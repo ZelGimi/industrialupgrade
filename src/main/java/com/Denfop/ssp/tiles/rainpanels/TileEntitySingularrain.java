@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package com.Denfop.ssp.tiles.rainpanels;
 
 import com.Denfop.ssp.tiles.TileEntityMoonPanel;

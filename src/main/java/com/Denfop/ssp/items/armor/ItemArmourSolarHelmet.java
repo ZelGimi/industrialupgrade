@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package com.Denfop.ssp.items.armor;
 
 import com.Denfop.ssp.SuperSolarPanels;

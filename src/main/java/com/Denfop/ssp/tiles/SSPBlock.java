@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package com.Denfop.ssp.tiles;
 import com.Denfop.ssp.*;
 import com.Denfop.ssp.items.*;

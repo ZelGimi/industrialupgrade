@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package com.Denfop.ssp;
 
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
