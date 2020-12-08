@@ -1,29 +1,30 @@
 package com.denfop.ssp.integration.botania;
 
-import java.util.Locale;
 import ic2.core.block.state.IIdProvider;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.client.model.ModelLoader;
+import ic2.core.init.BlocksItems;
+import ic2.core.item.ItemMulti;
+import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import ic2.core.init.BlocksItems;
 import net.minecraft.util.ResourceLocation;
-import ic2.core.ref.ItemName;
-import ic2.core.item.ItemMulti;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Locale;
 
 public class BotaniaCraftingThings extends ItemMulti
 {
     protected static final String NAME = "crafting";
     
     public BotaniaCraftingThings() {
-        super((ItemName)null, (Class)CraftingTypes.class);
-        ((BotaniaCraftingThings)BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", "crafting1"))).setUnlocalizedName("crafting1");
+        super(null, CraftingTypes.class);
+        BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", "crafting1")).setUnlocalizedName("crafting1");
     }
     
     @SideOnly(Side.CLIENT)
     protected void registerModel(final int meta, final ItemName name, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation((Item)this, meta, new ModelResourceLocation("super_solar_panels:crafting/" + CraftingTypes.getFromID(meta).getName(), (String)null));
+        ModelLoader.setCustomModelResourceLocation(this, meta, new ModelResourceLocation("super_solar_panels:crafting/" + CraftingTypes.getFromID(meta).getName(), null));
     }
     
     public String func_77658_a() {
@@ -49,7 +50,7 @@ public class BotaniaCraftingThings extends ItemMulti
         private final int ID;
         private static final CraftingTypes[] VALUES;
         
-        private CraftingTypes(final int ID) {
+        CraftingTypes(final int ID) {
             this.name = this.name().toLowerCase(Locale.ENGLISH);
             this.ID = ID;
         }

@@ -1,19 +1,20 @@
 package com.denfop.ssp.keyboard;
 
-import net.minecraft.client.settings.GameSettings;
-import java.util.Set;
-import org.apache.commons.lang3.ArrayUtils;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import java.util.Locale;
-import ic2.core.util.ReflectionUtil;
-import java.lang.reflect.Field;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
 import ic2.core.IC2;
 import ic2.core.util.Keyboard;
+import ic2.core.util.ReflectionUtil;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.lang.reflect.Field;
+import java.util.Locale;
+import java.util.Set;
 
 public final class SSPKeys extends Keyboard
 {
@@ -44,10 +45,10 @@ public final class SSPKeys extends Keyboard
     }
     
     static {
-        FLY_KEY = (Keyboard.IKeyWatcher)new KeyWatcher(SSPKey.fly);
-        poison = (Keyboard.IKeyWatcher)new KeyWatcher(SSPKey.poison);
-        poison1 = (Keyboard.IKeyWatcher)new KeyWatcher(SSPKey.poison1);
-        poison2 = (Keyboard.IKeyWatcher)new KeyWatcher(SSPKey.poison2);
+        FLY_KEY = new KeyWatcher(SSPKey.fly);
+        poison = new KeyWatcher(SSPKey.poison);
+        poison1 = new KeyWatcher(SSPKey.poison1);
+        poison2 = new KeyWatcher(SSPKey.poison2);
     }
     
     public enum SSPKey
@@ -63,8 +64,8 @@ public final class SSPKeys extends Keyboard
         
         public static Field getKeysField() {
             try {
-                final Field field = ReflectionUtil.getField((Class)Keyboard.Key.class, new String[] { "keys" });
-                ReflectionUtil.getField((Class)Field.class, new String[] { "modifiers" }).setInt(field, field.getModifiers() & 0xFFFFFFEF);
+                final Field field = ReflectionUtil.getField(Key.class, "keys");
+                ReflectionUtil.getField(Field.class, new String[] { "modifiers" }).setInt(field, field.getModifiers() & 0xFFFFFFEF);
                 return field;
             }
             catch (Exception e) {
@@ -72,7 +73,7 @@ public final class SSPKeys extends Keyboard
             }
         }
         
-        private SSPKey(final int keyID, final String description) {
+        SSPKey(final int keyID, final String description) {
             this.key = this.addKey(this.name());
             if (IC2.platform.isRendering()) {
                 ClientRegistry.registerKeyBinding(this.binding = new KeyBinding(description, keyID, "SuperSolarPanels".substring(0, 1).toUpperCase(Locale.ENGLISH) + "SuperSolarPanels".substring(1)));
@@ -81,7 +82,7 @@ public final class SSPKeys extends Keyboard
         
         private Keyboard.Key addKey(final String name) {
             final Keyboard.Key key = (Keyboard.Key)EnumHelper.addEnum((Class)Keyboard.Key.class, name, new Class[0], new Object[0]);
-            ReflectionUtil.setValue((Object)null, getKeysField(), (Object)ArrayUtils.add((Object[])Keyboard.Key.keys, (Object)key));
+            ReflectionUtil.setValue(null, getKeysField(), ArrayUtils.add(Key.keys, (Object)key));
             return key;
         }
     }

@@ -1,25 +1,17 @@
 package com.denfop.ssp.items.reactors;
 
+import com.denfop.ssp.items.resource.CraftingThings;
+import com.google.common.base.CaseFormat;
 import ic2.api.reactor.IReactor;
 import ic2.api.reactor.IReactorComponent;
 import ic2.core.IC2Potion;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.armor.ItemArmorHazmat;
 import ic2.core.item.reactor.AbstractDamageableReactorComponent;
-import ic2.core.item.type.NuclearResourceType;
 import ic2.core.ref.ItemName;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Queue;
-
-//import com.denfop.ssp.items.itembase.AbstractDamageableReactorComponent;
-import com.denfop.ssp.items.resource.CraftingThings;
-import com.google.common.base.CaseFormat;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -27,8 +19,12 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Queue;
+
 public class ItemReactorUranium extends AbstractDamageableReactorComponent {
-  public int numberOfCells;
+  public final int numberOfCells;
   
   public ItemReactorUranium(String name, int cells) {
     this(name, cells, 20000);
@@ -39,9 +35,9 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 	  }
 @SideOnly(Side.CLIENT)
 public void registerModels(ItemName name) {
-  ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+  ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
 }
-  protected String name;
+  protected final String name;
   public String setUnlocalizedName() {
       return "super_solar_panels." + super.getUnlocalizedName().substring(4);
   }
@@ -49,7 +45,7 @@ public void registerModels(ItemName name) {
     super(null, duration);
     setMaxStackSize(64);
     this.numberOfCells = cells;
-    ((ItemReactorUranium)BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name); 
+    BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
   }
   
  

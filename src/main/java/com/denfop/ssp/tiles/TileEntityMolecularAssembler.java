@@ -1,6 +1,8 @@
 package com.denfop.ssp.tiles;
 
 
+import com.denfop.ssp.IMolecularTransformerRecipeManager;
+import com.denfop.ssp.TransparentDynamicGUI;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
@@ -39,9 +41,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.denfop.ssp.IMolecularTransformerRecipeManager;
-import com.denfop.ssp.TransparentDynamicGUI;
-
 public class TileEntityMolecularAssembler extends TileEntityInventory implements IEnergySink, IHasGui, IGuiValueProvider
 {
     protected static final List<AxisAlignedBB> AABBs;
@@ -69,7 +68,7 @@ public class TileEntityMolecularAssembler extends TileEntityInventory implements
                 this.put(input);
             }
         };
-        this.outputSlot = new InvSlotOutput((TileEntityInventory)this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.comparator.setUpdate(() -> (this.currentRecipe == null) ? 0 : ((int) Util.lerp(0.0, 15.0, this.energyUsed / this.currentRecipe.b.totalEU)));
     }
 

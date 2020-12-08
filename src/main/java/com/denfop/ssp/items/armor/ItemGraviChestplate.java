@@ -2,7 +2,6 @@ package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.Configs;
 import com.denfop.ssp.items.armorbase.ItemAdvancedElectricJetpack;
-
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import net.minecraft.entity.Entity;
@@ -10,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -59,7 +57,7 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
       if (!create)
         return null; 
       out = new NBTTagCompound();
-      nbt.setTag("display", (NBTBase)out);
+      nbt.setTag("display", out);
     } else {
       out = nbt.getCompoundTag("display");
     } 

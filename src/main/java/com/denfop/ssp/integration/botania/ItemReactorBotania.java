@@ -1,25 +1,11 @@
 package com.denfop.ssp.integration.botania;
 
 
-
-
 import com.denfop.ssp.Configs;
-import com.denfop.ssp.items.SSP_Items;
 import com.denfop.ssp.items.reactors.ItemReactorUranium;
-import com.denfop.ssp.items.resource.CraftingThings;
-
 import ic2.api.reactor.IReactor;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.type.NuclearResourceType;
 import ic2.core.profile.NotClassic;
-import ic2.core.ref.ItemName;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @NotClassic
 public class ItemReactorBotania extends ItemReactorUranium {

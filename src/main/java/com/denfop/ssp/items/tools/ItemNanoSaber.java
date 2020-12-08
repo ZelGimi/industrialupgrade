@@ -1,8 +1,6 @@
 package com.denfop.ssp.items.tools;
 
-import com.denfop.ssp.Configs;
 import com.denfop.ssp.items.itembase.ItemElectricTool;
-import com.google.common.base.CaseFormat;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import ic2.api.item.ElectricItem;
@@ -10,16 +8,9 @@ import ic2.core.IC2;
 import ic2.core.audio.PositionSpec;
 import ic2.core.item.tool.HarvestLevel;
 import ic2.core.item.tool.ToolClass;
-import ic2.core.ref.ItemName;
 import ic2.core.slot.ArmorSlot;
 import ic2.core.util.StackUtil;
-import java.util.EnumSet;
-import java.util.Set;
-
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -35,26 +26,24 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemNanoSaber extends ItemElectricTool {
 	protected String name;
 
-	private int damage1;
+	private final int damage1;
 
-	private int damage2;
+	private final int damage2;
 
 public ItemNanoSaber(String name,int damage, HarvestLevel harvestLevel, ToolClass toolClasses, int maxCharge, int transferLimit , int tier, int damage2, int damage1) {
     super(name, damage, harvestLevel, toolClasses, maxCharge, transferLimit , tier, damage2, damage1);
     this.soundTicker = 0;
-    this.maxCharge = maxCharge;
-    this.transferLimit = transferLimit;
-    this.tier = tier;
+    ItemElectricTool.maxCharge = maxCharge;
+    ItemElectricTool.transferLimit = transferLimit;
+    ItemElectricTool.tier = tier;
     this.damage1 = damage1;
     this.damage2 = damage2;
   }
@@ -102,7 +91,7 @@ public ItemNanoSaber(String name,int damage, HarvestLevel harvestLevel, ToolClas
             amount = 300000.0D;
           } 
           if (amount > 0.0D) {
-            ElectricItem.manager.discharge(armor, amount, this.tier, true, false, false);
+            ElectricItem.manager.discharge(armor, amount, tier, true, false, false);
             if (!ElectricItem.manager.canUse(armor, 1.0D))
               target.setItemStackToSlot(slot, null); 
             drainSaber(stack, 2000.0D, source);
@@ -132,7 +121,7 @@ public ItemNanoSaber(String name,int damage, HarvestLevel harvestLevel, ToolClas
   
   public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
     if (isActive(stack))
-      drainSaber(stack, 80.0D, (EntityLivingBase)player); 
+      drainSaber(stack, 80.0D, player);
     return false;
   }
   
@@ -207,7 +196,7 @@ public ItemNanoSaber(String name,int damage, HarvestLevel harvestLevel, ToolClas
     return "Tools/Nanosabre/NanosabrePowerup.ogg";
   }
   
-  public static int ticker = 4;
+  public static final int ticker = 4;
   
   private int soundTicker;
 }

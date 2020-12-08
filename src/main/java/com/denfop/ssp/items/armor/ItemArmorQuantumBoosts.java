@@ -3,20 +3,17 @@ package com.denfop.ssp.items.armor;
 import com.denfop.ssp.Configs;
 import com.denfop.ssp.items.armorbase.ItemBoosts;
 import com.denfop.ssp.keyboard.SSPKeys;
-
 import ic2.api.item.ElectricItem;
 import ic2.api.item.HudMode;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import ic2.core.util.StackUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
@@ -69,7 +66,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
       if (!create)
         return null; 
       out = new NBTTagCompound();
-      nbt.setTag("display", (NBTBase)out);
+      nbt.setTag("display", out);
     } else {
       out = nbt.getCompoundTag("display");
     } 
@@ -90,8 +87,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
       boolean wasOnGround = (!nbtData.hasKey("wasOnGround") || nbtData.getBoolean("wasOnGround"));
       if (wasOnGround && !player.onGround && IC2.keyboard.isJumpKeyDown(player) && IC2.keyboard.isBoostKeyDown(player)) {
         ElectricItem.manager.use(stack, 4000.0D, null);
-        ret = true;
-      } 
+      }
       if (player.onGround != wasOnGround)
         nbtData.setBoolean("wasOnGround", player.onGround); 
     } else {
@@ -117,10 +113,10 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
         if (IC2.platform.isSimulating()) {
             nbtData.setBoolean("Nightvision", Nightvision);
             if (Nightvision) {
-                IC2.platform.messagePlayer(player, "Effects enabled.", new Object[0]);
+                IC2.platform.messagePlayer(player, "Effects enabled.");
             }
             else {
-                IC2.platform.messagePlayer(player, "Effects disabled.", new Object[0]);
+                IC2.platform.messagePlayer(player, "Effects disabled.");
             }
         }
     }
@@ -134,57 +130,34 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
         }
         if (IC2.platform.isSimulating()) {
             nbtData.setShort("HudMode", hubmode);
-            IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()), new Object[0]);
+            IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
         }
     }
     if (IC2.platform.isSimulating() && toggleTimer > 0) {
-        final NBTTagCompound nbtTagCompound = nbtData;
-        final String s = "toggleTimer";
+      final String s = "toggleTimer";
         --toggleTimer;
-        nbtTagCompound.setByte(s, toggleTimer);
+        nbtData.setByte(s, toggleTimer);
     }
-    if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, (EntityLivingBase)player)) {
+    if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
         final BlockPos pos = new BlockPos((int)Math.floor(player.posX), (int)Math.floor(player.posY), (int)Math.floor(player.posZ));
         final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
-        if (skylight > 8) {
-            
-            if (Configs.canCraftMT) {
-                player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0, true, true));
-              } else {
-                return;
-              } 
-              if (Configs.canCraftASP) {
-                player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 0, true, true));
-              } else {
-                return;
-              } 
-              if (Configs.canCraftASH) {
-                player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 300, 4, true, true));
-              } else {
-                return;
-              }
+      if (Configs.canCraftMT) {
+          player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0, true, true));
+        } else {
+          return;
         }
-        else {
-           
-            if (Configs.canCraftMT) {
-                player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0, true, true));
-              } else {
-                return;
-              } 
-              if (Configs.canCraftASP) {
-                player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 0, true, true));
-              } else {
-                return;
-              } 
-              if (Configs.canCraftASH) {
-                player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 300, 4, true, true));
-              } else {
-                return;
-              }
-        }  
-        }
-        ret = true;
+      if (Configs.canCraftASP) {
+        player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 0, true, true));
+      } else {
+        return;
+      }
+      if (Configs.canCraftASH) {
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 300, 4, true, true));
+      } else {
+        return;
+      }
     }
+  }
   
   
   public boolean isJetpackActive(ItemStack stack) {

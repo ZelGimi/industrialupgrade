@@ -1,7 +1,4 @@
 package com.denfop.ssp.integration.botania;
-import java.util.Set;
-
-
 
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -14,6 +11,8 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.Set;
+
 
 
 
@@ -21,9 +20,9 @@ public enum BotaniaMain implements ITeBlock
 //implements ITeBlock
 {
 	
-	manasteel_solar_panel((Class<? extends TileEntityBlock>)TileEntityManasteelSolar.class, 71), 
-    elementium_solar_panel((Class<? extends TileEntityBlock>)TileEntityElementiumSolar.class, 72, EnumRarity.RARE), 
-   terrasteel_solar_panel((Class<? extends TileEntityBlock>)TileEntityTerrasteelSolar.class, 73, EnumRarity.EPIC); 
+	manasteel_solar_panel(TileEntityManasteelSolar.class),
+    elementium_solar_panel(TileEntityElementiumSolar.class, 72, EnumRarity.RARE),
+   terrasteel_solar_panel(TileEntityTerrasteelSolar.class, 73, EnumRarity.EPIC);
       private final Class<? extends TileEntityBlock> teClass1;
     private final int itemMeta;
     private final EnumRarity rarity;
@@ -31,8 +30,8 @@ public enum BotaniaMain implements ITeBlock
     private static final BotaniaMain[] VALUES1;
     public static final ResourceLocation IDENTITY1;
     
-    private BotaniaMain(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
+    BotaniaMain(final Class<? extends TileEntityBlock> teClass) {
+        this(teClass, 71, EnumRarity.UNCOMMON);
       
     }
     
@@ -44,11 +43,11 @@ public enum BotaniaMain implements ITeBlock
   
     
     
-    private BotaniaMain(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
+    BotaniaMain(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass1= teClass;
         this.itemMeta = itemMeta;
         this.rarity = rarity;
-        GameRegistry.registerTileEntity((Class)teClass, "super_solar_panels:" + this.getName());
+        GameRegistry.registerTileEntity(teClass, "super_solar_panels:" + this.getName());
        
         
     }
@@ -96,7 +95,7 @@ public enum BotaniaMain implements ITeBlock
     }
     
     public Set<EnumFacing> getSupportedFacings() {
-        return (Set<EnumFacing>)Util.horizontalFacings;
+        return Util.horizontalFacings;
     }
     
     public EnumRarity getRarity() {
@@ -111,7 +110,7 @@ public enum BotaniaMain implements ITeBlock
         for (final BotaniaMain block : BotaniaMain.VALUES1) {
             if (block.teClass1 != null) {
                 try {
-                    block.dummyTe1 = (TileEntityBlock)block.teClass1.newInstance();
+                    block.dummyTe1 = block.teClass1.newInstance();
                 }
                 catch (Exception e) {
                     if (Util.inDev()) {

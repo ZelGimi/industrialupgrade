@@ -1,17 +1,13 @@
 package com.denfop.ssp.items.reactors;
 
+import com.google.common.base.CaseFormat;
 import ic2.api.reactor.IReactor;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.reactor.AbstractDamageableReactorComponent;
 import ic2.core.ref.ItemName;
-import java.util.List;
-
-import com.google.common.base.CaseFormat;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -19,18 +15,20 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class ItemReactorHeatStorage extends AbstractDamageableReactorComponent {
 	public static String name;
   public ItemReactorHeatStorage(String name, int heatStorage) {
     super(null, heatStorage);
-    ((ItemReactorHeatStorage)BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name);
+    BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", ItemReactorHeatStorage.name = name)).setUnlocalizedName(name);
   }
   public String getUnlocalizedName() {
 	    return "super_solar_panels." + super.getUnlocalizedName().substring(4);
 	  }
 @SideOnly(Side.CLIENT)
 public void registerModels(ItemName name) {
-  ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+  ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemReactorHeatStorage.name), null));
 }
   public boolean canStoreHeat(ItemStack stack, IReactor reactor, int x, int y) {
     return true;

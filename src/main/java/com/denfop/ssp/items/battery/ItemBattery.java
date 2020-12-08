@@ -2,19 +2,13 @@ package com.denfop.ssp.items.battery;
 
 
 import com.google.common.base.CaseFormat;
-
 import ic2.api.item.ElectricItem;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.BaseElectricItem;
-import ic2.core.item.ItemIC2;
 import ic2.core.ref.ItemName;
 import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -26,13 +20,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBattery extends BaseElectricItem {
-  private String name;
+  private final String name;
 
 public ItemBattery(String name, double maxCharge, double transferLimit, int tier) {
     super(null, maxCharge,  transferLimit,  tier);
     
     setMaxStackSize(16);
-    ((ItemBattery)BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name);
+    BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
   }
   
   public String getUnlocalizedName() {
@@ -40,7 +34,7 @@ public ItemBattery(String name, double maxCharge, double transferLimit, int tier
 	  }
 @SideOnly(Side.CLIENT)
 public void registerModels(ItemName name) {
-  ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+  ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
 }
   public boolean canProvideEnergy(ItemStack stack) {
     return true;
@@ -53,7 +47,7 @@ public void registerModels(ItemName name) {
     if (ElectricItem.manager.getCharge(stack) > 0.0D) {
       boolean transferred = false;
       for (int i = 0; i < 9; i++) {
-        ItemStack target = (ItemStack)player.inventory.mainInventory.get(i);
+        ItemStack target = player.inventory.mainInventory.get(i);
         if (target != null && target != stack)
           if (ElectricItem.manager.discharge(target, Double.POSITIVE_INFINITY, 2147483647, true, true, true) <= 0.0D) {
             double transfer = ElectricItem.manager.discharge(stack, 2.0D * this.transferLimit, 2147483647, true, true, true);
@@ -72,5 +66,5 @@ public void registerModels(ItemName name) {
     return new ActionResult(EnumActionResult.SUCCESS, stack);
   }
   
-  private static int maxLevel = 4;
+  private static final int maxLevel = 4;
 }

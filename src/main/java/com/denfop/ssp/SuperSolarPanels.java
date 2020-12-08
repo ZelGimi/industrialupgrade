@@ -1,16 +1,5 @@
 package com.denfop.ssp;
 
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import ic2.core.util.ReflectionUtil;
-import net.minecraft.client.renderer.color.ItemColors;
-import java.util.Map;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-
 import com.denfop.ssp.fluid.Neutron.BlockRegister;
 import com.denfop.ssp.fluid.Neutron.FluidRegister;
 import com.denfop.ssp.gui.ProgressBars;
@@ -26,62 +15,45 @@ import com.denfop.ssp.keyboard.SSPKeys;
 import com.denfop.ssp.proxy.CommonProxy;
 import com.denfop.ssp.tiles.SSPBlock;
 import com.denfop.ssp.tiles.TileEntityMolecularAssembler;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import ic2.core.init.Localization;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import ic2.core.item.armor.jetpack.JetpackAttachmentRecipe;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.logging.log4j.Logger;
-
+import ic2.api.event.TeBlockFinalCallEvent;
+import ic2.core.block.BlockTileEntity;
+import ic2.core.block.TeBlockRegistry;
+import ic2.core.util.ReflectionUtil;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import ic2.core.block.ITeBlock;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraft.block.material.Material;
-import ic2.core.block.TeBlockRegistry;
-import ic2.core.init.Localization;
-import ic2.core.item.armor.jetpack.JetpackAttachmentRecipe;
-import ic2.api.event.TeBlockFinalCallEvent;
-import ic2.core.block.BlockTileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
-import net.minecraftforge.fml.common.Mod;
+
+import java.util.Map;
 
 @Mod.EventBusSubscriber
-@Mod(modid = "super_solar_panels", name = "Super Solar Panels", dependencies = "required-after:ic2@[2.8.170,);", version = "1.3.0", acceptedMinecraftVersions = "[1.12,1.12.2]")
+@Mod(modid = SuperSolarPanels.MOD_ID, name = SuperSolarPanels.MOD_NAME, dependencies = "required-after:ic2@[2.8.170,);", version = "1.3.0", acceptedMinecraftVersions = "[1.12,1.12.2]")
 public final class SuperSolarPanels
 {
 
 	  public static boolean seasonal = false;
-    public static final String MODID = "super_solar_panels";
+    public static final String MOD_ID = "super_solar_panels";
+    public static final String MOD_NAME = "Super Solar Panels";
 	private static final String Urane = null;
-	public static final CreativeTabs SSPtab = (CreativeTabs)new SSPSourceTab("SSPtab");
+	public static final CreativeTabs SSPtab = new SSPSourceTab("SSPtab");
     public static Logger log;
     
     public static boolean avaritiaLoaded = false;
@@ -191,8 +163,8 @@ OreDictionary.registerOre("craftingSunnarium", SSP_Items.CRAFTING.getItemStack(C
  
     @SideOnly(Side.CLIENT)
     private static void setupRenderingGuf() {
-    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, (TileEntitySpecialRenderer)new PrettyMolecularTransformerTESR());
-      ForgeHooksClient.registerTESRItemStack((Item)machines.getItem(), SSPBlock.molecular_transformer.getId(), SSPBlock.molecular_transformer.getTeClass());
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, new PrettyMolecularTransformerTESR());
+      ForgeHooksClient.registerTESRItemStack(machines.getItem(), SSPBlock.molecular_transformer.getId(), SSPBlock.molecular_transformer.getTeClass());
   
     }
    
@@ -200,10 +172,10 @@ OreDictionary.registerOre("craftingSunnarium", SSP_Items.CRAFTING.getItemStack(C
     @SideOnly(Side.CLIENT)
     public static void doColourThings(final ColorHandlerEvent.Item event) {
         final ItemColors colours = event.getItemColors();
-        final IItemColor armourColouring = (IItemColor) ((Map)ReflectionUtil.getFieldValue(ReflectionUtil.getField((Class)ItemColors.class, (Class)Map.class), (Object)colours)).get(Items.LEATHER_BOOTS.delegate);
-        colours.registerItemColorHandler(armourColouring, new Item[] { SSP_Items.Spectral_SOLAR_HELMET.getInstance() });
-        colours.registerItemColorHandler(armourColouring, new Item[] { SSP_Items.Singular_SOLAR_HELMET.getInstance() });
-         colours.registerItemColorHandler(armourColouring, new Item[] { SSP_Items.HYBRID_SOLAR_HELMET.getInstance(), SSP_Items.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance() });
+        final IItemColor armourColouring = (IItemColor) ((Map)ReflectionUtil.getFieldValue(ReflectionUtil.getField(ItemColors.class, Map.class), colours)).get(Items.LEATHER_BOOTS.delegate);
+        colours.registerItemColorHandler(armourColouring, SSP_Items.Spectral_SOLAR_HELMET.getInstance());
+        colours.registerItemColorHandler(armourColouring, SSP_Items.Singular_SOLAR_HELMET.getInstance());
+         colours.registerItemColorHandler(armourColouring, SSP_Items.HYBRID_SOLAR_HELMET.getInstance(), SSP_Items.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance());
 
     }
     

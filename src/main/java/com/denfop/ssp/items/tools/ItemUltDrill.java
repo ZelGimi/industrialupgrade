@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.tools;
 
-import com.denfop.ssp.*;
+import com.denfop.ssp.Configs;
 import com.google.common.base.CaseFormat;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
@@ -9,9 +9,6 @@ import ic2.core.item.tool.HarvestLevel;
 import ic2.core.item.tool.ItemDrill;
 import ic2.core.ref.ItemName;
 import ic2.core.util.StackUtil;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -22,22 +19,20 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ItemUltDrill extends ItemDrill {
   public enum DrillMode {
@@ -65,10 +60,7 @@ public class ItemUltDrill extends ItemDrill {
     public static DrillMode getFromID(int ID) {
       return VALUES[ID % VALUES.length];
     }
-    
-    static {
-    
-    }
+
   }
   
   protected static final Material[] MATERIALS = new Material[] { Material.ROCK, Material.GRASS, Material.GROUND, Material.SAND, Material.CLAY };
@@ -77,12 +69,12 @@ public class ItemUltDrill extends ItemDrill {
   
   public ItemUltDrill() {
     super(null, Configs.operationEnergyCost, HarvestLevel.Iridium, Configs.maxChargedrill, Configs.transferLimitdrill, Configs.tierdrill, DrillMode.NORMAL.drillSpeed);
-    ((ItemUltDrill)BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", "ItemUltDrill"))).setUnlocalizedName("ItemUltDrill");
+    BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", "ItemUltDrill")).setUnlocalizedName("ItemUltDrill");
   }
   
   @SideOnly(Side.CLIENT)
   public void registerModels(ItemName name) {
-    ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "ItemUltDrill"), null));
+    ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "ItemUltDrill"), null));
   }
   
   public static DrillMode readDrillMode(ItemStack stack) {
@@ -150,7 +142,7 @@ public class ItemUltDrill extends ItemDrill {
   
   protected static boolean canBlockBeMined(World world, BlockPos pos, EntityPlayer player, boolean skipEffectivity) {
     IBlockState state = world.getBlockState(pos);
-    return (state.getBlock().canHarvestBlock((IBlockAccess)world, pos, player) && (skipEffectivity || isEffective(state.getMaterial())) && state.getPlayerRelativeBlockHardness(player, world, pos) != 0.0F);
+    return (state.getBlock().canHarvestBlock(world, pos, player) && (skipEffectivity || isEffective(state.getMaterial())) && state.getPlayerRelativeBlockHardness(player, world, pos) != 0.0F);
   }
   
   protected static boolean isEffective(Material material) {
@@ -174,7 +166,7 @@ public class ItemUltDrill extends ItemDrill {
           continue; 
         IBlockState state = world.getBlockState(blockPos);
         Block block = state.getBlock();
-        if (!block.isAir(state, (IBlockAccess)world, blockPos)) {
+        if (!block.isAir(state, world, blockPos)) {
           int experience;
           if (player instanceof EntityPlayerMP) {
             experience = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP)player).interactionManager.getGameType(), (EntityPlayerMP)player, blockPos);
@@ -197,11 +189,11 @@ public class ItemUltDrill extends ItemDrill {
             stack.onBlockDestroyed(world, state, blockPos, player);
           } 
           world.playEvent(2001, blockPos, Block.getStateId(state));
-          ((EntityPlayerMP)player).connection.sendPacket((Packet)new SPacketBlockChange(world, blockPos));
+          ((EntityPlayerMP)player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
         } 
       } 
       if (powerRanOut)
-        IC2.platform.messagePlayer(player, "super_solar_panels.advancedDrill.ranOut", new Object[0]); 
+        IC2.platform.messagePlayer(player, "super_solar_panels.advancedDrill.ranOut");
       return true;
     }
     if (readDrillMode(stack) == DrillMode.BIG_HOLES1 && !(world = player.world).isRemote) {
@@ -215,7 +207,7 @@ public class ItemUltDrill extends ItemDrill {
             continue; 
           IBlockState state = world.getBlockState(blockPos);
           Block block = state.getBlock();
-          if (!block.isAir(state, (IBlockAccess)world, blockPos)) {
+          if (!block.isAir(state, world, blockPos)) {
             int experience;
             if (player instanceof EntityPlayerMP) {
               experience = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP)player).interactionManager.getGameType(), (EntityPlayerMP)player, blockPos);
@@ -238,11 +230,11 @@ public class ItemUltDrill extends ItemDrill {
               stack.onBlockDestroyed(world, state, blockPos, player);
             } 
             world.playEvent(2001, blockPos, Block.getStateId(state));
-            ((EntityPlayerMP)player).connection.sendPacket((Packet)new SPacketBlockChange(world, blockPos));
+            ((EntityPlayerMP)player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
           } 
         } 
         if (powerRanOut)
-          IC2.platform.messagePlayer(player, "super_solar_panels.ItemUltDrill.ranOut", new Object[0]); 
+          IC2.platform.messagePlayer(player, "super_solar_panels.ItemUltDrill.ranOut");
         return true;
       } 
     return super.onBlockStartBreak(stack, pos, player);

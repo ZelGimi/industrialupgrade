@@ -15,7 +15,6 @@ import ic2.core.ref.ItemName;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -45,7 +44,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
   
   protected ItemAdvancedElectricJetpack(String name, double maxCharge, double transferLimit, int tier) {
     super(null, null, EntityEquipmentSlot.CHEST, maxCharge, transferLimit, tier);
-    ((ItemAdvancedElectricJetpack)BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name);
+    BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
     setMaxDamage(27);
     setMaxStackSize(1);
     setNoRepair();
@@ -53,7 +52,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
   
   @SideOnly(Side.CLIENT)
   public void registerModels(ItemName name) {
-    ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+    ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
   }
   
   public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
@@ -111,10 +110,10 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
         if (IC2.platform.isSimulating()) {
             nbtData.setBoolean("Nightvision", Nightvision);
             if (Nightvision) {
-                IC2.platform.messagePlayer(player, "Effects enabled.", new Object[0]);
+                IC2.platform.messagePlayer(player, "Effects enabled.");
             }
             else {
-                IC2.platform.messagePlayer(player, "Effects disabled.", new Object[0]);
+                IC2.platform.messagePlayer(player, "Effects disabled.");
             }
         }
     }
@@ -128,38 +127,22 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
         }
         if (IC2.platform.isSimulating()) {
             nbtData.setShort("HudMode", hubmode);
-            IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()), new Object[0]);
+            IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
         }
     }
     if (IC2.platform.isSimulating() && toggleTimer > 0) {
-        final NBTTagCompound nbtTagCompound = nbtData;
         final String s = "toggleTimer";
         --toggleTimer;
-        nbtTagCompound.setByte(s, toggleTimer);
+        nbtData.setByte(s, toggleTimer);
     }
-    if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, (EntityLivingBase)player)) {
+    if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
         final BlockPos pos = new BlockPos((int)Math.floor(player.posX), (int)Math.floor(player.posY), (int)Math.floor(player.posZ));
         final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
-        if (skylight > 8) {
-            
-            if (Configs.canCraftDoubleSlabs) {
-                player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0, true, true));
-              } else {
-                return;
-              } 
-              
-        }
-        else {
-           
-            if (Configs.canCraftDoubleSlabs) {
-                player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0, true, true));
-              } else {
-                return;
-              } 
-             
-          
-        }
-        ret = true;
+        if (Configs.canCraftDoubleSlabs) {
+            player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0, true, true));
+          } else {
+            return;
+          }
     }
   }
   

@@ -1,30 +1,26 @@
 package com.denfop.ssp.items.armorbase;
 
-import ic2.core.IC2;
+import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
-import ic2.core.init.Localization;
-import net.minecraft.util.text.TextFormatting;
-
-import com.denfop.ssp.SuperSolarPanels;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import net.minecraft.nbt.NBTTagCompound;
+import ic2.core.IC2;
+import ic2.core.init.BlocksItems;
+import ic2.core.item.armor.ItemArmorElectric;
+import ic2.core.item.armor.jetpack.IBoostingJetpack;
+import ic2.core.ref.ItemName;
 import ic2.core.util.StackUtil;
-import net.minecraft.item.EnumRarity;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import com.google.common.base.CaseFormat;
-import net.minecraft.item.Item;
-import ic2.core.init.BlocksItems;
-import net.minecraft.util.ResourceLocation;
-import ic2.core.ref.ItemName;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import ic2.core.item.armor.jetpack.IBoostingJetpack;
-import ic2.core.item.armor.ItemArmorElectric;
 
 public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack
 {
@@ -39,8 +35,8 @@ public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack
     }
     
     protected ItemLeggins(final String name, final double maxCharge, final double transferLimit, final int tier) {
-        super((ItemName)null, (String)null, EntityEquipmentSlot.LEGS, maxCharge, transferLimit, tier);
-        ((ItemLeggins)BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name);
+        super(null, null, EntityEquipmentSlot.LEGS, maxCharge, transferLimit, tier);
+        BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
         this.setMaxDamage(27);
         this.setMaxStackSize(1);
         this.setNoRepair();
@@ -48,7 +44,7 @@ public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack
     
     @SideOnly(Side.CLIENT)
     public void registerModels(final ItemName name) {
-        ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), (String)null));
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
     }
     
     public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
@@ -121,7 +117,7 @@ public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack
     }
     
     public boolean drainEnergy(final ItemStack pack, final int amount) {
-        return ElectricItem.manager.discharge(pack, (double)(amount * 6), Integer.MAX_VALUE, true, false, false) > 0.0;
+        return ElectricItem.manager.discharge(pack, amount * 6, Integer.MAX_VALUE, true, false, false) > 0.0;
     }
     
     public boolean canProvideEnergy(final ItemStack stack) {

@@ -1,10 +1,9 @@
 package com.denfop.ssp.tiles;
 
+import com.denfop.ssp.Configs;
 import ic2.api.tile.IEnergyStorage;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
-import ic2.core.block.IInventorySlotHolder;
-import ic2.core.block.TileEntityBlock;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.block.comp.Energy;
 import ic2.core.block.comp.TileEntityComponent;
@@ -19,11 +18,6 @@ import ic2.core.init.MainConfig;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.ConfigUtil;
 import ic2.core.util.StackUtil;
-import java.util.EnumSet;
-import java.util.List;
-
-import com.denfop.ssp.Configs;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,14 +30,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.EnumSet;
+import java.util.List;
+
 public class ultimatemfsu extends TileEntityInventory implements IEnergyStorage, IHasGui {
-  private int output = Configs.ultimatemfsu*4; 
+  private final int output = Configs.ultimatemfsu*4;
   
   protected final InvSlotCharge chargeSlot = new InvSlotCharge(this, 5);
   
   protected final InvSlotDischarge dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, 5, InvSlot.InvSide.BOTTOM);
-  private Energy energy = (Energy)addComponent((TileEntityComponent)(new Energy((TileEntityBlock)this, Configs.ultimatemfsu2, EnumSet.complementOf((EnumSet)EnumSet.of(EnumFacing.DOWN)), 
-        EnumSet.of(EnumFacing.DOWN), Configs.ultimatemfsu1, Configs.ultimatemfsu1, false)).addManagedSlot((InvSlot)this.chargeSlot).addManagedSlot((InvSlot)this.dischargeSlot));
+  private final Energy energy = (Energy)addComponent((TileEntityComponent)(new Energy(this, Configs.ultimatemfsu2, EnumSet.complementOf((EnumSet)EnumSet.of(EnumFacing.DOWN)),
+        EnumSet.of(EnumFacing.DOWN), Configs.ultimatemfsu1, Configs.ultimatemfsu1, false)).addManagedSlot(this.chargeSlot).addManagedSlot(this.dischargeSlot));
   
   protected void updateEntityServer() {
     super.updateEntityServer();
@@ -63,7 +60,7 @@ public class ultimatemfsu extends TileEntityInventory implements IEnergyStorage,
   
   public ContainerBase<?> getGuiContainer(EntityPlayer player) {
     try {
-      return (ContainerBase<?>)DynamicContainer.create((IInventory)this, player, GuiParser.parse(new ResourceLocation("super_solar_panels", "guidef/ultimatemfsu.xml"), this.teBlock.getTeClass()));
+      return DynamicContainer.create((IInventory)this, player, GuiParser.parse(new ResourceLocation("super_solar_panels", "guidef/ultimatemfsu.xml"), this.teBlock.getTeClass()));
     } catch (Exception exception) {
       return null;
     } 
@@ -72,7 +69,7 @@ public class ultimatemfsu extends TileEntityInventory implements IEnergyStorage,
   @SideOnly(Side.CLIENT)
   public GuiScreen getGui(EntityPlayer player, boolean b) {
     try {
-      return (GuiScreen)DynamicGui.create((IInventory)this, player, GuiParser.parse(new ResourceLocation("super_solar_panels", "guidef/ultimatemfsu.xml"), this.teBlock.getTeClass()));
+      return DynamicGui.create((IInventory)this, player, GuiParser.parse(new ResourceLocation("super_solar_panels", "guidef/ultimatemfsu.xml"), this.teBlock.getTeClass()));
     } catch (Exception exception) {
       return null;
     } 
@@ -134,24 +131,24 @@ public class ultimatemfsu extends TileEntityInventory implements IEnergyStorage,
   public void onGuiClosed(EntityPlayer player) {}
   
   public String getStorageText() {
-    return Localization.translate("gui.text.maxStorage", new Object[] { Long.valueOf((long)this.energy.getEnergy()) });
+    return Localization.translate("gui.text.maxStorage", (long) this.energy.getEnergy());
   }
   
   public String getCapacityText() {
-    return Localization.translate("gui.text.currentStorage", new Object[] { Long.valueOf((long)this.energy.getCapacity()) });
+    return Localization.translate("gui.text.currentStorage", (long) this.energy.getCapacity());
   }
   
   public String getOutputText() {
-    return Localization.translate("gui.text.output", new Object[] { Integer.valueOf(this.output) });
+    return Localization.translate("gui.text.output", this.output);
   }
   
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, tooltip, advanced);
-    tooltip.add(String.format("%s %s %s %s %s %s", new Object[] { Localization.translate("ic2.item.tooltip.Output"), Long.valueOf(this.output), 
-            Localization.translate("ic2.generic.text.EUt"), 
-            Localization.translate("ic2.item.tooltip.Capacity"), Long.valueOf((long)this.energy.getCapacity()), 
-            Localization.translate("ic2.generic.text.EU") }));
+    tooltip.add(String.format("%s %s %s %s %s %s", Localization.translate("ic2.item.tooltip.Output"), (long) this.output,
+            Localization.translate("ic2.generic.text.EUt"),
+            Localization.translate("ic2.item.tooltip.Capacity"), (long) this.energy.getCapacity(),
+            Localization.translate("ic2.generic.text.EU")));
     tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + 
         StackUtil.getOrCreateNbtData(stack).getDouble("energy") + " " + 
         Localization.translate("ic2.generic.text.EU"));

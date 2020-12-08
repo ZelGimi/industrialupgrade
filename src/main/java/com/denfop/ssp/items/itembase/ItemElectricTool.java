@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.itembase;
 
+import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IItemHudInfo;
@@ -17,15 +18,6 @@ import ic2.core.item.tool.ToolClass;
 import ic2.core.ref.ItemName;
 import ic2.core.util.LogCategory;
 import ic2.core.util.StackUtil;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import com.google.common.base.CaseFormat;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -34,22 +26,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.*;
+
 public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDamageItem, IElectricItem, IItemHudInfo {
-  public double operationEnergyCost;
+  public final double operationEnergyCost;
   
   public static int maxCharge;
   
@@ -62,19 +50,19 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
   protected boolean wasEquipped;
   public static  String name;
   protected ItemElectricTool(String name, int operationEnergyCost, HarvestLevel harvestLevel, ToolClass toolClasses, int maxCharge, int transferLimit, int tier, int damage2, int damage1) {
-    this(name, operationEnergyCost, HarvestLevel.Iron, Collections.emptySet(), maxCharge, transferLimit , tier );
+    this(name, operationEnergyCost, Collections.emptySet(), maxCharge, transferLimit , tier );
   }
   
-  protected ItemElectricTool(String name, int operationEnergyCost, HarvestLevel harvestLevel, Set<ToolClass> toolClasses, int maxCharge, int transferLimit, int tier) {
-    this(name, 2.0F, -3.0F, operationEnergyCost, harvestLevel, toolClasses, new HashSet<>(), maxCharge, transferLimit , tier);
+  protected ItemElectricTool(String name, int operationEnergyCost, Set<ToolClass> toolClasses, int maxCharge, int transferLimit, int tier) {
+    this(name, operationEnergyCost, HarvestLevel.Iron, toolClasses, new HashSet<>(), maxCharge, transferLimit , tier);
   }
  
-  private ItemElectricTool(String name, float damage, float speed, int operationEnergyCost, HarvestLevel harvestLevel, Set<ToolClass> toolClasses, Set<Block> mineableBlocks, int maxCharge, int transferLimit, int tier) {
-    super(null, damage, speed, harvestLevel, toolClasses, mineableBlocks);
+  private ItemElectricTool(String name, int operationEnergyCost, HarvestLevel harvestLevel, Set<ToolClass> toolClasses, Set<Block> mineableBlocks, int maxCharge, int transferLimit, int tier) {
+    super(null, (float) 2.0, (float) -3.0, harvestLevel, toolClasses, mineableBlocks);
     this.operationEnergyCost = operationEnergyCost;
     setMaxDamage(27);
     setNoRepair();
-    ((ItemElectricTool)BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name);
+    BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", ItemElectricTool.name = name)).setUnlocalizedName(name);
     
   }
  
@@ -84,15 +72,15 @@ public String getUnlocalizedName() {
 	  }
   @SideOnly(Side.CLIENT)
   public void registerModels(ItemName name) {
-    ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+    ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemElectricTool.name), null));
   }
   public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float xOffset, float yOffset, float zOffset) {
-	    ElectricItem.manager.use(StackUtil.get(player, hand), 0.0D, (EntityLivingBase)player);
+	    ElectricItem.manager.use(StackUtil.get(player, hand), 0.0D, player);
 	    return super.onItemUse(player, world, pos, hand, side, xOffset, yOffset, zOffset);
 	  }
 	  
 	  public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-	    ElectricItem.manager.use(StackUtil.get(player, hand), 0.0D, (EntityLivingBase)player);
+	    ElectricItem.manager.use(StackUtil.get(player, hand), 0.0D, player);
 	    return super.onItemRightClick(world, player, hand);
 	  }
 	  
@@ -119,15 +107,15 @@ public String getUnlocalizedName() {
 	  }
 	  
 	  public double getMaxCharge(ItemStack stack) {
-	    return this.maxCharge;
+	    return maxCharge;
 	  }
 	  
 	  public int getTier(ItemStack stack) {
-	    return this.tier;
+	    return tier;
 	  }
 	  
 	  public double getTransferLimit(ItemStack stack) {
-	    return this.transferLimit;
+	    return transferLimit;
 	  }
 	  
 	  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase user) {
@@ -135,7 +123,7 @@ public String getUnlocalizedName() {
 	      if (user != null) {
 	        ElectricItem.manager.use(stack, this.operationEnergyCost, user);
 	      } else {
-	        ElectricItem.manager.discharge(stack, this.operationEnergyCost, this.tier, true, false, false);
+	        ElectricItem.manager.discharge(stack, this.operationEnergyCost, tier, true, false, false);
 	      }  
 	    return true;
 	  }
@@ -151,18 +139,18 @@ public String getUnlocalizedName() {
 	  public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 	    if (!isInCreativeTab(tab))
 	      return; 
-	    ElectricItemManager.addChargeVariants((Item)this, (List)subItems);
+	    ElectricItemManager.addChargeVariants(this, subItems);
 	  }
 	  
 	  public List<String> getHudInfo(ItemStack stack, boolean advanced) {
 	    List<String> info = new LinkedList<>();
 	    info.add(ElectricItem.manager.getToolTip(stack));
-	    info.add(Localization.translate("ic2.item.tooltip.PowerTier", new Object[] { Integer.valueOf(this.tier) }));
+	    info.add(Localization.translate("ic2.item.tooltip.PowerTier", tier));
 	    return info;
 	  }
 	  
 	  protected ItemStack getItemStack(double charge) {
-	    ItemStack ret = new ItemStack((Item)this);
+	    ItemStack ret = new ItemStack(this);
 	    ElectricItem.manager.charge(ret, charge, 2147483647, true, false);
 	    return ret;
 	  }
@@ -227,7 +215,7 @@ public String getUnlocalizedName() {
 	  public void setDamage(ItemStack stack, int damage) {
 	    int prev = getDamage(stack);
 	    if (damage != prev && BaseElectricItem.logIncorrectItemDamaging)
-	      IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", new Object[] { Integer.valueOf(damage - prev) }); 
+	      IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", damage - prev);
 	  }
 	  
 	  public void setStackDamage(ItemStack stack, int damage) {

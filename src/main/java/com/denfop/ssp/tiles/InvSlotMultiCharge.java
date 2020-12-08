@@ -2,7 +2,6 @@ package com.denfop.ssp.tiles;
 
 import ic2.api.energy.tile.IChargingSlot;
 import ic2.api.item.ElectricItem;
-import ic2.core.block.IInventorySlotHolder;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;

@@ -8,14 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRegister
 {
-    public static BlockNeutronFluid 
+    public static final BlockNeutronFluid
                         Neutron_BLOCK = new BlockNeutronFluid(FluidRegister.Neutron);
    
     public static void register()

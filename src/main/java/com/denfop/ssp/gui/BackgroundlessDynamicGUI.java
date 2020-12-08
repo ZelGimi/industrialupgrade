@@ -15,14 +15,14 @@ public class BackgroundlessDynamicGUI<T extends ContainerBase<? extends IInvento
   }
   
   protected BackgroundlessDynamicGUI(EntityPlayer player, T container, GuiParser.GuiNode guiNode) {
-    super(player, (T)container, guiNode);
+    super(player, container, guiNode);
   }
   
   protected final void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     mouseX -= this.guiLeft;
     mouseY -= this.guiTop;
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    for (GuiElement<?> element : (Iterable<GuiElement<?>>)this.elements) {
+    for (GuiElement<?> element : this.elements) {
       if (element.isEnabled())
         drawElement(element, mouseX, mouseY); 
     } 

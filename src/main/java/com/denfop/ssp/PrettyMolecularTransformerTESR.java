@@ -1,14 +1,8 @@
 package com.denfop.ssp;
 
+import com.denfop.ssp.tiles.TileEntityMolecularAssembler;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
-import java.awt.Color;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -25,8 +19,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import com.denfop.ssp.SuperSolarPanels;
-import com.denfop.ssp.tiles.TileEntityMolecularAssembler;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<TileEntityMolecularAssembler> {
@@ -42,19 +41,19 @@ public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<Ti
   
   private static final IResourceManager resources = Minecraft.getMinecraft().getResourceManager();
   
-  public static boolean drawActiveCore = false;
+  public static final boolean drawActiveCore = false;
   
   public int ticker;
   
   public static int getTextureSize(String s, int dv) {
-	    if (textureSizeCache.containsKey(Arrays.asList(new Serializable[] { s, Integer.valueOf(dv) })))
-	      return textureSizeCache.get(Arrays.asList(new Serializable[] { s, Integer.valueOf(dv) })); 
+	    if (textureSizeCache.containsKey(Arrays.asList(s, dv)))
+	      return textureSizeCache.get(Arrays.asList(s, dv));
 	    try {
 	      InputStream inputstream = resources.getResource(new ResourceLocation("advanced_solar_panels", s)).getInputStream();
 	      if (inputstream == null)
 	        throw new FileNotFoundException("Image not found: " + s); 
 	      int size = ImageIO.read(inputstream).getWidth() / dv;
-	      textureSizeCache.put(Arrays.asList(new Serializable[] { s, Integer.valueOf(dv) } ), size);
+	      textureSizeCache.put(Arrays.asList(new Serializable[] { s, dv} ), size);
 	      return size;
 	    } catch (Exception e) {
 	      SuperSolarPanels.log.error("Error getting size of texture " + s + " (" + dv + ')', e);
@@ -171,7 +170,7 @@ public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<Ti
     if (tileTransformer != null && drawActiveCore && tileTransformer.getActive()) {
       GL11.glPushMatrix();
       GlStateManager.pushAttrib();
-      renderCore((TileEntity)tileTransformer, x, y, z);
+      renderCore(tileTransformer, x, y, z);
       GlStateManager.popAttrib();
       GL11.glPopMatrix();
     } 

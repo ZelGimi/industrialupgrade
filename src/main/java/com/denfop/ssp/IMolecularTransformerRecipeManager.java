@@ -5,7 +5,7 @@ import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
 
 public interface IMolecularTransformerRecipeManager extends IMachineRecipeManager<IMolecularTransformerRecipeManager.Input, ItemStack, ItemStack> {
-  public static final class Input {
+  final class Input {
     public final IRecipeInput input;
     
     public final int totalEU;
@@ -20,7 +20,7 @@ public interface IMolecularTransformerRecipeManager extends IMachineRecipeManage
     }
   }
   
-  public static final IMolecularTransformerRecipeManager RECIPES = new MolecularTransformerRecipeManager();
+  IMolecularTransformerRecipeManager RECIPES = new MolecularTransformerRecipeManager();
   
   boolean addRecipe(IRecipeInput paramIRecipeInput, int paramInt, ItemStack paramItemStack, boolean paramBoolean);
   

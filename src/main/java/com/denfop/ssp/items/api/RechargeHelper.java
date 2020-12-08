@@ -2,7 +2,6 @@ package com.denfop.ssp.items.api;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagInt;
 
 public class RechargeHelper {
@@ -20,7 +19,7 @@ public class RechargeHelper {
 	      int charge = is.getTagCompound().getInteger("tc.charge");
 	      if (charge >= amt) {
 	        charge -= amt;
-	        is.setTagInfo("tc.charge", (NBTBase)new NBTTagInt(charge));
+	        is.setTagInfo("tc.charge", new NBTTagInt(charge));
 	        return true;
 	      } 
 	    } 

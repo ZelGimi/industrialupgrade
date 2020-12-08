@@ -1,59 +1,45 @@
 package com.denfop.ssp.items.armor;
 
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.Configs;
 import com.denfop.ssp.tiles.TileEntitySolarPanel;
 import com.denfop.ssp.tiles.overtimepanel.*;
-import com.denfop.ssp.*;
-import java.util.Locale;
-
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.item.EnumRarity;
-import java.util.List;
+import com.google.common.base.CaseFormat;
+import ic2.api.item.*;
+import ic2.core.IC2;
+import ic2.core.IC2Potion;
+import ic2.core.init.BlocksItems;
+import ic2.core.init.Localization;
 import ic2.core.item.ElectricItemManager;
 import ic2.core.item.ItemTinCan;
 import ic2.core.ref.IItemModelProvider;
 import ic2.core.ref.ItemName;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import ic2.api.item.HudMode;
-
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import ic2.core.util.StackUtil;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import ic2.api.item.ElectricItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.world.World;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import com.google.common.base.CaseFormat;
-import ic2.core.init.Localization;
-import net.minecraft.item.ItemStack;
-import net.minecraft.creativetab.CreativeTabs;
-import ic2.core.IC2;
-import ic2.core.IC2Potion;
-import net.minecraft.item.Item;
-import ic2.core.init.BlocksItems;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import ic2.api.item.IItemHudProvider;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
-import ic2.api.item.IMetalArmor;
-import ic2.api.item.IElectricItem;
-import net.minecraft.item.ItemArmor;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvider, IElectricItem, IMetalArmor, ISpecialArmor, IItemHudProvider
 {
@@ -65,14 +51,14 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
     protected int ticker;
     public ItemArmourSolarHelmet(final SolarHelmetTypes type) {
         super(ItemArmor.ArmorMaterial.DIAMOND, -1, EntityEquipmentSlot.HEAD);
-        ((ItemArmourSolarHelmet)BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", type.getName()))).setUnlocalizedName(type.getLocalisedName());
-        this.setCreativeTab((CreativeTabs)IC2.tabIC2);
+        BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", type.getName())).setUnlocalizedName(type.getLocalisedName());
+        this.setCreativeTab(IC2.tabIC2);
         this.setMaxDamage(27);
         this.type = type;
         if (armorType == EntityEquipmentSlot.HEAD)
         MinecraftForge.EVENT_BUS.register(this); 
       //  potionRemovalCost.put(MobEffects.POISON, Integer.valueOf(10000));
-        potionRemovalCost.put(IC2Potion.radiation, Integer.valueOf(5000));
+        potionRemovalCost.put(IC2Potion.radiation, 5000);
    //   potionRemovalCost.replace(MobEffects.WITHER, Integer.valueOf(25000));
     }
     
@@ -94,7 +80,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
     
     @SideOnly(Side.CLIENT)
     public void registerModels(final ItemName name) {
-        ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.type.getName()), (String)null));
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.type.getName()), null));
     }
     
     public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
@@ -147,7 +133,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
                 return null;
             }
             out = new NBTTagCompound();
-            nbt.setTag("display", (NBTBase)out);
+            nbt.setTag("display", out);
         }
         else {
             out = nbt.getCompoundTag("display");
@@ -167,10 +153,10 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
             final int airLevel = player.getAir();
             if (ElectricItem.manager.canUse(stack, 1000.0) && airLevel < 100) {
                 player.setAir(airLevel + 200);
-                ElectricItem.manager.use(stack, 1000.0, (EntityLivingBase)player);
+                ElectricItem.manager.use(stack, 1000.0, player);
             }
         }
-        int output = 0;
+        int output;
         switch (this.state) {
             case DAY: {
                 output = this.type.dayEU;
@@ -186,42 +172,38 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
         }
         for (final ItemStack playerStack : player.inventory.armorInventory.subList(0, player.inventory.armorInventory.size() - 1)) {
             if (!StackUtil.isEmpty(playerStack) && playerStack.getItem() instanceof IElectricItem) {
-                output -= (int)ElectricItem.manager.charge(playerStack, (double)output, this.type.tier, false, false);
+                output -= (int)ElectricItem.manager.charge(playerStack, output, this.type.tier, false, false);
                 if (output <= 0) {
                     return;
                 }
-                continue;
             }
         }
         if (ItemArmourSolarHelmet.chargeWholeInventory) {
             for (final ItemStack playerStack : player.inventory.offHandInventory) {
                 if (!StackUtil.isEmpty(playerStack) && playerStack.getItem() instanceof IElectricItem) {
-                    output -= (int)ElectricItem.manager.charge(playerStack, (double)output, this.type.tier, false, false);
+                    output -= (int)ElectricItem.manager.charge(playerStack, output, this.type.tier, false, false);
                     if (output <= 0) {
                         return;
                     }
-                    continue;
                 }
             }
             for (final ItemStack playerStack : player.inventory.mainInventory) {
                 if (!StackUtil.isEmpty(playerStack) && playerStack.getItem() instanceof IElectricItem) {
-                    output -= (int)ElectricItem.manager.charge(playerStack, (double)output, this.type.tier, false, false);
+                    output -= (int)ElectricItem.manager.charge(playerStack, output, this.type.tier, false, false);
                     if (output <= 0) {
                         return;
                     }
-                    continue;
                 }
             }
         }
         final NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
         byte toggleTimer = nbtData.getByte("toggleTimer");
         boolean ret = false;
-        ElectricItem.manager.charge(stack, (double)output, Integer.MAX_VALUE, true, false);
+        ElectricItem.manager.charge(stack, output, Integer.MAX_VALUE, true, false);
         final int air = player.getAir();
         if (ElectricItem.manager.canUse(stack, 1000.0) && air < 100) {
             player.setAir(air + 200);
             ElectricItem.manager.use(stack, 1000.0, null);
-            ret = true;
         }
         else if (air <= 0) {
             IC2.achievements.issueAchievement(player, "starveWithQHelmet");
@@ -229,21 +211,20 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
         if (ElectricItem.manager.canUse(stack, 1000.0) && player.getFoodStats().needFood()) {
             int slot = -1;
             for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
-                final ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(i);
+                final ItemStack playerStack = player.inventory.mainInventory.get(i);
                 
             }
             if (slot > -1) {
-                ItemStack playerStack2 = (ItemStack)player.inventory.mainInventory.get(slot);
+                ItemStack playerStack2 = player.inventory.mainInventory.get(slot);
                 final ItemTinCan can = (ItemTinCan)playerStack2.getItem();
                 final ActionResult<ItemStack> result = can.onEaten(player, playerStack2);
-                playerStack2 = (ItemStack)result.getResult();
+                playerStack2 = result.getResult();
                 if (StackUtil.isEmpty(playerStack2)) {
-                    player.inventory.mainInventory.set(slot, (ItemStack)StackUtil.emptyStack);
+                    player.inventory.mainInventory.set(slot, StackUtil.emptyStack);
                 }
                 if (result.getType() == EnumActionResult.SUCCESS) {
                     ElectricItem.manager.use(stack, 1000.0, null);
                 }
-                ret = true;
             }
         }
         else if (player.getFoodStats().getFoodLevel() <= 0) {
@@ -262,10 +243,10 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
             if (IC2.platform.isSimulating()) {
                 nbtData.setBoolean("Nightvision", Nightvision);
                 if (Nightvision) {
-                    IC2.platform.messagePlayer(player, "Nightvision enabled.", new Object[0]);
+                    IC2.platform.messagePlayer(player, "Nightvision enabled.");
                 }
                 else {
-                    IC2.platform.messagePlayer(player, "Nightvision disabled.", new Object[0]);
+                    IC2.platform.messagePlayer(player, "Nightvision disabled.");
                 }
             }
         }
@@ -279,37 +260,35 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
             }
             if (IC2.platform.isSimulating()) {
                 nbtData.setShort("HudMode", hubmode);
-                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()), new Object[0]);
+                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
             }
         }
         if (IC2.platform.isSimulating() && toggleTimer > 0) {
-            final NBTTagCompound nbtTagCompound = nbtData;
             final String s = "toggleTimer";
             --toggleTimer;
-            nbtTagCompound.setByte(s, toggleTimer);
+            nbtData.setByte(s, toggleTimer);
         }
-        if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, (EntityLivingBase)player)) {
+        if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
             final BlockPos pos = new BlockPos((int)Math.floor(player.posX), (int)Math.floor(player.posY), (int)Math.floor(player.posZ));
             final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
             if (skylight > 8) {
-                IC2.platform.removePotion((EntityLivingBase)player, MobEffects.NIGHT_VISION);
+                IC2.platform.removePotion(player, MobEffects.NIGHT_VISION);
                
             }
             else {
                
                 player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0, true, true));
             }
-            ret = true;
         }
        
-        for (PotionEffect effect : new LinkedList<PotionEffect>(player.getActivePotionEffects())) {
+        for (PotionEffect effect : new LinkedList<>(player.getActivePotionEffects())) {
             Potion potion = effect.getPotion();
             Integer cost = potionRemovalCost.get(potion);
             if (cost != null) {
-              cost = Integer.valueOf(cost.intValue() * (effect.getAmplifier() + 1));
-              if (ElectricItem.manager.canUse(stack, cost.intValue())) {
-                ElectricItem.manager.use(stack, cost.intValue(), null);
-                IC2.platform.removePotion((EntityLivingBase)player, potion);
+              cost = cost.intValue() * (effect.getAmplifier() + 1);
+              if (ElectricItem.manager.canUse(stack, cost)) {
+                ElectricItem.manager.use(stack, cost, null);
+                IC2.platform.removePotion(player, potion);
               } 
             } 
           } 
@@ -336,14 +315,13 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
             }
             if (!isRemote) {
                 nbt.setByte("hudMode", hubmode);
-                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID((int)hubmode).getTranslationKey()), new Object[0]);
+                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
             }
         }
         if (!isRemote && toggleTimer > 0) {
-            final NBTTagCompound nbtTagCompound = nbt;
             final String s = "toggleTimer";
             --toggleTimer;
-            nbtTagCompound.setByte(s, toggleTimer);
+            nbt.setByte(s, toggleTimer);
         }
         return isRemote;
     }
@@ -368,7 +346,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
     
     public void getSubItems(final CreativeTabs tab, final NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
-            ElectricItemManager.addChargeVariants((Item)this, (List)items);
+            ElectricItemManager.addChargeVariants(this, items);
         }
     }
     
@@ -403,7 +381,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
     }
     
     public void damageArmor(final EntityLivingBase entity, final ItemStack stack, final DamageSource source, final int damage, final int slot) {
-        ElectricItem.manager.discharge(stack, (double)(damage * this.type.energyPerDamage), Integer.MAX_VALUE, true, false, false);
+        ElectricItem.manager.discharge(stack, damage * this.type.energyPerDamage, Integer.MAX_VALUE, true, false, false);
     }
     
     public boolean canProvideEnergy(final ItemStack stack) {
@@ -427,7 +405,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
     }
     
     public HudMode getHudMode(final ItemStack stack) {
-        return HudMode.getFromID((int)StackUtil.getOrCreateNbtData(stack).getByte("hudMode"));
+        return HudMode.getFromID(StackUtil.getOrCreateNbtData(stack).getByte("hudMode"));
     }
     
     static {
@@ -452,7 +430,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
         public final EnumRarity rarity;
         private final String name;
         
-        private SolarHelmetTypes(final EnumRarity rarity, final int dayEU, final int nightEU, final int tier, final double maxCharge, final double transferLimit, final int energyPerDamage, final double damageAbsorptionRatio) {
+        SolarHelmetTypes(final EnumRarity rarity, final int dayEU, final int nightEU, final int tier, final double maxCharge, final double transferLimit, final int energyPerDamage, final double damageAbsorptionRatio) {
             this.name = this.name().toLowerCase(Locale.ENGLISH);
             this.rarity = rarity;
             this.dayEU = dayEU;

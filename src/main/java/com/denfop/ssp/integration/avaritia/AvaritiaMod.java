@@ -1,7 +1,4 @@
 package com.denfop.ssp.integration.avaritia;
-import java.util.Set;
-
-
 
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -15,6 +12,8 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.Set;
+
 
 
 
@@ -22,8 +21,8 @@ public enum AvaritiaMod implements ITeBlock
 //implements ITeBlock
 {
 	
-	neutronium_solar_panel2((Class<? extends TileEntityBlock>)TileEntityNeutroniumSolar.class, 81), 
-    infinity_solar_panel((Class<? extends TileEntityBlock>)TileEntityInfinitySolar.class, 82, EnumRarity.RARE); 
+	neutronium_solar_panel2(TileEntityNeutroniumSolar.class),
+    infinity_solar_panel(TileEntityInfinitySolar.class, 82, EnumRarity.RARE);
      private final Class<? extends TileEntityBlock> teClass2;
     private final int itemMeta;
     private final EnumRarity rarity;
@@ -31,8 +30,8 @@ public enum AvaritiaMod implements ITeBlock
     private static final AvaritiaMod[] VALUES2;
     public static final ResourceLocation IDENTITY2;
     
-    private AvaritiaMod(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
+    AvaritiaMod(final Class<? extends TileEntityBlock> teClass) {
+        this(teClass, 81, EnumRarity.UNCOMMON);
       
     }
     
@@ -44,11 +43,11 @@ public enum AvaritiaMod implements ITeBlock
   
     
     
-    private AvaritiaMod(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
+    AvaritiaMod(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass2= teClass;
         this.itemMeta = itemMeta;
         this.rarity = rarity;
-        GameRegistry.registerTileEntity((Class)teClass, "super_solar_panels:" + this.getName());
+        GameRegistry.registerTileEntity(teClass, "super_solar_panels:" + this.getName());
        
         
     }
@@ -96,7 +95,7 @@ public enum AvaritiaMod implements ITeBlock
     }
     
     public Set<EnumFacing> getSupportedFacings() {
-        return (Set<EnumFacing>)Util.horizontalFacings;
+        return Util.horizontalFacings;
     }
     
     public EnumRarity getRarity() {
@@ -111,7 +110,7 @@ public enum AvaritiaMod implements ITeBlock
         for (final AvaritiaMod block : AvaritiaMod.VALUES2) {
             if (block.teClass2 != null) {
                 try {
-                    block.dummyTe2 = (TileEntityBlock)block.teClass2.newInstance();
+                    block.dummyTe2 = block.teClass2.newInstance();
                 }
                 catch (Exception e) {
                     if (Util.inDev()) {
@@ -145,7 +144,8 @@ public enum AvaritiaMod implements ITeBlock
 
 
 
-	public static void buildItems(Side side) {
+	@SuppressWarnings("EmptyMethod")
+    public static void buildItems(Side side) {
 		// TODO Auto-generated method stub
 		
 	}

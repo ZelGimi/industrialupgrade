@@ -1,29 +1,25 @@
 package com.denfop.ssp.items.armor;
 
+import com.denfop.ssp.Configs;
+import com.denfop.ssp.items.armorbase.ItemLeggins;
+import com.denfop.ssp.keyboard.SSPKeys;
+import ic2.api.item.ElectricItem;
+import ic2.api.item.HudMode;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
 import ic2.core.util.ConfigUtil;
 import ic2.core.util.StackUtil;
-
-import com.denfop.ssp.Configs;
-import com.denfop.ssp.items.armorbase.ItemLeggins;
-import com.denfop.ssp.keyboard.SSPKeys;
-
-import ic2.api.item.ElectricItem;
-import ic2.api.item.HudMode;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.world.World;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public class ItemArmorQuantumLeggins extends ItemLeggins
 {
@@ -77,7 +73,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins
                 return null;
             }
             out = new NBTTagCompound();
-            nbt.setTag("display", (NBTBase)out);
+            nbt.setTag("display", out);
         }
         else {
             out = nbt.getCompoundTag("display");
@@ -104,7 +100,6 @@ public class ItemArmorQuantumLeggins extends ItemLeggins
             if (speedTicker >= 10) {
                 speedTicker = 0;
                 ElectricItem.manager.use(stack, 1000.0, null);
-                ret = true;
             }
             nbtData.setByte("speedTicker", speedTicker);
             float speed = 0.22f;
@@ -129,10 +124,10 @@ public class ItemArmorQuantumLeggins extends ItemLeggins
             if (IC2.platform.isSimulating()) {
                 nbtData.setBoolean("Nightvision", Nightvision);
                 if (Nightvision) {
-                    IC2.platform.messagePlayer(player, "Effects enabled.", new Object[0]);
+                    IC2.platform.messagePlayer(player, "Effects enabled.");
                 }
                 else {
-                    IC2.platform.messagePlayer(player, "Effects disabled.", new Object[0]);
+                    IC2.platform.messagePlayer(player, "Effects disabled.");
                 }
             }
         }
@@ -146,49 +141,29 @@ public class ItemArmorQuantumLeggins extends ItemLeggins
             }
             if (IC2.platform.isSimulating()) {
                 nbtData.setShort("HudMode", hubmode);
-                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()), new Object[0]);
+                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
             }
         }
         if (IC2.platform.isSimulating() && toggleTimer > 0) {
-            final NBTTagCompound nbtTagCompound = nbtData;
             final String s = "toggleTimer";
             --toggleTimer;
-            nbtTagCompound.setByte(s, toggleTimer);
+            nbtData.setByte(s, toggleTimer);
         }
-        if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, (EntityLivingBase)player)) {
+        if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
             final BlockPos pos = new BlockPos((int)Math.floor(player.posX), (int)Math.floor(player.posY), (int)Math.floor(player.posZ));
             final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
-            if (skylight > 8) {
-                
-            	 if (Configs.canCraftHSP) {
-            	        player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 2, true, true));
-            	        } else {
-            	        	return;
-            	        }
-            	        
-            	        if (Configs.canCraftHSH) {
-            	        player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 2, true, true));
-            	        }else {
-            	        	return;
-            	        }
+            if (Configs.canCraftHSP) {
+                   player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 2, true, true));
+                   } else {
+                       return;
+                   }
+            if (Configs.canCraftHSH) {
+            player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 2, true, true));
+            }else {
+                return;
             }
-            else {
-               
-            	 if (Configs.canCraftHSP) {
-            	        player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 2, true, true));
-            	        } else {
-            	        	return;
-            	        }
-            	        
-            	        if (Configs.canCraftHSH) {
-            	        player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 2, true, true));
-            	        }else {
-            	        	return;
-            	        }
-            }  
-            }
-            ret = true;
         }
+    }
         
  
     

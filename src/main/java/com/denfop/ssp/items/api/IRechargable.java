@@ -8,7 +8,7 @@ public interface IRechargable {
   
   EnumChargeDisplay showInHud(ItemStack paramItemStack, EntityLivingBase paramEntityLivingBase);
   
-  public enum EnumChargeDisplay {
-    NEVER, NORMAL, PERIODIC;
+  enum EnumChargeDisplay {
+    NEVER, NORMAL, PERIODIC
   }
 }

@@ -1,43 +1,26 @@
 package com.denfop.ssp;
 
-import com.denfop.ssp.*;
 import com.denfop.ssp.integration.avaritia.TileEntityInfinitySolar;
 import com.denfop.ssp.integration.avaritia.TileEntityNeutroniumSolar;
-import com.denfop.ssp.integration.botania.*;
+import com.denfop.ssp.integration.botania.TileEntityElementiumSolar;
+import com.denfop.ssp.integration.botania.TileEntityManasteelSolar;
+import com.denfop.ssp.integration.botania.TileEntityTerrasteelSolar;
 import com.denfop.ssp.items.battery.ItemBattery;
-import com.denfop.ssp.tiles.*;
+import com.denfop.ssp.tiles.Moonpanel.*;
+import com.denfop.ssp.tiles.Sunpanel.*;
 import com.denfop.ssp.tiles.TileEntityMoonPanel;
 import com.denfop.ssp.tiles.TileEntityRainPanel;
 import com.denfop.ssp.tiles.TileEntitySolarPanel;
 import com.denfop.ssp.tiles.TileEntitySolarPanelsun;
-import com.denfop.ssp.tiles.Moonpanel.*;
-import com.denfop.ssp.tiles.neutronfabricator.*;
 import com.denfop.ssp.tiles.overtimepanel.*;
 import com.denfop.ssp.tiles.rainpanels.*;
-import com.denfop.ssp.tiles.Sunpanel.*;
-import com.denfop.ssp.tiles.TileEntityMoonPanel.SolarConfig;
-import com.denfop.ssp.tiles.TileEntityMoonPanel1;
-import com.denfop.ssp.tiles.Transformer.*;
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
-import java.util.List;
-import org.apache.commons.io.IOUtils;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-
-import com.denfop.ssp.tiles.overtimepanel.*;
-
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
 import java.text.ParseException;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Configs
 {
@@ -295,7 +278,7 @@ public final class Configs
 
         }
         catch (Exception e) {
-            SuperSolarPanels.log.fatal("Fatal error reading config file.", (Throwable)e);
+            SuperSolarPanels.log.fatal("Fatal error reading config file.", e);
             throw new RuntimeException(e);
         }
         finally {
@@ -341,7 +324,7 @@ public final class Configs
             recipes.add(recipe);
             continue;
           } 
-          SuperSolarPanels.log.warn("Skipping line {} as it is has the wrong format (expected length 3, found {})", Integer.valueOf(lineNumber), Integer.valueOf(recipe.parts.length));
+          SuperSolarPanels.log.warn("Skipping line {} as it is has the wrong format (expected length 3, found {})", lineNumber, recipe.parts.length);
         } 
       } catch (IOException e) {
     	  SuperSolarPanels.log.fatal("RIP MT Config!", e);
@@ -350,7 +333,7 @@ public final class Configs
         IOUtils.closeQuietly(reader);
         IOUtils.closeQuietly(stream);
       } 
-      MTRecipes = recipes.<MTRecipe>toArray(new MTRecipe[recipes.size()]);
+      MTRecipes = recipes.toArray(new MTRecipe[ 0 ]);
     }
     
     private static void fillDefault(File config) {

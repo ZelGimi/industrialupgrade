@@ -16,11 +16,13 @@ public class ThaumcraftMain {
 		Scan();
 		Theory();
 	}
-	private static void Scan() {
+	@SuppressWarnings("EmptyMethod")
+    private static void Scan() {
 		// TODO Auto-generated method stub
 		
 	}
-	private static void Theory() {
+	@SuppressWarnings("EmptyMethod")
+    private static void Theory() {
 		// TODO Auto-generated method stub
 		
 	}

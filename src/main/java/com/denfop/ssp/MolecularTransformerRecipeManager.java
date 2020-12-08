@@ -18,7 +18,7 @@ class MolecularTransformerRecipeManager extends MachineRecipeHelper<IMolecularTr
   }
   
   public boolean addRecipe(IRecipeInput input, int totalEU, ItemStack output, boolean replace) {
-    return addRecipe(new IMolecularTransformerRecipeManager.Input(input, totalEU), output, (NBTTagCompound)null, replace);
+    return addRecipe(new IMolecularTransformerRecipeManager.Input(input, totalEU), output, null, replace);
   }
   
   public boolean addRecipe(IMolecularTransformerRecipeManager.Input input, ItemStack output, NBTTagCompound metadata, boolean replace) {
@@ -60,7 +60,7 @@ class MolecularTransformerRecipeManager extends MachineRecipeHelper<IMolecularTr
   }
   
   public int getTotalEUNeeded(ItemStack input) {
-    IMolecularTransformerRecipeManager.Input recipe = (IMolecularTransformerRecipeManager.Input)getRecipe(input).getInput();
+    IMolecularTransformerRecipeManager.Input recipe = getRecipe(input).getInput();
     return (recipe == null) ? -1 : recipe.totalEU;
   }
   

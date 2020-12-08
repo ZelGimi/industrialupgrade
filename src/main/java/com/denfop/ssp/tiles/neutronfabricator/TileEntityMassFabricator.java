@@ -1,7 +1,7 @@
 package com.denfop.ssp.tiles.neutronfabricator;
 
-import ic2.api.energy.tile.IExplosionPowerOverride;
-import ic2.api.recipe.IMachineRecipeManager;
+import com.denfop.ssp.Configs;
+import com.denfop.ssp.fluid.Neutron.FluidRegister;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipeResult;
 import ic2.api.recipe.Recipes;
@@ -12,43 +12,27 @@ import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
-import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.Fluids;
 import ic2.core.block.comp.Redstone;
 import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
-import ic2.core.block.invslot.InvSlotOutput;
-import ic2.core.block.invslot.InvSlotProcessable;
-import ic2.core.block.invslot.InvSlotUpgrade;
+import ic2.core.block.invslot.*;
 import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
-import ic2.core.init.MainConfig;
-import ic2.core.item.type.CraftingItemType;
 import ic2.core.network.GuiSynced;
-import ic2.core.network.NetworkManager;
 import ic2.core.profile.NotClassic;
 import ic2.core.recipe.MatterAmplifierRecipeManager;
-import ic2.core.util.ConfigUtil;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-
-import com.denfop.ssp.Configs;
-import com.denfop.ssp.fluid.Neutron.FluidRegister;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
 @NotClassic
 public class TileEntityMassFabricator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock {
@@ -68,24 +52,20 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
         }
       };
     this.outputSlot = new InvSlotOutput(this, "output", 1);
-    this.containerslot = (InvSlotConsumableLiquid)new InvSlotConsumableLiquidByList(this, "container", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill, new Fluid[] { FluidRegister.Neutron});
+    this.containerslot = new InvSlotConsumableLiquidByList(this, "container", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill, FluidRegister.Neutron);
     this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
-    this.redstone = (Redstone)addComponent((TileEntityComponent)new Redstone((TileEntityBlock)this));
-    this.redstone.subscribe(new Redstone.IRedstoneChangeHandler() {
-          public void onRedstoneChange(int newLevel) {
-            TileEntityMassFabricator.this.energy.setEnabled((newLevel == 0));
-          }
-        });
-    this.fluids = (Fluids)addComponent((TileEntityComponent)new Fluids((TileEntityBlock)this));
-    this.fluidTank = (FluidTank)this.fluids.addTank("fluidTank", 10000, Fluids.fluidPredicate(new Fluid[] {FluidRegister.Neutron }));
+    this.redstone = (Redstone)addComponent((TileEntityComponent)new Redstone(this));
+    this.redstone.subscribe(newLevel -> TileEntityMassFabricator.this.energy.setEnabled((newLevel == 0)));
+    this.fluids = (Fluids)addComponent((TileEntityComponent)new Fluids(this));
+    this.fluidTank = this.fluids.addTank("fluidTank", 10000, Fluids.fluidPredicate(FluidRegister.Neutron));
     this.comparator.setUpdate(() -> {
-          int count = calcRedstoneFromInvSlots(new InvSlot[] { (InvSlot)this.amplifierSlot });
+          int count = calcRedstoneFromInvSlots(this.amplifierSlot);
           return (count > 0) ? count : ((this.scrap > 0) ? 1 : 0);
         });
   }
   
   public static void init() {
-    Recipes.matterAmplifier = (IMachineRecipeManager)new MatterAmplifierRecipeManager();
+    Recipes.matterAmplifier = new MatterAmplifierRecipeManager();
   //  addAmplifier(ItemName.crafting.getItemStack(CraftingItemType.scrap), 1, 5000);
     //addAmplifier(ItemName.crafting.getItemStack(CraftingItemType.scrap_box), 1, 45000);
   }
@@ -99,7 +79,7 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
   }
   
   public static void addAmplifier(IRecipeInput input, int amplification) {
-    Recipes.matterAmplifier.addRecipe(input, Integer.valueOf(amplification), null, false);
+    Recipes.matterAmplifier.addRecipe(input, amplification, null, false);
   }
   
   public void readFromNBT(NBTTagCompound nbt) {
@@ -154,12 +134,12 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
         MachineRecipeResult<IRecipeInput, Integer, ItemStack> recipe = this.amplifierSlot.process();
         if (recipe != null) {
           this.amplifierSlot.consume(recipe);
-          this.scrap += ((Integer)recipe.getOutput()).intValue();
+          this.scrap += recipe.getOutput();
         } 
       } 
       if (this.energy.getEnergy() >= this.energy.getCapacity())
         needsInvUpdate = attemptGeneration(); 
-      needsInvUpdate |= this.containerslot.processFromTank((IFluidTank)this.fluidTank, this.outputSlot);
+      needsInvUpdate |= this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
       this.lastEnergy = this.energy.getEnergy();
       if (needsInvUpdate)
         markDirty(); 
@@ -170,7 +150,7 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
     if (this.scrap > 0)
       return true; 
     MachineRecipeResult<? extends IRecipeInput, ? extends Integer, ? extends ItemStack> recipe = this.amplifierSlot.process();
-    return (recipe != null && ((Integer)recipe.getOutput()).intValue() > 0);
+    return (recipe != null && recipe.getOutput() > 0);
   }
   
   public boolean attemptGeneration() {
@@ -187,12 +167,12 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
   }
   
   public ContainerBase<TileEntityMassFabricator> getGuiContainer(EntityPlayer player) {
-	    return (ContainerBase)new ContainerMatter(player, this);
+	    return new ContainerMatter(player, this);
 	  }
 	  
 	  @SideOnly(Side.CLIENT)
 	  public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-	    return (GuiScreen)new GuiMatter(new ContainerMatter(player, this));
+	    return new GuiMatter(new ContainerMatter(player, this));
 	  }
 	  
   public void onGuiClosed(EntityPlayer player) {}
@@ -200,7 +180,7 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
   private void setState(int aState) {
     this.state = aState;
     if (this.prevState != this.state)
-      ((NetworkManager)IC2.network.get(true)).updateTileEntityField((TileEntity)this, "state"); 
+      IC2.network.get(true).updateTileEntityField(this, "state");
     this.prevState = this.state;
   }
   
@@ -252,11 +232,11 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
   
   public void setUpgradestat() {
     this.upgradeSlot.onChanged();
-    this.energy.setSinkTier(applyModifier(14, this.upgradeSlot.extraTier, 1.0D));
+    this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
   }
   
-  private static int applyModifier(int base, int extra, double multiplier) {
-    double ret = Math.round((base + extra) * multiplier);
+  private static int applyModifier(int extra) {
+    double ret = Math.round((14 + extra) * 1.0);
     return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int)ret;
   }
   

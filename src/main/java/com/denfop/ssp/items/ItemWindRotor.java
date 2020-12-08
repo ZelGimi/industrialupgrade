@@ -1,16 +1,13 @@
 package com.denfop.ssp.items;
 
 
+import com.google.common.base.CaseFormat;
 import ic2.api.item.IKineticRotor;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemGradualInt;
 import ic2.core.profile.NotClassic;
 import ic2.core.ref.ItemName;
-import java.util.List;
-
-import com.google.common.base.CaseFormat;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -22,6 +19,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 @NotClassic
 public class ItemWindRotor extends ItemGradualInt implements IKineticRotor {
   private final int maxWindStrength;
@@ -32,7 +31,7 @@ public class ItemWindRotor extends ItemGradualInt implements IKineticRotor {
   private final ResourceLocation renderTexture;
   private final float efficiency;
 
-private String name;
+private final String name;
   
 
   
@@ -46,7 +45,7 @@ private String name;
     this.renderTexture = RenderTexture;
     this.minWindStrength = minWindStrength;
     this.maxWindStrength = maxWindStrength;
-    ((ItemWindRotor)BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", this.name = name))).setUnlocalizedName(name);
+    BlocksItems.registerItem((Item)this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
     
   }
   public String getUnlocalizedName() {
@@ -54,11 +53,11 @@ private String name;
 	  }
 @SideOnly(Side.CLIENT)
 public void registerModels(ItemName name) {
-  ModelLoader.setCustomModelResourceLocation((Item)this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+  ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
 }
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
-    tooltip.add(Localization.translate("ic2.itemrotor.wind.info", new Object[] { Integer.valueOf(this.minWindStrength), Integer.valueOf(this.maxWindStrength) }));
+    tooltip.add(Localization.translate("ic2.itemrotor.wind.info", this.minWindStrength, this.maxWindStrength));
     IKineticRotor.GearboxType type = null;
     if ((Minecraft.getMinecraft()).currentScreen instanceof ic2.core.block.kineticgenerator.gui.GuiWaterKineticGenerator) {
       type = IKineticRotor.GearboxType.WATER;

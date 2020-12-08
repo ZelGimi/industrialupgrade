@@ -1,12 +1,12 @@
 package com.denfop.ssp.tiles;
 
 
+import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
@@ -16,11 +16,6 @@ import ic2.core.gui.dynamic.GuiParser;
 import ic2.core.gui.dynamic.IGuiValueProvider;
 import ic2.core.init.Localization;
 import ic2.core.network.GuiSynced;
-import java.util.List;
-
-import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
-import com.denfop.ssp.tiles.TileEntitySolarPanel.GenerationState;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,9 +24,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public abstract class TileEntityRainPanel extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider {
   public final int maxStorage;
@@ -50,7 +46,7 @@ public abstract class TileEntityRainPanel extends TileEntityInventory implements
   public int storage;
   
   public enum GenerationState {
-    NONE,  RAIN, DAY, NIGHT;
+    NONE,  RAIN, DAY, NIGHT
   }
   
   public static final class SolarConfig {
@@ -100,7 +96,7 @@ public abstract class TileEntityRainPanel extends TileEntityInventory implements
   protected void onLoaded() {
     super.onLoaded();
     if (!this.world.isRemote) {
-      this.addedToEnet = !MinecraftForge.EVENT_BUS.post((Event)new EnergyTileLoadEvent((IEnergyTile)this));
+      this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
       this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
       this.hasSky = !this.world.provider.isNether();
     } 
@@ -109,7 +105,7 @@ public abstract class TileEntityRainPanel extends TileEntityInventory implements
   protected void onUnloaded() {
     super.onUnloaded();
     if (this.addedToEnet)
-      this.addedToEnet = MinecraftForge.EVENT_BUS.post((Event)new EnergyTileUnloadEvent((IEnergyTile)this)); 
+      this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
   }
   
   public void readFromNBT(NBTTagCompound nbt) {
@@ -183,16 +179,16 @@ public abstract class TileEntityRainPanel extends TileEntityInventory implements
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, tooltip, advanced);
-    tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", new Object[] { Integer.valueOf(this.tier) }));
+    tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", this.tier));
   }
   
   public ContainerBase<? extends TileEntityRainPanel> getGuiContainer(EntityPlayer player) {
-    return (ContainerBase<? extends TileEntityRainPanel>)DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
+    return DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
   }
   
   @SideOnly(Side.CLIENT)
   public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-    return (GuiScreen)BackgroundlessDynamicGUI.create((IInventory)this, player, GuiParser.parse(this.teBlock));
+    return BackgroundlessDynamicGUI.create((IInventory)this, player, GuiParser.parse(this.teBlock));
   }
   
   public void onGuiClosed(EntityPlayer player) {}
@@ -212,15 +208,13 @@ public abstract class TileEntityRainPanel extends TileEntityInventory implements
   }
   
   public String getMaxOutput() {
-    return String.format("%s %.0f %s", new Object[] { Localization.translate("super_solar_panels.gui.maxOutput"), Double.valueOf(EnergyNet.instance.getPowerFromTier(this.tier+1)), Localization.translate("ic2.generic.text.EUt") });
+    return String.format("%s %.0f %s", Localization.translate("super_solar_panels.gui.maxOutput"), EnergyNet.instance.getPowerFromTier(this.tier + 1), Localization.translate("ic2.generic.text.EUt"));
   }
   
   public String getOutput() {
-    switch (this.active) {
-      case RAIN:
-        return String.format("%s %d %s", new Object[] { Localization.translate("super_solar_panels.gui.generating"), Integer.valueOf(this.rainPower), Localization.translate("ic2.generic.text.EUt") });
-      
-    } 
-    return String.format("%s 0 %s", new Object[] { Localization.translate("super_solar_panels.gui.generating"), Localization.translate("ic2.generic.text.EUt") });
+    if (this.active == GenerationState.RAIN) {
+      return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.generating"), Integer.valueOf(this.rainPower), Localization.translate("ic2.generic.text.EUt"));
+    }
+    return String.format("%s 0 %s", Localization.translate("super_solar_panels.gui.generating"), Localization.translate("ic2.generic.text.EUt"));
   }
 }
