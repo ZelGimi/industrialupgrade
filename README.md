@@ -1,2 +1,0 @@
-# supersolarpanels
-1
