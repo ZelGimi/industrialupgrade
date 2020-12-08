@@ -1,4 +1,3 @@
-
 package com.denfop.ssp.items.itembase;
 
 import ic2.api.item.ElectricItem;

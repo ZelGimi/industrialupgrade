@@ -1,4 +1,3 @@
-
 package com.denfop.ssp.tiles.earthpanel;
 
 import com.denfop.ssp.tiles.TileEntityEarthPanel;

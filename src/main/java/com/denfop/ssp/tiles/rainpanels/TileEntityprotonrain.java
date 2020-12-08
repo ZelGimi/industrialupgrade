@@ -1,4 +1,3 @@
-
 package com.denfop.ssp.tiles.rainpanels;
 
 import com.denfop.ssp.tiles.TileEntityMoonPanel;

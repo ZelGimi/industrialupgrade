@@ -1,4 +1,3 @@
-
 package com.denfop.ssp.tiles.airpanel;
 
 import com.denfop.ssp.tiles.TileEntityAirPanel;

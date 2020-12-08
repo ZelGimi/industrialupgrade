@@ -1,4 +1,3 @@
-
 package com.denfop.ssp.integration.avaritia;
 
 import com.denfop.ssp.tiles.TileEntitySolarPanel;
