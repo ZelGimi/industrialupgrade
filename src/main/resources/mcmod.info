@@ -6,20 +6,20 @@
 		"credits": "Created by Chocohead and Denfop(Remastered version), based on SeNtiMeL's versions, which were based on original the mod by Icedfire. Textures by Krezzard. Thanks mak326428 for help with developing in the past.",
 		"dependants": [],
 		"dependencies": [
-			"ic2"
+			"ic2@[2.8.170,)"
 		],
 		"description": "Modern solar panels is a remastered advanced solar panels and  new generation of using solar power. This is addon for IndustrialCraft 2.",
 		"logoFile": "",
 		"mcversion": "1.12.2",
-		"modid": "modern_solar_panels",
-		"name": "Modern Solar Panels",
+		"modid": "Super_solar_panels",
+		"name": "Super Solar Panels",
 		"parent": "",
 		"requiredMods": [
-			"ic2"
+			"ic2@[2.8.170,)"
 		],
 		"screenshots": [],
 		"updateUrl": "",
 		"url": "",
-		"version": "1.0.0"
+		"version": "1.3.0"
 	}
 ]
