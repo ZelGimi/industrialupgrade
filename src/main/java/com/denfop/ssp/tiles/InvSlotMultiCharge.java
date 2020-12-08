@@ -12,7 +12,7 @@ public class InvSlotMultiCharge extends InvSlot implements IChargingSlot
     public final int tier;
 
     public InvSlotMultiCharge(final TileEntityInventory base, final int tier, final int slotNumbers, final InvSlot.Access access) {
-        super((IInventorySlotHolder<?>) base, "charge", access, slotNumbers, InvSlot.InvSide.TOP);
+        super(base, "charge", access, slotNumbers, InvSlot.InvSide.TOP);
         this.tier = tier;
     }
 
