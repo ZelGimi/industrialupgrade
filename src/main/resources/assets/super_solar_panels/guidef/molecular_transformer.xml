@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gui width="220" height="193">
+	<environment name="game">
+		<image x="0" y="0" width="220" height="193" basesize="256" src="super_solar_panels:textures/gui/MolecularTransformer"/>
+		
+		<slot name="input" x="20" y="27" style="plain"/>
+		<gauge name="progress" x="23" y="48" style="progress_molecular_transformer"/>
+		<slot name="output" x="20" y="68" style="plain"/>
+	</environment>
+	<environment name="jei">
+		<image x="-5" y="16" width="170" height="64" u="3" v="12" basesize="256" src="super_solar_panels:textures/gui/MolecularTransformer JEI"/>
+		
+		<slot name="input" x="8" y="22" style="plain"/>
+		<gauge name="progress" x="11" y="43" style="progress_jei_molecular_transformer"/>
+		<slot name="output" x="8" y="57" style="plain"/>
+	</environment>
+	
+	<text y="9" align="center" color="16777215">%name%</text>
+
+	<text x="107" y="26" right="true" color="16777215">{super_solar_panels.gui.input}</text>
+	<text x="107" y="38" right="true" color="16777215">{super_solar_panels.gui.output}</text>
+	<text x="107" y="50" right="true" color="16777215">{super_solar_panels.gui.energyPerOperation}</text>
+	<text x="107" y="62" right="true" color="16777215">{super_solar_panels.gui.energyPerTick}</text>
+	<text x="107" y="74" right="true" color="16777215">{super_solar_panels.gui.progress}</text>
+	
+	<text x="112" y="26" color="16777215">%base.getInput()%</text>
+	<text x="112" y="38" color="16777215">%base.getOutput()%</text>
+	<text x="112" y="50" color="16777215">%base.getEnergyNeeded()%</text>
+	<text x="112" y="62" color="16777215">%base.getEU()%</text>
+	<text x="112" y="74" color="16777215">%base.getPercent()%</text>
+
+	<playerInventory x="18" y="98" spacing="5" hotbaroffset="67" style="plain" title="false"/>
+</gui>

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "super_solar_panels:blocks/spectral_side",
+		"down": "super_solar_panels:blocks/spectral_bottom",
+		"up": "super_solar_panels:blocks/spectral_topmoon",
+		"north": "super_solar_panels:blocks/spectral_side",
+		"east": "super_solar_panels:blocks/spectral_side",
+		"south": "super_solar_panels:blocks/spectral_side",
+		"west": "super_solar_panels:blocks/spectral_side"
+	}
+}

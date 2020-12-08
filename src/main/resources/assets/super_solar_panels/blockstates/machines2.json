@@ -1,0 +1,22 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"type": {
+			"neutronium_solar_panel2": {"model": "super_solar_panels:neutronium_solar_panel2"},
+			"infinity_solar_panel": {"model": "super_solar_panels:infinity_solar_panel"},
+			"manasteel_solar_panel": {"model": "super_solar_panels:manasteel_solar_panel"},
+			"elementium_solar_panel": {"model": "super_solar_panels:elementium_solar_panel"},
+			"terrasteel_solar_panel": {"model": "super_solar_panels:terrasteel_solar_panel"}
+			
+		},
+		"facing": {
+			"down": { "x": 90 },
+			"up": { "x": 270 },
+			"north": { "transform": "forge:default-block" },
+			"south": { "y": 180 },
+			"west": { "y": 270 },
+			"east": { "y": 90 }
+		},
+		"inventory": [{}]
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "super_solar_panels:blocks/Quantum Solar Side",
+		"down": "super_solar_panels:blocks/Quantum Solar Bottom",
+		"up": "super_solar_panels:blocks/Quantum Solar Top",
+		"north": "super_solar_panels:blocks/Quantum Solar Side",
+		"east": "super_solar_panels:blocks/Quantum Solar Side",
+		"south": "super_solar_panels:blocks/Quantum Solar Side",
+		"west": "super_solar_panels:blocks/Quantum Solar Side"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "super_solar_panels:blocks/psp_bottom",
+		"down": "super_solar_panels:blocks/nsp_bottom",
+		"up": "super_solar_panels:blocks/psp_topsun",
+		"north": "super_solar_panels:blocks/psp_bottom",
+		"east": "super_solar_panels:blocks/psp_bottom",
+		"south": "super_solar_panels:blocks/psp_bottom",
+		"west": "super_solar_panels:blocks/psp_bottom"
+	}
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gui width="194" height="168">
+	<image x="0" y="0" width="194" height="168" basesize="256" src="super_solar_panels:textures/gui/AdvancedSolarPanel"/>
+	<text y="7" align="center" color="13487565">%name%</text>
+	
+	<slotgrid y="59" x="17" style="plain" rows="1" spacing="2" name="charge"/>
+	<gauge name="progress" x="19" y="24" style="energy_advanced_solar"/>
+	
+	<only if="moonlight">
+		<image x="24" y="41" width="14" height="14" u="210" v="15" basesize="256" src="super_solar_panels:textures/gui/AdvancedSolarPanel"/>
+	</only>
+	
+	
+	<text x="50" y="22" color="13487565">{super_solar_panels.gui.storage} %base.storage%/%base.maxStorage%</text>
+	<text x="50" y="32" color="13487565">%base.getMaxOutput()%</text>
+	<text x="50" y="42" color="13487565">%base.getOutput()%</text>
+	
+	<playerInventory x="17" y="86" spacing="2" style="plain" title="false"/>
+</gui>
