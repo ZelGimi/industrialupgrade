@@ -1,4 +1,4 @@
-package com.denfop.ssp.fluid.Neutron;
+package com.denfop.ssp.fluid.neutron;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;

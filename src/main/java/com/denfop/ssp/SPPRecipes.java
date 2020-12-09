@@ -1,6 +1,6 @@
 package com.denfop.ssp;
 
-import com.denfop.ssp.fluid.Neutron.FluidRegister;
+import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.items.SSP_Items;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.tiles.SSPBlock;

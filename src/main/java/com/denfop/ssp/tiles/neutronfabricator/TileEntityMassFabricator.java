@@ -1,7 +1,7 @@
 package com.denfop.ssp.tiles.neutronfabricator;
 
 import com.denfop.ssp.Configs;
-import com.denfop.ssp.fluid.Neutron.FluidRegister;
+import com.denfop.ssp.fluid.neutron.FluidRegister;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipeResult;
 import ic2.api.recipe.Recipes;
