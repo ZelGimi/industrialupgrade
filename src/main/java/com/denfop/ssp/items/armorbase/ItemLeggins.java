@@ -22,6 +22,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack {
 	protected final String name;
 
@@ -62,7 +64,7 @@ public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack {
 		return EnumRarity.UNCOMMON;
 	}
 
-	public void onArmorTick(final World world, final EntityPlayer player, final ItemStack stack) {
+	public void onArmorTick(@Nonnull final World world, @Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
 		final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
 		byte toggleTimer = nbt.getByte("toggleTimer");
 

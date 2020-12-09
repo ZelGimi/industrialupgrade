@@ -34,6 +34,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDamageItem, IElectricItem, IItemHudInfo {
@@ -50,11 +51,11 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 	}
 
 	protected ItemElectricTool(String name, int operationEnergyCost, Set<ToolClass> toolClasses, int maxCharge, int transferLimit, int tier) {
-		this(name, operationEnergyCost, HarvestLevel.Iron, toolClasses, new HashSet<>(), maxCharge, transferLimit, tier);
+		this(name, operationEnergyCost, toolClasses, new HashSet<>(), maxCharge, transferLimit, tier);
 	}
 
-	private ItemElectricTool(String name, int operationEnergyCost, HarvestLevel harvestLevel, Set<ToolClass> toolClasses, Set<Block> mineableBlocks, int maxCharge, int transferLimit, int tier) {
-		super(null, (float) 2.0, (float) -3.0, harvestLevel, toolClasses, mineableBlocks);
+	private ItemElectricTool(String name, int operationEnergyCost, Set<ToolClass> toolClasses, Set<Block> mineableBlocks, int maxCharge, int transferLimit, int tier) {
+		super(null, (float) 2.0, (float) -3.0, HarvestLevel.Iron, toolClasses, mineableBlocks);
 		this.operationEnergyCost = operationEnergyCost;
 		setMaxDamage(27);
 		setNoRepair();
@@ -78,17 +79,19 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemElectricTool.name), null));
 	}
 
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float xOffset, float yOffset, float zOffset) {
+	@Nonnull
+	public EnumActionResult onItemUse(@Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing side, float xOffset, float yOffset, float zOffset) {
 		ElectricItem.manager.use(StackUtil.get(player, hand), 0.0D, player);
 		return super.onItemUse(player, world, pos, hand, side, xOffset, yOffset, zOffset);
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ElectricItem.manager.use(StackUtil.get(player, hand), 0.0D, player);
 		return super.onItemRightClick(world, player, hand);
 	}
 
-	public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag) {
+	public void onUpdate(@Nonnull ItemStack itemstack, @Nonnull World world, @Nonnull Entity entity, int i, boolean flag) {
 		boolean isEquipped = (flag && entity instanceof EntityLivingBase);
 		if (IC2.platform.isRendering()) {
 			if (isEquipped && !this.wasEquipped) {
@@ -120,13 +123,13 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 		}
 	}
 
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
 		if (!isInCreativeTab(tab))
 			return;
 		ElectricItemManager.addChargeVariants(this, subItems);
 	}
 
-	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player) {
+	public boolean onDroppedByPlayer(@Nonnull ItemStack item, @Nonnull EntityPlayer player) {
 		removeAudioSource();
 		return true;
 	}
@@ -135,11 +138,11 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 		return false;
 	}
 
-	public boolean isBookEnchantable(ItemStack itemstack1, ItemStack itemstack2) {
+	public boolean isBookEnchantable(@Nonnull ItemStack itemstack1, @Nonnull ItemStack itemstack2) {
 		return false;
 	}
 
-	public void setDamage(ItemStack stack, int damage) {
+	public void setDamage(@Nonnull ItemStack stack, int damage) {
 		int prev = getDamage(stack);
 		if (damage != prev && BaseElectricItem.logIncorrectItemDamaging)
 			IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", damage - prev);
@@ -165,11 +168,11 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 		return null;
 	}
 
-	public boolean hitEntity(ItemStack itemstack, EntityLivingBase entityliving, EntityLivingBase entityliving1) {
+	public boolean hitEntity(@Nonnull ItemStack itemstack, @Nonnull EntityLivingBase entityliving, @Nonnull EntityLivingBase entityliving1) {
 		return true;
 	}
 
-	public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase user) {
+	public boolean onBlockDestroyed(@Nonnull ItemStack stack, @Nonnull World world, IBlockState state, @Nonnull BlockPos pos, @Nonnull EntityLivingBase user) {
 		if (state.getBlockHardness(world, pos) != 0.0F)
 			if (user != null) {
 				ElectricItem.manager.use(stack, this.operationEnergyCost, user);
@@ -183,7 +186,7 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 		return 0;
 	}
 
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
+	public boolean getIsRepairable(@Nonnull ItemStack par1ItemStack, @Nonnull ItemStack par2ItemStack) {
 		return false;
 	}
 

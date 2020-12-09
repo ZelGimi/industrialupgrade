@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class SanariumOre extends Block {
@@ -29,12 +30,12 @@ public class SanariumOre extends Block {
 	}
 
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(@Nonnull Random random) {
 		return 1;
 	}
 
 
-	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+	public int getExpDrop(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, int fortune) {
 		Random rand = (world instanceof World) ? ((World) world).rand : new Random();
 		return MathHelper.getInt(rand, 4, 7);
 	}

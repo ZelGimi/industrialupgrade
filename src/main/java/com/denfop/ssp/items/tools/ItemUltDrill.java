@@ -30,6 +30,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -143,7 +144,7 @@ public class ItemUltDrill extends ItemDrill {
 				this.efficiency = mode.drillSpeed;
 				this.operationEnergyCost = mode.energyCost;
 			}
-			return new ActionResult(EnumActionResult.SUCCESS, stack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
 		return super.onItemRightClick(world, player, hand);
 	}
@@ -157,7 +158,7 @@ public class ItemUltDrill extends ItemDrill {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
+	public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag flag) {
 		tooltip.add(TextFormatting.GOLD + Localization.translate("super_solar_panels.ItemUltDrill.mode", new Object[]{TextFormatting.WHITE + Localization.translate((readDrillMode(stack)).translationName)}));
 	}
 
@@ -165,7 +166,7 @@ public class ItemUltDrill extends ItemDrill {
 		return DrillMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode"));
 	}
 
-	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
+	public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull EntityPlayer player) {
 		World world;
 		if (readDrillMode(stack) == DrillMode.BIG_HOLES && !(world = player.world).isRemote) {
 			Collection<BlockPos> blocks = getBrokenBlocks(player, rayTrace(world, player, true));

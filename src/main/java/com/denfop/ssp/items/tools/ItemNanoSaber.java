@@ -31,6 +31,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemNanoSaber extends ItemElectricTool {
 	public static final int ticker = 4;
 	private final int damage1;
@@ -49,31 +51,32 @@ public class ItemNanoSaber extends ItemElectricTool {
 		this.damage2 = damage2;
 	}
 
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+	@Nonnull
+	public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EntityEquipmentSlot slot, @Nonnull ItemStack stack) {
 		if (slot != EntityEquipmentSlot.MAINHAND)
 			return super.getAttributeModifiers(slot, stack);
 		int dmg = damage2;
 		if (ElectricItem.manager.canUse(stack, 400.0D) && isActive(stack))
 			dmg = damage1;
-		HashMultimap hashMultimap = HashMultimap.create();
+		HashMultimap<String, AttributeModifier> hashMultimap = HashMultimap.create();
 		hashMultimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0));
 		hashMultimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(Item.ATTACK_DAMAGE_MODIFIER, "Tool modifier", dmg, 0));
-		return (Multimap<String, AttributeModifier>) hashMultimap;
+		return hashMultimap;
 	}
 
-	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
+	public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull EntityPlayer player) {
 		if (isActive(stack))
 			drainSaber(stack, 80.0D, player);
 		return false;
 	}
 
-	public boolean onEntitySwing(EntityLivingBase entity, ItemStack stack) {
+	public boolean onEntitySwing(@Nonnull EntityLivingBase entity, @Nonnull ItemStack stack) {
 		if (IC2.platform.isRendering() && isActive(stack))
 			IC2.audioManager.playOnce(entity, PositionSpec.Hand, getRandomSwingSound(), true, IC2.audioManager.getDefaultVolume());
 		return false;
 	}
 
-	public boolean canDestroyBlockInCreative(World world, BlockPos pos, ItemStack stack, EntityPlayer player) {
+	public boolean canDestroyBlockInCreative(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull ItemStack stack, @Nonnull EntityPlayer player) {
 		return false;
 	}
 
@@ -123,23 +126,24 @@ public class ItemNanoSaber extends ItemElectricTool {
 		return 1.0F;
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack stack = StackUtil.get(player, hand);
 		if (world.isRemote)
-			return new ActionResult(EnumActionResult.PASS, stack);
+			return new ActionResult<>(EnumActionResult.PASS, stack);
 		NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
 		if (isActive(nbt)) {
 			setActive(nbt, false);
-			return new ActionResult(EnumActionResult.SUCCESS, stack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
 		if (ElectricItem.manager.canUse(stack, 32.0D)) {
 			setActive(nbt, true);
-			return new ActionResult(EnumActionResult.SUCCESS, stack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
 		return super.onItemRightClick(world, player, hand);
 	}
 
-	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean par5) {
+	public void onUpdate(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
 		super.onUpdate(stack, world, entity, slot, (par5 && isActive(stack)));
 		if (!isActive(stack))
 			return;
@@ -159,7 +163,7 @@ public class ItemNanoSaber extends ItemElectricTool {
 		return "Tools/Nanosabre/NanosabrePowerup.ogg";
 	}
 
-	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase source) {
+	public boolean hitEntity(@Nonnull ItemStack stack, @Nonnull EntityLivingBase target, @Nonnull EntityLivingBase source) {
 		if (!isActive(stack))
 			return true;
 		if (IC2.platform.isSimulating()) {

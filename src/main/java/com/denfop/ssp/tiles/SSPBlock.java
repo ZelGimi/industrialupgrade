@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 public enum SSPBlock implements ITeBlock {
@@ -126,10 +127,12 @@ public enum SSPBlock implements ITeBlock {
 
 	}
 
+	@Override
 	public String getName() {
 		return this.name();
 	}
 
+	@Override
 	public int getId() {
 		return this.itemMeta;
 	}
@@ -152,14 +155,18 @@ public enum SSPBlock implements ITeBlock {
 		}
 	}
 
+	@Override
+	@Nonnull
 	public ResourceLocation getIdentifier() {
 		return SSPBlock.IDENTITY;
 	}
 
+	@Override
 	public boolean hasItem() {
 		return true;
 	}
 
+	@Override
 	public Class<? extends TileEntityBlock> getTeClass() {
 		return this.teClass;
 	}
@@ -170,34 +177,46 @@ public enum SSPBlock implements ITeBlock {
 		return false;
 	}
 
+	@Override
+	@Nonnull
 	public Set<EnumFacing> getSupportedFacings() {
 		return Util.horizontalFacings;
 	}
 
+	@Override
 	public float getHardness() {
 		return 3.0f;
 	}
 
+	@Override
 	public float getExplosionResistance() {
 		return 0.0f;
 	}
 
+	@Override
+	@Nonnull
 	public TeBlock.HarvestTool getHarvestTool() {
 		return TeBlock.HarvestTool.Pickaxe;
 	}
 
+	@Override
+	@Nonnull
 	public TeBlock.DefaultDrop getDefaultDrop() {
 		return TeBlock.DefaultDrop.Self;
 	}
 
+	@Override
+	@Nonnull
 	public EnumRarity getRarity() {
 		return this.rarity;
 	}
 
+	@Override
 	public boolean allowWrenchRotating() {
 		return false;
 	}
 
+	@Override
 	public TileEntityBlock getDummyTe() {
 		return this.dummyTe;
 	}

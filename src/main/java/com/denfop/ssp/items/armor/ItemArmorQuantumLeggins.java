@@ -21,6 +21,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class ItemArmorQuantumLeggins extends ItemLeggins {
 	protected static final int DEFAULT_COLOUR = -1;
 
@@ -105,7 +107,6 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 			if (Configs.canCraftHSH) {
 				player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 2, true, true));
 			} else {
-				return;
 			}
 		}
 	}
@@ -222,8 +223,9 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 		}
 	}
 
+	@Nonnull
 	@Override
-	public EnumRarity getRarity(final ItemStack stack) {
+	public EnumRarity getRarity(@Nonnull final ItemStack stack) {
 		return EnumRarity.EPIC;
 	}
 }

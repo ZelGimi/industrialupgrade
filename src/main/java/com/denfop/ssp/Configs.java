@@ -335,6 +335,7 @@ public final class Configs {
 		MTRecipes = recipes.toArray(new MTRecipe[0]);
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private static void fillDefault(File config) {
 		FileOutputStream stream = null;
 		BufferedWriter writer = null;

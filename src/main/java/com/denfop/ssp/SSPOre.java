@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class SSPOre extends Block {
@@ -32,17 +33,17 @@ public class SSPOre extends Block {
 	// return ItemReg.LIRIUM;
 	//}
 
-	public int quantityDropped(Random random) {
+	public int quantityDropped(@Nonnull Random random) {
 		return 1;
 	}
 
-	public int quantityDroppedWithBonus(int fortune, Random random) {
+	public int quantityDroppedWithBonus(int fortune, @Nonnull Random random) {
 		if (fortune > 0)
 			return quantityDropped(random) + random.nextInt(fortune);
 		return quantityDropped(random);
 	}
 
-	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+	public int getExpDrop(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, int fortune) {
 		Random rand = (world instanceof World) ? ((World) world).rand : new Random();
 		return MathHelper.getInt(rand, 4, 7);
 	}

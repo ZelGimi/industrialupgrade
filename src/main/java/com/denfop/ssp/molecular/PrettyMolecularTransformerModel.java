@@ -5,6 +5,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
+import javax.annotation.Nonnull;
+
 public class PrettyMolecularTransformerModel extends ModelBase {
 	final ModelRenderer coreBottom;
 
@@ -97,7 +99,7 @@ public class PrettyMolecularTransformerModel extends ModelBase {
 		model.rotateAngleZ = (float) 0.0;
 	}
 
-	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void render(@Nonnull Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		super.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 		setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
 		this.coreBottom.render(scale);

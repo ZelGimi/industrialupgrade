@@ -25,11 +25,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IBoostingJetpack {
 	protected final String name;
@@ -67,23 +68,24 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 		return "ssp." + super.getUnlocalizedName().substring(4);
 	}
 
-	public EnumRarity getRarity(ItemStack stack) {
+	@Nonnull
+	public EnumRarity getRarity(@Nonnull ItemStack stack) {
 		return EnumRarity.UNCOMMON;
 	}
 
-	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+	public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
 		NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
 		byte toggleTimer = nbt.getByte("toggleTimer");
 		if (com.denfop.ssp.keyboard.SSPKeys.isFlyKeyDown(player) && toggleTimer == 0) {
 			nbt.setByte("toggleTimer", toggleTimer = 10);
-			if (!world.isRemote) {
+			/*if (!world.isRemote) {
 				String mode;
 				if (switchJetpack(stack)) {
 					mode = TextFormatting.DARK_GREEN + Localization.translate("gravisuite.message.on");
 				} else {
 					mode = TextFormatting.DARK_RED + Localization.translate("gravisuite.message.off");
 				}
-			}
+			}*/
 		}
 		if (toggleTimer > 0 && !isJetpackOn(stack)) {
 			toggleTimer = (byte) (toggleTimer - 1);
@@ -128,7 +130,6 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 			if (Configs.canCraftDoubleSlabs) {
 				player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0, true, true));
 			} else {
-				return;
 			}
 		}
 	}

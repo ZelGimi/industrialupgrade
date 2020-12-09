@@ -19,6 +19,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class ItemArmorQuantumBoosts extends ItemBoosts {
 	protected static final int DEFAULT_COLOUR = -1;
 
@@ -107,7 +109,6 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 			if (Configs.canCraftASH) {
 				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 300, 4, true, true));
 			} else {
-				return;
 			}
 		}
 	}
@@ -169,16 +170,16 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 		return 20000;
 	}
 
-	public boolean hasColor(ItemStack stack) {
+	public boolean hasColor(@Nonnull ItemStack stack) {
 		return (getColor(stack) != -1);
 	}
 
-	public int getColor(ItemStack stack) {
+	public int getColor(@Nonnull ItemStack stack) {
 		NBTTagCompound nbt = getDisplayNbt(stack, false);
 		return (nbt == null || !nbt.hasKey("colour", 3)) ? -1 : nbt.getInteger("colour");
 	}
 
-	public void removeColor(ItemStack stack) {
+	public void removeColor(@Nonnull ItemStack stack) {
 		NBTTagCompound nbt = getDisplayNbt(stack, false);
 		if (nbt == null || !nbt.hasKey("colour", 3))
 			return;
@@ -187,7 +188,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 			stack.getTagCompound().removeTag("display");
 	}
 
-	public void setColor(ItemStack stack, int colour) {
+	public void setColor(@Nonnull ItemStack stack, int colour) {
 		getDisplayNbt(stack, true).setInteger("colour", colour);
 	}
 
@@ -210,7 +211,8 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 		return out;
 	}
 
-	public EnumRarity getRarity(ItemStack stack) {
+	@Nonnull
+	public EnumRarity getRarity(@Nonnull ItemStack stack) {
 		return EnumRarity.EPIC;
 	}
 }

@@ -42,7 +42,7 @@ public class MolecularTransformerRecipeManager extends MachineRecipeHelper<IMole
 				return false;
 			}
 		}
-		MachineRecipe<IMolecularTransformerRecipeManager.Input, ItemStack> recipe = new MachineRecipe(input, output.copy(), metadata);
+		MachineRecipe<IMolecularTransformerRecipeManager.Input, ItemStack> recipe = new MachineRecipe<>(input, output.copy(), metadata);
 		this.recipes.put(input, recipe);
 		addToCache(recipe);
 		return true;

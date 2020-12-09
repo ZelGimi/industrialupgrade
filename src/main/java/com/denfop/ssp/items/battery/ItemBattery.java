@@ -19,6 +19,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemBattery extends BaseElectricItem {
 	private static final int maxLevel = 4;
 	private final String name;
@@ -43,10 +45,11 @@ public class ItemBattery extends BaseElectricItem {
 		return true;
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	@Nonnull
+	public ActionResult<ItemStack> onItemRightClick(World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack stack = StackUtil.get(player, hand);
 		if (world.isRemote || StackUtil.getSize(stack) != 1)
-			return new ActionResult(EnumActionResult.PASS, stack);
+			return new ActionResult<>(EnumActionResult.PASS, stack);
 		if (ElectricItem.manager.getCharge(stack) > 0.0D) {
 			boolean transferred = false;
 			for (int i = 0; i < 9; i++) {
@@ -66,6 +69,6 @@ public class ItemBattery extends BaseElectricItem {
 			if (transferred && !world.isRemote)
 				player.openContainer.detectAndSendChanges();
 		}
-		return new ActionResult(EnumActionResult.SUCCESS, stack);
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 }

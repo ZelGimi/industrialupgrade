@@ -73,8 +73,8 @@ public final class SSPKeys extends Keyboard {
 		}
 
 		private Keyboard.Key addKey(final String name) {
-			final Keyboard.Key key = (Keyboard.Key) EnumHelper.addEnum((Class) Keyboard.Key.class, name, new Class[0], new Object[0]);
-			ReflectionUtil.setValue(null, getKeysField(), ArrayUtils.add(Key.keys, (Object) key));
+			final Keyboard.Key key = EnumHelper.addEnum(Key.class, name, new Class[0]);
+			ReflectionUtil.setValue(null, getKeysField(), ArrayUtils.add(Key.keys, key));
 			return key;
 		}
 

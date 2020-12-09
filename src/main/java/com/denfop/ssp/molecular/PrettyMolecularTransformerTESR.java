@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -34,7 +35,7 @@ public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<Ti
 	private static final ResourceLocation transfTextloc = new ResourceLocation("super_solar_panels", "textures/models/textureMolecularTransformer.png");
 	private static final ResourceLocation plazmaTextloc = new ResourceLocation("super_solar_panels", "textures/models/plazma.png");
 	private static final ResourceLocation particlesTextloc = new ResourceLocation("super_solar_panels", "textures/models/particles.png");
-	private static final TObjectIntMap<List<Serializable>> textureSizeCache = (TObjectIntMap<List<Serializable>>) new TObjectIntHashMap();
+	private static final TObjectIntMap<List<Serializable>> textureSizeCache = new TObjectIntHashMap<>();
 	private static final IResourceManager resources = Minecraft.getMinecraft().getResourceManager();
 	public int ticker;
 
@@ -48,7 +49,7 @@ public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<Ti
 		return tile.getWorld().getCombinedLight(tile.getPos(), lightValue);
 	}
 
-	public void render(TileEntityMolecularAssembler tileTransformer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void render(@Nonnull TileEntityMolecularAssembler tileTransformer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		if (destroyStage >= 0) {

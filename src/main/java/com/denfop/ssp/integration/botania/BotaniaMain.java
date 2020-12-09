@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 
@@ -18,7 +19,7 @@ public enum BotaniaMain implements ITeBlock
 //implements ITeBlock
 {
 
-	manasteel_solar_panel(TileEntityManasteelSolar.class),
+	manasteel_solar_panel(),
 	elementium_solar_panel(TileEntityElementiumSolar.class, 72, EnumRarity.RARE),
 	terrasteel_solar_panel(TileEntityTerrasteelSolar.class, 73, EnumRarity.EPIC);
 	public static final ResourceLocation IDENTITY1;
@@ -35,8 +36,8 @@ public enum BotaniaMain implements ITeBlock
 	private TileEntityBlock dummyTe1;
 
 
-	BotaniaMain(final Class<? extends TileEntityBlock> teClass) {
-		this(teClass, 71, EnumRarity.UNCOMMON);
+	BotaniaMain() {
+		this(TileEntityManasteelSolar.class, 71, EnumRarity.UNCOMMON);
 
 	}
 
@@ -49,10 +50,12 @@ public enum BotaniaMain implements ITeBlock
 
 	}
 
+	@Override
 	public String getName() {
 		return this.name();
 	}
 
+	@Override
 	public int getId() {
 		return this.itemMeta;
 	}
@@ -75,14 +78,18 @@ public enum BotaniaMain implements ITeBlock
 		}
 	}
 
+	@Override
+	@Nonnull
 	public ResourceLocation getIdentifier() {
 		return BotaniaMain.IDENTITY1;
 	}
 
+	@Override
 	public boolean hasItem() {
 		return true;
 	}
 
+	@Override
 	public Class<? extends TileEntityBlock> getTeClass() {
 		return this.teClass1;
 	}
@@ -93,34 +100,46 @@ public enum BotaniaMain implements ITeBlock
 		return false;
 	}
 
+	@Override
+	@Nonnull
 	public Set<EnumFacing> getSupportedFacings() {
 		return Util.horizontalFacings;
 	}
 
+	@Override
 	public float getHardness() {
 		return 3.0f;
 	}
 
+	@Override
 	public float getExplosionResistance() {
 		return 0.0f;
 	}
 
+	@Override
+	@Nonnull
 	public TeBlock.HarvestTool getHarvestTool() {
 		return TeBlock.HarvestTool.Pickaxe;
 	}
 
+	@Override
+	@Nonnull
 	public TeBlock.DefaultDrop getDefaultDrop() {
 		return TeBlock.DefaultDrop.Self;
 	}
 
+	@Override
+	@Nonnull
 	public EnumRarity getRarity() {
 		return this.rarity;
 	}
 
+	@Override
 	public boolean allowWrenchRotating() {
 		return false;
 	}
 
+	@Override
 	public TileEntityBlock getDummyTe() {
 		return this.dummyTe1;
 	}

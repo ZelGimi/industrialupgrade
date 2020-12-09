@@ -20,6 +20,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Queue;
@@ -62,10 +63,11 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 			if (!heatRun) {
 				for (int i = 0; i < pulses; i++)
 					acceptUraniumPulse(stack, reactor, stack, x, y, x, y, heatRun);
-				pulses += checkPulseable(reactor, x - 1, y, stack, x, y, heatRun) +
+					/*	pulses += checkPulseable(reactor, x - 1, y, stack, x, y, heatRun) +
 						checkPulseable(reactor, x + 1, y, stack, x, y, heatRun) +
 						checkPulseable(reactor, x, y - 1, stack, x, y, heatRun) +
 						checkPulseable(reactor, x, y + 1, stack, x, y, heatRun);
+						*/
 			} else {
 				pulses += checkPulseable(reactor, x - 1, y, stack, x, y, heatRun) +
 						checkPulseable(reactor, x + 1, y, stack, x, y, heatRun) +
@@ -149,7 +151,7 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 		return (2 * this.numberOfCells);
 	}
 
-	public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
+	public void onUpdate(@Nonnull ItemStack stack, @Nonnull World world, @Nonnull Entity entity, int slotIndex, boolean isCurrentItem) {
 		if (entity instanceof EntityLivingBase) {
 			EntityLivingBase entityLiving = (EntityLivingBase) entity;
 			if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving))
@@ -157,7 +159,7 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 		}
 	}
 
-	public int getMetadata(ItemStack stack) {
+	public int getMetadata(@Nonnull ItemStack stack) {
 		return (getCustomDamage(stack) > 0) ? 1 : 0;
 	}
 

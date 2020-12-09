@@ -37,6 +37,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -72,40 +73,45 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		return "super_solar_panels." + super.getUnlocalizedName().substring(5);
 	}
 
-	public String getUnlocalizedName(final ItemStack stack) {
-		return this.getUnlocalizedName();
-	}
-
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModels(final ItemName name) {
 		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.type.getName()), null));
+	}
+
+	@Override
+	@Nonnull
+	public String getUnlocalizedName(@Nonnull final ItemStack stack) {
+		return this.getUnlocalizedName();
+	}
+
+	@Override
+	public boolean isMetalArmor(final ItemStack stack, final EntityPlayer player) {
+		return true;
 	}
 
 	public boolean canBeDyed() {
 		return this.type != SolarHelmetTypes.Spectral;
 	}
 
-	public String getItemStackDisplayName(final ItemStack stack) {
-		return Localization.translate(this.getUnlocalizedName(stack));
-	}
-
-	public boolean isMetalArmor(final ItemStack stack, final EntityPlayer player) {
-		return true;
-	}
-
+	@Override
 	public int getItemEnchantability() {
 		return 0;
 	}
 
-	public int getMetadata(final ItemStack stack) {
-		return 0;
+	@Override
+	@Nonnull
+	public String getItemStackDisplayName(@Nonnull final ItemStack stack) {
+		return Localization.translate(this.getUnlocalizedName(stack));
 	}
 
-	public boolean hasColor(final ItemStack stack) {
+	@Override
+	public boolean hasColor(@Nonnull final ItemStack stack) {
 		return this.getColor(stack) != -1;
 	}
 
-	public int getColor(final ItemStack stack) {
+	@Override
+	public int getColor(@Nonnull final ItemStack stack) {
 		final NBTTagCompound nbt = this.getDisplayNbt(stack, false);
 		if (nbt == null || !nbt.hasKey("colour", 3)) {
 			return -1;
@@ -113,7 +119,8 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		return nbt.getInteger("colour");
 	}
 
-	public void removeColor(final ItemStack stack) {
+	@Override
+	public void removeColor(@Nonnull final ItemStack stack) {
 		final NBTTagCompound nbt = this.getDisplayNbt(stack, false);
 		if (nbt == null || !nbt.hasKey("colour", 3)) {
 			return;
@@ -124,15 +131,49 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		}
 	}
 
-	public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
-		return "super_solar_panels:textures/armour/" + this.type.getName() + ((type != null) ? "Overlay" : "") + ".png";
+	@Override
+	public int getMetadata(@Nonnull final ItemStack stack) {
+		return 0;
 	}
 
-	public void setColor(final ItemStack stack, final int colour) {
+	@Override
+	public void setColor(@Nonnull final ItemStack stack, final int colour) {
 		this.getDisplayNbt(stack, true).setInteger("colour", colour);
 	}
 
-	public boolean getIsRepairable(final ItemStack toRepair, final ItemStack repair) {
+	@Override
+	public boolean getIsRepairable(@Nonnull final ItemStack toRepair, @Nonnull final ItemStack repair) {
+		return false;
+	}
+
+	@Override
+	public ISpecialArmor.ArmorProperties getProperties(final EntityLivingBase player, @Nonnull final ItemStack armour, final DamageSource source, final double damage, final int slot) {
+		if (source.isUnblockable()) {
+			return new ISpecialArmor.ArmorProperties(0, 0.0, 0);
+		}
+		return new ISpecialArmor.ArmorProperties(0, 0.15 * this.type.damageAbsorptionRatio, (int) (25.0 * ElectricItem.manager.getCharge(armour) / this.type.energyPerDamage));
+	}
+
+	@Override
+	public int getArmorDisplay(final EntityPlayer player, @Nonnull final ItemStack armour, final int slot) {
+		if (ElectricItem.manager.getCharge(armour) >= this.type.energyPerDamage) {
+			return (int) Math.round(3.0 * this.type.damageAbsorptionRatio);
+		}
+		return 0;
+	}
+
+	@Override
+	public String getArmorTexture(@Nonnull final ItemStack stack, @Nonnull final Entity entity, @Nonnull final EntityEquipmentSlot slot, @Nonnull final String type) {
+		return "super_solar_panels:textures/armour/" + this.type.getName() + ((type != null) ? "Overlay" : "") + ".png";
+	}
+
+	@Override
+	public void damageArmor(final EntityLivingBase entity, @Nonnull final ItemStack stack, final DamageSource source, final int damage, final int slot) {
+		ElectricItem.manager.discharge(stack, damage * this.type.energyPerDamage, Integer.MAX_VALUE, true, false, false);
+	}
+
+	@Override
+	public boolean canProvideEnergy(final ItemStack stack) {
 		return false;
 	}
 
@@ -159,33 +200,33 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 
 	}
 
-	public ISpecialArmor.ArmorProperties getProperties(final EntityLivingBase player, final ItemStack armour, final DamageSource source, final double damage, final int slot) {
-		if (source.isUnblockable()) {
-			return new ISpecialArmor.ArmorProperties(0, 0.0, 0);
-		}
-		return new ISpecialArmor.ArmorProperties(0, 0.15 * this.type.damageAbsorptionRatio, (int) (25.0 * ElectricItem.manager.getCharge(armour) / this.type.energyPerDamage));
-	}
-
-	public int getArmorDisplay(final EntityPlayer player, final ItemStack armour, final int slot) {
-		if (ElectricItem.manager.getCharge(armour) >= this.type.energyPerDamage) {
-			return (int) Math.round(3.0 * this.type.damageAbsorptionRatio);
-		}
-		return 0;
-	}
-
-	public void damageArmor(final EntityLivingBase entity, final ItemStack stack, final DamageSource source, final int damage, final int slot) {
-		ElectricItem.manager.discharge(stack, damage * this.type.energyPerDamage, Integer.MAX_VALUE, true, false, false);
-	}
-
-	public boolean canProvideEnergy(final ItemStack stack) {
-		return false;
-	}
-
+	@Override
 	public double getMaxCharge(final ItemStack stack) {
 		return this.type.maxCharge;
 	}
 
-	public void onArmorTick(final World world, EntityPlayer player, final ItemStack stack) {
+	@Override
+	public int getTier(final ItemStack stack) {
+		return this.type.tier;
+	}
+
+	@Override
+	public double getTransferLimit(final ItemStack stack) {
+		return this.type.transferLimit;
+	}
+
+	@Override
+	public boolean doesProvideHUD(final ItemStack stack) {
+		return ElectricItem.manager.getCharge(stack) > 0.0;
+	}
+
+	@Override
+	public HudMode getHudMode(final ItemStack stack) {
+		return HudMode.getFromID(StackUtil.getOrCreateNbtData(stack).getByte("hudMode"));
+	}
+
+	@Override
+	public void onArmorTick(final World world, @Nonnull EntityPlayer player, @Nonnull final ItemStack stack) {
 		if (this.HUDstuff(world.isRemote, player, stack)) {
 			return;
 		}
@@ -339,13 +380,6 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		//   IC2.platform.removePotion((EntityLivingBase)player, MobEffects.POISON);
 	}
 
-	public int getTier(final ItemStack stack) {
-		return this.type.tier;
-	}
-
-	public double getTransferLimit(final ItemStack stack) {
-		return this.type.transferLimit;
-	}
 
 	protected boolean HUDstuff(final boolean isRemote, final EntityPlayer player, final ItemStack stack) {
 		final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
@@ -371,13 +405,6 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		return isRemote;
 	}
 
-	public boolean doesProvideHUD(final ItemStack stack) {
-		return ElectricItem.manager.getCharge(stack) > 0.0;
-	}
-
-	public HudMode getHudMode(final ItemStack stack) {
-		return HudMode.getFromID(StackUtil.getOrCreateNbtData(stack).getByte("hudMode"));
-	}
 
 	protected int tickRate() {
 		return 128;
@@ -435,13 +462,16 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		}
 	}
 
-	public void getSubItems(final CreativeTabs tab, final NonNullList<ItemStack> items) {
+	@Override
+	public void getSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
 		if (this.isInCreativeTab(tab)) {
 			ElectricItemManager.addChargeVariants(this, items);
 		}
 	}
 
-	public EnumRarity getRarity(final ItemStack stack) {
+	@Override
+	@Nonnull
+	public EnumRarity getRarity(@Nonnull final ItemStack stack) {
 		return this.type.rarity;
 	}
 

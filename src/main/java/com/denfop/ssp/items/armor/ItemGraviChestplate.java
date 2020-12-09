@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 	protected static final int DEFAULT_COLOUR = -1;
 
@@ -23,11 +25,12 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 		return "super_solar_panels:textures/armour/" + this.name + ((type != null) ? "Overlay" : "") + ".png";
 	}
 
-	public EnumRarity getRarity(ItemStack stack) {
+	@Nonnull
+	public EnumRarity getRarity(@Nonnull ItemStack stack) {
 		return EnumRarity.EPIC;
 	}
 
-	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+	public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
 		super.onArmorTick(world, player, stack);
 		player.extinguish();
 	}
@@ -89,16 +92,16 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 		return 20000;
 	}
 
-	public boolean hasColor(ItemStack stack) {
+	public boolean hasColor(@Nonnull ItemStack stack) {
 		return (getColor(stack) != -1);
 	}
 
-	public int getColor(ItemStack stack) {
+	public int getColor(@Nonnull ItemStack stack) {
 		NBTTagCompound nbt = getDisplayNbt(stack, false);
 		return (nbt == null || !nbt.hasKey("colour", 3)) ? -1 : nbt.getInteger("colour");
 	}
 
-	public void removeColor(ItemStack stack) {
+	public void removeColor(@Nonnull ItemStack stack) {
 		NBTTagCompound nbt = getDisplayNbt(stack, false);
 		if (nbt == null || !nbt.hasKey("colour", 3))
 			return;
@@ -107,7 +110,7 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 			stack.getTagCompound().removeTag("display");
 	}
 
-	public void setColor(ItemStack stack, int colour) {
+	public void setColor(@Nonnull ItemStack stack, int colour) {
 		getDisplayNbt(stack, true).setInteger("colour", colour);
 	}
 
