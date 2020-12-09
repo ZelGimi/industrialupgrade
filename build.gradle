@@ -68,6 +68,10 @@ minecraft {
     }
 }
 
+repositories {
+    flatDir name: 'libs', dirs: "$projectDir/libs"
+}
+
 dependencies {
     minecraft([
             group  : "net.minecraftforge",
@@ -75,7 +79,13 @@ dependencies {
             version: "${minecraft_version}-${forge_version}"
     ])
 
-    compileOnly fileTree('deps') { include '*.jar'}
+    implementation fg.deobf(name: 'Botania-r1.10-361')
+    compileOnly    fg.deobf(name: 'industrialcraft-2-2.8.193-ex112-dev')
+    runtimeOnly    fg.deobf(name: 'industrialcraft-2-2.8.221-ex112')
+    implementation fg.deobf(name: 'jei_1.12.2-4.15.0.296')
+    implementation fg.deobf(name: 'Thaumcraft-1.12.2-6.1.BETA26')
+    implementation fg.deobf(name: 'WSP-1.12.2-0.8')
+    runtimeOnly    fg.deobf(name: 'Baubles-1.12-1.5.2')
 }
 
 processResources {
