@@ -8,13 +8,13 @@ import com.denfop.ssp.integration.botania.BotaniaItems;
 import com.denfop.ssp.integration.botania.BotaniaMain;
 import com.denfop.ssp.integration.botania.BotaniaRecipes;
 import com.denfop.ssp.integration.thaumcraft.ThaumcraftMain;
-import com.denfop.ssp.integration.wirelesssolarpanel.SWSP_Recipes;
-import com.denfop.ssp.items.SSP_Items;
+import com.denfop.ssp.integration.wirelesssolarpanel.SWSPRecipes;
+import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.denfop.ssp.proxy.CommonProxy;
 import com.denfop.ssp.tiles.SSPBlock;
-import com.denfop.ssp.tiles.TileEntityMolecularAssembler;
+import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
 import ic2.api.event.TeBlockFinalCallEvent;
 import ic2.core.block.BlockTileEntity;
 import ic2.core.block.TeBlockRegistry;
@@ -94,9 +94,9 @@ public final class SuperSolarPanels {
     public static void doColourThings(final ColorHandlerEvent.Item event) {
         final ItemColors colours = event.getItemColors();
         final IItemColor armourColouring = (IItemColor) ((Map) ReflectionUtil.getFieldValue(ReflectionUtil.getField(ItemColors.class, Map.class), colours)).get(Items.LEATHER_BOOTS.delegate);
-        colours.registerItemColorHandler(armourColouring, SSP_Items.Spectral_SOLAR_HELMET.getInstance());
-        colours.registerItemColorHandler(armourColouring, SSP_Items.Singular_SOLAR_HELMET.getInstance());
-        colours.registerItemColorHandler(armourColouring, SSP_Items.HYBRID_SOLAR_HELMET.getInstance(), SSP_Items.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance());
+        colours.registerItemColorHandler(armourColouring, SSPItems.SPECTRAL_SOLAR_HELMET.getInstance());
+        colours.registerItemColorHandler(armourColouring, SSPItems.SINGULAR_SOLAR_HELMET.getInstance());
+        colours.registerItemColorHandler(armourColouring, SSPItems.HYBRID_SOLAR_HELMET.getInstance(), SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance());
 
     }
 
@@ -127,33 +127,33 @@ public final class SuperSolarPanels {
         SuperSolarPanels.machines = TeBlockRegistry.get(SSPBlock.IDENTITY);
         if (event.getSide().isClient())
             setupRenderingGuf();
-        SSP_Items.buildItems(event.getSide());
+        SSPItems.buildItems(event.getSide());
         FluidRegister.register();
         BlockRegister.register();
         SSPKeys.addFlyKey();
         SPPRecipes.addMolecularTransformerRecipes();
         GameRegistry.registerWorldGenerator(new SSPWorldDecorator(), 0);
-        OreDictionary.registerOre("enderquantumcomponent", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.enderquantumcomponent));
-        OreDictionary.registerOre("solarsplitter", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.solarsplitter));
-        OreDictionary.registerOre("bluecomponent", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.bluecomponent));
-        OreDictionary.registerOre("greencomponent", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.greencomponent));
-        OreDictionary.registerOre("redcomponent", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.redcomponent));
-        OreDictionary.registerOre("singularcore", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.singularcore));
-        OreDictionary.registerOre("photoniy", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.photoniy));
-        OreDictionary.registerOre("photoniy_ingot", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.photoniy_ingot));
-        OreDictionary.registerOre("spectralcore", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.spectralcore));
+        OreDictionary.registerOre("enderquantumcomponent", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.enderquantumcomponent));
+        OreDictionary.registerOre("solarsplitter", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.solarsplitter));
+        OreDictionary.registerOre("bluecomponent", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.bluecomponent));
+        OreDictionary.registerOre("greencomponent", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.greencomponent));
+        OreDictionary.registerOre("redcomponent", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.redcomponent));
+        OreDictionary.registerOre("singularcore", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.singularcore));
+        OreDictionary.registerOre("photoniy", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.photoniy));
+        OreDictionary.registerOre("photoniy_ingot", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.photoniy_ingot));
+        OreDictionary.registerOre("spectralcore", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.spectralcore));
 
-        OreDictionary.registerOre("ingotUranium", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT));
-        OreDictionary.registerOre("ingotIridium", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT));
+        OreDictionary.registerOre("ingotUranium", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT));
+        OreDictionary.registerOre("ingotIridium", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT));
 //OreDictionary.registerOre("craftingSolarPanelHV", ModernSolarPanels.machines.getItemStack((ITeBlock)TEs.ultimate_solar_panel));
-        OreDictionary.registerOre("craftingSunnariumPart", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART));
-        OreDictionary.registerOre("craftingSunnarium", SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM));
+        OreDictionary.registerOre("craftingSunnariumPart", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART));
+        OreDictionary.registerOre("craftingSunnarium", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM));
 
     }
 
     @SideOnly(Side.CLIENT)
     private static void setupRenderingGuf() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, new PrettyMolecularTransformerTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, new com.denfop.ssp.molecular.PrettyMolecularTransformerTESR());
         ForgeHooksClient.registerTESRItemStack(machines.getItem(), SSPBlock.molecular_transformer.getId(), SSPBlock.molecular_transformer.getTeClass());
 
     }
@@ -173,7 +173,7 @@ public final class SuperSolarPanels {
         avaritiaLoaded = Loader.isModLoaded("avaritia");
         wirelesLoaded = Loader.isModLoaded("wirelesstools");
         if (wirelesLoaded) {
-            SWSP_Recipes.addCraftingRecipes();
+            SWSPRecipes.addCraftingRecipes();
 
 
         }

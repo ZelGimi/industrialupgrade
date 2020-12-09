@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.reactors;
 
+import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.google.common.base.CaseFormat;
 import ic2.api.reactor.IReactor;
@@ -123,16 +124,16 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 		ItemStack ret;
 		switch (this.numberOfCells) {
 			case 1:
-				ret = com.denfop.ssp.items.SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_proton_fuel_rod);
+				ret = SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_proton_fuel_rod);
 				return ret.copy();
 			case 2:
-				ret = com.denfop.ssp.items.SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_dual_proton_fuel_rod);
+				ret = SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_dual_proton_fuel_rod);
 				return ret.copy();
 			case 4:
-				ret = com.denfop.ssp.items.SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_quad_proton_fuel_rod);
+				ret = SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_quad_proton_fuel_rod);
 				return ret.copy();
 			case 8:
-				ret = com.denfop.ssp.items.SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_eit_proton_fuel_rod);
+				ret = SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_eit_proton_fuel_rod);
 				return ret.copy();
 		}
 		throw new RuntimeException("invalid cell count: " + this.numberOfCells);

@@ -1,6 +1,6 @@
 package com.denfop.ssp.integration.botania;
 
-import com.denfop.ssp.tiles.TileEntitySolarPanel;
+import com.denfop.ssp.tiles.panels.entity.TileEntitySolarPanel;
 
 public class TileEntityElementiumSolar extends TileEntitySolarPanel {
 	public static TileEntitySolarPanel.SolarConfig settings;

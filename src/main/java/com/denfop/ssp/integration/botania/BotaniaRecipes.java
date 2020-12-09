@@ -1,7 +1,7 @@
 package com.denfop.ssp.integration.botania;
 
 import com.denfop.ssp.SuperSolarPanels;
-import com.denfop.ssp.items.SSP_Items;
+import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.tiles.SSPBlock;
 import ic2.api.item.IC2Items;
@@ -19,9 +19,9 @@ public class BotaniaRecipes {
 	final static IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
 
 	public static void addCraftingRecipes() {
-		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_energy), 12000, LibOreDict.RUNE[0], LibOreDict.RUNE[1], SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART), SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT), SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "alloy"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate));
-		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_sun), 12000, LibOreDict.RUNE[2], LibOreDict.RUNE[3], SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM), SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_URANIUM), SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "carbon_plate"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate));
-		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_night), 12000, LibOreDict.RUNE[1], LibOreDict.RUNE[3], SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.dust), SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_URANIUM), SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "coal_chunk"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.manasteel_plate));
+		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_energy), 12000, LibOreDict.RUNE[0], LibOreDict.RUNE[1], SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "alloy"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate));
+		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_sun), 12000, LibOreDict.RUNE[2], LibOreDict.RUNE[3], SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_URANIUM), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "carbon_plate"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate));
+		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_night), 12000, LibOreDict.RUNE[1], LibOreDict.RUNE[3], SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.dust), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_URANIUM), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "coal_chunk"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.manasteel_plate));
 
 		addCompressorRecipe(input.forStack(new ItemStack(ModItems.manaResource, 1, 4)), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.terrasteel_plate));
 		addCompressorRecipe(input.forStack(new ItemStack(ModItems.manaResource, 1, 0)), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.manasteel_plate));
@@ -36,9 +36,9 @@ public class BotaniaRecipes {
 				//IC2Items.getItem("crafting", "advanced_circuit")
 				'C', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate)
 
-				// SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ele)
+				// SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ele)
 				,
-				'D', SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_GLASS_PANE),
+				'D', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_GLASS_PANE),
 				'O', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.terrasteel_plate),
 				'L', IC2Items.getItem("crafting", "alloy"),
 				'K', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_night),
@@ -48,8 +48,8 @@ public class BotaniaRecipes {
 				//IC2Items.getItem("crafting", "advanced_circuit")
 				'C', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate),
 
-				// SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ele)
-				'D', SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART),
+				// SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ele)
+				'D', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART),
 				'O', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.manasteel_core),
 				'L', IC2Items.getItem("crafting", "advanced_circuit"),
 				'K', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_night),
@@ -60,9 +60,9 @@ public class BotaniaRecipes {
 				//IC2Items.getItem("crafting", "advanced_circuit")
 				'C', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.manasteel_plate),
 
-				// SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ele)
-				'D', SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART),
-				'O', SSP_Items.CRAFTING.getItemStack(CraftingThings.CraftingTypes.advanced_core),
+				// SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ele)
+				'D', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART),
+				'O', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.advanced_core),
 				'L', IC2Items.getItem("crafting", "advanced_circuit"),
 				'K', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_night),
 				'M', BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_sun),

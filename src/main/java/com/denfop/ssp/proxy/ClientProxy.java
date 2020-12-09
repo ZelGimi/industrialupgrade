@@ -1,7 +1,7 @@
 package com.denfop.ssp.proxy;
 
-import com.denfop.ssp.BlocksRegister;
 import com.denfop.ssp.fluid.neutron.BlockRegister;
+import com.denfop.ssp.molecular.BlocksRegister;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

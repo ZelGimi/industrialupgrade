@@ -1,8 +1,8 @@
 package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.Configs;
-import com.denfop.ssp.tiles.TileEntitySolarPanel;
-import com.denfop.ssp.tiles.overtimepanel.*;
+import com.denfop.ssp.tiles.panels.entity.TileEntitySolarPanel;
+import com.denfop.ssp.tiles.panels.overtime.*;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.*;
 import ic2.core.IC2;

@@ -1,6 +1,6 @@
 package com.denfop.ssp.integration.avaritia;
 
-import com.denfop.ssp.tiles.TileEntitySolarPanel;
+import com.denfop.ssp.tiles.panels.entity.TileEntitySolarPanel;
 
 public class TileEntityInfinitySolar extends TileEntitySolarPanel {
 	public static TileEntitySolarPanel.SolarConfig settings;
