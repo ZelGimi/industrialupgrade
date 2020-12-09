@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.armor;
 
-import com.denfop.ssp.Configs;
+import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.items.armorbase.ItemAdvancedElectricJetpack;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;

@@ -1,6 +1,6 @@
 package com.denfop.ssp.integration.botania;
 
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
@@ -19,7 +19,7 @@ public class BotaniaCraftingThings extends ItemMulti {
 
 	public BotaniaCraftingThings() {
 		super(null, CraftingTypes.class);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, "crafting1")).setUnlocalizedName("crafting1");
+		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, "crafting1")).setUnlocalizedName("crafting1");
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -1,7 +1,7 @@
 package com.denfop.ssp.items.battery;
 
 
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
 import ic2.core.init.BlocksItems;
@@ -30,7 +30,7 @@ public class ItemBattery extends BaseElectricItem {
 		super(null, maxCharge, transferLimit, tier);
 
 		setMaxStackSize(16);
-		BlocksItems.registerItem(this, new ResourceLocation(SuperSolarPanels.MOD_ID, this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem(this, new ResourceLocation(Constants.MOD_ID, this.name = name)).setUnlocalizedName(name);
 	}
 
 	@SideOnly(Side.CLIENT)

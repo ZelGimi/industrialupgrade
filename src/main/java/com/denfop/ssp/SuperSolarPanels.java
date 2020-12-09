@@ -1,5 +1,7 @@
 package com.denfop.ssp;
 
+import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.fluid.neutron.BlockRegister;
 import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.gui.ProgressBars;
@@ -47,12 +49,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.Map;
 
 @Mod.EventBusSubscriber
-@Mod(modid = SuperSolarPanels.MOD_ID, name = SuperSolarPanels.MOD_NAME, dependencies = "required-after:ic2@[2.8.170,);", version = "1.3.0", acceptedMinecraftVersions = "[1.12,1.12.2]")
+@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public final class SuperSolarPanels {
 
-    public static final String MOD_ID = "super_solar_panels";
-    public static final String MOD_NAME = "Super Solar Panels";
-    public static final CreativeTabs SSPtab = new SSPSourceTab("SSPtab");
+    public static final CreativeTabs SSPTab = new SSPSourceTab("SSPtab");
     public static Logger log;
 
     public static boolean avaritiaLoaded = false;
@@ -100,7 +100,7 @@ public final class SuperSolarPanels {
     }
 
     public static ResourceLocation getIdentifier(final String name) {
-        return new ResourceLocation(SuperSolarPanels.MOD_ID, name);
+        return new ResourceLocation(Constants.MOD_ID, name);
     }
 
     @Mod.EventHandler

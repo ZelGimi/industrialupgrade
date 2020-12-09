@@ -1,5 +1,6 @@
-package com.denfop.ssp;
+package com.denfop.ssp.common;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.integration.avaritia.TileEntityInfinitySolar;
 import com.denfop.ssp.integration.avaritia.TileEntityNeutroniumSolar;
 import com.denfop.ssp.integration.botania.TileEntityElementiumSolar;
@@ -116,13 +117,13 @@ public final class Configs {
 	public static int terrasteel_fuel_rod;
 	static boolean hardRecipes;
 	static boolean easyASPRecipe;
-	static MTRecipe[] MTRecipes;
+	public static MTRecipe[] MTRecipes;
 
 	static {
 		NEW_LINE = System.getProperty("line.separator");
 	}
 
-	static void loadConfig(File config, boolean client) {
+	public static void loadConfig(File config, boolean client) {
 		SuperSolarPanels.log.info("Loading SSP Config from " + config.getAbsolutePath());
 		loadNormalConfig(config, client);
 		try {

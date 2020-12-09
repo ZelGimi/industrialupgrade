@@ -1,6 +1,6 @@
 package com.denfop.ssp.integration.avaritia;
 
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.TeBlock;
@@ -28,7 +28,7 @@ public enum AvaritiaMod implements ITeBlock
 
 	static {
 		VALUES2 = values();
-		IDENTITY2 = new ResourceLocation(SuperSolarPanels.MOD_ID, "machines2");
+		IDENTITY2 = new ResourceLocation(Constants.MOD_ID, "machines2");
 	}
 
 	private final Class<? extends TileEntityBlock> teClass2;
@@ -63,7 +63,7 @@ public enum AvaritiaMod implements ITeBlock
 
 	public static void buildDummies() {
 		final ModContainer mc = Loader.instance().activeModContainer();
-		if (mc == null || !SuperSolarPanels.MOD_ID.equals(mc.getModId())) {
+		if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
 			throw new IllegalAccessError("Don't mess with this please.");
 		}
 		for (final AvaritiaMod block : AvaritiaMod.VALUES2) {

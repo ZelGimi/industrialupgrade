@@ -1,7 +1,7 @@
 package com.denfop.ssp.items.tools;
 
-import com.denfop.ssp.Configs;
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
@@ -42,7 +42,7 @@ public class ItemUltDrill extends ItemDrill {
 
 	public ItemUltDrill() {
 		super(null, Configs.operationEnergyCost, HarvestLevel.Iridium, Configs.maxChargedrill, Configs.transferLimitdrill, Configs.tierdrill, DrillMode.NORMAL.drillSpeed);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, "ItemUltDrill")).setUnlocalizedName("ItemUltDrill");
+		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, "ItemUltDrill")).setUnlocalizedName("ItemUltDrill");
 	}
 
 	public static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, RayTraceResult ray) {

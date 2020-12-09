@@ -1,7 +1,7 @@
 package com.denfop.ssp.integration.botania;
 
-import com.denfop.ssp.Configs;
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
@@ -42,7 +42,7 @@ public class ItemBotaniaDrill extends ItemDrill {
 
 	public ItemBotaniaDrill() {
 		super(null, 46, HarvestLevel.Iridium, 8888888, Configs.transferLimitdrill, 4, DrillMode.NORMAL.drillSpeed);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, "ItemBotaniaDrill")).setUnlocalizedName("ItemBotaniaDrill");
+		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, "ItemBotaniaDrill")).setUnlocalizedName("ItemBotaniaDrill");
 	}
 
 	public static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, RayTraceResult ray) {
@@ -51,7 +51,7 @@ public class ItemBotaniaDrill extends ItemDrill {
 
 	protected static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, BlockPos pos, EnumFacing side) {
 		assert side != null;
-		int xMove = 3, yMove = xMove, zMove = yMove;
+		int xMove = 3, yMove = 3, zMove = 3;
 		switch (side.getAxis()) {
 			case X:
 				xMove = 0;
@@ -96,7 +96,7 @@ public class ItemBotaniaDrill extends ItemDrill {
 
 	protected static Collection<BlockPos> getBrokenBlocks1(EntityPlayer player, BlockPos pos, EnumFacing side) {
 		assert side != null;
-		int xMove = 2, yMove = xMove, zMove = yMove;
+		int xMove = 2, yMove = 2, zMove = 2;
 		switch (side.getAxis()) {
 			case X:
 				xMove = 0;
@@ -203,7 +203,8 @@ public class ItemBotaniaDrill extends ItemDrill {
 						stack.onBlockDestroyed(world, state, blockPos, player);
 					}
 					world.playEvent(2001, blockPos, Block.getStateId(state));
-					((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
+					if (player instanceof EntityPlayerMP)
+						((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
 				}
 			}
 			if (powerRanOut)
@@ -216,7 +217,6 @@ public class ItemBotaniaDrill extends ItemDrill {
 				blocks.add(pos);
 			boolean powerRanOut = false;
 			for (BlockPos blockPos : blocks) {
-
 				if (!world.isBlockLoaded(blockPos))
 					continue;
 				IBlockState state = world.getBlockState(blockPos);
@@ -244,7 +244,8 @@ public class ItemBotaniaDrill extends ItemDrill {
 						stack.onBlockDestroyed(world, state, blockPos, player);
 					}
 					world.playEvent(2001, blockPos, Block.getStateId(state));
-					((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
+					if (player instanceof EntityPlayerMP)
+						((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
 				}
 			}
 			if (powerRanOut)

@@ -12,18 +12,60 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath "gradle.plugin.net.kyori:blossom:1.1.0"
     }
 }
 
+apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: "net.kyori.blossom"
 
 version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 
+blossom {
+    replaceToken '%VERSION%', modVersion
+    replaceToken "%IC2_RANGE%", ic2_range
+}
+
 minecraft {
     //noinspection GroovyAssignabilityCheck
     mappings channel: "snapshot", version: mcp_version
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                supersolarpanels {
+                    source sourceSets.main
+                }
+            }
+        }
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'supersolarpanels', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                supersolarpanels {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -43,7 +85,8 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include "mcmod.info"
 
-        expand "version": project.version, "mcversion": project.minecraft_version
+        expand "version": project.version, "mcversion": project.minecraft_version,
+                "ic2_range": project.ic2_range
     }
 
     from(sourceSets.main.resources.srcDirs) {

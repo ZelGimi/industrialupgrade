@@ -1,7 +1,7 @@
 package com.denfop.ssp.integration.botania;
 
 
-import com.denfop.ssp.Configs;
+import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.items.reactors.ItemReactorUranium;
 import ic2.api.reactor.IReactor;
 import ic2.core.profile.NotClassic;

@@ -1,7 +1,7 @@
 package com.denfop.ssp.items.armor;
 
-import com.denfop.ssp.Configs;
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.ssp.tiles.panels.overtime.*;
 import com.google.common.base.CaseFormat;
@@ -59,7 +59,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 
 	public ItemArmourSolarHelmet(final SolarHelmetTypes type) {
 		super(ItemArmor.ArmorMaterial.DIAMOND, -1, EntityEquipmentSlot.HEAD);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, type.getName())).setUnlocalizedName(type.getLocalisedName());
+		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, type.getName())).setUnlocalizedName(type.getLocalisedName());
 		this.setCreativeTab(IC2.tabIC2);
 		this.setMaxDamage(27);
 		this.type = type;

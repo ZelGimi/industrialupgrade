@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.resource;
 
-import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
@@ -19,7 +19,7 @@ public class CraftingThings extends ItemMulti {
 
 	public CraftingThings() {
 		super(null, CraftingTypes.class);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, "crafting")).setUnlocalizedName("crafting");
+		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, "crafting")).setUnlocalizedName("crafting");
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -1,7 +1,7 @@
 package com.denfop.ssp.items.reactors;
 
 
-import com.denfop.ssp.Configs;
+import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import ic2.api.reactor.IReactor;

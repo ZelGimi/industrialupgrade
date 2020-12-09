@@ -1,5 +1,6 @@
 package com.denfop.ssp;
 
+import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
@@ -21,7 +22,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.text.ParseException;
 
-final class SPPRecipes {
+public final class SPPRecipes {
 	static void addCraftingRecipes() {
 		final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
 		final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
