@@ -5,14 +5,14 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 
 public class SSPB extends Block {
-  public SSPB(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
-    super(material);
-    setRegistryName("super_solar_panels", name);
-    setUnlocalizedName(name);
-    setHardness(hardness);
-    setResistance(resistance);
-    setHarvestLevel(harvLevel, level);
-    setSoundType(soundType);
-    setCreativeTab(SuperSolarPanels.SSPtab);
-  }
+	public SSPB(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
+		super(material);
+		setRegistryName("super_solar_panels", name);
+		setUnlocalizedName(name);
+		setHardness(hardness);
+		setResistance(resistance);
+		setHarvestLevel(harvLevel, level);
+		setSoundType(soundType);
+		setCreativeTab(SuperSolarPanels.SSPtab);
+	}
 }

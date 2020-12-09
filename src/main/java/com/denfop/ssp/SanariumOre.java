@@ -12,31 +12,30 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class SanariumOre extends Block {
-  public SanariumOre(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
-    super(material);
-    setRegistryName("super_solar_panels", name);
-    setUnlocalizedName(name);
-    setHardness(hardness);
-    setResistance(resistance);
-    setHarvestLevel(harvLevel, level);
-    setSoundType(soundType);
-    setCreativeTab(SuperSolarPanels.SSPtab);
-    setLightLevel(0.2F);
-  }
-  
-  public boolean hasTileEntity() {
-    return false;
-  }
-  
-  
-  public int quantityDropped(Random random) {
-    return 1;
-  }
-  
- 
-  
-  public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
-    Random rand = (world instanceof World) ? ((World)world).rand : new Random();
-    return MathHelper.getInt(rand, 4, 7);
-  }
+	public SanariumOre(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
+		super(material);
+		setRegistryName("super_solar_panels", name);
+		setUnlocalizedName(name);
+		setHardness(hardness);
+		setResistance(resistance);
+		setHarvestLevel(harvLevel, level);
+		setSoundType(soundType);
+		setCreativeTab(SuperSolarPanels.SSPtab);
+		setLightLevel(0.2F);
+	}
+
+	public boolean hasTileEntity() {
+		return false;
+	}
+
+
+	public int quantityDropped(Random random) {
+		return 1;
+	}
+
+
+	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+		Random rand = (world instanceof World) ? ((World) world).rand : new Random();
+		return MathHelper.getInt(rand, 4, 7);
+	}
 }

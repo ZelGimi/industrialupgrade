@@ -8,16 +8,17 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
-  public void preInit(FMLPreInitializationEvent event) {
-	  BlocksRegister.register();
+	public void preInit(FMLPreInitializationEvent event) {
+		BlocksRegister.register();
 
-	  
-  }
-  
-  public void init(FMLInitializationEvent event) {
-    GameRegistry.registerWorldGenerator(new SSPWorldDecorator(), 0);
-  }
-  
-  public void postInit(FMLPostInitializationEvent event) {}
+
+	}
+
+	public void init(FMLInitializationEvent event) {
+		GameRegistry.registerWorldGenerator(new SSPWorldDecorator(), 0);
+	}
+
+	public void postInit(FMLPostInitializationEvent event) {
+	}
 
 }
