@@ -37,7 +37,7 @@ public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, 
 	protected final InvSlotCharge chargeSlot = new InvSlotCharge(this, 5);
 	protected final InvSlotDischarge dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, 5, InvSlot.InvSide.BOTTOM);
 	private final int output = Configs.quantummfsu * 4;
-	private final Energy energy = (Energy) addComponent((TileEntityComponent) (new Energy(this, Configs.quantummfsu2, EnumSet.complementOf((EnumSet) EnumSet.of(EnumFacing.DOWN)),
+	private final Energy energy = (Energy) addComponent((TileEntityComponent) (new Energy(this, Configs.quantummfsu2, EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)),
 			EnumSet.of(EnumFacing.DOWN), Configs.quantummfsu1, Configs.quantummfsu1, false)).addManagedSlot(this.chargeSlot).addManagedSlot(this.dischargeSlot));
 
 	protected void updateEntityServer() {
@@ -69,7 +69,7 @@ public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, 
 
 	public void setFacing(EnumFacing facing) {
 		super.setFacing(facing);
-		this.energy.setDirections(EnumSet.complementOf((EnumSet) EnumSet.of(getFacing())), EnumSet.of(getFacing()));
+		this.energy.setDirections(EnumSet.complementOf(EnumSet.of(getFacing())), EnumSet.of(getFacing()));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -86,7 +86,7 @@ public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, 
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.energy.setDirections(EnumSet.complementOf((EnumSet) EnumSet.of(getFacing())), EnumSet.of(getFacing()));
+		this.energy.setDirections(EnumSet.complementOf(EnumSet.of(getFacing())), EnumSet.of(getFacing()));
 	}
 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
