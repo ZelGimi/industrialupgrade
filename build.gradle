@@ -1,55 +1,63 @@
 buildscript {
     repositories {
+        maven {
+            name = ":forge"
+            url = 'https://files.minecraftforge.net/maven'
+        }
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+
+apply plugin: 'net.minecraftforge.gradle'
 
 version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 
 minecraft {
-    version = minecraft_version + "-" + forge_version
-    runDir = "run"
-    
-    mappings = "snapshot_" + mcp_version
+    //noinspection GroovyAssignabilityCheck
+    mappings channel: "snapshot", version: mcp_version
 }
 
 dependencies {
+    minecraft([
+            group  : "net.minecraftforge",
+            name   : "forge",
+            version: "${minecraft_version}-${forge_version}"
+    ])
+
     compileOnly fileTree('deps') { include '*.jar'}
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", project.minecraft_version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        include "mcmod.info"
+
+        expand "version": project.version, "mcversion": project.minecraft_version
     }
-        
-    // copy everything else except the mcmod.info
+
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude "mcmod.info"
     }
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title": rootProject.getName(),
+                "Specification-Title": project.name,
                 "Specification-Vendor": "ijo42",
                 "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": rootProject.getName(),
+                "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
                 "Implementation-Vendor" :"Denfop",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -65,6 +73,6 @@ tasks.withType(JavaCompile) {
     options.incremental = true // one flag, and things will get so MUCH faster
 }
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-jar.archiveName = "${project.archivesBaseName}-${project.minecraft.version}-${project.version}.jar"
+jar.archiveName = "${project.archivesBaseName}-${project.minecraft_version}-${project.version}.jar"
 
 defaultTasks 'build'
