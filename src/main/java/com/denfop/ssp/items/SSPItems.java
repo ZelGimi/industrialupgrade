@@ -1,6 +1,7 @@
 package com.denfop.ssp.items;
 
 import com.denfop.ssp.Configs;
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.items.armor.*;
 import com.denfop.ssp.items.battery.ItemBattery;
 import com.denfop.ssp.items.reactors.ItemReactorHeatStorage;
@@ -50,13 +51,13 @@ public enum SSPItems {
 		HYBRID_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.HYBRID));
 		ULTIMATE_HYBRID_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.ULTIMATE));
 		DRILL.setInstance(new ItemUltDrill());
-		IRIDIUM.setInstance(new ItemWindRotor("rotor_carbon1", Configs.Radius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, new ResourceLocation("super_solar_panels", "textures/items/carbon_rotor_model1.png")));
-		COMPRESSIRIDIUM.setInstance(new ItemWindRotor("rotor_carbon2", Configs.Radius1, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, new ResourceLocation("super_solar_panels", "textures/items/carbon_rotor_model2.png")));
-		SPECTRAL.setInstance(new ItemWindRotor("rotor_carbon3", Configs.Radius2, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, new ResourceLocation("super_solar_panels", "textures/items/carbon_rotor_model3.png")));
+		IRIDIUM.setInstance(new ItemWindRotor("rotor_carbon1", Configs.iridiumRotorRadius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/items/carbon_rotor_model1.png")));
+		COMPRESSIRIDIUM.setInstance(new ItemWindRotor("rotor_carbon2", Configs.compressIridiumRotorRadius, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/items/carbon_rotor_model2.png")));
+		SPECTRAL.setInstance(new ItemWindRotor("rotor_carbon3", Configs.spectralRotorRadius, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/items/carbon_rotor_model3.png")));
 		//
-		IRIDIUM_1.setInstance(new ItemWindRotor("rotor_carbon4", Configs.Radius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, new ResourceLocation("super_solar_panels", "textures/items/carbon_rotor_model1.png")));
-		COMPRESSIRIDIUM_1.setInstance(new ItemWindRotor("rotor_carbon5", Configs.Radius1, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, new ResourceLocation("super_solar_panels", "textures/items/carbon_rotor_model2.png")));
-		SPECTRAL_1.setInstance(new ItemWindRotor("rotor_carbon6", Configs.Radius2, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, new ResourceLocation("super_solar_panels", "textures/items/carbon_rotor_model3.png")));
+		IRIDIUM_1.setInstance(new ItemWindRotor("rotor_carbon4", Configs.iridiumRotorRadius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/items/carbon_rotor_model1.png")));
+		COMPRESSIRIDIUM_1.setInstance(new ItemWindRotor("rotor_carbon5", Configs.compressIridiumRotorRadius, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/items/carbon_rotor_model2.png")));
+		SPECTRAL_1.setInstance(new ItemWindRotor("rotor_carbon6", Configs.spectralRotorRadius, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/items/carbon_rotor_model3.png")));
 
 
 		// new ItemReactorHeatStorage(ItemName.hex_heat_storage, 60000);

@@ -1,5 +1,6 @@
 package com.denfop.ssp.integration.botania;
 
+import com.denfop.ssp.SuperSolarPanels;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.TeBlock;
@@ -27,7 +28,7 @@ public enum BotaniaMain implements ITeBlock
 
 	static {
 		VALUES1 = values();
-		IDENTITY1 = new ResourceLocation("super_solar_panels", "machines1");
+		IDENTITY1 = new ResourceLocation(SuperSolarPanels.MOD_ID, "machines1");
 	}
 
 	private final Class<? extends TileEntityBlock> teClass1;
@@ -62,7 +63,7 @@ public enum BotaniaMain implements ITeBlock
 
 	public static void buildDummies() {
 		final ModContainer mc = Loader.instance().activeModContainer();
-		if (mc == null || !"super_solar_panels".equals(mc.getModId())) {
+		if (mc == null || !SuperSolarPanels.MOD_ID.equals(mc.getModId())) {
 			throw new IllegalAccessError("Don't mess with this please.");
 		}
 		for (final BotaniaMain block : BotaniaMain.VALUES1) {

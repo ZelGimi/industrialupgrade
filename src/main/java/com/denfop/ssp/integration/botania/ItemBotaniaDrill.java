@@ -1,6 +1,7 @@
 package com.denfop.ssp.integration.botania;
 
 import com.denfop.ssp.Configs;
+import com.denfop.ssp.SuperSolarPanels;
 import com.google.common.base.CaseFormat;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
@@ -41,7 +42,7 @@ public class ItemBotaniaDrill extends ItemDrill {
 
 	public ItemBotaniaDrill() {
 		super(null, 46, HarvestLevel.Iridium, 8888888, Configs.transferLimitdrill, 4, DrillMode.NORMAL.drillSpeed);
-		BlocksItems.registerItem((Item) this, new ResourceLocation("super_solar_panels", "ItemBotaniaDrill")).setUnlocalizedName("ItemBotaniaDrill");
+		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, "ItemBotaniaDrill")).setUnlocalizedName("ItemBotaniaDrill");
 	}
 
 	public static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, RayTraceResult ray) {

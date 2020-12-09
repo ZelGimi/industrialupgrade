@@ -15,7 +15,7 @@ import java.util.Random;
 public class SSPOre extends Block {
 	public SSPOre(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
 		super(material);
-		setRegistryName("super_solar_panels", name);
+		setRegistryName(SuperSolarPanels.MOD_ID, name);
 		setUnlocalizedName(name);
 		setHardness(hardness);
 		setResistance(resistance);

@@ -2,6 +2,7 @@ package com.denfop.ssp.items.armorbase;
 
 
 import com.denfop.ssp.Configs;
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
@@ -45,7 +46,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 
 	protected ItemAdvancedElectricJetpack(String name, double maxCharge, double transferLimit, int tier) {
 		super(null, null, EntityEquipmentSlot.CHEST, maxCharge, transferLimit, tier);
-		BlocksItems.registerItem((Item) this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, this.name = name)).setUnlocalizedName(name);
 		setMaxDamage(27);
 		setMaxStackSize(1);
 		setNoRepair();

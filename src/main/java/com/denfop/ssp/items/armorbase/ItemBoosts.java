@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.armorbase;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.items.api.PlayerEvents;
 import com.denfop.ssp.items.api.RechargeHelper;
 import com.google.common.base.CaseFormat;
@@ -40,7 +41,7 @@ public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
 
 	protected ItemBoosts(final String name, final double maxCharge, final double transferLimit, final int tier) {
 		super(null, null, EntityEquipmentSlot.FEET, maxCharge, transferLimit, tier);
-		BlocksItems.registerItem((Item) this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, this.name = name)).setUnlocalizedName(name);
 		this.setMaxDamage(27);
 		this.setMaxStackSize(1);
 		this.setNoRepair();

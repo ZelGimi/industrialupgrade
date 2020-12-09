@@ -127,7 +127,7 @@ public class ItemNanoSaber extends ItemElectricTool {
 	}
 
 	@Nonnull
-	public ActionResult<ItemStack> onItemRightClick(World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack stack = StackUtil.get(player, hand);
 		if (world.isRemote)
 			return new ActionResult<>(EnumActionResult.PASS, stack);

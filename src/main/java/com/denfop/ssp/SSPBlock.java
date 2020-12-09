@@ -7,7 +7,7 @@ import net.minecraft.block.material.Material;
 public class SSPBlock extends Block {
 	public SSPBlock(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
 		super(material);
-		setRegistryName("super_solar_panels", name);
+		setRegistryName(SuperSolarPanels.MOD_ID, name);
 		setUnlocalizedName(name);
 		setHardness(hardness);
 		setResistance(resistance);

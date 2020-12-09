@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -40,6 +41,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IRegistryDelegate;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
@@ -51,13 +53,11 @@ public final class SuperSolarPanels {
     public static final String MOD_ID = "super_solar_panels";
     public static final String MOD_NAME = "Super Solar Panels";
     public static final CreativeTabs SSPtab = new SSPSourceTab("SSPtab");
-    private static final String Urane = null;
-    public static boolean seasonal = false;
     public static Logger log;
 
     public static boolean avaritiaLoaded = false;
     public static boolean botaniaLoaded = false;
-    public static boolean wirelesLoaded = false;
+    public static boolean wirelessLoaded = false;
     public static boolean thaumcraftLoaded = false;
     public static BlockTileEntity machines;
     @SidedProxy(clientSide = "com.denfop.ssp.proxy.ClientProxy", serverSide = "com.denfop.ssp.proxy.CommonProxy")
@@ -80,7 +80,6 @@ public final class SuperSolarPanels {
         if (SuperSolarPanels.botaniaLoaded) {
             TeBlockRegistry.addAll(com.denfop.ssp.integration.botania.BotaniaMain.class, BotaniaMain.IDENTITY1);
             TeBlockRegistry.setDefaultMaterial(BotaniaMain.IDENTITY1, Material.ROCK);
-
         }
         if (avaritiaLoaded) {
             TeBlockRegistry.addAll(com.denfop.ssp.integration.avaritia.AvaritiaMod.class, AvaritiaMod.IDENTITY2);
@@ -93,7 +92,7 @@ public final class SuperSolarPanels {
     @SideOnly(Side.CLIENT)
     public static void doColourThings(final ColorHandlerEvent.Item event) {
         final ItemColors colours = event.getItemColors();
-        final IItemColor armourColouring = (IItemColor) ((Map) ReflectionUtil.getFieldValue(ReflectionUtil.getField(ItemColors.class, Map.class), colours)).get(Items.LEATHER_BOOTS.delegate);
+        final IItemColor armourColouring = (ReflectionUtil.<Map<IRegistryDelegate<Item>, IItemColor>>getFieldValue(ReflectionUtil.getField(ItemColors.class, Map.class), colours)).get(Items.LEATHER_BOOTS.delegate);
         colours.registerItemColorHandler(armourColouring, SSPItems.SPECTRAL_SOLAR_HELMET.getInstance());
         colours.registerItemColorHandler(armourColouring, SSPItems.SINGULAR_SOLAR_HELMET.getInstance());
         colours.registerItemColorHandler(armourColouring, SSPItems.HYBRID_SOLAR_HELMET.getInstance(), SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance());
@@ -101,7 +100,7 @@ public final class SuperSolarPanels {
     }
 
     public static ResourceLocation getIdentifier(final String name) {
-        return new ResourceLocation("super_solar_panels", name);
+        return new ResourceLocation(SuperSolarPanels.MOD_ID, name);
     }
 
     @Mod.EventHandler
@@ -111,12 +110,10 @@ public final class SuperSolarPanels {
         thaumcraftLoaded = Loader.isModLoaded("thaumcraft");
         if (botaniaLoaded) {
             SuperSolarPanels.machines1 = TeBlockRegistry.get(BotaniaMain.IDENTITY1);
-
             BotaniaItems.buildItems(event.getSide());
         }
-        if (thaumcraftLoaded) {
+        if (thaumcraftLoaded)
             ThaumcraftMain.init();
-        }
         if (avaritiaLoaded) {
             SuperSolarPanels.machines2 = TeBlockRegistry.get(AvaritiaMod.IDENTITY2);
             AvaritiaMod.buildItems(event.getSide());
@@ -168,18 +165,13 @@ public final class SuperSolarPanels {
         if (botaniaLoaded) {
             BotaniaRecipes.addCraftingRecipes();
             BotaniaMain.buildDummies();
-
         }
         avaritiaLoaded = Loader.isModLoaded("avaritia");
-        wirelesLoaded = Loader.isModLoaded("wirelesstools");
-        if (wirelesLoaded) {
+        wirelessLoaded = Loader.isModLoaded("wirelesstools");
+        if (wirelessLoaded)
             SWSPRecipes.addCraftingRecipes();
-
-
-        }
-        if (avaritiaLoaded) {
+        if (avaritiaLoaded)
             AvaritiaMod.buildDummies();
-        }
         TileEntityMolecularAssembler.MolecularOutput.registerNetwork();
     }
 
@@ -187,6 +179,4 @@ public final class SuperSolarPanels {
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
     }
-
-
 }

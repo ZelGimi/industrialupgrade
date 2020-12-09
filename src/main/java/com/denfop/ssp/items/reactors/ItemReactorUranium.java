@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.reactors;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.google.common.base.CaseFormat;
@@ -38,7 +39,7 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 		super(null, duration);
 		setMaxStackSize(64);
 		this.numberOfCells = cells;
-		BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem(this, new ResourceLocation(SuperSolarPanels.MOD_ID, this.name = name)).setUnlocalizedName(name);
 	}
 
 	@SideOnly(Side.CLIENT)

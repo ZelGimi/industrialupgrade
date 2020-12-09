@@ -2,6 +2,7 @@ package com.denfop.ssp.items.armor;
 
 
 import com.denfop.ssp.Configs;
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.*;
@@ -52,7 +53,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 
 	public ItemArmorQuantumHelmet(final SolarHelmetTypes type) {
 		super(ItemArmor.ArmorMaterial.DIAMOND, -1, EntityEquipmentSlot.HEAD);
-		BlocksItems.registerItem((Item) this, new ResourceLocation("super_solar_panels", type.getName())).setUnlocalizedName(type.getLocalisedName());
+		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, type.getName())).setUnlocalizedName(type.getLocalisedName());
 		this.setCreativeTab(IC2.tabIC2);
 		this.setMaxDamage(27);
 		this.type = type;

@@ -1,5 +1,6 @@
 package com.denfop.ssp.tiles;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.tiles.neutronfabricator.TileEntityMassFabricator;
 import com.denfop.ssp.tiles.panels.air.*;
 import com.denfop.ssp.tiles.panels.earth.*;
@@ -104,7 +105,7 @@ public enum SSPBlock implements ITeBlock {
 
 	static {
 		VALUES = values();
-		IDENTITY = new ResourceLocation("super_solar_panels", "machines");
+		IDENTITY = new ResourceLocation(SuperSolarPanels.MOD_ID, "machines");
 	}
 
 	private final Class<? extends TileEntityBlock> teClass;
@@ -139,7 +140,7 @@ public enum SSPBlock implements ITeBlock {
 
 	public static void buildDummies() {
 		final ModContainer mc = Loader.instance().activeModContainer();
-		if (mc == null || !"super_solar_panels".equals(mc.getModId())) {
+		if (mc == null || !SuperSolarPanels.MOD_ID.equals(mc.getModId())) {
 			throw new IllegalAccessError("Don't mess with this please.");
 		}
 		for (final SSPBlock block : SSPBlock.VALUES) {

@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.itembase;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
@@ -59,7 +60,7 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 		this.operationEnergyCost = operationEnergyCost;
 		setMaxDamage(27);
 		setNoRepair();
-		BlocksItems.registerItem(this, new ResourceLocation("super_solar_panels", ItemElectricTool.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem(this, new ResourceLocation(SuperSolarPanels.MOD_ID, ItemElectricTool.name = name)).setUnlocalizedName(name);
 
 	}
 

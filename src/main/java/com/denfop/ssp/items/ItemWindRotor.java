@@ -1,6 +1,7 @@
 package com.denfop.ssp.items;
 
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.IKineticRotor;
 import ic2.core.init.BlocksItems;
@@ -43,7 +44,7 @@ public class ItemWindRotor extends ItemGradualInt implements IKineticRotor {
 		this.renderTexture = RenderTexture;
 		this.minWindStrength = minWindStrength;
 		this.maxWindStrength = maxWindStrength;
-		BlocksItems.registerItem((Item) this, new ResourceLocation("super_solar_panels", this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem((Item) this, new ResourceLocation(SuperSolarPanels.MOD_ID, this.name = name)).setUnlocalizedName(name);
 
 	}
 

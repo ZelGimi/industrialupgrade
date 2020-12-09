@@ -1,14 +1,15 @@
 package com.denfop.ssp.gui;
 
+import com.denfop.ssp.SuperSolarPanels;
 import ic2.core.gui.Gauge;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Locale;
 
 public enum ProgressBars implements Gauge.IGaugeStyle {
-	PROGRESS_MOLECULAR_TRANSFORMER((new Gauge.GaugePropertyBuilder(221, 7, 10, 15, Gauge.GaugePropertyBuilder.GaugeOrientation.Down)).withTexture(new ResourceLocation("super_solar_panels", "textures/gui/MolecularTransformer.png"))),
-	PROGRESS_JEI_MOLECULAR_TRANSFORMER((new Gauge.GaugePropertyBuilder(176, 2, 12, 11, Gauge.GaugePropertyBuilder.GaugeOrientation.Down)).withTexture(new ResourceLocation("super_solar_panels", "textures/gui/MolecularTransformer JEI.png"))),
-	ENERGY_ADVANCED_SOLAR((new Gauge.GaugePropertyBuilder(195, 0, 24, 14, Gauge.GaugePropertyBuilder.GaugeOrientation.Right)).withTexture(new ResourceLocation("super_solar_panels", "textures/gui/AdvancedSolarPanel.png")));
+	PROGRESS_MOLECULAR_TRANSFORMER((new Gauge.GaugePropertyBuilder(221, 7, 10, 15, Gauge.GaugePropertyBuilder.GaugeOrientation.Down)).withTexture(new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/gui/MolecularTransformer.png"))),
+	PROGRESS_JEI_MOLECULAR_TRANSFORMER((new Gauge.GaugePropertyBuilder(176, 2, 12, 11, Gauge.GaugePropertyBuilder.GaugeOrientation.Down)).withTexture(new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/gui/MolecularTransformer JEI.png"))),
+	ENERGY_ADVANCED_SOLAR((new Gauge.GaugePropertyBuilder(195, 0, 24, 14, Gauge.GaugePropertyBuilder.GaugeOrientation.Right)).withTexture(new ResourceLocation(SuperSolarPanels.MOD_ID, "textures/gui/AdvancedSolarPanel.png")));
 
 	private final String name;
 

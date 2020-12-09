@@ -99,9 +99,9 @@ public final class Configs {
 	public static int minWindStrength;
 	public static int minWindStrength1;
 	public static int minWindStrength2;
-	public static int Radius;
-	public static int Radius1;
-	public static int Radius2;
+	public static int iridiumRotorRadius;
+	public static int compressIridiumRotorRadius;
+	public static int spectralRotorRadius;
 	public static int Neutronfabricator;
 	public static int Neutronfabricator1;
 	public static int advancedmfsu;
@@ -213,9 +213,9 @@ public final class Configs {
 			minWindStrength = config.get("Settings Iridium rotor", "minWindStrength", 25).getInt(25);
 			minWindStrength1 = config.get("Settings Compress iridium rotor", "minWindStrength", 25).getInt(25);
 			minWindStrength2 = config.get("Settings Spectral rotor", "minWindStrength", 25).getInt(25);
-			Radius = config.get("Settings Iridium rotor", "Radius", 11).getInt(11);
-			Radius1 = config.get("Settings Compress iridium rotor", "Radius", 11).getInt(11);
-			Radius2 = config.get("Settings Spectral rotor", "Radius", 11).getInt(11);
+			iridiumRotorRadius = config.get("Settings Iridium rotor", "Radius", 11).getInt(11);
+			compressIridiumRotorRadius = config.get("Settings Compress iridium rotor", "Radius", 11).getInt(11);
+			spectralRotorRadius = config.get("Settings Spectral rotor", "Radius", 11).getInt(11);
 //
 			advancedmfsu = config.get("Settings Advanced mfsu", "output", 16384).getInt(16384);
 			advancedmfsu1 = config.get("Settings Advanced mfsu", "tier ", 5).getInt(5);
@@ -380,7 +380,6 @@ public final class Configs {
 			write(writer, "super_solar_panels:crafting@6; super_solar_panels:crafting@49; 15000000");
 			write(writer, "ic2:misc_resource#iridium_ore; super_solar_panels:crafting@52; 25000000");
 		} catch (IOException e) {
-
 			SuperSolarPanels.log.fatal("RIP MT Config!", e);
 			throw new RuntimeException("Fatal error writing Molecular Transformer recipe file", e);
 		} finally {
