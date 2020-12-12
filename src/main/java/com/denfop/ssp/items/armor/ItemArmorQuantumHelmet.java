@@ -150,9 +150,8 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 			return;
 		}
 		nbt.removeTag("colour");
-		if (nbt.hasNoTags()) {
+		if (nbt.hasNoTags() && stack.getTagCompound() != null)
 			stack.getTagCompound().removeTag("display");
-		}
 	}
 
 	public boolean isMetalArmor(final ItemStack stack, final EntityPlayer player) {
@@ -164,7 +163,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 	}
 
 	public String getArmorTexture(@Nonnull final ItemStack stack, @Nonnull final Entity entity, @Nonnull final EntityEquipmentSlot slot, @Nonnull final String type) {
-		return "super_solar_panels:textures/armour/" + this.type.getName() + ((type != null) ? "Overlay" : "") + ".png";
+		return "super_solar_panels:textures/armour/" + this.type.getName() + "Overlay" + ".png";
 	}
 
 	public int getItemEnchantability() {
@@ -228,7 +227,6 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 		}
 		final NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
 		byte toggleTimer = nbtData.getByte("toggleTimer");
-		boolean ret = false;
 		ElectricItem.manager.charge(stack, output, Integer.MAX_VALUE, true, false);
 		final int air = player.getAir();
 		if (ElectricItem.manager.canUse(stack, 1000.0) && air < 100) {
@@ -241,7 +239,11 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 			int slot = -1;
 			for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
 				final ItemStack playerStack = player.inventory.mainInventory.get(i);
-
+				playerStack.getItem();
+				if(playerStack.getItem() instanceof ItemTinCan){
+					slot = i;
+					break;
+				}
 			}
 			if (slot > -1) {
 				ItemStack playerStack2 = player.inventory.mainInventory.get(slot);
@@ -258,10 +260,12 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 		} else if (player.getFoodStats().getFoodLevel() <= 0) {
 			IC2.achievements.issueAchievement(player, "starveWithQHelmet");
 		}
-		for (final Object effect : new LinkedList<Object>(player.getActivePotionEffects())) {
-			final Potion potion = ((PotionEffect) effect).getPotion();
-
-
+		for (final PotionEffect effect : new LinkedList<>(player.getActivePotionEffects())) {
+			final Potion potion = effect.getPotion();
+			if (potion.isBadEffect() && ElectricItem.manager.canUse(stack, 400D)) {
+				ElectricItem.manager.use(stack, 400D, null);
+				player.removePotionEffect(potion);
+			}
 		}
 		boolean Nightvision = nbtData.getBoolean("Nightvision");
 		short hubmode = nbtData.getShort("HudMode");
@@ -301,21 +305,9 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 
 				player.removeActivePotionEffect(MobEffects.NIGHT_VISION);
 			} else {
-
-
 				player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0, true, true));
-
 			}
 		}
-
-
-		player.removePotionEffect(MobEffects.POISON);
-		player.removePotionEffect(MobEffects.UNLUCK);
-		player.removePotionEffect(MobEffects.WITHER);
-
-		//   potionRemovalCost.put(IC2Potion.radiation, Integer.valueOf(10000));
-		//      IC2.platform.removePotion((EntityLivingBase)player, MobEffects.WITHER);
-		//   IC2.platform.removePotion((EntityLivingBase)player, MobEffects.POISON);
 	}
 
 	public double getTransferLimit(final ItemStack stack) {
