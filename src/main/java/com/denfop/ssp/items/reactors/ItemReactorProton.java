@@ -16,11 +16,11 @@ public class ItemReactorProton extends ItemReactorUranium {
 	}
 
 	protected int getFinalHeat(ItemStack stack, IReactor reactor, int x, int y, int heat) {
-		if (reactor.isFluidCooled()) {
+		/*if (reactor.isFluidCooled()) {
 			float breedereffectiveness = reactor.getHeat() / reactor.getMaxHeat();
 			if (breedereffectiveness > 0.5D)
 				heat *= 1;
-		}
+		}*/
 		return heat;
 	}
 

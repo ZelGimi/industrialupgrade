@@ -3,6 +3,7 @@ package com.denfop.ssp;
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import ic2.core.ContainerBase;
 import ic2.core.gui.GuiElement;
+import ic2.core.gui.Image;
 import ic2.core.gui.dynamic.DynamicContainer;
 import ic2.core.gui.dynamic.DynamicGui;
 import ic2.core.gui.dynamic.GuiParser;
@@ -21,7 +22,7 @@ public class TransparentDynamicGUI<T extends ContainerBase<? extends IInventory>
 
 	protected void drawElement(GuiElement<?> element, int mouseX, int mouseY) {
 		boolean image;
-		if (image = element instanceof ic2.core.gui.Image) {
+		if (image = element instanceof Image) {
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		}

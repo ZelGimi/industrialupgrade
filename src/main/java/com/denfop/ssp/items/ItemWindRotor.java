@@ -4,6 +4,8 @@ package com.denfop.ssp.items;
 import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.IKineticRotor;
+import ic2.core.block.kineticgenerator.gui.GuiWaterKineticGenerator;
+import ic2.core.block.kineticgenerator.gui.GuiWindKineticGenerator;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemGradualInt;
@@ -61,9 +63,9 @@ public class ItemWindRotor extends ItemGradualInt implements IKineticRotor {
 	public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag advanced) {
 		tooltip.add(Localization.translate("ic2.itemrotor.wind.info", this.minWindStrength, this.maxWindStrength));
 		IKineticRotor.GearboxType type = null;
-		if ((Minecraft.getMinecraft()).currentScreen instanceof ic2.core.block.kineticgenerator.gui.GuiWaterKineticGenerator) {
+		if ((Minecraft.getMinecraft()).currentScreen instanceof GuiWaterKineticGenerator) {
 			type = IKineticRotor.GearboxType.WATER;
-		} else if ((Minecraft.getMinecraft()).currentScreen instanceof ic2.core.block.kineticgenerator.gui.GuiWindKineticGenerator) {
+		} else if ((Minecraft.getMinecraft()).currentScreen instanceof GuiWindKineticGenerator) {
 			type = IKineticRotor.GearboxType.WIND;
 		}
 		if (type != null)

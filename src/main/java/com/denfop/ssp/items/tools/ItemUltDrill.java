@@ -203,7 +203,9 @@ public class ItemUltDrill extends ItemDrill {
 						stack.onBlockDestroyed(world, state, blockPos, player);
 					}
 					world.playEvent(2001, blockPos, Block.getStateId(state));
-					((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
+					if (player instanceof EntityPlayerMP) {
+						((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
+					}
 				}
 			}
 			if (powerRanOut)
@@ -244,7 +246,9 @@ public class ItemUltDrill extends ItemDrill {
 						stack.onBlockDestroyed(world, state, blockPos, player);
 					}
 					world.playEvent(2001, blockPos, Block.getStateId(state));
-					((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
+					if (player instanceof EntityPlayerMP) {
+						((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
+					}
 				}
 			}
 			if (powerRanOut)

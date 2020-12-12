@@ -16,7 +16,7 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lib.LibOreDict;
 
 public class BotaniaRecipes {
-	final static IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+	final static IRecipeInputFactory input = Recipes.inputFactory;
 
 	public static void addCraftingRecipes() {
 		BotaniaAPI.registerRuneAltarRecipe(BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.rune_energy), 12000, LibOreDict.RUNE[0], LibOreDict.RUNE[1], SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), IC2Items.getItem("crafting", "alloy"), BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.elementium_plate));
@@ -126,7 +126,7 @@ public class BotaniaRecipes {
 	}
 
 	private static void addCompressorRecipe(final IRecipeInput input, final ItemStack output) {
-		ic2.api.recipe.Recipes.compressor.addRecipe(input, null, false, output);
+		Recipes.compressor.addRecipe(input, null, false, output);
 	}
 
 	public static void addShapedRecipe(final ItemStack output, final Object... inputs) {
@@ -138,15 +138,15 @@ public class BotaniaRecipes {
 	}
 
 	private static void addcanerRecipe(IRecipeInput input, IRecipeInput input1, ItemStack output) {
-		ic2.api.recipe.Recipes.cannerBottle.addRecipe(input, input1, output, false);
+		Recipes.cannerBottle.addRecipe(input, input1, output, false);
 	}
 
 	private static void addcentrifugeRecipe(IRecipeInput input, ItemStack output) {
-		ic2.api.recipe.Recipes.centrifuge.addRecipe(input, null, false, output);
+		Recipes.centrifuge.addRecipe(input, null, false, output);
 	}
 
 	private static void addExtrudingRecipe(IRecipeInput input, ItemStack output) {
-		ic2.api.recipe.Recipes.metalformerExtruding.addRecipe(input, null, false, output);
+		Recipes.metalformerExtruding.addRecipe(input, null, false, output);
 	}
 
 	public static void addShapelessRecipe(final ItemStack output, final Object... inputs) {

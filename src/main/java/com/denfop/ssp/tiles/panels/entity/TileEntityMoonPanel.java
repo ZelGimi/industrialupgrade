@@ -2,6 +2,7 @@ package com.denfop.ssp.tiles.panels.entity;
 
 
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
+import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -37,7 +38,7 @@ public abstract class TileEntityMoonPanel extends TileEntityInventory implements
 
 	protected final int tier;
 
-	protected final com.denfop.ssp.tiles.InvSlotMultiCharge chargeSlots;
+	protected final InvSlotMultiCharge chargeSlots;
 
 	private final double tierPower;
 
@@ -60,7 +61,7 @@ public abstract class TileEntityMoonPanel extends TileEntityInventory implements
 		this.maxStorage = storage;
 		this.tier = tier;
 		this.tierPower = EnergyNet.instance.getPowerFromTier(tier);
-		this.chargeSlots = new com.denfop.ssp.tiles.InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
+		this.chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
 
 	}
 

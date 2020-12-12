@@ -31,10 +31,10 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 	}
 
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		return "super_solar_panels:textures/armour/" + this.name + ((type != null) ? "Overlay" : "") + ".png";
+		return "super_solar_panels:textures/armour/" + this.name + "Overlay" + ".png";
 	}
 
-	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+	public void onArmorTick(World world, @Nonnull EntityPlayer player, ItemStack stack) {
 		super.onArmorTick(world, player, stack);
 		player.fallDistance = 0;
 		NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
@@ -184,8 +184,9 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 		if (nbt == null || !nbt.hasKey("colour", 3))
 			return;
 		nbt.removeTag("colour");
-		if (nbt.hasNoTags())
+		if (nbt.hasNoTags() && stack.getTagCompound() != null) {
 			stack.getTagCompound().removeTag("display");
+		}
 	}
 
 	public void setColor(@Nonnull ItemStack stack, int colour) {

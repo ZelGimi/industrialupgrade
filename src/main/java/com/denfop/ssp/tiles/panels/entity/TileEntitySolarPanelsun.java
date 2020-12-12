@@ -2,6 +2,7 @@ package com.denfop.ssp.tiles.panels.entity;
 
 
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
+import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -34,7 +35,7 @@ public abstract class TileEntitySolarPanelsun extends TileEntityInventory implem
 
 	protected final int dayPower;
 
-	protected final com.denfop.ssp.tiles.InvSlotMultiCharge chargeSlots;
+	protected final InvSlotMultiCharge chargeSlots;
 
 	protected final int tier;
 
@@ -56,7 +57,7 @@ public abstract class TileEntitySolarPanelsun extends TileEntityInventory implem
 
 	public TileEntitySolarPanelsun(int dayPower, int storage, int tier) {
 		this.dayPower = dayPower;
-		this.chargeSlots = new com.denfop.ssp.tiles.InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
+		this.chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
 		this.maxStorage = storage;
 		this.tier = tier;
 		this.tierPower = EnergyNet.instance.getPowerFromTier(tier);

@@ -6,6 +6,7 @@ import com.denfop.ssp.items.armor.*;
 import com.denfop.ssp.items.battery.ItemBattery;
 import com.denfop.ssp.items.reactors.ItemReactorHeatStorage;
 import com.denfop.ssp.items.reactors.ItemReactorProton;
+import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.items.resource.CraftingThings.CraftingTypes;
 import com.denfop.ssp.items.tools.ItemNanoSaber;
 import com.denfop.ssp.items.tools.ItemUltDrill;
@@ -33,7 +34,7 @@ public enum SSPItems {
 	public static void buildItems(Side side) {
 		SINGULAR_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.Singular));
 		SPECTRAL_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.Spectral));
-		CRAFTING.setInstance(new com.denfop.ssp.items.resource.CraftingThings());
+		CRAFTING.setInstance(new CraftingThings());
 		GRAVI_CHESTPLATE.setInstance(new ItemGraviChestplate());
 		QUANTUM_LEGGINGS.setInstance(new ItemArmorQuantumLeggins());
 		QUANTUM_BOOSTS.setInstance(new ItemArmorQuantumBoosts());

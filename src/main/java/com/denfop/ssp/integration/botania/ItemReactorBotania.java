@@ -24,20 +24,15 @@ public class ItemReactorBotania extends ItemReactorUranium {
 	}
 
 	protected ItemStack getDepletedStack(ItemStack stack, IReactor reactor) {
-		ItemStack ret;
 		switch (this.numberOfCells) {
 			case 1:
-				ret = BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_terrasteel_fuel_rod);
-				return ret.copy();
+				return BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_terrasteel_fuel_rod);
 			case 2:
-				ret = BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_dual_terrasteel_fuel_rod);
-				return ret.copy();
+				return BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_dual_terrasteel_fuel_rod);
 			case 4:
-				ret = BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_quad_terrasteel_fuel_rod);
-				return ret.copy();
+				return BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_quad_terrasteel_fuel_rod);
 			case 8:
-				ret = BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_eit_terrasteel_fuel_rod);
-				return ret.copy();
+				return BotaniaItems.BotaniaCRAFTING.getItemStack(BotaniaCraftingThings.CraftingTypes.depleted_eit_terrasteel_fuel_rod);
 		}
 		throw new RuntimeException("invalid cell count: " + this.numberOfCells);
 	}

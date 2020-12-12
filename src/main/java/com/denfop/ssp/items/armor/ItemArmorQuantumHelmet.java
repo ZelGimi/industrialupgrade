@@ -365,7 +365,6 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 			this.transferLimit = transferLimit;
 			this.energyPerDamage = 42000;
 			this.damageAbsorptionRatio = 9;
-			assert (double) 9 > 0.0;
 		}
 
 		public String getName() {

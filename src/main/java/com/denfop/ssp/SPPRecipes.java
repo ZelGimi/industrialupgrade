@@ -5,6 +5,7 @@ import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.molecular.IMolecularTransformerRecipeManager;
+import com.denfop.ssp.molecular.MTRecipe;
 import com.denfop.ssp.tiles.SSPBlock;
 import ic2.api.item.IC2Items;
 import ic2.api.recipe.IRecipeInput;
@@ -24,8 +25,8 @@ import java.text.ParseException;
 
 public final class SPPRecipes {
 	static void addCraftingRecipes() {
-		final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-		final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
+		final IRecipeInputFactory input = Recipes.inputFactory;
+		final IRecipeInputFactory input1 = Recipes.inputFactory;
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.redcomponent), "AAA", "BBB", "AAA", 'A', IC2Items.getItem("glass", "reinforced"), 'B', Items.REDSTONE);
 
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.bluecomponent), "AAA", "BBB", "AAA", 'A', IC2Items.getItem("glass", "reinforced"), 'B', new ItemStack(Items.DYE, 1, 4));
@@ -447,26 +448,26 @@ public final class SPPRecipes {
 	}
 
 	private static void addCompressorRecipe(final IRecipeInput input, final ItemStack output) {
-		ic2.api.recipe.Recipes.compressor.addRecipe(input, null, false, output);
+		Recipes.compressor.addRecipe(input, null, false, output);
 	}
 
 	private static void addExtrudingRecipe(IRecipeInput input, ItemStack output) {
-		ic2.api.recipe.Recipes.metalformerExtruding.addRecipe(input, null, false, output);
+		Recipes.metalformerExtruding.addRecipe(input, null, false, output);
 	}
 
 	//addRecipe(IRecipeInput paramIRecipeInput1, IRecipeInput paramIRecipeInput2, ItemStack paramItemStack);
 	private static void addcanerRecipe(IRecipeInput input, IRecipeInput input1, ItemStack output) {
-		ic2.api.recipe.Recipes.cannerBottle.addRecipe(input, input1, output, false);
+		Recipes.cannerBottle.addRecipe(input, input1, output, false);
 	}
 
 	private static void addcentrifugeRecipe(IRecipeInput input, ItemStack output, ItemStack itemStack) {
-		ic2.api.recipe.Recipes.centrifuge.addRecipe(input, null, false, output, itemStack);
+		Recipes.centrifuge.addRecipe(input, null, false, output, itemStack);
 	}
 
 	static void addMolecularTransformerRecipes() {
 		SuperSolarPanels.log.info("Loading Molecular Transformer recipes from file");
 		int successes = 0;
-		for (com.denfop.ssp.molecular.MTRecipe recipe : Configs.MTRecipes) {
+		for (MTRecipe recipe : Configs.MTRecipes) {
 			try {
 				if (decodeLine(recipe.lineNumber, recipe.parts))
 					successes++;

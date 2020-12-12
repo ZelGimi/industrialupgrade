@@ -14,6 +14,7 @@ import com.denfop.ssp.integration.wirelesssolarpanel.SWSPRecipes;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.keyboard.SSPKeys;
+import com.denfop.ssp.molecular.PrettyMolecularTransformerTESR;
 import com.denfop.ssp.proxy.CommonProxy;
 import com.denfop.ssp.tiles.SSPBlock;
 import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
@@ -78,11 +79,11 @@ public final class SuperSolarPanels {
         TeBlockRegistry.addAll(com.denfop.ssp.tiles.SSPBlock.class, SSPBlock.IDENTITY);
         TeBlockRegistry.setDefaultMaterial(SSPBlock.IDENTITY, Material.ROCK);
         if (SuperSolarPanels.botaniaLoaded) {
-            TeBlockRegistry.addAll(com.denfop.ssp.integration.botania.BotaniaMain.class, BotaniaMain.IDENTITY1);
+            TeBlockRegistry.addAll(BotaniaMain.class, BotaniaMain.IDENTITY1);
             TeBlockRegistry.setDefaultMaterial(BotaniaMain.IDENTITY1, Material.ROCK);
         }
         if (avaritiaLoaded) {
-            TeBlockRegistry.addAll(com.denfop.ssp.integration.avaritia.AvaritiaMod.class, AvaritiaMod.IDENTITY2);
+            TeBlockRegistry.addAll(AvaritiaMod.class, AvaritiaMod.IDENTITY2);
             TeBlockRegistry.setDefaultMaterial(AvaritiaMod.IDENTITY2, Material.ROCK);
         }
 
@@ -150,7 +151,7 @@ public final class SuperSolarPanels {
 
     @SideOnly(Side.CLIENT)
     private static void setupRenderingGuf() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, new com.denfop.ssp.molecular.PrettyMolecularTransformerTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, new PrettyMolecularTransformerTESR());
         ForgeHooksClient.registerTESRItemStack(machines.getItem(), SSPBlock.molecular_transformer.getId(), SSPBlock.molecular_transformer.getTeClass());
 
     }

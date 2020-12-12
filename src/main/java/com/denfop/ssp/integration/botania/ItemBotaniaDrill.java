@@ -207,8 +207,6 @@ public class ItemBotaniaDrill extends ItemDrill {
 						((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
 				}
 			}
-			if (powerRanOut)
-				IC2.platform.messagePlayer(player, "super_solar_panels.advancedDrill.ranOut");
 			return true;
 		}
 		if (readDrillMode(stack) == DrillMode.BIG_HOLES1 && !(world = player.world).isRemote) {
@@ -248,8 +246,6 @@ public class ItemBotaniaDrill extends ItemDrill {
 						((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, blockPos));
 				}
 			}
-			if (powerRanOut)
-				IC2.platform.messagePlayer(player, "super_solar_panels.ItemUltDrill.ranOut");
 			return true;
 		}
 		return super.onBlockStartBreak(stack, pos, player);

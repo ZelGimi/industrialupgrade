@@ -138,8 +138,7 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
   protected void updateEntityServer() {
     super.updateEntityServer();
     this.redstonePowered = false;
-    boolean needsInvUpdate = false;
-    needsInvUpdate |= this.upgradeSlot.tickNoMark();
+    boolean needsInvUpdate = this.upgradeSlot.tickNoMark();
     if (this.redstone.hasRedstoneInput() || this.energy.getEnergy() <= 0.0D) {
       setState(0);
       setActive(false);

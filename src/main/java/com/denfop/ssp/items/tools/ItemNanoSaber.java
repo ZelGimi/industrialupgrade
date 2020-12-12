@@ -6,6 +6,8 @@ import com.google.common.collect.Multimap;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.audio.PositionSpec;
+import ic2.core.item.armor.ItemArmorNanoSuit;
+import ic2.core.item.armor.ItemArmorQuantumSuit;
 import ic2.core.item.tool.HarvestLevel;
 import ic2.core.item.tool.ToolClass;
 import ic2.core.slot.ArmorSlot;
@@ -147,12 +149,12 @@ public class ItemNanoSaber extends ItemElectricTool {
 		super.onUpdate(stack, world, entity, slot, (par5 && isActive(stack)));
 		if (!isActive(stack))
 			return;
-		if (ticker % 16 == 0 && entity instanceof EntityPlayerMP)
+		if (entity instanceof EntityPlayerMP)
 			if (slot < 9) {
 				drainSaber(stack, 64.0D, (EntityLivingBase) entity);
-			} else if (ticker % 64 == 0) {
+			} /*else if (ticker % 64 == 0) {
 				drainSaber(stack, 32.0D, (EntityLivingBase) entity);
-			}
+			}*/
 	}
 
 	protected String getIdleSound(EntityLivingBase player, ItemStack stack) {
@@ -173,12 +175,12 @@ public class ItemNanoSaber extends ItemElectricTool {
 					if (!ElectricItem.manager.canUse(stack, 2000.0D))
 						break;
 					ItemStack armor = target.getItemStackFromSlot(slot);
-					if (armor == null)
+					if (armor.isEmpty())
 						continue;
 					double amount = 0.0D;
-					if (armor.getItem() instanceof ic2.core.item.armor.ItemArmorNanoSuit) {
+					if (armor.getItem() instanceof ItemArmorNanoSuit) {
 						amount = 48000.0D;
-					} else if (armor.getItem() instanceof ic2.core.item.armor.ItemArmorQuantumSuit) {
+					} else if (armor.getItem() instanceof ItemArmorQuantumSuit) {
 						amount = 300000.0D;
 					}
 					if (amount > 0.0D) {

@@ -70,15 +70,16 @@ public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
 
 	public void onArmorTick(final World world, @Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
 		final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-		byte toggleTimer = nbt.getByte("toggleTimer");
+		nbt.getByte("toggleTimer");
 
 		if (!world.isRemote && player.ticksExisted % 20 == 0) {
 			int e = 0;
-			if (stack.hasTagCompound())
+			if (stack.hasTagCompound() && stack.getTagCompound() != null) {
 				e = stack.getTagCompound().getInteger("energy");
+			}
 			if (e > 0) {
 				e--;
-			} else if (e <= 0 && RechargeHelper.consumeCharge(stack, player, 1)) {
+			} else if (RechargeHelper.consumeCharge(stack, player, 1)) {
 				e = 60;
 			}
 			stack.setTagInfo("energy", new NBTTagInt(e));

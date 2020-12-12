@@ -4,6 +4,7 @@ import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.tiles.neutronfabricator.TileEntityMassFabricator;
 import com.denfop.ssp.tiles.panels.air.*;
 import com.denfop.ssp.tiles.panels.earth.*;
+import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
 import com.denfop.ssp.tiles.panels.moon.*;
 import com.denfop.ssp.tiles.panels.overtime.*;
 import com.denfop.ssp.tiles.panels.rain.*;
@@ -66,7 +67,7 @@ public enum SSPBlock implements ITeBlock {
 	//
 
 	proton_solar_panelrain(TileEntityProtonRain.class, 49, EnumRarity.EPIC),
-	molecular_transformer(com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler.class, 25, EnumRarity.RARE),
+	molecular_transformer(TileEntityMolecularAssembler.class, 25, EnumRarity.RARE),
 	advanced_solar_panelrain(TileEntityAdvancedSolarrain.class, 36),
 	hybrid_solar_panelrain(TileEntityHybridSolarrain.class, 37, EnumRarity.RARE),
 	ultimate_solar_panelrain(TileEntityUltimateHybridSolarrain.class, 38, EnumRarity.EPIC),

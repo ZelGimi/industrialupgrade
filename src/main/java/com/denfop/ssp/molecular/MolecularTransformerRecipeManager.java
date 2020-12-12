@@ -1,5 +1,6 @@
 package com.denfop.ssp.molecular;
 
+import com.denfop.ssp.SuperSolarPanels;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipe;
 import ic2.core.init.MainConfig;
@@ -50,7 +51,7 @@ public class MolecularTransformerRecipeManager extends MachineRecipeHelper<IMole
 
 	public static void showError(String message) {
 		if (MainConfig.ignoreInvalidRecipes) {
-			com.denfop.ssp.SuperSolarPanels.log.warn(message);
+			SuperSolarPanels.log.warn(message);
 		} else {
 			throw new RuntimeException(message);
 		}

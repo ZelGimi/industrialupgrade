@@ -77,7 +77,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 	public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
 		NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
 		byte toggleTimer = nbt.getByte("toggleTimer");
-		if (com.denfop.ssp.keyboard.SSPKeys.isFlyKeyDown(player) && toggleTimer == 0) {
+		if (SSPKeys.isFlyKeyDown(player) && toggleTimer == 0) {
 			nbt.setByte("toggleTimer", toggleTimer = 10);
 			/*if (!world.isRemote) {
 				String mode;

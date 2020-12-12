@@ -32,7 +32,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 
 	@Override
 	public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
-		return "super_solar_panels:textures/armour/" + this.name + ((type != null) ? "Overlay" : "") + ".png";
+		return "super_solar_panels:textures/armour/" + this.name + "Overlay" + ".png";
 	}
 
 	@Override
@@ -58,9 +58,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 					player.motionY += 0.12000000149011612;
 				}
 			}
-			if (speed > 0.0f) {
-				player.moveRelative(0.0f, 0.0f, 1.0f, speed);
-			}
+			player.moveRelative(0.0f, 0.0f, 1.0f, speed);
 		}
 		IC2.platform.profilerEndSection();
 
@@ -218,9 +216,8 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 			return;
 		}
 		nbt.removeTag("colour");
-		if (nbt.hasNoTags()) {
+		if (nbt.hasNoTags() && stack.getTagCompound() != null)
 			stack.getTagCompound().removeTag("display");
-		}
 	}
 
 	@Nonnull

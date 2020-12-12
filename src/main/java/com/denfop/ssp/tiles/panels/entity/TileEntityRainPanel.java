@@ -2,6 +2,7 @@ package com.denfop.ssp.tiles.panels.entity;
 
 
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
+import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -32,7 +33,7 @@ import java.util.List;
 public abstract class TileEntityRainPanel extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider {
 	public final int maxStorage;
 
-	protected final com.denfop.ssp.tiles.InvSlotMultiCharge chargeSlots;
+	protected final InvSlotMultiCharge chargeSlots;
 
 	protected final int rainPower;
 
@@ -60,7 +61,7 @@ public abstract class TileEntityRainPanel extends TileEntityInventory implements
 		this.maxStorage = storage;
 		this.tier = tier;
 		this.tierPower = EnergyNet.instance.getPowerFromTier(tier);
-		this.chargeSlots = new com.denfop.ssp.tiles.InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
+		this.chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
 	}
 
 	protected void onLoaded() {

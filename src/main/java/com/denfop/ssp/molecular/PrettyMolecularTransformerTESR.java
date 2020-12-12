@@ -1,5 +1,6 @@
 package com.denfop.ssp.molecular;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
 import gnu.trove.map.TObjectIntMap;
@@ -166,7 +167,7 @@ public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<Ti
 			textureSizeCache.put(Arrays.asList(new Serializable[]{s, dv}), size);
 			return size;
 		} catch (Exception e) {
-			com.denfop.ssp.SuperSolarPanels.log.error("Error getting size of texture " + s + " (" + dv + ')', e);
+			SuperSolarPanels.log.error("Error getting size of texture " + s + " (" + dv + ')', e);
 			return 16;
 		}
 	}
