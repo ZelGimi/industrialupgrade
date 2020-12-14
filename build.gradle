@@ -19,6 +19,8 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: "net.kyori.blossom"
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = modVersion
 group = modGroup
@@ -41,36 +43,37 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-            mods {
-                supersolarpanels {
-                    source sourceSets.main
-                }
-            }
         }
-        data {
-            workingDirectory project.file('run')
+
+        server {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'supersolarpanels', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                supersolarpanels {
-                    source sourceSets.main
-                }
-            }
         }
     }
 }
 
 repositories {
-    flatDir name: 'libs', dirs: "$projectDir/libs"
-}
+    maven { url = "http://maven.cil.li/" }
+    maven { url = "http://maven.ic2.player.to" }
+    maven {
+        name = 'jared maven'
+        url = 'https://maven.blamejared.com/'
+    }
+    maven {
+        name = 'DVS1 Maven FS'
+        url = 'http://dvs1.progwml6.com/files/maven'
+    }
+    maven { url = "http://maven.tterrag.com" }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }}
 
 dependencies {
     minecraft([
@@ -79,13 +82,12 @@ dependencies {
             version: "${minecraft_version}-${forge_version}"
     ])
 
-    implementation fg.deobf(name: 'Botania-r1.10-361')
-    compileOnly    fg.deobf(name: 'industrialcraft-2-2.8.193-ex112-dev')
-    runtimeOnly    fg.deobf(name: 'industrialcraft-2-2.8.221-ex112')
-    implementation fg.deobf(name: 'jei_1.12.2-4.15.0.296')
-    implementation fg.deobf(name: 'Thaumcraft-1.12.2-6.1.BETA26')
-    implementation fg.deobf(name: 'WSP-1.12.2-0.8')
-    runtimeOnly    fg.deobf(name: 'Baubles-1.12-1.5.2')
+    compileOnly 'curse.maven:thaumcraft-223628:2629023'
+    compileOnly 'curse.maven:wireless-solar-panels-377164:2954663'
+    compileOnly 'curse.maven:botania-225643:2846950'
+    compileOnly 'mezz.jei:jei_1.12.2:4.16.1.302:api'
+    runtimeOnly 'net.industrial-craft:industrialcraft-2:2.8.170-ex112'
+    compileOnly 'net.industrial-craft:industrialcraft-2:2.8.193-ex112:dev'
 }
 
 processResources {
@@ -124,8 +126,9 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     options.incremental = true // one flag, and things will get so MUCH faster
+    sourceCompatibility = targetCompatibility = '1.8'
 }
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-jar.archiveName = "${project.archivesBaseName}-${project.minecraft_version}-${project.version}.jar"
+jar.archiveFileName = "${project.archivesBaseName}-${project.minecraft_version}-${project.version}.jar"
 
+jar.finalizedBy('reobfJar')
 defaultTasks 'build'
