@@ -25,6 +25,8 @@ apply plugin: 'maven-publish'
 version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
+//noinspection GroovyAssignabilityCheck
+project.ic2_range= "[${project.ic2_min_ver},${project.ic2_max_ver}]"
 
 blossom {
     replaceToken '%VERSION%', modVersion
@@ -46,7 +48,6 @@ minecraft {
         }
 
         server {
-
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
@@ -57,23 +58,27 @@ minecraft {
 }
 
 repositories {
-    maven { url = "http://maven.cil.li/" }
-    maven { url = "http://maven.ic2.player.to" }
     maven {
-        name = 'jared maven'
-        url = 'https://maven.blamejared.com/'
+        name 'IC2'
+        url 'http://maven.ic2.player.to'
+        content {
+            includeGroup 'net.industrial-craft'
+        }
     }
     maven {
-        name = 'DVS1 Maven FS'
-        url = 'http://dvs1.progwml6.com/files/maven'
+        name 'progwml6'
+        url 'https://dvs1.progwml6.com/files/maven'
+        content {
+            includeGroup 'mezz.jei'
+        }
     }
-    maven { url = "http://maven.tterrag.com" }
     maven {
         url "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
-    }}
+    }
+}
 
 dependencies {
     minecraft([
@@ -82,12 +87,12 @@ dependencies {
             version: "${minecraft_version}-${forge_version}"
     ])
 
-    compileOnly 'curse.maven:thaumcraft-223628:2629023'
-    compileOnly 'curse.maven:wireless-solar-panels-377164:2954663'
-    compileOnly 'curse.maven:botania-225643:2846950'
-    compileOnly 'mezz.jei:jei_1.12.2:4.16.1.302:api'
-    runtimeOnly 'net.industrial-craft:industrialcraft-2:2.8.170-ex112'
-    compileOnly 'net.industrial-craft:industrialcraft-2:2.8.193-ex112:dev'
+    compileOnly "curse.maven:thaumcraft-223628:2629023"
+    compileOnly "curse.maven:wireless-solar-panels-377164:2954663"
+    compileOnly "curse.maven:botania-225643:2846950"
+    compileOnly "mezz.jei:jei_1.12.2:4.16.1.302:api"
+    runtimeOnly "net.industrial-craft:industrialcraft-2:${project.ic2_max_ver}"
+    compileOnly "net.industrial-craft:industrialcraft-2:2.8.193-ex112:dev"
 }
 
 processResources {
