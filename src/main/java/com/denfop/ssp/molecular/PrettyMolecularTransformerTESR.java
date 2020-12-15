@@ -1,7 +1,6 @@
 package com.denfop.ssp.molecular;
 
 import com.denfop.ssp.SuperSolarPanels;
-import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraft.client.Minecraft;

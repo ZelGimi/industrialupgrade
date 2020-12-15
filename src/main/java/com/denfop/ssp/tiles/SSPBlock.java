@@ -2,6 +2,7 @@ package com.denfop.ssp.tiles;
 
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.molecular.TileEntityMolecularAssembler;
 import com.denfop.ssp.tiles.neutronfabricator.TileEntityMassFabricator;
 import com.denfop.ssp.tiles.panels.air.*;
 import com.denfop.ssp.tiles.panels.earth.*;
