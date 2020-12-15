@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.reactors;
 
-import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.google.common.base.CaseFormat;
@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +38,7 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 		super(null, duration);
 		setMaxStackSize(64);
 		this.numberOfCells = cells;
-		BlocksItems.registerItem(this, new ResourceLocation(Constants.MOD_ID, this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem(this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
 	}
 
 	@SideOnly(Side.CLIENT)

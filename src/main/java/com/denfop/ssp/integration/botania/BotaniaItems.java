@@ -23,7 +23,6 @@ public enum BotaniaItems {
 		eit_terrasteel_fuel_rod.setInstance(new ItemReactorBotania("eit_terrasteel_fuel_rod", 8));
 		terrasteeldrill.setInstance(new ItemBotaniaDrill());
 
-
 		if (side == Side.CLIENT)
 			doModelGuf();
 	}

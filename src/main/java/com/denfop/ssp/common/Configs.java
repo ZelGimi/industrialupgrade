@@ -18,7 +18,6 @@ import com.denfop.ssp.tiles.panels.overtime.*;
 import com.denfop.ssp.tiles.panels.rain.*;
 import com.denfop.ssp.tiles.panels.sun.*;
 import net.minecraftforge.common.config.Configuration;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.text.ParseException;
@@ -300,12 +299,10 @@ public final class Configs {
 		SuperSolarPanels.log.info("Loading MT Recipes from " + config.getAbsolutePath());
 		if (!config.exists())
 			fillDefault(config);
-		FileInputStream stream = null;
-		BufferedReader reader = null;
+
 		List<MTRecipe> recipes = new ArrayList<>(20);
-		try {
-			stream = new FileInputStream(config);
-			reader = new BufferedReader(new InputStreamReader(stream));
+		try (FileInputStream stream = new FileInputStream(config);
+		     BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
 			int lineNumber = 0;
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -329,21 +326,22 @@ public final class Configs {
 		} catch (IOException e) {
 			SuperSolarPanels.log.fatal("RIP MT Config!", e);
 			throw new RuntimeException("Fatal error reading Molecular Transformer recipe file", e);
-		} finally {
-			IOUtils.closeQuietly(reader);
-			IOUtils.closeQuietly(stream);
 		}
 		MTRecipes = recipes.toArray(new MTRecipe[0]);
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private static void fillDefault(File config) {
-		FileOutputStream stream = null;
-		BufferedWriter writer = null;
 		try {
-			config.createNewFile();
-			stream = new FileOutputStream(config);
-			writer = new BufferedWriter(new OutputStreamWriter(stream));
+			if (!config.createNewFile()) {
+				throw new IOException("Couldn't create config file");
+			}
+		} catch (IOException e) {
+			SuperSolarPanels.log.fatal("RIP MT Config!", e);
+			throw new RuntimeException("Fatal error writing Molecular Transformer recipe file", e);
+		}
+
+		try (FileOutputStream stream = new FileOutputStream(config);
+		     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream))) {
 			write(writer, "##################################################################################################");
 			write(writer, "#                        AdvancedSolarPanels Molecular Transformer Recipes                       #");
 			write(writer, "##################################################################################################");
@@ -383,9 +381,6 @@ public final class Configs {
 		} catch (IOException e) {
 			SuperSolarPanels.log.fatal("RIP MT Config!", e);
 			throw new RuntimeException("Fatal error writing Molecular Transformer recipe file", e);
-		} finally {
-			IOUtils.closeQuietly(writer);
-			IOUtils.closeQuietly(stream);
 		}
 	}
 

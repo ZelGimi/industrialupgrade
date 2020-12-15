@@ -14,9 +14,7 @@ public class BlockRegister {
 			Neutron_BLOCK = new BlockNeutronFluid(FluidRegister.Neutron);
 
 	public static void register() {
-
 		setRegister();
-
 	}
 
 	private static void setRegister() {
@@ -26,7 +24,6 @@ public class BlockRegister {
 
 	@SideOnly(Side.CLIENT)
 	public static void registerRender() {
-
 		setRender();
 	}
 

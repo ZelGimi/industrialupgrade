@@ -1,8 +1,8 @@
 package com.denfop.ssp.items.armor;
 
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.*;
@@ -28,7 +28,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -53,7 +56,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 
 	public ItemArmorQuantumHelmet(final SolarHelmetTypes type) {
 		super(ItemArmor.ArmorMaterial.DIAMOND, -1, EntityEquipmentSlot.HEAD);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, type.getName())).setUnlocalizedName(type.getLocalisedName());
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(type.getName())).setUnlocalizedName(type.getLocalisedName());
 		this.setCreativeTab(IC2.tabIC2);
 		this.setMaxDamage(27);
 		this.type = type;
@@ -240,7 +243,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 			for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
 				final ItemStack playerStack = player.inventory.mainInventory.get(i);
 				playerStack.getItem();
-				if(playerStack.getItem() instanceof ItemTinCan){
+				if (playerStack.getItem() instanceof ItemTinCan) {
 					slot = i;
 					break;
 				}

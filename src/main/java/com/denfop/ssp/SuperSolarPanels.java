@@ -53,7 +53,7 @@ import java.util.Map;
 @Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public final class SuperSolarPanels {
 
-    public static final CreativeTabs SSPTab = new SSPSourceTab("SSPtab");
+    public static final CreativeTabs SSPTab = new SSPSourceTab("SuperSolarPanels");
     public static Logger log;
 
     public static boolean avaritiaLoaded = false;
@@ -97,7 +97,6 @@ public final class SuperSolarPanels {
         colours.registerItemColorHandler(armourColouring, SSPItems.SPECTRAL_SOLAR_HELMET.getInstance());
         colours.registerItemColorHandler(armourColouring, SSPItems.SINGULAR_SOLAR_HELMET.getInstance());
         colours.registerItemColorHandler(armourColouring, SSPItems.HYBRID_SOLAR_HELMET.getInstance(), SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance());
-
     }
 
     public static ResourceLocation getIdentifier(final String name) {
@@ -153,7 +152,6 @@ public final class SuperSolarPanels {
     private static void setupRenderingGuf() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularAssembler.class, new PrettyMolecularTransformerTESR());
         ForgeHooksClient.registerTESRItemStack(machines.getItem(), SSPBlock.molecular_transformer.getId(), SSPBlock.molecular_transformer.getTeClass());
-
     }
 
     @Mod.EventHandler

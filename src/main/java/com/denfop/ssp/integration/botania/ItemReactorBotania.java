@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 public class ItemReactorBotania extends ItemReactorUranium {
 	public ItemReactorBotania(String name, int cells) {
 		super(name, cells, Configs.terrasteel_fuel_rod);
-
 	}
 
 	protected int getFinalHeat(ItemStack stack, IReactor reactor, int x, int y, int heat) {

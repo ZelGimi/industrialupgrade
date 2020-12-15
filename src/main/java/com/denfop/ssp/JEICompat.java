@@ -95,13 +95,13 @@ public final class JEICompat implements IModPlugin {
 		}
 
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-			int space = 5;
-			int x = 5;
-			minecraft.fontRenderer.drawSplitString(this.input, 42, x, recipeWidth - 42, 16777215);
-			x += minecraft.fontRenderer.getWordWrappedHeight(this.input, recipeWidth - 42) + 5;
-			minecraft.fontRenderer.drawSplitString(this.output, 42, x, recipeWidth - 42, 16777215);
-			x += minecraft.fontRenderer.getWordWrappedHeight(this.output, recipeWidth - 42) + 5;
-			minecraft.fontRenderer.drawString(this.totalEU, 42, x, 16777215);
+			int y = 5;
+			int x = 42;
+			minecraft.fontRenderer.drawSplitString(this.input, x, y, recipeWidth - x, 16777215);
+			y += minecraft.fontRenderer.getWordWrappedHeight(this.input, recipeWidth - x) + 5;
+			minecraft.fontRenderer.drawSplitString(this.output, x, y, recipeWidth - x, 16777215);
+			y += minecraft.fontRenderer.getWordWrappedHeight(this.output, recipeWidth - x) + 5;
+			minecraft.fontRenderer.drawString(this.totalEU, x, y, 16777215);
 		}
 	}
 }

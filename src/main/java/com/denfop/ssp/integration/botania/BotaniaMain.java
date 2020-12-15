@@ -1,5 +1,6 @@
 package com.denfop.ssp.integration.botania;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Constants;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -16,11 +17,9 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 
-public enum BotaniaMain implements ITeBlock
-//implements ITeBlock
-{
+public enum BotaniaMain implements ITeBlock {
 
-	manasteel_solar_panel(),
+	manasteel_solar_panel,
 	elementium_solar_panel(TileEntityElementiumSolar.class, 72, EnumRarity.RARE),
 	terrasteel_solar_panel(TileEntityTerrasteelSolar.class, 73, EnumRarity.EPIC);
 	public static final ResourceLocation IDENTITY1;
@@ -28,7 +27,7 @@ public enum BotaniaMain implements ITeBlock
 
 	static {
 		VALUES1 = values();
-		IDENTITY1 = new ResourceLocation(Constants.MOD_ID, "machines1");
+		IDENTITY1 = SuperSolarPanels.getIdentifier("machines1");
 	}
 
 	private final Class<? extends TileEntityBlock> teClass1;

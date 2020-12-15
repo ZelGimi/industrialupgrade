@@ -26,10 +26,6 @@ public class SSPOre extends Block {
 		setLightLevel(0.2F);
 	}
 
-	public boolean hasTileEntity() {
-		return false;
-	}
-
 	// public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 	// return ItemReg.LIRIUM;
 	//}

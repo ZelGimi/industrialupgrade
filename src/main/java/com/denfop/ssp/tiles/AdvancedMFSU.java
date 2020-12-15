@@ -1,7 +1,7 @@
 package com.denfop.ssp.tiles;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Constants;
 import ic2.api.tile.IEnergyStorage;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
@@ -27,7 +27,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -97,7 +96,7 @@ public class AdvancedMFSU extends TileEntityInventory implements IEnergyStorage,
 
 	public ContainerBase<?> getGuiContainer(EntityPlayer player) {
 		try {
-			return DynamicContainer.create((IInventory) this, player, GuiParser.parse(new ResourceLocation(Constants.MOD_ID, "guidef/AdvancedMFSU.xml"), this.teBlock.getTeClass()));
+			return DynamicContainer.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/AdvancedMFSU.xml"), this.teBlock.getTeClass()));
 		} catch (Exception exception) {
 			return null;
 		}
@@ -106,7 +105,7 @@ public class AdvancedMFSU extends TileEntityInventory implements IEnergyStorage,
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer player, boolean b) {
 		try {
-			return DynamicGui.create((IInventory) this, player, GuiParser.parse(new ResourceLocation(Constants.MOD_ID, "guidef/AdvancedMFSU.xml"), this.teBlock.getTeClass()));
+			return DynamicGui.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/AdvancedMFSU.xml"), this.teBlock.getTeClass()));
 		} catch (Exception exception) {
 			return null;
 		}

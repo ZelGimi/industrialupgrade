@@ -1,7 +1,6 @@
 package com.denfop.ssp.molecular;
 
 import com.denfop.ssp.SuperSolarPanels;
-import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -34,9 +33,9 @@ import java.util.List;
 public class PrettyMolecularTransformerTESR extends TileEntitySpecialRenderer<TileEntityMolecularAssembler> {
 	public static final PrettyMolecularTransformerModel model = new PrettyMolecularTransformerModel();
 	public static final boolean drawActiveCore = false;
-	private static final ResourceLocation transfTextloc = new ResourceLocation(Constants.MOD_ID, "textures/models/textureMolecularTransformer.png");
-	private static final ResourceLocation plazmaTextloc = new ResourceLocation(Constants.MOD_ID, "textures/models/plazma.png");
-	private static final ResourceLocation particlesTextloc = new ResourceLocation(Constants.MOD_ID, "textures/models/particles.png");
+	private static final ResourceLocation transfTextloc = SuperSolarPanels.getIdentifier("textures/models/textureMolecularTransformer.png");
+	private static final ResourceLocation plazmaTextloc = SuperSolarPanels.getIdentifier("textures/models/plazma.png");
+	private static final ResourceLocation particlesTextloc = SuperSolarPanels.getIdentifier("textures/models/particles.png");
 	private static final TObjectIntMap<List<Serializable>> textureSizeCache = new TObjectIntHashMap<>();
 	private static final IResourceManager resources = Minecraft.getMinecraft().getResourceManager();
 	public int ticker;

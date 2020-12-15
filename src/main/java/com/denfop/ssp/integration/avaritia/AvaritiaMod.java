@@ -1,5 +1,6 @@
 package com.denfop.ssp.integration.avaritia;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Constants;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -28,7 +29,7 @@ public enum AvaritiaMod implements ITeBlock
 
 	static {
 		VALUES2 = values();
-		IDENTITY2 = new ResourceLocation(Constants.MOD_ID, "machines2");
+		IDENTITY2 = SuperSolarPanels.getIdentifier("machines2");
 	}
 
 	private final Class<? extends TileEntityBlock> teClass2;

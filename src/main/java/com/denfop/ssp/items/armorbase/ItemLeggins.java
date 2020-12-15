@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.armorbase;
 
-import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.SuperSolarPanels;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
@@ -17,7 +17,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,7 +37,7 @@ public class ItemLeggins extends ItemArmorElectric implements IBoostingJetpack {
 
 	protected ItemLeggins(final String name, final double maxCharge, final double transferLimit, final int tier) {
 		super(null, null, EntityEquipmentSlot.LEGS, maxCharge, transferLimit, tier);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
 		this.setMaxDamage(27);
 		this.setMaxStackSize(1);
 		this.setNoRepair();

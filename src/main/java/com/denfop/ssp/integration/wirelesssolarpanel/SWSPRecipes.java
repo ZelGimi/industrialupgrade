@@ -37,5 +37,4 @@ public class SWSPRecipes {
 	private static void addShapedRecipe(ItemStack output, Object... inputs) {
 		Recipes.advRecipes.addRecipe(output, inputs);
 	}
-
 }

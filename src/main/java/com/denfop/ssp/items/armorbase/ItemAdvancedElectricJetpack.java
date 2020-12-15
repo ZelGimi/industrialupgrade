@@ -1,8 +1,8 @@
 package com.denfop.ssp.items.armorbase;
 
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
@@ -24,7 +24,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -46,7 +45,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 
 	protected ItemAdvancedElectricJetpack(String name, double maxCharge, double transferLimit, int tier) {
 		super(null, null, EntityEquipmentSlot.CHEST, maxCharge, transferLimit, tier);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
 		setMaxDamage(27);
 		setMaxStackSize(1);
 		setNoRepair();

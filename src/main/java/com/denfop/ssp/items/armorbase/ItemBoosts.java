@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.armorbase;
 
-import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.items.api.PlayerEvents;
 import com.denfop.ssp.items.api.RechargeHelper;
 import com.google.common.base.CaseFormat;
@@ -20,7 +20,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,7 +40,7 @@ public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
 
 	protected ItemBoosts(final String name, final double maxCharge, final double transferLimit, final int tier) {
 		super(null, null, EntityEquipmentSlot.FEET, maxCharge, transferLimit, tier);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, this.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
 		this.setMaxDamage(27);
 		this.setMaxStackSize(1);
 		this.setNoRepair();

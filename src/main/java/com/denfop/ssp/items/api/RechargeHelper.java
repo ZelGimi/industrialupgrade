@@ -8,9 +8,8 @@ public class RechargeHelper {
 	public static int getCharge(ItemStack is) {
 		if (is == null || is.isEmpty() || !(is.getItem() instanceof IRechargable))
 			return -1;
-		if (is.hasTagCompound() && is.getTagCompound() != null) {
+		if (is.hasTagCompound() && is.getTagCompound() != null)
 			return is.getTagCompound().getInteger("tc.charge");
-		}
 		return 0;
 	}
 

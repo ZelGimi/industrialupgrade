@@ -179,7 +179,7 @@ public abstract class TileEntitySolarPanelsun extends TileEntityInventory implem
 
 	public String getOutput() {
 		if (this.active == GenerationState.DAY) {
-			return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.generating"), Integer.valueOf(this.dayPower), Localization.translate("ic2.generic.text.EUt"));
+			return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.generating"), this.dayPower, Localization.translate("ic2.generic.text.EUt"));
 		}
 		return String.format("%s 0 %s", Localization.translate("super_solar_panels.gui.generating"), Localization.translate("ic2.generic.text.EUt"));
 	}

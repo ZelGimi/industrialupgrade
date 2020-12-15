@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.reactors;
 
-import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.SuperSolarPanels;
 import com.google.common.base.CaseFormat;
 import ic2.api.reactor.IReactor;
 import ic2.core.init.BlocksItems;
@@ -10,7 +10,6 @@ import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,7 +22,7 @@ public class ItemReactorHeatStorage extends AbstractDamageableReactorComponent {
 
 	public ItemReactorHeatStorage(String name, int heatStorage) {
 		super(null, heatStorage);
-		BlocksItems.registerItem(this, new ResourceLocation(Constants.MOD_ID, ItemReactorHeatStorage.name = name)).setUnlocalizedName(name);
+		BlocksItems.registerItem(this, SuperSolarPanels.getIdentifier(ItemReactorHeatStorage.name = name)).setUnlocalizedName(name);
 	}
 
 	@SideOnly(Side.CLIENT)

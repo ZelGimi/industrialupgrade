@@ -1,7 +1,7 @@
 package com.denfop.ssp.integration.botania;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
@@ -21,7 +21,10 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
@@ -42,7 +45,7 @@ public class ItemBotaniaDrill extends ItemDrill {
 
 	public ItemBotaniaDrill() {
 		super(null, 46, HarvestLevel.Iridium, 8888888, Configs.transferLimitdrill, 4, DrillMode.NORMAL.drillSpeed);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, "ItemBotaniaDrill")).setUnlocalizedName("ItemBotaniaDrill");
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier("ItemBotaniaDrill")).setUnlocalizedName("ItemBotaniaDrill");
 	}
 
 	public static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, RayTraceResult ray) {

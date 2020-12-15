@@ -1,7 +1,7 @@
 package com.denfop.ssp.items.armor;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.ssp.tiles.panels.overtime.*;
 import com.google.common.base.CaseFormat;
@@ -29,7 +29,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -59,7 +62,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 
 	public ItemArmourSolarHelmet(final SolarHelmetTypes type) {
 		super(ItemArmor.ArmorMaterial.DIAMOND, -1, EntityEquipmentSlot.HEAD);
-		BlocksItems.registerItem((Item) this, new ResourceLocation(Constants.MOD_ID, type.getName())).setUnlocalizedName(type.getLocalisedName());
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(type.getName())).setUnlocalizedName(type.getLocalisedName());
 		this.setCreativeTab(IC2.tabIC2);
 		this.setMaxDamage(27);
 		this.type = type;
@@ -81,34 +84,8 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 	}
 
 	@Override
-	@Nonnull
-	public String getUnlocalizedName(@Nonnull final ItemStack stack) {
-		return this.getUnlocalizedName();
-	}
-
-	@Override
 	public boolean isMetalArmor(final ItemStack stack, final EntityPlayer player) {
 		return true;
-	}
-
-	public boolean canBeDyed() {
-		return this.type != SolarHelmetTypes.Spectral;
-	}
-
-	@Override
-	public int getItemEnchantability() {
-		return 0;
-	}
-
-	@Override
-	@Nonnull
-	public String getItemStackDisplayName(@Nonnull final ItemStack stack) {
-		return Localization.translate(this.getUnlocalizedName(stack));
-	}
-
-	@Override
-	public boolean hasColor(@Nonnull final ItemStack stack) {
-		return this.getColor(stack) != -1;
 	}
 
 	@Override
@@ -120,6 +97,26 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		return nbt.getInteger("colour");
 	}
 
+	public boolean canBeDyed() {
+		return this.type != SolarHelmetTypes.Spectral;
+	}
+
+	@Override
+	@Nonnull
+	public String getUnlocalizedName(@Nonnull final ItemStack stack) {
+		return this.getUnlocalizedName();
+	}
+
+	@Override
+	public int getItemEnchantability() {
+		return 0;
+	}
+
+	@Override
+	public boolean hasColor(@Nonnull final ItemStack stack) {
+		return this.getColor(stack) != -1;
+	}
+
 	@Override
 	public void removeColor(@Nonnull final ItemStack stack) {
 		final NBTTagCompound nbt = this.getDisplayNbt(stack, false);
@@ -129,52 +126,6 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		nbt.removeTag("colour");
 		if (nbt.hasNoTags() && stack.getTagCompound() != null)
 			stack.getTagCompound().removeTag("display");
-	}
-
-	@Override
-	public int getMetadata(@Nonnull final ItemStack stack) {
-		return 0;
-	}
-
-	@Override
-	public void setColor(@Nonnull final ItemStack stack, final int colour) {
-		this.getDisplayNbt(stack, true).setInteger("colour", colour);
-	}
-
-	@Override
-	public boolean getIsRepairable(@Nonnull final ItemStack toRepair, @Nonnull final ItemStack repair) {
-		return false;
-	}
-
-	@Override
-	public ISpecialArmor.ArmorProperties getProperties(final EntityLivingBase player, @Nonnull final ItemStack armour, final DamageSource source, final double damage, final int slot) {
-		if (source.isUnblockable()) {
-			return new ISpecialArmor.ArmorProperties(0, 0.0, 0);
-		}
-		return new ISpecialArmor.ArmorProperties(0, 0.15 * this.type.damageAbsorptionRatio, (int) (25.0 * ElectricItem.manager.getCharge(armour) / this.type.energyPerDamage));
-	}
-
-	@Override
-	public int getArmorDisplay(final EntityPlayer player, @Nonnull final ItemStack armour, final int slot) {
-		if (ElectricItem.manager.getCharge(armour) >= this.type.energyPerDamage) {
-			return (int) Math.round(3.0 * this.type.damageAbsorptionRatio);
-		}
-		return 0;
-	}
-
-	@Override
-	public String getArmorTexture(@Nonnull final ItemStack stack, @Nonnull final Entity entity, @Nonnull final EntityEquipmentSlot slot, @Nonnull final String type) {
-		return "super_solar_panels:textures/armour/" + this.type.getName() + "Overlay" + ".png";
-	}
-
-	@Override
-	public void damageArmor(final EntityLivingBase entity, @Nonnull final ItemStack stack, final DamageSource source, final int damage, final int slot) {
-		ElectricItem.manager.discharge(stack, damage * this.type.energyPerDamage, Integer.MAX_VALUE, true, false, false);
-	}
-
-	@Override
-	public boolean canProvideEnergy(final ItemStack stack) {
-		return false;
 	}
 
 	protected NBTTagCompound getDisplayNbt(final ItemStack stack, final boolean create) {
@@ -206,23 +157,40 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 	}
 
 	@Override
-	public int getTier(final ItemStack stack) {
-		return this.type.tier;
+	public void setColor(@Nonnull final ItemStack stack, final int colour) {
+		this.getDisplayNbt(stack, true).setInteger("colour", colour);
 	}
 
 	@Override
-	public double getTransferLimit(final ItemStack stack) {
-		return this.type.transferLimit;
+	@Nonnull
+	public String getItemStackDisplayName(@Nonnull final ItemStack stack) {
+		return Localization.translate(this.getUnlocalizedName(stack));
 	}
 
 	@Override
-	public boolean doesProvideHUD(final ItemStack stack) {
-		return ElectricItem.manager.getCharge(stack) > 0.0;
+	public boolean getIsRepairable(@Nonnull final ItemStack toRepair, @Nonnull final ItemStack repair) {
+		return false;
 	}
 
 	@Override
-	public HudMode getHudMode(final ItemStack stack) {
-		return HudMode.getFromID(StackUtil.getOrCreateNbtData(stack).getByte("hudMode"));
+	public ISpecialArmor.ArmorProperties getProperties(final EntityLivingBase player, @Nonnull final ItemStack armour, final DamageSource source, final double damage, final int slot) {
+		if (source.isUnblockable()) {
+			return new ISpecialArmor.ArmorProperties(0, 0.0, 0);
+		}
+		return new ISpecialArmor.ArmorProperties(0, 0.15 * this.type.damageAbsorptionRatio, (int) (25.0 * ElectricItem.manager.getCharge(armour) / this.type.energyPerDamage));
+	}
+
+	@Override
+	public int getArmorDisplay(final EntityPlayer player, @Nonnull final ItemStack armour, final int slot) {
+		if (ElectricItem.manager.getCharge(armour) >= this.type.energyPerDamage) {
+			return (int) Math.round(3.0 * this.type.damageAbsorptionRatio);
+		}
+		return 0;
+	}
+
+	@Override
+	public void damageArmor(final EntityLivingBase entity, @Nonnull final ItemStack stack, final DamageSource source, final int damage, final int slot) {
+		ElectricItem.manager.discharge(stack, damage * this.type.energyPerDamage, Integer.MAX_VALUE, true, false, false);
 	}
 
 	@Override
@@ -295,7 +263,7 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 			for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
 				final ItemStack playerStack = player.inventory.mainInventory.get(i);
 				playerStack.getItem();
-				if(playerStack.getItem() instanceof ItemTinCan){
+				if (playerStack.getItem() instanceof ItemTinCan) {
 					slot = i;
 					break;
 				}
@@ -380,35 +348,41 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		//   IC2.platform.removePotion((EntityLivingBase)player, MobEffects.POISON);
 	}
 
-
-	protected boolean HUDstuff(final boolean isRemote, final EntityPlayer player, final ItemStack stack) {
-		final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-		byte toggleTimer = nbt.getByte("toggleTimer");
-		if (IC2.keyboard.isAltKeyDown(player) && IC2.keyboard.isHudModeKeyDown(player) && toggleTimer == 0) {
-			byte hubmode = nbt.getByte("hudMode");
-			toggleTimer = 10;
-			if (hubmode == HudMode.getMaxMode()) {
-				hubmode = 0;
-			} else {
-				++hubmode;
-			}
-			if (!isRemote) {
-				nbt.setByte("hudMode", hubmode);
-				IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
-			}
-		}
-		if (!isRemote && toggleTimer > 0) {
-			final String s = "toggleTimer";
-			--toggleTimer;
-			nbt.setByte(s, toggleTimer);
-		}
-		return isRemote;
+	@Override
+	public boolean canProvideEnergy(final ItemStack stack) {
+		return false;
 	}
 
-
-	protected int tickRate() {
-		return 128;
+	@Override
+	public String getArmorTexture(@Nonnull final ItemStack stack, @Nonnull final Entity entity, @Nonnull final EntityEquipmentSlot slot, @Nonnull final String type) {
+		return "super_solar_panels:textures/armour/" + this.type.getName() + "Overlay" + ".png";
 	}
+
+	@Override
+	public int getTier(final ItemStack stack) {
+		return this.type.tier;
+	}
+
+	@Override
+	public double getTransferLimit(final ItemStack stack) {
+		return this.type.transferLimit;
+	}
+
+	@Override
+	public boolean doesProvideHUD(final ItemStack stack) {
+		return ElectricItem.manager.getCharge(stack) > 0.0;
+	}
+
+	@Override
+	public HudMode getHudMode(final ItemStack stack) {
+		return HudMode.getFromID(StackUtil.getOrCreateNbtData(stack).getByte("hudMode"));
+	}
+
+	@Override
+	public int getMetadata(@Nonnull final ItemStack stack) {
+		return 0;
+	}
+
 
 	public enum SolarHelmetTypes {
 		Spectral(EnumRarity.EPIC, TileEntitySpectral.settings.dayPower, TileEntitySpectral.settings.nightPower, 9, Configs.maxCharge9, Configs.transferLimit9, 42000, 9.0),
@@ -449,6 +423,37 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 			return "solar_helmets." + this.name;
 		}
 	}
+
+
+	protected boolean HUDstuff(final boolean isRemote, final EntityPlayer player, final ItemStack stack) {
+		final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
+		byte toggleTimer = nbt.getByte("toggleTimer");
+		if (IC2.keyboard.isAltKeyDown(player) && IC2.keyboard.isHudModeKeyDown(player) && toggleTimer == 0) {
+			byte hubmode = nbt.getByte("hudMode");
+			toggleTimer = 10;
+			if (hubmode == HudMode.getMaxMode()) {
+				hubmode = 0;
+			} else {
+				++hubmode;
+			}
+			if (!isRemote) {
+				nbt.setByte("hudMode", hubmode);
+				IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
+			}
+		}
+		if (!isRemote && toggleTimer > 0) {
+			final String s = "toggleTimer";
+			--toggleTimer;
+			nbt.setByte(s, toggleTimer);
+		}
+		return isRemote;
+	}
+
+
+	protected int tickRate() {
+		return 128;
+	}
+
 
 	public void checkTheSky(final World world, final BlockPos pos) {
 		if (!world.provider.hasSkyLight() && world.canBlockSeeSky(pos)) {
