@@ -115,7 +115,8 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
                 "Implementation-Vendor" :"Denfop",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "Git-Commit-Hash": getGitHash()
         ])
     }
 }
@@ -132,3 +133,13 @@ jar.archiveFileName = "${project.archivesBaseName}-${project.minecraft_version}-
 
 jar.finalizedBy('reobfJar')
 defaultTasks 'build'
+
+static def getGitHash() {
+    try {
+        def process = 'git rev-parse --short HEAD'.execute()
+        process.waitFor()
+        return (process.exitValue() ? 'unknown' : process.text.trim())
+    }catch(IOException ignored){
+        return 'unknown'
+    }
+}
