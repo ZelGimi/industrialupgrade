@@ -53,7 +53,7 @@ import java.util.Map;
 @Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public final class SuperSolarPanels {
 
-    public static final CreativeTabs SSPTab = new SSPSourceTab("SuperSolarPanels");
+    public static final CreativeTabs SSPTab = new SSPSourceTab("SSPSourceTab");
     public static Logger log;
 
     public static boolean avaritiaLoaded = false;

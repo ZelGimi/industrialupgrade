@@ -1,5 +1,4 @@
-advacement.super_solar_panels_prelest1=Мрія всього світа
-advacement.super_solar_panels_prelest2=Незабутній розум та краса
+super_solar_panels.crafting.nanobox.name=Нано ящик для инструментов
 super_solar_panels.machines.spectral_solar_panel=Spectral Solar Panel
 super_solar_panels.machines.singular_solar_panel=Singular Solar Panel
 super_solar_panels.machines.admin_solar_panel=Admin Solar Panel
@@ -168,3 +167,5 @@ super_solar_panels.machines.hybrid_solar_panelrain=Hybrid Rain Panel
 super_solar_panels.machines.ultimate_solar_panelrain=Ultimate Rain Panel
 super_solar_panels.machines.quantum_solar_panelrain=Quantum Rain Panel
 super_solar_panels.machines.nutronfabricator=Neutron Particle Generator
+item.ItemUltDrill.name=Ultimate Drill
+item.crafting.name=Crafting
