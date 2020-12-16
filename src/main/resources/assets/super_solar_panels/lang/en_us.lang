@@ -1,4 +1,3 @@
-super_solar_panels.crafting.nanobox.name=Нано ящик для инструментов
 super_solar_panels.machines.spectral_solar_panel=Spectral Solar Panel
 super_solar_panels.machines.singular_solar_panel=Singular Solar Panel
 super_solar_panels.machines.admin_solar_panel=Admin Solar Panel
@@ -52,17 +51,6 @@ super_solar_panels.crafting.quantum_core=Quantum Core
 super_solar_panels.solar_helmets.advanced=Advanced Solar Helmet
 super_solar_panels.solar_helmets.hybrid=Hybrid Solar Helmet
 super_solar_panels.solar_helmets.ultimate=Ultimate Hybrid Solar Helmet
-
-super_solar_panels.gui.input=Input:
-super_solar_panels.gui.output=Output:
-super_solar_panels.gui.maxOutput=Max Output:
-super_solar_panels.gui.energyPerOperation=Energy:
-super_solar_panels.gui.energyPerTick=EU in:
-super_solar_panels.gui.progress=Progress:
-super_solar_panels.gui.tier=Tier:
-super_solar_panels.gui.max=MAX
-super_solar_panels.gui.storage=Storage:
-super_solar_panels.gui.generating=Generating:
 
 super_solar_panels.crafting.sunlinse=Sun Linse
 super_solar_panels.crafting.nightlinse=Night Linse
@@ -169,3 +157,4 @@ super_solar_panels.machines.quantum_solar_panelrain=Quantum Rain Panel
 super_solar_panels.machines.nutronfabricator=Neutron Particle Generator
 item.ItemUltDrill.name=Ultimate Drill
 item.crafting.name=Crafting
+super_solar_panels.crafting.nanobox.name=Tool NanoBox
