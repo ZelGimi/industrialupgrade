@@ -4,10 +4,6 @@ import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.molecular.TileEntityMolecularAssembler;
 import com.denfop.ssp.tiles.neutronfabricator.TileEntityMassFabricator;
-import com.denfop.ssp.tiles.panels.air.*;
-import com.denfop.ssp.tiles.panels.earth.*;
-import com.denfop.ssp.tiles.panels.entity.TileEntityMolecularAssembler;
-import com.denfop.ssp.tiles.panels.moon.*;
 import com.denfop.ssp.tiles.panels.overtime.*;
 import com.denfop.ssp.tiles.panels.rain.*;
 import com.denfop.ssp.tiles.panels.sun.*;
@@ -56,16 +52,6 @@ public enum SSPBlock implements ITeBlock {
 	admin_solar_panelsun(TileEntityAdminsun.class, 22, EnumRarity.EPIC),
 	photonic_solar_panelsun(TileEntityPhotonicSun.class, 23, EnumRarity.EPIC),
 	neutronium_solar_panelsun(TileEntityNeutronSun.class, 24, EnumRarity.EPIC),
-	advanced_solar_panelmoon(TileEntityAdvancedSolarmoon.class, 26),
-	hybrid_solar_panelmoon(TileEntityHybridSolarmoon.class, 27, EnumRarity.RARE),
-	ultimate_solar_panelmoon(TileEntityUltimateHybridSolarmoon.class, 28, EnumRarity.EPIC),
-	quantum_solar_panelmoon(TileEntityQuantumSolarmoon.class, 29, EnumRarity.EPIC),
-	spectral_solar_panelmoon(TileEntitySpectralmoon.class, 30),
-	singular_solar_panelmoon(TileEntitySingularmoon.class, 31, EnumRarity.RARE),
-	admin_solar_panelmoon(TileEntityAdminmoon.class, 32, EnumRarity.EPIC),
-	photonic_solar_panelmoon(TileEntityPhotonicMoon.class, 33, EnumRarity.EPIC),
-	neutronium_solar_panelmoon(TileEntityNeutronMoon.class, 34, EnumRarity.EPIC),
-	proton_solar_panelmoon(TileEntityProtonMoon.class, 48, EnumRarity.EPIC),
 	//
 
 	proton_solar_panelrain(TileEntityProtonRain.class, 49, EnumRarity.EPIC),
@@ -81,28 +67,8 @@ public enum SSPBlock implements ITeBlock {
 	neutronium_solar_panelrain(TileEntityNeutronRain.class, 44, EnumRarity.EPIC),
 	advancedmfsu(AdvancedMFSU.class, 45, EnumRarity.EPIC),
 	ultimatemfsu(UltimateMFSU.class, 46, EnumRarity.EPIC),
-	quantummfsu(QuantumMFSU.class, 47, EnumRarity.EPIC),
+	quantummfsu(QuantumMFSU.class, 47, EnumRarity.EPIC);
 	//
-	adminair(TileEntityAdminair.class, 70, EnumRarity.EPIC),
-	advancedsolarair(TileEntityAdvancedSolarair.class, 51, EnumRarity.EPIC),
-	hybridsolarair(TileEntityHybridSolarair.class, 52, EnumRarity.EPIC),
-	neutronair(TileEntityNeutronAir.class, 53, EnumRarity.EPIC),
-	photonicair(TileEntityPhotonicAir.class, 54, EnumRarity.EPIC),
-	protonair(TileEntityProtonAir.class, 55, EnumRarity.EPIC),
-	quantumsolarair(TileEntityQuantumSolarair.class, 56, EnumRarity.EPIC),
-	singularair(TileEntitySingularair.class, 57, EnumRarity.EPIC),
-	spectralair(TileEntitySpectralair.class, 58, EnumRarity.EPIC),
-	ultimatehybridsolarair(TileEntityUltimateHybridSolarair.class, 59, EnumRarity.EPIC),
-	adminearth(TileEntityAdminearth.class, 60, EnumRarity.EPIC),
-	advancedsolarearth(TileEntityAdvancedSolarearth.class, 61, EnumRarity.EPIC),
-	hybridsolarearth(TileEntityHybridSolarearth.class, 62, EnumRarity.EPIC),
-	neutronearth(TileEntityNeutronEarth.class, 63, EnumRarity.EPIC),
-	photonicearth(TileEntityPhotonicEarth.class, 64, EnumRarity.EPIC),
-	protonearth(TileEntityProtonEarth.class, 65, EnumRarity.EPIC),
-	quantumsolarearth(TileEntityQuantumSolarearth.class, 66, EnumRarity.EPIC),
-	singularearth(TileEntitySingularearth.class, 67, EnumRarity.EPIC),
-	spectralearth(TileEntitySpectralearth.class, 68, EnumRarity.EPIC),
-	ultimatehybridsolarearth(TileEntityUltimateHybridSolarearth.class, 69, EnumRarity.EPIC);
 	public static final ResourceLocation IDENTITY;
 	private static final SSPBlock[] VALUES;
 
