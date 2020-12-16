@@ -45,7 +45,7 @@ public class ItemUltDrill extends ItemDrill {
 
 	public ItemUltDrill() {
 		super(null, Configs.operationEnergyCost, HarvestLevel.Iridium, Configs.maxChargedrill, Configs.transferLimitdrill, Configs.tierdrill, DrillMode.NORMAL.drillSpeed);
-		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier("ItemUltDrill")).setUnlocalizedName("ItemUltDrill");
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier("item_ult_drill")).setUnlocalizedName("item_ult_drill");
 	}
 
 	@Nonnull
@@ -135,7 +135,7 @@ public class ItemUltDrill extends ItemDrill {
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "ItemUltDrill"), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "item_ult_drill"), null));
 	}
 
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -144,7 +144,7 @@ public class ItemUltDrill extends ItemDrill {
 			if (!world.isRemote) {
 				DrillMode mode = readNextDrillMode(stack);
 				saveDrillMode(stack, mode);
-				IC2.platform.messagePlayer(player, "super_solar_panels.ItemUltDrill.mode", mode.colour, new Object[]{mode.translationName});
+				IC2.platform.messagePlayer(player, Localization.translate("super_solar_panels.item_ult_drill.mode") + " " + mode.colour + Localization.translate(mode.translationName));
 				this.efficiency = mode.drillSpeed;
 				this.operationEnergyCost = mode.energyCost;
 			}
@@ -163,7 +163,8 @@ public class ItemUltDrill extends ItemDrill {
 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag flag) {
-		tooltip.add(TextFormatting.GOLD + Localization.translate("super_solar_panels.ItemUltDrill.mode", new Object[]{TextFormatting.WHITE + Localization.translate((readDrillMode(stack)).translationName)}));
+		tooltip.add(TextFormatting.GOLD + Localization.translate("super_solar_panels.item_ult_drill.mode"));
+		tooltip.add(TextFormatting.WHITE + Localization.translate((readDrillMode(stack)).translationName));
 	}
 
 	public static DrillMode readDrillMode(ItemStack stack) {
@@ -212,7 +213,7 @@ public class ItemUltDrill extends ItemDrill {
 				}
 			}
 			if (powerRanOut)
-				IC2.platform.messagePlayer(player, "super_solar_panels.advancedDrill.ranOut");
+				IC2.platform.messagePlayer(player, "super_solar_panels.item_ult_drill.ranOut");
 			return true;
 		}
 		if (readDrillMode(stack) == DrillMode.BIG_HOLES1 && !(world = player.world).isRemote) {
@@ -255,7 +256,7 @@ public class ItemUltDrill extends ItemDrill {
 				}
 			}
 			if (powerRanOut)
-				IC2.platform.messagePlayer(player, "super_solar_panels.ItemUltDrill.ranOut");
+				IC2.platform.messagePlayer(player, "super_solar_panels.item_ult_drill.ranOut");
 			return true;
 		}
 		return super.onBlockStartBreak(stack, pos, player);
@@ -277,7 +278,7 @@ public class ItemUltDrill extends ItemDrill {
 		public final String translationName;
 
 		DrillMode(TextFormatting colour, float speed, double energyCost) {
-			this.translationName = "super_solar_panels.ItemUltDrill." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
+			this.translationName = "super_solar_panels.item_ult_drill.mode." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
 			this.energyCost = energyCost;
 			this.drillSpeed = speed;
 			this.colour = colour;

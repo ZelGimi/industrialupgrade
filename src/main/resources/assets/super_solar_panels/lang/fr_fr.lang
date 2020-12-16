@@ -134,8 +134,11 @@ super_solar_panels.eit_proton_fuel_rod=Huit barres de carburant (proton)
 super_solar_panels.rotor_carbon1=Rotor Iridium
 super_solar_panels.rotor_carbon2=Rotor Iridium avancé
 super_solar_panels.rotor_carbon3=Rotor spectral
-super_solar_panels.ItemUltDrill=Perceuse parfaite
-super_solar_panels.ItemUltDrill.mode=Perceuse parfaite
+super_solar_panels.item_ult_drill=Perceuse parfaite
+super_solar_panels.item_ult_drill.mode=Mode:
+super_solar_panels.item_ult_drill.mode.normal=Normal
+super_solar_panels.item_ult_drill.mode.bigHoles=Des Gros Trous
+super_solar_panels.item_ult_drill.mode.bigHoles1=Gros Gros Trous
 fluid.neutron=Neutron liquide
 fluid.iridium=Iridium liquide
 fluid.Protonium=Proton liquide
@@ -153,5 +156,5 @@ super_solar_panels.crafting.sunlinse=Lentille solaire
 super_solar_panels.crafting.nightlinse=Lentille d'ombre
 super_solar_panels.crafting.rainlinse=Lentille de pluiesuper_solar_panels.machines.photon_solar_panel=Photonic Solar Panel
 super_solar_panels.crafting.nanobox=Nano Boîte À Outils
-item.ItemUltDrill.name=Ultime De Forage
 item.crafting.name=L'artisanat
+
