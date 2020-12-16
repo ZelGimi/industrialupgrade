@@ -48,12 +48,12 @@ public class ItemUltDrill extends ItemDrill {
 		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier("ItemUltDrill")).setUnlocalizedName("ItemUltDrill");
 	}
 
+	@Nonnull
 	public static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, RayTraceResult ray) {
 		return getBrokenBlocks(player, ray.getBlockPos(), ray.sideHit);
 	}
 
 	protected static Collection<BlockPos> getBrokenBlocks(EntityPlayer player, BlockPos pos, EnumFacing side) {
-		assert side != null;
 		int xMove = 2, yMove = xMove, zMove = yMove;
 		switch (side.getAxis()) {
 			case X:

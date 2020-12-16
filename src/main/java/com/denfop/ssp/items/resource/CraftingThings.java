@@ -82,27 +82,13 @@ public class CraftingThings extends ItemMulti {
 		sunlinse(48),
 		nightlinse(49),
 		rainlinse(50),
-		zinc_plate(51),
-		chromium_plate(52),
-		wolfram_plate(53),
-		titan_plate(54),
-		platium_plate(55),
-		cobalt_plate(56),
-		compress_zinc_plate(57),
-		compress_chromium_plate(58),
-		compress_wolfram_plate(59),
 		comress_titan_plate(60),
 		comress_platium_plate(61),
-		compress_cobalt_plate(62),
 		QuantimItems7(63),
 		photoniy_ingot(64),
 		photoniy(65);
 
-		private static final CraftingTypes[] VALUES;
-
-		static {
-			VALUES = values();
-		}
+		private static final CraftingTypes[] VALUES = values();
 
 		private final String name;
 		private final int ID;

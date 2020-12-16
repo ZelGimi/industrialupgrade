@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 public enum SSPItems {
 	SPECTRAL_SOLAR_HELMET, SINGULAR_SOLAR_HELMET, QUANTUM_LEGGINGS, QUANTUM_BOOSTS, CRAFTING, GRAVI_CHESTPLATE, ADVANCED_CRYSTAL, QUANTUM_SABER, SPECTRAL_SABER, QUANTUM_HELMET, TWELVE_HEAT_STORAGE, MAX_HEAT_STORAGE, PROTON_FUEL_ROD, QUAD_PROTON_FUEL_ROD, EIT_PROTON_FUEL_ROD, DUAL_PROTON_FUEL_ROD, HYBRID_SOLAR_HELMET, ULTIMATE_HYBRID_SOLAR_HELMET, ADVANCED_SOLAR_HELMET,
 	DRILL,
-	IRIDIUM, COMPRESSIRIDIUM, SPECTRAL, COMPRESSIRIDIUM_1, IRIDIUM_1, SPECTRAL_1;
+	IRIDIUM, COMPRESSIRIDIUM, SPECTRAL;
 	//battery_su
 
 	public Item instance;
@@ -54,19 +54,6 @@ public enum SSPItems {
 		IRIDIUM.setInstance(new ItemWindRotor("rotor_carbon1", Configs.iridiumRotorRadius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model1.png")));
 		COMPRESSIRIDIUM.setInstance(new ItemWindRotor("rotor_carbon2", Configs.compressIridiumRotorRadius, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model2.png")));
 		SPECTRAL.setInstance(new ItemWindRotor("rotor_carbon3", Configs.spectralRotorRadius, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model3.png")));
-		//
-		IRIDIUM_1.setInstance(new ItemWindRotor("rotor_carbon4", Configs.iridiumRotorRadius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model1.png")));
-		COMPRESSIRIDIUM_1.setInstance(new ItemWindRotor("rotor_carbon5", Configs.compressIridiumRotorRadius, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model2.png")));
-		SPECTRAL_1.setInstance(new ItemWindRotor("rotor_carbon6", Configs.spectralRotorRadius, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model3.png")));
-
-
-		// new ItemReactorHeatStorage(ItemName.hex_heat_storage, 60000);
-		//new ItemReactorMOX(ItemName.mox_fuel_rod, 1);
-		//  new ItemReactorMOX(ItemName.dual_mox_fuel_rod, 2);
-		//   new ItemReactorMOX(ItemName.quad_mox_fuel_rod, 4);
-
-		//  battery_su.setInstance(new ItemBatteryChargeHotbar("charging_energy_crystal", 4000000.0D, 8192.0D, 3));
-		// new ItemBatteryChargeHotbar(ItemName.charging_energy_crystal, 4000000.0D, 8192.0D, 3);
 		if (side == Side.CLIENT)
 			doModelGuf();
 	}
