@@ -5,12 +5,6 @@ import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.fluid.neutron.BlockRegister;
 import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.gui.ProgressBars;
-import com.denfop.ssp.integration.avaritia.AvaritiaMod;
-import com.denfop.ssp.integration.botania.BotaniaItems;
-import com.denfop.ssp.integration.botania.BotaniaMain;
-import com.denfop.ssp.integration.botania.BotaniaRecipes;
-import com.denfop.ssp.integration.thaumcraft.ThaumcraftMain;
-import com.denfop.ssp.integration.wirelesssolarpanel.SWSPRecipes;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.denfop.ssp.keyboard.SSPKeys;
@@ -33,7 +27,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -56,17 +49,11 @@ public final class SuperSolarPanels {
     public static final CreativeTabs SSPTab = new SSPSourceTab("SSPSourceTab");
     public static Logger log;
 
-    public static boolean avaritiaLoaded = false;
-    public static boolean botaniaLoaded = false;
-    public static boolean wirelessLoaded = false;
-    public static boolean thaumcraftLoaded = false;
     public static BlockTileEntity machines;
     @SidedProxy(clientSide = "com.denfop.ssp.proxy.ClientProxy", serverSide = "com.denfop.ssp.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     public static SuperSolarPanels instance;
-    public static BlockTileEntity machines1;
-    public static BlockTileEntity machines2;
 
     static {
         FluidRegistry.enableUniversalBucket();
@@ -74,19 +61,8 @@ public final class SuperSolarPanels {
 
     @SubscribeEvent
     public static void register(final TeBlockFinalCallEvent event) {
-        botaniaLoaded = Loader.isModLoaded("botania");
-        avaritiaLoaded = Loader.isModLoaded("avaritia");
         TeBlockRegistry.addAll(com.denfop.ssp.tiles.SSPBlock.class, SSPBlock.IDENTITY);
         TeBlockRegistry.setDefaultMaterial(SSPBlock.IDENTITY, Material.ROCK);
-        if (SuperSolarPanels.botaniaLoaded) {
-            TeBlockRegistry.addAll(BotaniaMain.class, BotaniaMain.IDENTITY1);
-            TeBlockRegistry.setDefaultMaterial(BotaniaMain.IDENTITY1, Material.ROCK);
-        }
-        if (avaritiaLoaded) {
-            TeBlockRegistry.addAll(AvaritiaMod.class, AvaritiaMod.IDENTITY2);
-            TeBlockRegistry.setDefaultMaterial(AvaritiaMod.IDENTITY2, Material.ROCK);
-        }
-
     }
 
     @SubscribeEvent
@@ -105,19 +81,6 @@ public final class SuperSolarPanels {
 
     @Mod.EventHandler
     public void load(final FMLPreInitializationEvent event) {
-        botaniaLoaded = Loader.isModLoaded("botania");
-        avaritiaLoaded = Loader.isModLoaded("avaritia");
-        thaumcraftLoaded = Loader.isModLoaded("thaumcraft");
-        if (botaniaLoaded) {
-            SuperSolarPanels.machines1 = TeBlockRegistry.get(BotaniaMain.IDENTITY1);
-            BotaniaItems.buildItems(event.getSide());
-        }
-        if (thaumcraftLoaded)
-            ThaumcraftMain.init();
-        if (avaritiaLoaded) {
-            SuperSolarPanels.machines2 = TeBlockRegistry.get(AvaritiaMod.IDENTITY2);
-            AvaritiaMod.buildItems(event.getSide());
-        }
         proxy.preInit(event);
         SuperSolarPanels.log = event.getModLog();
         Configs.loadConfig(event.getSuggestedConfigurationFile(), event.getSide().isClient());
@@ -156,21 +119,10 @@ public final class SuperSolarPanels {
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
-        botaniaLoaded = Loader.isModLoaded("botania");
         proxy.init(event);
         SSPBlock.buildDummies();
         SPPRecipes.addCraftingRecipes();
         ProgressBars.addStyles();
-        if (botaniaLoaded) {
-            BotaniaRecipes.addCraftingRecipes();
-            BotaniaMain.buildDummies();
-        }
-        avaritiaLoaded = Loader.isModLoaded("avaritia");
-        wirelessLoaded = Loader.isModLoaded("wirelesstools");
-        if (wirelessLoaded)
-            SWSPRecipes.addCraftingRecipes();
-        if (avaritiaLoaded)
-            AvaritiaMod.buildDummies();
         TileEntityMolecularAssembler.MolecularOutput.registerNetwork();
     }
 
