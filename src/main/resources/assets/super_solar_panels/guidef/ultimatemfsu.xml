@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gui width="180" height="180">
+<gui width="210" height="210">
+
 	<text y="6" align="center">%name%</text>
 
-	<slot name="charge" x="81" y="20" />
-	<slot name="discharge" x="81" y="62" />
+	<slot name="charge" x="99" y="49" />
+	<slot name="discharge" x="99" y="90" />
 
-	<energygauge x="60" y="42" style="stirlingbar" /> 
+	<energygauge x="78" y="72" style="stirlingbar" /> 
 
-	<text y="44" x="8">%base.getStorageText()%</text>
-	<text y="44" x="122">%base.getCapacityText()%</text>
-	<text y="65" x="112">%base.getOutputText()%</text>
+	<text y="75" x="20">%base.getStorageText()%</text>
+	<text y="75" x="209">%base.getCapacityText()%</text>
 	<!--  15, 130, 117 -->
 
-	<playerInventory x="10" y="97" />
+	<playerInventory x="17" y="120" />
 </gui>
