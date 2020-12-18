@@ -11,7 +11,7 @@
 		"dependencies": [
 			"ic2@${ic2_range}"
 		],
-		"description": "Modern solar panels is a remastered advanced solar panels and new generation of using solar power. This is addon for IndustrialCraft 2.",
+		"description": "Super Solar Panels is a remastered Advanced Solar Panels and new generation of using solar power. This is addon for IndustrialCraft 2.",
 		"logoFile": "",
 		"mcversion": "1.12.2",
 		"modid": "super_solar_panels",
