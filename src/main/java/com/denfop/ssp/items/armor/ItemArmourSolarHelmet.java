@@ -68,9 +68,13 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		this.type = type;
 		if (armorType == EntityEquipmentSlot.HEAD)
 			MinecraftForge.EVENT_BUS.register(this);
-		//  potionRemovalCost.put(MobEffects.POISON, Integer.valueOf(10000));
 		potionRemovalCost.put(IC2Potion.radiation, 5000);
-		//   potionRemovalCost.replace(MobEffects.WITHER, Integer.valueOf(25000));
+		potionRemovalCost.put(MobEffects.POISON, 400);
+		potionRemovalCost.put(MobEffects.WITHER, 500);
+		potionRemovalCost.put(MobEffects.SLOWNESS, 300);
+		potionRemovalCost.put(MobEffects.NAUSEA, 1000);
+		potionRemovalCost.put(MobEffects.HUNGER, 300);
+		potionRemovalCost.put(MobEffects.WEAKNESS, 400);
 	}
 
 	public String func_77658_a() {
@@ -283,13 +287,6 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		} else if (player.getFoodStats().getFoodLevel() <= 0) {
 			IC2.achievements.issueAchievement(player, "starveWithQHelmet");
 		}
-		for (final PotionEffect effect : new LinkedList<>(player.getActivePotionEffects())) {
-			final Potion potion = effect.getPotion();
-			if (potion.isBadEffect() && ElectricItem.manager.canUse(stack, 400D)) {
-				ElectricItem.manager.use(stack, 400D, null);
-				player.removePotionEffect(potion);
-			}
-		}
 		boolean Nightvision = nbtData.getBoolean("Nightvision");
 		short hubmode = nbtData.getShort("HudMode");
 		if (IC2.keyboard.isAltKeyDown(player) && IC2.keyboard.isModeSwitchKeyDown(player) && toggleTimer == 0) {
@@ -342,10 +339,6 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 				}
 			}
 		}
-
-		//   potionRemovalCost.put(IC2Potion.radiation, Integer.valueOf(10000));
-		//      IC2.platform.removePotion((EntityLivingBase)player, MobEffects.WITHER);
-		//   IC2.platform.removePotion((EntityLivingBase)player, MobEffects.POISON);
 	}
 
 	@Override
@@ -383,45 +376,10 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		return 0;
 	}
 
-
-	public enum SolarHelmetTypes {
-		Spectral(EnumRarity.EPIC, TileEntitySpectral.settings.dayPower, TileEntitySpectral.settings.nightPower, 9, Configs.maxCharge9, Configs.transferLimit9, 42000, 9.0),
-		Singular(EnumRarity.EPIC, TileEntitySingular.settings.dayPower, TileEntitySingular.settings.nightPower, 9, Configs.maxCharge9, Configs.transferLimit9, 42000, 9.0),
-		ADVANCED(EnumRarity.UNCOMMON, TileEntityAdvancedSolar.settings.dayPower, TileEntityAdvancedSolar.settings.nightPower, 3, Configs.maxCharge10, Configs.transferLimit10, 800, 0.9D),
-		HYBRID(EnumRarity.RARE, TileEntityHybridSolar.settings.dayPower, TileEntityHybridSolar.settings.nightPower, 4, Configs.maxCharge11, Configs.transferLimit11, 2000, 1.0D),
-		ULTIMATE(EnumRarity.EPIC, TileEntityUltimateHybridSolar.settings.dayPower, TileEntityUltimateHybridSolar.settings.nightPower, 4, Configs.maxCharge11, Configs.transferLimit11, 2000, 1.0D),
-		;
-
-		public final double maxCharge;
-		public final double transferLimit;
-		public final double damageAbsorptionRatio;
-		public final int dayEU;
-		public final int nightEU;
-		public final int tier;
-		public final int energyPerDamage;
-		public final EnumRarity rarity;
-		private final String name;
-
-		SolarHelmetTypes(final EnumRarity rarity, final int dayEU, final int nightEU, final int tier, final double maxCharge, final double transferLimit, final int energyPerDamage, final double damageAbsorptionRatio) {
-			this.name = this.name().toLowerCase(Locale.ENGLISH);
-			this.rarity = rarity;
-			this.dayEU = dayEU;
-			this.nightEU = nightEU;
-			this.tier = tier;
-			this.maxCharge = maxCharge;
-			this.transferLimit = transferLimit;
-			this.energyPerDamage = energyPerDamage;
-			this.damageAbsorptionRatio = damageAbsorptionRatio;
-			assert damageAbsorptionRatio > 0.0;
-		}
-
-		public String getName() {
-			return this.name + "SolarHelmet";
-		}
-
-		protected String getLocalisedName() {
-			return "solar_helmets." + this.name;
-		}
+	@Override
+	public void getSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
+		if (this.isInCreativeTab(tab))
+			ElectricItemManager.addChargeVariants(this, items);
 	}
 
 
@@ -467,10 +425,42 @@ public class ItemArmourSolarHelmet extends ItemArmor implements IItemModelProvid
 		}
 	}
 
-	@Override
-	public void getSubItems(@Nonnull final CreativeTabs tab, @Nonnull final NonNullList<ItemStack> items) {
-		if (this.isInCreativeTab(tab)) {
-			ElectricItemManager.addChargeVariants(this, items);
+	public enum SolarHelmetTypes {
+		Spectral(EnumRarity.EPIC, TileEntitySpectral.settings.dayPower, TileEntitySpectral.settings.nightPower, 9, Configs.maxCharge9, Configs.transferLimit9, 42000, 9.0),
+		Singular(EnumRarity.EPIC, TileEntitySingular.settings.dayPower, TileEntitySingular.settings.nightPower, 9, Configs.maxCharge9, Configs.transferLimit9, 42000, 9.0),
+		ADVANCED(EnumRarity.UNCOMMON, TileEntityAdvancedSolar.settings.dayPower, TileEntityAdvancedSolar.settings.nightPower, 3, Configs.maxCharge10, Configs.transferLimit10, 800, 0.9D),
+		HYBRID(EnumRarity.RARE, TileEntityHybridSolar.settings.dayPower, TileEntityHybridSolar.settings.nightPower, 4, Configs.maxCharge11, Configs.transferLimit11, 2000, 1.0D),
+		ULTIMATE(EnumRarity.EPIC, TileEntityUltimateHybridSolar.settings.dayPower, TileEntityUltimateHybridSolar.settings.nightPower, 4, Configs.maxCharge11, Configs.transferLimit11, 2000, 1.0D);
+
+		public final double maxCharge;
+		public final double transferLimit;
+		public final double damageAbsorptionRatio;
+		public final int dayEU;
+		public final int nightEU;
+		public final int tier;
+		public final int energyPerDamage;
+		public final EnumRarity rarity;
+		private final String name;
+
+		SolarHelmetTypes(final EnumRarity rarity, final int dayEU, final int nightEU, final int tier, final double maxCharge, final double transferLimit, final int energyPerDamage, final double damageAbsorptionRatio) {
+			this.name = this.name().toLowerCase(Locale.ENGLISH);
+			this.rarity = rarity;
+			this.dayEU = dayEU;
+			this.nightEU = nightEU;
+			this.tier = tier;
+			this.maxCharge = maxCharge;
+			this.transferLimit = transferLimit;
+			this.energyPerDamage = energyPerDamage;
+			this.damageAbsorptionRatio = damageAbsorptionRatio;
+			assert damageAbsorptionRatio > 0.0;
+		}
+
+		public String getName() {
+			return this.name + "SolarHelmet";
+		}
+
+		protected String getLocalisedName() {
+			return "solar_helmets." + this.name;
 		}
 	}
 

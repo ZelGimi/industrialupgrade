@@ -45,11 +45,7 @@ import java.util.Locale;
 
 public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvider, IElectricItem, IMetalArmor, ISpecialArmor, IItemHudProvider {
 	protected static final int DEFAULT_COLOUR = -1;
-	public static boolean chargeWholeInventory;
-
-	static {
-		ItemArmorQuantumHelmet.chargeWholeInventory = false;
-	}
+	public static boolean chargeWholeInventory = false;
 
 	protected final SolarHelmetTypes type;
 	protected int ticker;

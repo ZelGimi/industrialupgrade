@@ -104,7 +104,6 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 			}
 			if (Configs.canCraftHSH) {
 				player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 2, true, true));
-			} else {
 			}
 		}
 	}
