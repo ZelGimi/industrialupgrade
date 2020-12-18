@@ -242,12 +242,12 @@ public final class Configs {
 			Neutronfabricator1 = config.get("Settings Neutron fabricator", "tier", 14).getInt(14);
 
 			//
-			drillSpeed = config.get("Settings Spectral Drill(Normal Mode)", "drillSpeed", 35).getInt(35);
-			drillSpeed1 = config.get("Settings Spectral Drill(BIG_HOLES(3x3) Mode)", "drillSpeed", 12).getInt(12);
-			drillSpeed2 = config.get("Settings Spectral Drill(BIG_HOLES(5x5) Mode)", "drillSpeed ", 16).getInt(16);
-			energyCost = config.get("Settings Spectral Drill(Normal Mode)", "energyCost", 160).getInt(160);
-			energyCost1 = config.get("Settings Spectral Drill(BIG_HOLES(3x3) Mode)", "energyCost", 160).getInt(160);
-			energyCost2 = config.get("Settings Spectral Drill(BIG_HOLES(5x5) Mode)", "energyCost", 160).getInt(160);
+			drillSpeed = config.get("Settings Perfect Drill(Normal Mode)", "drillSpeed", 35).getInt(35);
+			drillSpeed1 = config.get("Settings Perfect Drill(BIG_HOLES(3x3) Mode)", "drillSpeed", 12).getInt(12);
+			drillSpeed2 = config.get("Settings Perfect Drill(BIG_HOLES(5x5) Mode)", "drillSpeed ", 16).getInt(16);
+			energyCost = config.get("Settings Perfect Drill(Normal Mode)", "energyCost", 160).getInt(160);
+			energyCost1 = config.get("Settings Perfect Drill(BIG_HOLES(3x3) Mode)", "energyCost", 160).getInt(160);
+			energyCost2 = config.get("Settings Perfect Drill(BIG_HOLES(5x5) Mode)", "energyCost", 160).getInt(160);
 
 			//
 		} catch (Exception e) {
