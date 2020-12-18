@@ -230,7 +230,13 @@ public final class SPPRecipes {
 		addCompressorRecipe(input.forStack(IC2Items.getItem("nuclear", "plutonium")), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.protonshard));
 		addCompressorRecipe(input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.protonshard), 18), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.proton));
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.protoncore), " B ", "ACA", " B ", 'A', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.proton), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.EnrichedSunnariumAlloy4), 'C', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.spectralcore));
-		addCompressorRecipe(input.forStack(FluidUtil.getFilledBucket(new FluidStack(FluidRegister.Neutron, 1))), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutronshard));
+
+		FluidStack fluidStack = new FluidStack(FluidRegister.Neutron, 1);
+		if (fluidStack.getFluid() != null)
+			addCompressorRecipe(input.forStack(FluidUtil.getFilledBucket(fluidStack)), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutronshard));
+		else
+			SuperSolarPanels.log.error("Neutron Fluid is null, possible duplication");
+
 		addCompressorRecipe(input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutronshard), 9), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutron));
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutroncore), " A ", "ABA", " A ", 'A', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutron), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.quantcore2));
 		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.neutronium_solar_panel), " B ", "BAB", " B ", 'A', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.neutroncore), 'B', SuperSolarPanels.machines.getItemStack(SSPBlock.photonic_solar_panel));
