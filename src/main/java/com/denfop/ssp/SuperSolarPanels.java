@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -43,9 +44,10 @@ import net.minecraftforge.registries.IRegistryDelegate;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 @Mod.EventBusSubscriber
-@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]")
+@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]", certificateFingerprint = Constants.MOD_CERTIFICATE)
 public final class SuperSolarPanels {
 
     public static final CreativeTabs SSPTab = new SSPSourceTab("SSPSourceTab");
@@ -131,5 +133,12 @@ public final class SuperSolarPanels {
     @Mod.EventHandler
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
+    }
+
+    @Mod.EventHandler
+    public void init(final FMLFingerprintViolationEvent event) {
+        java.util.logging.Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+                "Invalid fingerprint detected! The file " + event.getSource().getName() +
+                        " may have been tampered with. This version will NOT be supported by the author!");
     }
 }

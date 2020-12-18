@@ -31,6 +31,7 @@ project.ic2_range= "[${project.ic2_min_ver},${project.ic2_max_ver}]"
 blossom {
     replaceToken '%VERSION%', modVersion
     replaceToken "%IC2_RANGE%", ic2_range
+    replaceToken "%CERTIFICATE%", fingerprint
 }
 
 minecraft {
