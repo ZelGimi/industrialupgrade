@@ -1,6 +1,6 @@
 package com.denfop.ssp.proxy;
 
-import com.denfop.ssp.SSPWorldDecorator;
+import com.denfop.ssp.common.SSPWorldDecorator;
 import com.denfop.ssp.molecular.BlocksRegister;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;

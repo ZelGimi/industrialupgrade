@@ -1,5 +1,6 @@
 package com.denfop.ssp;
 
+import com.denfop.ssp.gui.TransparentDynamicGUI;
 import com.denfop.ssp.molecular.IMolecularTransformerRecipeManager;
 import com.denfop.ssp.tiles.SSPBlock;
 import ic2.api.recipe.IRecipeInput;

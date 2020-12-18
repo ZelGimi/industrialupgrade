@@ -2,6 +2,8 @@ package com.denfop.ssp;
 
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.common.SSPSourceTab;
+import com.denfop.ssp.common.SSPWorldDecorator;
 import com.denfop.ssp.fluid.neutron.BlockRegister;
 import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.gui.ProgressBars;

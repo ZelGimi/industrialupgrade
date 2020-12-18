@@ -1,6 +1,7 @@
-package com.denfop.ssp;
+package com.denfop.ssp.common;
 
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.tiles.SSPBlock;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;

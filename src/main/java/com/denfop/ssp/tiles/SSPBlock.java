@@ -3,6 +3,9 @@ package com.denfop.ssp.tiles;
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.molecular.TileEntityMolecularAssembler;
+import com.denfop.ssp.tiles.mfsu.AdvancedMFSU;
+import com.denfop.ssp.tiles.mfsu.QuantumMFSU;
+import com.denfop.ssp.tiles.mfsu.UltimateMFSU;
 import com.denfop.ssp.tiles.neutronfabricator.TileEntityMassFabricator;
 import com.denfop.ssp.tiles.panels.overtime.*;
 import com.denfop.ssp.tiles.panels.rain.*;
@@ -69,13 +72,7 @@ public enum SSPBlock implements ITeBlock {
 	ultimatemfsu(UltimateMFSU.class, 46, EnumRarity.EPIC),
 	quantummfsu(QuantumMFSU.class, 47, EnumRarity.EPIC);
 	//
-	public static final ResourceLocation IDENTITY;
-	private static final SSPBlock[] VALUES;
-
-	static {
-		VALUES = values();
-		IDENTITY = SuperSolarPanels.getIdentifier("machines");
-	}
+	public static final ResourceLocation IDENTITY = SuperSolarPanels.getIdentifier("machines");
 
 	private final Class<? extends TileEntityBlock> teClass;
 	private final int itemMeta;
@@ -110,7 +107,7 @@ public enum SSPBlock implements ITeBlock {
 		if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
 			throw new IllegalAccessError("Don't mess with this please.");
 		}
-		for (final SSPBlock block : SSPBlock.VALUES) {
+		for (final SSPBlock block : SSPBlock.values()) {
 			if (block.teClass != null) {
 				try {
 					block.dummyTe = block.teClass.newInstance();

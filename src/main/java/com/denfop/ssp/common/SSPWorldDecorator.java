@@ -1,4 +1,4 @@
-package com.denfop.ssp;
+package com.denfop.ssp.common;
 
 import com.denfop.ssp.molecular.BlocksRegister;
 import com.google.common.base.Predicate;

@@ -1,8 +1,8 @@
 package com.denfop.ssp.molecular;
 
 
-import com.denfop.ssp.SSPBlock;
-import com.denfop.ssp.SSPOre;
+import com.denfop.ssp.common.SSPBlock;
+import com.denfop.ssp.common.SSPOre;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

@@ -1,7 +1,7 @@
 package com.denfop.ssp.molecular;
 
 
-import com.denfop.ssp.TransparentDynamicGUI;
+import com.denfop.ssp.gui.TransparentDynamicGUI;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;

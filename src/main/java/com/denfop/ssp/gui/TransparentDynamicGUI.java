@@ -1,6 +1,5 @@
-package com.denfop.ssp;
+package com.denfop.ssp.gui;
 
-import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import ic2.core.ContainerBase;
 import ic2.core.gui.GuiElement;
 import ic2.core.gui.Image;

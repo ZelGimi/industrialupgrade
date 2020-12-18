@@ -1,6 +1,6 @@
-package com.denfop.ssp;
+package com.denfop.ssp.common;
 
-import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.SuperSolarPanels;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
