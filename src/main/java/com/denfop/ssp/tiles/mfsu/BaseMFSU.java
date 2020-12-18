@@ -1,7 +1,8 @@
-package com.denfop.ssp.tiles;
+package com.denfop.ssp.tiles.mfsu;
 
 import com.denfop.ssp.SuperSolarPanels;
-import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
+import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.tile.IEnergyStorage;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
@@ -9,10 +10,8 @@ import ic2.core.block.TileEntityInventory;
 import ic2.core.block.comp.Energy;
 import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotCharge;
 import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.gui.dynamic.DynamicContainer;
-import ic2.core.gui.dynamic.DynamicGui;
 import ic2.core.gui.dynamic.GuiParser;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
@@ -33,12 +32,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import java.util.List;
 
-public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, IHasGui {
-	protected final InvSlotCharge chargeSlot = new InvSlotCharge(this, 5);
-	protected final InvSlotDischarge dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, 5, InvSlot.InvSide.BOTTOM);
-	private final int output = Configs.quantummfsu * 4;
-	private final Energy energy = (Energy) addComponent((TileEntityComponent) (new Energy(this, Configs.quantummfsu2, EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)),
-			EnumSet.of(EnumFacing.DOWN), Configs.quantummfsu1, Configs.quantummfsu1, false)).addManagedSlot(this.chargeSlot).addManagedSlot(this.dischargeSlot));
+public class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHasGui {
+	private final int output;
+	private final Energy energy;
+
+	public BaseMFSU(int output, int tier, double capacity) {
+		this.output = output;
+		InvSlotMultiCharge chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
+		InvSlotDischarge dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, tier, InvSlot.InvSide.BOTTOM);
+		this.energy = (Energy) addComponent((TileEntityComponent) (new Energy(this, capacity, EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)),
+				EnumSet.of(EnumFacing.DOWN), tier, tier, false)).addManagedSlot(chargeSlots).addManagedSlot(dischargeSlot));
+	}
 
 	protected void updateEntityServer() {
 		super.updateEntityServer();
@@ -96,7 +100,7 @@ public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, 
 
 	public ContainerBase<?> getGuiContainer(EntityPlayer player) {
 		try {
-			return DynamicContainer.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/QuantumMFSU.xml"), this.teBlock.getTeClass()));
+			return DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
 		} catch (Exception exception) {
 			return null;
 		}
@@ -105,7 +109,7 @@ public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, 
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer player, boolean b) {
 		try {
-			return DynamicGui.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/QuantumMFSU.xml"), this.teBlock.getTeClass()));
+			return BackgroundlessDynamicGUI.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/UltimateMFSU.xml"), this.teBlock.getTeClass()));
 		} catch (Exception exception) {
 			return null;
 		}
@@ -143,14 +147,10 @@ public class QuantumMFSU extends TileEntityInventory implements IEnergyStorage, 
 	}
 
 	public String getStorageText() {
-		return Localization.translate("gui.text.maxStorage", (long) this.energy.getEnergy());
-	}
-
-	public String getCapacityText() {
-		return Localization.translate("gui.text.currentStorage", (long) this.energy.getCapacity());
+		return String.format("%s %d / %d", Localization.translate("super_solar_panels.gui.storage"), (long) this.energy.getEnergy(), (long) this.energy.getCapacity());
 	}
 
 	public String getOutputText() {
-		return Localization.translate("gui.text.output", this.output);
+		return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.maxOutput"), (long) this.output, Localization.translate("ic2.generic.text.EUt"));
 	}
 }
