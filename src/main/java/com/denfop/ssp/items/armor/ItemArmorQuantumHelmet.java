@@ -7,6 +7,7 @@ import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.*;
 import ic2.core.IC2;
+import ic2.core.IC2Potion;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ElectricItemManager;
@@ -40,12 +41,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
 
 public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvider, IElectricItem, IMetalArmor, ISpecialArmor, IItemHudProvider {
 	protected static final int DEFAULT_COLOUR = -1;
 	public static boolean chargeWholeInventory = false;
+	protected static final Map<Potion, Integer> potionRemovalCost = new IdentityHashMap<>();
 
 	protected final SolarHelmetTypes type;
 	protected int ticker;
@@ -57,6 +61,13 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 		this.setMaxDamage(27);
 		this.type = type;
 
+		potionRemovalCost.put(IC2Potion.radiation, 5000);
+		potionRemovalCost.put(MobEffects.POISON, 400);
+		potionRemovalCost.put(MobEffects.WITHER, 500);
+		potionRemovalCost.put(MobEffects.SLOWNESS, 300);
+		potionRemovalCost.put(MobEffects.NAUSEA, 1000);
+		potionRemovalCost.put(MobEffects.HUNGER, 300);
+		potionRemovalCost.put(MobEffects.WEAKNESS, 400);
 	}
 
 	public String func_77658_a() {
@@ -259,13 +270,6 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 		} else if (player.getFoodStats().getFoodLevel() <= 0) {
 			IC2.achievements.issueAchievement(player, "starveWithQHelmet");
 		}
-		for (final PotionEffect effect : new LinkedList<>(player.getActivePotionEffects())) {
-			final Potion potion = effect.getPotion();
-			if (potion.isBadEffect() && ElectricItem.manager.canUse(stack, 400D)) {
-				ElectricItem.manager.use(stack, 400D, null);
-				player.removePotionEffect(potion);
-			}
-		}
 		boolean Nightvision = nbtData.getBoolean("Nightvision");
 		short hubmode = nbtData.getShort("HudMode");
 		if (SSPKeys.Isremovepoison(player) && toggleTimer == 0) {
@@ -305,6 +309,19 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 				player.removeActivePotionEffect(MobEffects.NIGHT_VISION);
 			} else {
 				player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0, true, true));
+			}
+		}
+
+
+		for (PotionEffect effect : new LinkedList<>(player.getActivePotionEffects())) {
+			Potion potion = effect.getPotion();
+			Integer cost = potionRemovalCost.get(potion);
+			if (cost != null) {
+				cost *= Math.max(1, effect.getAmplifier() + 1);
+				if (ElectricItem.manager.canUse(stack, cost)) {
+					ElectricItem.manager.use(stack, cost, null);
+					IC2.platform.removePotion(player, potion);
+				}
 			}
 		}
 	}
@@ -357,7 +374,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 		private final String name;
 
 		SolarHelmetTypes(final int tier, final double maxCharge, final double transferLimit) {
-			this.name = this.name().toLowerCase(Locale.ENGLISH);
+			this.name = this.name().toLowerCase(Locale.US);
 			this.rarity = EnumRarity.EPIC;
 			this.tier = tier;
 			this.maxCharge = maxCharge;
@@ -401,6 +418,4 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 	public EnumRarity getRarity(@Nonnull final ItemStack stack) {
 		return this.type.rarity;
 	}
-
-
 }

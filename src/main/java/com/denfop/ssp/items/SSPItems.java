@@ -2,7 +2,10 @@ package com.denfop.ssp.items;
 
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.items.armor.*;
+import com.denfop.ssp.items.armor.ItemArmorQuantumBoosts;
+import com.denfop.ssp.items.armor.ItemArmorQuantumHelmet;
+import com.denfop.ssp.items.armor.ItemArmorQuantumLeggins;
+import com.denfop.ssp.items.armor.ItemGraviChestplate;
 import com.denfop.ssp.items.battery.ItemBattery;
 import com.denfop.ssp.items.reactors.ItemReactorHeatStorage;
 import com.denfop.ssp.items.reactors.ItemReactorProton;
@@ -23,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 public enum SSPItems {
-	SPECTRAL_SOLAR_HELMET, SINGULAR_SOLAR_HELMET, QUANTUM_LEGGINGS, QUANTUM_BOOSTS, CRAFTING, GRAVI_CHESTPLATE, ADVANCED_CRYSTAL, QUANTUM_SABER, SPECTRAL_SABER, QUANTUM_HELMET, TWELVE_HEAT_STORAGE, MAX_HEAT_STORAGE, PROTON_FUEL_ROD, QUAD_PROTON_FUEL_ROD, EIT_PROTON_FUEL_ROD, DUAL_PROTON_FUEL_ROD, HYBRID_SOLAR_HELMET, ULTIMATE_HYBRID_SOLAR_HELMET, ADVANCED_SOLAR_HELMET,
+	QUANTUM_LEGGINGS, QUANTUM_BOOSTS, CRAFTING, GRAVI_CHESTPLATE, ADVANCED_CRYSTAL, QUANTUM_SABER, SPECTRAL_SABER, QUANTUM_HELMET, TWELVE_HEAT_STORAGE, MAX_HEAT_STORAGE, PROTON_FUEL_ROD, QUAD_PROTON_FUEL_ROD, EIT_PROTON_FUEL_ROD, DUAL_PROTON_FUEL_ROD,
 	DRILL,
 	IRIDIUM, COMPRESSIRIDIUM, SPECTRAL;
 	//battery_su
@@ -31,8 +34,6 @@ public enum SSPItems {
 	public Item instance;
 
 	public static void buildItems(Side side) {
-		SINGULAR_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.Singular));
-		SPECTRAL_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.Spectral));
 		CRAFTING.setInstance(new CraftingThings());
 		GRAVI_CHESTPLATE.setInstance(new ItemGraviChestplate());
 		QUANTUM_LEGGINGS.setInstance(new ItemArmorQuantumLeggins());
@@ -47,9 +48,6 @@ public enum SSPItems {
 		DUAL_PROTON_FUEL_ROD.setInstance(new ItemReactorProton("dual_proton_fuel_rod", 2));
 		QUAD_PROTON_FUEL_ROD.setInstance(new ItemReactorProton("quad_proton_fuel_rod", 4));
 		EIT_PROTON_FUEL_ROD.setInstance(new ItemReactorProton("eit_proton_fuel_rod", 8));
-		ADVANCED_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.ADVANCED));
-		HYBRID_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.HYBRID));
-		ULTIMATE_HYBRID_SOLAR_HELMET.setInstance(new ItemArmourSolarHelmet(ItemArmourSolarHelmet.SolarHelmetTypes.ULTIMATE));
 		DRILL.setInstance(new ItemUltDrill());
 		IRIDIUM.setInstance(new ItemWindRotor("rotor_carbon1", Configs.iridiumRotorRadius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model1.png")));
 		COMPRESSIRIDIUM.setInstance(new ItemWindRotor("rotor_carbon2", Configs.compressIridiumRotorRadius, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model2.png")));

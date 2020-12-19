@@ -32,8 +32,6 @@ public final class SPPRecipes {
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.bluecomponent), "AAA", "BBB", "AAA", 'A', IC2Items.getItem("glass", "reinforced"), 'B', new ItemStack(Items.DYE, 1, 4));
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.solarsplitter), "ABC", "ABC", "ABC", 'A', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.redcomponent), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.greencomponent), 'C', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.bluecomponent));
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.greencomponent), "A  ", 'A', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_GLASS_PANE));
-		addShapelessRecipe(new ItemStack(SSPItems.SPECTRAL_SOLAR_HELMET.getInstance()), SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance(), SuperSolarPanels.machines.getItemStack(SSPBlock.spectral_solar_panel), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.spectralcore));
-		addShapelessRecipe(new ItemStack(SSPItems.SINGULAR_SOLAR_HELMET.getInstance()), SSPItems.SPECTRAL_SOLAR_HELMET.getInstance(), SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.singularcore));
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_IRON_PLATE), "III", "IPI", "III",
 
 				'I', "plateIron",
@@ -110,38 +108,6 @@ public final class SPPRecipes {
 
 				'S', SuperSolarPanels.machines.getItemStack(SSPBlock.ultimate_solar_panel),
 				'Q', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QUANTUM_CORE));
-
-
-		addShapedRecipe(new ItemStack(SSPItems.ADVANCED_SOLAR_HELMET.getInstance()), " S ", "CNC", "GTG",
-
-				'S', SuperSolarPanels.machines.getItemStack(SSPBlock.advanced_solar_panel),
-				'C', IC2Items.getItem("crafting", "advanced_circuit"),
-				'N', IC2Items.getItem("nano_helmet"),
-				'G',
-				IC2Items.getItem("cable", "type:gold,insulation:2"),
-				'T', IC2Items.getItem("te", "lv_transformer"));
-
-		addShapedColourRecipe(new ItemStack(SSPItems.HYBRID_SOLAR_HELMET.getInstance()), " S ", "CQC", "GTG",
-
-				'S', SuperSolarPanels.machines.getItemStack(SSPBlock.hybrid_solar_panel),
-				'C', IC2Items.getItem("crafting", "advanced_circuit"),
-				'Q', IC2Items.getItem("quantum_helmet"),
-				'G',
-				IC2Items.getItem("cable", "type:glass,insulation:0"),
-				'T', IC2Items.getItem("te", "hv_transformer"));
-
-		addShapedColourRecipe(new ItemStack(SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance()), " S ", "CQC", "GTG",
-
-				'S', SuperSolarPanels.machines.getItemStack(SSPBlock.ultimate_solar_panel),
-				'C', IC2Items.getItem("crafting", "advanced_circuit"),
-				'Q', IC2Items.getItem("quantum_helmet"),
-				'G',
-				IC2Items.getItem("cable", "type:glass,insulation:0"),
-				'T', IC2Items.getItem("te", "hv_transformer"));
-		addShapelessRecipe(new ItemStack(SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance()), SSPItems.HYBRID_SOLAR_HELMET
-				.getInstance(), SuperSolarPanels.machines
-				.getItemStack(SSPBlock.ultimate_solar_panel));
-
 
 		addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_URANIUM), " G ", "GUG", " G ",
 

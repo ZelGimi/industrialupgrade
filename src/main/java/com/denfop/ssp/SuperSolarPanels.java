@@ -17,16 +17,10 @@ import com.denfop.ssp.tiles.SSPBlock;
 import ic2.api.event.TeBlockFinalCallEvent;
 import ic2.core.block.BlockTileEntity;
 import ic2.core.block.TeBlockRegistry;
-import ic2.core.util.ReflectionUtil;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -40,10 +34,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.registries.IRegistryDelegate;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Map;
 import java.util.logging.Level;
 
 @Mod.EventBusSubscriber
@@ -67,16 +59,6 @@ public final class SuperSolarPanels {
     public static void register(final TeBlockFinalCallEvent event) {
         TeBlockRegistry.addAll(com.denfop.ssp.tiles.SSPBlock.class, SSPBlock.IDENTITY);
         TeBlockRegistry.setDefaultMaterial(SSPBlock.IDENTITY, Material.ROCK);
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public static void doColourThings(final ColorHandlerEvent.Item event) {
-        final ItemColors colours = event.getItemColors();
-        final IItemColor armourColouring = (ReflectionUtil.<Map<IRegistryDelegate<Item>, IItemColor>>getFieldValue(ReflectionUtil.getField(ItemColors.class, Map.class), colours)).get(Items.LEATHER_BOOTS.delegate);
-        colours.registerItemColorHandler(armourColouring, SSPItems.SPECTRAL_SOLAR_HELMET.getInstance());
-        colours.registerItemColorHandler(armourColouring, SSPItems.SINGULAR_SOLAR_HELMET.getInstance());
-        colours.registerItemColorHandler(armourColouring, SSPItems.HYBRID_SOLAR_HELMET.getInstance(), SSPItems.ULTIMATE_HYBRID_SOLAR_HELMET.getInstance());
     }
 
     public static ResourceLocation getIdentifier(final String name) {
