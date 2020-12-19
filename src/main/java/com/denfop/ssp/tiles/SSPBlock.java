@@ -35,12 +35,12 @@ public enum SSPBlock implements ITeBlock {
 	ultimate_solar_panel(TileEntityUltimateHybridSolar.class, 3, EnumRarity.EPIC),
 	quantum_solar_panel(TileEntityQuantumSolar.class, 4, EnumRarity.EPIC),
 	spectral_solar_panel(TileEntitySpectral.class, 5),
+	proton_solar_panel(TileEntityProton.class, 11, EnumRarity.EPIC),
 	singular_solar_panel(TileEntitySingular.class, 6, EnumRarity.RARE),
 	admin_solar_panel(TileEntityAdmin.class, 7, EnumRarity.EPIC),
 	photonic_solar_panel(TileEntityPhotonic.class, 8, EnumRarity.EPIC),
 	neutronium_solar_panel(TileEntityNeutron.class, 9, EnumRarity.EPIC),
 	nutronfabricator(TileEntityMassFabricator.class, 10),
-	proton_solar_panel(TileEntityProton.class, 11, EnumRarity.EPIC),
 	transformator(TileEntityTransformerEV.class, 12),
 	transformator1(TileEntityTransformerEV1.class, 13),
 	transformator2(TileEntityTransformerEV2.class, 14),
@@ -57,13 +57,13 @@ public enum SSPBlock implements ITeBlock {
 	neutronium_solar_panelsun(TileEntityNeutronSun.class, 24, EnumRarity.EPIC),
 	//
 
-	proton_solar_panelrain(TileEntityProtonRain.class, 49, EnumRarity.EPIC),
 	molecular_transformer(TileEntityMolecularAssembler.class, 25, EnumRarity.RARE),
 	advanced_solar_panelrain(TileEntityAdvancedSolarrain.class, 36),
 	hybrid_solar_panelrain(TileEntityHybridSolarrain.class, 37, EnumRarity.RARE),
 	ultimate_solar_panelrain(TileEntityUltimateHybridSolarrain.class, 38, EnumRarity.EPIC),
 	quantum_solar_panelrain(TileEntityQuantumSolarrain.class, 39, EnumRarity.EPIC),
 	spectral_solar_panelrain(TileEntitySpectralrain.class, 40),
+	proton_solar_panelrain(TileEntityProtonRain.class, 49, EnumRarity.EPIC),
 	singular_solar_panelrain(TileEntitySingularrain.class, 41, EnumRarity.RARE),
 	admin_solar_panelrain(TileEntityAdminrain.class, 42, EnumRarity.EPIC),
 	photonic_solar_panelrain(TileEntityPhotonicRain.class, 43, EnumRarity.EPIC),
@@ -71,6 +71,7 @@ public enum SSPBlock implements ITeBlock {
 	advancedmfsu(AdvancedMFSU.class, 45, EnumRarity.EPIC),
 	ultimatemfsu(UltimateMFSU.class, 46, EnumRarity.EPIC),
 	quantummfsu(QuantumMFSU.class, 47, EnumRarity.EPIC);
+
 	//
 	public static final ResourceLocation IDENTITY = SuperSolarPanels.getIdentifier("machines");
 
@@ -82,7 +83,6 @@ public enum SSPBlock implements ITeBlock {
 
 	SSPBlock(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
 		this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
 	}
 
 	SSPBlock(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
