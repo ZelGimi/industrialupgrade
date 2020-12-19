@@ -18,7 +18,7 @@ public class CraftingThings extends ItemMulti {
 
 	public CraftingThings() {
 		super(null, CraftingTypes.class);
-		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier("crafting")).setUnlocalizedName("crafting");
+		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(NAME)).setUnlocalizedName(NAME);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -81,25 +81,23 @@ public class CraftingThings extends ItemMulti {
 		compresscarbonultra(47),
 		sunlinse(48),
 		nightlinse(49),
-		rainlinse(50),
-		comress_titan_plate(60),
-		comress_platium_plate(61),
-		QuantimItems7(63),
-		photoniy_ingot(64),
-		photoniy(65);
-
-		private static final CraftingTypes[] VALUES = values();
+		rainlinse(50)/*,
+		compress_titan_plate(60),
+		compress_platium_plate(61),
+		QuantumItems7(51)*/,
+		photoniy_ingot(51),
+		photoniy(52);
 
 		private final String name;
 		private final int ID;
 
 		CraftingTypes(final int ID) {
-			this.name = this.name().toLowerCase(Locale.ENGLISH);
+			this.name = this.name().toLowerCase(Locale.US);
 			this.ID = ID;
 		}
 
 		public static CraftingTypes getFromID(final int ID) {
-			return CraftingTypes.VALUES[ID % CraftingTypes.VALUES.length];
+			return values()[ID % values().length];
 		}
 
 		public String getName() {
