@@ -8,7 +8,6 @@ import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.block.comp.Energy;
-import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.gui.dynamic.DynamicContainer;
@@ -32,22 +31,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import java.util.List;
 
-public class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHasGui {
+public abstract class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHasGui {
 	private final int output;
 	private final Energy energy;
+	private static final int SLOTS = 4;
+	protected final InvSlotMultiCharge chargeSlots;
 
 	public BaseMFSU(int output, int tier, double capacity) {
 		this.output = output;
-		InvSlotMultiCharge chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
+		this.chargeSlots = new InvSlotMultiCharge(this, tier, SLOTS, InvSlot.Access.IO);
 		InvSlotDischarge dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, tier, InvSlot.InvSide.BOTTOM);
-		this.energy = (Energy) addComponent((TileEntityComponent) (new Energy(this, capacity, EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)),
-				EnumSet.of(EnumFacing.DOWN), tier, tier, false)).addManagedSlot(chargeSlots).addManagedSlot(dischargeSlot));
+		this.energy = addComponent((new Energy(this, capacity, EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)),
+				EnumSet.of(EnumFacing.DOWN), tier)).addManagedSlot(dischargeSlot));
 	}
 
 	protected void updateEntityServer() {
 		super.updateEntityServer();
 		if (this.energy.getEnergy() > this.energy.getCapacity())
 			this.energy.addEnergy(this.energy.getEnergy() - this.energy.getCapacity());
+		if (this.energy.getEnergy() > 0)
+			this.energy.useEnergy(this.chargeSlots.charge(this.energy.getEnergy()));
 	}
 
 	public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
@@ -100,7 +103,7 @@ public class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHa
 
 	public ContainerBase<?> getGuiContainer(EntityPlayer player) {
 		try {
-			return DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
+			return DynamicContainer.create(this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/advmfsu.xml"), this.teBlock.getTeClass()));
 		} catch (Exception exception) {
 			return null;
 		}
@@ -109,7 +112,7 @@ public class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHa
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer player, boolean b) {
 		try {
-			return BackgroundlessDynamicGUI.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/UltimateMFSU.xml"), this.teBlock.getTeClass()));
+			return BackgroundlessDynamicGUI.create((IInventory) this, player, GuiParser.parse(SuperSolarPanels.getIdentifier("guidef/advmfsu.xml"), this.teBlock.getTeClass()));
 		} catch (Exception exception) {
 			return null;
 		}

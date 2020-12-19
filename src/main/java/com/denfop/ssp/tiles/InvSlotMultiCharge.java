@@ -24,15 +24,13 @@ public class InvSlotMultiCharge extends InvSlot implements IChargingSlot {
 		}
 		double charged = 0.0;
 		for (final ItemStack stack : this) {
-			if (stack == null) {
+			if (stack == null)
 				continue;
-			}
 			final double energyIn = ElectricItem.manager.charge(stack, amount, this.tier, false, false);
 			amount -= energyIn;
 			charged += energyIn;
-			if (amount <= 0.0) {
+			if (amount <= 0.0)
 				break;
-			}
 		}
 		return charged;
 	}
