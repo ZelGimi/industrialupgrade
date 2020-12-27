@@ -2,10 +2,12 @@ package com.denfop.ssp.tiles.panels.sun;
 
 import com.denfop.ssp.tiles.panels.entity.TileEntitySunPanel;
 
-public class TileEntityProtonSun extends TileEntitySunPanel {
+public class TileEntityAdminSun extends TileEntitySunPanel {
 	public static TileEntitySunPanel.SolarConfig settings;
 
-	public TileEntityProtonSun() {
-		super(TileEntityProtonSun.settings);
+	public TileEntityAdminSun() {
+		super(TileEntityAdminSun.settings);
 	}
+
+
 }

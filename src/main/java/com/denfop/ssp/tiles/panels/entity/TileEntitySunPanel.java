@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public abstract class TileEntitySolarPanelsun extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider {
+public abstract class TileEntitySunPanel extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider {
 	public final int maxStorage;
 
 	protected final int dayPower;
@@ -51,11 +51,11 @@ public abstract class TileEntitySolarPanelsun extends TileEntityInventory implem
 	protected boolean hasSky;
 	private boolean addedToEnet;
 
-	public TileEntitySolarPanelsun(SolarConfig config) {
+	public TileEntitySunPanel(SolarConfig config) {
 		this(config.dayPower, config.storage, config.tier);
 	}
 
-	public TileEntitySolarPanelsun(int dayPower, int storage, int tier) {
+	public TileEntitySunPanel(int dayPower, int storage, int tier) {
 		this.dayPower = dayPower;
 		this.chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
 		this.maxStorage = storage;
@@ -155,7 +155,7 @@ public abstract class TileEntitySolarPanelsun extends TileEntityInventory implem
 		return this.tier;
 	}
 
-	public ContainerBase<? extends TileEntitySolarPanelsun> getGuiContainer(EntityPlayer player) {
+	public ContainerBase<? extends TileEntitySunPanel> getGuiContainer(EntityPlayer player) {
 		return DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
 	}
 
