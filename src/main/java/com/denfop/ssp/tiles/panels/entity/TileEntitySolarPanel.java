@@ -1,6 +1,7 @@
 package com.denfop.ssp.tiles.panels.entity;
 
 
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.energy.EnergyNet;
@@ -182,17 +183,17 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 	}
 
 	public String getMaxOutput() {
-		return String.format("%s %.0f %s", Localization.translate("super_solar_panels.gui.maxOutput"), EnergyNet.instance.getPowerFromTier(this.tier + 1), Localization.translate("ic2.generic.text.EUt"));
+		return String.format("%s %.0f %s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), EnergyNet.instance.getPowerFromTier(this.tier + 1), Localization.translate("ic2.generic.text.EUt"));
 	}
 
 	public String getOutput() {
 		switch (this.active) {
 			case DAY:
-				return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.generating"), this.dayPower, Localization.translate("ic2.generic.text.EUt"));
+				return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), this.dayPower, Localization.translate("ic2.generic.text.EUt"));
 			case NIGHT:
-				return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.generating"), this.nightPower, Localization.translate("ic2.generic.text.EUt"));
+				return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), this.nightPower, Localization.translate("ic2.generic.text.EUt"));
 		}
-		return String.format("%s 0 %s", Localization.translate("super_solar_panels.gui.generating"), Localization.translate("ic2.generic.text.EUt"));
+		return String.format("%s 0 %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Localization.translate("ic2.generic.text.EUt"));
 	}
 
 	public enum GenerationState {

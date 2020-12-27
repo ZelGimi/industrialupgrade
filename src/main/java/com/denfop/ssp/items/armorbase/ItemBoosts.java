@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.armorbase;
 
 import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.api.PlayerEvents;
 import com.denfop.ssp.items.api.RechargeHelper;
 import com.google.common.base.CaseFormat;
@@ -52,15 +53,15 @@ public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(final ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
 	}
 
 	public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
-		return "super_solar_panels:textures/armour/" + this.name + ".png";
+		return Constants.MOD_ID + ":textures/armour/" + this.name + ".png";
 	}
 
 	public String func_77658_a() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public EnumRarity func_77613_e(final ItemStack stack) {

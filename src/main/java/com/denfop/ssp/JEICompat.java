@@ -1,5 +1,6 @@
 package com.denfop.ssp;
 
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.gui.TransparentDynamicGUI;
 import com.denfop.ssp.molecular.IMolecularTransformerRecipeManager;
 import com.denfop.ssp.tiles.SSPBlock;
@@ -88,9 +89,9 @@ public final class JEICompat implements IModPlugin {
 				SuperSolarPanels.log.warn("Unexpected empty recipe input: " + input + " (" + input.getClass() + ')');
 				inputText = "Empty " + input.getClass().getSimpleName();
 			}
-			this.input = Localization.translate("super_solar_panels.gui.input") + ' ' + inputText;
-			this.output = Localization.translate("super_solar_panels.gui.output") + ' ' + container.getOutput().getDisplayName();
-			this.totalEU = String.format("%s %,d %s", Localization.translate("super_solar_panels.gui.energyPerOperation"),
+			this.input = Localization.translate(Constants.MOD_ID + ".gui.input") + ' ' + inputText;
+			this.output = Localization.translate(Constants.MOD_ID + ".gui.output") + ' ' + container.getOutput().getDisplayName();
+			this.totalEU = String.format("%s %,d %s", Localization.translate(Constants.MOD_ID + ".gui.energyPerOperation"),
 					container.getInput().totalEU,
 					Localization.translate("ic2.generic.text.EU"));
 		}

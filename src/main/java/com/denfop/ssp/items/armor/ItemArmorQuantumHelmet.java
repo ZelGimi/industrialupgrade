@@ -3,6 +3,7 @@ package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.*;
@@ -71,12 +72,12 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 	}
 
 	public String func_77658_a() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(5);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(5);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(final ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.type.getName()), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.type.getName()), null));
 	}
 
 	public boolean getIsRepairable(@Nonnull final ItemStack toRepair, @Nonnull final ItemStack repair) {
@@ -173,7 +174,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 	}
 
 	public String getArmorTexture(@Nonnull final ItemStack stack, @Nonnull final Entity entity, @Nonnull final EntityEquipmentSlot slot, @Nonnull final String type) {
-		return "super_solar_panels:textures/armour/" + this.type.getName() + "Overlay" + ".png";
+		return Constants.MOD_ID + ":textures/armour/" + this.type.getName() + "Overlay" + ".png";
 	}
 
 	public int getItemEnchantability() {
@@ -388,7 +389,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 		}
 
 		protected String getLocalisedName() {
-			return "solar_helmets." + this.name;
+			return Constants.MOD_ID + "." + this.name;
 		}
 	}
 

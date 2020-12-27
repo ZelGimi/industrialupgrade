@@ -3,6 +3,7 @@ package com.denfop.ssp.items.armorbase;
 
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
@@ -57,15 +58,15 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
 	}
 
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		return "super_solar_panels:textures/armour/" + this.name + ".png";
+		return Constants.MOD_ID + ":textures/armour/" + this.name + ".png";
 	}
 
 	public String getTranslationKey() {
-		return "ssp." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	@Nonnull

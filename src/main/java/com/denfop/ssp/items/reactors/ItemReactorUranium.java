@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.reactors;
 
 import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.SSPItems;
 import com.denfop.ssp.items.resource.CraftingThings;
 import com.google.common.base.CaseFormat;
@@ -43,15 +44,15 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
 	}
 
 	public String getUnlocalizedName() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public String setUnlocalizedName() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public void processChamber(ItemStack stack, IReactor reactor, int x, int y, boolean heatRun) {
@@ -101,10 +102,8 @@ public class ItemReactorUranium extends AbstractDamageableReactorComponent {
 
 	protected static int checkPulseable(IReactor reactor, int x, int y, ItemStack stack, int mex, int mey, boolean heatrun) {
 		ItemStack other = reactor.getItemAt(x, y);
-		if (other != null && other.getItem() instanceof IReactorComponent && (
-				(IReactorComponent) other.getItem()).acceptUraniumPulse(other, reactor, stack, x, y, mex, mey, heatrun))
-			return 1;
-		return 0;
+		return other != null && other.getItem() instanceof IReactorComponent && (
+				(IReactorComponent) other.getItem()).acceptUraniumPulse(other, reactor, stack, x, y, mex, mey, heatrun) ? 1 : 0;
 	}
 
 	protected static int triangularNumber(int x) {

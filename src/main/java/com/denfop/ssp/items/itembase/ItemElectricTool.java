@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.itembase;
 
 import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
@@ -66,7 +67,7 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 
 
 	public String getUnlocalizedName() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public float getDestroySpeed(ItemStack stack, IBlockState state) {
@@ -77,7 +78,7 @@ public abstract class ItemElectricTool extends ItemToolIC2 implements IPseudoDam
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemElectricTool.name), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemElectricTool.name), null));
 	}
 
 	@Nonnull

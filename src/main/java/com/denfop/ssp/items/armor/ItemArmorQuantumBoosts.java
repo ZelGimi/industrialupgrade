@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemBoosts;
 import com.denfop.ssp.keyboard.SSPKeys;
 import ic2.api.item.ElectricItem;
@@ -31,7 +32,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 	}
 
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		return "super_solar_panels:textures/armour/" + this.name + "Overlay" + ".png";
+		return Constants.MOD_ID + ":textures/armour/" + this.name + "Overlay" + ".png";
 	}
 
 	public void onArmorTick(World world, @Nonnull EntityPlayer player, ItemStack stack) {

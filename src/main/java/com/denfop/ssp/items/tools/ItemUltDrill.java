@@ -2,6 +2,7 @@ package com.denfop.ssp.items.tools;
 
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
@@ -106,14 +107,14 @@ public class ItemUltDrill extends ItemDrill {
 				}
 			}
 			if (powerRanOut)
-				IC2.platform.messagePlayer(player, "super_solar_panels.item_ult_drill.ranOut");
+				IC2.platform.messagePlayer(player, Constants.MOD_ID + ".item_ult_drill.ranOut");
 			return true;
 		}
 		return super.onBlockStartBreak(stack, pos, player);
 	}
 
 	public String getUnlocalizedName() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public EnumRarity getRarity(ItemStack stack) {
@@ -122,7 +123,7 @@ public class ItemUltDrill extends ItemDrill {
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "item_ult_drill"), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "item_ult_drill"), null));
 	}
 
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -131,7 +132,7 @@ public class ItemUltDrill extends ItemDrill {
 			if (!world.isRemote) {
 				DrillMode mode = readNextDrillMode(stack);
 				saveDrillMode(stack, mode);
-				IC2.platform.messagePlayer(player, Localization.translate("super_solar_panels.item_ult_drill.mode") + " " + mode.colour + Localization.translate(mode.translationName));
+				IC2.platform.messagePlayer(player, Localization.translate(Constants.MOD_ID + ".item_ult_drill.mode") + " " + mode.colour + Localization.translate(mode.translationName));
 				this.efficiency = mode.drillSpeed;
 				this.operationEnergyCost = mode.energyCost;
 			}
@@ -150,7 +151,7 @@ public class ItemUltDrill extends ItemDrill {
 
 	@SideOnly(Side.CLIENT)
 	public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag flag) {
-		tooltip.add(TextFormatting.GOLD + Localization.translate("super_solar_panels.item_ult_drill.mode"));
+		tooltip.add(TextFormatting.GOLD + Localization.translate(Constants.MOD_ID + ".item_ult_drill.mode"));
 		tooltip.add(TextFormatting.WHITE + Localization.translate((readDrillMode(stack)).translationName));
 	}
 
@@ -174,7 +175,7 @@ public class ItemUltDrill extends ItemDrill {
 		public final int range;
 
 		DrillMode(TextFormatting colour, float speed, double energyCost, int range) {
-			this.translationName = "super_solar_panels.item_ult_drill.mode." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
+			this.translationName = Constants.MOD_ID + ".item_ult_drill.mode." + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
 			this.energyCost = energyCost;
 			this.drillSpeed = speed;
 			this.colour = colour;

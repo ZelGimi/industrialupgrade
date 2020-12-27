@@ -1,6 +1,7 @@
 package com.denfop.ssp.tiles.mfsu;
 
 import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.tile.IEnergyStorage;
@@ -150,10 +151,10 @@ public abstract class BaseMFSU extends TileEntityInventory implements IEnergySto
 	}
 
 	public String getStorageText() {
-		return String.format("%s %d / %d", Localization.translate("super_solar_panels.gui.storage"), (long) this.energy.getEnergy(), (long) this.energy.getCapacity());
+		return String.format("%s %d / %d", Localization.translate(Constants.MOD_ID + ".gui.storage"), (long) this.energy.getEnergy(), (long) this.energy.getCapacity());
 	}
 
 	public String getOutputText() {
-		return String.format("%s %d %s", Localization.translate("super_solar_panels.gui.maxOutput"), (long) this.output, Localization.translate("ic2.generic.text.EUt"));
+		return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), (long) this.output, Localization.translate("ic2.generic.text.EUt"));
 	}
 }

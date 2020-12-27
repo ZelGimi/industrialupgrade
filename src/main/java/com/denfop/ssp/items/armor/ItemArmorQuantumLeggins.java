@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemLeggins;
 import com.denfop.ssp.keyboard.SSPKeys;
 import ic2.api.item.ElectricItem;
@@ -32,7 +33,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 
 	@Override
 	public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
-		return "super_solar_panels:textures/armour/" + this.name + "Overlay" + ".png";
+		return Constants.MOD_ID + ":textures/armour/" + this.name + "Overlay" + ".png";
 	}
 
 	@Override

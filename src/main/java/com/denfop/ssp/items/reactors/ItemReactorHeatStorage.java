@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.reactors;
 
 import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import com.google.common.base.CaseFormat;
 import ic2.api.reactor.IReactor;
 import ic2.core.init.BlocksItems;
@@ -27,11 +28,11 @@ public class ItemReactorHeatStorage extends AbstractDamageableReactorComponent {
 
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation("super_solar_panels:" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemReactorHeatStorage.name), null));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, ItemReactorHeatStorage.name), null));
 	}
 
 	public String getUnlocalizedName() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public boolean canStoreHeat(ItemStack stack, IReactor reactor, int x, int y) {

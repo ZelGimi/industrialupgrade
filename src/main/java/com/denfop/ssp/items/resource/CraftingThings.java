@@ -1,6 +1,7 @@
 package com.denfop.ssp.items.resource;
 
 import com.denfop.ssp.SuperSolarPanels;
+import com.denfop.ssp.common.Constants;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
@@ -23,11 +24,11 @@ public class CraftingThings extends ItemMulti {
 
 	@SideOnly(Side.CLIENT)
 	protected void registerModel(final int meta, final ItemName name, final String extraName) {
-		ModelLoader.setCustomModelResourceLocation(this, meta, new ModelResourceLocation("super_solar_panels:crafting/" + CraftingTypes.getFromID(meta).getName(), null));
+		ModelLoader.setCustomModelResourceLocation(this, meta, new ModelResourceLocation(Constants.MOD_ID + ":crafting/" + CraftingTypes.getFromID(meta).getName(), null));
 	}
 
 	public String func_77658_a() {
-		return "super_solar_panels." + super.getUnlocalizedName().substring(4);
+		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
 	}
 
 	public enum CraftingTypes implements IIdProvider {
