@@ -125,6 +125,7 @@ jar {
                 "Git-Commit-Hash": getGitHash()
         ])
     }
+    from 'LICENSE'
 }
 apply from: 'https://gist.github.com/ijo42/6b215e76269a72f37194b924ddda038e/raw/d782226840813ae6703044c51e98b61eb4675875/signjar.groovy'
 build.dependsOn signJar
