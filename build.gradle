@@ -17,6 +17,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: "net.kyori.blossom"
 apply plugin: 'eclipse'
@@ -32,6 +33,17 @@ blossom {
     replaceToken '%VERSION%', modVersion
     replaceToken "%IC2_RANGE%", ic2_range
     replaceToken "%CERTIFICATE%", fingerprint
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
 }
 
 minecraft {
@@ -55,6 +67,15 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
         }
+
+        data {
+            property 'forge.logging.console.level', 'debug'
+            workingDirectory project.file('run')
+            args '--mod', 'ssp', '--all',
+                    '--existing', '"' + file('src/main/resources/') + '"',
+                    '--existing', '"' + file('src/generated/resources/') + '"',
+                    '--output', '"' + file('src/generated/resources/') + '"'
+        }
     }
 }
 
@@ -75,7 +96,7 @@ repositories {
     }
     maven {
         url "https://www.cursemaven.com"
-        content {
+       content {
             includeGroup "curse.maven"
         }
     }
@@ -126,6 +147,9 @@ jar {
         ])
     }
     from 'LICENSE'
+
+    from sourceSets.main.output.classesDirs
+    from sourceSets.main.output.resourcesDir
 }
 apply from: 'https://gist.github.com/ijo42/6b215e76269a72f37194b924ddda038e/raw/d782226840813ae6703044c51e98b61eb4675875/signjar.groovy'
 build.dependsOn signJar
@@ -150,3 +174,6 @@ static def getGitHash() {
         return 'unknown'
     }
 }
+
+// Hack to include resources for Forge 1.12.2 using FG3
+sourceSets { main { output.resourcesDir = output.classesDirs[0] } }
