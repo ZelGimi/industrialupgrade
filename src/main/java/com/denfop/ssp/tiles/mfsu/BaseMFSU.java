@@ -5,6 +5,7 @@ import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.tile.IEnergyStorage;
+import ic2.api.tile.IWrenchable;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
@@ -18,6 +19,7 @@ import ic2.core.init.MainConfig;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.ConfigUtil;
 import ic2.core.util.StackUtil;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,14 +27,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-public abstract class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHasGui {
+public abstract class BaseMFSU extends TileEntityInventory implements IEnergyStorage, IHasGui, IWrenchable {
 	private final int output;
 	private final Energy energy;
 	private static final int SLOTS = 4;
@@ -78,6 +84,35 @@ public abstract class BaseMFSU extends TileEntityInventory implements IEnergySto
 	public void setFacing(EnumFacing facing) {
 		super.setFacing(facing);
 		this.energy.setDirections(EnumSet.complementOf(EnumSet.of(getFacing())), EnumSet.of(getFacing()));
+	}
+
+	@Override
+	public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
+		List<ItemStack> list = new ArrayList<>();
+		for (ItemStack chargeSlot : chargeSlots) {
+			list.add(chargeSlot);
+		}
+		return list;
+	}
+
+	@Override
+	public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
+		return false;
+	}
+
+	@Override
+	public EnumFacing getFacing(World world, BlockPos blockPos) {
+		return null;
+	}
+
+	@Override
+	public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
+		return false;
+	}
+
+	@Override
+	public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
+		return true;
 	}
 
 	@SideOnly(Side.CLIENT)

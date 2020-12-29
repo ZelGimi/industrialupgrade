@@ -9,6 +9,7 @@ import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
+import ic2.api.tile.IWrenchable;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
@@ -18,20 +19,25 @@ import ic2.core.gui.dynamic.GuiParser;
 import ic2.core.gui.dynamic.IGuiValueProvider;
 import ic2.core.init.Localization;
 import ic2.core.network.GuiSynced;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TileEntitySolarPanel extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider {
+public abstract class TileEntitySolarPanel extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider, IWrenchable {
 	public final int maxStorage;
 
 	protected final int dayPower;
@@ -121,6 +127,35 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 		} else {
 			this.storage = this.maxStorage;
 		}
+	}
+
+	@Override
+	public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
+		List<ItemStack> list = new ArrayList<>();
+		for (ItemStack chargeSlot : chargeSlots) {
+			list.add(chargeSlot);
+		}
+		return list;
+	}
+
+	@Override
+	public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
+		return false;
+	}
+
+	@Override
+	public EnumFacing getFacing(World world, BlockPos blockPos) {
+		return null;
+	}
+
+	@Override
+	public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
+		return false;
+	}
+
+	@Override
+	public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
+		return true;
 	}
 
 	public boolean getGuiState(String name) {

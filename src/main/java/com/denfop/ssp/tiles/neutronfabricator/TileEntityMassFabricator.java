@@ -5,6 +5,7 @@ import com.denfop.ssp.fluid.neutron.FluidRegister;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipeResult;
 import ic2.api.recipe.Recipes;
+import ic2.api.tile.IWrenchable;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
@@ -20,10 +21,15 @@ import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.network.GuiSynced;
 import ic2.core.profile.NotClassic;
 import ic2.core.recipe.MatterAmplifierRecipeManager;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,7 +41,7 @@ import java.util.List;
 import java.util.Set;
 
 @NotClassic
-public class TileEntityMassFabricator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock {
+public class TileEntityMassFabricator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock, IWrenchable {
   private static final int StateIdle = 0;
   private static final int StateRunning = 1;
   private static final int StateRunningScrap = 2;
@@ -101,6 +107,35 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
     addAmplifier(Recipes.inputFactory.forOreDict(input, amount), amplification);
   }
 
+  public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
+    List<ItemStack> list = new ArrayList<>();
+    for (ItemStack outSlot : outputSlot) list.add(outSlot);
+    for (ItemStack slot : upgradeSlot) list.add(slot);
+    for (ItemStack slot : containerslot) list.add(slot);
+    list.add(amplifierSlot.get());
+
+    return list;
+  }
+
+  @Override
+  public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
+    return false;
+  }
+
+  @Override
+  public EnumFacing getFacing(World world, BlockPos blockPos) {
+    return null;
+  }
+
+  @Override
+  public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
+    return false;
+  }
+
+  @Override
+  public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
+    return true;
+  }
   public void readFromNBT(NBTTagCompound nbt) {
     super.readFromNBT(nbt);
     this.scrap = nbt.getInteger("scrap");
