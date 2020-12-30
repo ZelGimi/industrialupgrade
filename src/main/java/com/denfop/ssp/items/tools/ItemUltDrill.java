@@ -46,7 +46,7 @@ public class ItemUltDrill extends ItemDrill {
 	protected static final String NAME = "item_ult_drill";
 
 	public ItemUltDrill() {
-		super(null, Configs.operationEnergyCost, HarvestLevel.Iridium, Configs.maxChargedrill, Configs.transferLimitdrill, Configs.tierdrill, DrillMode.NORMAL.drillSpeed);
+		super(null, Configs.Drill.Mode.Normal.getCost(), HarvestLevel.Iridium, Configs.Drill.Spectral.getMaxCharge(), Configs.Drill.Spectral.getTransferLimit(), Configs.Drill.Spectral.getTier(), DrillMode.NORMAL.drillSpeed);
 		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(NAME)).setUnlocalizedName(NAME);
 	}
 
@@ -160,9 +160,9 @@ public class ItemUltDrill extends ItemDrill {
 	}
 
 	public enum DrillMode {
-		NORMAL(TextFormatting.DARK_GREEN, Configs.drillSpeed, Configs.energyCost, 0),
-		BIG_HOLES(TextFormatting.AQUA, Configs.drillSpeed1, Configs.energyCost1, 1),
-		BIG_HOLES1(TextFormatting.LIGHT_PURPLE, Configs.drillSpeed2, Configs.energyCost2, 2);
+		NORMAL(TextFormatting.DARK_GREEN, Configs.Drill.Mode.Normal.getSpeed(), Configs.Drill.Mode.Normal.getCost(), 0),
+		BIG_HOLES(TextFormatting.AQUA, Configs.Drill.Mode.BigHoles.getSpeed(), Configs.Drill.Mode.BigHoles.getCost(), 1),
+		BIG_HOLES1(TextFormatting.LIGHT_PURPLE, Configs.Drill.Mode.BigBigHoles.getSpeed(), Configs.Drill.Mode.BigBigHoles.getCost(), 2);
 
 		public final float drillSpeed;
 

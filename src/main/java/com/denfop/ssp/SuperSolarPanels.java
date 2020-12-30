@@ -57,8 +57,8 @@ public final class SuperSolarPanels {
 
     @SubscribeEvent
     public static void register(final TeBlockFinalCallEvent event) {
-        TeBlockRegistry.addAll(com.denfop.ssp.tiles.SSPBlock.class, SSPBlock.IDENTITY);
-        TeBlockRegistry.setDefaultMaterial(SSPBlock.IDENTITY, Material.ROCK);
+        TeBlockRegistry.addAll(SSPBlock.class, SSPBlock.IDENTITY);
+	    TeBlockRegistry.setDefaultMaterial(SSPBlock.IDENTITY, Material.ROCK);
     }
 
     public static ResourceLocation getIdentifier(final String name) {

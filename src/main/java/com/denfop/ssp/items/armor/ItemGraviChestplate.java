@@ -1,6 +1,6 @@
 package com.denfop.ssp.items.armor;
 
-import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Configs.Armor;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemAdvancedElectricJetpack;
 import ic2.api.item.ElectricItem;
@@ -19,7 +19,7 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 	protected static final int DEFAULT_COLOUR = -1;
 
 	public ItemGraviChestplate() {
-		super("graviChestplate", Configs.maxCharge6, Configs.transferLimit6, Configs.tier6);
+		super("graviChestplate", Armor.Quantum.chestplate.getMaxCharge(), Armor.Quantum.chestplate.getTransferLimit(), Armor.Quantum.chestplate.getTier());
 	}
 
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {

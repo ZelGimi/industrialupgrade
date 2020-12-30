@@ -2,7 +2,7 @@ package com.denfop.ssp.items.armor;
 
 
 import com.denfop.ssp.SuperSolarPanels;
-import com.denfop.ssp.common.Configs;
+import com.denfop.ssp.common.Configs.Armor;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
@@ -364,7 +364,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
 	}
 
 	public enum SolarHelmetTypes {
-		Helmet(Configs.tier4, Configs.maxCharge4, Configs.transferLimit4);
+		Helmet(Armor.Quantum.helmet.getTier(), Armor.Quantum.helmet.getMaxCharge(), Armor.Quantum.helmet.getTransferLimit());
 
 		public final double maxCharge;
 		public final double transferLimit;

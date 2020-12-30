@@ -4,6 +4,6 @@ import com.denfop.ssp.common.Configs;
 
 public class AdvancedMFSU extends BaseMFSU {
 	public AdvancedMFSU() {
-		super(Configs.advancedmfsu, Configs.advancedmfsu1, Configs.advancedmfsu2);
+		super(Configs.MFSU.Advanced.getTransferLimit(), Configs.MFSU.Advanced.getTier(), Configs.MFSU.Advanced.getMaxCharge());
 	}
 }

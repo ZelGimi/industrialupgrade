@@ -1,11 +1,11 @@
 package com.denfop.ssp.tiles.panels.rain;
 
+import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.tiles.panels.entity.TileEntityRainPanel;
 
 public class TileEntityQuantumSolarRain extends TileEntityRainPanel {
-	public static SolarConfig settings;
 
 	public TileEntityQuantumSolarRain() {
-		super(TileEntityQuantumSolarRain.settings);
+		super(Configs.Panel.rain[ Configs.Panel.Quantum.ordinal() ]);
 	}
 }

@@ -4,6 +4,6 @@ import com.denfop.ssp.common.Configs;
 
 public class UltimateMFSU extends BaseMFSU {
 	public UltimateMFSU() {
-		super(Configs.ultimatemfsu, Configs.ultimatemfsu1, Configs.ultimatemfsu2);
+		super(Configs.MFSU.Ultimate.getTransferLimit(), Configs.MFSU.Ultimate.getTier(), Configs.MFSU.Ultimate.getMaxCharge());
 	}
 }
