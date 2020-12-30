@@ -2,76 +2,31 @@ package com.denfop.ssp.tiles.panels.entity;
 
 
 import com.denfop.ssp.common.Constants;
-import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
-import com.denfop.ssp.tiles.InvSlotMultiCharge;
-import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.tile.IWrenchable;
-import ic2.core.ContainerBase;
-import ic2.core.IHasGui;
-import ic2.core.block.TileEntityInventory;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.gui.dynamic.DynamicContainer;
-import ic2.core.gui.dynamic.GuiParser;
-import ic2.core.gui.dynamic.IGuiValueProvider;
 import ic2.core.init.Localization;
-import ic2.core.network.GuiSynced;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import ic2.core.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
 
-public abstract class TileEntitySolarPanel extends TileEntityInventory implements IEnergySource, IHasGui, IGuiValueProvider, IWrenchable {
-	public final int maxStorage;
+public abstract class TileEntitySolarPanel extends BasePanelTE {
 
 	protected final int dayPower;
 
 	protected final int nightPower;
 
-	protected final int tier;
-
-	protected final InvSlotMultiCharge chargeSlots;
-
-	private final double tierPower;
-
-	@GuiSynced
-	public int storage;
-	@GuiSynced
-	protected GenerationState active = GenerationState.NONE;
-	protected int ticker;
-	protected boolean canRain;
-	protected boolean hasSky;
-	private boolean addedToEnet;
-
 	public TileEntitySolarPanel(SolarConfig config) {
-		this(config.dayPower, config.nightPower, config.storage, config.tier);
+		super(config);
+		this.dayPower = config.dayPower;
+		this.nightPower = config.nightPower;
 	}
 
-	public TileEntitySolarPanel(int dayPower, int nightPower, int storage, int tier) {
-		this.dayPower = dayPower;
-		this.nightPower = nightPower;
-		this.maxStorage = storage;
-		this.tier = tier;
-		this.tierPower = EnergyNet.instance.getPowerFromTier(tier);
-		this.chargeSlots = new InvSlotMultiCharge(this, tier, 4, InvSlot.Access.IO);
+	@Nonnull
+	@Override
+	protected String getGuiDef() {
+		return "solar_panel_overtime";
 	}
 
 	protected void onLoaded() {
@@ -107,10 +62,7 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 			this.storage = (int) (this.storage - this.chargeSlots.charge(this.storage));
 	}
 
-	protected int tickRate() {
-		return 128;
-	}
-
+	@Override
 	public void checkTheSky() {
 		final BlockPos up = this.pos.up();
 		if (this.hasSky && this.world.canBlockSeeSky(up) && this.world.getBlockState(up).getMaterial().getMaterialMapColor() == MapColor.AIR) {
@@ -124,43 +76,6 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 		}
 	}
 
-	public void tryGenerateEnergy(int amount) {
-		if (this.storage + amount <= this.maxStorage) {
-			this.storage += amount;
-		} else {
-			this.storage = this.maxStorage;
-		}
-	}
-
-	@Override
-	public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
-		List<ItemStack> list = new ArrayList<>();
-		for (ItemStack chargeSlot : chargeSlots) {
-			list.add(chargeSlot);
-		}
-		return list;
-	}
-
-	@Override
-	public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
-		return false;
-	}
-
-	@Override
-	public EnumFacing getFacing(World world, BlockPos blockPos) {
-		return null;
-	}
-
-	@Override
-	public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-		return false;
-	}
-
-	@Override
-	public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
-		return true;
-	}
-
 	public boolean getGuiState(String name) {
 		if ("sunlight".equals(name))
 			return (this.active == GenerationState.DAY);
@@ -169,61 +84,7 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 		return super.getGuiState(name);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-		super.addInformation(stack, tooltip, advanced);
-		tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", this.tier));
-	}
-
-	public void readFromNBT(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		this.storage = nbt.getInteger("storage");
-	}
-
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
-		nbt.setInteger("storage", this.storage);
-		return nbt;
-	}
-
-	public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
-		return true;
-	}
-
-	public double getOfferedEnergy() {
-		return (this.storage < this.tierPower) ? this.storage : this.tierPower;
-	}
-
-	public void drawEnergy(double amount) {
-		this.storage = (int) (this.storage - amount);
-	}
-
-	public int getSourceTier() {
-		return this.tier;
-	}
-
-	public ContainerBase<? extends TileEntitySolarPanel> getGuiContainer(EntityPlayer player) {
-		return DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-		return BackgroundlessDynamicGUI.create((IInventory) this, player, GuiParser.parse(this.teBlock));
-	}
-
-	public void onGuiClosed(EntityPlayer player) {
-	}
-
-	public double getGuiValue(String name) {
-		if ("progress".equals(name))
-			return this.storage / this.maxStorage;
-		throw new IllegalArgumentException("Unexpected GUI value requested: " + name);
-	}
-
-	public String getMaxOutput() {
-		return String.format("%s %.0f %s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), EnergyNet.instance.getPowerFromTier(this.tier + 1), Localization.translate("ic2.generic.text.EUt"));
-	}
-
+	@Override
 	public String getOutput() {
 		switch (this.active) {
 			case DAY:
@@ -234,25 +95,15 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 		return String.format("%s 0 %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Localization.translate("ic2.generic.text.EUt"));
 	}
 
-	public enum GenerationState {
-		NONE, NIGHT, DAY
-	}
+	public static class SolarConfig extends BasePanelTE.SolarConfig {
 
-	public static final class SolarConfig {
-		public final int dayPower;
+		private final int dayPower;
+		private final int nightPower;
 
-		public final int nightPower;
-
-		final int storage;
-
-		final int tier;
-
-
-		public SolarConfig(int dayPower, int nightPower, int storage, int tier) {
+		public SolarConfig(int dayPower, int nightPower, int maxStorage, int tier) {
+			super(maxStorage, tier);
 			this.dayPower = dayPower;
 			this.nightPower = nightPower;
-			this.storage = storage;
-			this.tier = tier;
 		}
 	}
 }
