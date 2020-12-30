@@ -19,6 +19,8 @@ import ic2.core.gui.dynamic.GuiParser;
 import ic2.core.gui.dynamic.IGuiValueProvider;
 import ic2.core.init.Localization;
 import ic2.core.network.GuiSynced;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -110,8 +112,9 @@ public abstract class TileEntitySolarPanel extends TileEntityInventory implement
 	}
 
 	public void checkTheSky() {
-		if (this.hasSky && this.world.canBlockSeeSky(this.pos.up())) {
-			if (this.world.isDaytime() && (!this.canRain || (!this.world.isRaining() && !this.world.isThundering()))) {
+		final BlockPos up = this.pos.up();
+		if (this.hasSky && this.world.canBlockSeeSky(up) && this.world.getBlockState(up).getMaterial().getMaterialMapColor() == MapColor.AIR) {
+			if (this.world.isDaytime() && !(this.canRain && (this.world.isRaining() || this.world.isThundering()))) {
 				this.active = GenerationState.DAY;
 			} else {
 				this.active = GenerationState.NIGHT;
