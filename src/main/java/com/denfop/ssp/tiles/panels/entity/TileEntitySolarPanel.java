@@ -88,9 +88,9 @@ public abstract class TileEntitySolarPanel extends BasePanelTE {
 	public String getOutput() {
 		switch (this.active) {
 			case DAY:
-				return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), this.dayPower, Localization.translate("ic2.generic.text.EUt"));
+				return String.format("%s %s %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Util.toSiString(this.dayPower, 3), Localization.translate("ic2.generic.text.EUt"));
 			case NIGHT:
-				return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), this.nightPower, Localization.translate("ic2.generic.text.EUt"));
+				return String.format("%s %s %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Util.toSiString(this.nightPower, 3), Localization.translate("ic2.generic.text.EUt"));
 		}
 		return String.format("%s 0 %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Localization.translate("ic2.generic.text.EUt"));
 	}

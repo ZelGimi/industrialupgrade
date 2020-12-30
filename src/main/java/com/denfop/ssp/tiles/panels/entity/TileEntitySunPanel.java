@@ -60,7 +60,7 @@ public abstract class TileEntitySunPanel extends BasePanelTE {
 	@Override
 	public String getOutput() {
 		if (this.active == GenerationState.DAY) {
-			return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), this.dayPower, Localization.translate("ic2.generic.text.EUt"));
+			return String.format("%s %s %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Util.toSiString(this.dayPower, 3), Localization.translate("ic2.generic.text.EUt"));
 		}
 		return String.format("%s 0 %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Localization.translate("ic2.generic.text.EUt"));
 	}
