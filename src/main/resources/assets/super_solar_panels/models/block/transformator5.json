@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "super_solar_panels:blocks/pn_transformer_leftrightback_active",
+		"down": "super_solar_panels:blocks/pn_transformer_bottomtop_active",
+		"up": "super_solar_panels:blocks/pn_transformer_bottomtop_active",
+		"north": "super_solar_panels:blocks/pn_transformer_front_active",
+		"east": "super_solar_panels:blocks/pn_transformer_leftrightback_active",
+		"south": "super_solar_panels:blocks/pn_transformer_leftrightback_active",
+		"west": "super_solar_panels:blocks/pn_transformer_leftrightback_active"
+	}
+}

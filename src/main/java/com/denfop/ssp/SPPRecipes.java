@@ -214,6 +214,8 @@ public final class SPPRecipes {
 		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.transformator1), "BCB", 'C', SuperSolarPanels.machines.getItemStack(SSPBlock.transformator), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.quantumitems6));
 		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.transformator2), "BCB", 'C', SuperSolarPanels.machines.getItemStack(SSPBlock.transformator1), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QuantumItems5));
 		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.transformator3), "BCB", 'C', SuperSolarPanels.machines.getItemStack(SSPBlock.transformator2), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QuantumItems5));
+		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.transformator4), "BCB", 'C', SuperSolarPanels.machines.getItemStack(SSPBlock.transformator3), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QuantumItems5));
+		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.transformator5), "BCB", 'C', SuperSolarPanels.machines.getItemStack(SSPBlock.transformator4), 'B', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QuantumItems5));
 		//
 		//
 		addShapedRecipe(SuperSolarPanels.machines.getItemStack(SSPBlock.ultimatemfsu), " B ", "BCB", " B ", 'B', SuperSolarPanels.machines.getItemStack(SSPBlock.advancedmfsu), 'C', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.quantumitems6));
