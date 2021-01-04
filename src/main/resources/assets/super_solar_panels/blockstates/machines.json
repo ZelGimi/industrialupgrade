@@ -3,32 +3,73 @@
 	"variants": {
 		"type": {
 			"molecular_transformer": {"model": "super_solar_panels:molecular_transformer"},
-			"spectral_solar_panel": {"model": "super_solar_panels:spectral_solar_panel"},
-			"singular_solar_panel": {"model": "super_solar_panels:singulary_solar_panel"},
-			"admin_solar_panel": {"model": "super_solar_panels:admin_solar_panel"},
-			"photonic_solar_panel": {"model": "super_solar_panels:photonic_solar_panel"},
-			"neutronium_solar_panel": {"model": "super_solar_panels:neutronium_solar_panel"},
-			"proton_solar_panel": {"model": "super_solar_panels:proton_solar_panel"},
-			"transformator": {"model": "super_solar_panels:transformator"},
-			"transformator1": {"model": "super_solar_panels:transformator1"},
-			"transformator2": {"model": "super_solar_panels:transformator2"},
-			"transformator3": {"model": "super_solar_panels:transformator3"},
-			"nutronfabricator": {"model": "super_solar_panels:nutronfabricator"},
-			"iridiumgenerator": {"model": "super_solar_panels:nutronfabricator"},
-			"advanced_solar_panelsun": {"model": "super_solar_panels:advanced_solar_panelsun"},
-			"hybrid_solar_panelsun": {"model": "super_solar_panels:hybrid_solar_panelsun"},
-			"ultimate_solar_panelsun": {"model": "super_solar_panels:ultimate_solar_panelsun"},
-			"quantum_solar_panelsun": {"model": "super_solar_panels:quantum_solar_panelsun"},
-			"spectral_solar_panelsun": {"model": "super_solar_panels:spectral_solar_panelsun"},
-			"singular_solar_panelsun": {"model": "super_solar_panels:singulary_solar_panelsun"},
-			"admin_solar_panelsun": {"model": "super_solar_panels:admin_solar_panelsun"},
-			"photonic_solar_panelsun": {"model": "super_solar_panels:photonic_solar_panelsun"},
-			"neutronium_solar_panelsun": {"model": "super_solar_panels:neutronium_solar_panelsun"},
+			"spectral_solar_panel": {
+				"model": "super_solar_panels:spectral_solar_panel"
+			},
+			"singular_solar_panel": {
+				"model": "super_solar_panels:singulary_solar_panel"
+			},
+			"admin_solar_panel": {
+				"model": "super_solar_panels:admin_solar_panel"
+			},
+			"photonic_solar_panel": {
+				"model": "super_solar_panels:photonic_solar_panel"
+			},
+			"neutronium_solar_panel": {
+				"model": "super_solar_panels:neutronium_solar_panel"
+			},
+			"proton_solar_panel": {
+				"model": "super_solar_panels:proton_solar_panel"
+			},
+			"transformator": {
+				"model": "super_solar_panels:transformator"
+			},
+			"transformator1": {
+				"model": "super_solar_panels:transformator1"
+			},
+			"transformator2": {
+				"model": "super_solar_panels:transformator2"
+			},
+			"transformator3": {
+				"model": "super_solar_panels:transformator3"
+			},
+			"transformator4": {
+				"model": "super_solar_panels:transformator4"
+			},
+			"transformator5": {
+				"model": "super_solar_panels:transformator5"
+			},
+			"nutronfabricator": {
+				"model": "super_solar_panels:nutronfabricator"
+			},
+			"advanced_solar_panelsun": {
+				"model": "super_solar_panels:advanced_solar_panelsun"
+			},
+			"hybrid_solar_panelsun": {
+				"model": "super_solar_panels:hybrid_solar_panelsun"
+			},
+			"ultimate_solar_panelsun": {
+				"model": "super_solar_panels:ultimate_solar_panelsun"
+			},
+			"quantum_solar_panelsun": {
+				"model": "super_solar_panels:quantum_solar_panelsun"
+			},
+			"spectral_solar_panelsun": {
+				"model": "super_solar_panels:spectral_solar_panelsun"
+			},
+			"singular_solar_panelsun": {
+				"model": "super_solar_panels:singulary_solar_panelsun"
+			},
+			"admin_solar_panelsun": {
+				"model": "super_solar_panels:admin_solar_panelsun"
+			},
+			"photonic_solar_panelsun": {
+				"model": "super_solar_panels:photonic_solar_panelsun"
+			},
+			"neutronium_solar_panelsun": {
+				"model": "super_solar_panels:neutronium_solar_panelsun"
+			},
 			"proton_solar_panelsun": {"model": "super_solar_panels:proton_solar_panelsun"},
-			"advanced_solar_panelsun": {"model": "super_solar_panels:advanced_solar_panelsun"},
-			"hybrid_solar_panelsun": {"model": "super_solar_panels:hybrid_solar_panelsun"},
-			"ultimate_solar_panelsun": {"model": "super_solar_panels:ultimate_solar_panelsun"},
-			"quantum_solar_panelsun": {"model": "super_solar_panels:quantum_solar_panelsun"},
 			"advanced_solar_panel": {"model": "super_solar_panels:advanced_solar_panel"},
 			"hybrid_solar_panel": {"model": "super_solar_panels:hybrid_solar_panel"},
 			"ultimate_solar_panel": {"model": "super_solar_panels:ultimate_solar_panel"},
@@ -43,14 +84,6 @@
 			"photonic_solar_panelmoon": {"model": "super_solar_panels:photonic_solar_panel1"},
 			"neutronium_solar_panelmoon": {"model": "super_solar_panels:neutronium_solar_panel1"},
 			"proton_solar_panelmoon": {"model": "super_solar_panels:proton_solar_panel1"},
-			"advanced_solar_panelmoon": {"model": "super_solar_panels:advanced_solar_panel1"},
-			"hybrid_solar_panelmoon": {"model": "super_solar_panels:hybrid_solar_panel1"},
-			"ultimate_solar_panelmoon": {"model": "super_solar_panels:ultimate_solar_panel1"},
-			"quantum_solar_panelmoon": {"model": "super_solar_panels:quantum_solar_panel1"},
-			"advanced_solar_panelrain": {"model": "super_solar_panels:advanced_solar_panelrain"},
-			"hybrid_solar_panelrain": {"model": "super_solar_panels:hybrid_solar_panelrainrain"},
-			"ultimate_solar_panelrain": {"model": "super_solar_panels:ultimate_solar_panelrain"},
-			"quantum_solar_panelrain": {"model": "super_solar_panels:quantum_solar_panelrain"},
 			"spectral_solar_panelrain": {"model": "super_solar_panels:spectral_solar_panelrain"},
 			"singular_solar_panelrain": {"model": "super_solar_panels:singulary_solar_panelrain"},
 			"admin_solar_panelrain": {"model": "super_solar_panels:admin_solar_panelrain"},
