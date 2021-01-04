@@ -43,11 +43,12 @@ public abstract class BaseMFSU extends TileEntityInventory implements IEnergySto
 	private final Energy energy;
 	private static final int SLOTS = 4;
 	protected final InvSlotMultiCharge chargeSlots;
+	protected final InvSlotDischarge dischargeSlot;
 
 	public BaseMFSU(int output, int tier, double capacity) {
 		this.output = output;
 		this.chargeSlots = new InvSlotMultiCharge(this, tier, SLOTS, InvSlot.Access.IO);
-		InvSlotDischarge dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, tier, InvSlot.InvSide.BOTTOM);
+		this.dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.IO, tier, InvSlot.InvSide.BOTTOM);
 		this.energy = addComponent((new Energy(this, capacity, EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)),
 				EnumSet.of(EnumFacing.DOWN), tier)).addManagedSlot(dischargeSlot));
 	}
@@ -89,25 +90,36 @@ public abstract class BaseMFSU extends TileEntityInventory implements IEnergySto
 	@Override
 	public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
 		List<ItemStack> list = new ArrayList<>();
-		for (ItemStack chargeSlot : chargeSlots) {
-			list.add(chargeSlot);
-		}
+		chargeSlots.forEach(list::add);
+		dischargeSlot.forEach(list::add);
 		return list;
 	}
 
+
 	@Override
-	public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
-		return false;
+	public boolean canSetFacing(World world, BlockPos pos, EnumFacing enumFacing, EntityPlayer player) {
+		if (!this.teBlock.allowWrenchRotating()) {
+			return false;
+		} else if (enumFacing == this.getFacing()) {
+			return false;
+		} else {
+			return this.getSupportedFacings().contains(enumFacing);
+		}
 	}
 
 	@Override
 	public EnumFacing getFacing(World world, BlockPos blockPos) {
-		return null;
+		return this.getFacing();
 	}
 
 	@Override
 	public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-		return false;
+		if (!this.canSetFacingWrench(enumFacing, entityPlayer)) {
+			return false;
+		} else {
+			this.setFacing(enumFacing);
+			return true;
+		}
 	}
 
 	@Override

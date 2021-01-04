@@ -9,6 +9,7 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.IGrowingBuffer;
 import ic2.api.network.INetworkCustomEncoder;
 import ic2.api.recipe.MachineRecipeResult;
+import ic2.api.tile.IWrenchable;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
@@ -23,30 +24,30 @@ import ic2.core.network.GuiSynced;
 import ic2.core.util.StackUtil;
 import ic2.core.util.Tuple;
 import ic2.core.util.Util;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TileEntityMolecularAssembler extends TileEntityInventory implements IEnergySink, IHasGui, IGuiValueProvider {
-	protected static final List<AxisAlignedBB> AABBs;
+public class TileEntityMolecularAssembler extends TileEntityInventory implements IEnergySink, IHasGui, IGuiValueProvider, IWrenchable {
+	protected static final List<AxisAlignedBB> AABBs = Arrays.asList(new AxisAlignedBB(0.25, 0.0, 0.25, 0.75, 1.0, 0.75), new AxisAlignedBB(0.05, 0.0, 0.2, 0.6, 1.0, 0.8));
 	protected static final byte MAX_TIME_WAIT = 40;
-
-	static {
-		AABBs = Arrays.asList(new AxisAlignedBB(0.25, 0.0, 0.25, 0.75, 1.0, 0.75), new AxisAlignedBB(0.05, 0.0, 0.2, 0.6, 1.0, 0.8));
-	}
 
 	public final InvSlotProcessable<IMolecularTransformerRecipeManager.Input, ItemStack, ItemStack> inputSlot;
 	public final InvSlotOutput outputSlot;
@@ -171,6 +172,46 @@ public class TileEntityMolecularAssembler extends TileEntityInventory implements
 		super.addInformation(stack, tooltip, advanced);
 		tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", this.getSinkTier()));
 	}
+
+	public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
+		List<ItemStack> list = new ArrayList<>();
+		outputSlot.forEach(list::add);
+		inputSlot.forEach(list::add);
+
+		return list;
+	}
+
+	@Override
+	public boolean canSetFacing(World world, BlockPos pos, EnumFacing enumFacing, EntityPlayer player) {
+		if (!this.teBlock.allowWrenchRotating()) {
+			return false;
+		} else if (enumFacing == this.getFacing()) {
+			return false;
+		} else {
+			return this.getSupportedFacings().contains(enumFacing);
+		}
+	}
+
+	@Override
+	public EnumFacing getFacing(World world, BlockPos blockPos) {
+		return this.getFacing();
+	}
+
+	@Override
+	public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
+		if (!this.canSetFacingWrench(enumFacing, entityPlayer)) {
+			return false;
+		} else {
+			this.setFacing(enumFacing);
+			return true;
+		}
+	}
+
+	@Override
+	public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
+		return true;
+	}
+
 
 	protected boolean canWork() {
 		final MachineRecipeResult<IMolecularTransformerRecipeManager.Input, ItemStack, ItemStack> result = this.inputSlot.process();

@@ -109,33 +109,45 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
 
   public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
     List<ItemStack> list = new ArrayList<>();
-    for (ItemStack outSlot : outputSlot) list.add(outSlot);
-    for (ItemStack slot : upgradeSlot) list.add(slot);
-    for (ItemStack slot : containerslot) list.add(slot);
-    list.add(amplifierSlot.get());
+    outputSlot.forEach(list::add);
+    upgradeSlot.forEach(list::add);
+    containerslot.forEach(list::add);
+    amplifierSlot.forEach(list::add);
 
     return list;
   }
 
   @Override
-  public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
-    return false;
+  public boolean canSetFacing(World world, BlockPos pos, EnumFacing enumFacing, EntityPlayer player) {
+    if (!this.teBlock.allowWrenchRotating()) {
+      return false;
+    } else if (enumFacing == this.getFacing()) {
+      return false;
+    } else {
+      return this.getSupportedFacings().contains(enumFacing);
+    }
   }
 
   @Override
   public EnumFacing getFacing(World world, BlockPos blockPos) {
-    return null;
+    return this.getFacing();
   }
 
   @Override
   public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-    return false;
+    if (!this.canSetFacingWrench(enumFacing, entityPlayer)) {
+      return false;
+    } else {
+      this.setFacing(enumFacing);
+      return true;
+    }
   }
 
   @Override
   public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
     return true;
   }
+
   public void readFromNBT(NBTTagCompound nbt) {
     super.readFromNBT(nbt);
     this.scrap = nbt.getInteger("scrap");

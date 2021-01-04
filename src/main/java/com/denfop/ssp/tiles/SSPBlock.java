@@ -160,7 +160,7 @@ public enum SSPBlock implements ITeBlock {
 	@Override
 	@Nonnull
 	public TeBlock.HarvestTool getHarvestTool() {
-		return TeBlock.HarvestTool.Pickaxe;
+		return TeBlock.HarvestTool.Wrench;
 	}
 
 	@Override
