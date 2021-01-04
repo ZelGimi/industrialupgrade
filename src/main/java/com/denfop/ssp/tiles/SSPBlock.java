@@ -10,10 +10,7 @@ import com.denfop.ssp.tiles.neutronfabricator.TileEntityMassFabricator;
 import com.denfop.ssp.tiles.panels.overtime.*;
 import com.denfop.ssp.tiles.panels.rain.*;
 import com.denfop.ssp.tiles.panels.sun.*;
-import com.denfop.ssp.tiles.transformer.TileEntityTransformerEV;
-import com.denfop.ssp.tiles.transformer.TileEntityTransformerEV1;
-import com.denfop.ssp.tiles.transformer.TileEntityTransformerEV2;
-import com.denfop.ssp.tiles.transformer.TileEntityTransformerEV3;
+import com.denfop.ssp.tiles.transformer.*;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.TeBlock;
@@ -45,6 +42,8 @@ public enum SSPBlock implements ITeBlock {
 	transformator1(TileEntityTransformerEV1.class, 13),
 	transformator2(TileEntityTransformerEV2.class, 14),
 	transformator3(TileEntityTransformerEV3.class, 15),
+	transformator4(TileEntityTransformerEV4.class, 26),
+	transformator5(TileEntityTransformerEV5.class, 27),
 	advanced_solar_panelsun(TileEntityAdvancedSolarSun.class, 16),
 	hybrid_solar_panelsun(TileEntityHybridSolarSun.class, 17, EnumRarity.RARE),
 	ultimate_solar_panelsun(TileEntityUltimateHybridSolarSun.class, 18, EnumRarity.EPIC),
@@ -178,7 +177,7 @@ public enum SSPBlock implements ITeBlock {
 
 	@Override
 	public boolean allowWrenchRotating() {
-		return false;
+		return true;
 	}
 
 	@Override

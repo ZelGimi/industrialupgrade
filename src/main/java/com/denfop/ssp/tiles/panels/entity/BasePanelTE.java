@@ -5,6 +5,8 @@ import com.denfop.ssp.common.Utils;
 import com.denfop.ssp.gui.BackgroundlessDynamicGUI;
 import com.denfop.ssp.tiles.InvSlotMultiCharge;
 import ic2.api.energy.EnergyNet;
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.tile.IWrenchable;
@@ -29,6 +31,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,7 +67,9 @@ public abstract class BasePanelTE extends TileEntityInventory implements IEnergy
 	}
 
 	protected boolean canSeeSky(BlockPos up) {
-		return this.hasSky && this.world.canBlockSeeSky(up) && (this.world.getBlockState(up).getMaterial().getMaterialMapColor() == MapColor.AIR);
+		return this.hasSky && this.world.canBlockSeeSky(up) &&
+				(this.world.getBlockState(up).getMaterial().getMaterialMapColor() ==
+						MapColor.AIR);
 	}
 
 	public void tryGenerateEnergy(int amount) {
@@ -73,6 +78,21 @@ public abstract class BasePanelTE extends TileEntityInventory implements IEnergy
 		} else {
 			this.storage = this.maxStorage;
 		}
+	}
+
+	protected void onLoaded() {
+		super.onLoaded();
+		if (!this.world.isRemote) {
+			this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+			this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
+			this.hasSky = !this.world.provider.isNether();
+		}
+	}
+
+	protected void onUnloaded() {
+		super.onUnloaded();
+		if (this.addedToEnet)
+			this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -111,25 +131,34 @@ public abstract class BasePanelTE extends TileEntityInventory implements IEnergy
 	@Override
 	public List<ItemStack> getWrenchDrops(World world, BlockPos blockPos, IBlockState iBlockState, TileEntity tileEntity, EntityPlayer entityPlayer, int i) {
 		List<ItemStack> list = new ArrayList<>();
-		for (ItemStack chargeSlot : chargeSlots) {
-			list.add(chargeSlot);
-		}
+		chargeSlots.forEach(list::add);
 		return list;
 	}
 
 	@Override
-	public boolean canSetFacing(World world, BlockPos pos, EnumFacing newDirection, EntityPlayer player) {
-		return false;
+	public boolean canSetFacing(World world, BlockPos pos, EnumFacing enumFacing, EntityPlayer player) {
+		if (!this.teBlock.allowWrenchRotating()) {
+			return false;
+		} else if (enumFacing == this.getFacing()) {
+			return false;
+		} else {
+			return this.getSupportedFacings().contains(enumFacing);
+		}
 	}
 
 	@Override
 	public EnumFacing getFacing(World world, BlockPos blockPos) {
-		return null;
+		return this.getFacing();
 	}
 
 	@Override
 	public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-		return false;
+		if (!this.canSetFacingWrench(enumFacing, entityPlayer)) {
+			return false;
+		} else {
+			this.setFacing(enumFacing);
+			return true;
+		}
 	}
 
 	@Override

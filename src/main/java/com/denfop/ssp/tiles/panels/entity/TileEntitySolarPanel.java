@@ -2,12 +2,8 @@ package com.denfop.ssp.tiles.panels.entity;
 
 
 import com.denfop.ssp.common.Constants;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
 
@@ -29,25 +25,8 @@ public abstract class TileEntitySolarPanel extends BasePanelTE {
 		return "solar_panel_overtime";
 	}
 
-	protected void onLoaded() {
-		super.onLoaded();
-		if (!this.world.isRemote) {
-			this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-			this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
-			this.hasSky = !this.world.provider.isNether();
-		}
-	}
-
-	protected void onUnloaded() {
-		super.onUnloaded();
-		if (this.addedToEnet)
-			this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-	}
-
 	protected void updateEntityServer() {
 		super.updateEntityServer();
-		if (this.ticker++ % tickRate() == 0)
-			checkTheSky();
 
 		switch (this.active) {
 			case DAY:
@@ -64,16 +43,9 @@ public abstract class TileEntitySolarPanel extends BasePanelTE {
 
 	@Override
 	public void checkTheSky() {
-		final BlockPos up = this.pos.up();
-		if (this.hasSky && this.world.canBlockSeeSky(up) && this.world.getBlockState(up).getMaterial().getMaterialMapColor() == MapColor.AIR) {
-			if (this.world.isDaytime() && !(this.canRain && (this.world.isRaining() || this.world.isThundering()))) {
-				this.active = GenerationState.DAY;
-			} else {
-				this.active = GenerationState.NIGHT;
-			}
-		} else {
-			this.active = GenerationState.NONE;
-		}
+		this.active = canSeeSky(this.pos.up()) ? this.world.isDaytime() &&
+				!(this.canRain && (this.world.isRaining() || this.world.isThundering())) ?
+				GenerationState.DAY : GenerationState.NIGHT : GenerationState.NONE;
 	}
 
 	public boolean getGuiState(String name) {
