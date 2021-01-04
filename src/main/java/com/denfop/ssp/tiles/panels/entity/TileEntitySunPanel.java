@@ -2,13 +2,16 @@ package com.denfop.ssp.tiles.panels.entity;
 
 
 import com.denfop.ssp.common.Constants;
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
 
-public class TileEntitySunPanel extends BasePanelTE {
+public abstract class TileEntitySunPanel extends BasePanelTE {
 	protected final int dayPower;
 
 	public TileEntitySunPanel(SolarConfig config) {
@@ -22,12 +25,19 @@ public class TileEntitySunPanel extends BasePanelTE {
 		return "solar_panel_sun";
 	}
 
-	@Override
-	public void checkTheSky() {
-		final BlockPos up = this.pos.up();
-		this.active = canSeeSky(up) &&
-				!(!this.world.isDaytime() || this.canRain && (this.world.isRaining() || this.world.isThundering())) ?
-				GenerationState.DAY : GenerationState.NONE;
+	protected void onLoaded() {
+		super.onLoaded();
+		if (!this.world.isRemote) {
+			this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+			this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
+			this.hasSky = !this.world.provider.isNether();
+		}
+	}
+
+	protected void onUnloaded() {
+		super.onUnloaded();
+		if (this.addedToEnet)
+			this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 	}
 
 	protected void updateEntityServer() {

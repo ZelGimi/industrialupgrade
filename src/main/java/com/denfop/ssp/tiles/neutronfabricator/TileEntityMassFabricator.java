@@ -62,7 +62,7 @@ public class TileEntityMassFabricator extends TileEntityElectricMachine implemen
   private AudioSource audioSourceScrap;
 
   public TileEntityMassFabricator() {
-    super(Math.round(Configs.Fabricator.Neutron.getCost1mb()), Configs.Fabricator.Neutron.getTier());
+    super(Math.round(Configs.Neutronfabricator), Configs.Neutronfabricator1);
     this.scrap = 0;
     this.state = 0;
     this.prevState = 0;

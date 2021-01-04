@@ -1,7 +1,6 @@
 package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Configs.Armor;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemLeggins;
 import com.denfop.ssp.keyboard.SSPKeys;
@@ -29,7 +28,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 	protected static final int DEFAULT_COLOUR = -1;
 
 	public ItemArmorQuantumLeggins() {
-		super("graviLeggins", Armor.Quantum.leggings.getMaxCharge(), Armor.Quantum.leggings.getTransferLimit(), Configs.Armor.Quantum.leggings.getTier());
+		super("graviLeggins", Configs.maxCharge5, Configs.transferLimit5, Configs.tier5);
 	}
 
 	@Override
@@ -99,12 +98,12 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 		if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
 			final BlockPos pos = new BlockPos((int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
 			final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
-			if (Configs.Permitting.isCanCraftHSP()) {
+			if (Configs.canCraftHSP) {
 				player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300, 2, true, true));
 			} else {
 				return;
 			}
-			if (Configs.Permitting.isCanCraftHSH()) {
+			if (Configs.canCraftHSH) {
 				player.addPotionEffect(new PotionEffect(MobEffects.LUCK, 300, 2, true, true));
 			}
 		}

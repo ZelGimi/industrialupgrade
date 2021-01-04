@@ -1,7 +1,6 @@
 package com.denfop.ssp.items.armor;
 
 import com.denfop.ssp.common.Configs;
-import com.denfop.ssp.common.Configs.Armor;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemBoosts;
 import com.denfop.ssp.keyboard.SSPKeys;
@@ -29,7 +28,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 	private float jumpCharge;
 
 	public ItemArmorQuantumBoosts() {
-		super("graviBoosts", Armor.Quantum.boots.getMaxCharge(), Armor.Quantum.boots.getTransferLimit(), Armor.Quantum.boots.getTier());
+		super("graviBoosts", Configs.maxCharge3, Configs.transferLimit3, Configs.tier3);
 	}
 
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
@@ -98,17 +97,17 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 		if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
 			final BlockPos pos = new BlockPos((int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
 			final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
-			if (Configs.Permitting.isCanCraftMT()) {
+			if (Configs.canCraftMT) {
 				player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0, true, true));
 			} else {
 				return;
 			}
-			if (Configs.Permitting.isCanCraftASP()) {
+			if (Configs.canCraftASP) {
 				player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 300, 0, true, true));
 			} else {
 				return;
 			}
-			if (Configs.Permitting.isCanCraftASH()) {
+			if (Configs.canCraftASH) {
 				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 300, 4, true, true));
 			} else {
 			}

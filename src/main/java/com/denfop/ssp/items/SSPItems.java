@@ -38,20 +38,20 @@ public enum SSPItems {
 		GRAVI_CHESTPLATE.setInstance(new ItemGraviChestplate());
 		QUANTUM_LEGGINGS.setInstance(new ItemArmorQuantumLeggins());
 		QUANTUM_BOOSTS.setInstance(new ItemArmorQuantumBoosts());
-		ADVANCED_CRYSTAL.setInstance(new ItemBattery("spectral_battery", Configs.Battery.Spectral.getMaxCharge(), Configs.Battery.Spectral.getTransferLimit(), Configs.Battery.Spectral.getTier()));
-		QUANTUM_SABER.setInstance(new ItemNanoSaber("quantumsaber", 10, HarvestLevel.Diamond, ToolClass.Sword, Configs.Weapon.Saber.Quantum.getMaxCharge(), Configs.Weapon.Saber.Quantum.getTransferLimit(), Configs.Weapon.Saber.Quantum.getTier(), Configs.Weapon.Saber.Quantum.getDamageInactive(), Configs.Weapon.Saber.Quantum.getDamageActive()));
-		SPECTRAL_SABER.setInstance(new ItemNanoSaber("spectralsaber", 10, HarvestLevel.Diamond, ToolClass.Sword, Configs.Weapon.Saber.Spectral.getMaxCharge(), Configs.Weapon.Saber.Spectral.getTransferLimit(), Configs.Weapon.Saber.Spectral.getTier(), Configs.Weapon.Saber.Spectral.getDamageInactive(), Configs.Weapon.Saber.Spectral.getDamageActive()));
+		ADVANCED_CRYSTAL.setInstance(new ItemBattery("spectral_battery", Configs.maxCharge8, Configs.transferLimit8, Configs.tier8));
+		QUANTUM_SABER.setInstance(new ItemNanoSaber("quantumsaber", 10, HarvestLevel.Diamond, ToolClass.Sword, Configs.maxCharge1, Configs.transferLimit1, Configs.tier1, Configs.damage1, Configs.damage2));
+		SPECTRAL_SABER.setInstance(new ItemNanoSaber("spectralsaber", 10, HarvestLevel.Diamond, ToolClass.Sword, Configs.maxCharge2, Configs.transferLimit2, Configs.tier2, Configs.damage3, Configs.damage4));
 		QUANTUM_HELMET.setInstance(new ItemArmorQuantumHelmet(ItemArmorQuantumHelmet.SolarHelmetTypes.Helmet));
-		TWELVE_HEAT_STORAGE.setInstance(new ItemReactorHeatStorage("twelve_heat_storage", Configs.Rod.CoolingRod.Twelve.getStorage()));
-		MAX_HEAT_STORAGE.setInstance(new ItemReactorHeatStorage("max_heat_storage", Configs.Rod.CoolingRod.Max.getStorage()));
+		TWELVE_HEAT_STORAGE.setInstance(new ItemReactorHeatStorage("twelve_heat_storage", Configs.twelve_heat_storage));
+		MAX_HEAT_STORAGE.setInstance(new ItemReactorHeatStorage("max_heat_storage", Configs.max_heat_storage));
 		PROTON_FUEL_ROD.setInstance(new ItemReactorProton("proton_fuel_rod", 1));
 		DUAL_PROTON_FUEL_ROD.setInstance(new ItemReactorProton("dual_proton_fuel_rod", 2));
 		QUAD_PROTON_FUEL_ROD.setInstance(new ItemReactorProton("quad_proton_fuel_rod", 4));
 		EIT_PROTON_FUEL_ROD.setInstance(new ItemReactorProton("eit_proton_fuel_rod", 8));
 		DRILL.setInstance(new ItemUltDrill());
-		IRIDIUM.setInstance(new ItemWindRotor("rotor_carbon1", Configs.Rotor.Iridium.getRotorRadius(), Configs.Rotor.Iridium.getDurability(), Configs.Rotor.Iridium.getEfficient(), Configs.Rotor.Iridium.getMinWind(), Configs.Rotor.Iridium.getMaxWind(), SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model1.png")));
-		COMPRESSIRIDIUM.setInstance(new ItemWindRotor("rotor_carbon2", Configs.Rotor.CompressIridium.getRotorRadius(), Configs.Rotor.CompressIridium.getDurability(), Configs.Rotor.CompressIridium.getEfficient(), Configs.Rotor.CompressIridium.getMinWind(), Configs.Rotor.CompressIridium.getMaxWind(), SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model2.png")));
-		SPECTRAL.setInstance(new ItemWindRotor("rotor_carbon3", Configs.Rotor.Spectral.getRotorRadius(), Configs.Rotor.Spectral.getDurability(), Configs.Rotor.Spectral.getEfficient(), Configs.Rotor.Spectral.getMinWind(), Configs.Rotor.Spectral.getMaxWind(), SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model3.png")));
+		IRIDIUM.setInstance(new ItemWindRotor("rotor_carbon1", Configs.iridiumRotorRadius, Configs.rotor_carbon1, Configs.coefficient, Configs.minWindStrength, Configs.maxWindStrength, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model1.png")));
+		COMPRESSIRIDIUM.setInstance(new ItemWindRotor("rotor_carbon2", Configs.compressIridiumRotorRadius, Configs.rotor_carbon2, Configs.coefficient1, Configs.minWindStrength1, Configs.maxWindStrength1, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model2.png")));
+		SPECTRAL.setInstance(new ItemWindRotor("rotor_carbon3", Configs.spectralRotorRadius, Configs.rotor_carbon3, Configs.coefficient2, Configs.minWindStrength2, Configs.maxWindStrength2, SuperSolarPanels.getIdentifier("textures/items/carbon_rotor_model3.png")));
 		if (side == Side.CLIENT)
 			doModelGuf();
 	}

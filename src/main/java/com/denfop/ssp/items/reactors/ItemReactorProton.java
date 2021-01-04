@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 @NotClassic
 public class ItemReactorProton extends ItemReactorUranium {
 	public ItemReactorProton(String name, int cells) {
-		super(name, cells, Configs.Rod.FuelRod.Proton.getStorage());
+		super(name, cells, Configs.proton_fuel_rod);
 
 	}
 

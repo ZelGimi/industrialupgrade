@@ -128,7 +128,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 		if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
 			final BlockPos pos = new BlockPos((int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
 			final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
-			if (Configs.Permitting.isCanCraftDoubleSlabs()) {
+			if (Configs.canCraftDoubleSlabs) {
 				player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0, true, true));
 			} else {
 			}
