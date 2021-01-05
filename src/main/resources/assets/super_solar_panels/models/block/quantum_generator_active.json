@@ -1,6 +1,6 @@
 {
-	"parent": "advanced_solar_panels:block/quantum_generator",
-	"textures": {
-		"all": "advanced_solar_panels:blocks/Quantum Generator Active"
-	}
+  "parent": "advanced_solar_panels:block/quantum_generator",
+  "textures": {
+    "all": "advanced_solar_panels:blocks/Quantum Generator Active"
+  }
 }

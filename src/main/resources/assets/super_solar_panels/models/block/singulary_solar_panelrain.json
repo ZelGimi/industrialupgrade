@@ -1,12 +1,12 @@
 {
-	"parent": "block/cube",
-	"textures": {
-		"particle": "super_solar_panels:blocks/singulary_side",
-		"down": "super_solar_panels:blocks/singulary_bottom",
-		"up": "super_solar_panels:blocks/singulary_toprain",
-		"north": "super_solar_panels:blocks/singulary_side",
-		"east": "super_solar_panels:blocks/singulary_side",
-		"south": "super_solar_panels:blocks/singulary_side",
-		"west": "super_solar_panels:blocks/singulary_side"
-	}
+  "parent": "block/cube",
+  "textures": {
+    "particle": "super_solar_panels:blocks/singulary_side",
+    "down": "super_solar_panels:blocks/singulary_bottom",
+    "up": "super_solar_panels:blocks/singulary_toprain",
+    "north": "super_solar_panels:blocks/singulary_side",
+    "east": "super_solar_panels:blocks/singulary_side",
+    "south": "super_solar_panels:blocks/singulary_side",
+    "west": "super_solar_panels:blocks/singulary_side"
+  }
 }

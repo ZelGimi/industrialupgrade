@@ -1,12 +1,12 @@
 {
-	"parent": "block/cube",
-	"textures": {
-		"particle": "super_solar_panels:blocks/Ultimate Solar Side",
-		"down": "super_solar_panels:blocks/Ultimate Solar Bottom",
-		"up": "super_solar_panels:blocks/Ultimate Solar Top",
-		"north": "super_solar_panels:blocks/Ultimate Solar Side",
-		"east": "super_solar_panels:blocks/Ultimate Solar Side",
-		"south": "super_solar_panels:blocks/Ultimate Solar Side",
-		"west": "super_solar_panels:blocks/Ultimate Solar Side"
-	}
+  "parent": "block/cube",
+  "textures": {
+    "particle": "super_solar_panels:blocks/Ultimate Solar Side",
+    "down": "super_solar_panels:blocks/Ultimate Solar Bottom",
+    "up": "super_solar_panels:blocks/Ultimate Solar Top",
+    "north": "super_solar_panels:blocks/Ultimate Solar Side",
+    "east": "super_solar_panels:blocks/Ultimate Solar Side",
+    "south": "super_solar_panels:blocks/Ultimate Solar Side",
+    "west": "super_solar_panels:blocks/Ultimate Solar Side"
+  }
 }

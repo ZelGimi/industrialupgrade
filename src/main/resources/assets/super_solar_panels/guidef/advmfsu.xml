@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gui width="194" height="169">
-	<image x="0" y="0" width="194" height="169" basesize="256" src="super_solar_panels:textures/gui/advmfsu"/>
+    <image x="0" y="0" width="194" height="169" basesize="256" src="super_solar_panels:textures/gui/advmfsu"/>
 
-	<text y="6" align="center" color="13487565">%name%</text>
+    <text y="6" align="center" color="13487565">%name%</text>
 
-	<slotgrid x="17" y="59" style="plain" rows="1" spacing="2" name="charge"/>
-	<slot name="discharge" x="117" y="59" style="plain"/>
+    <slotgrid x="17" y="59" style="plain" rows="1" spacing="2" name="charge"/>
+    <slot name="discharge" x="117" y="59" style="plain"/>
 
-	<energygauge x="24" y="41" style="stirlingbar"/>
+    <energygauge x="24" y="41" style="stirlingbar"/>
 
-	<text x="24" y="22" color="13487565">%base.getStorageText()%</text>
-	<text x="24" y="32" color="13487565">%base.getOutputText()%</text>
+    <text x="24" y="22" color="13487565">%base.getStorageText()%</text>
+    <text x="24" y="32" color="13487565">%base.getOutputText()%</text>
 
-	<playerInventory x="17" y="86" spacing="2" style="plain" title="false"/>
+    <playerInventory x="17" y="86" spacing="2" style="plain" title="false"/>
 </gui>

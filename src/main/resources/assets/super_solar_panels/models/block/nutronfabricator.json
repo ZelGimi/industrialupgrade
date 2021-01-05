@@ -1,12 +1,12 @@
 {
-	"parent": "block/cube",
-	"textures": {
-		"particle": "super_solar_panels:blocks/Blockgenbase",
-		"down": "super_solar_panels:blocks/blockgentop",
-		"up": "super_solar_panels:blocks/blockgentop",
-		"north": "super_solar_panels:blocks/Blockgenbase",
-		"east": "super_solar_panels:blocks/Blockgenbase",
-		"south": "super_solar_panels:blocks/Blockgenbase",
-		"west": "super_solar_panels:blocks/Blockgenbase"
-	}
+  "parent": "block/cube",
+  "textures": {
+    "particle": "super_solar_panels:blocks/Blockgenbase",
+    "down": "super_solar_panels:blocks/blockgentop",
+    "up": "super_solar_panels:blocks/blockgentop",
+    "north": "super_solar_panels:blocks/Blockgenbase",
+    "east": "super_solar_panels:blocks/Blockgenbase",
+    "south": "super_solar_panels:blocks/Blockgenbase",
+    "west": "super_solar_panels:blocks/Blockgenbase"
+  }
 }
