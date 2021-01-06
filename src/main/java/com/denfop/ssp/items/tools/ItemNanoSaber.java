@@ -84,14 +84,13 @@ public class ItemNanoSaber extends ItemElectricTool {
 
 	public String getRandomSwingSound() {
 		switch (IC2.random.nextInt(3)) {
-			default:
-				return "Tools/Nanosabre/NanosabreSwing1.ogg";
 			case 1:
 				return "Tools/Nanosabre/NanosabreSwing2.ogg";
 			case 2:
-				break;
+				return "Tools/Nanosabre/NanosabreSwing3.ogg";
+			default:
+				return "Tools/Nanosabre/NanosabreSwing1.ogg";
 		}
-		return "Tools/Nanosabre/NanosabreSwing3.ogg";
 	}
 
 	public static void drainSaber(ItemStack stack, double amount, EntityLivingBase entity) {

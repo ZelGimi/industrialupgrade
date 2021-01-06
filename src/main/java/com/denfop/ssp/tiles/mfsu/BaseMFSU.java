@@ -19,6 +19,7 @@ import ic2.core.init.MainConfig;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.ConfigUtil;
 import ic2.core.util.StackUtil;
+import ic2.core.util.Util;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -198,10 +199,10 @@ public abstract class BaseMFSU extends TileEntityInventory implements IEnergySto
 	}
 
 	public String getStorageText() {
-		return String.format("%s %d / %d", Localization.translate(Constants.MOD_ID + ".gui.storage"), (long) this.energy.getEnergy(), (long) this.energy.getCapacity());
+		return String.format("%s %s / %s%s", Localization.translate(Constants.MOD_ID + ".gui.storage"), Util.toSiString(this.energy.getEnergy(), 3), Util.toSiString(this.energy.getCapacity(), 3), Localization.translate("ic2.generic.text.EUt"));
 	}
 
 	public String getOutputText() {
-		return String.format("%s %d %s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), (long) this.output, Localization.translate("ic2.generic.text.EUt"));
+		return String.format("%s %s%s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), Util.toSiString(this.output, 3), Localization.translate("ic2.generic.text.EUt"));
 	}
 }

@@ -167,7 +167,7 @@ public abstract class BasePanelTE extends TileEntityInventory implements IEnergy
 	}
 
 	public String getStorage() {
-		return Util.toSiString(this.storage, 3) + "/" + Util.toSiString(this.maxStorage, 3) + " EU";
+		return Util.toSiString(this.storage, 3) + "/" + Util.toSiString(this.maxStorage, 3) + "EU";
 	}
 
 	public double getGuiValue(String name) {
@@ -181,7 +181,7 @@ public abstract class BasePanelTE extends TileEntityInventory implements IEnergy
 	}
 
 	public String getMaxOutput() {
-		return String.format("%s %s %s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), Util.toSiString(EnergyNet.instance.getPowerFromTier(this.tier + 1), 3), Localization.translate("ic2.generic.text.EUt"));
+		return String.format("%s %s%s", Localization.translate(Constants.MOD_ID + ".gui.maxOutput"), Util.toSiString(EnergyNet.instance.getPowerFromTier(this.tier + 1), 3), Localization.translate("ic2.generic.text.EUt"));
 	}
 
 	public void onGuiClosed(EntityPlayer player) {
