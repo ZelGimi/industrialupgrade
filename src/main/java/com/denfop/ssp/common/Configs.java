@@ -238,16 +238,16 @@ public final class Configs {
 			transferLimitdrill = config.get("Settings Spectral Drill", " transferLimit ", 5000).getInt(5000);
 			tierdrill = config.get("Settings Spectral Drill", "tier", 2).getInt(2);
 			//
-			Neutronfabricator = config.get("Settings Neutron fabricator", "1 mb = 15625000.0F (default)", 15625000.0F).getInt((int) 15625000.0F);
+			Neutronfabricator = config.get("Settings Neutron fabricator", "1 mb = 15625000.0F (default)", 15625000.0F).getInt(15625000);
 			Neutronfabricator1 = config.get("Settings Neutron fabricator", "tier", 14).getInt(14);
 
 			//
 			drillSpeed = config.get("Settings Perfect Drill(Normal Mode)", "drillSpeed", 35).getInt(35);
-			drillSpeed1 = config.get("Settings Perfect Drill(BIG_HOLES(3x3) Mode)", "drillSpeed", 12).getInt(12);
-			drillSpeed2 = config.get("Settings Perfect Drill(BIG_HOLES(5x5) Mode)", "drillSpeed ", 16).getInt(16);
+			drillSpeed1 = config.get("Settings Perfect Drill(BIG_HOLES(3x3) Mode)", "drillSpeed", 16).getInt(16);
+			drillSpeed2 = config.get("Settings Perfect Drill(BIG_HOLES(5x5) Mode)", "drillSpeed ", 12).getInt(12);
 			energyCost = config.get("Settings Perfect Drill(Normal Mode)", "energyCost", 160).getInt(160);
-			energyCost1 = config.get("Settings Perfect Drill(BIG_HOLES(3x3) Mode)", "energyCost", 160).getInt(160);
-			energyCost2 = config.get("Settings Perfect Drill(BIG_HOLES(5x5) Mode)", "energyCost", 160).getInt(160);
+			energyCost1 = config.get("Settings Perfect Drill(BIG_HOLES(3x3) Mode)", "energyCost", 200).getInt(200);
+			energyCost2 = config.get("Settings Perfect Drill(BIG_HOLES(5x5) Mode)", "energyCost", 250).getInt(250);
 
 			//
 		} catch (Exception e) {
