@@ -23,6 +23,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderExceptionModCrash;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
@@ -58,6 +60,9 @@ public final class SuperSolarPanels {
 
 	@SubscribeEvent
 	public static void register(final TeBlockFinalCallEvent event) {
+		if (Loader.isModLoaded("advanced_solar_panels"))
+			throw new LoaderExceptionModCrash("SuperSolarPanels incompatible with AdvancedSolarPanels. sorry", new Throwable());
+
 		TeBlockRegistry.addAll(SSPBlock.class, SSPBlock.IDENTITY);
 		TeBlockRegistry.setDefaultMaterial(SSPBlock.IDENTITY, Material.ROCK);
 	}
