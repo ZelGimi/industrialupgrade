@@ -234,7 +234,7 @@ public final class Configs {
 			quantummfsu2 = config.get("Settings Quantum mfsu", "maxCharge", 1600000000).getInt(1600000000);
 //
 			operationEnergyCost = config.get("Settings Spectral Drill", "operationEnergyCost", 160).getInt(160);
-			maxChargedrill = config.get("Settings Spectral Drill", "MaxCharge ", 75000).getInt(75000);
+			maxChargedrill = config.get("Settings Spectral Drill", "MaxCharge ", 750000).getInt(750000);
 			transferLimitdrill = config.get("Settings Spectral Drill", " transferLimit ", 5000).getInt(5000);
 			tierdrill = config.get("Settings Spectral Drill", "tier", 2).getInt(2);
 			//
