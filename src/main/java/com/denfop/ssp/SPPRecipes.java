@@ -332,7 +332,7 @@ public final class SPPRecipes {
 				// IC2Items.getItem("cable", "type:glass,insulation:0"),
 				//  Character.valueOf('T'), IC2Items.getItem("te", "hv_transformer")
 		);
-		addShapedColourRecipe(new ItemStack(SSPItems.IRIDIUM.getInstance()), //" CQ",
+		addShapedColourRecipe(new ItemStack(SSPItems.IRIDIUM_ROTOR.getInstance()), //" CQ",
 				"QSQ",
 				//"QC ",
 
@@ -343,13 +343,13 @@ public final class SPPRecipes {
 				// IC2Items.getItem("cable", "type:glass,insulation:0"),
 				//  Character.valueOf('T'), IC2Items.getItem("te", "hv_transformer")
 		);
-		addShapedColourRecipe(new ItemStack(SSPItems.COMPRESSIRIDIUM.getInstance()), " S ",
+		addShapedColourRecipe(new ItemStack(SSPItems.COMPRESS_IRIDIUM_ROTOR.getInstance()), " S ",
 				"CQC",
 				" S ",
 
 				'S', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.compresscarbon),
 				'C', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.quantumitems6),
-				'Q', new ItemStack(SSPItems.IRIDIUM.getInstance())
+				'Q', new ItemStack(SSPItems.IRIDIUM_ROTOR.getInstance())
 				// Character.valueOf('G'),
 				// IC2Items.getItem("cable", "type:glass,insulation:0"),
 				//  Character.valueOf('T'), IC2Items.getItem("te", "hv_transformer")
@@ -360,7 +360,7 @@ public final class SPPRecipes {
 
 				'S', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QuantumItems2),
 				'C', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.compresscarbonultra),
-				'Q', new ItemStack(SSPItems.COMPRESSIRIDIUM.getInstance())
+				'Q', new ItemStack(SSPItems.COMPRESS_IRIDIUM_ROTOR.getInstance())
 				// Character.valueOf('G'),
 				// IC2Items.getItem("cable", "type:glass,insulation:0"),
 				//  Character.valueOf('T'), IC2Items.getItem("te", "hv_transformer")
