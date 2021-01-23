@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class CraftingThings extends ItemMulti {
+public class CraftingThings extends ItemMulti<CraftingThings.CraftingTypes> {
 	protected static final String NAME = "crafting";
 
 	public CraftingThings() {
