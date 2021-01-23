@@ -1,6 +1,5 @@
 package com.denfop.ssp.common;
 
-import com.denfop.ssp.molecular.BlocksRegister;
 import com.google.common.base.Predicate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;

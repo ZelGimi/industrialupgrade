@@ -1,4 +1,4 @@
-package com.denfop.ssp.molecular;
+package com.denfop.ssp.common;
 
 
 import com.denfop.ssp.common.SSPBlock;
