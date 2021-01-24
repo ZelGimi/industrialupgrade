@@ -22,8 +22,8 @@ public class SSPWorldDecorator implements IWorldGenerator {
 
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 		if (world.provider.getDimension() != 0) return;
-		runGenerator(iridiumOre, world, random, chunkX, chunkZ, 80, 5, 180);
-		runGenerator(platinumOre, world, random, chunkX, chunkZ, 80, 5, 180);
+		runGenerator(iridiumOre, world, random, chunkX, chunkZ, 4, 5, 30);
+		runGenerator(platinumOre, world, random, chunkX, chunkZ, 4, 5, 30);
 	}
 
 	// IBlockState blockToGen, int blockAmount, Predicate<IBlockState> blockToReplace, World world, Random rand, int chunk_X, int chunk_Z) {
