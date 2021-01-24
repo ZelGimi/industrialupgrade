@@ -26,6 +26,19 @@ public class SSPOre extends Block {
 		setLightLevel(0.2F);
 	}
 
+	@Override
+	@ParametersAreNonnullByDefault
+	public int quantityDroppedWithBonus(int fortune, Random random) {
+
+		if (fortune > 0 && Item.getItemFromBlock(this) != this.getItemDropped(this.getBlockState().getValidStates().iterator().next(), random, fortune)) {
+
+			int i = Math.max(0, random.nextInt(fortune + 2) - 1);
+
+			return this.quantityDropped(random) * (i + 1);
+
+		} else return this.quantityDropped(random);
+
+	}
 
 	@Override
 	@ParametersAreNonnullByDefault

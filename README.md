@@ -11,11 +11,12 @@ In addition to Night, Day, etc. Panels. The mod adds improved quantum armor, new
 
 Based on ASP and other addons for IC2, we have a very voluminous mod, where everyone will find a goal for themselves.
 
-Please, dont mistake out mod with **Legacy ver. which Depends on ASP**. Remastered is independent and most often **
-incompatible with ASP**
+Please, don't mistake out mod with **Legacy ver. which Depends on ASP**. Remastered is independent and most often **incompatible with ASP**
 
 Among other things, the mod adds modules for panels that can increase the energy level, generation, internal storage,
 change the type of panel or output RF energy
+
+We are looking for translators and proofreaders If you are confident in your knowledge of the language and are ready to translate the mod, DM *spinel#2440* in Discord!
 
 *Our Discord: https://discord.gg/PvJ6d7Afbn* ![](https://amity.is-inside.me/EgpfZzdP.png)
 
