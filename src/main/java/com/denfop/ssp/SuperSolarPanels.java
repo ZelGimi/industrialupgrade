@@ -3,7 +3,6 @@ package com.denfop.ssp;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.common.SSPSourceTab;
-import com.denfop.ssp.common.SSPWorldDecorator;
 import com.denfop.ssp.fluid.neutron.BlockRegister;
 import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.gui.ProgressBars;
@@ -32,7 +31,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -84,7 +82,6 @@ public final class SuperSolarPanels {
 		BlockRegister.register();
 		SSPKeys.addFlyKey();
 		SPPRecipes.addMolecularTransformerRecipes();
-		GameRegistry.registerWorldGenerator(new SSPWorldDecorator(), 0);
 		OreDictionary.registerOre("enderquantumcomponent", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.enderquantumcomponent));
 		OreDictionary.registerOre("solarsplitter", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.solarsplitter));
 		OreDictionary.registerOre("bluecomponent", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.bluecomponent));
@@ -97,7 +94,7 @@ public final class SuperSolarPanels {
 
 		OreDictionary.registerOre("ingotUranium", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT));
 		OreDictionary.registerOre("ingotIridium", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT));
-//OreDictionary.registerOre("craftingSolarPanelHV", ModernSolarPanels.machines.getItemStack((ITeBlock)TEs.ultimate_solar_panel));
+
 		OreDictionary.registerOre("craftingSunnariumPart", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM_PART));
 		OreDictionary.registerOre("craftingSunnarium", SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM));
 
