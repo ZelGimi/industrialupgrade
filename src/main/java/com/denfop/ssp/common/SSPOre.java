@@ -14,38 +14,55 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
 public class SSPOre extends Block {
-	public SSPOre(Material material, String name, float hardness, float resistance, String harvLevel, int level, SoundType soundType) {
-		super(material);
-		setRegistryName(Constants.MOD_ID, name);
-		setUnlocalizedName(name);
-		setHardness(hardness);
-		setResistance(resistance);
-		setHarvestLevel(harvLevel, level);
-		setSoundType(soundType);
-		setCreativeTab(SuperSolarPanels.SSPTab);
-		setLightLevel(0.2F);
-	}
 
-	@Override
-	@ParametersAreNonnullByDefault
-	public int quantityDroppedWithBonus(int fortune, Random random) {
+    public SSPOre(
+            Material material,
+            String name,
+            float hardness,
+            float resistance,
+            String harvLevel,
+            int level,
+            SoundType soundType
+    ) {
+        super(material);
+        setRegistryName(Constants.MOD_ID, name);
+        setUnlocalizedName(name);
+        setHardness(hardness);
+        setResistance(resistance);
+        setHarvestLevel(harvLevel, level);
+        setSoundType(soundType);
+        setCreativeTab(SuperSolarPanels.SSPTab);
+        setLightLevel(0.2F);
+    }
 
-		if (fortune > 0 && Item.getItemFromBlock(this) != this.getItemDropped(this.getBlockState().getValidStates().iterator().next(), random, fortune)) {
+    @Override
+    @ParametersAreNonnullByDefault
+    public int quantityDroppedWithBonus(int fortune, Random random) {
 
-			int i = Math.max(0, random.nextInt(fortune + 2) - 1);
+        if (fortune > 0 && Item.getItemFromBlock(this) != this.getItemDropped(this
+                .getBlockState()
+                .getValidStates()
+                .iterator()
+                .next(), random, fortune)) {
 
-			return this.quantityDropped(random) * (i + 1);
+            int i = Math.max(0, random.nextInt(fortune + 2) - 1);
 
-		} else return this.quantityDropped(random);
+            return this.quantityDropped(random) * (i + 1);
 
-	}
+        } else {
+            return this.quantityDropped(random);
+        }
 
-	@Override
-	@ParametersAreNonnullByDefault
-	public int getExpDrop(IBlockState state, net.minecraft.world.IBlockAccess world, BlockPos pos, int fortune) {
-		Random rand = world instanceof World ? ((World) world).rand : new Random();
-		if (this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this))
-			return MathHelper.getInt(rand, 0, 2);
-		return 0;
-	}
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public int getExpDrop(IBlockState state, net.minecraft.world.IBlockAccess world, BlockPos pos, int fortune) {
+        Random rand = world instanceof World ? ((World) world).rand : new Random();
+        if (this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this)) {
+            return MathHelper.getInt(rand, 0, 2);
+        }
+        return 0;
+    }
+
 }

@@ -29,142 +29,156 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
-	protected final String name;
 
-	public ItemBoosts() {
-		this("advancedJetpack");
-	}
+    protected final String name;
 
-	protected ItemBoosts(final String name) {
-		this(name, 3000000.0, 30000.0, 3);
-	}
+    public ItemBoosts() {
+        this("advancedJetpack");
+    }
 
-	protected ItemBoosts(final String name, final double maxCharge, final double transferLimit, final int tier) {
-		super(null, null, EntityEquipmentSlot.FEET, maxCharge, transferLimit, tier);
-		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
-		this.setMaxDamage(27);
-		this.setMaxStackSize(1);
-		this.setNoRepair();
-	}
+    protected ItemBoosts(final String name) {
+        this(name, 3000000.0, 30000.0, 3);
+    }
 
-	public static boolean isHovering(final ItemStack stack) {
-		return StackUtil.getOrCreateNbtData(stack).getBoolean("hoverMode");
-	}
+    protected ItemBoosts(final String name, final double maxCharge, final double transferLimit, final int tier) {
+        super(null, null, EntityEquipmentSlot.FEET, maxCharge, transferLimit, tier);
+        BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
+        this.setMaxDamage(27);
+        this.setMaxStackSize(1);
+        this.setNoRepair();
+    }
 
-	@SideOnly(Side.CLIENT)
-	public void registerModels(final ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
-	}
+    public static boolean isHovering(final ItemStack stack) {
+        return StackUtil.getOrCreateNbtData(stack).getBoolean("hoverMode");
+    }
 
-	public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
-		return Constants.MOD_ID + ":textures/armour/" + this.name + ".png";
-	}
+    @SideOnly(Side.CLIENT)
+    public void registerModels(final ItemName name) {
+        ModelLoader.setCustomModelResourceLocation(
+                this,
+                0,
+                new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(
+                        CaseFormat.LOWER_UNDERSCORE,
+                        this.name
+                ), null)
+        );
+    }
 
-	public String func_77658_a() {
-		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
-	}
+    public String getArmorTexture(final ItemStack stack, final Entity entity, final EntityEquipmentSlot slot, final String type) {
+        return Constants.MOD_ID + ":textures/armour/" + this.name + ".png";
+    }
 
-	public EnumRarity func_77613_e(final ItemStack stack) {
-		return EnumRarity.UNCOMMON;
-	}
+    public String func_77658_a() {
+        return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
+    }
 
-	public void onArmorTick(final World world, @Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
-		final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-		nbt.getByte("toggleTimer");
+    public EnumRarity func_77613_e(final ItemStack stack) {
+        return EnumRarity.UNCOMMON;
+    }
 
-		if (!world.isRemote && player.ticksExisted % 20 == 0) {
-			int e = 0;
-			if (stack.hasTagCompound() && stack.getTagCompound() != null) {
-				e = stack.getTagCompound().getInteger("energy");
-			}
-			if (e > 0) {
-				e--;
-			} else if (RechargeHelper.consumeCharge(stack, player, 1)) {
-				e = 60;
-			}
-			stack.setTagInfo("energy", new NBTTagInt(e));
-		}
-		boolean hasCharge = (RechargeHelper.getCharge(stack) > 0);
-		if (hasCharge && !player.capabilities.isFlying && player.moveForward > 0.0F) {
-			if (player.world.isRemote && !player.isSneaking()) {
-				if (!PlayerEvents.prevStep.containsKey(player.getEntityId()))
-					PlayerEvents.prevStep.put(player.getEntityId(), player.stepHeight);
-				player.stepHeight = 1.0F;
-			}
-			if (player.onGround) {
-				float bonus = 0.05F;
-				if (player.isInWater())
-					bonus /= 4.0F;
-				player.moveRelative(0.0F, 0.0F, bonus, 1.0F);
-			} else {
-				if (player.isInWater())
-					player.moveRelative(0.0F, 0.0F, 0.025F, 1.0F);
-				player.jumpMovementFactor = 0.05F;
-			}
-		}
-	}
+    public void onArmorTick(final World world, @Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
+        final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
+        nbt.getByte("toggleTimer");
 
-	public float getBaseThrust(final ItemStack stack, final boolean hover) {
-		return hover ? 0.65f : 0.3f;
-	}
+        if (!world.isRemote && player.ticksExisted % 20 == 0) {
+            int e = 0;
+            if (stack.hasTagCompound() && stack.getTagCompound() != null) {
+                e = stack.getTagCompound().getInteger("energy");
+            }
+            if (e > 0) {
+                e--;
+            } else if (RechargeHelper.consumeCharge(stack, player, 1)) {
+                e = 60;
+            }
+            stack.setTagInfo("energy", new NBTTagInt(e));
+        }
+        boolean hasCharge = (RechargeHelper.getCharge(stack) > 0);
+        if (hasCharge && !player.capabilities.isFlying && player.moveForward > 0.0F) {
+            if (player.world.isRemote && !player.isSneaking()) {
+                if (!PlayerEvents.prevStep.containsKey(player.getEntityId())) {
+                    PlayerEvents.prevStep.put(player.getEntityId(), player.stepHeight);
+                }
+                player.stepHeight = 1.0F;
+            }
+            if (player.onGround) {
+                float bonus = 0.05F;
+                if (player.isInWater()) {
+                    bonus /= 4.0F;
+                }
+                player.moveRelative(0.0F, 0.0F, bonus, 1.0F);
+            } else {
+                if (player.isInWater()) {
+                    player.moveRelative(0.0F, 0.0F, 0.025F, 1.0F);
+                }
+                player.jumpMovementFactor = 0.05F;
+            }
+        }
+    }
 
-	public float getBoostThrust(final EntityPlayer player, final ItemStack stack, final boolean hover) {
-		return (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 60.0) ? (hover ? 0.07f : 0.09f) : 0.0f;
-	}
+    public float getBaseThrust(final ItemStack stack, final boolean hover) {
+        return hover ? 0.65f : 0.3f;
+    }
 
-	public boolean useBoostPower(final ItemStack stack, final float boostAmount) {
-		return ElectricItem.manager.discharge(stack, 60.0, Integer.MAX_VALUE, true, false, false) > 0.0;
-	}
+    public float getBoostThrust(final EntityPlayer player, final ItemStack stack, final boolean hover) {
+        return (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 60.0)
+                ? (hover ? 0.07f : 0.09f)
+                : 0.0f;
+    }
 
-	public float getHoverBoost(final EntityPlayer player, final ItemStack stack, final boolean up) {
-		if (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 60.0) {
-			if (!player.onGround) {
-				ElectricItem.manager.discharge(stack, 60.0, Integer.MAX_VALUE, true, false, false);
-			}
-			return 2.0f;
-		}
-		return 1.0f;
-	}
+    public boolean useBoostPower(final ItemStack stack, final float boostAmount) {
+        return ElectricItem.manager.discharge(stack, 60.0, Integer.MAX_VALUE, true, false, false) > 0.0;
+    }
 
-	public boolean drainEnergy(final ItemStack pack, final int amount) {
-		return ElectricItem.manager.discharge(pack, amount * 6, Integer.MAX_VALUE, true, false, false) > 0.0;
-	}
+    public float getHoverBoost(final EntityPlayer player, final ItemStack stack, final boolean up) {
+        if (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 60.0) {
+            if (!player.onGround) {
+                ElectricItem.manager.discharge(stack, 60.0, Integer.MAX_VALUE, true, false, false);
+            }
+            return 2.0f;
+        }
+        return 1.0f;
+    }
 
-	public float getPower(final ItemStack stack) {
-		return 1.0f;
-	}
+    public boolean drainEnergy(final ItemStack pack, final int amount) {
+        return ElectricItem.manager.discharge(pack, amount * 6, Integer.MAX_VALUE, true, false, false) > 0.0;
+    }
 
-	public float getDropPercentage(final ItemStack stack) {
-		return 0.05f;
-	}
+    public float getPower(final ItemStack stack) {
+        return 1.0f;
+    }
 
-	public double getChargeLevel(final ItemStack stack) {
-		return ElectricItem.manager.getCharge(stack) / this.getMaxCharge(stack);
-	}
+    public float getDropPercentage(final ItemStack stack) {
+        return 0.05f;
+    }
 
-	@Override
-	public boolean isJetpackActive(ItemStack arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public double getChargeLevel(final ItemStack stack) {
+        return ElectricItem.manager.getCharge(stack) / this.getMaxCharge(stack);
+    }
 
-	public float getHoverMultiplier(final ItemStack stack, final boolean upwards) {
-		return 0.2f;
-	}
+    @Override
+    public boolean isJetpackActive(ItemStack arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	public float getWorldHeightDivisor(final ItemStack stack) {
-		return 1.0f;
-	}
+    public float getHoverMultiplier(final ItemStack stack, final boolean upwards) {
+        return 0.2f;
+    }
 
-	public boolean canProvideEnergy(final ItemStack stack) {
-		return true;
-	}
+    public float getWorldHeightDivisor(final ItemStack stack) {
+        return 1.0f;
+    }
 
-	public double getDamageAbsorptionRatio() {
-		return 0.0;
-	}
+    public boolean canProvideEnergy(final ItemStack stack) {
+        return true;
+    }
 
-	public int getEnergyPerDamage() {
-		return 0;
-	}
+    public double getDamageAbsorptionRatio() {
+        return 0.0;
+    }
+
+    public int getEnergyPerDamage() {
+        return 0;
+    }
+
 }

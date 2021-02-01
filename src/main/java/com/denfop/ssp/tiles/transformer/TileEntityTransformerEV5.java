@@ -5,7 +5,9 @@ import ic2.core.profile.NotClassic;
 
 @NotClassic
 public class TileEntityTransformerEV5 extends TileEntityTransformer {
-	public TileEntityTransformerEV5() {
-		super(10);
-	}
+
+    public TileEntityTransformerEV5() {
+        super(10);
+    }
+
 }

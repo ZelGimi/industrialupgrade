@@ -8,59 +8,73 @@ import ic2.core.util.Util;
 import javax.annotation.Nonnull;
 
 public abstract class TileEntitySunPanel extends BasePanelTE {
-	protected final int dayPower;
 
-	public TileEntitySunPanel(SolarConfig config) {
-		super(config);
-		this.dayPower = config.dayPower;
-	}
+    protected final int dayPower;
 
-	@Nonnull
-	@Override
-	protected String getGuiDef() {
-		return "solar_panel_sun";
-	}
+    public TileEntitySunPanel(SolarConfig config) {
+        super(config);
+        this.dayPower = config.dayPower;
+    }
 
-	protected void updateEntityServer() {
-		super.updateEntityServer();
+    @Nonnull
+    @Override
+    protected String getGuiDef() {
+        return "solar_panel_sun";
+    }
 
-		if (this.active == GenerationState.DAY) {
-			tryGenerateEnergy(this.dayPower);
-		}
-		if (this.storage > 0)
-			this.storage = (int) (this.storage - this.chargeSlots.charge(this.storage));
-	}
+    protected void updateEntityServer() {
+        super.updateEntityServer();
 
-	public boolean getGuiState(String name) {
-		if ("sunlight".equals(name))
-			return (this.active == GenerationState.DAY);
+        if (this.active == GenerationState.DAY) {
+            tryGenerateEnergy(this.dayPower);
+        }
+        if (this.storage > 0) {
+            this.storage = (int) (this.storage - this.chargeSlots.charge(this.storage));
+        }
+    }
 
-		return super.getGuiState(name);
-	}
+    public boolean getGuiState(String name) {
+        if ("sunlight".equals(name)) {
+            return (this.active == GenerationState.DAY);
+        }
 
-	@Override
-	public void checkTheSky() {
-		this.active = !canSeeSky(this.pos.up()) ||
-				!this.world.isDaytime() || this.canRain &&
-				(this.world.isRaining() || this.world.isThundering()) ?
-				GenerationState.NONE : GenerationState.DAY;
-	}
+        return super.getGuiState(name);
+    }
 
-	@Override
-	public String getOutput() {
-		if (this.active == GenerationState.DAY) {
-			return String.format("%s %s %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Util.toSiString(this.dayPower, 3), Localization.translate("ic2.generic.text.EUt"));
-		}
-		return String.format("%s 0 %s", Localization.translate(Constants.MOD_ID + ".gui.generating"), Localization.translate("ic2.generic.text.EUt"));
-	}
+    @Override
+    public void checkTheSky() {
+        this.active = !canSeeSky(this.pos.up()) ||
+                !this.world.isDaytime() || this.canRain &&
+                (this.world.isRaining() || this.world.isThundering()) ?
+                GenerationState.NONE : GenerationState.DAY;
+    }
 
-	public static class SolarConfig extends BasePanelTE.SolarConfig {
+    @Override
+    public String getOutput() {
+        if (this.active == GenerationState.DAY) {
+            return String.format(
+                    "%s %s %s",
+                    Localization.translate(Constants.MOD_ID + ".gui.generating"),
+                    Util.toSiString(this.dayPower, 3),
+                    Localization.translate("ic2.generic.text.EUt")
+            );
+        }
+        return String.format(
+                "%s 0 %s",
+                Localization.translate(Constants.MOD_ID + ".gui.generating"),
+                Localization.translate("ic2.generic.text.EUt")
+        );
+    }
 
-		private final int dayPower;
+    public static class SolarConfig extends BasePanelTE.SolarConfig {
 
-		public SolarConfig(int dayPower, int maxStorage, int tier) {
-			super(maxStorage, tier);
-			this.dayPower = dayPower;
-		}
-	}
+        private final int dayPower;
+
+        public SolarConfig(int dayPower, int maxStorage, int tier) {
+            super(maxStorage, tier);
+            this.dayPower = dayPower;
+        }
+
+    }
+
 }

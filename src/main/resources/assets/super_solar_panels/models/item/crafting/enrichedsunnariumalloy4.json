@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "super_solar_panels:items/EnrichedSunnariumAlloy4"
-	}
+  "parent": "ic2:item/default",
+  "textures": {
+    "layer0": "super_solar_panels:items/EnrichedSunnariumAlloy4"
+  }
 }

@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "super_solar_panels:items/Red_Spectral_Component"
-	}
+  "parent": "ic2:item/default",
+  "textures": {
+    "layer0": "super_solar_panels:items/Red_Spectral_Component"
+  }
 }

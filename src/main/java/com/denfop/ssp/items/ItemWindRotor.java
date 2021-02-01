@@ -28,73 +28,90 @@ import java.util.List;
 
 @NotClassic
 public class ItemWindRotor extends ItemGradualInt implements IKineticRotor {
-	private final int maxWindStrength;
 
-	private final int minWindStrength;
+    private final int maxWindStrength;
 
-	private final int radius;
-	private final ResourceLocation renderTexture;
-	private final float efficiency;
+    private final int minWindStrength;
 
-	private final String name;
+    private final int radius;
+    private final ResourceLocation renderTexture;
+    private final float efficiency;
+
+    private final String name;
 
 
-	public ItemWindRotor(String name, int Radius, int durability, float efficiency, int minWindStrength, int maxWindStrength, ResourceLocation RenderTexture) {
-		super(null, durability);
-		setMaxStackSize(1);
-		this.radius = Radius;
-		this.efficiency = efficiency;
-		this.renderTexture = RenderTexture;
-		this.minWindStrength = minWindStrength;
-		this.maxWindStrength = maxWindStrength;
-		BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
+    public ItemWindRotor(
+            String name,
+            int Radius,
+            int durability,
+            float efficiency,
+            int minWindStrength,
+            int maxWindStrength,
+            ResourceLocation RenderTexture
+    ) {
+        super(null, durability);
+        setMaxStackSize(1);
+        this.radius = Radius;
+        this.efficiency = efficiency;
+        this.renderTexture = RenderTexture;
+        this.minWindStrength = minWindStrength;
+        this.maxWindStrength = maxWindStrength;
+        BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
 
-	}
+    }
 
-	@SideOnly(Side.CLIENT)
-	public void registerModels(ItemName name) {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, this.name), null));
-	}
+    @SideOnly(Side.CLIENT)
+    public void registerModels(ItemName name) {
+        ModelLoader.setCustomModelResourceLocation(
+                this,
+                0,
+                new ModelResourceLocation(Constants.MOD_ID + ":" + CaseFormat.LOWER_CAMEL.to(
+                        CaseFormat.LOWER_UNDERSCORE,
+                        this.name
+                ), null)
+        );
+    }
 
-	public String getUnlocalizedName() {
-		return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
-	}
+    public String getUnlocalizedName() {
+        return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
+    }
 
-	@SideOnly(Side.CLIENT)
-	public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag advanced) {
-		tooltip.add(Localization.translate("ic2.itemrotor.wind.info", this.minWindStrength, this.maxWindStrength));
-		IKineticRotor.GearboxType type = null;
-		if ((Minecraft.getMinecraft()).currentScreen instanceof GuiWaterKineticGenerator) {
-			type = IKineticRotor.GearboxType.WATER;
-		} else if ((Minecraft.getMinecraft()).currentScreen instanceof GuiWindKineticGenerator) {
-			type = IKineticRotor.GearboxType.WIND;
-		}
-		if (type != null)
-			tooltip.add(Localization.translate("ic2.itemrotor.fitsin." + isAcceptedType(stack, type)));
-	}
+    @SideOnly(Side.CLIENT)
+    public void addInformation(@Nonnull ItemStack stack, World world, List<String> tooltip, @Nonnull ITooltipFlag advanced) {
+        tooltip.add(Localization.translate("ic2.itemrotor.wind.info", this.minWindStrength, this.maxWindStrength));
+        IKineticRotor.GearboxType type = null;
+        if ((Minecraft.getMinecraft()).currentScreen instanceof GuiWaterKineticGenerator) {
+            type = IKineticRotor.GearboxType.WATER;
+        } else if ((Minecraft.getMinecraft()).currentScreen instanceof GuiWindKineticGenerator) {
+            type = IKineticRotor.GearboxType.WIND;
+        }
+        if (type != null) {
+            tooltip.add(Localization.translate("ic2.itemrotor.fitsin." + isAcceptedType(stack, type)));
+        }
+    }
 
-	public int getDiameter(ItemStack stack) {
-		return this.radius;
-	}
+    public int getDiameter(ItemStack stack) {
+        return this.radius;
+    }
 
-	public ResourceLocation getRotorRenderTexture(ItemStack stack) {
-		return this.renderTexture;
-	}
+    public ResourceLocation getRotorRenderTexture(ItemStack stack) {
+        return this.renderTexture;
+    }
 
-	public float getEfficiency(ItemStack stack) {
-		return this.efficiency;
-	}
+    public float getEfficiency(ItemStack stack) {
+        return this.efficiency;
+    }
 
-	public int getMinWindStrength(ItemStack stack) {
-		return this.minWindStrength;
-	}
+    public int getMinWindStrength(ItemStack stack) {
+        return this.minWindStrength;
+    }
 
-	public int getMaxWindStrength(ItemStack stack) {
-		return this.maxWindStrength;
-	}
+    public int getMaxWindStrength(ItemStack stack) {
+        return this.maxWindStrength;
+    }
 
-	public boolean isAcceptedType(ItemStack stack, IKineticRotor.GearboxType type) {
-		return (type == IKineticRotor.GearboxType.WIND);
-	}
+    public boolean isAcceptedType(ItemStack stack, IKineticRotor.GearboxType type) {
+        return (type == IKineticRotor.GearboxType.WIND);
+    }
 
 }

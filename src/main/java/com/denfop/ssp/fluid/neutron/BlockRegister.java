@@ -10,25 +10,31 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRegister {
-	public static final BlockNeutronFluid
-			Neutron_BLOCK = new BlockNeutronFluid(FluidRegister.Neutron);
 
-	public static void register() {
-		setRegister();
-	}
+    public static final BlockNeutronFluid
+            Neutron_BLOCK = new BlockNeutronFluid(FluidRegister.Neutron);
 
-	private static void setRegister() {
-		ForgeRegistries.BLOCKS.register(BlockRegister.Neutron_BLOCK);
-		ForgeRegistries.ITEMS.register(new ItemBlock(BlockRegister.Neutron_BLOCK).setRegistryName(BlockRegister.Neutron_BLOCK.getRegistryName()));
-	}
+    public static void register() {
+        setRegister();
+    }
 
-	@SideOnly(Side.CLIENT)
-	public static void registerRender() {
-		setRender();
-	}
+    private static void setRegister() {
+        ForgeRegistries.BLOCKS.register(BlockRegister.Neutron_BLOCK);
+        ForgeRegistries.ITEMS.register(new ItemBlock(BlockRegister.Neutron_BLOCK).setRegistryName(BlockRegister.Neutron_BLOCK.getRegistryName()));
+    }
 
-	@SideOnly(Side.CLIENT)
-	private static void setRender() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(BlockRegister.Neutron_BLOCK), 0, new ModelResourceLocation(BlockRegister.Neutron_BLOCK.getRegistryName(), "inventory"));
-	}
+    @SideOnly(Side.CLIENT)
+    public static void registerRender() {
+        setRender();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static void setRender() {
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(
+                Item.getItemFromBlock(BlockRegister.Neutron_BLOCK),
+                0,
+                new ModelResourceLocation(BlockRegister.Neutron_BLOCK.getRegistryName(), "inventory")
+        );
+    }
+
 }

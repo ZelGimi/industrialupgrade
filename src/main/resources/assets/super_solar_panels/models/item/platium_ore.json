@@ -1,6 +1,6 @@
 {
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "super_solar_panels:blocks/platiumore"
-    }
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "super_solar_panels:blocks/platiumore"
+  }
 }

@@ -16,122 +16,130 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
-	protected static final int DEFAULT_COLOUR = -1;
 
-	public ItemGraviChestplate() {
-		super("graviChestplate", Configs.maxCharge6, Configs.transferLimit6, Configs.tier6);
-	}
+    protected static final int DEFAULT_COLOUR = -1;
 
-	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		return Constants.MOD_ID + ":textures/armour/" + this.name + "Overlay" + ".png";
-	}
+    public ItemGraviChestplate() {
+        super("graviChestplate", Configs.maxCharge6, Configs.transferLimit6, Configs.tier6);
+    }
 
-	@Nonnull
-	public EnumRarity getRarity(@Nonnull ItemStack stack) {
-		return EnumRarity.EPIC;
-	}
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+        return Constants.MOD_ID + ":textures/armour/" + this.name + "Overlay" + ".png";
+    }
 
-	public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
-		super.onArmorTick(world, player, stack);
-		player.extinguish();
-	}
+    @Nonnull
+    public EnumRarity getRarity(@Nonnull ItemStack stack) {
+        return EnumRarity.EPIC;
+    }
 
-	public float getBaseThrust(ItemStack stack, boolean hover) {
-		return hover ? 1.0F : 0.5F;
-	}
+    public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
+        super.onArmorTick(world, player, stack);
+        player.extinguish();
+    }
 
-	public float getBoostThrust(EntityPlayer player, ItemStack stack, boolean hover) {
-		return (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 834.0D) ? (hover ? 0.1F : 0.3F) : 0.0F;
-	}
+    public float getBaseThrust(ItemStack stack, boolean hover) {
+        return hover ? 1.0F : 0.5F;
+    }
 
-	public boolean useBoostPower(ItemStack stack, float boostAmount) {
-		return (ElectricItem.manager.discharge(stack, 834.0D, 2147483647, true, false, false) > 0.0D);
-	}
+    public float getBoostThrust(EntityPlayer player, ItemStack stack, boolean hover) {
+        return (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 834.0D)
+                ? (hover ? 0.1F : 0.3F)
+                : 0.0F;
+    }
 
-	public float getHoverBoost(EntityPlayer player, ItemStack stack, boolean up) {
-		if (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 834.0D) {
-			if (!player.onGround)
-				ElectricItem.manager.discharge(stack, 834.0D, 2147483647, true, false, false);
-			return 3.0F;
-		}
-		return 1.0F;
-	}
+    public boolean useBoostPower(ItemStack stack, float boostAmount) {
+        return (ElectricItem.manager.discharge(stack, 834.0D, 2147483647, true, false, false) > 0.0D);
+    }
 
-	public boolean drainEnergy(ItemStack pack, int amount) {
-		return (ElectricItem.manager.discharge(pack, 278.0D, 2147483647, true, false, false) > 0.0D);
-	}
+    public float getHoverBoost(EntityPlayer player, ItemStack stack, boolean up) {
+        if (IC2.keyboard.isBoostKeyDown(player) && ElectricItem.manager.getCharge(stack) >= 834.0D) {
+            if (!player.onGround) {
+                ElectricItem.manager.discharge(stack, 834.0D, 2147483647, true, false, false);
+            }
+            return 3.0F;
+        }
+        return 1.0F;
+    }
 
-	public float getPower(ItemStack stack) {
-		return 1.5F;
-	}
+    public boolean drainEnergy(ItemStack pack, int amount) {
+        return (ElectricItem.manager.discharge(pack, 278.0D, 2147483647, true, false, false) > 0.0D);
+    }
 
-	public float getDropPercentage(ItemStack stack) {
-		return 0.01F;
-	}
+    public float getPower(ItemStack stack) {
+        return 1.5F;
+    }
 
-	public boolean isJetpackActive(ItemStack stack) {
-		return (super.isJetpackActive(stack) && ElectricItem.manager.getCharge(stack) >= 10000.0D);
-	}
+    public float getDropPercentage(ItemStack stack) {
+        return 0.01F;
+    }
 
-	public float getHoverMultiplier(ItemStack stack, boolean upwards) {
-		return 0.25F;
-	}
+    public boolean isJetpackActive(ItemStack stack) {
+        return (super.isJetpackActive(stack) && ElectricItem.manager.getCharge(stack) >= 10000.0D);
+    }
 
-	public float getWorldHeightDivisor(ItemStack stack) {
-		return 0.91071427F;
-	}
+    public float getHoverMultiplier(ItemStack stack, boolean upwards) {
+        return 0.25F;
+    }
 
-	public boolean canProvideEnergy(ItemStack stack) {
-		return true;
-	}
+    public float getWorldHeightDivisor(ItemStack stack) {
+        return 0.91071427F;
+    }
 
-	public double getDamageAbsorptionRatio() {
-		return 1.1D;
-	}
+    public boolean canProvideEnergy(ItemStack stack) {
+        return true;
+    }
 
-	public int getEnergyPerDamage() {
-		return 20000;
-	}
+    public double getDamageAbsorptionRatio() {
+        return 1.1D;
+    }
 
-	public boolean hasColor(@Nonnull ItemStack stack) {
-		return (getColor(stack) != -1);
-	}
+    public int getEnergyPerDamage() {
+        return 20000;
+    }
 
-	public int getColor(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt = getDisplayNbt(stack, false);
-		return (nbt == null || !nbt.hasKey("colour", 3)) ? -1 : nbt.getInteger("colour");
-	}
+    public boolean hasColor(@Nonnull ItemStack stack) {
+        return (getColor(stack) != -1);
+    }
 
-	public void removeColor(@Nonnull ItemStack stack) {
-		NBTTagCompound nbt = getDisplayNbt(stack, false);
-		if (nbt == null || !nbt.hasKey("colour", 3))
-			return;
-		nbt.removeTag("colour");
-		if (nbt.hasNoTags() && stack.getTagCompound() != null) {
-			stack.getTagCompound().removeTag("display");
-		}
-	}
+    public int getColor(@Nonnull ItemStack stack) {
+        NBTTagCompound nbt = getDisplayNbt(stack, false);
+        return (nbt == null || !nbt.hasKey("colour", 3)) ? -1 : nbt.getInteger("colour");
+    }
 
-	public void setColor(@Nonnull ItemStack stack, int colour) {
-		getDisplayNbt(stack, true).setInteger("colour", colour);
-	}
+    public void removeColor(@Nonnull ItemStack stack) {
+        NBTTagCompound nbt = getDisplayNbt(stack, false);
+        if (nbt == null || !nbt.hasKey("colour", 3)) {
+            return;
+        }
+        nbt.removeTag("colour");
+        if (nbt.hasNoTags() && stack.getTagCompound() != null) {
+            stack.getTagCompound().removeTag("display");
+        }
+    }
 
-	protected NBTTagCompound getDisplayNbt(ItemStack stack, boolean create) {
-		NBTTagCompound out, nbt = stack.getTagCompound();
-		if (nbt == null) {
-			if (!create)
-				return null;
-			nbt = new NBTTagCompound();
-			stack.setTagCompound(nbt);
-		}
-		if (!nbt.hasKey("display", 10)) {
-			if (!create)
-				return null;
-			out = new NBTTagCompound();
-			nbt.setTag("display", out);
-		} else {
-			out = nbt.getCompoundTag("display");
-		}
-		return out;
-	}
+    public void setColor(@Nonnull ItemStack stack, int colour) {
+        getDisplayNbt(stack, true).setInteger("colour", colour);
+    }
+
+    protected NBTTagCompound getDisplayNbt(ItemStack stack, boolean create) {
+        NBTTagCompound out, nbt = stack.getTagCompound();
+        if (nbt == null) {
+            if (!create) {
+                return null;
+            }
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        }
+        if (!nbt.hasKey("display", 10)) {
+            if (!create) {
+                return null;
+            }
+            out = new NBTTagCompound();
+            nbt.setTag("display", out);
+        } else {
+            out = nbt.getCompoundTag("display");
+        }
+        return out;
+    }
+
 }

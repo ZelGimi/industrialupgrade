@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "super_solar_panels:items/neutronshard"
-	}
+  "parent": "ic2:item/default",
+  "textures": {
+    "layer0": "super_solar_panels:items/neutronshard"
+  }
 }

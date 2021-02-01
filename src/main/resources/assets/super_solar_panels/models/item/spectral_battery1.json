@@ -1,6 +1,6 @@
 {
-	"parent": "super_solar_panels:item/default",
-	"textures": {
-		"layer0": "super_solar_panels:items/energy_crystal_0"
-	}
+  "parent": "super_solar_panels:item/default",
+  "textures": {
+    "layer0": "super_solar_panels:items/energy_crystal_0"
+  }
 }

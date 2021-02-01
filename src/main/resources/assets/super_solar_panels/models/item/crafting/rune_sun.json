@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "super_solar_panels:items/rune_sun"
-	}
+  "parent": "ic2:item/default",
+  "textures": {
+    "layer0": "super_solar_panels:items/rune_sun"
+  }
 }

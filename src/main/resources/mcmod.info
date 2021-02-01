@@ -1,28 +1,28 @@
 [
-	{
-		"authorList": [
-			"Icedfire",
-			"SeNtiMeL",
-			"Chocohead",
-			"Denfop"
-		],
-		"credits": "Created by Chocohead and Denfop(Remastered version), based on SeNtiMeL's versions, which were based on original the mod by Icedfire. Textures by Krezzard. Thanks mak326428 for help with developing in the past.",
-		"dependants": [],
-		"dependencies": [
-			"ic2@${ic2_range}"
-		],
-		"description": "Super Solar Panels is a remastered Advanced Solar Panels and new generation of using solar power. This is addon for IndustrialCraft 2.",
-		"logoFile": "",
-		"mcversion": "1.12.2",
-		"modid": "super_solar_panels",
-		"name": "Super Solar Panels",
-		"parent": "",
-		"requiredMods": [
-			"ic2@${ic2_range}"
-		],
-		"screenshots": [],
-		"updateUrl": "",
-		"url": "",
-		"version": "${version}"
-	}
+  {
+    "authorList": [
+      "Icedfire",
+      "SeNtiMeL",
+      "Chocohead",
+      "Denfop"
+    ],
+    "credits": "Created by Chocohead and Denfop(Remastered version), based on SeNtiMeL's versions, which were based on original the mod by Icedfire. Textures by Krezzard. Thanks mak326428 for help with developing in the past.",
+    "dependants": [],
+    "dependencies": [
+      "ic2@${ic2_range}"
+    ],
+    "description": "Super Solar Panels is a remastered Advanced Solar Panels and new generation of using solar power. This is addon for IndustrialCraft 2.",
+    "logoFile": "",
+    "mcversion": "1.12.2",
+    "modid": "super_solar_panels",
+    "name": "Super Solar Panels",
+    "parent": "",
+    "requiredMods": [
+      "ic2@${ic2_range}"
+    ],
+    "screenshots": [],
+    "updateUrl": "",
+    "url": "",
+    "version": "${version}"
+  }
 ]

@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"normal": {
-			"model": "super_solar_panels:iridium_block"
-		}
-	}
+  "variants": {
+    "normal": {
+      "model": "super_solar_panels:iridium_block"
+    }
+  }
 }

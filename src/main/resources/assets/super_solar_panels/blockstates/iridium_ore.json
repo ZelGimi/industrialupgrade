@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"normal": {
-			"model": "super_solar_panels:iridium_ore"
-		}
-	}
+  "variants": {
+    "normal": {
+      "model": "super_solar_panels:iridium_ore"
+    }
+  }
 }

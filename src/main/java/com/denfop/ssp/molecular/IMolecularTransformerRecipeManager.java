@@ -4,25 +4,30 @@ import ic2.api.recipe.IMachineRecipeManager;
 import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
 
-public interface IMolecularTransformerRecipeManager extends IMachineRecipeManager<IMolecularTransformerRecipeManager.Input, ItemStack, ItemStack> {
-	IMolecularTransformerRecipeManager RECIPES = new MolecularTransformerRecipeManager();
+public interface IMolecularTransformerRecipeManager extends
+        IMachineRecipeManager<IMolecularTransformerRecipeManager.Input, ItemStack, ItemStack> {
 
-	boolean addRecipe(IRecipeInput paramIRecipeInput, int paramInt, ItemStack paramItemStack, boolean paramBoolean);
+    IMolecularTransformerRecipeManager RECIPES = new MolecularTransformerRecipeManager();
 
-	int getTotalEUNeeded(ItemStack paramItemStack);
+    boolean addRecipe(IRecipeInput paramIRecipeInput, int paramInt, ItemStack paramItemStack, boolean paramBoolean);
 
-	final class Input {
-		public final IRecipeInput input;
+    int getTotalEUNeeded(ItemStack paramItemStack);
 
-		public final int totalEU;
+    final class Input {
 
-		public Input(IRecipeInput input, int totalEU) {
-			this.input = input;
-			this.totalEU = totalEU;
-		}
+        public final IRecipeInput input;
 
-		public String toString() {
-			return "MTInput<" + this.input + ", " + this.totalEU + '>';
-		}
-	}
+        public final int totalEU;
+
+        public Input(IRecipeInput input, int totalEU) {
+            this.input = input;
+            this.totalEU = totalEU;
+        }
+
+        public String toString() {
+            return "MTInput<" + this.input + ", " + this.totalEU + '>';
+        }
+
+    }
+
 }

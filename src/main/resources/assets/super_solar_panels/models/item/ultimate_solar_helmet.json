@@ -1,7 +1,7 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "super_solar_panels:items/UltimateSolarHelmet",
-		"layer1": "super_solar_panels:items/UltimateSolarHelmetOverlay"
-	}
+  "parent": "ic2:item/default",
+  "textures": {
+    "layer0": "super_solar_panels:items/UltimateSolarHelmet",
+    "layer1": "super_solar_panels:items/UltimateSolarHelmetOverlay"
+  }
 }
