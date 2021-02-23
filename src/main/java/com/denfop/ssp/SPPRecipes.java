@@ -27,7 +27,6 @@ public final class SPPRecipes {
 
     static void addCraftingRecipes() {
         final IRecipeInputFactory input = Recipes.inputFactory;
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
         addShapedRecipe(
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.redcomponent),
                 "AAA",
@@ -70,7 +69,7 @@ public final class SPPRecipes {
         addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_IRON_PLATE), "III", "IPI", "III",
 
                 'I', "plateIron",
-                'P', "ingotIridium"
+                'P', input.forOreDict("ingotIridium")
         );
         //
         addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ultimate_core), "IPI",
@@ -82,7 +81,7 @@ public final class SPPRecipes {
         addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.advanced_core), "IPI",
 
                 'I', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.SUNNARIUM),
-                'P', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.URANIUM_INGOT)
+                'P', input.forOreDict("ingotUranium")
         );
         //
         addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.hybrid_core), "IPI",
@@ -141,7 +140,7 @@ public final class SPPRecipes {
 
                 'P', IC2Items.getItem("crafting", "carbon_plate"),
                 'L', SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.hybrid_core),
-                'I', IC2Items.getItem("crafting", "iridium"),
+                'I', input.forOreDict("ingotIridium"),
                 'A',
                 SuperSolarPanels.machines.getItemStack(SSPBlock.advanced_solar_panel),
                 'C', IC2Items.getItem("crafting", "advanced_circuit"),
@@ -176,7 +175,7 @@ public final class SPPRecipes {
         addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_URANIUM), " G ", "GUG", " G ",
 
                 'G', Items.GLOWSTONE_DUST,
-                'U', "ingotUranium"
+                'U', input.forOreDict("ingotUranium")
         );
         addShapedRecipe(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRRADIANT_GLASS_PANE), "GGG", "UDU", "GGG",
 
@@ -216,7 +215,7 @@ public final class SPPRecipes {
                 "BCB",
                 "ABA",
                 'A',
-                IC2Items.getItem("crafting", "iridium"),
+                input.forOreDict("ingotIridium"),
                 'B',
                 Items.ENDER_EYE,
                 'C',
@@ -272,7 +271,7 @@ public final class SPPRecipes {
                 'C',
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.photoniy_ingot),
                 'B',
-                IC2Items.getItem("crafting", "iridium"),
+                input.forOreDict("ingotIridium"),
                 'D',
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.ENRICHED_SUNNARIUM_ALLOY)
         );
@@ -430,7 +429,7 @@ public final class SPPRecipes {
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.quantcore2)
         );
         addCompressorRecipe(
-                input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT), 9),
+                input.forOreDict("ingotIridium", 9),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.QuantumItems2)
         );
         addCompressorRecipe(
@@ -481,7 +480,7 @@ public final class SPPRecipes {
         );
 
         addCompressorRecipe(
-                input.forStack(IC2Items.getItem("misc_resource", "iridium_ore")),
+                input.forOreDict("iridiumOre"),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.IRIDIUM_INGOT)
         );
         addExtrudingRecipe(
@@ -884,7 +883,7 @@ public final class SPPRecipes {
         //
         addcanerRecipe(
                 input.forStack(IC2Items.getItem("crafting", "fuel_rod"), 1),
-                input1.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.proton)),
+                input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.proton)),
                 new ItemStack(SSPItems.PROTON_FUEL_ROD.getInstance())
         );
         addcentrifugeRecipe(
