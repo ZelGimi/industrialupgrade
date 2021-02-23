@@ -881,27 +881,27 @@ public final class SPPRecipes {
                 SuperSolarPanels.machines.getItemStack(SSPBlock.quantum_solar_panel)
         );
         //
-        addcanerRecipe(
+        addCanerRecipe(
                 input.forStack(IC2Items.getItem("crafting", "fuel_rod"), 1),
                 input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.proton)),
                 new ItemStack(SSPItems.PROTON_FUEL_ROD.getInstance())
         );
-        addcentrifugeRecipe(
+        addCentrifugeRecipe(
                 input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_proton_fuel_rod)),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.proton),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.protonshard)
         );
-        addcentrifugeRecipe(
+        addCentrifugeRecipe(
                 input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_dual_proton_fuel_rod)),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_proton_fuel_rod),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_proton_fuel_rod)
         );
-        addcentrifugeRecipe(
+        addCentrifugeRecipe(
                 input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_quad_proton_fuel_rod)),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_dual_proton_fuel_rod),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_dual_proton_fuel_rod)
         );
-        addcentrifugeRecipe(
+        addCentrifugeRecipe(
                 input.forStack(SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_eit_proton_fuel_rod)),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_quad_proton_fuel_rod),
                 SSPItems.CRAFTING.getItemStack(CraftingThings.CraftingTypes.depleted_quad_proton_fuel_rod)
@@ -1029,11 +1029,11 @@ public final class SPPRecipes {
     }
 
     //addRecipe(IRecipeInput paramIRecipeInput1, IRecipeInput paramIRecipeInput2, ItemStack paramItemStack);
-    private static void addcanerRecipe(IRecipeInput input, IRecipeInput input1, ItemStack output) {
+    private static void addCanerRecipe(IRecipeInput input, IRecipeInput input1, ItemStack output) {
         Recipes.cannerBottle.addRecipe(input, input1, output, false);
     }
 
-    private static void addcentrifugeRecipe(IRecipeInput input, ItemStack output, ItemStack itemStack) {
+    private static void addCentrifugeRecipe(IRecipeInput input, ItemStack output, ItemStack itemStack) {
         Recipes.centrifuge.addRecipe(input, null, false, output, itemStack);
     }
 
