@@ -68,7 +68,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
         this.setCreativeTab(IC2.tabIC2);
         this.setMaxDamage(27);
         this.type = type;
-
+        this.setCreativeTab(SuperSolarPanels.SSPTab);
         potionRemovalCost.put(IC2Potion.radiation, 5000);
         potionRemovalCost.put(MobEffects.POISON, 400);
         potionRemovalCost.put(MobEffects.WITHER, 500);

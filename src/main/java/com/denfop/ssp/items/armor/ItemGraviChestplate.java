@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.armor;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemAdvancedElectricJetpack;
@@ -21,6 +22,7 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 
     public ItemGraviChestplate() {
         super("graviChestplate", Configs.maxCharge6, Configs.transferLimit6, Configs.tier6);
+        this.setCreativeTab(SuperSolarPanels.SSPTab);
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {

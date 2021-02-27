@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.armor;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemBoosts;
@@ -30,6 +31,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 
     public ItemArmorQuantumBoosts() {
         super("graviBoosts", Configs.maxCharge3, Configs.transferLimit3, Configs.tier3);
+        this.setCreativeTab(SuperSolarPanels.SSPTab);
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {

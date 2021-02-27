@@ -49,6 +49,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
         super(null, null, EntityEquipmentSlot.CHEST, maxCharge, transferLimit, tier);
         BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
         setMaxDamage(27);
+        setCreativeTab(SuperSolarPanels.SSPTab);
         setMaxStackSize(1);
         setNoRepair();
     }

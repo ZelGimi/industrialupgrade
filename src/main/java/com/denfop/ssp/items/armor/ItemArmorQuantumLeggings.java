@@ -1,5 +1,6 @@
 package com.denfop.ssp.items.armor;
 
+import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.items.armorbase.ItemLeggins;
@@ -30,6 +31,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 
     public ItemArmorQuantumLeggins() {
         super("graviLeggins", Configs.maxCharge5, Configs.transferLimit5, Configs.tier5);
+        this.setCreativeTab(SuperSolarPanels.SSPTab);
     }
 
     @Override

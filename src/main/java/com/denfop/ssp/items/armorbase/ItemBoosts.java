@@ -44,6 +44,7 @@ public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
         super(null, null, EntityEquipmentSlot.FEET, maxCharge, transferLimit, tier);
         BlocksItems.registerItem((Item) this, SuperSolarPanels.getIdentifier(this.name = name)).setUnlocalizedName(name);
         this.setMaxDamage(27);
+        this.setCreativeTab(SuperSolarPanels.SSPTab);
         this.setMaxStackSize(1);
         this.setNoRepair();
     }
