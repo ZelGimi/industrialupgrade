@@ -38,12 +38,11 @@ public class ItemArmorQuantumLeggings extends ItemLeggins {
     }
 
     @Override
-    public void onArmorTick(final World world, final EntityPlayer player, final ItemStack stack) {
+    public void onArmorTick(@Nonnull final World world, @Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
         super.onArmorTick(world, player, stack);
         player.extinguish();
         final NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
         byte toggleTimer = nbtData.getByte("toggleTimer");
-        boolean ret = false;
         final boolean enableQuantumSpeedOnSprint = !IC2.platform.isRendering() || ConfigUtil.getBool(
                 MainConfig.get(),
                 "misc/quantumSpeedOnSprint"

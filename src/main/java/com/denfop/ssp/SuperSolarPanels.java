@@ -3,6 +3,7 @@ package com.denfop.ssp;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.common.SSPSourceTab;
+import com.denfop.ssp.events.EventHandler;
 import com.denfop.ssp.fluid.neutron.BlockRegister;
 import com.denfop.ssp.fluid.neutron.FluidRegister;
 import com.denfop.ssp.gui.ProgressBars;
@@ -16,10 +17,12 @@ import com.denfop.ssp.tiles.SSPBlock;
 import ic2.api.event.TeBlockFinalCallEvent;
 import ic2.core.block.BlockTileEntity;
 import ic2.core.block.TeBlockRegistry;
+import ic2.core.util.Config;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
@@ -51,6 +54,7 @@ public final class SuperSolarPanels {
     public static CommonProxy proxy;
 
     public static SuperSolarPanels instance;
+    private static Config config;
 
     static {
         FluidRegistry.enableUniversalBucket();
@@ -126,6 +130,7 @@ public final class SuperSolarPanels {
         SPPRecipes.addCraftingRecipes();
         ProgressBars.addStyles();
         TileEntityMolecularAssembler.MolecularOutput.registerNetwork();
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     @Mod.EventHandler

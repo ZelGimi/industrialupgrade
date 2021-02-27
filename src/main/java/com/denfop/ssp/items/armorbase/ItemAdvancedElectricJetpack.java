@@ -4,6 +4,7 @@ package com.denfop.ssp.items.armorbase;
 import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
+import com.denfop.ssp.common.Utils;
 import com.denfop.ssp.keyboard.SSPKeys;
 import com.google.common.base.CaseFormat;
 import ic2.api.item.ElectricItem;
@@ -97,7 +98,9 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
     public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
         NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
         byte toggleTimer = nbt.getByte("toggleTimer");
+        NBTTagCompound nbtBase = Utils.getOrCreateNbtData(player);
         if (SSPKeys.isFlyKeyDown(player) && toggleTimer == 0) {
+            nbtBase.setBoolean("isFlyActive", true);
             nbt.setByte("toggleTimer", toggleTimer = 10);
 			/*if (!world.isRemote) {
 				String mode;
@@ -107,6 +110,8 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
 					mode = TextFormatting.DARK_RED + Localization.translate("gravisuite.message.off");
 				}
 			}*/
+        } else {
+            nbtBase.setBoolean("isFlyActive", false);
         }
         if (toggleTimer > 0 && !isJetpackOn(stack)) {
             toggleTimer = (byte) (toggleTimer - 1);
@@ -151,10 +156,8 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
                     (int) Math.floor(player.posY),
                     (int) Math.floor(player.posZ)
             );
-            final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
             if (Configs.canCraftDoubleSlabs) {
                 player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300, 0, true, true));
-            } else {
             }
         }
     }

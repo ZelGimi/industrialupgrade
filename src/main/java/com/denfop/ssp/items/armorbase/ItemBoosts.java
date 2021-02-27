@@ -9,7 +9,6 @@ import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.armor.ItemArmorElectric;
-import ic2.core.item.armor.jetpack.IBoostingJetpack;
 import ic2.core.ref.ItemName;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
+public class ItemBoosts extends ItemArmorElectric {
 
     protected final String name;
 
@@ -156,11 +155,6 @@ public class ItemBoosts extends ItemArmorElectric implements IBoostingJetpack {
         return ElectricItem.manager.getCharge(stack) / this.getMaxCharge(stack);
     }
 
-    @Override
-    public boolean isJetpackActive(ItemStack arg0) {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
     public float getHoverMultiplier(final ItemStack stack, final boolean upwards) {
         return 0.2f;

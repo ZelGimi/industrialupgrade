@@ -18,16 +18,11 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
 public class ItemArmorQuantumBoosts extends ItemBoosts {
-
-    protected static final int DEFAULT_COLOUR = -1;
-
-    private float jumpCharge;
 
     public ItemArmorQuantumBoosts() {
         super("graviBoosts", Configs.maxCharge3, Configs.transferLimit3, Configs.tier3);
@@ -38,12 +33,11 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
         return Constants.MOD_ID + ":textures/armour/" + this.name + "Overlay" + ".png";
     }
 
-    public void onArmorTick(World world, @Nonnull EntityPlayer player, ItemStack stack) {
+    public void onArmorTick(World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
         super.onArmorTick(world, player, stack);
         player.fallDistance = 0;
         NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
         byte toggleTimer = nbtData.getByte("toggleTimer");
-        boolean ret = false;
         if (IC2.platform.isSimulating()) {
             boolean wasOnGround = (!nbtData.hasKey("wasOnGround") || nbtData.getBoolean("wasOnGround"));
             if (wasOnGround && !player.onGround && IC2.keyboard.isJumpKeyDown(player) && IC2.keyboard.isBoostKeyDown(player)) {
@@ -52,21 +46,8 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
             if (player.onGround != wasOnGround) {
                 nbtData.setBoolean("wasOnGround", player.onGround);
             }
-        } else {
-            if (ElectricItem.manager.canUse(stack, 4000.0D) && player.onGround) {
-                this.jumpCharge = 1.0F;
-            }
-            if (player.motionY >= 0.0D && this.jumpCharge > 0.0F && !player.isInWater()) {
-                if (this.jumpCharge == 0.9F) {
-                    player.motionX *= 1.0D;
-                    player.motionZ *= 1.0D;
-                }
-                player.motionY += (this.jumpCharge * 0.3F);
-                this.jumpCharge = (float) (this.jumpCharge * 0.75D);
-            } else if (this.jumpCharge < 1.0F) {
-                this.jumpCharge = 0.0F;
-            }
         }
+        player.stepHeight = 1;
         boolean nightVision = nbtData.getBoolean("nightVision");
         short hubMode = nbtData.getShort("HudMode");
         if (SSPKeys.Isremovepoison1(player) && toggleTimer == 0) {
@@ -99,12 +80,6 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
             nbtData.setByte(s, toggleTimer);
         }
         if (nightVision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
-            final BlockPos pos = new BlockPos(
-                    (int) Math.floor(player.posX),
-                    (int) Math.floor(player.posY),
-                    (int) Math.floor(player.posZ)
-            );
-            final int skylight = player.getEntityWorld().getLightFromNeighbors(pos);
             if (Configs.canCraftMT) {
                 player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300, 0, true, true));
             } else {
@@ -117,7 +92,6 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
             }
             if (Configs.canCraftASH) {
                 player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 300, 4, true, true));
-            } else {
             }
         }
     }
@@ -156,10 +130,6 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
 
     public float getDropPercentage(ItemStack stack) {
         return 0.01F;
-    }
-
-    public boolean isJetpackActive(ItemStack stack) {
-        return (super.isJetpackActive(stack) && ElectricItem.manager.getCharge(stack) >= 10000.0D);
     }
 
     public float getHoverMultiplier(ItemStack stack, boolean upwards) {

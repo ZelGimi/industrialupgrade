@@ -231,7 +231,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
     }
 
     public void onArmorTick(final World world, @Nonnull final EntityPlayer player, @Nonnull final ItemStack stack) {
-        if (this.HUDstuff(world.isRemote, player, stack)) {
+        if (this.HUDStuff(world.isRemote, player, stack)) {
             return;
         }
         if (this.ticker++ % this.tickRate() == 0) {
@@ -378,7 +378,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
         return ElectricItem.manager.getCharge(stack) > 0.0;
     }
 
-    protected boolean HUDstuff(final boolean isRemote, final EntityPlayer player, final ItemStack stack) {
+    protected boolean HUDStuff(final boolean isRemote, final EntityPlayer player, final ItemStack stack) {
         final NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
         byte toggleTimer = nbt.getByte("toggleTimer");
         if (IC2.keyboard.isAltKeyDown(player) && IC2.keyboard.isHudModeKeyDown(player) && toggleTimer == 0) {
