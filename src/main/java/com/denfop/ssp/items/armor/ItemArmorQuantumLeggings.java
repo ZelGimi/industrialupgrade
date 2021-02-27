@@ -25,11 +25,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemArmorQuantumLeggins extends ItemLeggins {
+public class ItemArmorQuantumLeggings extends ItemLeggins {
 
-    protected static final int DEFAULT_COLOUR = -1;
-
-    public ItemArmorQuantumLeggins() {
+    public ItemArmorQuantumLeggings() {
         super("graviLeggins", Configs.maxCharge5, Configs.transferLimit5, Configs.tier5);
         this.setCreativeTab(SuperSolarPanels.SSPTab);
     }

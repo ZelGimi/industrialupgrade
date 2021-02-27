@@ -4,7 +4,7 @@ import com.denfop.ssp.SuperSolarPanels;
 import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.items.armor.ItemArmorQuantumBoosts;
 import com.denfop.ssp.items.armor.ItemArmorQuantumHelmet;
-import com.denfop.ssp.items.armor.ItemArmorQuantumLeggins;
+import com.denfop.ssp.items.armor.ItemArmorQuantumLeggings;
 import com.denfop.ssp.items.armor.ItemGraviChestplate;
 import com.denfop.ssp.items.battery.ItemBattery;
 import com.denfop.ssp.items.reactors.ItemReactorHeatStorage;
@@ -52,7 +52,7 @@ public enum SSPItems {
         CRAFTING.setInstance(new CraftingThings());
         QUANTUM_HELMET.setInstance(new ItemArmorQuantumHelmet(ItemArmorQuantumHelmet.SolarHelmetTypes.Helmet));
         GRAVI_CHESTPLATE.setInstance(new ItemGraviChestplate());
-        QUANTUM_LEGGINGS.setInstance(new ItemArmorQuantumLeggins());
+        QUANTUM_LEGGINGS.setInstance(new ItemArmorQuantumLeggings());
         QUANTUM_BOOSTS.setInstance(new ItemArmorQuantumBoosts());
         ADVANCED_CRYSTAL.setInstance(new ItemBattery(
                 "spectral_battery",
