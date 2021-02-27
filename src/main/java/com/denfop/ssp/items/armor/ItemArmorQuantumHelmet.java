@@ -429,7 +429,7 @@ public class ItemArmorQuantumHelmet extends ItemArmor implements IItemModelProvi
     }
 
     @Nonnull
-    public EnumRarity getRarity(@Nonnull final ItemStack stack) {
+    public EnumRarity getForgeRarity(@Nonnull final ItemStack stack) {
         return this.type.rarity;
     }
 

@@ -226,7 +226,7 @@ public class ItemArmorQuantumBoosts extends ItemBoosts {
     }
 
     @Nonnull
-    public EnumRarity getRarity(@Nonnull ItemStack stack) {
+    public EnumRarity getForgeRarity(@Nonnull ItemStack stack) {
         return EnumRarity.EPIC;
     }
 

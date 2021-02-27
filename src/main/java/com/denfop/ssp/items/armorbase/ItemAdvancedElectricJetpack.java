@@ -89,7 +89,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
     }
 
     @Nonnull
-    public EnumRarity getRarity(@Nonnull ItemStack stack) {
+    public EnumRarity getForgeRarity(@Nonnull ItemStack stack) {
         return EnumRarity.UNCOMMON;
     }
 

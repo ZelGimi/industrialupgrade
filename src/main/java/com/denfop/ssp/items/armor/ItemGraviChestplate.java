@@ -28,7 +28,7 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
     }
 
     @Nonnull
-    public EnumRarity getRarity(@Nonnull ItemStack stack) {
+    public EnumRarity getForgeRarity(@Nonnull ItemStack stack) {
         return EnumRarity.EPIC;
     }
 

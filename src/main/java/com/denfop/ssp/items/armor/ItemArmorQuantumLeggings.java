@@ -237,7 +237,7 @@ public class ItemArmorQuantumLeggins extends ItemLeggins {
 
     @Nonnull
     @Override
-    public EnumRarity getRarity(@Nonnull final ItemStack stack) {
+    public EnumRarity getForgeRarity(@Nonnull final ItemStack stack) {
         return EnumRarity.EPIC;
     }
 

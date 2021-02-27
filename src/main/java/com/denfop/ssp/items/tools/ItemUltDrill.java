@@ -160,7 +160,8 @@ public class ItemUltDrill extends ItemDrill {
         return Constants.MOD_ID + "." + super.getUnlocalizedName().substring(4);
     }
 
-    public EnumRarity getRarity(ItemStack stack) {
+    @Nonnull
+    public EnumRarity getForgeRarity(@Nonnull ItemStack stack) {
         return EnumRarity.UNCOMMON;
     }
 

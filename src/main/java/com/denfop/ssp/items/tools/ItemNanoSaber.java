@@ -241,8 +241,9 @@ public class ItemNanoSaber extends ItemElectricTool {
         return true;
     }
 
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack stack) {
+    public EnumRarity getForgeRarity(@Nonnull ItemStack stack) {
         return EnumRarity.UNCOMMON;
     }
 
