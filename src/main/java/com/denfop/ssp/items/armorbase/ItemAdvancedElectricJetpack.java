@@ -113,14 +113,14 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
         }
         boolean ret = false;
         NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
-        boolean Nightvision = nbtData.getBoolean("Nightvision");
-        short hubmode = nbtData.getShort("HudMode");
+        boolean nightVision = nbtData.getBoolean("nightVision");
+        short hubMode = nbtData.getShort("HudMode");
         if (SSPKeys.Isremovepoison2(player) && toggleTimer == 0) {
             toggleTimer = 10;
-            Nightvision = !Nightvision;
+            nightVision = !nightVision;
             if (IC2.platform.isSimulating()) {
-                nbtData.setBoolean("Nightvision", Nightvision);
-                if (Nightvision) {
+                nbtData.setBoolean("nightVision", nightVision);
+                if (nightVision) {
                     IC2.platform.messagePlayer(player, "Effects enabled.");
                 } else {
                     IC2.platform.messagePlayer(player, "Effects disabled.");
@@ -129,14 +129,14 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
         }
         if (IC2.keyboard.isAltKeyDown(player) && IC2.keyboard.isHudModeKeyDown(player) && toggleTimer == 0) {
             toggleTimer = 10;
-            if (hubmode == HudMode.getMaxMode()) {
-                hubmode = 0;
+            if (hubMode == HudMode.getMaxMode()) {
+                hubMode = 0;
             } else {
-                ++hubmode;
+                ++hubMode;
             }
             if (IC2.platform.isSimulating()) {
-                nbtData.setShort("HudMode", hubmode);
-                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubmode).getTranslationKey()));
+                nbtData.setShort("HudMode", hubMode);
+                IC2.platform.messagePlayer(player, Localization.translate(HudMode.getFromID(hubMode).getTranslationKey()));
             }
         }
         if (IC2.platform.isSimulating() && toggleTimer > 0) {
@@ -144,7 +144,7 @@ public class ItemAdvancedElectricJetpack extends ItemArmorElectric implements IB
             --toggleTimer;
             nbtData.setByte(s, toggleTimer);
         }
-        if (Nightvision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
+        if (nightVision && IC2.platform.isSimulating() && ElectricItem.manager.use(stack, 1.0, player)) {
             final BlockPos pos = new BlockPos(
                     (int) Math.floor(player.posX),
                     (int) Math.floor(player.posY),
