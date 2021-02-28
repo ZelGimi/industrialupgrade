@@ -5,7 +5,6 @@ import com.denfop.ssp.common.Configs;
 import com.denfop.ssp.common.Constants;
 import com.denfop.ssp.common.Utils;
 import com.denfop.ssp.items.armorbase.ItemAdvancedElectricJetpack;
-import com.denfop.ssp.keyboard.SSPKeys;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
 import ic2.core.util.StackUtil;
@@ -20,7 +19,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
-
+    protected static final int DEFAULT_COLOUR = -1;
 
     public ItemGraviChestplate() {
         super("graviChestplate", Configs.maxCharge6, Configs.transferLimit6, Configs.tier6);
@@ -39,26 +38,13 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
     public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
         super.onArmorTick(world, player, stack);
         player.extinguish();
-        NBTTagCompound nbtBase = Utils.getOrCreateNbtData(player);
+        NBTTagCompound nbtbase = Utils.getOrCreateNbtData(player);
         NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
         byte toggleTimer = nbtData.getByte("toggleTimer");
-        boolean isFlyActive = nbtBase.getBoolean("isFlyActive");
-        if (SSPKeys.Isremovepoison1(player) && toggleTimer == 0) {
+        player.capabilities.allowFlying = true;
+        player.capabilities.setFlySpeed((float) 0.15);
+        player.capabilities.isFlying = true;
 
-            toggleTimer = 10;
-            isFlyActive = !isFlyActive;
-            if (IC2.platform.isSimulating()) {
-                nbtBase.setBoolean("isFlyActive", isFlyActive);
-                if (isFlyActive) {
-                    IC2.platform.messagePlayer(player, "Fly enabled.");
-                } else {
-                    IC2.platform.messagePlayer(player, "Fly disabled.");
-                }
-            }
-        } else {
-            nbtBase.setBoolean("isFlyActive", false);
-        }
-        nbtBase.setBoolean("isFlyActive", SSPKeys.isFlyKeyDown(player));
         if (IC2.platform.isSimulating() && toggleTimer > 0) {
             final String s = "toggleTimer";
             --toggleTimer;
@@ -100,10 +86,6 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
 
     public float getDropPercentage(ItemStack stack) {
         return 0.01F;
-    }
-
-    public boolean isJetpackActive(ItemStack stack) {
-        return (super.isJetpackActive(stack) && ElectricItem.manager.getCharge(stack) >= 10000.0D);
     }
 
     public float getHoverMultiplier(ItemStack stack, boolean upwards) {
@@ -170,5 +152,4 @@ public class ItemGraviChestplate extends ItemAdvancedElectricJetpack {
         }
         return out;
     }
-
 }
