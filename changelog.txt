@@ -1,4 +1,94 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
-Version:s12iu03a:
+Version:2.0:
+1. New panels
+2. Reworked energy generation in 1.12.2
+3. The system of the panels has been redesigned
+4. Added modules to the panel
+5. Changed transformers
+6. Added new generators of matters
+7. Added new double, triple and quad mechanisms,
+8. Added alloy smelter and advanced version
+9. Added manufacturer of microcircuits, transistors, boards and processors
+10. Added new types of generators
+11. Added quantum generators with modules
+12. Added a drilling rig for searching for veins
+13. Added veins of ores and oil
+14. Added generators of solar energy
+15. Added sannarium maker
+16. Added modification station
+17. Added Radiation Purifier
+18. Added privatizer
+19. Added Wireless Configurator
+20. Added an automatic hunter and modules to it
+21. Added own heaters
+22. Added advanced molecular transformer
+23. Redesigned molecular transformer
+24. Added improved versions of geogenerators
+25. Added improved nuclear reactors
+26. Added enrichment
+27. Added synthesis
+28. Added mineral separator
+29. Added manufacturer of withers
+30. Added magnetic trap
+31. Added magnetic generators
+32. Added a combined generator of matter
+33. Added fishing machine
+34. Added analyzer and modules for it are the same as in quarries
+35. Added dyeing machine and skins for items (drills and armor)
+36. Added petrol  and diesel generators
+37. Added improved pumps
+38. Added storage of experience and a module to it
+39. Added hydrogen, obsidian, lava and helium generators
+40. Added chemical plant and plastic automatic machine
+41. Added electrolyzer, with its own hydrogen and oxygen
+42. Added generators of solid matter and a combiner to it
+43. Added refineries
+44. Added own liquid tanks
+45. Added a rocking machine and oil deposits in the desert
+46. Added solids converter
+47. Added panel combiner
+48. Added the ability for double, triple and quad mechanisms to put RF modules, stacks, multipliers and modules of the "Panel" type
+49. Added combined macerators and recyclers
+50. Added rolling machines, extruders and cutting machines
+51. Added standalone farms and scrap collectors
+52. Added maker of Sannarium and Sannarium Plates
+53. Added and improved energy storage and modules for them
+54. Added modules for pumping tools and armor
+55. Added sets of pumping panels, energy storage and mechanisms
+56. Added new improvements for mechanisms
+57. Added wires
+58. Added new rotors
+59. Added new radioactive elements and nuclear rods to them
+60. Added new improvements for reactors
+61. Added panel glass and paint and solid matter
+62. Added new ingots, ores
+63. Added alloys
+64. Added cathode and anode
+65. Added core panels
+66. Added charging energy crystals
+67. Added gravitool
+68. Added purifier
+69. Added ruby, sapphire and topaz and armor to them
+70. Added reinforced nano-armor
+71. Added spectral armor
+72. Added bags
+73. Added magnets
+74. Added plastic and plastic plate
+75. Added nano, quantum and spectral tools (pickaxes, axes, shovels, drills)
+76. Bows added
+77. Added quantum and spectrum saber
+78. Added jetpacks
+79. Added sun helmets
+80. Added energy packs
+81. Added integration with JEI
+82. Added integration with CraftTweaker
+83. Added integration with WirelessIndustry
+84. Added integration with EMC
+85. Added integration with DraconicEvolution
+86. Added integration with CompactSolarPanels
+87. Added integration with Avaritia
+88. Added integration with Forestry
+89. Added integration with ExNihiloReborn
+90. Added integration with Thaumcraft 
