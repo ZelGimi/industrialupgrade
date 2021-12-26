@@ -6,7 +6,7 @@ Version:2.0.1:
 2.fixed crash on the server side in heaters
 3.fixed the black and white list in a quantum quarries
 4.added even more blocks to the blacklist of instruments
-5.fixed crash sound
+5.fixed crash sounds
 Version:2.0:
 1. New panels
 2. Reworked energy generation in 1.12.2
