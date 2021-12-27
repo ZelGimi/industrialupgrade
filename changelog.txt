@@ -1,6 +1,14 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.0.2:
+1.fixed localization
+2.fixed the work of the modification station
+3.fixed the models of mechanisms when they work
+4.added blacklist for instruments
+5.added even more integration to jei
+6.added information about rotors
+7.fixed small bugs 
 Version:2.0.1:
 1.fixed of obtaining energy in molecular converters
 2.fixed crash on the server side in heaters
