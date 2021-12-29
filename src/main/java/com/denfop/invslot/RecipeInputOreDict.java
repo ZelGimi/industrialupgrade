@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.invslot;
 
 import ic2.api.recipe.IRecipeInput;
@@ -18,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput {
+
     public final String input;
     public final int amount;
     public final Integer meta;
@@ -27,11 +23,11 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
         this(input, 1);
     }
 
-  public   RecipeInputOreDict(String input, int amount) {
-        this(input, amount, (Integer)null);
+    public RecipeInputOreDict(String input, int amount) {
+        this(input, amount, null);
     }
 
-    public  RecipeInputOreDict(String input, int amount, Integer meta) {
+    public RecipeInputOreDict(String input, int amount, Integer meta) {
         this.input = input;
         this.amount = amount;
         this.meta = meta;
@@ -54,13 +50,13 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
                         return false;
                     }
 
-                    oreStack = (ItemStack)var6.next();
+                    oreStack = (ItemStack) var6.next();
                     oreItem = oreStack.getItem();
-                } while(oreItem == null);
+                } while (oreItem == null);
 
                 metaRequired = useOreStackMeta ? oreStack.getItemDamage() : this.meta;
-            } while(subjectItem != oreItem);
-        } while(subjectMeta != metaRequired && metaRequired != 32767);
+            } while (subjectItem != oreItem);
+        } while (subjectMeta != metaRequired && metaRequired != 32767);
 
         return true;
     }
@@ -74,8 +70,8 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
         boolean hasUnsuitableEntries = false;
         Iterator var3 = ores.iterator();
 
-        while(var3.hasNext()) {
-            ItemStack stack = (ItemStack)var3.next();
+        while (var3.hasNext()) {
+            ItemStack stack = (ItemStack) var3.next();
             if (StackUtil.getSize(stack) != this.getAmount()) {
                 hasUnsuitableEntries = true;
                 break;
@@ -88,8 +84,8 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
             List<ItemStack> ret = new ArrayList(ores.size());
             Iterator var7 = ores.iterator();
 
-            while(var7.hasNext()) {
-                ItemStack stack = (ItemStack)var7.next();
+            while (var7.hasNext()) {
+                ItemStack stack = (ItemStack) var7.next();
                 if (stack.getItem() != null) {
                     if (StackUtil.getSize(stack) != this.getAmount()) {
                         stack = StackUtil.copyWithSize(stack, this.getAmount());
@@ -104,12 +100,14 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
     }
 
     public String toString() {
-        return this.meta == null ? "RInputOreDict<" + this.amount + "x" + this.input + ">" : "RInputOreDict<" + this.amount + "x" + this.input + "@" + this.meta + ">";
+        return this.meta == null
+                ? "RInputOreDict<" + this.amount + "x" + this.input + ">"
+                : "RInputOreDict<" + this.amount + "x" + this.input + "@" + this.meta + ">";
     }
 
     public boolean equals(Object obj) {
         RecipeInputOreDict other;
-        if (obj != null && this.getClass() == obj.getClass() && this.input.equals((other = (RecipeInputOreDict)obj).input) && other.amount == this.amount) {
+        if (obj != null && this.getClass() == obj.getClass() && this.input.equals((other = (RecipeInputOreDict) obj).input) && other.amount == this.amount) {
             return this.meta == null ? other.meta == null : this.meta == other.meta;
         } else {
             return false;
@@ -128,4 +126,5 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
             return ret;
         }
     }
+
 }

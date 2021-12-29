@@ -22,7 +22,8 @@ public class RegisterOreDict {
     public static final String[] string1 = {"casing", "doubleplate", "dust", "ingot", "nugget", "plate", "block"};
 
     public static final String[] string = {"casing", "crushed", "doubleplate", "dust", "ingot", "nugget", "plate", "purifiedcrushed", "smalldust", "stik", "verysmalldust", "block"};
-    public static final String[] string2 = {"heavyore","baseore","radiationore","radiationresources","preciousore","preciousgem"};
+    public static final String[] string2 = {"heavyore", "baseore", "radiationore", "radiationresources", "preciousore", "preciousgem"};
+
     public static void writelist() {
         list_item.add(IUItem.casing);
         list_item.add(IUItem.crushed);
@@ -174,10 +175,12 @@ public class RegisterOreDict {
 
         }
         for (int i = 0; i < list_baseore.size(); i++) {
-            OreDictionary.registerOre("ore" + list_baseore.get(i),
+            OreDictionary.registerOre(
+                    "ore" + list_baseore.get(i),
                     new ItemStack(Item.getItemFromBlock((IUItem.ore)).setUnlocalizedName(string2[1]), 1,
-                    i
-            ));
+                            i
+                    )
+            );
 
         }
         for (int j = 0; j < list_item.size(); j++) {
@@ -230,18 +233,25 @@ public class RegisterOreDict {
                 "oreCurium",
                 new ItemStack(Item.getItemFromBlock(IUItem.radiationore).setUnlocalizedName(string2[2]), 1, 2)
         );
-        if(Loader.isModLoaded("exnihilocreatio"))
-        ExNihiloIntegration.oredictionary();
+        if (Loader.isModLoaded("exnihilocreatio")) {
+            ExNihiloIntegration.oredictionary();
+        }
         OreDictionary.registerOre("gemAmericium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 0));
         OreDictionary.registerOre("gemNeptunium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 1));
         OreDictionary.registerOre("gemCurium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 2));
 
-        OreDictionary.registerOre("oreRuby",
-                new ItemStack(Item.getItemFromBlock(IUItem.preciousore).setUnlocalizedName(string2[4]), 1, 0));
-        OreDictionary.registerOre("oreSapphire",
-                new ItemStack(Item.getItemFromBlock(IUItem.preciousore).setUnlocalizedName(string2[4]), 1, 1));
-        OreDictionary.registerOre("oreTopaz",
-                new ItemStack(Item.getItemFromBlock(IUItem.preciousore).setUnlocalizedName(string2[4]), 1, 2));
+        OreDictionary.registerOre(
+                "oreRuby",
+                new ItemStack(Item.getItemFromBlock(IUItem.preciousore).setUnlocalizedName(string2[4]), 1, 0)
+        );
+        OreDictionary.registerOre(
+                "oreSapphire",
+                new ItemStack(Item.getItemFromBlock(IUItem.preciousore).setUnlocalizedName(string2[4]), 1, 1)
+        );
+        OreDictionary.registerOre(
+                "oreTopaz",
+                new ItemStack(Item.getItemFromBlock(IUItem.preciousore).setUnlocalizedName(string2[4]), 1, 2)
+        );
         OreDictionary.registerOre("gemRuby", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 0));
         OreDictionary.registerOre("gemSapphire", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 1));
         OreDictionary.registerOre("gemTopaz", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 2));

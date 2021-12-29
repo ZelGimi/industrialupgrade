@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 public class GenHeliumHandler {
-    private static List<GenHeliumHandler> recipes = new ArrayList<>();
+
+    private static final List<GenHeliumHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
     private final int input;
 
 
     public static List<GenHeliumHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
-
-
 
 
     public GenHeliumHandler(
@@ -35,10 +35,10 @@ public class GenHeliumHandler {
     }
 
 
-
     public int getEnergy() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public FluidStack getOutput() { // Получатель входного предмета рецепта.
         return input2;
     }
@@ -47,26 +47,28 @@ public class GenHeliumHandler {
             int input, FluidStack input2
     ) {
         GenHeliumHandler recipe = new GenHeliumHandler(input, input2);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static GenHeliumHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (GenHeliumHandler recipe : recipes)
+        }
+        for (GenHeliumHandler recipe : recipes) {
             return recipe;
+        }
         return null;
     }
-
 
 
     public static void initRecipes() {
         for (Map.Entry<NBTTagCompound, FluidStack> container :
                 Recipes.heliumgenerator.getRecipes().entrySet()) {
-            addRecipe(container.getKey().getInteger("amount"),container.getValue()  );
+            addRecipe(container.getKey().getInteger("amount"), container.getValue());
 
         }
     }
@@ -78,4 +80,5 @@ public class GenHeliumHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

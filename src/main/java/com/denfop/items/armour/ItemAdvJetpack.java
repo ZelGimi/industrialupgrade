@@ -40,7 +40,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, IModelRegister, ISpecialArmor, IMetalArmor, IItemHudInfo {
+public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, IModelRegister, ISpecialArmor, IMetalArmor,
+        IItemHudInfo {
 
     protected static AudioSource audioSource;
     private static boolean lastJetpackUsed = false;
@@ -50,7 +51,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     private final int tier;
 
     public ItemAdvJetpack(String name, int maxStorage, int TransferLimit, int tier) {
-        super(null, "",EntityEquipmentSlot.CHEST,maxStorage,TransferLimit ,tier);
+        super(null, "", EntityEquipmentSlot.CHEST, maxStorage, TransferLimit, tier);
 
         this.setMaxDamage(27);
         this.setMaxStackSize(1);
@@ -66,10 +67,16 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", new Object[]{damage - prev});
+            IC2.log.warn(
+                    LogCategory.Armor,
+                    new Throwable(),
+                    "Detected invalid armor damage application (%d):",
+                    damage - prev
+            );
         }
 
     }
@@ -83,9 +90,11 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     public int getEnergyPerDamage() {
         return 20000;
     }
+
     public String getUnlocalizedName() {
-        return super.getUnlocalizedName().substring(4)+".name";
+        return super.getUnlocalizedName().substring(4) + ".name";
     }
+
     @Override
     public void registerModels() {
         registerModels(this.armorName);
@@ -389,4 +398,5 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         info.add(ElectricItem.manager.getToolTip(stack));
         return info;
     }
+
 }

@@ -75,7 +75,8 @@ import java.util.Set;
 public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegister {
 
     public static final Set<IBlockState> mineableBlocks = Sets
-            .newHashSet(Blocks.GRASS.getDefaultState(),
+            .newHashSet(
+                    Blocks.GRASS.getDefaultState(),
                     Blocks.DIRT.getDefaultState(),
                     Blocks.SAND.getDefaultState(),
                     Blocks.GRAVEL.getDefaultState(),
@@ -469,8 +470,9 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
             }
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
+                if (player.isSneaking()) {
                     return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
                 return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
             }
@@ -517,7 +519,11 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
 
 
                     ((EntityPlayerMP) entity).addExhaustion(-0.025F);
-                    if ((ModUtils.getore(block,block.getMetaFromState(state)) && check_list(block, block.getMetaFromState(state) , stack))|| !Config.blacklist || !nbt.getBoolean("black")) {
+                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && check_list(
+                            block,
+                            block.getMetaFromState(state),
+                            stack
+                    )) || !Config.blacklist || !nbt.getBoolean("black")) {
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
                                 item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
@@ -530,7 +536,7 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
 
-                                    item.setDead();
+                                item.setDead();
 
                             }
                         }
@@ -544,7 +550,8 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
                     block.onBlockDestroyedByPlayer(world, pos, state);
                 }
 
-                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
+                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(
+                        CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
                         pos,
                         Minecraft.getMinecraft().objectMouseOver.sideHit
                 ));
@@ -584,6 +591,7 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
 
         return !lst.isEmpty() && !lst.contains(name);
     }
+
     public float energy(ItemStack stack) {
         NBTTagCompound nbt = ModUtils.nbt(stack);
         int energy1 = 0;
@@ -663,9 +671,11 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
         if (IUCore.keyboard.isBlackListModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean black = !nbt.getBoolean("black");
-            CommonProxy.sendPlayerMessage(player,
-                    TextFormatting.GREEN +Localization.translate("message.blacklist") +
-                            (black ? Localization.translate("message.allow") :Localization.translate("message.disallow")));
+            CommonProxy.sendPlayerMessage(
+                    player,
+                    TextFormatting.GREEN + Localization.translate("message.blacklist") +
+                            (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+            );
             nbt.setBoolean("black", black);
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
@@ -751,9 +761,9 @@ public class EnergyShovel extends ItemTool implements IElectricItem, IModelRegis
 
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("iu.changemode_key") +  Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
+            par3List.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
-            par3List.add(Localization.translate("iu.blacklist_key") +  Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode())  + Localization.translate(
+            par3List.add(Localization.translate("iu.blacklist_key") + Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
 
         }

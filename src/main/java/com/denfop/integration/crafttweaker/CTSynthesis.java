@@ -21,6 +21,7 @@ import java.util.Objects;
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTSynthesis {
+
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container, IIngredient fill, int percent) {
         NBTTagCompound tag = new NBTTagCompound();
@@ -29,8 +30,8 @@ public class CTSynthesis {
     }
 
 
-
     private static class AddSynthesisIngredientAction extends BaseAction {
+
         private final IIngredient container;
 
         private final IIngredient fill;
@@ -39,7 +40,7 @@ public class CTSynthesis {
         private final NBTTagCompound nbt;
 
         public AddSynthesisIngredientAction(IIngredient container, IIngredient fill, IItemStack output, NBTTagCompound nbt) {
-           super("synthesis");
+            super("synthesis");
             this.container = container;
             this.fill = fill;
             this.output = output;
@@ -63,7 +64,8 @@ public class CTSynthesis {
             Recipes.synthesis.addRecipe(
                     new IC2RecipeInput(this.container),
                     new IC2RecipeInput(this.fill), this.nbt,
-                    getItemStack(this.output));
+                    getItemStack(this.output)
+            );
 
         }
 
@@ -85,17 +87,22 @@ public class CTSynthesis {
         }
 
         public boolean equals(Object obj) {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             AddSynthesisIngredientAction other = (AddSynthesisIngredientAction) obj;
-            if (!Objects.equals(this.container, other.container))
+            if (!Objects.equals(this.container, other.container)) {
                 return false;
-            if (!Objects.equals(this.fill, other.fill))
+            }
+            if (!Objects.equals(this.fill, other.fill)) {
                 return false;
+            }
             return Objects.equals(this.output, other.output);
         }
+
     }
 
     private static class Remove extends BaseAction {
@@ -104,18 +111,25 @@ public class CTSynthesis {
 
         protected Remove(Map<IDoubleMachineRecipeManager.Input, RecipeOutput> recipes) {
             super("synthesis");
-            this.recipes=recipes;
+            this.recipes = recipes;
         }
+
         @Override
         public void apply() {
 
-            for(Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet())
-                Recipes.synthesis.getRecipes().remove(iRecipeInputRecipeOutputEntry.getKey(),
-                        iRecipeInputRecipeOutputEntry.getValue());
+            for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet()) {
+                Recipes.synthesis.getRecipes().remove(
+                        iRecipeInputRecipeOutputEntry.getKey(),
+                        iRecipeInputRecipeOutputEntry.getValue()
+                );
+            }
 
         }
+
         protected String getRecipeInfo(Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> recipe) {
             return recipe.toString();
         }
+
     }
+
 }

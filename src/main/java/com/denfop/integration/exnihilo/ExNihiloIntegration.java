@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExNihiloIntegration implements IExNihiloCreatioModule, IRecipeDefaults {
+
     public static Block gravel;
     public static Block dust;
     public static Block sand;
@@ -46,57 +47,69 @@ public class ExNihiloIntegration implements IExNihiloCreatioModule, IRecipeDefau
         list.add("Manganese");//16
         return list;
     }
-    public static void registerOre(HammerRegistry registry,Block ore, int oreMeta, Item reward, int rewardMeta) {
+
+    public static void registerOre(HammerRegistry registry, Block ore, int oreMeta, Item reward, int rewardMeta) {
         if (ore != null && reward != null) {
-            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward,1, rewardMeta),2, 1.0F, 0.0F);
-            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward,1, rewardMeta),2,  1.0F, 0.0F);
-            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward,1, rewardMeta),2,  1.0F, 0.0F);
-            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward,1, rewardMeta),2,  1.0F, 0.0F);
-            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward,1, rewardMeta),2,  0.5F, 0.1F);
-            registry.register(new BlockInfo(ore, oreMeta),new ItemStack(reward,1, rewardMeta),2,  0.05F, 0.1F);
-            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward,1, rewardMeta),2,  0.0F, 0.05F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 1.0F, 0.0F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 1.0F, 0.0F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 1.0F, 0.0F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 1.0F, 0.0F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 0.5F, 0.1F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 0.05F, 0.1F);
+            registry.register(new BlockInfo(ore, oreMeta), new ItemStack(reward, 1, rewardMeta), 2, 0.0F, 0.05F);
         }
 
     }
+
     public void registerHammer(HammerRegistry registry) {
         for (int i = 0; i < IUItem.name_mineral1.size(); i++) {
             if (i != 6 && i != 7 && i != 11) {
-                registerOre(registry,ExNihiloIntegration.gravel, i, ExNihiloIntegration.sand_crushed, i);
-                registerOre(registry,ExNihiloIntegration.sand, i, ExNihiloIntegration.dust_crushed, i);
+                registerOre(registry, ExNihiloIntegration.gravel, i, ExNihiloIntegration.sand_crushed, i);
+                registerOre(registry, ExNihiloIntegration.sand, i, ExNihiloIntegration.dust_crushed, i);
             }
         }
     }
-        public void registerSieve(SieveRegistry registry) {
+
+    public void registerSieve(SieveRegistry registry) {
         for (int i = 0; i < IUItem.name_mineral1.size(); i++) {
             if (i != 6 && i != 7 && i != 11) {
                 registry.register(new BlockInfo(Blocks.GRAVEL), new ItemInfo(ExNihiloIntegration.gravel_crushed, i), 0.1F,
-                        BlockSieve.MeshType.IRON.getID());
-                registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(ExNihiloIntegration.sand_crushed, i), 0.1F,
-                        BlockSieve.MeshType.IRON.getID());
-                registry.register(new BlockInfo(ModBlocks.dust),   new ItemInfo(ExNihiloIntegration.dust_crushed, i), 0.1F,
-                        BlockSieve.MeshType.IRON.getID());
+                        BlockSieve.MeshType.IRON.getID()
+                );
+                registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(ExNihiloIntegration.sand_crushed, i), 0.1F,
+                        BlockSieve.MeshType.IRON.getID()
+                );
+                registry.register(new BlockInfo(ModBlocks.dust), new ItemInfo(ExNihiloIntegration.dust_crushed, i), 0.1F,
+                        BlockSieve.MeshType.IRON.getID()
+                );
             }
         }
-        registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(IUItem.toriy, 0), 0.15F, BlockSieve.MeshType.IRON.getID());
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.toriy, 0), 0.15F, BlockSieve.MeshType.IRON.getID());
 
-        registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(IUItem.radiationresources, 0), 0.05F,
-                BlockSieve.MeshType.IRON.getID());
-        registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(IUItem.radiationresources, 1), 0.02F,
-                BlockSieve.MeshType.IRON.getID());
-        registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(IUItem.radiationresources, 2), 0.01F,
-                BlockSieve.MeshType.IRON.getID());
-        registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(IUItem.preciousgem, 0), 0.1F,
-                BlockSieve.MeshType.IRON.getID());
-        registry.register(new BlockInfo(Blocks.SAND),   new ItemInfo(IUItem.preciousgem, 1), 0.1F,
-                BlockSieve.MeshType.IRON.getID());
-        registry.register(new BlockInfo(Blocks.SAND),  new ItemInfo(IUItem.preciousgem, 2), 0.1F,
-                BlockSieve.MeshType.IRON.getID());
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.radiationresources, 0), 0.05F,
+                BlockSieve.MeshType.IRON.getID()
+        );
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.radiationresources, 1), 0.02F,
+                BlockSieve.MeshType.IRON.getID()
+        );
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.radiationresources, 2), 0.01F,
+                BlockSieve.MeshType.IRON.getID()
+        );
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.preciousgem, 0), 0.1F,
+                BlockSieve.MeshType.IRON.getID()
+        );
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.preciousgem, 1), 0.1F,
+                BlockSieve.MeshType.IRON.getID()
+        );
+        registry.register(new BlockInfo(Blocks.SAND), new ItemInfo(IUItem.preciousgem, 2), 0.1F,
+                BlockSieve.MeshType.IRON.getID()
+        );
 
     }
+
     public static void init() {
 
         ExNihiloCreatio.loadedModules.add(new ExNihiloIntegration());
-
 
 
     }

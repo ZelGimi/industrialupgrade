@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class CuttingHandler {
-    private static List<CuttingHandler> recipes = new ArrayList<>();
+
+    private static final List<CuttingHandler> recipes = new ArrayList<>();
 
 
     public static List<CuttingHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -41,18 +43,22 @@ public class CuttingHandler {
 
     public static CuttingHandler addRecipe(ItemStack input, ItemStack output) {
         CuttingHandler recipe = new CuttingHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static CuttingHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (CuttingHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (CuttingHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -75,4 +81,5 @@ public class CuttingHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

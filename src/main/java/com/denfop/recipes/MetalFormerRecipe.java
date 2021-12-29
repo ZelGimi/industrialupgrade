@@ -46,7 +46,7 @@ public class MetalFormerRecipe {
         }
         final IRecipeInputFactory input1 = Recipes.inputFactory;
         Recipes.metalformerExtruding.addRecipe(input1.forStack(Ic2Items.platetin), null, false,
-                new ItemStack(Ic2Items.cell.getItem(),3)
+                new ItemStack(Ic2Items.cell.getItem(), 3)
         );
     }
 

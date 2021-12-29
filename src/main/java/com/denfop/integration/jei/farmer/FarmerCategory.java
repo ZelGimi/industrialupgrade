@@ -26,17 +26,18 @@ public class FarmerCategory extends Gui implements IRecipeCategory<FarmerRecipeW
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine3.png"), 3, 3, 140,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockMoreMachine3.farmer.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines_base3,1,0).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines_base3, 1, 0).getUnlocalizedName());
     }
 
     @Override
@@ -50,21 +51,20 @@ public class FarmerCategory extends Gui implements IRecipeCategory<FarmerRecipeW
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
 
-        int xScale = (int) (24 * progress / 100);
+        int xScale = 24 * progress / 100;
         if (xScale > 24) {
             progress = 0;
         }
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66-1, 12 + 19, 192, 14, 16, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 19, 192, 14, 16, xScale + 1);
         drawTexturedModalRect(
-                 + 2,  + 44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +2, +44 + 14 - energylevel, 176, 14 - energylevel, 14,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
@@ -91,7 +91,6 @@ public class FarmerCategory extends Gui implements IRecipeCategory<FarmerRecipeW
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine3.png");
     }
-
 
 
 }

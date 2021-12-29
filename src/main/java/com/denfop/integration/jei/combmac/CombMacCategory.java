@@ -26,18 +26,20 @@ public class CombMacCategory extends Gui implements IRecipeCategory<CombMacRecip
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png"), 3, 3, 140,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockMoreMachine1.comb_macerator.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines_base1,1,6).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines_base1, 1, 6).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,21 +51,20 @@ public class CombMacCategory extends Gui implements IRecipeCategory<CombMacRecip
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
 
-        int xScale = (int) (24 * progress / 100);
+        int xScale = 24 * progress / 100;
         if (xScale > 24) {
             progress = 0;
         }
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66-1, 12 + 19, 192, 14, 16, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 19, 192, 14, 16, xScale + 1);
         drawTexturedModalRect(
-                + 2,  + 44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +2, +44 + 14 - energylevel, 176, 14 - energylevel, 14,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
@@ -90,7 +91,6 @@ public class CombMacCategory extends Gui implements IRecipeCategory<CombMacRecip
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
-
 
 
 }

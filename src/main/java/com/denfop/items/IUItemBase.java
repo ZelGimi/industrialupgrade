@@ -22,7 +22,7 @@ public class IUItemBase extends ItemIC2 implements IModelRegister {
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4)+".name";
+        return "iu." + super.getUnlocalizedName().substring(4) + ".name";
     }
 
     public IUItemBase(String name, String path) {

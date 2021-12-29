@@ -45,7 +45,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
         this.maxSunEnergy = 2500;
         this.cof = cof;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
-      this.input =  new InvSlotGenSunarrium(this);
+        this.input = new InvSlotGenSunarrium(this);
         this.name = name;
     }
 
@@ -92,7 +92,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
         super.updateEntityServer();
 
         long tick = this.getWorld().provider.getWorldTime() % 24000L;
-           if (this.world.canBlockSeeSky(this.pos.up()) &&
+        if (this.world.canBlockSeeSky(this.pos.up()) &&
                 (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
                         MapColor.AIR)) {
             energy(tick);
@@ -108,28 +108,28 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
 
     public void energy(long tick) {
         double k = 0;
-       List<Double> lst = input.coefday();
-       if(this.getWorld().provider.isDaytime() ) {
-           if (tick <= 1000L) {
-               k = 5;
-           }
-           if (tick > 1000L && tick <= 4000L) {
-               k = 10;
-           }
-           if (tick > 4000L && tick <= 8000L) {
-               k = 30;
-           }
-           if (tick > 8000L && tick <= 11000L) {
-               k = 10;
-           }
-           if (tick > 11000L) {
-               k = 5;
-           }
-           this.sunenergy += (k * this.cof * (1 + lst.get(0)));
-       }
+        List<Double> lst = input.coefday();
+        if (this.getWorld().provider.isDaytime()) {
+            if (tick <= 1000L) {
+                k = 5;
+            }
+            if (tick > 1000L && tick <= 4000L) {
+                k = 10;
+            }
+            if (tick > 4000L && tick <= 8000L) {
+                k = 30;
+            }
+            if (tick > 8000L && tick <= 11000L) {
+                k = 10;
+            }
+            if (tick > 11000L) {
+                k = 5;
+            }
+            this.sunenergy += (k * this.cof * (1 + lst.get(0)));
+        }
 
-        if(lst.get(2) > 0 && !this.getWorld().provider.isDaytime()) {
-          double  tick1 = tick - 12000;
+        if (lst.get(2) > 0 && !this.getWorld().provider.isDaytime()) {
+            double tick1 = tick - 12000;
             if (tick1 <= 1000L) {
                 k = 5;
             }
@@ -145,7 +145,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
             if (tick1 > 11000L) {
                 k = 5;
             }
-            this.sunenergy += (k * this.cof * (lst.get(2)-1) * (1+lst.get(1)));
+            this.sunenergy += (k * this.cof * (lst.get(2) - 1) * (1 + lst.get(1)));
 
         }
         if (this.sunenergy >= this.maxSunEnergy) {

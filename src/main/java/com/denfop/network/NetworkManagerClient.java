@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.network;
 
 import ic2.core.IC2;
@@ -35,6 +30,7 @@ import java.util.zip.InflaterOutputStream;
 
 @SideOnly(Side.CLIENT)
 public class NetworkManagerClient extends NetworkManager {
+
     private GrowingBuffer largePacketBuffer;
 
     public NetworkManagerClient() {
@@ -97,13 +93,19 @@ public class NetworkManagerClient extends NetworkManager {
             GrowingBuffer buffer = new GrowingBuffer(32);
             SubPacketType.RequestGUI.writeTo(buffer);
             if (inventory instanceof TileEntity) {
-                TileEntity te = (TileEntity)inventory;
+                TileEntity te = (TileEntity) inventory;
                 buffer.writeBoolean(false);
                 DataEncoder.encode(buffer, te, false);
             } else {
                 EntityPlayer player = Minecraft.getMinecraft().player;
-                if ((StackUtil.isEmpty(player.inventory.getCurrentItem()) || !(player.inventory.getCurrentItem().getItem() instanceof IHandHeldInventory)) && (StackUtil.isEmpty(player.getHeldItemOffhand()) || !(player.getHeldItemOffhand().getItem() instanceof IHandHeldInventory))) {
-                    IC2.platform.displayError("An unknown GUI type was attempted to be displayed.\nThis could happen due to corrupted data from a player or a bug.\n\n(Technical information: " + inventory + ")", new Object[0]);
+                if ((StackUtil.isEmpty(player.inventory.getCurrentItem()) || !(player.inventory
+                        .getCurrentItem()
+                        .getItem() instanceof IHandHeldInventory)) && (StackUtil.isEmpty(player.getHeldItemOffhand()) || !(player
+                        .getHeldItemOffhand()
+                        .getItem() instanceof IHandHeldInventory))) {
+                    IC2.platform.displayError(
+                            "An unknown GUI type was attempted to be displayed.\nThis could happen due to corrupted data from a player or a bug.\n\n(Technical information: " + inventory + ")"
+                    );
                 } else {
                     buffer.writeBoolean(true);
                 }
@@ -143,7 +145,7 @@ public class NetworkManagerClient extends NetworkManager {
                 final int windowId;
                 final int currentItemPosition;
                 final int dataLen;
-                switch(packetType) {
+                switch (packetType) {
                     case LargePacket:
                         state = is.readUnsignedByte();
                         if ((state & 2) != 0) {
@@ -166,7 +168,7 @@ public class NetworkManagerClient extends NetworkManager {
                             input.writeTo(inflate);
                             inflate.close();
                             decompBuffer.flip();
-                            switch(state >> 2) {
+                            switch (state >> 2) {
                                 case 1:
                                     processChatPacket(decompBuffer);
                                     return;
@@ -189,19 +191,19 @@ public class NetworkManagerClient extends NetworkManager {
                         break;
                     case GuiDisplay:
                         final boolean isAdmin = is.readBoolean();
-                        switch(is.readByte()) {
+                        switch (is.readByte()) {
                             case 0:
                                 final Object teDeferred = DataEncoder.decodeDeferred(is, TileEntity.class);
                                 windowId = is.readInt();
                                 IC2.platform.requestTick(false, new Runnable() {
                                     public void run() {
                                         EntityPlayer player = IC2.platform.getPlayerInstance();
-                                        TileEntity te = (TileEntity)DataEncoder.getValue(teDeferred);
+                                        TileEntity te = DataEncoder.getValue(teDeferred);
                                         if (te instanceof IHasGui) {
-                                            IC2.platform.launchGuiClient(player, (IHasGui)te, isAdmin);
+                                            IC2.platform.launchGuiClient(player, (IHasGui) te, isAdmin);
                                             player.openContainer.windowId = windowId;
                                         } else if (player instanceof EntityPlayerSP) {
-                                            ((EntityPlayerSP)player).connection.sendPacket(new CPacketCloseWindow(windowId));
+                                            ((EntityPlayerSP) player).connection.sendPacket(new CPacketCloseWindow(windowId));
                                         }
 
                                     }
@@ -222,7 +224,7 @@ public class NetworkManagerClient extends NetworkManager {
                                                 return;
                                             }
 
-                                            currentItem = (ItemStack)player.inventory.offHandInventory.get(actualItemPosition);
+                                            currentItem = player.inventory.offHandInventory.get(actualItemPosition);
                                         } else {
                                             if (currentItemPosition != player.inventory.currentItem) {
                                                 return;
@@ -233,12 +235,26 @@ public class NetworkManagerClient extends NetworkManager {
 
                                         if (!currentItem.isEmpty() && currentItem.getItem() instanceof IHandHeldInventory) {
                                             if (subGUI && currentItem.getItem() instanceof IHandHeldSubInventory) {
-                                                IC2.platform.launchGuiClient(player, ((IHandHeldSubInventory)currentItem.getItem()).getSubInventory(player, currentItem, ID), isAdmin);
+                                                IC2.platform.launchGuiClient(
+                                                        player,
+                                                        ((IHandHeldSubInventory) currentItem.getItem()).getSubInventory(player,
+                                                                currentItem,
+                                                                ID
+                                                        ),
+                                                        isAdmin
+                                                );
                                             } else {
-                                                IC2.platform.launchGuiClient(player, ((IHandHeldInventory)currentItem.getItem()).getInventory(player, currentItem), isAdmin);
+                                                IC2.platform.launchGuiClient(
+                                                        player,
+                                                        ((IHandHeldInventory) currentItem.getItem()).getInventory(
+                                                                player,
+                                                                currentItem
+                                                        ),
+                                                        isAdmin
+                                                );
                                             }
                                         } else if (player instanceof EntityPlayerSP) {
-                                            ((EntityPlayerSP)player).connection.sendPacket(new CPacketCloseWindow(dataLen));
+                                            ((EntityPlayerSP) player).connection.sendPacket(new CPacketCloseWindow(dataLen));
                                         }
 
                                         player.openContainer.windowId = dataLen;
@@ -261,9 +277,9 @@ public class NetworkManagerClient extends NetworkManager {
                 String[] var1 = messages.split("[\\r\\n]+");
                 int var2 = var1.length;
 
-                for(int var3 = 0; var3 < var2; ++var3) {
+                for (int var3 = 0; var3 < var2; ++var3) {
                     String line = var1[var3];
-                    IC2.platform.messagePlayer((EntityPlayer)null, line, new Object[0]);
+                    IC2.platform.messagePlayer(null, line);
                 }
 
             }
@@ -276,11 +292,12 @@ public class NetworkManagerClient extends NetworkManager {
         String[] var3 = messages.split("[\\r\\n]+");
         int var4 = var3.length;
 
-        for(int var5 = 0; var5 < var4; ++var5) {
+        for (int var5 = 0; var5 < var4; ++var5) {
             String line = var3[var5];
             console.println(line);
         }
 
         console.flush();
     }
+
 }

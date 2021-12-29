@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RollingWrapper implements  IRecipeWrapper  {
-
+public class RollingWrapper implements IRecipeWrapper {
 
 
     private final ItemStack inputstack;
@@ -25,25 +24,26 @@ public class RollingWrapper implements  IRecipeWrapper  {
         this.outputstack = container.getOutput();
 
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
+
     public List<List<ItemStack>> getInputs() {
         ItemStack inputs = this.inputstack;
         List<ItemStack> stack = new ArrayList<>();
-        if(OreDictionary.getOreIDs(inputs).length >0){
-            int id =    OreDictionary.getOreIDs(inputs)[0];
+        if (OreDictionary.getOreIDs(inputs).length > 0) {
+            int id = OreDictionary.getOreIDs(inputs)[0];
             stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
-        }else
-
+        } else {
             stack.add(inputs);
+        }
         return inputs.isEmpty() ? Collections.emptyList() : Collections.singletonList(stack);
     }
 
     public List<ItemStack> getOutputs() {
         return new ArrayList(Collections.singleton(this.outputstack));
     }
-
 
 
     public void getIngredients(IIngredients ingredients) {
@@ -58,4 +58,5 @@ public class RollingWrapper implements  IRecipeWrapper  {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
     }
+
 }

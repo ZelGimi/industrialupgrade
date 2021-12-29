@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.blocks;
 
 
@@ -42,9 +37,6 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
         this.setUnlocalizedName(name.name());
         this.setCreativeTab(IUCore.SSPTab);
         this.fluid = fluid;
-
-
-
 
 
         ResourceLocation regName = IUCore.getIdentifier(name.name());

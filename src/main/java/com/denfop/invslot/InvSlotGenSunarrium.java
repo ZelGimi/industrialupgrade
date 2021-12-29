@@ -20,9 +20,10 @@ public class InvSlotGenSunarrium extends InvSlot {
     }
 
     public boolean accepts(ItemStack itemStack) {
-        return itemStack.getItem() instanceof ItemBaseModules && (itemStack.getItemDamage() < 6 ||itemStack.getItemDamage() > 14 );
+        return itemStack.getItem() instanceof ItemBaseModules && (itemStack.getItemDamage() < 6 || itemStack.getItemDamage() > 14);
     }
-    public List<Double> coefday(){
+
+    public List<Double> coefday() {
         double coef = 0;
         double coef1 = 0;
         double coef2 = 0;
@@ -36,10 +37,10 @@ public class InvSlotGenSunarrium extends InvSlot {
                 double percent = module.percent;
                 switch (type) {
                     case DAY:
-                        coef +=percent;
+                        coef += percent;
                         break;
                     case NIGHT:
-                        coef1 +=percent;
+                        coef1 += percent;
                         break;
                     case MOON_LINSE:
                         coef2 = percent;
@@ -52,6 +53,7 @@ public class InvSlotGenSunarrium extends InvSlot {
         lst.add(coef2);
         return lst;
     }
+
     public int getStackSizeLimit() {
         return this.stackSizeLimit;
     }

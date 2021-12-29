@@ -60,6 +60,7 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
         return new ContainerAdvOilRefiner(entityPlayer, this);
 
     }
+
     public String getStartSoundFile() {
         return "Machines/oilrefiner.ogg";
     }
@@ -123,8 +124,8 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
             }
             if (drain || drain1) {
                 int drains = 0;
-                drains = drain ? drains+3 : drains;
-                drains = drain1 ? drains+2 : drains;
+                drains = drain ? drains + 3 : drains;
+                drains = drain1 ? drains + 2 : drains;
 
                 this.getFluidTank(0).drain(drains, true);
                 initiate(0);

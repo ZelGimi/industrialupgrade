@@ -74,6 +74,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
     public ContainerBase<? extends TileEntityDoubleMolecular> getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseDoubleMolecular(entityPlayer, this);
     }
+
     @Override
     protected boolean onActivated(
             final EntityPlayer player,
@@ -86,12 +87,13 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         if (player.getHeldItem(hand).getItem() instanceof AdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
             if (!this.rf) {
                 this.rf = true;
-                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount()-1);
+                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
                 return true;
             }
         }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
+
     protected boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -190,7 +192,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule, 1),
-               IUItem.module2,
+                IUItem.module2,
                 new ItemStack(IUItem.upgrademodule, 1, 1),
                 2500000
         );
@@ -227,7 +229,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule, 1),
-              PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_FIRE_RESISTANCE),
+                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_FIRE_RESISTANCE),
                 new ItemStack(IUItem.upgrademodule, 1, 7),
                 2500000
         );
@@ -281,7 +283,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 2500000
         );
 
-        addrecipe(IUItem.module1, IUItem.module1,IUItem.genmodule, 7500000);
+        addrecipe(IUItem.module1, IUItem.module1, IUItem.genmodule, 7500000);
         addrecipe(
                 IUItem.genmodule,
                 IUItem.genmodule,
@@ -289,7 +291,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 10000000
         );
         addrecipe(
-               IUItem.module2,
+                IUItem.module2,
                 IUItem.module2,
                 IUItem.gennightmodule,
                 7500000
@@ -301,27 +303,27 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 10000000
         );
         addrecipe(
-               IUItem.module3,
+                IUItem.module3,
                 IUItem.module3,
                 IUItem.storagemodule,
                 7500000
         );
         addrecipe(
-               IUItem.storagemodule,
-               IUItem.storagemodule,
+                IUItem.storagemodule,
+                IUItem.storagemodule,
                 IUItem.storagemodule1,
                 10000000
         );
         addrecipe(
-               IUItem.module4,
+                IUItem.module4,
                 IUItem.module4,
                 IUItem.outputmodule,
                 7500000
         );
         addrecipe(
-              IUItem.outputmodule,
-               IUItem.outputmodule,
-               IUItem.outputmodule1,
+                IUItem.outputmodule,
+                IUItem.outputmodule,
+                IUItem.outputmodule1,
                 10000000
         );
         addrecipe(
@@ -338,19 +340,19 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         );
 
         addrecipe(
-              IUItem.phase_module,
+                IUItem.phase_module,
                 IUItem.phase_module,
                 IUItem.phase_module1,
                 7500000
         );
         addrecipe(
-               IUItem.phase_module1,
                 IUItem.phase_module1,
-               IUItem.phase_module2,
+                IUItem.phase_module1,
+                IUItem.phase_module2,
                 10000000
         );
         addrecipe(
-               IUItem.moonlinse_module,
+                IUItem.moonlinse_module,
                 IUItem.moonlinse_module,
                 IUItem.moonlinse_module1,
                 7500000
@@ -419,7 +421,6 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         }
 
     }
-
 
 
     public void markDirty() {
@@ -635,6 +636,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         }
         return i;
     }
+
     public String getStartSoundFile() {
         return "Machines/molecular.ogg";
     }

@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 public class InvSlotConverterSolidMatter extends InvSlot {
 
     public InvSlotConverterSolidMatter(TileEntityInventory base1, String string) {
-        super(base1, string,  InvSlot.Access.I, 7, InvSlot.InvSide.TOP);
+        super(base1, string, InvSlot.Access.I, 7, InvSlot.InvSide.TOP);
 
     }
 
@@ -37,8 +37,9 @@ public class InvSlotConverterSolidMatter extends InvSlot {
     }
 
     public void consume(int content, int amount) {
-        consume(content, amount,false,false);
+        consume(content, amount, false, false);
     }
+
     public static boolean isStackEqual(ItemStack stack1, ItemStack stack2) {
         return stack1 == null && stack2 == null || stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
     }
@@ -46,35 +47,36 @@ public class InvSlotConverterSolidMatter extends InvSlot {
     public static boolean isStackEqualStrict(ItemStack stack1, ItemStack stack2) {
         return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
-    public void consume(int content,int amount, boolean simulate, boolean consumeContainers) {
+
+    public void consume(int content, int amount, boolean simulate, boolean consumeContainers) {
         ItemStack ret = null;
 
-            ItemStack stack = get(content);
-            if (!stack.isEmpty() && stack.getCount() >= 1 &&
+        ItemStack stack = get(content);
+        if (!stack.isEmpty() && stack.getCount() >= 1 &&
 
-                    accepts(stack) && (ret == null ||
-                    isStackEqualStrict(stack, ret)) && (stack.getCount() == 1 || consumeContainers ||
-                    !stack.getItem().hasContainerItem(stack))) {
-                int currentAmount = Math.min(amount, stack.getCount());
-                amount -= currentAmount;
-                if (!simulate) {
-                    if (stack.getCount() == currentAmount) {
-                        if (!consumeContainers && stack.getItem().hasContainerItem(stack)) {
-                            put(content, stack.getItem().getContainerItem(stack));
-                        } else {
-                            put(content, null);
-                        }
+                accepts(stack) && (ret == null ||
+                isStackEqualStrict(stack, ret)) && (stack.getCount() == 1 || consumeContainers ||
+                !stack.getItem().hasContainerItem(stack))) {
+            int currentAmount = Math.min(amount, stack.getCount());
+            amount -= currentAmount;
+            if (!simulate) {
+                if (stack.getCount() == currentAmount) {
+                    if (!consumeContainers && stack.getItem().hasContainerItem(stack)) {
+                        put(content, stack.getItem().getContainerItem(stack));
                     } else {
-                        stack.setCount(stack.getCount() - currentAmount);
+                        put(content, null);
                     }
-                }
-                if (ret == null) {
-                    ret = StackUtil.copyWithSize(stack, currentAmount);
                 } else {
-                    ret.setCount(ret.getCount() + currentAmount);
+                    stack.setCount(stack.getCount() - currentAmount);
                 }
-
             }
+            if (ret == null) {
+                ret = StackUtil.copyWithSize(stack, currentAmount);
+            } else {
+                ret.setCount(ret.getCount() + currentAmount);
+            }
+
+        }
 
     }
 

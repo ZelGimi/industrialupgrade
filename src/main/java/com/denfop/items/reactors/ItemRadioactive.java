@@ -49,6 +49,7 @@ public class ItemRadioactive extends ItemIC2 implements IModelRegister {
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(4);
     }

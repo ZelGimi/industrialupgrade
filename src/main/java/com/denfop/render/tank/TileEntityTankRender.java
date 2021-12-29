@@ -37,23 +37,23 @@ public class TileEntityTankRender extends TileEntitySpecialRenderer<TileEntityLi
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
         if (tile.getFluidTank().getFluid() != null) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
-        double m1 = (tile.gaugeLiquidScaled(0.51));
-        GL11.glTranslatef(0.6F, (float) m1, 0.7F);
+            GL11.glPushMatrix();
+            GL11.glTranslated(x, y, z);
+            double m1 = (tile.gaugeLiquidScaled(0.51));
+            GL11.glTranslatef(0.6F, (float) m1, 0.7F);
 
-        GL11.glRotatef(0F, 0.0F, 0F, 0F);
-        double m = (tile.gaugeLiquidScaled(0.8));
-        m = Math.min(0.8, m);
-        GL11.glScalef(1F, (float) m, 1F);
+            GL11.glRotatef(0F, 0.0F, 0F, 0F);
+            double m = (tile.gaugeLiquidScaled(0.8));
+            m = Math.min(0.8, m);
+            GL11.glScalef(1F, (float) m, 1F);
             final ResourceLocation tex = tile.getFluidTank().getFluid().getFluid().getStill();
-           final ResourceLocation resorce = new ResourceLocation(tex.getResourceDomain(),"textures/"+tex.getResourcePath()+
-                   ".png");
+            final ResourceLocation resorce = new ResourceLocation(tex.getResourceDomain(), "textures/" + tex.getResourcePath() +
+                    ".png");
             bindTexture(resorce);
             model1.renderAll();
 
 
-        GL11.glPopMatrix();
+            GL11.glPopMatrix();
         }
     }
 

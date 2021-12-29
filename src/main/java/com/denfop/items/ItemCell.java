@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.items;
 
 import com.denfop.Constants;
@@ -78,19 +73,19 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
             Fluid fluid = IUItem.celltype1.get(stack.getItemDamage());
             Block block = fluid.getBlock();
             if (StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all), player, true)) {
-               if(LiquidUtil.fillBlock(new FluidStack(fluid,1000), world, pos, false)) {
-                   StackUtil.consumeOrError(player, hand, 1);
-                   StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
-                           player, false
-                   );
-                   return EnumActionResult.SUCCESS;
-               }else   if(LiquidUtil.fillBlock(new FluidStack(fluid,1000), world, pos.offset(EnumFacing.UP), false)) {
-                   StackUtil.consumeOrError(player, hand, 1);
-                   StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
-                           player, false
-                   );
-                   return EnumActionResult.SUCCESS;
-               }
+                if (LiquidUtil.fillBlock(new FluidStack(fluid, 1000), world, pos, false)) {
+                    StackUtil.consumeOrError(player, hand, 1);
+                    StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
+                            player, false
+                    );
+                    return EnumActionResult.SUCCESS;
+                } else if (LiquidUtil.fillBlock(new FluidStack(fluid, 1000), world, pos.offset(EnumFacing.UP), false)) {
+                    StackUtil.consumeOrError(player, hand, 1);
+                    StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
+                            player, false
+                    );
+                    return EnumActionResult.SUCCESS;
+                }
             }
         }
         return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);

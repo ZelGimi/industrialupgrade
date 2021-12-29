@@ -9,4 +9,5 @@ public interface ITemperatureMechanism {
     void work(ITemperature tile);
 
     boolean hasHeaters(ITemperature tile);
+
 }

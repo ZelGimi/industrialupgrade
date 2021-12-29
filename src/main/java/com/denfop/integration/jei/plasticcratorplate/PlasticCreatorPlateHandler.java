@@ -14,13 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 public class PlasticCreatorPlateHandler {
-    private static List<PlasticCreatorPlateHandler> recipes = new ArrayList<>();
+
+    private static final List<PlasticCreatorPlateHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
 
 
     public static List<PlasticCreatorPlateHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -37,13 +39,14 @@ public class PlasticCreatorPlateHandler {
     }
 
 
-
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public FluidStack getInput2() { // Получатель входного предмета рецепта.
         return input2;
     }
+
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
@@ -53,29 +56,33 @@ public class PlasticCreatorPlateHandler {
             ItemStack output
     ) {
         PlasticCreatorPlateHandler recipe = new PlasticCreatorPlateHandler(input, input2, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static PlasticCreatorPlateHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (PlasticCreatorPlateHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (PlasticCreatorPlateHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ;
+        return is.isItemEqual(input);
     }
 
     public static void initRecipes() {
         for (Map.Entry<IPlasticPlateRecipemanager.Input, RecipeOutput> container :
                 Recipes.plasticplate.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0),container.getKey().fluidStack,
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fluidStack,
 
                     container.getValue().items.get(0)
             );
@@ -90,4 +97,5 @@ public class PlasticCreatorPlateHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

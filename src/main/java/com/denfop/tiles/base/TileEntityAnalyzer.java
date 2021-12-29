@@ -273,99 +273,103 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
             for (int x = tempx; x < tempx + 16; x++) {
                 for (int z = tempz; z < tempz + 16; z++) {
-                    for (int yy = this.y; yy  < this.y + 4; yy++) {
+                    for (int yy = this.y; yy < this.y + 4; yy++) {
                         if (this.energy.getEnergy() < 1) {
-                        break;
-                    }
-                    this.energy.useEnergy(1);
-                    initiate(0);
-                    if (!this.getWorld().isAirBlock(new BlockPos(x, yy, z))) {
-                        if (!this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock().equals(Blocks.AIR)) {
-                            this.breakblock++;
-                            Block block = this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock();
-                            ItemStack stack = new ItemStack(block, 1,
-                                    block.getMetaFromState(this.getWorld().getBlockState(new BlockPos(x, yy, z)))
-                            );
+                            break;
+                        }
+                        this.energy.useEnergy(1);
+                        initiate(0);
+                        if (!this.getWorld().isAirBlock(new BlockPos(x, yy, z))) {
+                            if (!this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock().equals(Blocks.AIR)) {
+                                this.breakblock++;
+                                Block block = this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock();
+                                ItemStack stack = new ItemStack(block, 1,
+                                        block.getMetaFromState(this.getWorld().getBlockState(new BlockPos(x, yy, z)))
+                                );
 
-                            if ((this.getWorld().getBlockState(new BlockPos(x,yy, z)).getMaterial() == Material.IRON || this
-                                    .getWorld()
-                                    .getBlockState(new BlockPos(x, yy, z))
-                                    .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
+                                if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
+                                        .getWorld()
+                                        .getBlockState(new BlockPos(x, yy, z))
+                                        .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
 
 
-                                int id = OreDictionary.getOreIDs(stack)[0];
-                                String name = OreDictionary.getOreName(id);
-                                if (name.startsWith("ore")) {
-                                    if (!this.inputslot.CheckBlackList(
-                                            blacklist,
-                                            name
-                                    ) && this.inputslot.CheckWhiteList(whitelist, name)) {
+                                    int id = OreDictionary.getOreIDs(stack)[0];
+                                    String name = OreDictionary.getOreName(id);
+                                    if (name.startsWith("ore")) {
+                                        if (!this.inputslot.CheckBlackList(
+                                                blacklist,
+                                                name
+                                        ) && this.inputslot.CheckWhiteList(whitelist, name)) {
 
-                                        if (listore.isEmpty()) {
-                                            listore.add(name);
-                                            listnumberore.add(1);
-                                            yore.add(yy);
-                                            this.y1.add(yy);
-                                            this.numberores = listore.size();
-                                            listnumberore1 = new int[listnumberore.size()];
-                                            for (int i = 0; i < listnumberore.size(); i++) {
-                                                listnumberore1[i] = listnumberore.get(i);
+                                            if (listore.isEmpty()) {
+                                                listore.add(name);
+                                                listnumberore.add(1);
+                                                yore.add(yy);
+                                                this.y1.add(yy);
+                                                this.numberores = listore.size();
+                                                listnumberore1 = new int[listnumberore.size()];
+                                                for (int i = 0; i < listnumberore.size(); i++) {
+                                                    listnumberore1[i] = listnumberore.get(i);
+                                                }
+
+                                                this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
+                                                this.sum1 = ModUtils.getsum1(this.y1);
+                                                this.middleheightores = new ArrayList<>();
+                                                for (int i = 0; i < this.listore.size(); i++) {
+                                                    this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
+                                                            i)));
+                                                }
+
                                             }
 
-                                            this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
-                                            this.sum1 = ModUtils.getsum1(this.y1);
-                                            this.middleheightores = new ArrayList<>();
-                                            for (int i = 0; i < this.listore.size(); i++) {
-                                                this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(i)));
+                                            if (!listore.contains(name)) {
+
+
+                                                listore.add(name);
+                                                listnumberore.add(1);
+                                                yore.add(yy);
+                                                this.y1.add(yy);
+                                                this.numberores = listore.size();
+                                                listnumberore1 = new int[listnumberore.size()];
+                                                for (int i = 0; i < listnumberore.size(); i++) {
+                                                    listnumberore1[i] = listnumberore.get(i);
+                                                }
+
+                                                this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
+                                                this.sum1 = ModUtils.getsum1(this.y1);
+                                                this.middleheightores = new ArrayList<>();
+                                                for (int i = 0; i < this.listore.size(); i++) {
+                                                    this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
+                                                            i)));
+                                                }
+
                                             }
+                                            if (listore.contains(name)) {
+                                                yore.set(listore.indexOf(name), yore.get(listore.indexOf(name)) + yy);
+
+                                                listnumberore.set(
+                                                        listore.indexOf(name),
+                                                        listnumberore.get(listore.indexOf(name)) + 1
+                                                );
+                                                this.y1.add(yy);
+                                                this.numberores = listore.size();
+                                                listnumberore1 = new int[listnumberore.size()];
+                                                for (int i = 0; i < listnumberore.size(); i++) {
+                                                    listnumberore1[i] = listnumberore.get(i);
+                                                }
+
+                                                this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
+                                                this.sum1 = ModUtils.getsum1(this.y1);
+                                                this.middleheightores = new ArrayList<>();
+                                                for (int i = 0; i < this.listore.size(); i++) {
+                                                    this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
+                                                            i)));
+                                                }
+
+                                            }
+
 
                                         }
-
-                                        if (!listore.contains(name)) {
-
-
-                                            listore.add(name);
-                                            listnumberore.add(1);
-                                            yore.add(yy);
-                                            this.y1.add(yy);
-                                            this.numberores = listore.size();
-                                            listnumberore1 = new int[listnumberore.size()];
-                                            for (int i = 0; i < listnumberore.size(); i++) {
-                                                listnumberore1[i] = listnumberore.get(i);
-                                            }
-
-                                            this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
-                                            this.sum1 = ModUtils.getsum1(this.y1);
-                                            this.middleheightores = new ArrayList<>();
-                                            for (int i = 0; i < this.listore.size(); i++) {
-                                                this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(i)));
-                                            }
-
-                                        }
-                                        if (listore.contains(name)) {
-                                            yore.set(listore.indexOf(name), yore.get(listore.indexOf(name)) + yy);
-
-                                            listnumberore.set(
-                                                    listore.indexOf(name),
-                                                    listnumberore.get(listore.indexOf(name)) + 1
-                                            );
-                                            this.y1.add(yy);
-                                            this.numberores = listore.size();
-                                            listnumberore1 = new int[listnumberore.size()];
-                                            for (int i = 0; i < listnumberore.size(); i++) {
-                                                listnumberore1[i] = listnumberore.get(i);
-                                            }
-
-                                            this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
-                                            this.sum1 = ModUtils.getsum1(this.y1);
-                                            this.middleheightores = new ArrayList<>();
-                                            for (int i = 0; i < this.listore.size(); i++) {
-                                                this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(i)));
-                                            }
-
-                                        }
-
-
                                     }
                                 }
                             }
@@ -373,11 +377,10 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                     }
                 }
             }
-            }
         }
 
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
-            this.y+=4;
+            this.y += 4;
 
 
             if (this.y >= 256) {
@@ -459,61 +462,48 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
             for (int x = tempx; x < tempx + 16; x++) {
                 for (int z = tempz; z < tempz + 16; z++) {
-                    for (int yy = this.y; yy  < this.y + 4; yy++) {
-                    if (this.energy.getEnergy() < 1) {
-                        break;
-                    }
-                    this.energy.useEnergy(1);
-                    initiate(0);
-                    if (!this.getWorld().isAirBlock(new BlockPos(x,yy, z))) {
-                        if (!this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock().equals(Blocks.AIR)) {
-                            this.breakblock++;
-                            Block block = this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock();
-                            ItemStack stack = new ItemStack(block, 1,
-                                    block.getMetaFromState(this.getWorld().getBlockState(new BlockPos(x, yy, z)))
-                            );
+                    for (int yy = this.y; yy < this.y + 4; yy++) {
+                        if (this.energy.getEnergy() < 1) {
+                            break;
+                        }
+                        this.energy.useEnergy(1);
+                        initiate(0);
+                        if (!this.getWorld().isAirBlock(new BlockPos(x, yy, z))) {
+                            if (!this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock().equals(Blocks.AIR)) {
+                                this.breakblock++;
+                                Block block = this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock();
+                                ItemStack stack = new ItemStack(block, 1,
+                                        block.getMetaFromState(this.getWorld().getBlockState(new BlockPos(x, yy, z)))
+                                );
 
-                            if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
-                                    .getWorld()
-                                    .getBlockState(new BlockPos(x, yy, z))
-                                    .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
-                                int id = OreDictionary.getOreIDs(stack)[0];
-                                String name = OreDictionary.getOreName(id);
-                                if (name.startsWith("ore")) {
-                                    if (!(!this.inputslot.CheckBlackList(blacklist, name) && this.inputslot.CheckWhiteList(
-                                            whitelist,
-                                            name
-                                    ))) {
-                                        continue;
-                                    }
-                                    double energycost = this.inputslot.getenergycost(target1);
-                                    String temp = name.substring(3);
+                                if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
+                                        .getWorld()
+                                        .getBlockState(new BlockPos(x, yy, z))
+                                        .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
+                                    int id = OreDictionary.getOreIDs(stack)[0];
+                                    String name = OreDictionary.getOreName(id);
+                                    if (name.startsWith("ore")) {
+                                        if (!(!this.inputslot.CheckBlackList(blacklist, name) && this.inputslot.CheckWhiteList(
+                                                whitelist,
+                                                name
+                                        ))) {
+                                            continue;
+                                        }
+                                        double energycost = this.inputslot.getenergycost(target1);
+                                        String temp = name.substring(3);
 
-                                    if (temp.startsWith("Infused")) {
-                                        temp = name.substring("Infused".length() + 3);
-                                    }
+                                        if (temp.startsWith("Infused")) {
+                                            temp = name.substring("Infused".length() + 3);
+                                        }
 
-                                    if (!name.equals("oreRedstone") && (OreDictionary.getOres("gem" + temp) == null || OreDictionary
-                                            .getOres("gem" + temp)
-                                            .size() < 1) && (OreDictionary.getOres("shard" + temp) == null || OreDictionary
-                                            .getOres("shard" + temp)
-                                            .size() < 1)) {
+                                        if (!name.equals("oreRedstone") && (OreDictionary.getOres("gem" + temp) == null || OreDictionary
+                                                .getOres("gem" + temp)
+                                                .size() < 1) && (OreDictionary.getOres("shard" + temp) == null || OreDictionary
+                                                .getOres("shard" + temp)
+                                                .size() < 1)) {
 
-                                        boolean furnace = this.inputslot.getFurnaceModule();
-                                        if (!furnace) {
-                                            if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
-                                                if (target1.energy.getEnergy() >= energycost &&
-                                                        target1.outputSlot.canAdd(stack)) {
-                                                    target1.outputSlot.add(stack);
-                                                    this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
-                                                    target1.energy.useEnergy(energycost);
-                                                    target1.getblock++;
-                                                }
-                                            }
-                                        } else {
-                                            temp = name.substring(3);
-                                            temp = "ingot" + temp;
-                                            if (OreDictionary.getOres(temp).isEmpty()) {
+                                            boolean furnace = this.inputslot.getFurnaceModule();
+                                            if (!furnace) {
                                                 if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
                                                     if (target1.energy.getEnergy() >= energycost &&
                                                             target1.outputSlot.canAdd(stack)) {
@@ -524,51 +514,65 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                                     }
                                                 }
                                             } else {
+                                                temp = name.substring(3);
+                                                temp = "ingot" + temp;
+                                                if (OreDictionary.getOres(temp).isEmpty()) {
+                                                    if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
+                                                        if (target1.energy.getEnergy() >= energycost &&
+                                                                target1.outputSlot.canAdd(stack)) {
+                                                            target1.outputSlot.add(stack);
+                                                            this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
+                                                            target1.energy.useEnergy(energycost);
+                                                            target1.getblock++;
+                                                        }
+                                                    }
+                                                } else {
 
-                                                ItemStack stack1 = OreDictionary.getOres(temp).get(0);
-                                                if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
-                                                    if (target1.energy.getEnergy() >= energycost &&
-                                                            target1.outputSlot.canAdd(stack1)) {
-                                                        target1.outputSlot.add(stack1);
-                                                        this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
-                                                        target1.energy.useEnergy(energycost);
-                                                        target1.getblock++;
+                                                    ItemStack stack1 = OreDictionary.getOres(temp).get(0);
+                                                    if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
+                                                        if (target1.energy.getEnergy() >= energycost &&
+                                                                target1.outputSlot.canAdd(stack1)) {
+                                                            target1.outputSlot.add(stack1);
+                                                            this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
+                                                            target1.energy.useEnergy(energycost);
+                                                            target1.getblock++;
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                    } else {
-                                        ItemStack gem = null;
+                                        } else {
+                                            ItemStack gem = null;
 
-                                        if (OreDictionary.getOres("gem" + temp).size() != 0) {
-                                            gem = OreDictionary.getOres("gem" + temp).get(0);
-                                        } else if (OreDictionary.getOres("shard" + temp).size() != 0) {
-                                            gem = OreDictionary.getOres("shard" + temp).get(0);
-                                        } else if (OreDictionary.getOres("dust" + temp).size() != 0) {
-                                            gem = OreDictionary.getOres("dust" + temp).get(0);
-                                        }
-                                        int chance2 = this.inputslot.lucky();
+                                            if (OreDictionary.getOres("gem" + temp).size() != 0) {
+                                                gem = OreDictionary.getOres("gem" + temp).get(0);
+                                            } else if (OreDictionary.getOres("shard" + temp).size() != 0) {
+                                                gem = OreDictionary.getOres("shard" + temp).get(0);
+                                            } else if (OreDictionary.getOres("dust" + temp).size() != 0) {
+                                                gem = OreDictionary.getOres("dust" + temp).get(0);
+                                            }
+                                            int chance2 = this.inputslot.lucky();
 
 
-                                        List<Boolean> get = new ArrayList<>();
-                                        if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
-                                            if (target1.energy.getEnergy() >= energycost) {
-                                                for (int j = 0; j < chance2 + 1; j++) {
-                                                    if (target1.outputSlot.canAdd(gem)) {
-                                                        target1.outputSlot.add(gem);
-                                                        get.add(true);
-                                                    } else {
-                                                        get.add(false);
+                                            List<Boolean> get = new ArrayList<>();
+                                            if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
+                                                if (target1.energy.getEnergy() >= energycost) {
+                                                    for (int j = 0; j < chance2 + 1; j++) {
+                                                        if (target1.outputSlot.canAdd(gem)) {
+                                                            target1.outputSlot.add(gem);
+                                                            get.add(true);
+                                                        } else {
+                                                            get.add(false);
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                        if (ModUtils.Boolean(get)) {
-                                            this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
-                                            target1.energy.useEnergy(energycost);
-                                            target1.getblock++;
-                                        }
+                                            if (ModUtils.Boolean(get)) {
+                                                this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
+                                                target1.energy.useEnergy(energycost);
+                                                target1.getblock++;
+                                            }
 
+                                        }
                                     }
                                 }
                             }
@@ -576,11 +580,10 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                     }
                 }
             }
-            }
         }
 
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
-            this.y+=4;
+            this.y += 4;
 
 
             if (this.y >= 256) {
@@ -665,6 +668,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         }
         return nbttagcompound;
     }
+
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
@@ -672,30 +676,37 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
             this.audioSource = null;
         }
     }
+
     public AudioSource audioSource;
+
     public void onNetworkEvent(int event) {
-        if (this.audioSource == null && getStartSoundFile() != null)
+        if (this.audioSource == null && getStartSoundFile() != null) {
             this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
+        }
         switch (event) {
             case 0:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.play();
+                }
                 break;
             case 1:
                 if (this.audioSource != null) {
                     this.audioSource.stop();
-                    if (getInterruptSoundFile() != null)
+                    if (getInterruptSoundFile() != null) {
                         IUCore.audioManager.playOnce(this, getInterruptSoundFile());
+                    }
                 }
                 break;
             case 2:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.stop();
+                }
                 break;
 
 
         }
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

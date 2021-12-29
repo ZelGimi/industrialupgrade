@@ -21,23 +21,26 @@ public class ElectrolyzerCategory extends Gui implements IRecipeCategory<Electro
 
     private final IDrawableStatic bg;
     private int energy = 0;
+
     public ElectrolyzerCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine2.electrolyzer_iu.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine1,1,15).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 15).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,18 +52,15 @@ public class ElectrolyzerCategory extends Gui implements IRecipeCategory<Electro
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
 
         energy++;
-        int energylevel = Math.min(29 * energy/100,29);
-      mc.getTextureManager().bindTexture(getTexture());
+        int energylevel = Math.min(29 * energy / 100, 29);
+        mc.getTextureManager().bindTexture(getTexture());
 
 
-        this.drawTexturedModalRect( + 34,  + 64, 177, 104, energylevel, 9);
-
-
+        this.drawTexturedModalRect(+34, +64, 177, 104, energylevel, 9);
 
 
     }
@@ -97,7 +97,6 @@ public class ElectrolyzerCategory extends Gui implements IRecipeCategory<Electro
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png");
     }
-
 
 
 }

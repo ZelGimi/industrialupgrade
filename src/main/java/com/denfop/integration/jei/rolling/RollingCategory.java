@@ -16,27 +16,28 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class  RollingCategory extends Gui implements IRecipeCategory< RollingWrapper> {
+public class RollingCategory extends Gui implements IRecipeCategory<RollingWrapper> {
 
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
 
-    public  RollingCategory(
+    public RollingCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine2.png"), 3, 3, 140,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockMoreMachine2.rolling.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines_base2,1,0).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines_base2, 1, 0).getUnlocalizedName());
     }
 
     @Override
@@ -50,21 +51,20 @@ public class  RollingCategory extends Gui implements IRecipeCategory< RollingWra
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
 
-        int xScale = (int) (24 * progress / 100);
+        int xScale = 24 * progress / 100;
         if (xScale > 24) {
             progress = 0;
         }
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66-1, 12 + 19, 192, 14+24 * 4, 16, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 19, 192, 14 + 24 * 4, 16, xScale + 1);
         drawTexturedModalRect(
-                + 2,  + 44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +2, +44 + 14 - energylevel, 176, 14 - energylevel, 14,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
@@ -91,7 +91,6 @@ public class  RollingCategory extends Gui implements IRecipeCategory< RollingWra
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMachine2.png");
     }
-
 
 
 }

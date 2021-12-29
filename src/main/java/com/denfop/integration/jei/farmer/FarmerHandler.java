@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class FarmerHandler {
-    private static List<FarmerHandler> recipes = new ArrayList<>();
+
+    private static final List<FarmerHandler> recipes = new ArrayList<>();
 
 
     public static List<FarmerHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -41,18 +43,22 @@ public class FarmerHandler {
 
     public static FarmerHandler addRecipe(ItemStack input, ItemStack output) {
         FarmerHandler recipe = new FarmerHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static FarmerHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (FarmerHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (FarmerHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -63,7 +69,7 @@ public class FarmerHandler {
     public static void initRecipes() {
         for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.fermer.getRecipes()) {
             addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()).get(0)
-                   );
+            );
 
         }
     }
@@ -75,4 +81,5 @@ public class FarmerHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

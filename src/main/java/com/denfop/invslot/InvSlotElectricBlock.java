@@ -162,7 +162,8 @@ public class InvSlotElectricBlock extends InvSlot {
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
                 if (tile.getWorld().getTileEntity(pos) != null
-                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityBlock && x != 0  && nbttagcompound.getBoolean("change")
+                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityBlock && x != 0 && nbttagcompound.getBoolean(
+                        "change")
                         && y != 0 && z != 0) {
                     TileEntityBlock tile1 = (TileEntityBlock) tile.getWorld().getTileEntity(pos);
 

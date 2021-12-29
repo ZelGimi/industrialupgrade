@@ -20,7 +20,6 @@ public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
     public final ContainerCombinerMatter container;
 
 
-
     public GUICombinerMatter(ContainerCombinerMatter container1) {
         super(container1);
         this.container = container1;
@@ -55,8 +54,6 @@ public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
 
-
-      
 
         TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(par1, par2);
         handleUpgradeTooltip(par1 - this.guiLeft, par2 - this.guiTop, 165, 0, 175, 12);

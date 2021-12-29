@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MolecularTransformerRecipeWrapper implements  IRecipeWrapper  {
- 
+public class MolecularTransformerRecipeWrapper implements IRecipeWrapper {
 
 
     protected final String input;
@@ -31,9 +30,11 @@ public class MolecularTransformerRecipeWrapper implements  IRecipeWrapper  {
         String inputText;
 
         if (!container.getInput().isEmpty()) {
-            inputText =container.getInput().getDisplayName();
-        }  else {
-            IUCore.log.warn("Unexpected empty recipe input: " + container.getInput() + " (" + container.getInput().getClass() + ')');
+            inputText = container.getInput().getDisplayName();
+        } else {
+            IUCore.log.warn("Unexpected empty recipe input: " + container.getInput() + " (" + container
+                    .getInput()
+                    .getClass() + ')');
             inputText = "Empty " + container.getInput().getClass().getSimpleName();
         }
         this.inputstack = container.getInput();
@@ -43,27 +44,29 @@ public class MolecularTransformerRecipeWrapper implements  IRecipeWrapper  {
                 Localization.translate("gui.MolecularTransformer.output") + ' ' + container.getOutput().getDisplayName();
         this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation"),
                 ModUtils.getString(container.getEnergy()),
-                Localization.translate("ic2.generic.text.EU"));
+                Localization.translate("ic2.generic.text.EU")
+        );
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
-    public List<List<ItemStack>> getInputs() {
-       ItemStack inputs = this.inputstack;
-        List<ItemStack> stack = new ArrayList<>();
-       if(OreDictionary.getOreIDs(inputs).length >0){
-       int id =    OreDictionary.getOreIDs(inputs)[0];
-           stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
-       }else
 
-        stack.add(inputs);
+    public List<List<ItemStack>> getInputs() {
+        ItemStack inputs = this.inputstack;
+        List<ItemStack> stack = new ArrayList<>();
+        if (OreDictionary.getOreIDs(inputs).length > 0) {
+            int id = OreDictionary.getOreIDs(inputs)[0];
+            stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
+        } else {
+            stack.add(inputs);
+        }
         return inputs.isEmpty() ? Collections.emptyList() : Collections.singletonList(stack);
     }
 
     public List<ItemStack> getOutputs() {
         return new ArrayList(Collections.singleton(this.outputstack));
     }
-
 
 
     public void getIngredients(IIngredients ingredients) {
@@ -85,4 +88,5 @@ public class MolecularTransformerRecipeWrapper implements  IRecipeWrapper  {
         y += minecraft.fontRenderer.getWordWrappedHeight(this.output, recipeWidth - x) + 5;
         minecraft.fontRenderer.drawString(this.totalEU, x, y, 16777215);
     }
+
 }

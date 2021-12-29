@@ -10,16 +10,23 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityRenderConverterMatter extends TileEntitySpecialRenderer<TileEntityConverterSolidMatter> {
 
-    public static final ResourceLocation texture = new ResourceLocation(Constants.TEXTURES,
-            "textures/models/SintezatorSolidVeshestv.png");
+    public static final ResourceLocation texture = new ResourceLocation(
+            Constants.TEXTURES,
+            "textures/models/SintezatorSolidVeshestv.png"
+    );
     static final IModelCustom model = AdvancedModelLoader
             .loadModel(new ResourceLocation(Constants.TEXTURES, "models/SintezatorSolidVeshestv.obj"));
 
 
-
-
-    public void render(TileEntityConverterSolidMatter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
-    {
+    public void render(
+            TileEntityConverterSolidMatter te,
+            double x,
+            double y,
+            double z,
+            float partialTicks,
+            int destroyStage,
+            float alpha
+    ) {
         GL11.glPushMatrix();
 
         GL11.glTranslated(x, y, z);

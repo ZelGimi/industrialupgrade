@@ -26,7 +26,6 @@ public class InvSlotProcessableStone extends InvSlot implements IInvSlotProcessa
     }
 
 
-
     public Map<IGenStoneRecipeManager.Input, RecipeOutput> getRecipeList() {
         return Recipes.GenStone.getRecipes();
     }
@@ -57,13 +56,16 @@ public class InvSlotProcessableStone extends InvSlot implements IInvSlotProcessa
     public RecipeOutput process() {
         ItemStack input = ((TileEntityGenerationStone) this.base).inputSlotA.get();
         ItemStack input1 = ((TileEntityGenerationStone) this.base).inputSlotA.get(1);
-        if (input == null)
+        if (input == null) {
             return null;
-        if (input1 == null)
+        }
+        if (input1 == null) {
             return null;
-        RecipeOutput output = getOutputFor(input, input1,false);
-        if (output == null)
+        }
+        RecipeOutput output = getOutputFor(input, input1, false);
+        if (output == null) {
             return null;
+        }
         List<ItemStack> itemsCopy = new ArrayList<>(output.items.size());
         itemsCopy.addAll(output.items);
         return new RecipeOutput(output.metadata, itemsCopy);
@@ -73,11 +75,12 @@ public class InvSlotProcessableStone extends InvSlot implements IInvSlotProcessa
 
         ItemStack input = ((TileEntityGenerationStone) this.base).inputSlotA.get();
         ItemStack input1 = ((TileEntityGenerationStone) this.base).inputSlotA.get(1);
-        if (input != null && input.stackSize <= 1)
+        if (input != null && input.stackSize <= 1) {
             ((TileEntityGenerationStone) this.base).inputSlotA.put(null);
-        if (input1 != null && input1.stackSize <= 1)
-            ((TileEntityGenerationStone) this.base).inputSlotA.put(1,null);
-
+        }
+        if (input1 != null && input1.stackSize <= 1) {
+            ((TileEntityGenerationStone) this.base).inputSlotA.put(1, null);
+        }
 
 
     }

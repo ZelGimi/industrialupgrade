@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.utils;
 
 import com.denfop.IUCore;
@@ -21,6 +16,7 @@ import java.util.Set;
 
 @SideOnly(Side.CLIENT)
 public class KeyboardClient extends KeyboardIU {
+
     public static final KeyBinding changemode = new KeyBinding("Change mode key", Keyboard.KEY_G, "IndustrialUpgrade");
     public static final KeyBinding flymode = new KeyBinding("Fly Key", Keyboard.KEY_F, "IndustrialUpgrade");
     public static final KeyBinding streakmode = new KeyBinding("Change Streak Key", Keyboard.KEY_X, "IndustrialUpgrade");
@@ -71,4 +67,5 @@ public class KeyboardClient extends KeyboardIU {
         }
 
     }
+
 }

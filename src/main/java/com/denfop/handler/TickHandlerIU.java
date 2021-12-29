@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TickHandlerIU {
+
     public TickHandlerIU() {
         FMLCommonHandler.instance().bus().register(this);
     }
@@ -19,4 +20,5 @@ public class TickHandlerIU {
         }
 
     }
+
 }

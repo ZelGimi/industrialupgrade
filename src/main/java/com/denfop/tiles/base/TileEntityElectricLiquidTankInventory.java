@@ -31,6 +31,7 @@ public abstract class TileEntityElectricLiquidTankInventory extends TileEntityEl
         super.writeToNBT(nbttagcompound);
         return nbttagcompound;
     }
+
     public double getEnergy() {
         return this.energy.getEnergy();
     }

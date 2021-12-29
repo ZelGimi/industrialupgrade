@@ -20,6 +20,7 @@ public enum EnumSpawnerModules {
         this.meta = meta;
         this.percent = percent;
     }
+
     public static EnumSpawnerModules getFromID(final int ID) {
         return values()[ID % values().length];
     }

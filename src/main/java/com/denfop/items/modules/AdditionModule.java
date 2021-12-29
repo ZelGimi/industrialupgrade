@@ -73,11 +73,12 @@ public class AdditionModule extends ItemMulti<AdditionModule.CraftingTypes> impl
         if (player.getHeldItem(hand).getItemDamage() == 10) {
             if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBlock) {
                 TileEntityBlock tile = (TileEntityBlock) world.getTileEntity(pos);
-                if(tile.getComponent(Energy.class) != null) {
+                if (tile.getComponent(Energy.class) != null) {
                     NBTTagCompound nbttagcompound = ModUtils.nbt(player.getHeldItem(hand));
-                 boolean charge =   nbttagcompound.getBoolean("change");
-                 if(tile instanceof TileEntityElectricBlock && charge)
-                     return EnumActionResult.PASS;
+                    boolean charge = nbttagcompound.getBoolean("change");
+                    if (tile instanceof TileEntityElectricBlock && charge) {
+                        return EnumActionResult.PASS;
+                    }
                     nbttagcompound.setInteger("Xcoord", tile.getPos().getX());
                     nbttagcompound.setInteger("Ycoord", tile.getPos().getY());
                     nbttagcompound.setInteger("Zcoord", tile.getPos().getZ());

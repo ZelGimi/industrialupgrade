@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.audio;
 
 import ic2.core.IC2;
@@ -286,9 +281,11 @@ public final class AudioManagerClient extends AudioManager {
     public AudioSource createSource(Object obj, String initialSoundFile) {
         return this.createSource(obj, PositionSpec.Center, initialSoundFile, false, false, this.getDefaultVolume());
     }
-    public AudioSource createSource(Object obj, String initialSoundFile,PositionSpec spec) {
+
+    public AudioSource createSource(Object obj, String initialSoundFile, PositionSpec spec) {
         return this.createSource(obj, PositionSpec.Hand, initialSoundFile, false, false, this.getDefaultVolume());
     }
+
     public AudioSource createSource(
             Object obj,
             PositionSpec positionSpec,
@@ -387,8 +384,9 @@ public final class AudioManagerClient extends AudioManager {
                 return null;
             } else {
                 URL url = AudioSource.class.getClassLoader().getResource("assets/industrialupgrade/sounds/" + soundFile);
-                if (url == null)
+                if (url == null) {
                     url = AudioSource.class.getClassLoader().getResource("ic2/sounds/" + soundFile);
+                }
 
                 if (url == null) {
                     IC2.log.warn(LogCategory.Audio, "Invalid sound file: %s.", soundFile);

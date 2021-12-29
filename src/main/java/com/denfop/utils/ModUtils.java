@@ -21,24 +21,24 @@ public class ModUtils {
 
     public static List<ItemStack> blacklist_block() {
         List<ItemStack> list = new ArrayList<>();
-        list.add( new ItemStack(Blocks.STONE));
-        list.add( new ItemStack(Blocks.DIRT));
-        list.add( new ItemStack(Blocks.NETHERRACK));
-        list.add( new ItemStack(Blocks.END_STONE));
-        list.add( new ItemStack(Blocks.STONE,1,1));
-        list.add( new ItemStack(Blocks.STONE,1,2));
-        list.add( new ItemStack(Blocks.STONE,1,3));
-        list.add( new ItemStack(Blocks.STONE,1,4));
-        list.add( new ItemStack(Blocks.STONE,1,5));
-        list.add( new ItemStack(Blocks.STONE,1,6));
-        list.add( new ItemStack(Blocks.DIRT,1,1));
-        list.add( new ItemStack(Blocks.DIRT,1,2));
-        list.add( new ItemStack(Blocks.DIRT,1,3));
+        list.add(new ItemStack(Blocks.STONE));
+        list.add(new ItemStack(Blocks.DIRT));
+        list.add(new ItemStack(Blocks.NETHERRACK));
+        list.add(new ItemStack(Blocks.END_STONE));
+        list.add(new ItemStack(Blocks.STONE, 1, 1));
+        list.add(new ItemStack(Blocks.STONE, 1, 2));
+        list.add(new ItemStack(Blocks.STONE, 1, 3));
+        list.add(new ItemStack(Blocks.STONE, 1, 4));
+        list.add(new ItemStack(Blocks.STONE, 1, 5));
+        list.add(new ItemStack(Blocks.STONE, 1, 6));
+        list.add(new ItemStack(Blocks.DIRT, 1, 1));
+        list.add(new ItemStack(Blocks.DIRT, 1, 2));
+        list.add(new ItemStack(Blocks.DIRT, 1, 3));
         return list;
     }
 
     public static boolean getore(Block localBlock, int meta) {
-        ItemStack stack = new ItemStack(localBlock,1,meta);
+        ItemStack stack = new ItemStack(localBlock, 1, meta);
         for (ItemStack itemstack : blacklist_block()) {
             if (stack.isItemEqual(itemstack)) {
                 return false;
@@ -55,6 +55,7 @@ public class ModUtils {
         }
         return true;
     }
+
     public static boolean getore(ItemStack localBlock) {
         for (ItemStack itemstack : blacklist_block()) {
             if (localBlock.isItemEqual(itemstack)) {
@@ -63,6 +64,7 @@ public class ModUtils {
         }
         return true;
     }
+
     public static boolean getore(Block stack, Block localBlock) {
         ItemStack stack1 = new ItemStack(localBlock);
         for (ItemStack itemstack : blacklist_block()) {
@@ -144,21 +146,25 @@ public class ModUtils {
     }
 
     public static void SetDoubleWithoutItem(NBTTagCompound NBTTagCompound, String name, double amount) {
-        if (NBTTagCompound == null)
+        if (NBTTagCompound == null) {
             NBTTagCompound = new NBTTagCompound();
+        }
         NBTTagCompound.setDouble(name, amount);
 
     }
 
     public static double NBTGetDouble(ItemStack stack, String name) {
-        if (name == null)
+        if (name == null) {
             return 0;
+        }
         NBTTagCompound NBTTagCompound = stack.getTagCompound();
-        if (NBTTagCompound == null)
+        if (NBTTagCompound == null) {
             return 0;
+        }
         return NBTTagCompound.getDouble(name);
 
     }
+
     public static String Boolean(boolean boolean1) {
         if (boolean1) {
             return Localization.translate("iu.yes");
@@ -167,11 +173,13 @@ public class ModUtils {
         }
 
     }
+
     public static void mode(ItemStack stack, List<String> list) {
         NBTTagCompound nbt = nbt(stack);
         String mode = nbt.getString("mode");
-        if (mode.isEmpty())
+        if (mode.isEmpty()) {
             list.add(Localization.translate("defaultskin"));
+        }
         switch (mode) {
             case "Zelen":
                 list.add(Localization.translate("camouflageskin"));

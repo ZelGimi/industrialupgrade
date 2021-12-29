@@ -37,7 +37,8 @@ public class TileEntityMagnet extends TileEntityElectricMachine
 
         super.updateEntityServer();
         int radius = 10;
-        AxisAlignedBB axisalignedbb = new AxisAlignedBB(this.pos.getX() - radius,
+        AxisAlignedBB axisalignedbb = new AxisAlignedBB(
+                this.pos.getX() - radius,
                 this.pos.getY() - radius,
                 this.pos.getZ() - radius,
                 this.pos.getX() + radius,

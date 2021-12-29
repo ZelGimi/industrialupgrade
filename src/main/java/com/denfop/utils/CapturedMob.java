@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.utils;
 
 
@@ -61,7 +56,8 @@ public final class CapturedMob {
     private final ResourceLocation entityId;
     @Nullable
     private final String customName;
-    private  int color;
+    private int color;
+
     private CapturedMob(@Nonnull EntityLivingBase entity) {
         ResourceLocation id = EntityList.getKey(entity);
         this.entityId = id == null ? PIG : id;
@@ -74,8 +70,8 @@ public final class CapturedMob {
             }
         }
         this.color = -1;
-        if(entity instanceof EntitySheep){
-            this.color=   ((EntitySheep)entity).getFleeceColor().getMetadata();
+        if (entity instanceof EntitySheep) {
+            this.color = ((EntitySheep) entity).getFleeceColor().getMetadata();
         }
         if (name != null && name.length() > 0) {
             this.customName = name;
@@ -334,8 +330,8 @@ public final class CapturedMob {
                             ((EntityLiving) entity).onInitialSpawn(difficulty, null);
                         }
                     }
-                    if(entity instanceof EntitySheep){
-                        ((EntitySheep)entity).setFleeceColor(EnumDyeColor.byMetadata(color));
+                    if (entity instanceof EntitySheep) {
+                        ((EntitySheep) entity).setFleeceColor(EnumDyeColor.byMetadata(color));
                     }
 
                     return entity;
@@ -345,8 +341,8 @@ public final class CapturedMob {
                 if (!clone && entity != null) {
                     entity.setUniqueId(MathHelper.getRandomUUID(world.rand));
                 }
-                if(entity instanceof EntitySheep){
-                    ((EntitySheep)entity).setFleeceColor(EnumDyeColor.byMetadata(color));
+                if (entity instanceof EntitySheep) {
+                    ((EntitySheep) entity).setFleeceColor(EnumDyeColor.byMetadata(color));
                 }
                 return entity;
             }

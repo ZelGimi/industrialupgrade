@@ -22,23 +22,26 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public PlasticCreatorPlateCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPlasticPlate" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine2.plastic_plate_creator.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine1,1,13).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 13).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -50,13 +53,12 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
-        int xScale = (int) (24 * progress / 100);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
+        int xScale = 24 * progress / 100;
 
         if (xScale > 24) {
             progress = 0;
@@ -65,13 +67,12 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
         mc.getTextureManager().bindTexture(getTexture());
 
 
-
-        drawTexturedModalRect( + 51 + 1,  + 31 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(+51 + 1, +31 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
 
-        drawTexturedModalRect( + 74,  + 29, 176, 14, xScale + 1, 16);
+        drawTexturedModalRect(+74, +29, 176, 14, xScale + 1, 16);
 
 
     }
@@ -99,7 +100,6 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPlasticPlate.png");
     }
-
 
 
 }

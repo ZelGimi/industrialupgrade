@@ -21,23 +21,26 @@ public class PaintingCategory extends Gui implements IRecipeCategory<PaintingWra
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public PaintingCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter" +
                         ".png"), 3, 3, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine2.painter.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine1,1,3).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 3).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,12 +52,11 @@ public class PaintingCategory extends Gui implements IRecipeCategory<PaintingWra
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 14 * progress / 100;
         if (xScale > 14) {
             progress = 0;
@@ -63,8 +65,7 @@ public class PaintingCategory extends Gui implements IRecipeCategory<PaintingWra
         mc.getTextureManager().bindTexture(getTexture());
 
 
-
-            drawTexturedModalRect(72, 32, 178, 33 , xScale + 1, 13);
+        drawTexturedModalRect(72, 32, 178, 33, xScale + 1, 13);
         drawTexturedModalRect(22, 54 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
@@ -93,7 +94,6 @@ public class PaintingCategory extends Gui implements IRecipeCategory<PaintingWra
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIPainter.png");
     }
-
 
 
 }

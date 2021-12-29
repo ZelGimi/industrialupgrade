@@ -103,6 +103,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         return nbttagcompound;
 
     }
+
     private double lastEnergy;
 
     public void updateEntityServer() {
@@ -135,7 +136,6 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                     this.scrap += recipe.getOutput();
                 }
             }
-
 
 
             if (this.energy.canUseEnergy(energycost)) {

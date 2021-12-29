@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.tiles.base;
 
 import com.denfop.container.ContainerGenerator;
@@ -29,7 +24,8 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator {
     public int itemFuelTime = 0;
 
     public TileEntityAdvGenerator(double coef, int maxstorage, String name) {
-        super(coef * (double) Math.round(10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/generator")),
+        super(
+                coef * (double) Math.round(10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/generator")),
                 1,
                 maxstorage
         );

@@ -42,8 +42,12 @@ public class GUIUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
                     14, chargeLevel
             );
         }
-        ItemStack module = getUpgradeItem(this.container.base.inputSlotA.get(0)) ? this.container.base.inputSlotA.get(0) : this.container.base.inputSlotA.get(1);
-        ItemStack stack1 = getUpgradeItem(this.container.base.inputSlotA.get(0)) ? this.container.base.inputSlotA.get(1) : this.container.base.inputSlotA.get(0);
+        ItemStack module = getUpgradeItem(this.container.base.inputSlotA.get(0))
+                ? this.container.base.inputSlotA.get(0)
+                : this.container.base.inputSlotA.get(1);
+        ItemStack stack1 = getUpgradeItem(this.container.base.inputSlotA.get(0))
+                ? this.container.base.inputSlotA.get(1)
+                : this.container.base.inputSlotA.get(0);
 
         boolean allow = true;
         NBTTagCompound nbt1 = ModUtils.nbt(stack1);
@@ -82,7 +86,7 @@ public class GUIUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
 
 
                 }
-            }else{
+            } else {
                 if (progress > 0) {
                     drawTexturedModalRect(xoffset + 31, yoffset + 36, 176, 17, progress + 1, 11);
                 }

@@ -26,20 +26,26 @@ public class AvaritiaIntegration {
 
     public static void recipe() {
         Recipes.advRecipes.addRecipe(new ItemStack(blockAvSolarPanel, 1, 0), " B ", "BAB", " B ", 'B',
-                new ItemStack(IUItem.blockpanel, 1, 8), 'A', neutroncore);
+                new ItemStack(IUItem.blockpanel, 1, 8), 'A', neutroncore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(blockAvSolarPanel, 1, 1),
-                " B ", "BAB", " B ", 'B', new ItemStack(blockAvSolarPanel, 1, 0), 'A', infinitycore);
+                " B ", "BAB", " B ", 'B', new ItemStack(blockAvSolarPanel, 1, 0), 'A', infinitycore
+        );
 
         Recipes.advRecipes.addRecipe(new ItemStack(neutroncore, 1), " A ", "ABA", " A ", 'B',
-                new ItemStack(IUItem.core, 1, 5), 'A', ModItems.neutronium_ingot);
+                new ItemStack(IUItem.core, 1, 5), 'A', ModItems.neutronium_ingot
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(infinitycore, 1), "BAB", "ABA", "BAB", 'B',
-                new ItemStack(neutroncore, 1), 'A', ModItems.infinity_ingot);
+                new ItemStack(neutroncore, 1), 'A', ModItems.infinity_ingot
+        );
 
 
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.UpgradePanelKit, 1, 20), "   ", "BAB", " B ", 'B',
-                new ItemStack(IUItem.blockpanel, 1, 8), 'A', neutroncore);
+                new ItemStack(IUItem.blockpanel, 1, 8), 'A', neutroncore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.UpgradePanelKit, 1, 21),
-                "   ", "BAB", " B ", 'B', new ItemStack(blockAvSolarPanel, 1, 0), 'A', infinitycore);
+                "   ", "BAB", " B ", 'B', new ItemStack(blockAvSolarPanel, 1, 0), 'A', infinitycore
+        );
 
     }
 

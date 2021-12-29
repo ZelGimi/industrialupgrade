@@ -12,13 +12,20 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class MachineAddRecipeAction extends BaseAction {
+
     private final String name;
     private final IMachineRecipeManager machine;
     private final ItemStack[] output;
     private final IRecipeInput input;
     private final NBTTagCompound tag;
 
-    public MachineAddRecipeAction(String name, IMachineRecipeManager machine, ItemStack[] output, NBTTagCompound tag, IRecipeInput input) {
+    public MachineAddRecipeAction(
+            String name,
+            IMachineRecipeManager machine,
+            ItemStack[] output,
+            NBTTagCompound tag,
+            IRecipeInput input
+    ) {
         super(name);
         this.name = name;
         this.machine = machine;
@@ -33,7 +40,7 @@ public class MachineAddRecipeAction extends BaseAction {
                 ((IBasicMachineRecipeManager) this.machine).addRecipe(this.input, this.tag, true, this.output);
             }
         } catch (RuntimeException var2) {
-           CraftTweakerAPI.logError(var2.getMessage());
+            CraftTweakerAPI.logError(var2.getMessage());
         }
 
     }
@@ -107,4 +114,5 @@ public class MachineAddRecipeAction extends BaseAction {
             }
         }
     }
+
 }

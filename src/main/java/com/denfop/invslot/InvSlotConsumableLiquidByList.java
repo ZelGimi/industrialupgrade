@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.invslot;
 
 import ic2.core.block.TileEntityInventory;
@@ -14,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class InvSlotConsumableLiquidByList extends InvSlotConsumableLiquid {
+
     private final Set<Fluid> acceptedFluids;
 
     public InvSlotConsumableLiquidByList(
@@ -36,4 +32,5 @@ public class InvSlotConsumableLiquidByList extends InvSlotConsumableLiquid {
     protected Iterable<Fluid> getPossibleFluids() {
         return this.acceptedFluids;
     }
+
 }

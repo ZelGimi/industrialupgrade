@@ -74,7 +74,8 @@ import java.util.Set;
 
 public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegister {
 
-    public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(Blocks.COBBLESTONE.getDefaultState(),
+    public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(
+            Blocks.COBBLESTONE.getDefaultState(),
             Blocks.DOUBLE_STONE_SLAB.getDefaultState(),
             Blocks.STONE_SLAB.getDefaultState(),
             Blocks.STONE.getDefaultState(),
@@ -270,9 +271,11 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                     for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
                         if (ElectricItem.manager.canUse(stack, energy)) {
                             BlockPos pos_block = new BlockPos(xPos, yPos, zPos);
-                            if (save)
-                                if (world.getTileEntity(pos_block) != null)
+                            if (save) {
+                                if (world.getTileEntity(pos_block) != null) {
                                     continue;
+                                }
+                            }
                             IBlockState state = world.getBlockState(pos_block);
                             Block localBlock = world.getBlockState(pos_block).getBlock();
                             if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
@@ -502,8 +505,9 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
             }
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
-                return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                if (player.isSneaking()) {
+                    return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
 
                 return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
@@ -641,7 +645,11 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
 
 
                     ((EntityPlayerMP) entity).addExhaustion(-0.025F);
-                    if ((ModUtils.getore(block,block.getMetaFromState(state))&& nbt.getBoolean("black") && check_list(block, block.getMetaFromState(state) , stack)) || !Config.blacklist  || !nbt.getBoolean("black")) {
+                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && nbt.getBoolean("black") && check_list(
+                            block,
+                            block.getMetaFromState(state),
+                            stack
+                    )) || !Config.blacklist || !nbt.getBoolean("black")) {
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
                                 item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
@@ -651,12 +659,13 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                             }
                         }
                     } else {
-                        if( nbt.getBoolean("black"))
-                        for (EntityItem item : items) {
-                            if (!entity.getEntityWorld().isRemote) {
+                        if (nbt.getBoolean("black")) {
+                            for (EntityItem item : items) {
+                                if (!entity.getEntityWorld().isRemote) {
 
                                     item.setDead();
 
+                                }
                             }
                         }
                     }
@@ -669,7 +678,8 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                     block.onBlockDestroyedByPlayer(world, pos, state);
                 }
 
-                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
+                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(
+                        CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
                         pos,
                         Minecraft.getMinecraft().objectMouseOver.sideHit
                 ));
@@ -765,17 +775,21 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         if (IUCore.keyboard.isSaveModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean save = !nbt.getBoolean("save");
-            CommonProxy.sendPlayerMessage(player,
-                    TextFormatting.GREEN +Localization.translate("message.savemode") +
-                            (save ? Localization.translate("message.allow") :Localization.translate("message.disallow")));
+            CommonProxy.sendPlayerMessage(
+                    player,
+                    TextFormatting.GREEN + Localization.translate("message.savemode") +
+                            (save ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+            );
             nbt.setBoolean("save", save);
         }
         if (IUCore.keyboard.isBlackListModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean black = !nbt.getBoolean("black");
-            CommonProxy.sendPlayerMessage(player,
-                    TextFormatting.GREEN +Localization.translate("message.blacklist") +
-                            (black ? Localization.translate("message.allow") :Localization.translate("message.disallow")));
+            CommonProxy.sendPlayerMessage(
+                    player,
+                    TextFormatting.GREEN + Localization.translate("message.blacklist") +
+                            (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+            );
             nbt.setBoolean("black", black);
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
@@ -804,10 +818,12 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                         );
                     }
                     this.efficiency = this.normalPower;
-                    if(this.efficienty != 0)
-                    enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
-                    if(this.lucky != 0)
-                    enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
+                    if (this.efficienty != 0) {
+                        enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
+                    }
+                    if (this.lucky != 0) {
+                        enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
+                    }
 
                     EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
                     break;
@@ -880,15 +896,16 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
 
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("iu.changemode_key") +  Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
+            par3List.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
-            par3List.add(Localization.translate("iu.blacklist_key") +  Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode())  + Localization.translate(
+            par3List.add(Localization.translate("iu.blacklist_key") + Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
 
         }
         ModUtils.mode(par1ItemStack, par3List);
         super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
     }
+
     public boolean check_list(Block block, int metaFromState, ItemStack stack) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         if (!nbt.getBoolean("list")) {
@@ -913,16 +930,19 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
 
         return !lst.isEmpty() && !lst.contains(name);
     }
+
     @Override
     public void getSubItems(final CreativeTabs subs, final NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(subs)) {
             ItemStack stack = new ItemStack(this, 1);
 
             Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-if( this.efficienty != 0)
-            enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
-            if( this.lucky != 0)
-enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
+            if (this.efficienty != 0) {
+                enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
+            }
+            if (this.lucky != 0) {
+                enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
+            }
             EnchantmentHelper.setEnchantments(enchantmentMap, stack);
 
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);

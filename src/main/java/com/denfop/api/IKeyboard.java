@@ -17,4 +17,5 @@ public interface IKeyboard {
     boolean isFlyModeKeyDown(final EntityPlayer p0);
 
     boolean isBlackListModeKeyDown(final EntityPlayer p0);
+
 }

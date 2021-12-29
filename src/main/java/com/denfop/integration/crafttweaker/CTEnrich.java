@@ -20,14 +20,15 @@ import java.util.Objects;
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTEnrich {
+
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container, IIngredient fill) {
         CraftTweakerAPI.apply(new AddEnrichIngredientAction(container, fill, output));
     }
 
 
-
     private static class AddEnrichIngredientAction extends BaseAction {
+
         private final IIngredient container;
 
         private final IIngredient fill;
@@ -59,7 +60,8 @@ public class CTEnrich {
                     new IC2RecipeInput(this.container),
                     new IC2RecipeInput(this.fill), null,
 
-                    getItemStack(this.output));
+                    getItemStack(this.output)
+            );
 
         }
 
@@ -80,17 +82,22 @@ public class CTEnrich {
         }
 
         public boolean equals(Object obj) {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             AddEnrichIngredientAction other = (AddEnrichIngredientAction) obj;
-            if (!Objects.equals(this.container, other.container))
+            if (!Objects.equals(this.container, other.container)) {
                 return false;
-            if (!Objects.equals(this.fill, other.fill))
+            }
+            if (!Objects.equals(this.fill, other.fill)) {
                 return false;
+            }
             return Objects.equals(this.output, other.output);
         }
+
     }
 
     private static class Remove extends BaseAction {
@@ -99,7 +106,7 @@ public class CTEnrich {
 
         protected Remove(Map<IDoubleMachineRecipeManager.Input, RecipeOutput> recipes) {
             super("enrichment");
-            this.recipes=recipes;
+            this.recipes = recipes;
         }
 
         protected String getRecipeInfo(Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> recipe) {
@@ -109,10 +116,15 @@ public class CTEnrich {
         @Override
         public void apply() {
 
-            for(Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet())
-                Recipes.enrichment.getRecipes().remove(iRecipeInputRecipeOutputEntry.getKey(),
-                        iRecipeInputRecipeOutputEntry.getValue());
+            for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet()) {
+                Recipes.enrichment.getRecipes().remove(
+                        iRecipeInputRecipeOutputEntry.getKey(),
+                        iRecipeInputRecipeOutputEntry.getValue()
+                );
+            }
 
         }
+
     }
+
 }

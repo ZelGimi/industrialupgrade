@@ -19,24 +19,25 @@ import net.minecraft.util.ResourceLocation;
 public class QuarryCategory extends Gui implements IRecipeCategory<QuarryWrapper> {
 
     private final IDrawableStatic bg;
-    private int progress = 0;
+    private final int progress = 0;
     private int energy = 0;
 
     public QuarryCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png"), 3, 3, 160,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine.quantum_quarry.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines,1,8).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines, 1, 8).getUnlocalizedName());
     }
 
     @Override
@@ -50,16 +51,15 @@ public class QuarryCategory extends Gui implements IRecipeCategory<QuarryWrapper
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
 
         energy++;
-        int energylevel = (int) Math.min(48.0F * energy/100,48);
+        int energylevel = (int) Math.min(48.0F * energy / 100, 48);
 
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect( + 140 + 1 + 2,  + 25 + 48 - energylevel, 176,
+        drawTexturedModalRect(+140 + 1 + 2, +25 + 48 - energylevel, 176,
                 48 - energylevel, 48, energylevel
         );
 
@@ -84,7 +84,6 @@ public class QuarryCategory extends Gui implements IRecipeCategory<QuarryWrapper
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiquantumquerry.png");
     }
-
 
 
 }

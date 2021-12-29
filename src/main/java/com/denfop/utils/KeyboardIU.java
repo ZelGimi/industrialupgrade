@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 public class KeyboardIU implements IKeyboard {
+
     private final Map<EntityPlayer, Set<KeyboardIU.Key>> playerKeys = new WeakHashMap();
 
     public KeyboardIU() {
@@ -60,8 +61,10 @@ public class KeyboardIU implements IKeyboard {
     public enum Key {
         CHANGE,
         STREAKMODE,
-        FLYMODE, VERTICALMODE,
-        SAVEMODE,BLACKMODE;
+        FLYMODE,
+        VERTICALMODE,
+        SAVEMODE,
+        BLACKMODE;
 
         public static final KeyboardIU.Key[] keys = values();
 
@@ -93,4 +96,5 @@ public class KeyboardIU implements IKeyboard {
             return ret;
         }
     }
+
 }

@@ -51,7 +51,11 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
         this.coef = 1;
         this.fluidSlot = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidName.fluidbenz.getInstance());
         this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.energy = this.addComponent(Energy.asBasicSource(this, (double) 32000 * coef, EnergyNet.instance.getTierFromPower(this.production)));
+        this.energy = this.addComponent(Energy.asBasicSource(
+                this,
+                (double) 32000 * coef,
+                EnergyNet.instance.getTierFromPower(this.production)
+        ));
 
     }
 

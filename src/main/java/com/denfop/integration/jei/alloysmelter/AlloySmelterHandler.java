@@ -13,19 +13,21 @@ import java.util.List;
 import java.util.Map;
 
 public class AlloySmelterHandler {
-    private static List< AlloySmelterHandler> recipes = new ArrayList<>();
+
+    private static final List<AlloySmelterHandler> recipes = new ArrayList<>();
 
 
-    public static List< AlloySmelterHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+    public static List<AlloySmelterHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack input,input1, output;
+    private final ItemStack input, input1, output;
 
 
-    public AlloySmelterHandler(ItemStack input, ItemStack input1,ItemStack output) {
+    public AlloySmelterHandler(ItemStack input, ItemStack input1, ItemStack output) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
@@ -34,39 +36,46 @@ public class AlloySmelterHandler {
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public ItemStack getInput1() { // Получатель входного предмета рецепта.
         return input1;
     }
+
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
 
-    public static AlloySmelterHandler addRecipe(ItemStack input, ItemStack input1,ItemStack output) {
-        AlloySmelterHandler recipe = new AlloySmelterHandler(input,input1, output);
-        if (recipes.contains(recipe))
+    public static AlloySmelterHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
+        AlloySmelterHandler recipe = new AlloySmelterHandler(input, input1, output);
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static AlloySmelterHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (AlloySmelterHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (AlloySmelterHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ||is.isItemEqual(input1);
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
     public static void initRecipes() {
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
                 Recipes.Alloysmelter.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0),container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0));
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
+                    container.getValue().items.get(0)
+            );
 
         }
     }
@@ -78,4 +87,5 @@ public class AlloySmelterHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

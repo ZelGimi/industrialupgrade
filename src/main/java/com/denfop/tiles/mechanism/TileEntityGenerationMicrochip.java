@@ -38,7 +38,8 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.iuingot, 1
                         , 11), new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.basecircuit), false
         );
-        add(new ItemStack(IUItem.iuingot, 1, 1),
+        add(
+                new ItemStack(IUItem.iuingot, 1, 1),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.GOLD_INGOT),
                 new ItemStack(IUItem.iuingot, 1, 7),
@@ -46,7 +47,8 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.basecircuit, 1, 1),
                 true
         );
-        add(new ItemStack(IUItem.iuingot, 1, 18),
+        add(
+                new ItemStack(IUItem.iuingot, 1, 18),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.DIAMOND),
                 new ItemStack(IUItem.iuingot, 1, 0),
@@ -54,7 +56,8 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.basecircuit, 1, 2),
                 true
         );
-        add(new ItemStack(IUItem.iuingot, 1, 18),
+        add(
+                new ItemStack(IUItem.iuingot, 1, 18),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.EMERALD),
                 new ItemStack(IUItem.iuingot, 1, 0),
@@ -73,7 +76,8 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.basecircuit, 1, 4), new ItemStack(IUItem.basecircuit, 1, 7),
                 new ItemStack(IUItem.basecircuit, 1, 10), true
         );
-        add(new ItemStack(IUItem.iuingot, 1, 2),
+        add(
+                new ItemStack(IUItem.iuingot, 1, 2),
                 new ItemStack(IUItem.iuingot, 1, 10),
                 new ItemStack(IUItem.basecircuit, 1, 2),
                 new ItemStack(IUItem.basecircuit, 1, 5),

@@ -26,7 +26,8 @@ public class TileEntityQuadMetalFormer extends TileEntityMultiMachine
                 Recipes.metalformerExtruding, 0
         );
         this.inputSlots = new InvSlotProcessableMultiGeneric(this, "input", EnumMultiMachine.QUAD_METAL_FORMER.sizeWorkingSlot,
-                Recipes.metalformerExtruding);
+                Recipes.metalformerExtruding
+        );
     }
 
     @Override

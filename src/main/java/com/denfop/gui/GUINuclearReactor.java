@@ -38,14 +38,16 @@ public class GUINuclearReactor extends GuiIC2<ContainerBaseNuclearReactor> {
         new AdvArea(this, 5, 160, 22, 177)
                 .withTooltip(Localization.translate("ic2.NuclearReactor.gui.mode.electric"))
                 .drawForeground(par1, par2);
-       (new LinkedGauge(this, 7, 136, container.base, "heat", Gauge.GaugeStyle.HeatNuclearReactor)).withTooltip(
-               () -> Localization.translate("ic2.NuclearReactor.gui.info.temp",
-                       ((IGuiValueProvider)(GUINuclearReactor.this.container).base).getGuiValue("heat") * 100.0D
-               )).drawForeground(par1, par2);
-       Text.create(this, 107, 136, 200, 13, TextProvider.of(() -> Localization.translate("ic2.NuclearReactor.gui.info.EUoutput",
-               Math.round(((GUINuclearReactor.this.container).base).getOfferedEnergy())
-       )), 5752026, false, 4, 0, false, true).drawForeground(par1, par2)
-       ;
+        (new LinkedGauge(this, 7, 136, container.base, "heat", Gauge.GaugeStyle.HeatNuclearReactor)).withTooltip(
+                () -> Localization.translate(
+                        "ic2.NuclearReactor.gui.info.temp",
+                        ((IGuiValueProvider) (GUINuclearReactor.this.container).base).getGuiValue("heat") * 100.0D
+                )).drawForeground(par1, par2);
+        Text.create(this, 107, 136, 200, 13, TextProvider.of(() -> Localization.translate(
+                "ic2.NuclearReactor.gui.info.EUoutput",
+                Math.round(((GUINuclearReactor.this.container).base).getOfferedEnergy())
+        )), 5752026, false, 4, 0, false, true).drawForeground(par1, par2)
+        ;
 
     }
 
@@ -73,13 +75,15 @@ public class GUINuclearReactor extends GuiIC2<ContainerBaseNuclearReactor> {
             }
         }
         (new LinkedGauge(this, 7, 136, container.base, "heat", Gauge.GaugeStyle.HeatNuclearReactor)).withTooltip(
-                () -> Localization.translate("ic2.NuclearReactor.gui.info.temp",
-                        ((IGuiValueProvider)(GUINuclearReactor.this.container).base).getGuiValue("heat") * 100.0D
-                )).drawBackground(xOffset,yOffset);
+                () -> Localization.translate(
+                        "ic2.NuclearReactor.gui.info.temp",
+                        ((IGuiValueProvider) (GUINuclearReactor.this.container).base).getGuiValue("heat") * 100.0D
+                )).drawBackground(xOffset, yOffset);
 
-        Text.create(this, 107, 136, 200, 13, TextProvider.of(() -> Localization.translate("ic2.NuclearReactor.gui.info.EUoutput",
+        Text.create(this, 107, 136, 200, 13, TextProvider.of(() -> Localization.translate(
+                "ic2.NuclearReactor.gui.info.EUoutput",
                 Math.round(((GUINuclearReactor.this.container).base).getOfferedEnergy())
-        )), 5752026, false, 4, 0, false, true).drawBackground(xOffset,yOffset)
+        )), 5752026, false, 4, 0, false, true).drawBackground(xOffset, yOffset)
         ;
     }
 

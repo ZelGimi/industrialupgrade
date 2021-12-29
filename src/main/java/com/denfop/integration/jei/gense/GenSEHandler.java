@@ -12,22 +12,23 @@ import java.util.List;
 import java.util.Map;
 
 public class GenSEHandler {
-    private static List<GenSEHandler> recipes = new ArrayList<>();
+
+    private static final List<GenSEHandler> recipes = new ArrayList<>();
 
 
     public static List<GenSEHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack  output;
+    private final ItemStack output;
 
 
     public GenSEHandler(ItemStack output) {
         this.output = output;
     }
-
 
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
@@ -37,17 +38,20 @@ public class GenSEHandler {
 
     public static GenSEHandler addRecipe(ItemStack output) {
         GenSEHandler recipe = new GenSEHandler(output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static GenSEHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (GenSEHandler recipe : recipes)
-                return recipe;
+        }
+        for (GenSEHandler recipe : recipes) {
+            return recipe;
+        }
         return null;
     }
 
@@ -66,4 +70,5 @@ public class GenSEHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

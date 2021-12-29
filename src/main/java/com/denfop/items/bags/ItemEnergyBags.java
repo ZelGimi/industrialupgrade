@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.items.bags;
 
 import com.denfop.Constants;
@@ -53,9 +48,11 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
         IUCore.proxy.addIModelRegister(this);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
     }
+
     public String getUnlocalizedName() {
         return "item." + this.internalName + ".name";
     }
+
     @SideOnly(Side.CLIENT)
     public void registerModels(final String name) {
         ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));

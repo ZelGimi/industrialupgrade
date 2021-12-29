@@ -50,8 +50,9 @@ public class SandBlocks extends BlockCore implements IModelRegister {
 
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int i = 0; i < (Type.values()).length; i++) {
-            if (Type.getFromID(i) != Type.nickel && Type.getFromID(i) != Type.silver && Type.getFromID(i) != Type.platium)
+            if (Type.getFromID(i) != Type.nickel && Type.getFromID(i) != Type.silver && Type.getFromID(i) != Type.platium) {
                 items.add(new ItemStack(this, 1, i));
+            }
         }
     }
 
@@ -60,7 +61,7 @@ public class SandBlocks extends BlockCore implements IModelRegister {
         if (meta >= (Type.values()).length) {
             meta = 0;
         }
-        return Type.values()[meta].getName()+"_sandcrushed" + ".name";
+        return Type.values()[meta].getName() + "_sandcrushed" + ".name";
     }
 
     public EnumRarity getRarity(ItemStack stack) {

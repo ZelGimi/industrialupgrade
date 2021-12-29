@@ -125,7 +125,7 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
 
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.changemode_key") +  Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
+            tooltip.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
         }
 

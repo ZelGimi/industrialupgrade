@@ -42,10 +42,12 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         this.temperature = 0;
 
     }
+
     @Override
     public boolean reveiver() {
         return false;
     }
+
     @Override
     protected boolean onActivated(
             final EntityPlayer player,

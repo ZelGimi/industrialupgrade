@@ -9,16 +9,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GenSEWrapper implements  IRecipeWrapper  {
-
-
+public class GenSEWrapper implements IRecipeWrapper {
 
 
     private final ItemStack outputstack;
 
 
     public GenSEWrapper(GenSEHandler container) {
-
 
 
         this.outputstack = container.getOutput();
@@ -28,7 +25,6 @@ public class GenSEWrapper implements  IRecipeWrapper  {
     public List<ItemStack> getOutputs() {
         return new ArrayList(Collections.singleton(this.outputstack));
     }
-
 
 
     public void getIngredients(IIngredients ingredients) {
@@ -42,4 +38,5 @@ public class GenSEWrapper implements  IRecipeWrapper  {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
     }
+
 }

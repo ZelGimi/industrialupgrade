@@ -132,7 +132,7 @@ public class IUEventHandler {
                                 }
                             }
                         } else {
-                            if(!player.onGround) {
+                            if (!player.onGround) {
                                 player.capabilities.isFlying = true;
                                 player.capabilities.allowFlying = true;
                                 nbtData.setBoolean("isFlyActive", true);
@@ -149,7 +149,7 @@ public class IUEventHandler {
                                 if (player.getEntityWorld().isRemote) {
                                     player.capabilities.setFlySpeed((float) ((float) 0.1 + 0.05 * flyspeed));
                                 }
-                            }else{
+                            } else {
                                 player.capabilities.isFlying = false;
                                 player.capabilities.allowFlying = false;
                                 if (player.getEntityWorld().isRemote) {
@@ -341,48 +341,54 @@ public class IUEventHandler {
                     if (input.getItem() instanceof EnergyAxe) {
                         EnergyAxe drill = (EnergyAxe) input.getItem();
                         if (Config.enableefficiency) {
-                            if( drill.efficienty != 0)
-                            enchantmentMap4.put(
-                                    Enchantments.EFFICIENCY,
-                                    drill.efficienty
-                            );
-                            if( drill.lucky != 0)
-                            enchantmentMap4.put(
-                                    Enchantments.FORTUNE,
-                                    drill.lucky
-                            );
+                            if (drill.efficienty != 0) {
+                                enchantmentMap4.put(
+                                        Enchantments.EFFICIENCY,
+                                        drill.efficienty
+                                );
+                            }
+                            if (drill.lucky != 0) {
+                                enchantmentMap4.put(
+                                        Enchantments.FORTUNE,
+                                        drill.lucky
+                                );
+                            }
                             nbtData.setBoolean("create", false);
                             EnchantmentHelper.setEnchantments(enchantmentMap4, input);
                         }
                     } else if (input.getItem() instanceof EnergyPickaxe) {
                         EnergyPickaxe drill = (EnergyPickaxe) input.getItem();
                         if (Config.enableefficiency) {
-                            if( drill.efficienty != 0)
-                            enchantmentMap4.put(
-                                    Enchantments.EFFICIENCY,
-                                    drill.efficienty
-                            );
-                            if( drill.lucky != 0)
-                            enchantmentMap4.put(
-                                    Enchantments.FORTUNE,
-                                    drill.lucky
-                            );
+                            if (drill.efficienty != 0) {
+                                enchantmentMap4.put(
+                                        Enchantments.EFFICIENCY,
+                                        drill.efficienty
+                                );
+                            }
+                            if (drill.lucky != 0) {
+                                enchantmentMap4.put(
+                                        Enchantments.FORTUNE,
+                                        drill.lucky
+                                );
+                            }
                             nbtData.setBoolean("create", false);
                             EnchantmentHelper.setEnchantments(enchantmentMap4, input);
                         }
                     } else if (input.getItem() instanceof EnergyShovel) {
                         EnergyShovel drill = (EnergyShovel) input.getItem();
                         if (Config.enableefficiency) {
-                            if( drill.efficienty != 0)
-                            enchantmentMap4.put(
-                                    Enchantments.EFFICIENCY,
-                                    drill.efficienty
-                            );
-                            if( drill.lucky != 0)
-                            enchantmentMap4.put(
-                                    Enchantments.FORTUNE,
-                                    drill.lucky
-                            );
+                            if (drill.efficienty != 0) {
+                                enchantmentMap4.put(
+                                        Enchantments.EFFICIENCY,
+                                        drill.efficienty
+                                );
+                            }
+                            if (drill.lucky != 0) {
+                                enchantmentMap4.put(
+                                        Enchantments.FORTUNE,
+                                        drill.lucky
+                                );
+                            }
                             nbtData.setBoolean("create", false);
                             EnchantmentHelper.setEnchantments(enchantmentMap4, input);
                         }
@@ -774,8 +780,9 @@ public class IUEventHandler {
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         for (int i = 0; i < 36; i++) {
             if (!player.inventory.mainInventory.get(i).isEmpty()
-                    && player.inventory.mainInventory.get(i).isItemEqual(Ic2Items.toolbox))
+                    && player.inventory.mainInventory.get(i).isItemEqual(Ic2Items.toolbox)) {
                 player.inventory.mainInventory.get(i).setItemDamage(5);
+            }
 
             if (!player.inventory.mainInventory.get(i).isEmpty()
                     && player.inventory.mainInventory.get(i).getItem().equals(Ic2Items.cesuUnit.getItem())) {
@@ -794,7 +801,7 @@ public class IUEventHandler {
                     player.inventory.mainInventory.set(i, new ItemStack(IUItem.electricblock, 1, 4));
 
                 }
-                 if (meta == Ic2Items.ChargepadbatBox.getItemDamage()) {
+                if (meta == Ic2Items.ChargepadbatBox.getItemDamage()) {
                     player.inventory.mainInventory.set(i, new ItemStack(IUItem.Chargepadelectricblock, 1, 2));
                 }
                 if (meta == Ic2Items.ChargepadcesuUnit.getItemDamage()) {

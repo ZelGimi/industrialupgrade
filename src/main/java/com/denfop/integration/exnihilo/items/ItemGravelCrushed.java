@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemGravelCrushed extends  ItemMulti<ItemGravelCrushed.Types> implements IModelRegister {
+public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implements IModelRegister {
 
     protected static final String NAME = "gravelcrushed";
 
@@ -39,8 +39,10 @@ public class ItemGravelCrushed extends  ItemMulti<ItemGravelCrushed.Types> imple
         if (meta >= (Types.values()).length) {
             meta = 0;
         }
-        return Types.values()[meta].getName()+"_gravelcrushed" + ".name";
-    }  public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        return Types.values()[meta].getName() + "_gravelcrushed" + ".name";
+    }
+
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
             for (final ItemGravelCrushed.Types type : this.typeProperty.getShownValues()) {
@@ -51,12 +53,15 @@ public class ItemGravelCrushed extends  ItemMulti<ItemGravelCrushed.Types> imple
 
         }
     }
+
     @SideOnly(Side.CLIENT)
     protected void registerModel(final int meta, final ItemName name, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+"_gravelcrushed", null)
+                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types
+                        .getFromID(meta)
+                        .getName() + "_gravelcrushed", null)
         );
     }
 

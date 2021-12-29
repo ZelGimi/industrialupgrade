@@ -21,22 +21,24 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public GenStarCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIWitherMaker" +
                         ".png"), 3, 3, 147,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine1.gen_wither.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine,1,13).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine, 1, 13).getUnlocalizedName());
     }
 
     @Override
@@ -50,12 +52,11 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 40 * progress / 100;
         double xScale1 = 10.0F * progress / 100;
         double xScale2 = 19.0F * progress / 100;
@@ -65,11 +66,12 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect( + 76,  + 51 + 11 - energylevel, 176, 14 - energylevel,
-                14, energylevel);
+        drawTexturedModalRect(+76, +51 + 11 - energylevel, 176, 14 - energylevel,
+                14, energylevel
+        );
 
 
-        drawTexturedModalRect( + 78,  + 13, 177, 19, xScale + 1, 18);
+        drawTexturedModalRect(+78, +13, 177, 19, xScale + 1, 18);
 
     }
 
@@ -104,7 +106,6 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIWitherMaker.png");
     }
-
 
 
 }

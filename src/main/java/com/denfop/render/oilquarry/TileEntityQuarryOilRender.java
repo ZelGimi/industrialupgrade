@@ -49,7 +49,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
         model.renderAll();
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
-       if (!tile.analysis)
+        if (!tile.analysis) {
             if (!tile.empty) {
                 GL11.glPushMatrix();
                 GL11.glTranslated(x, y, z);
@@ -58,20 +58,19 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
 
                 GL11.glRotatef(rotation, 0F, 1F, 0F);
 
-                Block block = tile.getWorld().getBlockState(new BlockPos( tile.x, tile.y, tile.z)).getBlock();
+                Block block = tile.getWorld().getBlockState(new BlockPos(tile.x, tile.y, tile.z)).getBlock();
 
 
-                        BlockRendererDispatcher ren =    Minecraft.getMinecraft().getBlockRendererDispatcher();
-                        IBlockState state = block.getBlockState().getBaseState();
-                        final String texture1 = ren
-                                .getModelForState(state)
-                                .getQuads(state, EnumFacing.NORTH, 0)
-                                .get(0)
-                                .getSprite().getIconName()+".png"
-                               ;
-                String dom = texture1.substring(0,texture1.indexOf(":"));
-                String path = "textures/"+texture1.substring(texture1.indexOf(":")+1);
-                final ResourceLocation resorce = new ResourceLocation(dom,path);
+                BlockRendererDispatcher ren = Minecraft.getMinecraft().getBlockRendererDispatcher();
+                IBlockState state = block.getBlockState().getBaseState();
+                final String texture1 = ren
+                        .getModelForState(state)
+                        .getQuads(state, EnumFacing.NORTH, 0)
+                        .get(0)
+                        .getSprite().getIconName() + ".png";
+                String dom = texture1.substring(0, texture1.indexOf(":"));
+                String path = "textures/" + texture1.substring(texture1.indexOf(":") + 1);
+                final ResourceLocation resorce = new ResourceLocation(dom, path);
                 bindTexture(resorce);
                 ore.renderAll();
                 GL11.glDisable(GL11.GL_BLEND);
@@ -80,6 +79,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
                 prevRotation = rotation;
                 rotation += 0.25;
             }
+        }
 
 
     }

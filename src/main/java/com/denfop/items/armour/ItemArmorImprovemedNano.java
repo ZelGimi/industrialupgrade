@@ -77,7 +77,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
             String name, EntityEquipmentSlot armorType1, double maxCharge1, double transferLimit1,
             int tier1
     ) {
-        super(null, "",armorType1,maxCharge1,transferLimit1 * 16,tier1);
+        super(null, "", armorType1, maxCharge1, transferLimit1 * 16, tier1);
 
         if (armorType1 == EntityEquipmentSlot.FEET) {
             MinecraftForge.EVENT_BUS.register(this);
@@ -100,13 +100,20 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", new Object[]{damage - prev});
+            IC2.log.warn(
+                    LogCategory.Armor,
+                    new Throwable(),
+                    "Detected invalid armor damage application (%d):",
+                    damage - prev
+            );
         }
 
     }
+
     @Override
     public void getSubItems(final CreativeTabs p_150895_1_, final NonNullList<ItemStack> var3) {
         if (this.isInCreativeTab(p_150895_1_)) {
@@ -402,13 +409,13 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                         ItemFood can = (ItemFood) stack.getItem();
                         stack = can.onItemUseFinish(stack, world, player);
                         if (stack.getCount() <= 0) {
-                            player.inventory.mainInventory.set(slot, null);
+                            player.inventory.mainInventory.set(slot, StackUtil.emptyStack);
                         }
                         ElectricItem.manager.use(itemStack, 1000.0D, null);
                         ret = true;
                     }
-                    for(int i = 0; i < player.inventory.mainInventory.size(); ++i) {
-                        ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(i);
+                    for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
+                        ItemStack playerStack = player.inventory.mainInventory.get(i);
                         if (!StackUtil.isEmpty(playerStack) && playerStack.getItem() == ItemName.filled_tin_can.getInstance()) {
                             slot = i;
                             break;
@@ -416,16 +423,16 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                     }
 
                     if (slot > -1) {
-                        ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(slot);
-                        ItemTinCan can = (ItemTinCan)playerStack.getItem();
+                        ItemStack playerStack = player.inventory.mainInventory.get(slot);
+                        ItemTinCan can = (ItemTinCan) playerStack.getItem();
                         ActionResult<ItemStack> result = can.onEaten(player, playerStack);
-                        playerStack = (ItemStack)result.getResult();
+                        playerStack = result.getResult();
                         if (StackUtil.isEmpty(playerStack)) {
                             player.inventory.mainInventory.set(slot, StackUtil.emptyStack);
                         }
 
                         if (result.getType() == EnumActionResult.SUCCESS) {
-                            ElectricItem.manager.use(itemStack, 1000.0D, (EntityLivingBase)null);
+                            ElectricItem.manager.use(itemStack, 1000.0D, null);
                         }
 
                         ret = true;
@@ -517,13 +524,14 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
                 break;
             case 2:
-             if(!player.onGround)
-                if (nbtData.getBoolean("jetpack")) {
+                if (!player.onGround) {
+                    if (nbtData.getBoolean("jetpack")) {
 
-                    if (ElectricItem.manager.canUse(itemStack, 25)) {
-                        ElectricItem.manager.use(itemStack, 25, player);
-                    } else {
-                        nbtData.setBoolean("jetpack", false);
+                        if (ElectricItem.manager.canUse(itemStack, 25)) {
+                            ElectricItem.manager.use(itemStack, 25, player);
+                        } else {
+                            nbtData.setBoolean("jetpack", false);
+                        }
                     }
                 }
                 jetpack = nbtData.getBoolean("jetpack");
@@ -545,7 +553,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                 }
 
 
-                if( IUCore.keyboard.isFlyModeKeyDown(player) && toggleTimer == 0) {
+                if (IUCore.keyboard.isFlyModeKeyDown(player) && toggleTimer == 0) {
                     toggleTimer = 10;
                     jetpack = !jetpack;
                     if (IC2.platform.isSimulating()) {
@@ -711,7 +719,6 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     }
 
 
-
     @Override
 
     public List<String> getHudInfo(ItemStack stack, boolean advanced) {
@@ -719,4 +726,5 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         info.add(ElectricItem.manager.getToolTip(stack));
         return info;
     }
+
 }

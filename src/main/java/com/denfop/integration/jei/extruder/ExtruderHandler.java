@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class ExtruderHandler {
-    private static List<ExtruderHandler> recipes = new ArrayList<>();
+
+    private static final List<ExtruderHandler> recipes = new ArrayList<>();
 
 
     public static List<ExtruderHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -41,18 +43,22 @@ public class ExtruderHandler {
 
     public static ExtruderHandler addRecipe(ItemStack input, ItemStack output) {
         ExtruderHandler recipe = new ExtruderHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static ExtruderHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (ExtruderHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (ExtruderHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -75,4 +81,5 @@ public class ExtruderHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 
 public enum BlockAvaritiaSolarPanel implements ITeBlock {
 
-   neutron_solar_panel_av(TileEntityNeutronSolarPanel.class, 0, EnumRarity.RARE),
+    neutron_solar_panel_av(TileEntityNeutronSolarPanel.class, 0, EnumRarity.RARE),
     infinity_solar_panel(TileEntityInfinitySolarPanel.class, 1, EnumRarity.RARE),
 
 

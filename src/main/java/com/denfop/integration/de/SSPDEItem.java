@@ -23,7 +23,7 @@ public class SSPDEItem extends ItemIC2 implements IModelRegister {
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4)+".name";
+        return "iu." + super.getUnlocalizedName().substring(4) + ".name";
     }
 
     public SSPDEItem(String name, String path) {

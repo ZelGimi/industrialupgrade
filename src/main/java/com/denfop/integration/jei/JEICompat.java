@@ -161,6 +161,7 @@ import java.util.Arrays;
 
 @JEIPlugin
 public final class JEICompat implements IModPlugin {
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         registry.addRecipeCategories(new MolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -201,445 +202,693 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new RollingCategory(registry.getJeiHelpers().getGuiHelper()));
 
     }
+
     public void register(IModRegistry registry) {
         registry.addRecipeClickArea(GuiMolecularTransformer.class, 23, 48, 10, 15, BlockMolecular.molecular.getName());
-        registry.addRecipes(MolecularTransformerHandler.getRecipes(),
-                new MolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.addRecipes(
+                MolecularTransformerHandler.getRecipes(),
+                new MolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.handleRecipes(MolecularTransformerHandler.class, MolecularTransformerRecipeWrapper::new,
-                BlockMolecular.molecular.getName());
-         registry.addRecipeCatalyst(new ItemStack(IUItem.blockmolecular),  new MolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                BlockMolecular.molecular.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.blockmolecular),
+                new MolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.addRecipeClickArea(GuiDoubleMolecularTransformer.class, 23, 48, 10, 15, BlockDoubleMolecularTransfomer.double_transformer.getName());
+        registry.addRecipeClickArea(
+                GuiDoubleMolecularTransformer.class,
+                23,
+                48,
+                10,
+                15,
+                BlockDoubleMolecularTransfomer.double_transformer.getName()
+        );
         registry.addRecipes(
                 DoubleMolecularTransformerHandler.getRecipes(),
-                new DoubleMolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new DoubleMolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.handleRecipes(DoubleMolecularTransformerHandler.class, DoubleMolecularTransformerRecipeWrapper::new,
-                BlockDoubleMolecularTransfomer.double_transformer.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.blockdoublemolecular),
-                new DoubleMolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                BlockDoubleMolecularTransfomer.double_transformer.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.blockdoublemolecular),
+                new DoubleMolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIAlloySmelter.class, 80, 35, 22, 14,
-                BlockBaseMachine.alloy_smelter.getName());
+                BlockBaseMachine.alloy_smelter.getName()
+        );
         registry.addRecipes(
                 AlloySmelterHandler.getRecipes(),
-                new AlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new AlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.handleRecipes(AlloySmelterHandler.class, AlloySmelterRecipeWrapper::new,
-                BlockBaseMachine.alloy_smelter.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,4),
-                new AlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                BlockBaseMachine.alloy_smelter.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 4),
+                new AlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIAdvAlloySmelter.class, 80, 35, 22, 14,
-                BlockBaseMachine1.adv_alloy_smelter.getName());
+                BlockBaseMachine1.adv_alloy_smelter.getName()
+        );
         registry.addRecipes(
                 AdvAlloySmelterHandler.getRecipes(),
-                new AdvAlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new AdvAlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.handleRecipes(AdvAlloySmelterHandler.class, AdvAlloySmelterRecipeWrapper::new,
-                BlockBaseMachine1.adv_alloy_smelter.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine,1,3),
-                new AdvAlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                BlockBaseMachine1.adv_alloy_smelter.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine, 1, 3),
+                new AdvAlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.addRecipeClickArea(GUIGenerationMicrochip.class, 88, 18, 106-88, 34-18,
-                BlockBaseMachine.generator_microchip.getName());
+        registry.addRecipeClickArea(GUIGenerationMicrochip.class, 88, 18, 106 - 88, 34 - 18,
+                BlockBaseMachine.generator_microchip.getName()
+        );
         registry.addRecipes(
                 MicrochipHandler.getRecipes(),
-                new MicrochipCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new MicrochipCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.handleRecipes(MicrochipHandler.class, MicrochipRecipeWrapper::new,
-                BlockBaseMachine.generator_microchip.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,6),
-                new MicrochipCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                BlockBaseMachine.generator_microchip.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 6),
+                new MicrochipCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIEnriched.class, 67, 36, 15, 15,
-                BlockBaseMachine1.enrichment.getName());
+                BlockBaseMachine1.enrichment.getName()
+        );
         registry.addRecipes(
                 EnrichHandler.getRecipes(),
-                new EnrichCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new EnrichCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.handleRecipes(EnrichHandler.class, EnrichRecipeWrapper::new,
-                BlockBaseMachine1.enrichment.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine,1,10),
-                new EnrichCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                BlockBaseMachine1.enrichment.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine, 1, 10),
+                new EnrichCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUISynthesis.class, 82, 30, 25, 23,
-                BlockBaseMachine1.synthesis.getName());
+                BlockBaseMachine1.synthesis.getName()
+        );
         registry.addRecipes(
                 SynthesisHandler.getRecipes(),
-                new SynthesisCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new SynthesisCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(SynthesisHandler.class,SynthesisWrapper::new,
-                BlockBaseMachine1.synthesis.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine,1,11),
-                new SynthesisCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(SynthesisHandler.class, SynthesisWrapper::new,
+                BlockBaseMachine1.synthesis.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine, 1, 11),
+                new SynthesisCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUISunnariumPanelMaker.class, 74, 34, 14, 14,
-                BlockSunnariumPanelMaker.gen_sunnarium.getName());
+                BlockSunnariumPanelMaker.gen_sunnarium.getName()
+        );
         registry.addRecipes(
                 SannariumPanelHandler.getRecipes(),
-                new  SannariumPanelCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new SannariumPanelCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes( SannariumPanelHandler.class, SannariumPanelWrapper::new,
-                BlockSunnariumPanelMaker.gen_sunnarium.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.sunnariummaker,1,0),
-                new  SannariumPanelCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(SannariumPanelHandler.class, SannariumPanelWrapper::new,
+                BlockSunnariumPanelMaker.gen_sunnarium.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.sunnariummaker, 1, 0),
+                new SannariumPanelCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUISunnariumMaker.class, 55, 20, 17, 31,
-                BlockSunnariumMaker.gen_sunnarium_plate.getName());
+                BlockSunnariumMaker.gen_sunnarium_plate.getName()
+        );
         registry.addRecipes(
                 SunnariumHandler.getRecipes(),
-                new  SunnariumCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new SunnariumCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes( SunnariumHandler.class,SunnariumWrapper::new,
-                BlockSunnariumMaker.gen_sunnarium_plate.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.sunnariumpanelmaker,1,0),
-                new  SunnariumCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(SunnariumHandler.class, SunnariumWrapper::new,
+                BlockSunnariumMaker.gen_sunnarium_plate.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.sunnariumpanelmaker, 1, 0),
+                new SunnariumCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIPlasticCreator.class, 80, 35, 22, 14,
-                BlockBaseMachine2.plastic_creator.getName());
+                BlockBaseMachine2.plastic_creator.getName()
+        );
         registry.addRecipes(
                 PlasticCrreatorHandler.getRecipes(),
-                new  PlasticCrreatorCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new PlasticCrreatorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes( PlasticCrreatorHandler.class,PlasticCrreatorWrapper::new,
-                BlockBaseMachine2.plastic_creator.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,11),
-                new  PlasticCrreatorCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(PlasticCrreatorHandler.class, PlasticCrreatorWrapper::new,
+                BlockBaseMachine2.plastic_creator.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 11),
+                new PlasticCrreatorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIPlasticPlateCreator.class, 80, 35, 22, 14,
-                BlockBaseMachine2.plastic_plate_creator.getName());
+                BlockBaseMachine2.plastic_plate_creator.getName()
+        );
         registry.addRecipes(
                 PlasticCreatorPlateHandler.getRecipes(),
-                new  PlasticCreatorPlateCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new PlasticCreatorPlateCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes( PlasticCreatorPlateHandler.class, PlasticCreatorPlateWrapper::new,
-                BlockBaseMachine2.plastic_plate_creator.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,13),
-                new   PlasticCreatorPlateCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(PlasticCreatorPlateHandler.class, PlasticCreatorPlateWrapper::new,
+                BlockBaseMachine2.plastic_plate_creator.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 13),
+                new PlasticCreatorPlateCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIUpgradeBlock.class, 81, 33, 27, 18,
-                BlockUpgradeBlock.upgrade_block.getName());
+                BlockUpgradeBlock.upgrade_block.getName()
+        );
         registry.addRecipes(
                 UpgradeBlockHandler.getRecipes(),
-                new  UpgradeBlockCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new UpgradeBlockCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes( UpgradeBlockHandler.class, UpgradeBlockWrapper::new,
-                BlockUpgradeBlock.upgrade_block.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.upgradeblock,1,0),
-                new   UpgradeBlockCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(UpgradeBlockHandler.class, UpgradeBlockWrapper::new,
+                BlockUpgradeBlock.upgrade_block.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.upgradeblock, 1, 0),
+                new UpgradeBlockCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIPainting.class, 75, 34, 15, 15,
-                BlockBaseMachine2.painter.getName());
+                BlockBaseMachine2.painter.getName()
+        );
         registry.addRecipes(
                 PaintingHandler.getRecipes(),
-                new   PaintingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new PaintingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(  PaintingHandler.class, PaintingWrapper::new,
-                BlockBaseMachine2.painter.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,3),
-                new   PaintingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(PaintingHandler.class, PaintingWrapper::new,
+                BlockBaseMachine2.painter.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 3),
+                new PaintingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIGenStone.class, 64, 28, 16, 16,
-                BlockBaseMachine.gen_stone.getName());
+                BlockBaseMachine.gen_stone.getName()
+        );
         registry.addRecipes(
                 GenStoneHandler.getRecipes(),
-                new   GenStoneCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new GenStoneCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(  GenStoneHandler.class, GenStoneRecipeWrapper::new,
-                BlockBaseMachine.gen_stone.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,7),
-                new   GenStoneCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenStoneHandler.class, GenStoneRecipeWrapper::new,
+                BlockBaseMachine.gen_stone.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 7),
+                new GenStoneCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIWitherMaker.class, 81, 16, 40, 18,
-                BlockBaseMachine1.gen_wither.getName());
+                BlockBaseMachine1.gen_wither.getName()
+        );
         registry.addRecipes(
                 GenStarHandler.getRecipes(),
-                new   GenStarCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new GenStarCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(  GenStarHandler.class, GenStarRecipeManager::new,
-                BlockBaseMachine1.gen_wither.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine,1,13),
-                new   GenStarCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenStarHandler.class, GenStarRecipeManager::new,
+                BlockBaseMachine1.gen_wither.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine, 1, 13),
+                new GenStarCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipeClickArea(GUIHandlerHeavyOre.class, 48, 31, 44, 14,
-                BlockBaseMachine1.handler_ho.getName());
+                BlockBaseMachine1.handler_ho.getName()
+        );
         registry.addRecipes(
-               HandlerHOHandler.getRecipes(),
-                new   HandlerHOCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                HandlerHOHandler.getRecipes(),
+                new HandlerHOCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(   HandlerHOHandler.class,  HandlerHORecipeWrapper::new,
-                BlockBaseMachine1.handler_ho.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine,1,12),
-                new    HandlerHOCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(HandlerHOHandler.class, HandlerHORecipeWrapper::new,
+                BlockBaseMachine1.handler_ho.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine, 1, 12),
+                new HandlerHOCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIElectrolyzer.class, 33, 15, 22, 35,
-                BlockBaseMachine2.electrolyzer_iu.getName());
+                BlockBaseMachine2.electrolyzer_iu.getName()
+        );
         registry.addRecipes(
                 ElectrolyzerHandler.getRecipes(),
-                new   ElectrolyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new ElectrolyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(   ElectrolyzerHandler.class,  ElectrolyzerRecipeWrapper::new,
-                BlockBaseMachine2.electrolyzer_iu.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,15),
-                new    ElectrolyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-
+        registry.handleRecipes(ElectrolyzerHandler.class, ElectrolyzerRecipeWrapper::new,
+                BlockBaseMachine2.electrolyzer_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 15),
+                new ElectrolyzerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipes(
-               GenLavaHandler.getRecipes(),
-                new   GenLavaCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                GenLavaHandler.getRecipes(),
+                new GenLavaCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(  GenLavaHandler.class,  GenLavaWrapper::new,
-                BlockBaseMachine2.lava_gen.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,12),
-                new    GenLavaCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenLavaHandler.class, GenLavaWrapper::new,
+                BlockBaseMachine2.lava_gen.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 12),
+                new GenLavaCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
                 GenHeliumHandler.getRecipes(),
-                new   GenHeliumCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new GenHeliumCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(  GenHeliumHandler.class,  GenHeliumWrapper::new,
-                BlockBaseMachine2.helium_generator.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,14),
-                new    GenHeliumCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenHeliumHandler.class, GenHeliumWrapper::new,
+                BlockBaseMachine2.helium_generator.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 14),
+                new GenHeliumCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
                 GenNeuHandler.getRecipes(),
-                new  GenNeuCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new GenNeuCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(  GenNeuHandler.class, GenNeuWrapper::new,
-                BlockBaseMachine.neutron_generator.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,5),
-                new    GenNeuCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenNeuHandler.class, GenNeuWrapper::new,
+                BlockBaseMachine.neutron_generator.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 5),
+                new GenNeuCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipeClickArea(GUIObsidianGenerator.class, 101, 34, 16, 16,
-                BlockBaseMachine2.gen_obsidian.getName());
+                BlockBaseMachine2.gen_obsidian.getName()
+        );
         registry.addRecipes(
                 GenObsHandler.getRecipes(),
-                new   GenObsCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new GenObsCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(    GenObsHandler.class,   GenObsWrapper::new,
-                BlockBaseMachine2.gen_obsidian.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.basemachine1,1,10),
-                new     GenObsCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenObsHandler.class, GenObsWrapper::new,
+                BlockBaseMachine2.gen_obsidian.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.basemachine1, 1, 10),
+                new GenObsCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipeClickArea(GUIOilRefiner.class, 33, 15, 22, 35,
-                BlockRefiner.refiner.getName());
+                BlockRefiner.refiner.getName()
+        );
         registry.addRecipes(
                 RefinerHandler.getRecipes(),
-                new    RefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new RefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(   RefinerHandler.class,  RefinerRecipeWrapper::new,
-                BlockRefiner.refiner.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.oilrefiner,1,0),
-                new     RefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(RefinerHandler.class, RefinerRecipeWrapper::new,
+                BlockRefiner.refiner.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.oilrefiner, 1, 0),
+                new RefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipeClickArea(GUIAdvOilRefiner.class, 33, 15, 22, 35,
-                BlockAdvRefiner.adv_refiner.getName());
+                BlockAdvRefiner.adv_refiner.getName()
+        );
         registry.addRecipes(
                 AdvRefinerHandler.getRecipes(),
-                new     AdvRefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new AdvRefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(    AdvRefinerHandler.class,   AdvRefinerRecipeWrapper::new,
-                BlockAdvRefiner.adv_refiner.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.oiladvrefiner,1,0),
-                new      AdvRefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(AdvRefinerHandler.class, AdvRefinerRecipeWrapper::new,
+                BlockAdvRefiner.adv_refiner.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.oiladvrefiner, 1, 0),
+                new AdvRefinerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
                 FarmerHandler.getRecipes(),
-                new      FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(    FarmerHandler.class,    FarmerRecipeWrapper::new,
-                BlockMoreMachine3.farmer.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,0),
-                new       FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,1),
-                new       FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,2),
-                new       FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,3),
-                new       FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(FarmerHandler.class, FarmerRecipeWrapper::new,
+                BlockMoreMachine3.farmer.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 0),
+                new FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 1),
+                new FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 2),
+                new FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 3),
+                new FarmerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
                 ScrapHandler.getRecipes(),
-                new       ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(     ScrapHandler.class,     ScrapRecipeWrapper::new,
-                BlockMoreMachine3.assamplerscrap.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,4),
-                new        ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,5),
-                new        ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,6),
-                new        ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base3,1,7),
-                new        ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(ScrapHandler.class, ScrapRecipeWrapper::new,
+                BlockMoreMachine3.assamplerscrap.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 4),
+                new ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 5),
+                new ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 6),
+                new ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 7),
+                new ScrapCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
                 CombMacHandler.getRecipes(),
-                new      CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(     CombMacHandler.class,     CombMacRecipeWrapper::new,
-                BlockMoreMachine1.comb_macerator.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base1,1,6),
-                new       CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base1,1,7),
-                new       CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base1,1,8),
-                new       CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base1,1,9),
-                new       CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(CombMacHandler.class, CombMacRecipeWrapper::new,
+                BlockMoreMachine1.comb_macerator.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 6),
+                new CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 7),
+                new CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 8),
+                new CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 9),
+                new CombMacCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
-               QuarryHandler.getRecipes(),
-                new      QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                QuarryHandler.getRecipes(),
+                new QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(      QuarryHandler.class,     QuarryWrapper::new,
-                BlockBaseMachine.quantum_quarry.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,8),
-                new       QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,13),
-                new       QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,14),
-                new       QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,15),
-                new       QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(QuarryHandler.class, QuarryWrapper::new,
+                BlockBaseMachine.quantum_quarry.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 8),
+                new QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 13),
+                new QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 14),
+                new QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 15),
+                new QuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipes(
                 GenSEHandler.getRecipes(),
-                new      GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(      GenSEHandler.class,    GenSEWrapper::new,
-                BlockSolarEnergy.se_gen.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.blockSE,1,0),
-                new      GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.ImpblockSE,1,0),
-                new      GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.AdvblockSE,1,0),
-                new      GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(GenSEHandler.class, GenSEWrapper::new,
+                BlockSolarEnergy.se_gen.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.blockSE, 1, 0),
+                new GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.ImpblockSE, 1, 0),
+                new GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.AdvblockSE, 1, 0),
+                new GenSECategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
-        registry.addRecipeClickArea(GUIConverterSolidMatter.class, 78, 50, 111-78, 17,
-                BlockConverterMatter.converter_matter.getName());
+        registry.addRecipeClickArea(GUIConverterSolidMatter.class, 78, 50, 111 - 78, 17,
+                BlockConverterMatter.converter_matter.getName()
+        );
         registry.addRecipes(
                 ConverterHandler.getRecipes(),
-                new    ConverterCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new ConverterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(    ConverterHandler.class,   ConverterWrapper::new,
-                BlockConverterMatter.converter_matter.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.convertersolidmatter,1,0),
-                new      ConverterCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(ConverterHandler.class, ConverterWrapper::new,
+                BlockConverterMatter.converter_matter.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.convertersolidmatter, 1, 0),
+                new ConverterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         registry.addRecipes(
                 FQuarryHandler.getRecipes(),
-                new      FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(      FQuarryHandler.class,     FQuarryWrapper::new,
-                BlockBaseMachine.quantum_quarry.getName()+"1");
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,8),
-                new       FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,13),
-                new       FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,14),
-                new       FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines,1,15),
-                new       FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-
-
-        registry.addRecipes(
-               ExtruderHandler.getRecipes(),
-                new       ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-
-        registry.handleRecipes(      ExtruderHandler.class,      ExtruderWrapper::new,
-                BlockMoreMachine2.extruder.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,4),
-                new       ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,5),
-                new       ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,6),
-                new        ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,7),
-                new        ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(FQuarryHandler.class, FQuarryWrapper::new,
+                BlockBaseMachine.quantum_quarry.getName() + "1"
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 8),
+                new FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 13),
+                new FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 14),
+                new FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines, 1, 15),
+                new FQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipes(
-               CuttingHandler.getRecipes(),
-                new       CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                ExtruderHandler.getRecipes(),
+                new ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(      CuttingHandler.class,     CuttingWrapper::new,
-                BlockMoreMachine2.cutting.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,8),
-                new       CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,9),
-                new       CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,10),
-                new       CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,11),
-                new        CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(ExtruderHandler.class, ExtruderWrapper::new,
+                BlockMoreMachine2.extruder.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 4),
+                new ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 5),
+                new ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 6),
+                new ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 7),
+                new ExtruderCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+
+        registry.addRecipes(
+                CuttingHandler.getRecipes(),
+                new CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(CuttingHandler.class, CuttingWrapper::new,
+                BlockMoreMachine2.cutting.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 8),
+                new CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 9),
+                new CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 10),
+                new CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 11),
+                new CuttingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
 
         registry.addRecipes(
                 RollingHandler.getRecipes(),
-                new       RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+                new RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
-        registry.handleRecipes(      RollingHandler.class,     RollingWrapper::new,
-                BlockMoreMachine2.rolling.getName());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,0),
-                new      RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,1),
-                new      RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,2),
-                new      RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
-        registry.addRecipeCatalyst(new ItemStack(IUItem.machines_base2,1,3),
-                new        RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid());
+        registry.handleRecipes(RollingHandler.class, RollingWrapper::new,
+                BlockMoreMachine2.rolling.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 0),
+                new RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 1),
+                new RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 2),
+                new RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base2, 1, 3),
+                new RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.double_macerator);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.double_macerator);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.triple_macerator);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.triple_macerator);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.quad_macerator);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.quad_macerator);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.double_extractor);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.double_extractor);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.triple_extractor);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.triple_extractor);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.quad_extractor);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.quad_extractor);
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.double_commpressor);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.double_commpressor);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.triple_commpressor);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.triple_commpressor);
 
         this.addMachineRecipes(registry, new DynamicCategory(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.quad_commpressor);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.quad_commpressor);
         registry.addRecipeCategoryCraftingItem(getBlockStack(BlockMoreMachine.double_furnace), "minecraft.smelting");
         registry.addRecipeCategoryCraftingItem(getBlockStack(BlockMoreMachine.triple_furnace), "minecraft.smelting");
         registry.addRecipeCategoryCraftingItem(getBlockStack(BlockMoreMachine.quad_furnace), "minecraft.smelting");
 
         this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerExtruding, 0,
-                registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.double_metalformer);
-        this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerRolling, 1,  registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.double_metalformer);
-        this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerCutting, 2,  registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.double_metalformer);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.double_metalformer);
+        this.addMachineRecipes(
+                registry,
+                new MetalFormerCategory(Recipes.metalformerRolling, 1, registry.getJeiHelpers().getGuiHelper()),
+                BlockMoreMachine.double_metalformer
+        );
+        this.addMachineRecipes(
+                registry,
+                new MetalFormerCategory(Recipes.metalformerCutting, 2, registry.getJeiHelpers().getGuiHelper()),
+                BlockMoreMachine.double_metalformer
+        );
         this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerExtruding, 0,
-                registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.triple_metalformer);
-        this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerRolling, 1,  registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.triple_metalformer);
-        this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerCutting, 2,  registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.triple_metalformer);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.triple_metalformer);
+        this.addMachineRecipes(
+                registry,
+                new MetalFormerCategory(Recipes.metalformerRolling, 1, registry.getJeiHelpers().getGuiHelper()),
+                BlockMoreMachine.triple_metalformer
+        );
+        this.addMachineRecipes(
+                registry,
+                new MetalFormerCategory(Recipes.metalformerCutting, 2, registry.getJeiHelpers().getGuiHelper()),
+                BlockMoreMachine.triple_metalformer
+        );
         this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerExtruding, 0,
-                registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.quad_metalformer);
-        this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerRolling, 1,  registry.getJeiHelpers().getGuiHelper()),BlockMoreMachine.quad_metalformer);
-        this.addMachineRecipes(registry, new MetalFormerCategory(Recipes.metalformerCutting, 2,  registry.getJeiHelpers().getGuiHelper()), BlockMoreMachine.quad_metalformer);
+                registry.getJeiHelpers().getGuiHelper()
+        ), BlockMoreMachine.quad_metalformer);
+        this.addMachineRecipes(
+                registry,
+                new MetalFormerCategory(Recipes.metalformerRolling, 1, registry.getJeiHelpers().getGuiHelper()),
+                BlockMoreMachine.quad_metalformer
+        );
+        this.addMachineRecipes(
+                registry,
+                new MetalFormerCategory(Recipes.metalformerCutting, 2, registry.getJeiHelpers().getGuiHelper()),
+                BlockMoreMachine.quad_metalformer
+        );
 
         final IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
         this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.double_recycler);
@@ -649,9 +898,11 @@ public final class JEICompat implements IModPlugin {
         this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.triple_comb_recycler);
         this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.quad_comb_recycler);
     }
+
     public ItemStack getBlockStack(ITeBlock block) {
         return TeBlockRegistry.get(block.getIdentifier()).getItemStack(block);
     }
+
     private <T> void addMachineRecipes(IModRegistry registry, IORecipeCategory<T> category, ITeBlock block) {
         registry.addRecipeCategoryCraftingItem(getBlockStack(block), category.getUid());
     }
@@ -678,9 +929,6 @@ public final class JEICompat implements IModPlugin {
         }
 
     }
-
-
-
 
 
 }

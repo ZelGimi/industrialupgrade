@@ -123,8 +123,6 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
     }
 
 
-
-
     public void updateEntityServer() {
 
         super.updateEntityServer();
@@ -135,13 +133,13 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
         int spawn = 1;
         int experience = 0;
         ItemStack stack3 = Ic2Items.ejectorUpgrade;
-       ((IUpgradeItem)stack3.getItem()).onTick(stack3, this);
+        ((IUpgradeItem) stack3.getItem()).onTick(stack3, this);
 
 
         this.costenergy = this.tempcostenergy;
         for (int i = 0; i < module_upgrade.size(); i++) {
             if (module_upgrade.get(i) != null) {
-                EnumSpawnerModules module =EnumSpawnerModules.getFromID(module_upgrade.get(i).getItemDamage());
+                EnumSpawnerModules module = EnumSpawnerModules.getFromID(module_upgrade.get(i).getItemDamage());
                 EnumSpawnerType type = module.type;
                 switch (type) {
                     case SPAWN:

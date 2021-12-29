@@ -32,14 +32,15 @@ import java.util.List;
 import java.util.Set;
 
 public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory implements IHasGui, IUpgradableBlock {
-    public final InvSlotUpgrade upgradeSlot;
 
+    public final InvSlotUpgrade upgradeSlot;
 
 
     public final InvSlotConsumableLiquidByList containerslot;
     public final InvSlotConsumableLiquidByList containerslot1;
     public final ResourceLocation texture;
     private final String name;
+
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
@@ -57,11 +58,13 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
     public void onNetworkUpdate(String field) {
 
     }
+
     public double gaugeLiquidScaled(double i) {
         return this.getFluidTank().getFluidAmount() <= 0
                 ? 0
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
+
     protected boolean isSideSolid(EnumFacing side) {
         return false;
     }
@@ -75,7 +78,7 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
     }
 
     public TileEntityLiquedTank(String name, int tanksize, String texturename) {
-        super(name,1000,1,tanksize);
+        super(name, 1000, 1, tanksize);
 
 
         this.containerslot = new InvSlotConsumableLiquidByList(this,
@@ -85,8 +88,10 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
                 "containerslot1", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Drain
         );
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
-        this.texture = new ResourceLocation(Constants.TEXTURES,
-                "textures/models/" + texturename + ".png");
+        this.texture = new ResourceLocation(
+                Constants.TEXTURES,
+                "textures/models/" + texturename + ".png"
+        );
         this.name = name;
     }
 
@@ -107,37 +112,45 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
     }
 
 
-
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = false;
-        if(this.world.provider.getWorldTime() % 20 == 0)
-        IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+        if (this.world.provider.getWorldTime() % 20 == 0) {
+            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+        }
 
         for (int i = 0; i < this.upgradeSlot.size(); i++) {
             ItemStack stack = this.upgradeSlot.get(i);
-            if (stack != null && stack.getItem() instanceof IUpgradeItem)
-                if (((IUpgradeItem) stack.getItem()).onTick(stack, this))
+            if (stack != null && stack.getItem() instanceof IUpgradeItem) {
+                if (((IUpgradeItem) stack.getItem()).onTick(stack, this)) {
                     needsInvUpdate = true;
+                }
+            }
         }
         MutableObject<ItemStack> output = new MutableObject();
         if (this.containerslot.transferFromTank(this.fluidTank, output, true)
                 && (output.getValue() == null || this.outputSlot.canAdd(output.getValue()))) {
             this.containerslot.transferFromTank(this.fluidTank, output, false);
-            if (output.getValue() != null)
+            if (output.getValue() != null) {
                 this.outputSlot.add(output.getValue());
+            }
         }
         if (this.needsFluid()) {
             output = new MutableObject();
-            if (this.containerslot1.transferToTank(this.fluidTank, output, true) && (output.getValue() == null || this.outputSlot.canAdd(output.getValue()))) {
+            if (this.containerslot1.transferToTank(
+                    this.fluidTank,
+                    output,
+                    true
+            ) && (output.getValue() == null || this.outputSlot.canAdd(output.getValue()))) {
                 needsInvUpdate = this.containerslot1.transferToTank(this.fluidTank, output, false);
                 if (output.getValue() != null) {
                     this.outputSlot.add(output.getValue());
                 }
             }
         }
-        if (needsInvUpdate)
+        if (needsInvUpdate) {
             markDirty();
+        }
 
     }
 
@@ -193,8 +206,9 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
 
     public void onLoaded() {
         super.onLoaded();
-        if (IC2.platform.isSimulating())
+        if (IC2.platform.isSimulating()) {
             setUpgradestat();
+        }
     }
 
     public void setUpgradestat() {
@@ -205,13 +219,16 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
 
     public void markDirty() {
         super.markDirty();
-        if (IC2.platform.isSimulating())
+        if (IC2.platform.isSimulating()) {
             setUpgradestat();
+        }
     }
 
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing);
+                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+        );
     }
+
 }

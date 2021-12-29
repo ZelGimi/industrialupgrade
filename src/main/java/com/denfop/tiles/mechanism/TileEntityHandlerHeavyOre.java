@@ -31,12 +31,15 @@ public class TileEntityHandlerHeavyOre extends TileEntityBaseHandlerHeavyOre {
         super(1, 300, 3);
         this.inputSlotA = new com.denfop.invslot.InvSlotProcessable(this, "inputA", Recipes.handlerore, 1);
     }
+
     @Override
     public boolean reveiver() {
         return true;
     }
+
     public static void init() {
-        addhandlerore(new ItemStack(IUItem.heavyore),
+        addhandlerore(
+                new ItemStack(IUItem.heavyore),
                 new ItemStack[]{new ItemStack(Blocks.IRON_ORE), new ItemStack(Blocks.GOLD_ORE)},
                 (short) 1500
         );

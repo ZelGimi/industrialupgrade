@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.render;
 
 import com.denfop.Constants;
@@ -44,23 +39,32 @@ import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 public class ModelCable extends AbstractModel implements ISpecialParticleModel {
+
     private final Map<ResourceLocation, TextureAtlasSprite> textures;
     private final LoadingCache<CableRenderState, IBakedModel> modelCache;
 
     public ModelCable() {
         textures = generateTextureLocations();
-        this.modelCache = CacheBuilder.newBuilder().maximumSize(256L).expireAfterAccess(5L, TimeUnit.MINUTES).build(new CacheLoader<CableRenderState, IBakedModel>() {
-            public IBakedModel load(@Nonnull CableRenderState key) {
-                return ModelCable.this.generateModel(key);
-            }
-        });
+        this.modelCache = CacheBuilder
+                .newBuilder()
+                .maximumSize(256L)
+                .expireAfterAccess(5L, TimeUnit.MINUTES)
+                .build(new CacheLoader<CableRenderState, IBakedModel>() {
+                    public IBakedModel load(@Nonnull CableRenderState key) {
+                        return ModelCable.this.generateModel(key);
+                    }
+                });
     }
 
     public Collection<ResourceLocation> getTextures() {
         return this.textures.keySet();
     }
 
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public IBakedModel bake(
+            IModelState state,
+            VertexFormat format,
+            Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter
+    ) {
 
         for (final Entry<ResourceLocation, TextureAtlasSprite> resourceLocationTextureAtlasSpriteEntry : this.textures.entrySet()) {
             resourceLocationTextureAtlasSpriteEntry.setValue(bakedTextureGetter.apply(resourceLocationTextureAtlasSpriteEntry.getKey()));
@@ -85,9 +89,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
             for (int insulation = 0; insulation <= type.maxInsulation; ++insulation) {
 
 
-
                 ret.put(new ResourceLocation(Constants.MOD_ID, name.toString()), null);
-
 
 
                 name.setLength(reset1);
@@ -103,7 +105,6 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
         String loc = "blocks/wiring/cable/" + type.getName(insulation);
 
 
-
         return new ResourceLocation(Constants.MOD_ID, loc);
     }
 
@@ -112,38 +113,39 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
         if (!(rawState instanceof Ic2BlockStateInstance)) {
             return ModelUtil.getMissingModel().getQuads(rawState, side, rand);
         } else {
-            Ic2BlockStateInstance state = (Ic2BlockStateInstance)rawState;
+            Ic2BlockStateInstance state = (Ic2BlockStateInstance) rawState;
             if (!state.hasValue(TileEntityCable.renderStateProperty)) {
                 return ModelUtil.getMissingModel().getQuads(state, side, rand);
             } else {
                 CableRenderState prop = state.getValue(TileEntityCable.renderStateProperty);
 
-                    try {
-                        return this.modelCache.get(prop).getQuads(state, side, rand);
-                    } catch (ExecutionException var9) {
-                        throw new RuntimeException(var9);
-                    }
+                try {
+                    return this.modelCache.get(prop).getQuads(state, side, rand);
+                } catch (ExecutionException var9) {
+                    throw new RuntimeException(var9);
+                }
 
             }
         }
     }
 
     private IBakedModel generateModel(CableRenderState prop) {
-        float th = prop.type.thickness + (float)(prop.insulation * 2) * 0.0625F;
+        float th = prop.type.thickness + (float) (prop.insulation * 2) * 0.0625F;
         float sp = (1.0F - th) / 2.0F;
         List<BakedQuad>[] faceQuads = new List[EnumFacing.VALUES.length];
 
-        for(int i = 0; i < faceQuads.length; ++i) {
+        for (int i = 0; i < faceQuads.length; ++i) {
             faceQuads[i] = new ArrayList<>();
         }
 
         List<BakedQuad> generalQuads = new ArrayList<>();
         TextureAtlasSprite sprite = this.textures.get(getTextureLocation(prop.type, prop.insulation,
-                prop.active));
+                prop.active
+        ));
         EnumFacing[] var7 = EnumFacing.VALUES;
         int i = var7.length;
 
-        for(int var9 = 0; var9 < i; ++var9) {
+        for (int var9 = 0; var9 < i; ++var9) {
             EnumFacing facing = var7[var9];
             boolean hasConnection = (prop.connectivity & 1 << facing.ordinal()) != 0;
             float zS = sp;
@@ -153,7 +155,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
             float zE;
             float xE = yE = zE = sp + th;
             if (hasConnection) {
-                switch(facing) {
+                switch (facing) {
                     case DOWN:
                         yS = 0.0F;
                         yE = sp;
@@ -182,7 +184,18 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
                         throw new RuntimeException();
                 }
 
-                VdUtil.addCuboid(xS, yS, zS, xE, yE, zE, EnumSet.complementOf(EnumSet.of(facing.getOpposite())), sprite, faceQuads, generalQuads);
+                VdUtil.addCuboid(
+                        xS,
+                        yS,
+                        zS,
+                        xE,
+                        yE,
+                        zE,
+                        EnumSet.complementOf(EnumSet.of(facing.getOpposite())),
+                        sprite,
+                        faceQuads,
+                        generalQuads
+                );
             } else {
                 VdUtil.addCuboid(sp, sp, sp, xE, yE, zE, EnumSet.of(facing), sprite, faceQuads, generalQuads);
             }
@@ -190,7 +203,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
 
         int used = 0;
 
-        for(i = 0; i < faceQuads.length; ++i) {
+        for (i = 0; i < faceQuads.length; ++i) {
             if (faceQuads[i].isEmpty()) {
                 faceQuads[i] = Collections.emptyList();
             } else {
@@ -227,4 +240,5 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
 
         }
     }
+
 }

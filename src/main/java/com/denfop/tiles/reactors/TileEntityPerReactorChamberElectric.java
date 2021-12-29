@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.tiles.reactors;
 
 import ic2.api.energy.tile.IEnergyAcceptor;

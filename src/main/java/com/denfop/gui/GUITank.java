@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GUITank extends GuiIC2<ContainerTank> {
+
     public final ContainerTank container;
 
     public GUITank(ContainerTank container1) {
@@ -41,4 +42,5 @@ public class GUITank extends GuiIC2<ContainerTank> {
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUITank.png");
     }
+
 }

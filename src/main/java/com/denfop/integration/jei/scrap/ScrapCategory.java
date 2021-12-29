@@ -26,18 +26,20 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine3.png"), 3, 3, 140,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockMoreMachine3.assamplerscrap.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines_base3,1,4).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines_base3, 1, 4).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,21 +51,20 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
 
         int xScale = 24 * progress / 100;
         if (xScale > 24) {
             progress = 0;
         }
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66-1, 12 + 19, 192, 14+24, 16, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 19, 192, 14 + 24, 16, xScale + 1);
         drawTexturedModalRect(
-                + 2,  + 44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +2, +44 + 14 - energylevel, 176, 14 - energylevel, 14,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
@@ -90,7 +91,6 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine3.png");
     }
-
 
 
 }

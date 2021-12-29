@@ -55,7 +55,6 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
     }
 
 
-
     @Override
     public boolean itemInteractionForEntity(
             final ItemStack stack,
@@ -155,7 +154,6 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
     ) {
         super.addInformation(itemStack, worldIn, info, flagIn);
         if (itemStack.getItemDamage() == 1) {
-
 
 
         } else {

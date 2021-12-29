@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.items.energy;
 
 import com.denfop.Constants;
@@ -95,12 +90,15 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
         }
         TileEntitySolarPanel base = (TileEntitySolarPanel) tile;
         double energy = 10000;
-        if (base.time > 0)
+        if (base.time > 0) {
             energy = (double) 10000 / (double) (base.time / 20);
-        if (base.time1 > 0 && base.time <= 0)
+        }
+        if (base.time1 > 0 && base.time <= 0) {
             energy += (double) 10000 / (double) (base.time1 / 20);
-        if (base.time2 > 0 && base.time <= 0 && base.time1 <= 0)
+        }
+        if (base.time2 > 0 && base.time <= 0 && base.time1 <= 0) {
             energy += ((double) 10000 / (double) (base.time2 / 20)) + 10000;
+        }
         if (ElectricItem.manager.canUse(itemstack, energy)) {
             base.time = 28800;
             base.time1 = 14400;
@@ -109,7 +107,7 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
             base.work1 = true;
             base.work2 = true;
             ElectricItem.manager.use(itemstack, 1000, player);
-            return  EnumActionResult.SUCCESS;
+            return EnumActionResult.SUCCESS;
         }
         return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
     }

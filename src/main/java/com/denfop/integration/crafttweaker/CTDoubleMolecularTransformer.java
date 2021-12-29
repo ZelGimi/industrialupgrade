@@ -26,6 +26,7 @@ import java.util.Objects;
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTDoubleMolecularTransformer {
+
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container, IIngredient fill, double energy) {
         NBTTagCompound tag = new NBTTagCompound();
@@ -37,7 +38,9 @@ public class CTDoubleMolecularTransformer {
     public static void removeRecipe(IItemStack output) {
         LinkedHashMap<IDoubleMolecularRecipeManager.Input, RecipeOutput> recipes = new LinkedHashMap();
 
-        for (Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : Recipes.doublemolecular.getRecipes().entrySet()) {
+        for (Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : Recipes.doublemolecular
+                .getRecipes()
+                .entrySet()) {
 
             for (ItemStack stack : iRecipeInputRecipeOutputEntry.getValue().items) {
                 if (stack.isItemEqual(InputHelper.toStack(output))) {
@@ -50,6 +53,7 @@ public class CTDoubleMolecularTransformer {
     }
 
     private static class AddMolecularIngredientAction extends BaseAction {
+
         private final IIngredient container;
 
         private final IIngredient fill;
@@ -79,25 +83,30 @@ public class CTDoubleMolecularTransformer {
         }
 
         public void apply() {
-            String ore="";
-            String ore1="";
+            String ore = "";
+            String ore1 = "";
             ItemStack stack = new IC2RecipeInput(this.container).getInputs().get(0);
             int amount = new IC2RecipeInput(this.container).getAmount();
-            if(OreDictionary.getOreIDs(stack).length > 0)
+            if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
+            }
             stack = new IC2RecipeInput(this.fill).getInputs().get(0);
             int amount1 = new IC2RecipeInput(this.fill).getAmount();
-            if(OreDictionary.getOreIDs(stack).length > 0)
+            if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore1 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
+            }
 
             Recipes.doublemolecular.addRecipe(
 
-                    OreDictionary.getOres(ore).isEmpty() ? new IC2RecipeInput(this.container) : new RecipeInputOreDict(ore, amount),
+                    OreDictionary.getOres(ore).isEmpty()
+                            ? new IC2RecipeInput(this.container)
+                            : new RecipeInputOreDict(ore, amount),
                     OreDictionary.getOres(ore1).isEmpty() ? new IC2RecipeInput(this.fill) : new RecipeInputOreDict(ore1, amount1),
 
                     this.nbt,
 
-                    getItemStack(this.output));
+                    getItemStack(this.output)
+            );
 
         }
 
@@ -119,20 +128,26 @@ public class CTDoubleMolecularTransformer {
         }
 
         public boolean equals(Object obj) {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             AddMolecularIngredientAction other = (AddMolecularIngredientAction) obj;
-            if (!Objects.equals(this.container, other.container))
+            if (!Objects.equals(this.container, other.container)) {
                 return false;
-            if (!Objects.equals(this.fill, other.fill))
+            }
+            if (!Objects.equals(this.fill, other.fill)) {
                 return false;
-            if (!Objects.equals(this.nbt, other.nbt))
+            }
+            if (!Objects.equals(this.nbt, other.nbt)) {
                 return false;
+            }
 
             return Objects.equals(this.output, other.output);
         }
+
     }
 
     private static class Remove extends BaseAction {
@@ -141,7 +156,7 @@ public class CTDoubleMolecularTransformer {
 
         protected Remove(Map<IDoubleMolecularRecipeManager.Input, RecipeOutput> recipes) {
             super("doublemolecular");
-            this.recipes=recipes;
+            this.recipes = recipes;
         }
 
         protected String getRecipeInfo(Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> recipe) {
@@ -150,11 +165,15 @@ public class CTDoubleMolecularTransformer {
 
         @Override
         public void apply() {
-            for(Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet())
-                Recipes.doublemolecular.getRecipes().remove(iRecipeInputRecipeOutputEntry.getKey(),
-                        iRecipeInputRecipeOutputEntry.getValue());
+            for (Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet()) {
+                Recipes.doublemolecular.getRecipes().remove(
+                        iRecipeInputRecipeOutputEntry.getKey(),
+                        iRecipeInputRecipeOutputEntry.getValue()
+                );
+            }
 
         }
 
     }
+
 }

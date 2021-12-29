@@ -21,22 +21,24 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public AdvAlloySmelterCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiadvalloysmelter" +
                         ".png"), 5, 16, 140,
-                65);
+                65
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine1.adv_alloy_smelter.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate( new ItemStack(IUItem.basemachine,1,3).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine, 1, 3).getUnlocalizedName());
     }
 
     @Override
@@ -50,21 +52,21 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        double energylevel = Math.min(14.0F * energy/100,14);
+        double energylevel = Math.min(14.0F * energy / 100, 14);
         double xScale = 24.0F * progress / 100;
         if (xScale > 24.0F) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(51 + 1, 20 + 14 - (int)energylevel, 176, 14 - (int)energylevel,
-                14, (int)energylevel );
-        drawTexturedModalRect( 74,  18, 176, 14, (int) (xScale + 1), 16);
+        drawTexturedModalRect(51 + 1, 20 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+                14, (int) energylevel
+        );
+        drawTexturedModalRect(74, 18, 176, 14, (int) (xScale + 1), 16);
 
     }
 
@@ -93,7 +95,6 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiadvalloysmelter.png");
     }
-
 
 
 }
