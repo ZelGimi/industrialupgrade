@@ -1,6 +1,21 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.1:
+1. Fixed the cobblestone generator
+2. Fixed the helium generator
+3. Added some prompts to mechanisms
+4. Added the ability to change the getting of resources in quarries
+5. Added the ability for helmets to eat tin cans
+6. If the player is on the ground, he does not fly.
+7. Added even more jei support
+8. Fixed the work of tools on the server side
+9. Fixed rotate  storages and transformers
+10. Fixed purifier
+11. Fixed crafting improved lappack
+12. Added support for Chinese by 绝绝子
+13. Fixed incompatibility with ASP
+14. When pressed with shift, only one block breaks 
 Version:2.0.2:
 1.fixed localization
 2.fixed the work of the modification station
