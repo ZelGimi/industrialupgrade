@@ -21,16 +21,18 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public SunnariumCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUISunnariumMaker" +
                         ".png"), 3, 3, 140,
-                77);
+                77
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockSunnariumMaker.gen_sunnarium_plate.getName();
     }
 
@@ -38,6 +40,7 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.sunnariumpanelmaker).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,12 +52,11 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = (int) (17.0F * progress / 100);
 
         if (xScale > 17.0F) {
@@ -64,12 +66,12 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
         mc.getTextureManager().bindTexture(getTexture());
 
 
-            drawTexturedModalRect( + 9,  + 59  + 14 - energylevel, 176, 14 - energylevel,
-                    14, energylevel
-            );
+        drawTexturedModalRect(+9, +59 + 14 - energylevel, 176, 14 - energylevel,
+                14, energylevel
+        );
 
 
-            drawTexturedModalRect( + 52,  + 17, 176, 31, xScale + 1, 31);
+        drawTexturedModalRect(+52, +17, 176, 31, xScale + 1, 31);
 
 
     }
@@ -98,7 +100,6 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUISunnariumMaker.png");
     }
-
 
 
 }

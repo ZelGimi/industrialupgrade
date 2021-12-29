@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemDustCrushed extends  ItemMulti<ItemDustCrushed.Types> implements IModelRegister {
+public class ItemDustCrushed extends ItemMulti<ItemDustCrushed.Types> implements IModelRegister {
 
     protected static final String NAME = "dustcrushed";
 
@@ -39,8 +39,9 @@ public class ItemDustCrushed extends  ItemMulti<ItemDustCrushed.Types> implement
         if (meta >= (Types.values()).length) {
             meta = 0;
         }
-        return Types.values()[meta].getName()+"_dustcrushed" + ".name";
+        return Types.values()[meta].getName() + "_dustcrushed" + ".name";
     }
+
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
@@ -52,12 +53,16 @@ public class ItemDustCrushed extends  ItemMulti<ItemDustCrushed.Types> implement
 
         }
     }
+
     @SideOnly(Side.CLIENT)
     protected void registerModel(final int meta, final ItemName name, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+ "_dustcrushed", null)
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName() + "_dustcrushed",
+                        null
+                )
         );
     }
 

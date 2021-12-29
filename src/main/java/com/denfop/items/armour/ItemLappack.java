@@ -44,7 +44,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemLappack extends ItemArmorElectric implements IElectricItem, IModelRegister, IMetalArmor, ISpecialArmor, IItemHudInfo {
+public class ItemLappack extends ItemArmorElectric implements IElectricItem, IModelRegister, IMetalArmor, ISpecialArmor,
+        IItemHudInfo {
 
     private final int maxCharge;
 
@@ -62,7 +63,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             int Tier,
             int TransferLimit
     ) {
-        super(null, "",EntityEquipmentSlot.CHEST,MaxCharge,TransferLimit ,Tier);
+        super(null, "", EntityEquipmentSlot.CHEST, MaxCharge, TransferLimit, Tier);
 
         this.maxCharge = MaxCharge;
         this.transferLimit = TransferLimit;
@@ -75,16 +76,24 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", new Object[]{damage - prev});
+            IC2.log.warn(
+                    LogCategory.Armor,
+                    new Throwable(),
+                    "Detected invalid armor damage application (%d):",
+                    damage - prev
+            );
         }
 
     }
+
     public String getUnlocalizedName() {
-        return "item."+super.getUnlocalizedName().substring(4)+".name";
+        return "item." + super.getUnlocalizedName().substring(4) + ".name";
     }
+
     @Override
     public double getDamageAbsorptionRatio() {
         return 0.4;
@@ -157,8 +166,6 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
     public int getEnergyPerDamage() {
         return 10000;
     }
-
-
 
 
     public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player) {
@@ -301,7 +308,8 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                         .get(i)
                         .getItem() instanceof IElectricItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                        double sentPacket = ElectricItem.manager.charge(player.inventory.armorInventory.get(i),
+                        double sentPacket = ElectricItem.manager.charge(
+                                player.inventory.armorInventory.get(i),
                                 ElectricItem.manager.getCharge(itemStack),
                                 2147483647,
                                 true,
@@ -347,7 +355,8 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                 if (!player.inventory.mainInventory.get(j).isEmpty()
                         && player.inventory.mainInventory.get(j).getItem() instanceof ic2.api.item.IElectricItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                        double sentPacket = ElectricItem.manager.charge(player.inventory.mainInventory.get(j),
+                        double sentPacket = ElectricItem.manager.charge(
+                                player.inventory.mainInventory.get(j),
                                 ElectricItem.manager.getCharge(itemStack),
                                 2147483647,
                                 true,
@@ -413,4 +422,5 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         info.add(ElectricItem.manager.getToolTip(stack));
         return info;
     }
+
 }

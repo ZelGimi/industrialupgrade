@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 public class GenNeuHandler {
-    private static List<GenNeuHandler> recipes = new ArrayList<>();
+
+    private static final List<GenNeuHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
     private final double input;
 
 
     public static List<GenNeuHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
-
-
 
 
     public GenNeuHandler(
@@ -35,10 +35,10 @@ public class GenNeuHandler {
     }
 
 
-
     public double getEnergy() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public FluidStack getOutput() { // Получатель входного предмета рецепта.
         return input2;
     }
@@ -47,26 +47,28 @@ public class GenNeuHandler {
             double input, FluidStack input2
     ) {
         GenNeuHandler recipe = new GenNeuHandler(input, input2);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static GenNeuHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (GenNeuHandler recipe : recipes)
+        }
+        for (GenNeuHandler recipe : recipes) {
             return recipe;
+        }
         return null;
     }
-
 
 
     public static void initRecipes() {
         for (Map.Entry<NBTTagCompound, FluidStack> container :
                 Recipes.neutroniumgenrator.getRecipes().entrySet()) {
-            addRecipe(container.getKey().getDouble("amount"),container.getValue()  );
+            addRecipe(container.getKey().getDouble("amount"), container.getValue());
 
         }
     }
@@ -78,4 +80,5 @@ public class GenNeuHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

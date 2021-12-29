@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.gui;
 
 import com.denfop.Constants;
@@ -23,7 +18,7 @@ public class GUIBags extends GuiIC2<ContainerBags> {
     public GUIBags(ContainerBags container, final ItemStack itemStack1) {
         super(container);
 
-        this.name = Localization.translate(itemStack1.getUnlocalizedName()+ ".name");
+        this.name = Localization.translate(itemStack1.getUnlocalizedName() + ".name");
         this.ySize = 232;
     }
 

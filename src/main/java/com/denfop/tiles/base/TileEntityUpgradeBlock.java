@@ -56,11 +56,11 @@ public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine {
     protected boolean isNormalCube() {
         return false;
     }
+
     @Override
     public void onNetworkUpdate(String field) {
 
     }
-
 
 
     public static void init() {
@@ -288,7 +288,7 @@ public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine {
             this.energy.addEnergy(energyConsume * operationLength);
             return;
         }
-        if(module.getItem() instanceof  UpgradeModule) {
+        if (module.getItem() instanceof UpgradeModule) {
             EnumInfoUpgradeModules type = UpgradeModule.getType(module.getItemDamage());
             int min = 0;
             for (int i = 0; i < 4; i++) {
@@ -323,7 +323,7 @@ public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine {
             stack.setItemDamage(Damage);
         }
 
-        if(module.getItem() instanceof QuarryModule && module.getItemDamage() == 12) {
+        if (module.getItem() instanceof QuarryModule && module.getItemDamage() == 12) {
             int Damage = stack1.getItemDamage();
             NBTTagCompound nbt2 = ModUtils.nbt(module);
             double newCharge = ElectricItem.manager.getCharge(stack1);
@@ -335,11 +335,11 @@ public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine {
             stack.setTagCompound(nbt1);
             NBTTagCompound nbt = ModUtils.nbt(stack);
             for (int j = 0; j < 9; j++) {
-                    String l = "number_" + j;
-                    String temp = nbt2.getString(l);
-                    nbt.setString(l,temp);
+                String l = "number_" + j;
+                String temp = nbt2.getString(l);
+                nbt.setString(l, temp);
             }
-            nbt.setBoolean("list",true);
+            nbt.setBoolean("list", true);
             ElectricItem.manager.charge(stack, newCharge, Integer.MAX_VALUE, true, false);
             EnchantmentHelper.setEnchantments(enchantmentMap, stack);
             stack.setItemDamage(Damage);

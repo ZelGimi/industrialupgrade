@@ -97,24 +97,19 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
                 }
 
 
+                final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta - 1);
 
-
-
-                    final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta-1);
-
-                    TileEntitySolarPanel panel = kit1.tile;
-                    if (panel != null) {
-                        NBTTagCompound nbt = new NBTTagCompound();
-                        tile.writeToNBT(nbt);
-                        panel.readFromNBT(nbt);
-                        world.setTileEntity(pos, panel);
-                        panel.onUpgraded();
-                        panel .markDirty();
-                        stack.setCount(stack.getCount() - 1);
-                        return EnumActionResult.SUCCESS;
-                    }
-
-
+                TileEntitySolarPanel panel = kit1.tile;
+                if (panel != null) {
+                    NBTTagCompound nbt = new NBTTagCompound();
+                    tile.writeToNBT(nbt);
+                    panel.readFromNBT(nbt);
+                    world.setTileEntity(pos, panel);
+                    panel.onUpgraded();
+                    panel.markDirty();
+                    stack.setCount(stack.getCount() - 1);
+                    return EnumActionResult.SUCCESS;
+                }
 
 
             } else if (tileEntity instanceof TileEntitySolarGenerator) {
@@ -122,13 +117,13 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
                     EnumSolarPanels kit = EnumSolarPanels.getFromID(meta);
                     TileEntitySolarPanel panel = new TileEntityAdvancedSolarPanel();
                     NBTTagCompound nbt = new NBTTagCompound();
-                    ((TileEntitySolarGenerator)   world.getTileEntity(pos)).writeToNBT(nbt);
+                    ((TileEntitySolarGenerator) world.getTileEntity(pos)).writeToNBT(nbt);
                     panel.readFromNBT(nbt);
-                        world.setTileEntity(pos, panel);
-                        panel.onUpgraded();
-                        panel.markDirty();
-                        stack.setCount(stack.getCount() - 1);
-                        return EnumActionResult.SUCCESS;
+                    world.setTileEntity(pos, panel);
+                    panel.onUpgraded();
+                    panel.markDirty();
+                    stack.setCount(stack.getCount() - 1);
+                    return EnumActionResult.SUCCESS;
 
 
                 }
@@ -178,8 +173,7 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
         upgradepanelkit20(20),
         upgradepanelkit21(21),
         upgradepanelkit22(22),
-        upgradepanelkit23(23)
-        ;
+        upgradepanelkit23(23);
 
         private final String name;
         private final int ID;
@@ -224,7 +218,8 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
         ELEMENTUM(EnumSolarPanels.ELEMENTUM_SOLAR_PANEL, 18, true, new TileEntityElementumSolarPanel()),
         TERRASTEEL(EnumSolarPanels.TERRASTEEL_SOLAR_PANEL, 19, true, new TileEntityTerrasteelSolarPanel()),
         NEUTRON_AV(EnumSolarPanels.NEUTRONIUM_SOLAR_PANEL_AVARITIA, 20, true,
-                new com.denfop.integration.avaritia.TileEntityNeutronSolarPanel()),
+                new com.denfop.integration.avaritia.TileEntityNeutronSolarPanel()
+        ),
         INFINITY(EnumSolarPanels.INFINITY_SOLAR_PANEL, 21, true, new TileEntityInfinitySolarPanel()),
         THAUM(EnumSolarPanels.THAUM_SOLAR_PANEL, 22, true, new TileEntityThaumSolarPanel()),
         VOID(EnumSolarPanels.VOID_SOLAR_PANEL, 23, true, new TileEntityVoidSolarPanel()),
@@ -241,6 +236,7 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
             this.register = register;
             this.tile = tile;
         }
+
         public static EnumSolarPanelsKit getFromID(final int ID) {
             return values()[ID % values().length];
         }

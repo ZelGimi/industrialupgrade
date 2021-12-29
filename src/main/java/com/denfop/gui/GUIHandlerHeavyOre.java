@@ -34,11 +34,13 @@ public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
                         this.container.base.getMaxTemperature()))
                 .drawForeground(par1, par2);
 
-        if( this.container.base.inputSlotA.process() != null)
-            if( !Recipes.mechanism.hasHeaters( this.container.base))
+        if (this.container.base.inputSlotA.process() != null) {
+            if (!Recipes.mechanism.hasHeaters(this.container.base)) {
                 new AdvArea(this, 33, 50, 51, 68)
                         .withTooltip(Localization.translate("iu.needheaters"))
                         .drawForeground(par1, par2);
+            }
+        }
 
     }
 
@@ -55,8 +57,8 @@ public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
         if (temperature > 0) {
             drawTexturedModalRect(this.guiLeft + 51, this.guiTop + 52, 176, 50, temperature + 1, 11);
         }
-        if( this.container.base.inputSlotA.process() != null)
-            if( !Recipes.mechanism.hasHeaters( this.container.base)) {
+        if (this.container.base.inputSlotA.process() != null) {
+            if (!Recipes.mechanism.hasHeaters(this.container.base)) {
                 drawTexturedModalRect(this.guiLeft + 22, this.guiTop + 50, 177, 67, 9, 16);
 
                 RenderHelper.enableGUIStandardItemLighting();
@@ -78,6 +80,7 @@ public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
                 RenderHelper.enableStandardItemLighting();
                 GL11.glPopMatrix();
             }
+        }
 
     }
 

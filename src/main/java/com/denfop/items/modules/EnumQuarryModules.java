@@ -26,10 +26,10 @@ public enum EnumQuarryModules {
         this.type = type;
         this.efficiency = efficiency;
     }
+
     public static EnumQuarryModules getFromID(final int ID) {
         return values()[ID % values().length];
     }
-
 
 
 }

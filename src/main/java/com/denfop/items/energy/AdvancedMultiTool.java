@@ -74,7 +74,8 @@ import java.util.Set;
 
 public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModelRegister {
 
-    public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(Blocks.COBBLESTONE.getDefaultState(),
+    public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(
+            Blocks.COBBLESTONE.getDefaultState(),
             Blocks.DOUBLE_STONE_SLAB.getDefaultState(),
             Blocks.STONE_SLAB.getDefaultState(),
             Blocks.STONE.getDefaultState(),
@@ -274,9 +275,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                             BlockPos pos_block = new BlockPos(xPos, yPos, zPos);
                             IBlockState state = world.getBlockState(pos_block);
                             Block localBlock = world.getBlockState(pos_block).getBlock();
-                            if (save)
-                                if (world.getTileEntity(pos_block) != null)
+                            if (save) {
+                                if (world.getTileEntity(pos_block) != null) {
                                     continue;
+                                }
+                            }
                             if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                                     && state.getBlockHardness(world, pos_block) >= 0.0F
                             ) {
@@ -581,8 +584,9 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
             }
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
+                if (player.isSneaking()) {
                     return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
                 return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
             }
@@ -612,8 +616,9 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
 
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
+                if (player.isSneaking()) {
                     return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
                 return break_block(world, block, meta, mop, (byte) (2 + aoe), player, pos, stack, state);
             }
@@ -642,8 +647,9 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
             }
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
+                if (player.isSneaking()) {
                     return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
                 return break_block(world, block, meta, mop, (byte) (3 + aoe), player, pos, stack, state);
             }
@@ -798,7 +804,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
 
                     ((EntityPlayerMP) entity).addExhaustion(-0.025F);
-                    if ((ModUtils.getore(block,block.getMetaFromState(state))&& check_list(block, block.getMetaFromState(state) , stack) && nbt.getBoolean("black") )|| !Config.blacklist  || !nbt.getBoolean("black")) {
+                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && check_list(
+                            block,
+                            block.getMetaFromState(state),
+                            stack
+                    ) && nbt.getBoolean("black")) || !Config.blacklist || !nbt.getBoolean("black")) {
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
                                 item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
@@ -808,12 +818,13 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                             }
                         }
                     } else {
-                        if( nbt.getBoolean("black"))
-                        for (EntityItem item : items) {
-                            if (!entity.getEntityWorld().isRemote) {
+                        if (nbt.getBoolean("black")) {
+                            for (EntityItem item : items) {
+                                if (!entity.getEntityWorld().isRemote) {
 
                                     item.setDead();
 
+                                }
                             }
                         }
                     }
@@ -826,7 +837,8 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                     block.onBlockDestroyedByPlayer(world, pos, state);
                 }
 
-                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
+                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(
+                        CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
                         pos,
                         Minecraft.getMinecraft().objectMouseOver.sideHit
                 ));
@@ -866,6 +878,7 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
         return !lst.isEmpty() && !lst.contains(name);
     }
+
     public float energy(ItemStack stack) {
         NBTTagCompound nbt = ModUtils.nbt(stack);
         int energy1 = 0;
@@ -953,17 +966,21 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         if (IUCore.keyboard.isSaveModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean save = !nbt.getBoolean("save");
-            CommonProxy.sendPlayerMessage(player,
-                    TextFormatting.GREEN +Localization.translate("message.savemode") +
-                            (save ? Localization.translate("message.allow") :Localization.translate("message.disallow")));
+            CommonProxy.sendPlayerMessage(
+                    player,
+                    TextFormatting.GREEN + Localization.translate("message.savemode") +
+                            (save ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+            );
             nbt.setBoolean("save", save);
         }
         if (IUCore.keyboard.isBlackListModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean black = !nbt.getBoolean("black");
-            CommonProxy.sendPlayerMessage(player,
-                    TextFormatting.GREEN +Localization.translate("message.blacklist") +
-                            (black ? Localization.translate("message.allow") :Localization.translate("message.disallow")));
+            CommonProxy.sendPlayerMessage(
+                    player,
+                    TextFormatting.GREEN + Localization.translate("message.blacklist") +
+                            (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+            );
             nbt.setBoolean("black", black);
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
@@ -1165,10 +1182,10 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("iu.changemode_key") +  Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode())  + Localization.translate(
+            par3List.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
 
-            par3List.add(Localization.translate("iu.blacklist_key") +  Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode())  + Localization.translate(
+            par3List.add(Localization.translate("iu.blacklist_key") + Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
 
         }

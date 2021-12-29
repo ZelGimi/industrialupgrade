@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class MolecularTransformerHandler {
-    private static List<MolecularTransformerHandler> recipes = new ArrayList<MolecularTransformerHandler>();
+
+    private static final List<MolecularTransformerHandler> recipes = new ArrayList<MolecularTransformerHandler>();
     private final double energy;
 
     public static List<MolecularTransformerHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
-        initRecipes();
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
         return recipes;
     }
 
@@ -38,6 +40,7 @@ public class MolecularTransformerHandler {
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
+
     public double getEnergy() { // Получатель выходного предмета рецепта.
         return energy;
     }
@@ -45,18 +48,22 @@ public class MolecularTransformerHandler {
 
     public static MolecularTransformerHandler addRecipe(ItemStack input, ItemStack output, double energy) {
         MolecularTransformerHandler recipe = new MolecularTransformerHandler(input, output, energy);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static MolecularTransformerHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (MolecularTransformerHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (MolecularTransformerHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -66,11 +73,12 @@ public class MolecularTransformerHandler {
 
     public static void initRecipes() {
         for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.molecular.getRecipes()) {
-            addRecipe(container.getInput().getInputs().get(0),new ArrayList<ItemStack>(container.getOutput()).get(0),
-                    container.getMetaData().getDouble("energy"));
+            addRecipe(container.getInput().getInputs().get(0), new ArrayList<ItemStack>(container.getOutput()).get(0),
+                    container.getMetaData().getDouble("energy")
+            );
 
         }
-       }
+    }
 
     private static ItemStack is(Item item) { // Побочный метод.
         return new ItemStack(item);
@@ -79,4 +87,5 @@ public class MolecularTransformerHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

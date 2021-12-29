@@ -19,6 +19,7 @@ import java.util.Objects;
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTQuarry {
+
     @ZenMethod
     public static void addRecipe(IItemStack output) {
 
@@ -39,6 +40,7 @@ public class CTQuarry {
             return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
         }
     }
+
     @ZenMethod
     public static void remove(IItemStack input) {
         ModTweaker.LATE_REMOVALS.add(new CTQuarry.Remove(input));
@@ -46,6 +48,7 @@ public class CTQuarry {
 
 
     private static class AddMolecularAction extends BaseAction {
+
         private final IItemStack output;
 
 
@@ -70,13 +73,15 @@ public class CTQuarry {
         public void apply() {
 
 
-            if(OreDictionary.getOreIDs((ItemStack) output.getInternal()).length == 0)
-                if(!IUCore.list.contains((ItemStack) output.getInternal()))
+            if (OreDictionary.getOreIDs((ItemStack) output.getInternal()).length == 0) {
+                if (!IUCore.list.contains((ItemStack) output.getInternal())) {
                     IUCore.list.add((ItemStack) output.getInternal());
-            else {
-                int i =   OreDictionary.getOreIDs((ItemStack) output.getInternal())[0];
-                    if(!IUCore.list.contains(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0)))
+                } else {
+                    int i = OreDictionary.getOreIDs((ItemStack) output.getInternal())[0];
+                    if (!IUCore.list.contains(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0))) {
                         IUCore.list.add(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0));
+                    }
+                }
             }
 
         }
@@ -96,18 +101,22 @@ public class CTQuarry {
         }
 
         public boolean equals(Object obj) {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             AddMolecularAction other = (AddMolecularAction) obj;
 
             return Objects.equals(this.output, other.output);
         }
+
     }
 
     private static class Remove extends BaseAction {
-        private IItemStack input;
+
+        private final IItemStack input;
 
         public Remove(IItemStack input) {
             super("quarry");
@@ -115,10 +124,10 @@ public class CTQuarry {
         }
 
         public void apply() {
-            if(OreDictionary.getOreIDs((ItemStack) input.getInternal()).length == 0)
-            IUCore.list.remove((ItemStack) input.getInternal());
-            else {
-             int i =   OreDictionary.getOreIDs((ItemStack) input.getInternal())[0];
+            if (OreDictionary.getOreIDs((ItemStack) input.getInternal()).length == 0) {
+                IUCore.list.remove((ItemStack) input.getInternal());
+            } else {
+                int i = OreDictionary.getOreIDs((ItemStack) input.getInternal())[0];
                 IUCore.list.remove(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0));
             }
         }
@@ -126,6 +135,7 @@ public class CTQuarry {
         protected String getRecipeInfo() {
             return LogHelper.getStackDescription(this.input);
         }
+
     }
 
 

@@ -14,21 +14,25 @@ import java.util.List;
 import java.util.Map;
 
 public class PlasticCrreatorHandler {
-    private static List< PlasticCrreatorHandler> recipes = new ArrayList<>();
+
+    private static final List<PlasticCrreatorHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
 
 
-    public static List< PlasticCrreatorHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+    public static List<PlasticCrreatorHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack input,input1, output;
+    private final ItemStack input, input1, output;
 
 
-    public PlasticCrreatorHandler(ItemStack input, ItemStack input1,FluidStack input2,
-                            ItemStack output) {
+    public PlasticCrreatorHandler(
+            ItemStack input, ItemStack input1, FluidStack input2,
+            ItemStack output
+    ) {
         this.input = input;
         this.input1 = input1;
         this.input2 = input2;
@@ -36,46 +40,54 @@ public class PlasticCrreatorHandler {
     }
 
 
-
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public ItemStack getInput1() { // Получатель входного предмета рецепта.
         return input1;
     }
+
     public FluidStack getInput2() { // Получатель входного предмета рецепта.
         return input2;
     }
+
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
 
-    public static PlasticCrreatorHandler addRecipe(ItemStack input, ItemStack input1, FluidStack input2,
-                                             ItemStack output) {
-        PlasticCrreatorHandler recipe = new PlasticCrreatorHandler(input,input1, input2, output);
-        if (recipes.contains(recipe))
+    public static PlasticCrreatorHandler addRecipe(
+            ItemStack input, ItemStack input1, FluidStack input2,
+            ItemStack output
+    ) {
+        PlasticCrreatorHandler recipe = new PlasticCrreatorHandler(input, input1, input2, output);
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static PlasticCrreatorHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (PlasticCrreatorHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (PlasticCrreatorHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ||is.isItemEqual(input1);
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
     public static void initRecipes() {
         for (Map.Entry<IPlasticRecipemanager.Input, RecipeOutput> container :
                 Recipes.plastic.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0),container.getKey().fill.getInputs().get(0),
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
                     container.getKey().fluidStack,
 
                     container.getValue().items.get(0)
@@ -91,4 +103,5 @@ public class PlasticCrreatorHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

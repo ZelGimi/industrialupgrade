@@ -6,9 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GenObsWrapper implements  IRecipeWrapper  {
-
-
+public class GenObsWrapper implements IRecipeWrapper {
 
 
     private final FluidStack inputstack;
@@ -23,9 +21,11 @@ public class GenObsWrapper implements  IRecipeWrapper  {
         this.output = container.getOutput();
 
     }
+
     public FluidStack getInput1() {
         return inputstack;
     }
+
     public FluidStack getInput2() {
         return inputstack2;
     }
@@ -35,8 +35,6 @@ public class GenObsWrapper implements  IRecipeWrapper  {
     }
 
 
-
-
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInput(FluidStack.class, this.inputstack);
         ingredients.setInput(FluidStack.class, this.inputstack2);
@@ -44,8 +42,7 @@ public class GenObsWrapper implements  IRecipeWrapper  {
     }
 
 
-
-
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
     }
+
 }

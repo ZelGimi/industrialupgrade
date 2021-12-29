@@ -73,13 +73,12 @@ import java.util.Map;
 
 @SuppressWarnings("SameReturnValue")
 public class ItemArmorImprovemedQuantum extends ItemArmorElectric
-        implements IModelRegister, ISpecialArmor,  IElectricItem, IItemHudInfo, IMetalArmor {
+        implements IModelRegister, ISpecialArmor, IElectricItem, IItemHudInfo, IMetalArmor {
 
     protected static final Map<Potion, Integer> potionRemovalCost = new HashMap<Potion, Integer>();
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;
-    private final ThreadLocal<Boolean> allowDamaging;
     private final String armorName;
     private final String name;
     private float jumpCharge;
@@ -88,7 +87,7 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
             String name, EntityEquipmentSlot armorType1, double maxCharge1, double transferLimit1,
             int tier1
     ) {
-        super(null, "",armorType1,maxCharge1,transferLimit1 * 16,tier1);
+        super(null, "", armorType1, maxCharge1, transferLimit1 * 16, tier1);
         if (armorType1 == EntityEquipmentSlot.FEET) {
             MinecraftForge.EVENT_BUS.register(this);
         }
@@ -97,7 +96,6 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
         potionRemovalCost.put(MobEffects.WITHER, 100);
         this.name = name;
         potionRemovalCost.put(MobEffects.HUNGER, 200);
-        this.allowDamaging = new ThreadLocal<>();
         this.maxCharge = maxCharge1;
         this.tier = tier1;
         this.transferLimit = transferLimit1 * 16;
@@ -115,13 +113,20 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
     public boolean isDamageable() {
         return false;
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", new Object[]{damage - prev});
+            IC2.log.warn(
+                    LogCategory.Armor,
+                    new Throwable(),
+                    "Detected invalid armor damage application (%d):",
+                    damage - prev
+            );
         }
 
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(
@@ -134,20 +139,23 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
         if (itemStack.getItem() == IUItem.quantumBodyarmor) {
             info.add(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack")));
-            if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+            if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 info.add(Localization.translate("press.lshift"));
+            }
 
 
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 info.add(Localization.translate("iu.changemode_fly") + Keyboard.getKeyName(KeyboardClient.flymode.getKeyCode()));
                 info.add(Localization.translate("iu.vertical") + Keyboard.getKeyName(KeyboardClient.verticalmode.getKeyCode()));
-                info.add(Localization.translate("iu.magnet_mode") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + " + " + Keyboard.getKeyName(Keyboard.KEY_LSHIFT));
+                info.add(Localization.translate("iu.magnet_mode") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + " + " + Keyboard.getKeyName(
+                        Keyboard.KEY_LSHIFT));
 
             }
 
 
         }
-        ModUtils.mode(itemStack, info);  }
+        ModUtils.mode(itemStack, info);
+    }
 
     @Override
     public void getSubItems(final CreativeTabs p_150895_1_, final NonNullList<ItemStack> var3) {
@@ -166,12 +174,11 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name + extraName;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -201,7 +208,6 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
         return Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + suffix + ".png";
     }
-
 
 
     public String getUnlocalizedName() {
@@ -393,8 +399,6 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
     }
 
 
-
-
     public int getEnergyPerDamage() {
         return 20000;
     }
@@ -466,14 +470,14 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
                         ItemFood can = (ItemFood) stack.getItem();
                         stack = can.onItemUseFinish(stack, world, player);
                         if (stack.getCount() <= 0) {
-                            player.inventory.mainInventory.set(slot, null);
+                            player.inventory.mainInventory.set(slot,StackUtil.emptyStack);
                         }
-                        ElectricItem.manager.use(itemStack, 1000.0D, null);
+                        ElectricItem.manager.use(itemStack, 1000.0D, player);
                         ret = true;
                     }
 
-                    for(int i = 0; i < player.inventory.mainInventory.size(); ++i) {
-                        ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(i);
+                    for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
+                        ItemStack playerStack = player.inventory.mainInventory.get(i);
                         if (!StackUtil.isEmpty(playerStack) && playerStack.getItem() == ItemName.filled_tin_can.getInstance()) {
                             slot = i;
                             break;
@@ -481,16 +485,16 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
                     }
 
                     if (slot > -1) {
-                        ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(slot);
-                        ItemTinCan can = (ItemTinCan)playerStack.getItem();
+                        ItemStack playerStack = player.inventory.mainInventory.get(slot);
+                        ItemTinCan can = (ItemTinCan) playerStack.getItem();
                         ActionResult<ItemStack> result = can.onEaten(player, playerStack);
-                        playerStack = (ItemStack)result.getResult();
+                        playerStack = result.getResult();
                         if (StackUtil.isEmpty(playerStack)) {
                             player.inventory.mainInventory.set(slot, StackUtil.emptyStack);
                         }
 
                         if (result.getType() == EnumActionResult.SUCCESS) {
-                            ElectricItem.manager.use(itemStack, 1000.0D, (EntityLivingBase)null);
+                            ElectricItem.manager.use(itemStack, 1000.0D, null);
                         }
 
                         ret = true;
@@ -582,14 +586,15 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
                 break;
             case 2:
-                if(!player.onGround)
-                if (nbtData.getBoolean("jetpack")) {
+                if (!player.onGround) {
+                    if (nbtData.getBoolean("jetpack")) {
 
-                    if (ElectricItem.manager.canUse(itemStack, 25)) {
+                        if (ElectricItem.manager.canUse(itemStack, 25)) {
 
-                        ElectricItem.manager.use(itemStack, 25, player);
-                    } else {
-                        nbtData.setBoolean("jetpack", false);
+                            ElectricItem.manager.use(itemStack, 25, player);
+                        } else {
+                            nbtData.setBoolean("jetpack", false);
+                        }
                     }
                 }
                 jetpack = nbtData.getBoolean("jetpack");
@@ -730,7 +735,8 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
                             .get(i)
                             .getItem() != this) {
                         if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                            double sentPacket = ElectricItem.manager.charge(player.inventory.armorInventory.get(i),
+                            double sentPacket = ElectricItem.manager.charge(
+                                    player.inventory.armorInventory.get(i),
                                     ElectricItem.manager.getCharge(itemStack),
                                     2147483647,
                                     true,
@@ -781,7 +787,8 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
                             .get(j)
                             .getItem()).wirellescharge)) {
                         if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                            double sentPacket = ElectricItem.manager.charge(player.inventory.mainInventory.get(j),
+                            double sentPacket = ElectricItem.manager.charge(
+                                    player.inventory.mainInventory.get(j),
                                     ElectricItem.manager.getCharge(itemStack),
                                     2147483647,
                                     true,
@@ -964,9 +971,10 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
 
     public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        return ElectricItem.manager.getCharge(armor) >= (double)this.getEnergyPerDamage() ? (int)Math.round(20.0D * this.getBaseAbsorptionRatio() * this.getDamageAbsorptionRatio()) : 0;
+        return ElectricItem.manager.getCharge(armor) >= (double) this.getEnergyPerDamage()
+                ? (int) Math.round(20.0D * this.getBaseAbsorptionRatio() * this.getDamageAbsorptionRatio())
+                : 0;
     }
-
 
 
     @Override

@@ -21,14 +21,31 @@ import java.util.Objects;
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTGenMicrochip {
+
     @ZenMethod
-    public static void addRecipe(IItemStack output, IIngredient container, IIngredient fill, IIngredient fill1, IIngredient fill2, IIngredient fill3, int temperature) {
-        CraftTweakerAPI.apply(new AddGenMicrochipIngredientAction(container, fill, fill1, fill2, fill3, output, (short) temperature));
+    public static void addRecipe(
+            IItemStack output,
+            IIngredient container,
+            IIngredient fill,
+            IIngredient fill1,
+            IIngredient fill2,
+            IIngredient fill3,
+            int temperature
+    ) {
+        CraftTweakerAPI.apply(new AddGenMicrochipIngredientAction(
+                container,
+                fill,
+                fill1,
+                fill2,
+                fill3,
+                output,
+                (short) temperature
+        ));
     }
 
 
-
     private static class AddGenMicrochipIngredientAction extends BaseAction {
+
         private final IIngredient container;
 
         private final IIngredient fill;
@@ -39,7 +56,15 @@ public class CTGenMicrochip {
         private final IIngredient fill3;
         private final NBTTagCompound nbt;
 
-        public AddGenMicrochipIngredientAction(IIngredient container, IIngredient fill, IIngredient fill1, IIngredient fill2, IIngredient fill3, IItemStack output, short temperature) {
+        public AddGenMicrochipIngredientAction(
+                IIngredient container,
+                IIngredient fill,
+                IIngredient fill1,
+                IIngredient fill2,
+                IIngredient fill3,
+                IItemStack output,
+                short temperature
+        ) {
             super("genmicrochip");
             this.container = container;
             this.fill = fill;
@@ -75,7 +100,8 @@ public class CTGenMicrochip {
                     new IC2RecipeInput(this.fill3),
 
 
-                    getItemStack(this.output), this.nbt);
+                    getItemStack(this.output), this.nbt
+            );
 
         }
 
@@ -99,23 +125,31 @@ public class CTGenMicrochip {
         }
 
         public boolean equals(Object obj) {
-            if (obj == null)
+            if (obj == null) {
                 return false;
-            if (getClass() != obj.getClass())
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
+            }
             AddGenMicrochipIngredientAction other = (AddGenMicrochipIngredientAction) obj;
-            if (!Objects.equals(this.container, other.container))
+            if (!Objects.equals(this.container, other.container)) {
                 return false;
-            if (!Objects.equals(this.fill, other.fill))
+            }
+            if (!Objects.equals(this.fill, other.fill)) {
                 return false;
-            if (!Objects.equals(this.fill1, other.fill1))
+            }
+            if (!Objects.equals(this.fill1, other.fill1)) {
                 return false;
-            if (!Objects.equals(this.fill2, other.fill2))
+            }
+            if (!Objects.equals(this.fill2, other.fill2)) {
                 return false;
-            if (!Objects.equals(this.fill3, other.fill3))
+            }
+            if (!Objects.equals(this.fill3, other.fill3)) {
                 return false;
+            }
             return Objects.equals(this.output, other.output);
         }
+
     }
 
     private static class Remove extends BaseAction {
@@ -124,7 +158,7 @@ public class CTGenMicrochip {
 
         protected Remove(Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes) {
             super("genmicrochip");
-            this.recipes=recipes;
+            this.recipes = recipes;
         }
 
         protected String getRecipeInfo() {
@@ -134,11 +168,15 @@ public class CTGenMicrochip {
 
         @Override
         public void apply() {
-            for(Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet())
-                Recipes.GenerationMicrochip.getRecipes().remove(iRecipeInputRecipeOutputEntry.getKey(),
-                        iRecipeInputRecipeOutputEntry.getValue());
+            for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet()) {
+                Recipes.GenerationMicrochip.getRecipes().remove(
+                        iRecipeInputRecipeOutputEntry.getKey(),
+                        iRecipeInputRecipeOutputEntry.getValue()
+                );
+            }
         }
 
 
     }
+
 }

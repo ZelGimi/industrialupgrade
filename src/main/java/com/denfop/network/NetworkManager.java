@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.network;
 
 import com.denfop.IUCore;
@@ -34,7 +29,8 @@ import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 
 public class NetworkManager implements INetworkManager {
-    private static Field playerInstancePlayers = ReflectionUtil.getField(PlayerChunkMapEntry.class, List.class);
+
+    private static final Field playerInstancePlayers = ReflectionUtil.getField(PlayerChunkMapEntry.class, List.class);
     private static FMLEventChannel channel;
     private static final int maxPacketDataLength = 32766;
     public static final String channelName = "ic2";
@@ -52,9 +48,6 @@ public class NetworkManager implements INetworkManager {
     }
 
 
-
-
-
     public final void updateTileEntityField(TileEntity te, String field) {
 
 
@@ -63,20 +56,15 @@ public class NetworkManager implements INetworkManager {
     private Field getClientModifiableField(Class<?> cls, String fieldName) {
         Field field = ReflectionUtil.getFieldRecursive(cls, fieldName);
         if (field == null) {
-            IC2.log.warn(LogCategory.Network, "Can't find field %s in %s.", new Object[]{fieldName, cls.getName()});
+            IC2.log.warn(LogCategory.Network, "Can't find field %s in %s.", fieldName, cls.getName());
             return null;
         } else if (field.getAnnotation(ClientModifiable.class) == null) {
-            IC2.log.warn(LogCategory.Network, "The field %s in %s is not modifiable.", new Object[]{fieldName, cls.getName()});
+            IC2.log.warn(LogCategory.Network, "The field %s in %s is not modifiable.", fieldName, cls.getName());
             return null;
         } else {
             return field;
         }
     }
-
-
-
-
-
 
 
     public final void initiateTileEntityEvent(TileEntity te, int event, boolean limitRange) {
@@ -100,39 +88,17 @@ public class NetworkManager implements INetworkManager {
     }
 
 
-
     public void requestGUI(IHasGui inventory) {
         assert false;
 
     }
 
 
-
-
-
-
-
-
-
     public final void sendInitialData(TileEntity te) {
         assert !this.isClient();
 
 
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     final void sendLargePacket(EntityPlayerMP player, int id, GrowingBuffer data) {
@@ -179,7 +145,7 @@ public class NetworkManager implements INetworkManager {
             }
 
             firstPacket = false;
-        } while(!lastPacket);
+        } while (!lastPacket);
 
     }
 
@@ -187,7 +153,10 @@ public class NetworkManager implements INetworkManager {
     public void onPacket(ServerCustomPacketEvent event) {
         if (this.getClass() == NetworkManager.class) {
             try {
-                this.onPacketData(GrowingBuffer.wrap(event.getPacket().payload()), ((NetHandlerPlayServer)event.getHandler()).player);
+                this.onPacketData(
+                        GrowingBuffer.wrap(event.getPacket().payload()),
+                        ((NetHandlerPlayServer) event.getHandler()).player
+                );
             } catch (Throwable var3) {
                 IC2.log.warn(LogCategory.Network, var3, "Network read failed");
                 throw new RuntimeException(var3);
@@ -216,7 +185,6 @@ public class NetworkManager implements INetworkManager {
     }
 
 
-
     public void initiateKeyUpdate(int keyState) {
     }
 
@@ -224,8 +192,7 @@ public class NetworkManager implements INetworkManager {
     }
 
 
-
-    protected final void  sendPacket(GrowingBuffer buffer) {
+    protected final void sendPacket(GrowingBuffer buffer) {
         if (!this.isClient()) {
             channel.sendToAll(makePacket(buffer, true));
         } else {
@@ -239,7 +206,6 @@ public class NetworkManager implements INetworkManager {
 
         channel.sendTo(makePacket(buffer, advancePos), player);
     }
-
 
 
     static void writeFieldData(Object object, String fieldName, GrowingBuffer out) throws IOException {
@@ -262,4 +228,5 @@ public class NetworkManager implements INetworkManager {
     private static FMLProxyPacket makePacket(GrowingBuffer buffer, boolean advancePos) {
         return new FMLProxyPacket(new PacketBuffer(buffer.toByteBuf(advancePos)), "IU");
     }
+
 }

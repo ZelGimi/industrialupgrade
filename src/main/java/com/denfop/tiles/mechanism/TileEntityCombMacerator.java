@@ -30,7 +30,11 @@ public class TileEntityCombMacerator extends TileEntityMultiMachine {
 
                 name1 = "ore" + name1;
 
-                if (OreDictionary.getOres(name1).size() > 0 &&  OreDictionary.getOres(name1) != null && OreDictionary.getOres(name) != null && OreDictionary.getOres(name).size() > 0) {
+                if (OreDictionary
+                        .getOres(name1)
+                        .size() > 0 && OreDictionary.getOres(name1) != null && OreDictionary.getOres(name) != null && OreDictionary
+                        .getOres(name)
+                        .size() > 0) {
                     addrecipe(name1, name, 3);
                 }
 

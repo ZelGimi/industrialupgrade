@@ -80,12 +80,13 @@ public class GUIPainting extends GuiIC2<ContainerDoubleElectricMachine> {
         }
         int down;
         ItemStack stack = null;
-        if (this.container.base.inputSlotA.get(0) != null)
+        if (this.container.base.inputSlotA.get(0) != null) {
             stack = this.container.base.inputSlotA.get(0).getItem() instanceof ItemPaints
                     ? this.container.base.inputSlotA.get(0) : this.container.base.inputSlotA.get(1);
-        if (stack == null)
+        }
+        if (stack == null) {
             down = 0;
-        else {
+        } else {
             down = 14 * (stack.getItemDamage() - 1);
         }
 

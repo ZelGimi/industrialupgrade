@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.render;
 
 import com.denfop.Constants;
@@ -18,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IUModelLoader implements ICustomModelLoader {
+
     private static final Map<ResourceLocation, IReloadableModel> models = new HashMap();
 
     public IUModelLoader() {
@@ -47,4 +43,5 @@ public class IUModelLoader implements ICustomModelLoader {
     public IModel loadModel(ResourceLocation modelLocation) throws IOException {
         return models.get(modelLocation);
     }
+
 }

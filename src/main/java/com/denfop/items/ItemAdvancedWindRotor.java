@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.items;
 
 import com.denfop.Constants;
@@ -97,9 +92,15 @@ public class ItemAdvancedWindRotor extends ItemGradualInt implements IKineticRot
 
         int windStrength = 40;
         int windStrength1 = 60;
-        double KU = windStrength * this.getEfficiency(stack) * 10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/kineticgenerator/wind");
+        double KU = windStrength * this.getEfficiency(stack) * 10.0F * ConfigUtil.getFloat(
+                MainConfig.get(),
+                "balance/energy/kineticgenerator/wind"
+        );
         int eu = (int) (KU * 0.25D * (double) ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/Kinetic"));
-        double KU1 = windStrength1 * this.getEfficiency(stack) * 10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/kineticgenerator/wind");
+        double KU1 = windStrength1 * this.getEfficiency(stack) * 10.0F * ConfigUtil.getFloat(
+                MainConfig.get(),
+                "balance/energy/kineticgenerator/wind"
+        );
         int eu1 = (int) (KU1 * 0.25D * (double) ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/Kinetic"));
 
         tooltip.add(Localization.translate("iu.windgenerator") + windStrength + " " + Localization.translate("iu.windgenerator1") + eu);

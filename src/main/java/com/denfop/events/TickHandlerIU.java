@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 public class TickHandlerIU {
+
     private static final boolean debugupdate = System.getProperty("ic2.debugupdate") != null;
     private static final Map<IWorldTickCallback, Throwable> debugTraces;
     private static Throwable lastDebugTrace;
@@ -24,47 +25,58 @@ public class TickHandlerIU {
     static {
         debugTraces = debugupdate ? new WeakHashMap() : null;
     }
+
     private static void processUpdates(World world, WorldData worldData) {
         IC2.platform.profilerStartSection("single-update");
 
         IWorldTickCallback callback;
-        Queue<IWorldTickCallback> singleUpdates = ReflectionHelper.getPrivateValue(WorldData.class, worldData, new String[] { "singleUpdates" });
+        Queue<IWorldTickCallback> singleUpdates = ReflectionHelper.getPrivateValue(
+                WorldData.class,
+                worldData,
+                new String[]{"singleUpdates"}
+        );
 
-        for(; (callback = singleUpdates.poll()) != null; callback.onTick(world)) {
+        for (; (callback = singleUpdates.poll()) != null; callback.onTick(world)) {
             if (debugupdate) {
                 lastDebugTrace = debugTraces.remove(callback);
             }
         }
 
         IC2.platform.profilerEndStartSection("cont-update");
-        ReflectionHelper.setPrivateValue(WorldData.class,worldData, true, "continuousUpdatesInUse");
+        ReflectionHelper.setPrivateValue(WorldData.class, worldData, true, "continuousUpdatesInUse");
 
 
         IWorldTickCallback update;
-        Set<IWorldTickCallback> continuousUpdates = ReflectionHelper.getPrivateValue(WorldData.class, worldData, new String[] { "continuousUpdates" });
-        for(Iterator var3 = continuousUpdates.iterator(); var3.hasNext(); update.onTick(world)) {
-            update = (IWorldTickCallback)var3.next();
+        Set<IWorldTickCallback> continuousUpdates = ReflectionHelper.getPrivateValue(
+                WorldData.class,
+                worldData,
+                new String[]{"continuousUpdates"}
+        );
+        for (Iterator var3 = continuousUpdates.iterator(); var3.hasNext(); update.onTick(world)) {
+            update = (IWorldTickCallback) var3.next();
             if (debugupdate) {
-                lastDebugTrace = (Throwable)debugTraces.remove(update);
+                lastDebugTrace = debugTraces.remove(update);
             }
         }
-        ReflectionHelper.setPrivateValue(WorldData.class,worldData, false, "continuousUpdatesInUse");
-
+        ReflectionHelper.setPrivateValue(WorldData.class, worldData, false, "continuousUpdatesInUse");
 
 
         if (debugupdate) {
             lastDebugTrace = null;
         }
-        List<IWorldTickCallback>  continuousUpdatesToAdd= ReflectionHelper.getPrivateValue(WorldData.class, worldData,
-                new String[] { "continuousUpdatesToAdd" });
+        List<IWorldTickCallback> continuousUpdatesToAdd = ReflectionHelper.getPrivateValue(WorldData.class, worldData,
+                new String[]{"continuousUpdatesToAdd"}
+        );
         continuousUpdates.addAll(continuousUpdatesToAdd);
         continuousUpdatesToAdd.clear();
-        List<IWorldTickCallback>  continuousUpdatesToRemove= ReflectionHelper.getPrivateValue(WorldData.class, worldData,
-                new String[] { "continuousUpdatesToRemove" });
+        List<IWorldTickCallback> continuousUpdatesToRemove = ReflectionHelper.getPrivateValue(WorldData.class, worldData,
+                new String[]{"continuousUpdatesToRemove"}
+        );
         continuousUpdates.removeAll(continuousUpdatesToRemove);
         continuousUpdatesToRemove.clear();
         IC2.platform.profilerEndSection();
     }
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {

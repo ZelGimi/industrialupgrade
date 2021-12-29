@@ -7,9 +7,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GenLavaWrapper implements  IRecipeWrapper  {
-
-
+public class GenLavaWrapper implements IRecipeWrapper {
 
 
     private final int inputstack;
@@ -22,20 +20,18 @@ public class GenLavaWrapper implements  IRecipeWrapper  {
         this.inputstack2 = container.getOutput();
 
     }
+
     public int getEnergy() {
         return inputstack;
     }
+
     public FluidStack getInput2() {
         return inputstack2;
     }
 
 
-
-
-
-
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setOutput(FluidStack.class,this.inputstack2);
+        ingredients.setOutput(FluidStack.class, this.inputstack2);
     }
 
 
@@ -44,6 +40,13 @@ public class GenLavaWrapper implements  IRecipeWrapper  {
     }
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawSplitString(Localization.translate("cost.name") + " " + ModUtils.getString((double) getEnergy()) + "EU", 10, 30,recipeWidth - 10, 4210752);
+        minecraft.fontRenderer.drawSplitString(
+                Localization.translate("cost.name") + " " + ModUtils.getString((double) getEnergy()) + "EU",
+                10,
+                30,
+                recipeWidth - 10,
+                4210752
+        );
     }
+
 }

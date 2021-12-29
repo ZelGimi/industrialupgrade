@@ -92,9 +92,11 @@ public class ClientProxy extends CommonProxy {
 
 
     }
+
     public void regrecipemanager() {
         super.regrecipemanager();
     }
+
     @Override
     public void profilerEndStartSection(final String section) {
         if (this.isRendering()) {
@@ -112,9 +114,11 @@ public class ClientProxy extends CommonProxy {
             super.profilerEndSection();
         }
     }
+
     public boolean isRendering() {
         return !this.isSimulating();
     }
+
     @Override
     public void profilerStartSection(final String section) {
         if (this.isRendering()) {
@@ -145,8 +149,9 @@ public class ClientProxy extends CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        if (Config.HUB)
+        if (Config.HUB) {
             new com.denfop.handler.TickHandlerIU();
+        }
 
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileAdvSolarGenerator.class, new TileEntityAdvSolarEnergyRender());

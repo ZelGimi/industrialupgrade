@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PlasticCreatorPlateWrapper implements  IRecipeWrapper  {
-
-
+public class PlasticCreatorPlateWrapper implements IRecipeWrapper {
 
 
     private final ItemStack inputstack;
@@ -27,12 +25,15 @@ public class PlasticCreatorPlateWrapper implements  IRecipeWrapper  {
         this.outputstack = container.getOutput();
 
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
+
     public FluidStack getInput2() {
         return inputstack2;
     }
+
     public List<List<ItemStack>> getInputs() {
         ItemStack inputs = this.inputstack;
         List<ItemStack> stack = new ArrayList<>();
@@ -45,11 +46,9 @@ public class PlasticCreatorPlateWrapper implements  IRecipeWrapper  {
     }
 
 
-
-
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputLists(ItemStack.class, this.getInputs());
-        ingredients.setInput(FluidStack.class,this.inputstack2);
+        ingredients.setInput(FluidStack.class, this.inputstack2);
         ingredients.setOutputs(ItemStack.class, this.getOutputs());
     }
 
@@ -61,4 +60,5 @@ public class PlasticCreatorPlateWrapper implements  IRecipeWrapper  {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
     }
+
 }

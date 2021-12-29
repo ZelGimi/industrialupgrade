@@ -80,11 +80,11 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             final ItemArmor.ArmorMaterial par2EnumArmorMaterial, final int par3, final int par4,
             final int htype, String name
     ) {
-        super(null, "",EntityEquipmentSlot.HEAD,
-                htype == 1 ? 1000000.0 : htype == 2 ? 1.0E7 :  htype == 3 ? 10000.0 : Config.Storagequantumsuit,
-                htype == 1 ? 3000.0 : htype == 2 ? 10000.0 :  htype == 3 ? 10000.0 : 38000.0,
-                htype == 1 ? 1 : htype == 2 ? 2 :  htype == 3 ? 3 : htype == 4 ? 5 : 7
-                );
+        super(null, "", EntityEquipmentSlot.HEAD,
+                htype == 1 ? 1000000.0 : htype == 2 ? 1.0E7 : htype == 3 ? 10000.0 : Config.Storagequantumsuit,
+                htype == 1 ? 3000.0 : htype == 2 ? 10000.0 : htype == 3 ? 10000.0 : 38000.0,
+                htype == 1 ? 1 : htype == 2 ? 2 : htype == 3 ? 3 : htype == 4 ? 5 : 7
+        );
 
         this.solarType = htype;
         this.name = name;
@@ -92,7 +92,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         this.tier = 1;
         if (this.solarType == 1) {
             this.genDay = Config.advGenDay;
-            this.genNight = genDay/2;
+            this.genNight = genDay / 2;
             this.maxCharge = 1000000.0;
             this.energyPerDamage = 800;
             this.damageAbsorptionRatio = 0.9;
@@ -103,7 +103,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         }
         if (this.solarType == 2) {
             this.genDay = Config.hGenDay;
-            this.genNight = genDay/2;
+            this.genNight = genDay / 2;
             this.maxCharge = 1.0E7;
             this.transferLimit = 10000.0;
             this.tier = 2;
@@ -115,7 +115,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         }
         if (this.solarType == 3) {
             this.genDay = Config.uhGenDay;
-            this.genNight = genDay/2;
+            this.genNight = genDay / 2;
             this.maxCharge = 1.0E7;
             this.transferLimit = 10000.0;
             this.tier = 3;
@@ -127,7 +127,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         }
         if (this.solarType == 4) {
             this.genDay = Config.spectralpanelGenDay;
-            this.genNight = genDay/2;
+            this.genNight = genDay / 2;
             this.transferLimit = 38000.0;
             this.maxCharge = Config.Storagequantumsuit;
             this.tier = 5;
@@ -139,7 +139,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         }
         if (this.solarType == 5) {
             this.genDay = Config.singularpanelGenDay;
-            this.genNight = genDay/2;
+            this.genNight = genDay / 2;
             this.transferLimit = 100000.0;
             this.maxCharge = Config.Storagequantumsuit;
             this.tier = 7;
@@ -159,16 +159,24 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(LogCategory.Armor, new Throwable(), "Detected invalid armor damage application (%d):", new Object[]{damage - prev});
+            IC2.log.warn(
+                    LogCategory.Armor,
+                    new Throwable(),
+                    "Detected invalid armor damage application (%d):",
+                    damage - prev
+            );
         }
 
     }
+
     public String getUnlocalizedName() {
-        return "item."+super.getUnlocalizedName().substring(4)+".name";
+        return "item." + super.getUnlocalizedName().substring(4) + ".name";
     }
+
     @Override
     public void registerModels() {
         registerModels(this.name);
@@ -212,6 +220,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return true;
     }
+
     private double experimental_generating(World world) {
         double k = 0;
         float angle = world.getCelestialAngle(1.0F) - 0.784690560F < 0 ? 1.0F - 0.784690560F : -0.784690560F;
@@ -220,9 +229,9 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         celestialAngle %= 360;
         celestialAngle += 12;
         //TODO: end code GC
-        if (celestialAngle <= 90)
+        if (celestialAngle <= 90) {
             k = celestialAngle / 90;
-        else if (celestialAngle > 90 && celestialAngle < 180) {
+        } else if (celestialAngle > 90 && celestialAngle < 180) {
             celestialAngle -= 90;
             k = 1 - celestialAngle / 90;
         } else if (celestialAngle > 180 && celestialAngle < 270) {
@@ -293,12 +302,12 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         double k = experimental_generating(worldObj);
         if (this.sunIsUp && this.skyIsVisible) {
             this.storage = nbtData.getDouble("storage");
-            this.storage = this.storage + (this.genDay + this.genDay * 0.05 * genday)*k;
+            this.storage = this.storage + (this.genDay + this.genDay * 0.05 * genday) * k;
             nbtData.setDouble("storage", this.storage);
         }
         if (this.skyIsVisible) {
             this.storage = nbtData.getDouble("storage");
-            this.storage = this.storage + (this.genNight + this.genNight * 0.05 * gennight)*k;
+            this.storage = this.storage + (this.genNight + this.genNight * 0.05 * gennight) * k;
             nbtData.setDouble("storage", this.storage);
 
         }
@@ -325,7 +334,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             int slot = -1;
             for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
                 if (!player.inventory.mainInventory.get(i).isEmpty()
-                        && player.inventory.mainInventory.get(i).getItem() instanceof ItemFood ) {
+                        && player.inventory.mainInventory.get(i).getItem() instanceof ItemFood) {
                     slot = i;
                     break;
                 }
@@ -340,8 +349,8 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
                 ElectricItem.manager.use(itemStack, 1000.0D, null);
                 ret = true;
             }
-            for(int i = 0; i < player.inventory.mainInventory.size(); ++i) {
-                ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(i);
+            for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
+                ItemStack playerStack = player.inventory.mainInventory.get(i);
                 if (!StackUtil.isEmpty(playerStack) && playerStack.getItem() == ItemName.filled_tin_can.getInstance()) {
                     slot = i;
                     break;
@@ -349,16 +358,16 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             }
 
             if (slot > -1) {
-                ItemStack playerStack = (ItemStack)player.inventory.mainInventory.get(slot);
-                ItemTinCan can = (ItemTinCan)playerStack.getItem();
+                ItemStack playerStack = player.inventory.mainInventory.get(slot);
+                ItemTinCan can = (ItemTinCan) playerStack.getItem();
                 ActionResult<ItemStack> result = can.onEaten(player, playerStack);
-                playerStack = (ItemStack)result.getResult();
+                playerStack = result.getResult();
                 if (StackUtil.isEmpty(playerStack)) {
                     player.inventory.mainInventory.set(slot, StackUtil.emptyStack);
                 }
 
                 if (result.getType() == EnumActionResult.SUCCESS) {
-                    ElectricItem.manager.use(itemStack, 1000.0D, (EntityLivingBase)null);
+                    ElectricItem.manager.use(itemStack, 1000.0D, null);
                 }
 
                 ret = true;
@@ -434,6 +443,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         info.add(ElectricItem.manager.getToolTip(stack));
         return info;
     }
+
     public void updateVisibility(EntityPlayer player) {
         BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
         boolean wetBiome = player.world.getBiome(pos).getRainfall() > 0.0F;
@@ -496,7 +506,8 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         }
         protect = Math.min(protect, EnumInfoUpgradeModules.PROTECTION.max);
 
-        ElectricItem.manager.discharge(stack,
+        ElectricItem.manager.discharge(
+                stack,
                 damage * (this.getEnergyPerDamage() - this.getEnergyPerDamage() * 0.2 * protect),
                 Integer.MAX_VALUE,
                 true,
@@ -512,7 +523,6 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
     public double getDamageAbsorptionRatio() {
         return this.damageAbsorptionRatio;
     }
-
 
 
     @Override

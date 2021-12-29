@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum  BlockCable implements ITeBlock {
+public enum BlockCable implements ITeBlock {
 
     cable_iu(TileEntityCable.class, -1),
     ;

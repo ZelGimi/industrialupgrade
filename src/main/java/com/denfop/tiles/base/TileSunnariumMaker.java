@@ -28,7 +28,7 @@ public class TileSunnariumMaker extends TileEntityBaseSunnariumMaker {
     }
 
     public static void init() {
-       addSunnariumMaker(new ItemStack(IUItem.sunnarium, 1, 4), new ItemStack(Items.GLOWSTONE_DUST), new ItemStack(Items.QUARTZ),
+        addSunnariumMaker(new ItemStack(IUItem.sunnarium, 1, 4), new ItemStack(Items.GLOWSTONE_DUST), new ItemStack(Items.QUARTZ),
                 new ItemStack(IUItem.iuingot, 1, 3), new ItemStack(IUItem.sunnarium, 1, 3)
         );
     }

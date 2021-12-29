@@ -45,7 +45,7 @@ public class CompressorRecipe {
             }
         }
         addcompressor(Ic2Items.uraniumOre, 1, new ItemStack(IUItem.itemSSP, 1, 2));
-       addcompressor(Ic2Items.crushedUraniumOre, 1, new ItemStack(IUItem.itemSSP, 1, 2));
+        addcompressor(Ic2Items.crushedUraniumOre, 1, new ItemStack(IUItem.itemSSP, 1, 2));
     }
 
     public static void addcompressor(ItemStack input, int n, ItemStack output) {

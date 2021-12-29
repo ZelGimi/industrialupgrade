@@ -9,16 +9,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ConverterWrapper implements  IRecipeWrapper  {
-
-
+public class ConverterWrapper implements IRecipeWrapper {
 
 
     private final ItemStack outputstack;
 
 
     public ConverterWrapper(ConverterHandler container) {
-
 
 
         this.outputstack = container.getOutput();
@@ -28,7 +25,6 @@ public class ConverterWrapper implements  IRecipeWrapper  {
     public List<ItemStack> getOutputs() {
         return new ArrayList(Collections.singleton(this.outputstack));
     }
-
 
 
     public void getIngredients(IIngredients ingredients) {
@@ -43,4 +39,5 @@ public class ConverterWrapper implements  IRecipeWrapper  {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
     }
+
 }

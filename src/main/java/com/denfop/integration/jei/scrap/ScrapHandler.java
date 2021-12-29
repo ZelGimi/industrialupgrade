@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class ScrapHandler {
-    private static List<ScrapHandler> recipes = new ArrayList<>();
+
+    private static final List<ScrapHandler> recipes = new ArrayList<>();
 
 
     public static List<ScrapHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -41,18 +43,22 @@ public class ScrapHandler {
 
     public static ScrapHandler addRecipe(ItemStack input, ItemStack output) {
         ScrapHandler recipe = new ScrapHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static ScrapHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (ScrapHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (ScrapHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -75,4 +81,5 @@ public class ScrapHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

@@ -27,23 +27,26 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public GenStoneCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIGenStone" +
                         ".png"), 3, 3, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine.gen_stone.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines,1,7).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines, 1, 7).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -55,17 +58,15 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
-
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
 
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect( + 54  - 48,  + 33 + 14 - energylevel, 176,
+        drawTexturedModalRect(+54 - 48, +33 + 14 - energylevel, 176,
                 14 - energylevel, 14, energylevel
         );
         RenderHelper.enableGUIStandardItemLighting();
@@ -78,8 +79,8 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
         this.zLevel = 100.0F;
         mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        mc.getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(Blocks.COBBLESTONE),  + 61,
-                + 25
+        mc.getRenderItem().renderItemAndEffectIntoGUI(new ItemStack(Blocks.COBBLESTONE), +61,
+                +25
         );
 
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -111,7 +112,6 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIGenStone.png");
     }
-
 
 
 }

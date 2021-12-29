@@ -46,7 +46,7 @@ public class BlockOil extends BlockCore implements IModelRegister, ITileEntityPr
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.oil));
         setHarvestLevel("pickaxe", 2);
-        GameRegistry.registerTileEntity(TileOilBlock.class,"oilblock");
+        GameRegistry.registerTileEntity(TileOilBlock.class, "oilblock");
     }
 
     protected BlockStateContainer createBlockState() {

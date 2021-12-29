@@ -41,6 +41,7 @@ public class TileEntityMagnetGenerator extends TileEntityElectricMachine {
             initiate(2);
         }
     }
+
     public String getStartSoundFile() {
         return "Machines/magnet_generator.ogg";
     }

@@ -13,19 +13,21 @@ import java.util.Collection;
 import java.util.List;
 
 public class HandlerHOHandler {
-    private static List<HandlerHOHandler> recipes = new ArrayList<>();
+
+    private static final List<HandlerHOHandler> recipes = new ArrayList<>();
     private final List<ItemStack> output;
 
     public static List<HandlerHOHandler> getRecipes() {
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
     private final ItemStack input;
 
 
-    public HandlerHOHandler(ItemStack input,  List<ItemStack> output) {
+    public HandlerHOHandler(ItemStack input, List<ItemStack> output) {
         this.input = input;
         this.output = output;
     }
@@ -41,18 +43,22 @@ public class HandlerHOHandler {
 
     public static HandlerHOHandler addRecipe(ItemStack input, ArrayList<ItemStack> output) {
         HandlerHOHandler recipe = new HandlerHOHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static HandlerHOHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (HandlerHOHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (HandlerHOHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -62,7 +68,7 @@ public class HandlerHOHandler {
 
     public static void initRecipes() {
         for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.handlerore.getRecipes()) {
-            addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput())   );
+            addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()));
 
         }
     }
@@ -74,4 +80,5 @@ public class HandlerHOHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

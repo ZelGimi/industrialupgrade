@@ -22,7 +22,7 @@ public class TileEntityFermer extends TileEntityMultiMachine {
     }
 
     public static void init() {
-         addrecipe(Items.WHEAT_SEEDS, Items.WHEAT, 2);
+        addrecipe(Items.WHEAT_SEEDS, Items.WHEAT, 2);
         addrecipe(Items.WHEAT, Items.WHEAT_SEEDS, 1);
         addrecipe(Items.CARROT, Items.CARROT, 2);
         addrecipe(Items.POTATO, Items.POTATO, 2);

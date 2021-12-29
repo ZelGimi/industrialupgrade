@@ -84,13 +84,15 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         this.coef = coef;
         this.redstone = this.addComponent(new Redstone(this));
     }
+
     public double getGuiValue(String name) {
         if ("heat".equals(name)) {
-            return this.maxHeat == 0 ? 0.0D : (double)this.heat / (double)this.maxHeat;
+            return this.maxHeat == 0 ? 0.0D : (double) this.heat / (double) this.maxHeat;
         } else {
             throw new IllegalArgumentException("Invalid value: " + name);
         }
     }
+
     abstract void setblock();
 
     public static void showHeatEffects(World world, BlockPos pos, int heat) {
@@ -189,19 +191,18 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     }
 
 
-
-
     public double getReactorEUEnergyOutput() {
         return this.getOfferedEnergy();
     }
+
     public int getSourceTier() {
         return Math.max(EnergyNet.instance.getTierFromPower(this.getOfferedEnergy()), 2);
     }
+
     abstract void getSubs();
 
     public void refreshChambers() {
         getSubs();
-
 
 
     }
@@ -291,7 +292,6 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     }
 
 
-
     public boolean calculateHeatEffects() {
         if (this.heat >= 4000 && IC2.platform.isSimulating() && !(ConfigUtil.getFloat(
                 MainConfig.get(),
@@ -333,7 +333,8 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                 if (power >= 0.7F) {
                     List list1 = this.getWorld().getEntitiesWithinAABB(
                             EntityLivingBase.class,
-                            new AxisAlignedBB(this.getPos().getX() - 3,
+                            new AxisAlignedBB(
+                                    this.getPos().getX() - 3,
                                     this.pos.getY() - 3,
                                     this.pos.getZ() - 3,
                                     this.pos.getX() + 4,
@@ -379,6 +380,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
             return false;
         }
     }
+
     public BlockPos getRandCoord1(int radius) {
         if (radius <= 0) {
             return null;
@@ -387,12 +389,17 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
             BlockPos ret;
             do {
-                ret = this.pos.add(world.rand.nextInt(2 * radius + 1) - radius, world.rand.nextInt(2 * radius + 1) - radius, world.rand.nextInt(2 * radius + 1) - radius);
-            } while(ret.equals(this.pos));
+                ret = this.pos.add(
+                        world.rand.nextInt(2 * radius + 1) - radius,
+                        world.rand.nextInt(2 * radius + 1) - radius,
+                        world.rand.nextInt(2 * radius + 1) - radius
+                );
+            } while (ret.equals(this.pos));
 
             return ret;
         }
     }
+
     public int[] getRandCoord(int radius) {
         if (radius <= 0) {
             return null;

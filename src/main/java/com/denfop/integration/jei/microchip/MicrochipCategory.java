@@ -21,22 +21,24 @@ public class MicrochipCategory extends Gui implements IRecipeCategory<MicrochipR
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public MicrochipCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICirsuit" +
                         ".png"), 3, 3, 140,
-                77);
+                77
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine.generator_microchip.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines,1,6).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines, 1, 6).getUnlocalizedName());
     }
 
 
@@ -51,12 +53,11 @@ public class MicrochipCategory extends Gui implements IRecipeCategory<MicrochipR
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        double energylevel = Math.min(14.0F * energy/100,14);
+        double energylevel = Math.min(14.0F * energy / 100, 14);
         double xScale = 24 * progress / 100;
         double xScale1 = 10.0F * progress / 100;
         double xScale2 = 19.0F * progress / 100;
@@ -66,19 +67,19 @@ public class MicrochipCategory extends Gui implements IRecipeCategory<MicrochipR
 
         mc.getTextureManager().bindTexture(getTexture());
 
-            drawTexturedModalRect( 24,   10, 176, 34, (int) (xScale + 1), 28);
+        drawTexturedModalRect(24, 10, 176, 34, (int) (xScale + 1), 28);
 
 
-            drawTexturedModalRect( 57,   14, 176, 64, (int) (xScale1 + 1), 19);
+        drawTexturedModalRect(57, 14, 176, 64, (int) (xScale1 + 1), 19);
 
 
-            drawTexturedModalRect( 85,   20, 176, 85, (int) (xScale2 + 1), 7);
+        drawTexturedModalRect(85, 20, 176, 85, (int) (xScale2 + 1), 7);
 
 
-        drawTexturedModalRect( 67,   59, 176, 20, 38 + 1, 11);
+        drawTexturedModalRect(67, 59, 176, 20, 38 + 1, 11);
 
-        drawTexturedModalRect( 3,  73 - 13 + 14 - (int)energylevel, 176, 14 - (int)energylevel,
-                14, (int)energylevel
+        drawTexturedModalRect(3, 73 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+                14, (int) energylevel
         );
 
     }
@@ -108,7 +109,6 @@ public class MicrochipCategory extends Gui implements IRecipeCategory<MicrochipR
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICirsuit.png");
     }
-
 
 
 }

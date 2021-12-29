@@ -21,23 +21,26 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public SynthesisCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guisynthesis" +
                         ".png"), 3, 3, 148,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine1.synthesis.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine,1,11).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine, 1, 11).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,12 +52,11 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 15 * progress / 100;
         int xScale1 = 10 * progress / 100;
         if (xScale > 15) {
@@ -63,14 +65,14 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
 
         mc.getTextureManager().bindTexture(getTexture());
 
-            drawTexturedModalRect( + 21,  + 53 + 14 - energylevel, 176, 14 - energylevel,
-                    14, energylevel
-            );
+        drawTexturedModalRect(+21, +53 + 14 - energylevel, 176, 14 - energylevel,
+                14, energylevel
+        );
 
 
-            drawTexturedModalRect( + 36,  + 34, 177, 35, xScale + 1, 9);
+        drawTexturedModalRect(+36, +34, 177, 35, xScale + 1, 9);
 
-            drawTexturedModalRect( + 79,  + 27, 177, 52, xScale1 + 1, 23);
+        drawTexturedModalRect(+79, +27, 177, 52, xScale1 + 1, 23);
 
     }
 
@@ -96,7 +98,6 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisynthesis.png");
     }
-
 
 
 }

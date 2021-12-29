@@ -19,4 +19,5 @@ public interface ITemperature {
     TileEntityElectricMachine getTile();
 
     boolean reveiver();
+
 }

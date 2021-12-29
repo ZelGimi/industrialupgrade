@@ -26,11 +26,12 @@ public class DoubleMolecularTransformerCategory extends Gui implements IRecipeCa
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew" +
                         ".png"), 8, 22, 155,
-                70);
+                70
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockDoubleMolecularTransfomer.double_transformer.getName();
     }
 
@@ -48,7 +49,6 @@ public class DoubleMolecularTransformerCategory extends Gui implements IRecipeCa
     public IDrawable getBackground() {
         return bg;
     }
-
 
 
     @Override
@@ -85,7 +85,6 @@ public class DoubleMolecularTransformerCategory extends Gui implements IRecipeCa
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guidoublemoleculartransformernew.png");
     }
-
 
 
 }

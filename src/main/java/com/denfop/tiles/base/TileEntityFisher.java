@@ -180,28 +180,33 @@ public class TileEntityFisher extends TileEntityElectricMachine
     }
 
     public void onNetworkEvent(int event) {
-        if (this.audioSource == null && getStartSoundFile() != null)
+        if (this.audioSource == null && getStartSoundFile() != null) {
             this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
+        }
         switch (event) {
             case 0:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.play();
+                }
                 break;
             case 1:
                 if (this.audioSource != null) {
                     this.audioSource.stop();
-                    if (getInterruptSoundFile() != null)
+                    if (getInterruptSoundFile() != null) {
                         IUCore.audioManager.playOnce(this, getInterruptSoundFile());
+                    }
                 }
                 break;
             case 2:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.stop();
+                }
                 break;
 
 
         }
     }
+
     static {
         try {
             Field var0 = Random.class.getDeclaredField("seed");

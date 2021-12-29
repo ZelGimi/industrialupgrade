@@ -486,8 +486,9 @@ public class EnergyPickaxe extends ItemTool implements IElectricItem, IModelRegi
             }
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
+                if (player.isSneaking()) {
                     return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
                 return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
             }
@@ -776,23 +777,25 @@ public class EnergyPickaxe extends ItemTool implements IElectricItem, IModelRegi
         if (IUCore.keyboard.isSaveModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean save = !nbt.getBoolean("save");
-            if (IC2.platform.isSimulating())
+            if (IC2.platform.isSimulating()) {
                 IC2.platform.messagePlayer(
-                    player,
-                    TextFormatting.GREEN + Localization.translate("message.savemode") +
-                            (save ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
-            );
+                        player,
+                        TextFormatting.GREEN + Localization.translate("message.savemode") +
+                                (save ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+                );
+            }
             nbt.setBoolean("save", save);
         }
         if (IUCore.keyboard.isBlackListModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean black = !nbt.getBoolean("black");
-            if (IC2.platform.isSimulating())
+            if (IC2.platform.isSimulating()) {
                 IC2.platform.messagePlayer(
-                    player,
-                    TextFormatting.GREEN + Localization.translate("message.blacklist") +
-                            (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
-            );
+                        player,
+                        TextFormatting.GREEN + Localization.translate("message.blacklist") +
+                                (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+                );
+            }
             nbt.setBoolean("black", black);
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {

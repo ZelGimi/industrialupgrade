@@ -78,13 +78,13 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                         "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
                         this.guiLeft + 60, this.guiTop + 25 + 44, 4210752
                 );
-                double hours =0;
+                double hours = 0;
                 double minutes = 0;
                 double seconds = 0;
-                if(this.container.base.time.size() > 0) {
-                     hours = this.container.base.time.get(0);
-                     minutes = this.container.base.time.get(1);
-                     seconds = this.container.base.time.get(2);
+                if (this.container.base.time.size() > 0) {
+                    hours = this.container.base.time.get(0);
+                    minutes = this.container.base.time.get(1);
+                    seconds = this.container.base.time.get(2);
                 }
                 String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") + "" : "";
                 String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
@@ -122,14 +122,16 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                     this.bindTexture();
                     drawTexturedModalRect(this.guiLeft + 23, this.guiTop + 48, 221, 7, 10, (int) chargeLevel);
                     this.bindTexture();
-                    this.fontRenderer.drawString(input + col*size + "x" + this.container.base.inputSlot
+                    this.fontRenderer.drawString(input + col * size + "x" + this.container.base.inputSlot
                                     .get()
                                     .getDisplayName(),
                             this.guiLeft + 60, this.guiTop + 25, 4210752
                     );
 
-                    this.fontRenderer.drawString(output +  output2.stackSize*size + "x" + output1.items.get(0).getDisplayName(), this.guiLeft + 60,
-                            this.guiTop + 25 + 11, 4210752
+                    this.fontRenderer.drawString(output + output2.stackSize * size + "x" + output1.items.get(0).getDisplayName(),
+                            this.guiLeft + 60,
+                            this.guiTop + 25 + 11,
+                            4210752
                     );
                     this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output1.metadata.getDouble("energy") * size) + " EU",
                             this.guiLeft + 60, this.guiTop + 25 + 22, 4210752
@@ -151,10 +153,10 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                             "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
                             this.guiLeft + 60, this.guiTop + 25 + 44, 4210752
                     );
-                    double hours =0;
+                    double hours = 0;
                     double minutes = 0;
                     double seconds = 0;
-                    if(this.container.base.time.size() > 0) {
+                    if (this.container.base.time.size() > 0) {
                         hours = this.container.base.time.get(0);
                         minutes = this.container.base.time.get(1);
                         seconds = this.container.base.time.get(2);

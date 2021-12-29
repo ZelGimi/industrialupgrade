@@ -74,7 +74,8 @@ import java.util.Set;
 
 public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister {
 
-    public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(Blocks.PLANKS.getDefaultState(),
+    public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(
+            Blocks.PLANKS.getDefaultState(),
             Blocks.BOOKSHELF.getDefaultState(),
             Blocks.LOG.getDefaultState(),
             Blocks.LOG2.getDefaultState(),
@@ -466,8 +467,9 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
             }
             aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
-                if(player.isSneaking())
+                if (player.isSneaking()) {
                     return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                }
 
                 return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
             }
@@ -609,8 +611,9 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
 
 
                     ((EntityPlayerMP) entity).addExhaustion(-0.025F);
-                    if (((ModUtils.getore(block,block.getMetaFromState(state))&& check_list(block,
-                            block.getMetaFromState(state) , stack))&& nbt.getBoolean("black")) || !Config.blacklist  || !nbt.getBoolean("black")) {
+                    if (((ModUtils.getore(block, block.getMetaFromState(state)) && check_list(block,
+                            block.getMetaFromState(state), stack
+                    )) && nbt.getBoolean("black")) || !Config.blacklist || !nbt.getBoolean("black")) {
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
                                 item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
@@ -620,12 +623,13 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
                             }
                         }
                     } else {
-                        if( nbt.getBoolean("black"))
-                        for (EntityItem item : items) {
-                            if (!entity.getEntityWorld().isRemote) {
+                        if (nbt.getBoolean("black")) {
+                            for (EntityItem item : items) {
+                                if (!entity.getEntityWorld().isRemote) {
 
                                     item.setDead();
 
+                                }
                             }
                         }
                     }
@@ -638,7 +642,8 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
                     block.onBlockDestroyedByPlayer(world, pos, state);
                 }
 
-                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
+                Objects.requireNonNull(Minecraft.getMinecraft().getConnection()).sendPacket(new CPacketPlayerDigging(
+                        CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK,
                         pos,
                         Minecraft.getMinecraft().objectMouseOver.sideHit
                 ));
@@ -678,6 +683,7 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
 
         return !lst.isEmpty() && !lst.contains(name);
     }
+
     public float energy(ItemStack stack) {
         NBTTagCompound nbt = ModUtils.nbt(stack);
         int energy1 = 0;
@@ -757,9 +763,11 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
         if (IUCore.keyboard.isBlackListModeKeyDown(player)) {
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             boolean black = !nbt.getBoolean("black");
-            CommonProxy.sendPlayerMessage(player,
-                    TextFormatting.GREEN +Localization.translate("message.blacklist") +
-                            (black ? Localization.translate("message.allow") :Localization.translate("message.disallow")));
+            CommonProxy.sendPlayerMessage(
+                    player,
+                    TextFormatting.GREEN + Localization.translate("message.blacklist") +
+                            (black ? Localization.translate("message.allow") : Localization.translate("message.disallow"))
+            );
             nbt.setBoolean("black", black);
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
@@ -862,9 +870,9 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
 
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("iu.changemode_key") +  Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
+            par3List.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
-            par3List.add(Localization.translate("iu.blacklist_key") +  Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode())  + Localization.translate(
+            par3List.add(Localization.translate("iu.blacklist_key") + Keyboard.getKeyName(KeyboardClient.blackmode.getKeyCode()) + Localization.translate(
                     "iu.changemode_rcm"));
 
         }

@@ -36,23 +36,31 @@ public class DraconicIntegration {
         final IRecipeInputFactory input = Recipes.inputFactory;
         Recipes.compressor.addRecipe(
                 input.forStack(new ItemStack(DEFeatures.chaosShard, 1, 2), 1),
-                null,false, new ItemStack(chaosingot, 1));
+                null, false, new ItemStack(chaosingot, 1)
+        );
 
         Recipes.advRecipes.addRecipe(new ItemStack(ChaosEnergyCore, 1), " B ", "BAB", " B ", 'B',
-                new ItemStack(chaosingot, 1), 'A', DEFeatures.draconicEnergyCore);
+                new ItemStack(chaosingot, 1), 'A', DEFeatures.draconicEnergyCore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(blockDESolarPanel, 1, 0), " B ", "BAB", " B ", 'B',
-                new ItemStack(IUItem.blockpanel, 1), 'A', DEFeatures.wyvernCore);
+                new ItemStack(IUItem.blockpanel, 1), 'A', DEFeatures.wyvernCore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(blockDESolarPanel, 1, 1), "AB ", "BAB", " BA", 'B',
-                new ItemStack(blockDESolarPanel, 1, 0), 'A', DEFeatures.awakenedCore);
+                new ItemStack(blockDESolarPanel, 1, 0), 'A', DEFeatures.awakenedCore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(blockDESolarPanel, 1, 2), "ABC", "BAB", "CBA", 'B',
-                new ItemStack(blockDESolarPanel, 1, 1), 'A', DEFeatures.chaoticCore, 'C', ChaosEnergyCore);
+                new ItemStack(blockDESolarPanel, 1, 1), 'A', DEFeatures.chaoticCore, 'C', ChaosEnergyCore
+        );
 
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.UpgradePanelKit, 1, 14), "   ", "BAB", " B ", 'B',
-                new ItemStack(IUItem.blockpanel, 1), 'A', DEFeatures.wyvernCore);
+                new ItemStack(IUItem.blockpanel, 1), 'A', DEFeatures.wyvernCore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.UpgradePanelKit, 1, 15), "A  ", "BAB", " BA", 'B',
-                new ItemStack(blockDESolarPanel, 1, 0), 'A', DEFeatures.awakenedCore);
+                new ItemStack(blockDESolarPanel, 1, 0), 'A', DEFeatures.awakenedCore
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.UpgradePanelKit, 1, 16), "A C", "BAB", "CBA", 'B',
-                new ItemStack(blockDESolarPanel, 1, 1), 'A', DEFeatures.chaoticCore, 'C', ChaosEnergyCore);
+                new ItemStack(blockDESolarPanel, 1, 1), 'A', DEFeatures.chaoticCore, 'C', ChaosEnergyCore
+        );
 
     }
 
@@ -60,4 +68,5 @@ public class DraconicIntegration {
 
 
     }
+
 }

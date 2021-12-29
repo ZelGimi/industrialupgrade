@@ -41,7 +41,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     public final int defaultOperationLength;
     public int energyConsume;
     public final int defaultEnergyConsume;
-    public  double defaultEnergyStorage;
+    public double defaultEnergyStorage;
     public AudioSource audioSource;
     public double progress;
     public double guiProgress = 0;
@@ -49,7 +49,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     public int operationsPerTick;
 
     public TileEntityConverterSolidMatter() {
-        super("",50000, 14, 1);
+        super("", 50000, 14, 1);
         this.MatterSlot = new InvSlotConverterSolidMatter(this, "input");
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 3);
         this.inputSlot = new InvSlotProcessableConverterSolidMatter(this, "inputA", 1, Recipes.matterrecipe);
@@ -58,6 +58,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         this.defaultEnergyStorage = 50000;
         this.defaultEnergyConsume = this.energyConsume = 2;
     }
+
     public void setOverclockRates() {
         this.upgradeSlot.onChanged();
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
@@ -71,6 +72,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         ));
 
     }
+
     public static void init() {
 
         addrecipe(new ItemStack(Blocks.STONE), 0.5, 0, 0, 0, 0, 0.25, 0, 0);
@@ -83,28 +85,37 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         addrecipe(new ItemStack(Blocks.GLASS), 2, 0, 0.5, 0, 0, 0, 0, 0);
         addrecipe(new ItemStack(Blocks.FURNACE), 2, 0, 0, 0, 0, 1, 0, 0);
         addrecipe(new ItemStack(Blocks.END_STONE), 0.5, 0, 0, 0, 0, 0, 0.25, 0);
-        for (int i = 0; i < IUItem.name_mineral.size(); i++)
+        for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.iuingot, 1, i), 2, 0, 0, 0, 0, 6, 0, 0);
+        }
 
     }
 
-    public static void addrecipe(ItemStack stack, double matter, double sunmatter, double aquamatter, double nethermatter, double nightmatter, double earthmatter, double endmatter, double aermatter) {
+    public static void addrecipe(
+            ItemStack stack,
+            double matter,
+            double sunmatter,
+            double aquamatter,
+            double nethermatter,
+            double nightmatter,
+            double earthmatter,
+            double endmatter,
+            double aermatter
+    ) {
         NBTTagCompound nbt = new NBTTagCompound();
         double[] quantitysolid = {matter, sunmatter, aquamatter, nethermatter, nightmatter, earthmatter, endmatter, aermatter};
-        for (int i = 0; i < quantitysolid.length; i++)
+        for (int i = 0; i < quantitysolid.length; i++) {
             ModUtils.SetDoubleWithoutItem(nbt, ("quantitysolid_" + i), quantitysolid[i]);
+        }
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.matterrecipe.addRecipe(input.forStack(stack), nbt,false, stack);
+        Recipes.matterrecipe.addRecipe(input.forStack(stack), nbt, false, stack);
     }
-
 
 
     @Override
     public void onNetworkUpdate(String field) {
 
     }
-
-
 
 
     public double getProgress() {
@@ -121,21 +132,24 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         if (output != null) {
             setActive(true);
 
-            if (this.energy.getEnergy() == 0)
+            if (this.energy.getEnergy() == 0) {
                 IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
-            if (this.useEnergy(this.energyConsume , false) && this.getrequiredmatter(output)) {
+            }
+            if (this.useEnergy(this.energyConsume, false) && this.getrequiredmatter(output)) {
                 this.progress++;
-                this.useEnergy(this.energyConsume , true);
+                this.useEnergy(this.energyConsume, true);
                 needsInvUpdate = true;
             }
 
             double p = (this.progress / operationLength);
 
 
-            if (p <= 1)
+            if (p <= 1) {
                 this.guiProgress = p;
-            if (p > 1)
+            }
+            if (p > 1) {
                 this.guiProgress = 1;
+            }
             if (progress >= operationLength && this.getrequiredmatter(output)) {
 
                 operate(output);
@@ -145,41 +159,48 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
                 IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
             }
         } else {
-            if (getActive())
+            if (getActive()) {
                 IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+            }
 
             setActive(false);
         }
-       needsInvUpdate |= this.upgradeSlot.tickNoMark();
+        needsInvUpdate |= this.upgradeSlot.tickNoMark();
         if (needsInvUpdate) {
             super.markDirty();
         }
     }
 
     private void useMatter(RecipeOutput output) {
-        if (inputSlot.isEmpty())
+        if (inputSlot.isEmpty()) {
             return;
+        }
         ItemStack stack = this.inputSlot.get(0);
 
 
         NBTTagCompound nbt = output.metadata;
         double[] outputmatter = new double[9];
-        for (int i = 0; i < this.quantitysolid.length; i++)
+        for (int i = 0; i < this.quantitysolid.length; i++) {
             outputmatter[i] = nbt.getDouble(("quantitysolid_" + i));
-        for (int i = 0; i < this.quantitysolid.length; i++)
+        }
+        for (int i = 0; i < this.quantitysolid.length; i++) {
             this.quantitysolid[i] -= outputmatter[i];
+        }
     }
 
     public boolean getrequiredmatter(RecipeOutput output) {
         NBTTagCompound nbt = output.metadata;
         double[] outputmatter = new double[9];
 
-        for (int i = 0; i < this.quantitysolid.length; i++)
+        for (int i = 0; i < this.quantitysolid.length; i++) {
             outputmatter[i] = nbt.getDouble(("quantitysolid_" + i));
+        }
 
-        for (int i = 0; i < this.quantitysolid.length; i++)
-            if (!(this.quantitysolid[i] >= outputmatter[i]))
+        for (int i = 0; i < this.quantitysolid.length; i++) {
+            if (!(this.quantitysolid[i] >= outputmatter[i])) {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -201,11 +222,13 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
 
 
     public RecipeOutput getOutput() {
-        if (this.inputSlot.isEmpty())
+        if (this.inputSlot.isEmpty()) {
             return null;
+        }
         RecipeOutput output = this.inputSlot.process();
-        if (output == null)
+        if (output == null) {
             return null;
+        }
         if (this.outputSlot.canAdd(output.items)) {
             return output;
         }
@@ -215,20 +238,21 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
 
     public void markDirty() {
         super.markDirty();
-        if (IC2.platform.isSimulating())
+        if (IC2.platform.isSimulating()) {
             setOverclockRates();
+        }
     }
-
-
 
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        for (int i = 0; i < this.quantitysolid.length; i++)
+        for (int i = 0; i < this.quantitysolid.length; i++) {
             this.quantitysolid[i] = nbttagcompound.getDouble(("quantitysolid_" + i));
+        }
         this.progress = nbttagcompound.getDouble("progress");
 
     }
+
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
@@ -241,7 +265,6 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     protected boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
-
 
 
     protected boolean isSideSolid(EnumFacing side) {
@@ -258,10 +281,11 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        for (int i = 0; i < this.quantitysolid.length; i++)
+        for (int i = 0; i < this.quantitysolid.length; i++) {
             nbttagcompound.setDouble(("quantitysolid_" + i), this.quantitysolid[i]);
+        }
         nbttagcompound.setDouble("progress", this.progress);
-return nbttagcompound;
+        return nbttagcompound;
     }
 
     public double getEnergy() {
@@ -270,8 +294,9 @@ return nbttagcompound;
 
     public boolean useEnergy(double amount, boolean consume) {
         if (this.energy.canUseEnergy(amount)) {
-            if (consume)
+            if (consume) {
                 this.energy.useEnergy(amount);
+            }
             return true;
         }
         return false;
@@ -279,7 +304,7 @@ return nbttagcompound;
 
     public boolean useEnergy(double amount) {
         if (this.energy.canUseEnergy(amount)) {
-                this.energy.useEnergy(amount);
+            this.energy.useEnergy(amount);
             return true;
         }
         return false;
@@ -321,23 +346,27 @@ return nbttagcompound;
 
     @Override
     public void onNetworkEvent(int event) {
-        if (this.audioSource == null && getStartSoundFile() != null)
+        if (this.audioSource == null && getStartSoundFile() != null) {
             this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+        }
         switch (event) {
             case 0:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.play();
+                }
                 break;
             case 1:
                 if (this.audioSource != null) {
                     this.audioSource.stop();
-                    if (getInterruptSoundFile() != null)
+                    if (getInterruptSoundFile() != null) {
                         IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                    }
                 }
                 break;
             case 2:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.stop();
+                }
                 break;
         }
     }

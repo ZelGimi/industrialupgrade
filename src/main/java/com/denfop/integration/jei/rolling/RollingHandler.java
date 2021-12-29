@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class RollingHandler {
-    private static List<RollingHandler> recipes = new ArrayList<>();
+
+    private static final List<RollingHandler> recipes = new ArrayList<>();
 
 
     public static List<RollingHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -41,18 +43,22 @@ public class RollingHandler {
 
     public static RollingHandler addRecipe(ItemStack input, ItemStack output) {
         RollingHandler recipe = new RollingHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static RollingHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (RollingHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (RollingHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -75,4 +81,5 @@ public class RollingHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

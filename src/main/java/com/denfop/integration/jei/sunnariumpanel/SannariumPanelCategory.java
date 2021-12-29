@@ -21,23 +21,26 @@ public class SannariumPanelCategory extends Gui implements IRecipeCategory<Sanna
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public SannariumPanelCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guisunnariumpanelmaker" +
                         ".png"), 3, 3, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockSunnariumPanelMaker.gen_sunnarium.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.sunnariummaker,1).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.sunnariummaker, 1).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,12 +52,11 @@ public class SannariumPanelCategory extends Gui implements IRecipeCategory<Sanna
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 14 * progress / 100;
 
         if (xScale > 14) {
@@ -64,12 +66,12 @@ public class SannariumPanelCategory extends Gui implements IRecipeCategory<Sanna
         mc.getTextureManager().bindTexture(getTexture());
 
 
-            drawTexturedModalRect( + 22,  + 54 + 14 - energylevel, 176, 14 - energylevel,
-                    14, energylevel
-            );
+        drawTexturedModalRect(+22, +54 + 14 - energylevel, 176, 14 - energylevel,
+                14, energylevel
+        );
 
 
-            drawTexturedModalRect( + 71,  + 31, 177, 32, xScale + 1, 15);
+        drawTexturedModalRect(+71, +31, 177, 32, xScale + 1, 15);
 
     }
 
@@ -95,7 +97,6 @@ public class SannariumPanelCategory extends Gui implements IRecipeCategory<Sanna
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guisunnariumpanelmaker.png");
     }
-
 
 
 }

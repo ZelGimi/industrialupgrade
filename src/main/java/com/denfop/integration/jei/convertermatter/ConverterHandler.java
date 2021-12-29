@@ -13,22 +13,23 @@ import java.util.Collection;
 import java.util.List;
 
 public class ConverterHandler {
-    private static List<ConverterHandler> recipes = new ArrayList<>();
+
+    private static final List<ConverterHandler> recipes = new ArrayList<>();
 
 
     public static List<ConverterHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack  output;
+    private final ItemStack output;
 
 
     public ConverterHandler(ItemStack output) {
         this.output = output;
     }
-
 
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
@@ -38,17 +39,20 @@ public class ConverterHandler {
 
     public static ConverterHandler addRecipe(ItemStack output) {
         ConverterHandler recipe = new ConverterHandler(output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static ConverterHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (ConverterHandler recipe : recipes)
+        }
+        for (ConverterHandler recipe : recipes) {
             return recipe;
+        }
         return null;
     }
 
@@ -67,4 +71,5 @@ public class ConverterHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

@@ -137,15 +137,18 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     public boolean operate(boolean sim) {
         FluidStack liquid;
         List<FluidStack> liquid_list = new ArrayList<>();
-        for(int i = this.pos.getX()-1;i < this.pos.getX()+1;i++)
-            for(int j = this.pos.getZ()-1;j < this.pos.getZ()+1;j++)
-                for(int k = this.pos.getY()-1;k < this.pos.getY()+1;k++)
-        for (EnumFacing dir : EnumFacing.values()) {
-            liquid = this.pump(new BlockPos(i + dir.getFrontOffsetX(), k+ dir.getFrontOffsetY(),
-                    j + dir.getFrontOffsetZ()
-            ), sim);
-            if (liquid != null) {
-                liquid_list.add(liquid);
+        for (int i = this.pos.getX() - 1; i < this.pos.getX() + 1; i++) {
+            for (int j = this.pos.getZ() - 1; j < this.pos.getZ() + 1; j++) {
+                for (int k = this.pos.getY() - 1; k < this.pos.getY() + 1; k++) {
+                    for (EnumFacing dir : EnumFacing.values()) {
+                        liquid = this.pump(new BlockPos(i + dir.getFrontOffsetX(), k + dir.getFrontOffsetY(),
+                                j + dir.getFrontOffsetZ()
+                        ), sim);
+                        if (liquid != null) {
+                            liquid_list.add(liquid);
+                        }
+                    }
+                }
             }
         }
 
@@ -153,12 +156,13 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
         for (FluidStack stack : liquid_list) {
 
             if (!sim) {
-                if(this.getFluidTank().fill(stack, false) > 0) {
+                if (this.getFluidTank().fill(stack, false) > 0) {
                     this.getFluidTank().fill(stack, true);
                     canoperate = true;
                 }
-            }else if(this.getFluidTank().fill(stack, false) > 0)
+            } else if (this.getFluidTank().fill(stack, false) > 0) {
                 return true;
+            }
 
 
         }
@@ -228,7 +232,8 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
         this.operationLength = (int) Math.round(stackOpLen * (double) this.operationsPerTick / 64.0D);
         this.energyConsume = applyModifier(this.defaultEnergyConsume, this.upgradeSlot.extraEnergyDemand, 1);
         this.energy.setSinkTier(applyModifier(this.defaultTier, this.upgradeSlot.extraTier, 1.0D));
-        this.energy.setCapacity(applyModifier(this.defaultEnergyStorage,
+        this.energy.setCapacity(applyModifier(
+                this.defaultEnergyStorage,
                 this.upgradeSlot.extraEnergyStorage + this.operationLength * this.energyConsume,
                 this.upgradeSlot.energyStorageMultiplier
         ));

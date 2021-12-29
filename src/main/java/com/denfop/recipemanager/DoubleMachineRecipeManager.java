@@ -110,16 +110,23 @@ public class DoubleMachineRecipeManager implements IDoubleMachineRecipeManager {
         RecipeOutput recipe = this.getRecipes().get(input);
         if (recipe != null && checkListEquality(recipe.items, output.items)) {
             this.recipes.remove(input);
-            for (Iterator<Map.Entry<Input, RecipeOutput>> it = Recipes.Alloysmelter.getRecipes().entrySet().iterator(); it.hasNext(); ) {
-                Map.Entry<Input, RecipeOutput> iRecipeInputRecipeOutputEntry =  it.next();
-             if(  getOutputFor(iRecipeInputRecipeOutputEntry.getKey().container.getInputs().get(0),iRecipeInputRecipeOutputEntry.getKey().fill.getInputs().get(0),false,
-                        false) == null) {
-                 it.remove();
-                 return;
-             }
+            for (Iterator<Map.Entry<Input, RecipeOutput>> it = Recipes.Alloysmelter
+                    .getRecipes()
+                    .entrySet()
+                    .iterator(); it.hasNext(); ) {
+                Map.Entry<Input, RecipeOutput> iRecipeInputRecipeOutputEntry = it.next();
+                if (getOutputFor(iRecipeInputRecipeOutputEntry.getKey().container.getInputs().get(0),
+                        iRecipeInputRecipeOutputEntry.getKey().fill.getInputs().get(0),
+                        false,
+                        false
+                ) == null) {
+                    it.remove();
+                    return;
+                }
             }
         }
     }
+
     private static boolean checkListEquality(Collection<ItemStack> a, Collection<ItemStack> b) {
         if (a.size() != b.size()) {
             return false;
@@ -143,4 +150,5 @@ public class DoubleMachineRecipeManager implements IDoubleMachineRecipeManager {
             return true;
         }
     }
+
 }

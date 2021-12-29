@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.audio;
 
 public class AudioManager {
@@ -32,9 +27,11 @@ public class AudioManager {
     public AudioSource createSource(Object obj, String initialSoundFile) {
         return null;
     }
-    public AudioSource createSource(Object obj, String initialSoundFile,PositionSpec spec) {
+
+    public AudioSource createSource(Object obj, String initialSoundFile, PositionSpec spec) {
         return null;
     }
+
     public AudioSource createSource(
             Object obj,
             PositionSpec positionSpec,

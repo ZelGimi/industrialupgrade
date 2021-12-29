@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.tiles.base;
 
 import com.denfop.Config;
@@ -152,7 +147,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                 TileEntityVein tile = (TileEntityVein) this.getWorld().getTileEntity(new BlockPos(chunkx, 0, chunkz));
                 if (tile.number > 0) {
                     if (this.inputslot.get() != null) {
-                        EnumQuarryModules module =EnumQuarryModules.getFromID(this.inputslot.get().getItemDamage());
+                        EnumQuarryModules module = EnumQuarryModules.getFromID(this.inputslot.get().getItemDamage());
                         EnumQuarryType type = module.type;
 
                         if (type == EnumQuarryType.SPEED) {
@@ -252,24 +247,25 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                             int num = list.size();
                             int chance1 = rand.nextInt(num);
                             if (!list(list_check, list.get(chance1))) {
-                                if(OreDictionary.getOreIDs(list.get(chance1)).length > 0)
-                                if ((!OreDictionary
-                                        .getOreName(OreDictionary.getOreIDs(list.get(chance1))[0])
-                                        .startsWith("gem") && !OreDictionary
-                                        .getOreName(OreDictionary.getOreIDs(list.get(chance1))[0])
-                                        .startsWith("shard")
-                                        && list.get(chance1).getItem() != Items.REDSTONE && list
-                                        .get(chance1)
-                                        .getItem() != Items.DYE && list.get(chance1).getItem() != Items.COAL && list
-                                        .get(chance1)
-                                        .getItem() != Items.GLOWSTONE_DUST) && chance2 >= 0) {
-                                    if (this.outputSlot.canAdd(list.get(chance1))) {
-                                        this.outputSlot.add(list.get(chance1));
-                                    }
-                                } else {
-                                    for (int j = 0; j < chance2 + 1; j++) {
+                                if (OreDictionary.getOreIDs(list.get(chance1)).length > 0) {
+                                    if ((!OreDictionary
+                                            .getOreName(OreDictionary.getOreIDs(list.get(chance1))[0])
+                                            .startsWith("gem") && !OreDictionary
+                                            .getOreName(OreDictionary.getOreIDs(list.get(chance1))[0])
+                                            .startsWith("shard")
+                                            && list.get(chance1).getItem() != Items.REDSTONE && list
+                                            .get(chance1)
+                                            .getItem() != Items.DYE && list.get(chance1).getItem() != Items.COAL && list
+                                            .get(chance1)
+                                            .getItem() != Items.GLOWSTONE_DUST) && chance2 >= 0) {
                                         if (this.outputSlot.canAdd(list.get(chance1))) {
                                             this.outputSlot.add(list.get(chance1));
+                                        }
+                                    } else {
+                                        for (int j = 0; j < chance2 + 1; j++) {
+                                            if (this.outputSlot.canAdd(list.get(chance1))) {
+                                                this.outputSlot.add(list.get(chance1));
+                                            }
                                         }
                                     }
                                 }
@@ -288,7 +284,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         if (this.getWorld().provider.getWorldTime() % 200 == 0) {
             initiate(2);
         }
-        if(getActive()) {
+        if (getActive()) {
             ItemStack stack3 = Ic2Items.ejectorUpgrade;
             ((IUpgradeItem) stack3.getItem()).onTick(stack3, this);
         }
@@ -466,4 +462,5 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                 UpgradableProperty.ItemProducing
         );
     }
+
 }

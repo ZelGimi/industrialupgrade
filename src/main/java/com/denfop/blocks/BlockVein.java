@@ -46,7 +46,7 @@ public class BlockVein extends BlockCore implements IModelRegister, ITileEntityP
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.Magnetite));
         setHarvestLevel("pickaxe", 2);
-        GameRegistry.registerTileEntity(TileEntityVein.class,"veinblock");
+        GameRegistry.registerTileEntity(TileEntityVein.class, "veinblock");
     }
 
     protected BlockStateContainer createBlockState() {

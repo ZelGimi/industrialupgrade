@@ -20,23 +20,25 @@ public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper
 
     private final IDrawableStatic bg;
 
-    public  GenNeuCategory(
+    public GenNeuCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine.neutron_generator.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.machines,1,5).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.machines, 1, 5).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -46,7 +48,6 @@ public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper
     public IDrawable getBackground() {
         return bg;
     }
-
 
 
     @Override
@@ -61,7 +62,7 @@ public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper
     @Override
     public void setRecipe(
             final IRecipeLayout layout,
-            final  GenNeuWrapper recipes,
+            final GenNeuWrapper recipes,
             final IIngredients ingredients
     ) {
 
@@ -77,7 +78,6 @@ public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
     }
-
 
 
 }

@@ -13,19 +13,21 @@ import java.util.List;
 import java.util.Map;
 
 public class PaintingHandler {
-    private static List< PaintingHandler> recipes = new ArrayList<>();
+
+    private static final List<PaintingHandler> recipes = new ArrayList<>();
 
 
-    public static List< PaintingHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+    public static List<PaintingHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack input,input1, output;
+    private final ItemStack input, input1, output;
 
 
-    public PaintingHandler(ItemStack input, ItemStack input1,ItemStack output) {
+    public PaintingHandler(ItemStack input, ItemStack input1, ItemStack output) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
@@ -34,39 +36,46 @@ public class PaintingHandler {
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public ItemStack getInput1() { // Получатель входного предмета рецепта.
         return input1;
     }
+
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
 
-    public static PaintingHandler addRecipe(ItemStack input, ItemStack input1,ItemStack output) {
-        PaintingHandler recipe = new PaintingHandler(input,input1, output);
-        if (recipes.contains(recipe))
+    public static PaintingHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
+        PaintingHandler recipe = new PaintingHandler(input, input1, output);
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static PaintingHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (PaintingHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (PaintingHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ||is.isItemEqual(input1);
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
     public static void initRecipes() {
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
                 Recipes.painting.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0),container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0));
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
+                    container.getValue().items.get(0)
+            );
 
         }
     }
@@ -78,4 +87,5 @@ public class PaintingHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

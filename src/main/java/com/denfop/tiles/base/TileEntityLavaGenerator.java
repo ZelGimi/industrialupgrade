@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.tiles.base;
 
 import com.denfop.container.ContainerLavaGenerator;
@@ -97,6 +92,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
 
         super.onUnloaded();
     }
+
     private void initiate(int soundEvent) {
         IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
     }
@@ -182,6 +178,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
         }
 
     }
+
     public String getStartSoundFile() {
         return "Machines/gen_lava.ogg";
     }

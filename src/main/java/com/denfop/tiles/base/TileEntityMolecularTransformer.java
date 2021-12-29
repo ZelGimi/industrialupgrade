@@ -101,7 +101,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         if (player.getHeldItem(hand).getItem() instanceof AdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
             if (!this.rf) {
                 this.rf = true;
-                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount()-1);
+                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
                 return true;
             }
         }
@@ -515,6 +515,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         }
         return i;
     }
+
     public String getStartSoundFile() {
         return "Machines/molecular.ogg";
     }

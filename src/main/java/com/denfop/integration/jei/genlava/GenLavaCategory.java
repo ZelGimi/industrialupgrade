@@ -16,27 +16,29 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class GenLavaCategory extends Gui implements IRecipeCategory< GenLavaWrapper> {
+public class GenLavaCategory extends Gui implements IRecipeCategory<GenLavaWrapper> {
 
     private final IDrawableStatic bg;
 
-    public  GenLavaCategory(
+    public GenLavaCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine2.lava_gen.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine1,1,12).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 12).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -46,7 +48,6 @@ public class GenLavaCategory extends Gui implements IRecipeCategory< GenLavaWrap
     public IDrawable getBackground() {
         return bg;
     }
-
 
 
     @Override
@@ -61,7 +62,7 @@ public class GenLavaCategory extends Gui implements IRecipeCategory< GenLavaWrap
     @Override
     public void setRecipe(
             final IRecipeLayout layout,
-            final  GenLavaWrapper recipes,
+            final GenLavaWrapper recipes,
             final IIngredients ingredients
     ) {
 
@@ -77,7 +78,6 @@ public class GenLavaCategory extends Gui implements IRecipeCategory< GenLavaWrap
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
     }
-
 
 
 }

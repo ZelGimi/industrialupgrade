@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.tiles.base;
 
 import cofh.redstoneflux.api.IEnergyHandler;
@@ -107,10 +102,11 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
 
     public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
-        if (this.rf)
+        if (this.rf) {
             return receiveEnergy(maxReceive, simulate);
-        else
+        } else {
             return 0;
+        }
 
     }
 
@@ -124,6 +120,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         }
         return i;
     }
+
     public void updateVisibility(TileEntitySolarPanel type) {
         type.wetBiome = this.world.getBiome(this.pos).getRainfall() > 0.0F;
         type.noSunWorld = this.world.provider.isNether();
@@ -159,6 +156,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         }
 
     }
+
     @Override
     protected boolean onActivated(
             final EntityPlayer entityPlayer,
@@ -168,7 +166,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
             final float hitY,
             final float hitZ
     ) {
-        if(this.expstorage  > 0){
+        if (this.expstorage > 0) {
             ExperienceUtils.addPlayerXP(entityPlayer, this.expstorage);
             this.expstorage = 0;
         }
@@ -179,7 +177,12 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                     int meta = type.meta;
                     ItemStack stack = new ItemStack(IUItem.module6, 1, meta);
                     if (!entityPlayer.inventory.addItemStackToInventory(stack)) {
-                        EntityItem item = new EntityItem(entityPlayer.getEntityWorld(),(int) (entityPlayer.posX), (int) entityPlayer.posY - 1, (int) (entityPlayer.posZ));
+                        EntityItem item = new EntityItem(
+                                entityPlayer.getEntityWorld(),
+                                (int) (entityPlayer.posX),
+                                (int) entityPlayer.posY - 1,
+                                (int) (entityPlayer.posZ)
+                        );
                         item.setItem(stack);
                         item.setPosition(entityPlayer.posX, entityPlayer.posY - 1, entityPlayer.posZ);
                         item.setDefaultPickupDelay();
@@ -188,14 +191,16 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
 
                 }
                 this.solartype = ItemModuleTypePanel.getSolarType(entityPlayer.getHeldItem(hand).getItemDamage());
-                entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount()-1);
+                entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount() - 1);
                 return true;
             }
-            if (entityPlayer.getHeldItem(hand).getItem() instanceof AdditionModule && entityPlayer.getHeldItem(hand).getItemDamage() == 4) {
+            if (entityPlayer.getHeldItem(hand).getItem() instanceof AdditionModule && entityPlayer
+                    .getHeldItem(hand)
+                    .getItemDamage() == 4) {
                 if (!this.rf && this.module == 0) {
                     this.rf = true;
                     this.module = 1;
-                    entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount()-1);
+                    entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount() - 1);
                     return true;
                 }
             }
@@ -203,7 +208,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                 if (!this.quickly && this.module == 0) {
                     this.quickly = true;
                     this.module = 1;
-                    entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount()-1);
+                    entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount() - 1);
                     return true;
                 }
             }
@@ -211,12 +216,12 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                 if (!this.modulesize && this.module == 0) {
                     this.modulesize = true;
                     this.module = 1;
-                    entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount()-1);
+                    entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount() - 1);
                     return true;
                 }
             }
         }
-        return super.onActivated( entityPlayer, hand, side, hitX, hitY, hitZ);
+        return super.onActivated(entityPlayer, hand, side, hitX, hitY, hitZ);
     }
 
     public abstract String getInventoryName();
@@ -302,10 +307,9 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         nbttagcompound.setBoolean("rf", this.rf);
         nbttagcompound.setBoolean("quickly", this.quickly);
         nbttagcompound.setBoolean("modulesize", this.modulesize);
-        if (this.solartype != null)
+        if (this.solartype != null) {
             nbttagcompound.setInteger("panelid", this.solartype.meta);
-
-        else {
+        } else {
             nbttagcompound.setInteger("panelid", -1);
         }
         return nbttagcompound;
@@ -346,22 +350,25 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         if (solartype != null) {
             if (this.energy.getEnergy() < this.energy.getCapacity() || (this.energy2 < this.maxEnergy2 && this.rf)) {
                 TileEntitySolarPanel panel = new TileEntitySolarPanel(solartype);
-                if (panel.getWorld() != this.getWorld())
+                if (panel.getWorld() != this.getWorld()) {
                     panel.setWorld(this.getWorld());
+                }
                 panel.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
                         (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
                                 MapColor.AIR) && !panel.noSunWorld;
                 panel.wetBiome = panel.getWorld().getBiome(this.pos).getRainfall() > 0.0F;
-                panel.rain =  panel.wetBiome && (this.world.isRaining() || this.world.isThundering());
+                panel.rain = panel.wetBiome && (this.world.isRaining() || this.world.isThundering());
                 panel.sunIsUp = this.getWorld().isDaytime();
 
-                if (panel.active == null || this.getWorld().provider.getWorldTime() % 40 == 0)
+                if (panel.active == null || this.getWorld().provider.getWorldTime() % 40 == 0) {
                     updateVisibility(panel);
+                }
                 panel.gainFuel();
-                if (this.energy.getEnergy() < this.energy.getCapacity())
+                if (this.energy.getEnergy() < this.energy.getCapacity()) {
                     this.energy.addEnergy(Math.min(panel.generating, energy.getFreeEnergy()));
-                else if (this.energy2 < this.maxEnergy2 && this.rf)
+                } else if (this.energy2 < this.maxEnergy2 && this.rf) {
                     this.energy2 += Math.min(panel.generating, (this.maxEnergy2 - this.energy2) / Config.coefficientrf);
+                }
             }
         }
         int quickly = 1;
@@ -625,4 +632,5 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public void onUpgraded() {
         this.rerender();
     }
+
 }

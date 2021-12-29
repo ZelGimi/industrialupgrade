@@ -21,11 +21,13 @@ import java.util.Collections;
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTFermer {
+
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
         CraftTweakerAPI.apply(new MachineAddRecipeAction("Fermer", Recipes.fermer,
 
-                CraftTweakerMC.getItemStacks(output), null, new IC2RecipeInput(container)));
+                CraftTweakerMC.getItemStacks(output), null, new IC2RecipeInput(container)
+        ));
     }
 
     @ZenMethod
@@ -34,7 +36,8 @@ public class CTFermer {
         nbt.setInteger("operationLength", time);
         CraftTweakerAPI.apply(new MachineAddRecipeAction("Fermer", Recipes.fermer,
 
-                CraftTweakerMC.getItemStacks(output), nbt, new IC2RecipeInput(container)));
+                CraftTweakerMC.getItemStacks(output), nbt, new IC2RecipeInput(container)
+        ));
     }
 
     @ZenMethod
@@ -44,7 +47,8 @@ public class CTFermer {
         nbt.setBoolean("consume", consume);
         CraftTweakerAPI.apply(new MachineAddRecipeAction("Fermer", Recipes.fermer,
 
-                CraftTweakerMC.getItemStacks(output), nbt, new IC2RecipeInput(container)));
+                CraftTweakerMC.getItemStacks(output), nbt, new IC2RecipeInput(container)
+        ));
     }
 
     @ZenMethod
@@ -55,13 +59,15 @@ public class CTFermer {
     @ZenMethod
     public static IItemStack[] getOutput(IItemStack input) {
         RecipeOutput output = Recipes.molecular.getOutputFor(CraftTweakerMC.getItemStack(input), false);
-        if (output == null || output.items.isEmpty())
+        if (output == null || output.items.isEmpty()) {
             return null;
+        }
         return CraftTweakerMC.getIItemStacks(output.items);
     }
 
     private static class Remove extends BaseAction {
-        private IItemStack input;
+
+        private final IItemStack input;
 
         public Remove(IItemStack input) {
             super("Fermer");
@@ -70,14 +76,17 @@ public class CTFermer {
 
         public void apply() {
             RecipeOutput output = Recipes.fermer.getOutputFor(CraftTweakerMC.getItemStack(input), false);
-            if (output == null || output.items.isEmpty())
+            if (output == null || output.items.isEmpty()) {
                 return;
+            }
             Recipes.fermer.removeRecipe(CraftTweakerMC.getItemStack(input), Collections.singletonList(output.items.get(0)));
 
         }
 
         protected String getRecipeInfo() {
-            return LogHelper.getStackDescription((IIngredient)this.input);
+            return LogHelper.getStackDescription(this.input);
         }
+
     }
+
 }

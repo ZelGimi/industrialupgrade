@@ -21,24 +21,27 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public EnrichCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guenrichment" +
                         ".png"), 3, 3, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine1.enrichment.getName();
     }
 
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine,1,10).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine, 1, 10).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -50,24 +53,23 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        double energylevel = Math.min(14.0F * energy/100,14);
+        double energylevel = Math.min(14.0F * energy / 100, 14);
         double xScale = 15 * progress / 100;
         if (xScale > 15) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect( + 22,  + 54 + 14 - (int)energylevel, 176, 14 - (int)energylevel,
-                14, (int)energylevel
+        drawTexturedModalRect(+22, +54 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+                14, (int) energylevel
         );
 
 
-        drawTexturedModalRect( + 64 + 1,  + 32, 177, 32, (int)xScale + 1, 15);
+        drawTexturedModalRect(+64 + 1, +32, 177, 32, (int) xScale + 1, 15);
 
     }
 
@@ -93,7 +95,6 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guenrichment.png");
     }
-
 
 
 }

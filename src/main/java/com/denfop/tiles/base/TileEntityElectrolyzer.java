@@ -46,23 +46,27 @@ public class TileEntityElectrolyzer extends TileEntityBaseLiquedMachine {
     }
 
     public void onNetworkEvent(int event) {
-        if (this.audioSource == null && getStartSoundFile() != null)
+        if (this.audioSource == null && getStartSoundFile() != null) {
             this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
+        }
         switch (event) {
             case 0:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.play();
+                }
                 break;
             case 1:
                 if (this.audioSource != null) {
                     this.audioSource.stop();
-                    if (getInterruptSoundFile() != null)
+                    if (getInterruptSoundFile() != null) {
                         IUCore.audioManager.playOnce(this, getInterruptSoundFile());
+                    }
                 }
                 break;
             case 2:
-                if (this.audioSource != null)
+                if (this.audioSource != null) {
                     this.audioSource.stop();
+                }
                 break;
 
 
@@ -107,16 +111,18 @@ public class TileEntityElectrolyzer extends TileEntityBaseLiquedMachine {
                 if (anode.getItemDamage() < anode.getMaxDamage()) {
                     anode.setItemDamage(anode.getItemDamage() + 1);
                 }
-                if ( cathode.getItemDamage() == cathode.getMaxDamage())
-                this.cathodeslot.consume(1);
-                if ( anode.getItemDamage() == anode.getMaxDamage())
-                this.anodeslot.consume(1);
+                if (cathode.getItemDamage() == cathode.getMaxDamage()) {
+                    this.cathodeslot.consume(1);
+                }
+                if (anode.getItemDamage() == anode.getMaxDamage()) {
+                    this.anodeslot.consume(1);
+                }
             } else {
                 setActive(false);
             }
 
 
-        }else {
+        } else {
             setActive(false);
         }
 

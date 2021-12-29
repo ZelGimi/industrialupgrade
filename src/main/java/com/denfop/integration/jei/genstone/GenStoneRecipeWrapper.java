@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GenStoneRecipeWrapper implements  IRecipeWrapper  {
-
-
+public class GenStoneRecipeWrapper implements IRecipeWrapper {
 
 
     private final ItemStack inputstack;
@@ -28,26 +26,31 @@ public class GenStoneRecipeWrapper implements  IRecipeWrapper  {
         this.outputstack = container.getOutput();
 
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
+
     public ItemStack getInput1() {
         return inputstack1;
     }
+
     public List<List<ItemStack>> getInputs() {
         ItemStack inputs = this.inputstack;
         List<ItemStack> stack = new ArrayList<>();
 
-        if(OreDictionary.getOreIDs(inputs).length >0){
-            int id =    OreDictionary.getOreIDs(inputs)[0];
+        if (OreDictionary.getOreIDs(inputs).length > 0) {
+            int id = OreDictionary.getOreIDs(inputs)[0];
             stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
-        }else
+        } else {
             stack.add(inputs);
-        if(OreDictionary.getOreIDs(this.inputstack1).length >0){
-            int id =    OreDictionary.getOreIDs(this.inputstack1)[0];
+        }
+        if (OreDictionary.getOreIDs(this.inputstack1).length > 0) {
+            int id = OreDictionary.getOreIDs(this.inputstack1)[0];
             stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
-        }else
+        } else {
             stack.add(this.inputstack1);
+        }
 
         return inputs.isEmpty() ? Collections.emptyList() : Collections.singletonList(stack);
     }
@@ -55,7 +58,6 @@ public class GenStoneRecipeWrapper implements  IRecipeWrapper  {
     public List<ItemStack> getOutputs() {
         return new ArrayList(Collections.singleton(this.outputstack));
     }
-
 
 
     public void getIngredients(IIngredients ingredients) {
@@ -71,4 +73,5 @@ public class GenStoneRecipeWrapper implements  IRecipeWrapper  {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
     }
+
 }

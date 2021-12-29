@@ -20,23 +20,25 @@ public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumW
 
     private final IDrawableStatic bg;
 
-    public  GenHeliumCategory(
+    public GenHeliumCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine2.helium_generator.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine1,1,14).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 14).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -46,7 +48,6 @@ public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumW
     public IDrawable getBackground() {
         return bg;
     }
-
 
 
     @Override
@@ -61,7 +62,7 @@ public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumW
     @Override
     public void setRecipe(
             final IRecipeLayout layout,
-            final  GenHeliumWrapper recipes,
+            final GenHeliumWrapper recipes,
             final IIngredients ingredients
     ) {
 
@@ -77,7 +78,6 @@ public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumW
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
     }
-
 
 
 }

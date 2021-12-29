@@ -20,23 +20,26 @@ public class RefinerCategory extends Gui implements IRecipeCategory<RefinerRecip
 
     private final IDrawableStatic bg;
     private int energy = 0;
+
     public RefinerCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guioilrefiner" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockRefiner.refiner.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.oilrefiner,1).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.oilrefiner, 1).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -48,18 +51,15 @@ public class RefinerCategory extends Gui implements IRecipeCategory<RefinerRecip
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
 
         energy++;
-        int energylevel = Math.min(29 * energy/100,29);
+        int energylevel = Math.min(29 * energy / 100, 29);
         mc.getTextureManager().bindTexture(getTexture());
 
 
-        this.drawTexturedModalRect( + 34,  + 64, 177, 104, energylevel, 9);
-
-
+        this.drawTexturedModalRect(+34, +64, 177, 104, energylevel, 9);
 
 
     }
@@ -90,7 +90,6 @@ public class RefinerCategory extends Gui implements IRecipeCategory<RefinerRecip
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guioilrefiner.png");
     }
-
 
 
 }

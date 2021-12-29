@@ -40,6 +40,7 @@ public enum EnumModule {
         this.percent = percent / 100;
         this.description = description;
     }
+
     public static EnumModule getFromID(final int ID) {
         return values()[ID % values().length];
     }

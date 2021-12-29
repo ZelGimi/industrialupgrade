@@ -71,9 +71,7 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
                 if (enumblock != null && enumblock.kit_meta == meta) {
 
 
-
                     TileEntityElectricBlock te = enumblock.state;
-
 
 
                     if (te != null) {
@@ -82,12 +80,10 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
                         te.readFromNBT(nbt);
                         world.setTileEntity(pos, te);
                         te.onUpgraded();
-                        te .markDirty();
+                        te.markDirty();
                         stack.setCount(stack.getCount() - 1);
                         return EnumActionResult.SUCCESS;
                     }
-
-
 
 
                 }

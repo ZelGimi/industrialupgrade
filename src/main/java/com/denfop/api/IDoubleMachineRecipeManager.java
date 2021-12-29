@@ -38,7 +38,7 @@ public interface IDoubleMachineRecipeManager {
      */
     Map<Input, RecipeOutput> getRecipes();
 
-    void  removeRecipe(Input input, RecipeOutput output);
+    void removeRecipe(Input input, RecipeOutput output);
 
     class Input {
 
@@ -54,12 +54,15 @@ public interface IDoubleMachineRecipeManager {
         public boolean matches1(ItemStack container1, ItemStack fill1) {
             return this.container.matches(fill1) && this.fill.matches(container1);
         }
-        public IRecipeInput getContainer(){
+
+        public IRecipeInput getContainer() {
             return container;
         }
-        public IRecipeInput getFill(){
+
+        public IRecipeInput getFill() {
             return fill;
         }
+
         public final IRecipeInput container;
         public final IRecipeInput fill;
 

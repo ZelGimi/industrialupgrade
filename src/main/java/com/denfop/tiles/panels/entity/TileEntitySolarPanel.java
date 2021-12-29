@@ -129,19 +129,19 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
 
 
-            if (Config.promt) {
-                    info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
-                            + ModUtils.getString(this.genDay) + " EU/t ");
-                    info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
-                            + ModUtils.getString(this.genNight) + " EU/t ");
+        if (Config.promt) {
+            info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                    + ModUtils.getString(this.genDay) + " EU/t ");
+            info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                    + ModUtils.getString(this.genNight) + " EU/t ");
 
-                    info.add(Localization.translate("ic2.item.tooltip.Output") + " "
-                            + ModUtils.getString(this.production) + " EU/t ");
-                    info.add(Localization.translate("ic2.item.tooltip.Capacity") + " "
-                            + ModUtils.getString(this.maxStorage) + " EU ");
-                    info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
+            info.add(Localization.translate("ic2.item.tooltip.Output") + " "
+                    + ModUtils.getString(this.production) + " EU/t ");
+            info.add(Localization.translate("ic2.item.tooltip.Capacity") + " "
+                    + ModUtils.getString(this.maxStorage) + " EU ");
+            info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
 
-            }
+        }
 
 
     }
@@ -231,9 +231,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         celestialAngle %= 360;
         celestialAngle += 12;
         //TODO: end code GC
-        if (celestialAngle <= 90)
+        if (celestialAngle <= 90) {
             k = celestialAngle / 90;
-        else if (celestialAngle > 90 && celestialAngle < 180) {
+        } else if (celestialAngle > 90 && celestialAngle < 180) {
             celestialAngle -= 90;
             k = 1 - celestialAngle / 90;
         } else if (celestialAngle > 180 && celestialAngle < 270) {
@@ -292,7 +292,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
 
 
     }
-
 
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
@@ -507,7 +506,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     }
 
     public int getSourceTier() {
-           return Math.max(EnergyNet.instance.getTierFromPower(this.production), 2);
+        return Math.max(EnergyNet.instance.getTierFromPower(this.production), 2);
     }
 
     @Override

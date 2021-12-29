@@ -53,13 +53,17 @@ public class EventUpdate {
                                 "updatemod") + TextFormatting.RESET + TextFormatting.GREEN + "" + TextFormatting.BOLD + this.thread.getVersion()
                 );
 
-                IC2.platform.messagePlayer(player,
-                        TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod5"));
+                IC2.platform.messagePlayer(
+                        player,
+                        TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod5")
+                );
 
                 IC2.platform.messagePlayer(player, this.thread.getChangelog());
 
-                IC2.platform.messagePlayer(player,
-                        TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod2"));
+                IC2.platform.messagePlayer(
+                        player,
+                        TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod2")
+                );
 
                 IC2.platform.messagePlayer(player, this.thread.getDownload());
             }

@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop;
 
 import ic2.core.IC2;
@@ -15,6 +10,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class IULoot {
+
     public static void init() {
         new IULoot();
     }
@@ -30,12 +26,16 @@ public class IULoot {
                 return;
             }
 
-            if (this.getClass().getResource("/assets/industrialupgrade/loot_tables/" + event.getName().getResourcePath() + ".json") == null) {
+            if (this.getClass().getResource("/assets/industrialupgrade/loot_tables/" + event
+                    .getName()
+                    .getResourcePath() + ".json") == null) {
                 return;
             }
 
-            LootTable table = event.getLootTableManager().getLootTableFromLocation(new ResourceLocation(Constants.MOD_ID,
-                    event.getName().getResourcePath()));
+            LootTable table = event.getLootTableManager().getLootTableFromLocation(new ResourceLocation(
+                    Constants.MOD_ID,
+                    event.getName().getResourcePath()
+            ));
             if (table == null || table == LootTable.EMPTY_LOOT_TABLE) {
                 return;
             }
@@ -51,4 +51,5 @@ public class IULoot {
         }
 
     }
+
 }

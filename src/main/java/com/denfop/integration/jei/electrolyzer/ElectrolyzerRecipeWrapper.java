@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ElectrolyzerRecipeWrapper implements  IRecipeWrapper  {
-
-
+public class ElectrolyzerRecipeWrapper implements IRecipeWrapper {
 
 
     private final FluidStack inputstack;
@@ -26,12 +24,15 @@ public class ElectrolyzerRecipeWrapper implements  IRecipeWrapper  {
         this.outputstack = container.getOutput();
 
     }
+
     public FluidStack getInput() {
         return inputstack;
     }
+
     public FluidStack getOutput1() {
         return outputstack1;
     }
+
     public List<List<FluidStack>> getInputs() {
         FluidStack inputs = this.inputstack;
         List<FluidStack> stack = new ArrayList<>();
@@ -47,17 +48,14 @@ public class ElectrolyzerRecipeWrapper implements  IRecipeWrapper  {
     }
 
 
-
-
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputLists(FluidStack.class, this.getInputs());
         ingredients.setOutputs(FluidStack.class, this.getOutputs());
     }
 
 
-
-
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
     }
+
 }

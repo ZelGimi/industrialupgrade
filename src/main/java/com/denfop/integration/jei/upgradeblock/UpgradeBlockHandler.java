@@ -13,19 +13,21 @@ import java.util.List;
 import java.util.Map;
 
 public class UpgradeBlockHandler {
-    private static List< UpgradeBlockHandler> recipes = new ArrayList<>();
+
+    private static final List<UpgradeBlockHandler> recipes = new ArrayList<>();
 
 
-    public static List< UpgradeBlockHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+    public static List<UpgradeBlockHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack input,input1, output;
+    private final ItemStack input, input1, output;
 
 
-    public UpgradeBlockHandler(ItemStack input, ItemStack input1,ItemStack output) {
+    public UpgradeBlockHandler(ItemStack input, ItemStack input1, ItemStack output) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
@@ -34,39 +36,46 @@ public class UpgradeBlockHandler {
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public ItemStack getInput1() { // Получатель входного предмета рецепта.
         return input1;
     }
+
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
 
-    public static UpgradeBlockHandler addRecipe(ItemStack input, ItemStack input1,ItemStack output) {
-        UpgradeBlockHandler recipe = new UpgradeBlockHandler(input,input1, output);
-        if (recipes.contains(recipe))
+    public static UpgradeBlockHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
+        UpgradeBlockHandler recipe = new UpgradeBlockHandler(input, input1, output);
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static UpgradeBlockHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (UpgradeBlockHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (UpgradeBlockHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ||is.isItemEqual(input1);
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
     public static void initRecipes() {
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
                 Recipes.upgrade.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0),container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0));
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
+                    container.getValue().items.get(0)
+            );
 
         }
     }
@@ -78,4 +87,5 @@ public class UpgradeBlockHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

@@ -36,11 +36,13 @@ public class GUIGenerationMicrochip extends GuiIC2<ContainerBaseGenerationChipMa
                 .withTooltip(Localization.translate("iu.temperature") + ModUtils.getString(this.container.base.getTemperature()) + "/" + ModUtils.getString(
                         this.container.base.getMaxTemperature()))
                 .drawForeground(par1, par2);
-        if( this.container.base.inputSlotA.process() != null)
-            if( !Recipes.mechanism.hasHeaters( this.container.base))
-        new AdvArea(this, 48, 61, 66, 79)
-                .withTooltip(Localization.translate("iu.needheaters"))
-                .drawForeground(par1, par2);
+        if (this.container.base.inputSlotA.process() != null) {
+            if (!Recipes.mechanism.hasHeaters(this.container.base)) {
+                new AdvArea(this, 48, 61, 66, 79)
+                        .withTooltip(Localization.translate("iu.needheaters"))
+                        .drawForeground(par1, par2);
+            }
+        }
 
     }
 
@@ -71,29 +73,30 @@ public class GUIGenerationMicrochip extends GuiIC2<ContainerBaseGenerationChipMa
         if (temperature > 0) {
             drawTexturedModalRect(xoffset + 70, yoffset + 62, 176, 20, temperature + 1, 11);
         }
-       if( this.container.base.inputSlotA.process() != null)
-           if( !Recipes.mechanism.hasHeaters( this.container.base)) {
-               drawTexturedModalRect(xoffset + 37, yoffset + 60, 177, 97, 9, 16);
+        if (this.container.base.inputSlotA.process() != null) {
+            if (!Recipes.mechanism.hasHeaters(this.container.base)) {
+                drawTexturedModalRect(xoffset + 37, yoffset + 60, 177, 97, 9, 16);
 
-               RenderHelper.enableGUIStandardItemLighting();
-               GL11.glPushMatrix();
-               GL11.glColor4f(1, 1, 1, 1);
-               GL11.glEnable(GL11.GL_LIGHTING);
-               GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-               GlStateManager.disableLighting();
-               GlStateManager.enableDepth();
-               this.zLevel = 100.0F;
-               mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                RenderHelper.enableGUIStandardItemLighting();
+                GL11.glPushMatrix();
+                GL11.glColor4f(1, 1, 1, 1);
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+                GlStateManager.disableLighting();
+                GlStateManager.enableDepth();
+                this.zLevel = 100.0F;
+                mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-               itemRender.renderItemAndEffectIntoGUI(new ItemStack(IUItem.basemachine2, 1, 5), xoffset + 49,
-                       yoffset + 61
-               );
+                itemRender.renderItemAndEffectIntoGUI(new ItemStack(IUItem.basemachine2, 1, 5), xoffset + 49,
+                        yoffset + 61
+                );
 
-               GL11.glDisable(GL11.GL_LIGHTING);
-               GlStateManager.enableLighting();
-               RenderHelper.enableStandardItemLighting();
-               GL11.glPopMatrix();
-           }
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GlStateManager.enableLighting();
+                RenderHelper.enableStandardItemLighting();
+                GL11.glPopMatrix();
+            }
+        }
     }
 
     public String getName() {

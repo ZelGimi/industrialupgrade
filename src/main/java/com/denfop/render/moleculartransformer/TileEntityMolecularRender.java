@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.opengl.GL11;
+
 public class TileEntityMolecularRender extends TileEntitySpecialRenderer<TileEntityMolecularTransformer> {
 
     public static final ResourceLocation texture = new ResourceLocation(
@@ -76,7 +77,7 @@ public class TileEntityMolecularRender extends TileEntitySpecialRenderer<TileEnt
     );
     static final IModelCustom model = AdvancedModelLoader
             .loadModel(new ResourceLocation(Constants.TEXTURES, "models/MolecularT1.obj"));
-  
+
     public void render(
             TileEntityMolecularTransformer tile,
             double x,

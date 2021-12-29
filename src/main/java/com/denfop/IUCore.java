@@ -127,6 +127,7 @@ public final class IUCore {
     public static KeyboardIU keyboard;
 
     public static SideGateway<NetworkManager> network;
+
     static {
         FluidRegistry.enableUniversalBucket();
         IUCore.instance = new IUCore();
@@ -140,7 +141,6 @@ public final class IUCore {
     }
 
 
-
     public static <E extends Enum<E> & ITeBlock> void register(Class<E> enumClass, ResourceLocation ref) {
         TeBlockRegistry.addAll(enumClass, ref);
         TeBlockRegistry.setDefaultMaterial(ref, Material.ROCK);
@@ -149,12 +149,16 @@ public final class IUCore {
                 block.getAllTypes().forEach(type -> {
                     if (type.hasItem()) {
                         list.add(block.getItemStack(type));
-                        if (ref.equals(IUStorage.IDENTITY) ||ref.equals(IUChargepadStorage.IDENTITY) ) {
+                        if (ref.equals(IUStorage.IDENTITY) || ref.equals(IUChargepadStorage.IDENTITY)) {
                             ItemStack filled = block.getItemStack(type);
-                            ModUtils.nbt(filled).setDouble("energy",
-                                    ((IStorage)(((IElectricBlock)type).getDummyElec())).getEUCapacity());
-                            ModUtils.nbt(filled).setDouble("energy2",
-                                    ((IStorage)(((IElectricBlock)type).getDummyElec())).getRFCapacity());
+                            ModUtils.nbt(filled).setDouble(
+                                    "energy",
+                                    ((IStorage) (((IElectricBlock) type).getDummyElec())).getEUCapacity()
+                            );
+                            ModUtils.nbt(filled).setDouble(
+                                    "energy2",
+                                    ((IStorage) (((IElectricBlock) type).getDummyElec())).getRFCapacity()
+                            );
                             list.add(filled);
                         }
                     }
@@ -205,18 +209,22 @@ public final class IUCore {
         Config.Thaumcraft = Loader.isModLoaded("thaumcraft");
         Config.DraconicLoaded = Loader.isModLoaded("draconicevolution");
         Config.AvaritiaLoaded = Loader.isModLoaded("avaritia");
-        Config. BotaniaLoaded = Loader.isModLoaded("botania");
+        Config.BotaniaLoaded = Loader.isModLoaded("botania");
         Config.EnchantingPlus = Loader.isModLoaded("eplus");
         Config.MineFactory = Loader.isModLoaded("MineFactoryReloaded");
-        if(Config.AvaritiaLoaded)
-        register(BlockAvaritiaSolarPanel.class, BlockAvaritiaSolarPanel.IDENTITY);
+        if (Config.AvaritiaLoaded) {
+            register(BlockAvaritiaSolarPanel.class, BlockAvaritiaSolarPanel.IDENTITY);
+        }
 
-            if(Config.BotaniaLoaded)
-        register(BlockBotSolarPanel.class, BlockBotSolarPanel.IDENTITY);
-        if(Config.DraconicLoaded)
-        register(BlockDESolarPanel.class, BlockDESolarPanel.IDENTITY);
-        if(Config.Thaumcraft)
-        register(blockThaumcraftSolarPanel.class, blockThaumcraftSolarPanel.IDENTITY);
+        if (Config.BotaniaLoaded) {
+            register(BlockBotSolarPanel.class, BlockBotSolarPanel.IDENTITY);
+        }
+        if (Config.DraconicLoaded) {
+            register(BlockDESolarPanel.class, BlockDESolarPanel.IDENTITY);
+        }
+        if (Config.Thaumcraft) {
+            register(blockThaumcraftSolarPanel.class, blockThaumcraftSolarPanel.IDENTITY);
+        }
 
 
     }
@@ -232,7 +240,7 @@ public final class IUCore {
         MinecraftForge.EVENT_BUS.register(this);
         IUCore.log = event.getModLog();
         Config.loadConfig(event.getSuggestedConfigurationFile(), event.getSide().isClient());
-    //    MainConfig.get().get("misc/enableEnetExplosions").set(false);
+        //    MainConfig.get().get("misc/enableEnetExplosions").set(false);
         proxy.regrecipemanager();
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
         FMLCommonHandler.instance().bus().register(new TickHandlerIU());
@@ -277,14 +285,18 @@ public final class IUCore {
         BlockConverterMatter.buildDummies();
 
         BlockQuarryVein.buildDummies();
-        if(Config.AvaritiaLoaded)
+        if (Config.AvaritiaLoaded) {
             BlockAvaritiaSolarPanel.buildDummies();
-        if(Config.BotaniaLoaded)
+        }
+        if (Config.BotaniaLoaded) {
             BlockBotSolarPanel.buildDummies();
-        if(Config.DraconicLoaded)
+        }
+        if (Config.DraconicLoaded) {
             BlockDESolarPanel.buildDummies();
-        if(Config.Thaumcraft)
+        }
+        if (Config.Thaumcraft) {
             blockThaumcraftSolarPanel.buildDummies();
+        }
         proxy.preInit(event);
         ListInformation.init();
         GenOre.init();
@@ -296,10 +308,12 @@ public final class IUCore {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         EnumSolarPanels.registerTile();
         ItemUpgradePanelKit.EnumSolarPanelsKit.registerkit();
-        if (event.getSide().isClient())
-        ForgeHooksClient.registerTESRItemStack(
-                Item.getItemFromBlock(IUItem.blockmolecular), 0,
-                BlockMolecular.molecular.getTeClass());
+        if (event.getSide().isClient()) {
+            ForgeHooksClient.registerTESRItemStack(
+                    Item.getItemFromBlock(IUItem.blockmolecular), 0,
+                    BlockMolecular.molecular.getTeClass()
+            );
+        }
 
     }
 
@@ -396,8 +410,9 @@ public final class IUCore {
             String temp = oreClass.substring(3);
 
             if (OreDictionary.getOres("gem" + temp) == null || OreDictionary.getOres("gem" + temp).size() < 1) {
-               if( !list.contains(OreDictionary.getOres(oreClass).get(0)))
-                list.add(OreDictionary.getOres(oreClass).get(0));
+                if (!list.contains(OreDictionary.getOres(oreClass).get(0))) {
+                    list.add(OreDictionary.getOres(oreClass).get(0));
+                }
 
             } else {
                 if (!list.contains(OreDictionary.getOres("gem" + temp).get(0))) {
@@ -413,10 +428,12 @@ public final class IUCore {
             String orename = "ore" + temp;
 
             list.removeAll(OreDictionary.getOres(orename));
-            if (!list.contains(OreDictionary.getOres(oreClass).get(0)))
-            list.add(OreDictionary.getOres(oreClass).get(0));
-            if (!get_ingot.contains(OreDictionary.getOres(oreClass).get(0)))
-            get_ingot.add(OreDictionary.getOres(oreClass).get(0));
+            if (!list.contains(OreDictionary.getOres(oreClass).get(0))) {
+                list.add(OreDictionary.getOres(oreClass).get(0));
+            }
+            if (!get_ingot.contains(OreDictionary.getOres(oreClass).get(0))) {
+                get_ingot.add(OreDictionary.getOres(oreClass).get(0));
+            }
 
 
         }
@@ -436,36 +453,41 @@ public final class IUCore {
         EnumElectricBlockState.register();
 
 
-        list.add(new ItemStack( Items.DIAMOND));
-        list.add(new ItemStack( Items.EMERALD));
-        list.add(new ItemStack( Items.REDSTONE));
-        list.add(new ItemStack( Items.DYE,1,4));
-        list.add(new ItemStack( Items.COAL));
-        list.add(new ItemStack( Items.GLOWSTONE_DUST));
-        get_ingot.add(new ItemStack( Items.DIAMOND));
-        get_ingot.add(new ItemStack( Items.EMERALD));
-        get_ingot.add(new ItemStack( Items.REDSTONE));
-        get_ingot.add(new ItemStack( Items.DYE,1,4));
-        get_ingot.add(new ItemStack( Items.COAL));
-        get_ingot.add(new ItemStack( Items.GLOWSTONE_DUST));
-        for(int i =0; i < list.size();i++)
-            if(list.get(i).isItemEqual(Ic2Items.iridiumOre))
+        list.add(new ItemStack(Items.DIAMOND));
+        list.add(new ItemStack(Items.EMERALD));
+        list.add(new ItemStack(Items.REDSTONE));
+        list.add(new ItemStack(Items.DYE, 1, 4));
+        list.add(new ItemStack(Items.COAL));
+        list.add(new ItemStack(Items.GLOWSTONE_DUST));
+        get_ingot.add(new ItemStack(Items.DIAMOND));
+        get_ingot.add(new ItemStack(Items.EMERALD));
+        get_ingot.add(new ItemStack(Items.REDSTONE));
+        get_ingot.add(new ItemStack(Items.DYE, 1, 4));
+        get_ingot.add(new ItemStack(Items.COAL));
+        get_ingot.add(new ItemStack(Items.GLOWSTONE_DUST));
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isItemEqual(Ic2Items.iridiumOre)) {
                 list.remove(i);
-        list.add(new ItemStack(IUItem.ore,1,14));
-        for(int i =0; i < get_ingot.size();i++)
-            if(get_ingot.get(i).isItemEqual(Ic2Items.iridiumOre))
+            }
+        }
+        list.add(new ItemStack(IUItem.ore, 1, 14));
+        for (int i = 0; i < get_ingot.size(); i++) {
+            if (get_ingot.get(i).isItemEqual(Ic2Items.iridiumOre)) {
                 get_ingot.remove(i);
-        get_ingot.add(new ItemStack(IUItem.iuingot,1,14));
+            }
+        }
+        get_ingot.add(new ItemStack(IUItem.iuingot, 1, 14));
 
     }
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onViewRenderFogDensity(EntityViewRenderEvent.FogDensity event) {
         if (event.getState().getBlock() instanceof BlockIUFluid) {
             event.setCanceled(true);
-            Fluid fluid = ((BlockIUFluid)event.getState().getBlock()).getFluid();
+            Fluid fluid = ((BlockIUFluid) event.getState().getBlock()).getFluid();
             GlStateManager.setFog(GlStateManager.FogMode.EXP);
-            event.setDensity((float) Util.map((double)Math.abs(fluid.getDensity()), 20000.0D, 2.0D));
+            event.setDensity((float) Util.map((double) Math.abs(fluid.getDensity()), 20000.0D, 2.0D));
         }
     }
 

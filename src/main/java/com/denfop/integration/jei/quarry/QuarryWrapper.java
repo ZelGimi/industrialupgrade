@@ -9,8 +9,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuarryWrapper implements  IRecipeWrapper  {
-
+public class QuarryWrapper implements IRecipeWrapper {
 
 
     private final ItemStack outputstack;
@@ -27,15 +26,14 @@ public class QuarryWrapper implements  IRecipeWrapper  {
     public List<ItemStack> getOutputs() {
         ItemStack inputs = this.outputstack;
         List<ItemStack> stack = new ArrayList<>();
-        if(OreDictionary.getOreIDs(inputs).length >0){
-            int id =    OreDictionary.getOreIDs(inputs)[0];
+        if (OreDictionary.getOreIDs(inputs).length > 0) {
+            int id = OreDictionary.getOreIDs(inputs)[0];
             stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
-        }else
-
+        } else {
             stack.add(inputs);
+        }
         return stack;
     }
-
 
 
     public void getIngredients(IIngredients ingredients) {
@@ -49,4 +47,5 @@ public class QuarryWrapper implements  IRecipeWrapper  {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
     }
+
 }

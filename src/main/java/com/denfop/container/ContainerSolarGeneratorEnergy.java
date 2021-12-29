@@ -13,8 +13,9 @@ public class ContainerSolarGeneratorEnergy extends ContainerFullInv<TileSolarGen
         super(entityPlayer, tileEntity, 196);
 
         addSlotToContainer(new SlotInvSlot(tileEntity.outputSlot, 0, 67 + 2, 34 + 1));
-        for(int i =0 ; i < tileEntity.input.size();i++)
-            addSlotToContainer(new SlotInvSlot(tileEntity.input, i, 80+i*18, 85));
+        for (int i = 0; i < tileEntity.input.size(); i++) {
+            addSlotToContainer(new SlotInvSlot(tileEntity.input, i, 80 + i * 18, 85));
+        }
 
     }
 

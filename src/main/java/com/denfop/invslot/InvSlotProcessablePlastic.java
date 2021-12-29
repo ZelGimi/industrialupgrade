@@ -25,7 +25,8 @@ public class InvSlotProcessablePlastic extends InvSlotProcessable {
 
     public boolean accepts(ItemStack itemStack) {
         LiquidUtil.FluidOperationResult result = LiquidUtil.drainContainer(itemStack, null, 1000,
-                FluidContainerOutputMode.EmptyFullToOutput);
+                FluidContainerOutputMode.EmptyFullToOutput
+        );
 
         for (Map.Entry<IPlasticRecipemanager.Input, RecipeOutput> entry : getRecipeList().entrySet()) {
             if (entry.getKey().container.matches(itemStack) || entry.getKey().fill.matches(itemStack)) {
@@ -33,10 +34,12 @@ public class InvSlotProcessablePlastic extends InvSlotProcessable {
             }
 
         }
-        if(result != null){
-        Fluid fluid = result.fluidChange.getFluid();
-        if(fluid.equals(FluidName.fluidpolyeth.getInstance()) || fluid.equals(FluidName.fluidpolyprop.getInstance()))
-            return itemStack != null;}
+        if (result != null) {
+            Fluid fluid = result.fluidChange.getFluid();
+            if (fluid.equals(FluidName.fluidpolyeth.getInstance()) || fluid.equals(FluidName.fluidpolyprop.getInstance())) {
+                return itemStack != null;
+            }
+        }
 
         return false;
 

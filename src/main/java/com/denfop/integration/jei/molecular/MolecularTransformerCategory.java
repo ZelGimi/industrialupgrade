@@ -25,11 +25,12 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/moleculartransformer.png"), 8, 22, 155,
-                70);
+                70
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockMolecular.molecular.getName();
     }
 
@@ -47,7 +48,6 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
     public IDrawable getBackground() {
         return bg;
     }
-
 
 
     @Override
@@ -81,7 +81,6 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/moleculartransformer.png");
     }
-
 
 
 }

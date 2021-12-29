@@ -140,9 +140,10 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         boolean needsInvUpdate;
         needsInvUpdate = this.upgradeSlot.tickNoMark();
         for (FluidTank tank : fluidTank) {
-            if(!tank.equals(fluidTank[0]))
-            for (InvSlotConsumableLiquidByListRemake slot : this.containerslot) {
-                needsInvUpdate |= slot.processFromTank(tank, this.outputSlot);
+            if (!tank.equals(fluidTank[0])) {
+                for (InvSlotConsumableLiquidByListRemake slot : this.containerslot) {
+                    needsInvUpdate |= slot.processFromTank(tank, this.outputSlot);
+                }
             }
         }
         if (needsInvUpdate) {

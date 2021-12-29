@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.items;
 
 import com.denfop.Constants;
@@ -95,14 +90,19 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         }
 
     }
+
     @SideOnly(Side.CLIENT)
     protected void registerModel(final int meta, final ItemName name, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + ItemBaseCircuit.Types.getFromID(meta).getName(), null)
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + ItemBaseCircuit.Types.getFromID(meta).getName(),
+                        null
+                )
         );
     }
+
     @Nonnull
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -207,17 +207,19 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         int insulation = getInsulation(stack);
         return type.getName(insulation);
     }
-    String[] name = {"itemcable","itemcableo","itemgoldсable","itemgoldcablei","itemgoldcableii","itemironcable","itemironcablei",
+
+    String[] name = {"itemcable", "itemcableo", "itemgoldсable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
             "itemironcableii",
             "itemironcableiiii"
-            ,"itemglasscable"
-            ,"itemglasscablei"};
+            , "itemglasscable"
+            , "itemglasscablei"};
+
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
         if (meta >= name.length) {
             meta = 0;
         }
-        return "iu."+name[meta];
+        return "iu." + name[meta];
     }
 
 
@@ -231,7 +233,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         loss = type.loss;
 
 
-        info.add(ModUtils.getString( capacity) + " " + Localization.translate("ic2.generic.text.EUt"));
+        info.add(ModUtils.getString(capacity) + " " + Localization.translate("ic2.generic.text.EUt"));
         info.add(Localization.translate("ic2.cable.tooltip.loss", lossFormat.format(loss)));
     }
 

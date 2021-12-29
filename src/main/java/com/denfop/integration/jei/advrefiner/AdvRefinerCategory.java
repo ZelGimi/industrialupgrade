@@ -20,16 +20,18 @@ public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefine
 
     private final IDrawableStatic bg;
     private int energy = 0;
+
     public AdvRefinerCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guioilrefiner" +
                         ".png"), 5, 5, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockAdvRefiner.adv_refiner.getName();
     }
 
@@ -37,6 +39,7 @@ public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefine
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.oiladvrefiner).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -48,18 +51,15 @@ public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefine
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
 
         energy++;
-        int energylevel = Math.min(29 * energy/100,29);
+        int energylevel = Math.min(29 * energy / 100, 29);
         mc.getTextureManager().bindTexture(getTexture());
 
 
-        this.drawTexturedModalRect( + 34,  + 64, 177, 104, energylevel, 9);
-
-
+        this.drawTexturedModalRect(+34, +64, 177, 104, energylevel, 9);
 
 
     }
@@ -90,7 +90,6 @@ public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefine
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guioilrefiner.png");
     }
-
 
 
 }

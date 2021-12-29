@@ -13,64 +13,75 @@ import java.util.List;
 import java.util.Map;
 
 public class SynthesisHandler {
-    private static List< SynthesisHandler> recipes = new ArrayList<>();
+
+    private static final List<SynthesisHandler> recipes = new ArrayList<>();
     private final int percent;
 
 
-    public static List< SynthesisHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+    public static List<SynthesisHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
-    private final ItemStack input,input1, output;
+    private final ItemStack input, input1, output;
 
 
-    public SynthesisHandler(ItemStack input, ItemStack input1,ItemStack output,int percent) {
+    public SynthesisHandler(ItemStack input, ItemStack input1, ItemStack output, int percent) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
-        this.percent=percent;
+        this.percent = percent;
     }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public ItemStack getInput1() { // Получатель входного предмета рецепта.
         return input1;
     }
+
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();
     }
+
     public int getPercent() { // Получатель выходного предмета рецепта.
         return percent;
     }
-    public static SynthesisHandler addRecipe(ItemStack input, ItemStack input1,ItemStack output,int percent) {
-        SynthesisHandler recipe = new SynthesisHandler(input,input1, output, percent);
-        if (recipes.contains(recipe))
+
+    public static SynthesisHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, int percent) {
+        SynthesisHandler recipe = new SynthesisHandler(input, input1, output, percent);
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static SynthesisHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (SynthesisHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (SynthesisHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ||is.isItemEqual(input1);
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
     public static void initRecipes() {
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
                 Recipes.synthesis.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0),container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0),container.getValue().metadata.getInteger("percent"));
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
+                    container.getValue().items.get(0), container.getValue().metadata.getInteger("percent")
+            );
 
         }
     }
@@ -82,4 +93,5 @@ public class SynthesisHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }

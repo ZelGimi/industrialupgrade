@@ -104,17 +104,19 @@ public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
             );
         }
         this.drawXCenteredString(this.xSize / 2, 6, this.container.base.getInventoryName(), 4210752, false);
-        String tooltip1 = ModUtils.getString( this.container.base.energy2) + "/" + ModUtils.getString( this.container.base.maxEnergy2) + " RF";
+        String tooltip1 = ModUtils.getString(this.container.base.energy2) + "/" + ModUtils.getString(this.container.base.maxEnergy2) + " RF";
         String tooltip2 =
-                ModUtils.getString(Math.min( this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getEnergy())) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getEnergy()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
                         "EU";
 
-        GuiTooltipHelper.drawAreaTooltip(this,x - this.guiLeft, y - this.guiTop, tooltip2, 5, 47, 19, 61);
-        GuiTooltipHelper.drawAreaTooltip(this,x - this.guiLeft, y - this.guiTop, tooltip1, 14, 47, 28, 61);
-        String tooltip =  this.container.base.expstorage + "/" +  5000;
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip2, 5, 47, 19, 61);
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip1, 14, 47, 28, 61);
+        String tooltip = this.container.base.expstorage + "/" + 5000;
 
-        GuiTooltipHelper.drawAreaTooltip(this,x - this.guiLeft, y - this.guiTop, tooltip, 9, 30, 32, 38);
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip, 9, 30, 32, 38);
         i = 0;
         for (Slot slot : this.container.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
@@ -123,11 +125,13 @@ public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
                 if (slotInv.invSlot instanceof IInvSlotProcessableMulti) {
 
-                    double progress = (24.0F *   this.container.base.getProgress(i));
-                    if (progress > 0)
-                        GuiTooltipHelper.drawAreaTooltip(this,x - this.guiLeft, y - this.guiTop,
-                                ModUtils.getString(  this.container.base.getProgress(i) * 100) + "%", xX, yY + 19, xX + 16,
-                                yY + 19 + 25);
+                    double progress = (24.0F * this.container.base.getProgress(i));
+                    if (progress > 0) {
+                        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop,
+                                ModUtils.getString(this.container.base.getProgress(i) * 100) + "%", xX, yY + 19, xX + 16,
+                                yY + 19 + 25
+                        );
+                    }
                     i++;
                 }
 

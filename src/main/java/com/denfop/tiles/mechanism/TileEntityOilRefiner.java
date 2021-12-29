@@ -119,10 +119,10 @@ public class TileEntityOilRefiner extends TileEntityBaseLiquedMachine {
                 fill(new FluidStack(FluidName.fluiddizel.getInstance(), 2), true);
                 drain1 = true;
             }
-            if (drain ||drain1 ) {
+            if (drain || drain1) {
                 int drains = 0;
-                drains = drain ? drains+3 : drains;
-                drains = drain1 ? drains+2 : drains;
+                drains = drain ? drains + 3 : drains;
+                drains = drain1 ? drains + 2 : drains;
 
                 this.getFluidTank(0).drain(drains, true);
                 initiate(0);

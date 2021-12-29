@@ -142,7 +142,7 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Loader;
 
-public class  Register {
+public class Register {
 
     static final ItemArmor.ArmorMaterial RubyMaterial = EnumHelper.addArmorMaterial("RubyMaterial", "ruby", 450,
             new int[]{2, 7, 3, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F
@@ -188,8 +188,8 @@ public class  Register {
         IUItem.oilquarry = TeBlockRegistry.get(BlockQuarryVein.IDENTITY).setCreativeTab(IUCore.SSPTab);
         IUItem.cable = new ItemCable();
         IUItem.convertersolidmatter = TeBlockRegistry.get(BlockConverterMatter.IDENTITY).setCreativeTab(IUCore.SSPTab);
-        IUItem.oilgetter=TeBlockRegistry.get(BlockPetrolQuarry.IDENTITY).setCreativeTab(IUCore.SSPTab);
-        IUItem.combinersolidmatter=TeBlockRegistry.get(BlockCombinerSolid.IDENTITY).setCreativeTab(IUCore.SSPTab);
+        IUItem.oilgetter = TeBlockRegistry.get(BlockPetrolQuarry.IDENTITY).setCreativeTab(IUCore.SSPTab);
+        IUItem.combinersolidmatter = TeBlockRegistry.get(BlockCombinerSolid.IDENTITY).setCreativeTab(IUCore.SSPTab);
 
         IUItem.machines_base = TeBlockRegistry.get(BlockMoreMachine.IDENTITY).setCreativeTab(IUCore.SSPTab);
         IUItem.machines_base1 = TeBlockRegistry.get(BlockMoreMachine1.IDENTITY).setCreativeTab(IUCore.SSPTab);
@@ -207,13 +207,16 @@ public class  Register {
             BotaniaIntegration.reactorDepletedterastrellQuad = new ItemStack(
                     new ItemDepletedRod("reactorDepletedterastrellQuad"));
             BotaniaIntegration.reactorterastrellSimple = new ItemStack(new ItemBaseRod("reactorterastrellSimple", 1,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4));
+                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
+            ));
 
             BotaniaIntegration.reactorterastrellDual = new ItemStack(new ItemBaseRod("reactorterastrellDual", 2,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4));
+                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
+            ));
 
             BotaniaIntegration.reactorterastrellQuad = new ItemStack(new ItemBaseRod("reactorterastrellQuad", 4,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4));
+                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
+            ));
 
 
         }
@@ -241,7 +244,8 @@ public class  Register {
         IUItem.hazmatchest = new ItemArmorAdvHazmat("hazmatchest", EntityEquipmentSlot.CHEST);
         IUItem.hazmatleggins = new ItemArmorAdvHazmat("hazmatleggins", EntityEquipmentSlot.LEGS);
         IUItem.hazmatboosts = new ItemArmorAdvHazmat("hazmatboosts", EntityEquipmentSlot.FEET);
-        IUItem.NanoHelmet = new ItemArmorImprovemedNano("itemArmorNanoHelmet",
+        IUItem.NanoHelmet = new ItemArmorImprovemedNano(
+                "itemArmorNanoHelmet",
                 EntityEquipmentSlot.HEAD,
                 (float) Config.NanoHelmet,
                 (float) Config.NanoTransfer,
@@ -250,7 +254,8 @@ public class  Register {
         IUItem.NanoBodyarmor = new ItemArmorImprovemedNano("itemArmorNanoChestplate", EntityEquipmentSlot.CHEST,
                 (float) Config.NanoBodyarmor, Config.NanoTransfer, Config.Nanotier
         );
-        IUItem.NanoLeggings = new ItemArmorImprovemedNano("itemArmorNanoLegs",
+        IUItem.NanoLeggings = new ItemArmorImprovemedNano(
+                "itemArmorNanoLegs",
                 EntityEquipmentSlot.LEGS,
                 (float) Config.NanoLeggings,
                 (float) Config.NanoTransfer,
@@ -605,7 +610,8 @@ public class  Register {
         IUItem.oilblock = new BlockOil();
         IUItem.toriyore = new BlockThoriumOre();
         IUItem.itemSSP = new ItemIUCrafring();
-        IUItem.nanopickaxe = new EnergyPickaxe(Item.ToolMaterial.DIAMOND,
+        IUItem.nanopickaxe = new EnergyPickaxe(
+                Item.ToolMaterial.DIAMOND,
                 "nanopickaxe",
                 1,
                 1,
@@ -617,7 +623,8 @@ public class  Register {
                 Config.nano_energyPerOperation,
                 Config.nano_energyPerbigHolePowerOperation
         );
-        IUItem.nanoshovel = new EnergyShovel(Item.ToolMaterial.DIAMOND,
+        IUItem.nanoshovel = new EnergyShovel(
+                Item.ToolMaterial.DIAMOND,
                 "nanoshovel",
                 1,
                 1,
@@ -642,7 +649,8 @@ public class  Register {
                 Config.nano_energyPerOperation,
                 Config.nano_energyPerbigHolePowerOperation
         );
-        IUItem.quantumpickaxe = new EnergyPickaxe(Item.ToolMaterial.DIAMOND,
+        IUItem.quantumpickaxe = new EnergyPickaxe(
+                Item.ToolMaterial.DIAMOND,
                 "quantumpickaxe",
                 3,
                 2,
@@ -654,7 +662,8 @@ public class  Register {
                 Config.quantum_energyPerOperation,
                 Config.quantum_energyPerbigHolePowerOperation
         );
-        IUItem.quantumshovel = new EnergyShovel(Item.ToolMaterial.DIAMOND,
+        IUItem.quantumshovel = new EnergyShovel(
+                Item.ToolMaterial.DIAMOND,
                 "quantumshovel",
                 3,
                 2,
@@ -666,7 +675,8 @@ public class  Register {
                 Config.quantum_energyPerOperation,
                 Config.quantum_energyPerbigHolePowerOperation
         );
-        IUItem.quantumaxe = new EnergyAxe(Item.ToolMaterial.DIAMOND,
+        IUItem.quantumaxe = new EnergyAxe(
+                Item.ToolMaterial.DIAMOND,
                 "quantumaxe",
                 3,
                 2,
@@ -678,7 +688,8 @@ public class  Register {
                 Config.quantum_energyPerOperation,
                 Config.quantum_energyPerbigHolePowerOperation
         );
-        IUItem.spectralpickaxe = new EnergyPickaxe(Item.ToolMaterial.DIAMOND,
+        IUItem.spectralpickaxe = new EnergyPickaxe(
+                Item.ToolMaterial.DIAMOND,
                 "spectralpickaxe",
                 5,
                 3,
@@ -692,7 +703,8 @@ public class  Register {
         );
         IUItem.ultDDrill = new AdvancedMultiTool(Item.ToolMaterial.DIAMOND, "ultDDrill");
 
-        IUItem.spectralshovel = new EnergyShovel(Item.ToolMaterial.DIAMOND,
+        IUItem.spectralshovel = new EnergyShovel(
+                Item.ToolMaterial.DIAMOND,
                 "spectralshovel",
                 5,
                 3,
@@ -704,7 +716,8 @@ public class  Register {
                 Config.spectral_energyPerOperation,
                 Config.spectral_energyPerbigHolePowerOperation
         );
-        IUItem.spectralaxe = new EnergyAxe(Item.ToolMaterial.DIAMOND,
+        IUItem.spectralaxe = new EnergyAxe(
+                Item.ToolMaterial.DIAMOND,
                 "spectralaxe",
                 5,
                 3,
@@ -746,7 +759,8 @@ public class  Register {
         IUItem.quantumSaber = new ItemQuantumSaber("itemNanoSaber1", Config.maxCharge1, Config.transferLimit1,
                 Config.tier1, Config.spectralsaberactive1, Config.spectralsabernotactive1
         );
-        IUItem.quantumHelmet = new ItemArmorImprovemedQuantum("itemArmorQuantumHelmet",
+        IUItem.quantumHelmet = new ItemArmorImprovemedQuantum(
+                "itemArmorQuantumHelmet",
                 EntityEquipmentSlot.HEAD,
                 Config.armor_maxcharge,
                 Config.armor_transferlimit,
@@ -877,29 +891,29 @@ public class  Register {
                 Config.per_lappack_transfer
         );
         IUItem.machinekit = new ItemUpgradeMachinesKit();
-        IUItem.circuitSpectral= new ItemStack(IUItem.basecircuit,1,11);
-        IUItem.cirsuitQuantum= new ItemStack(IUItem.basecircuit,1,10);
-        IUItem.QuantumItems9= new ItemStack(IUItem.basecircuit,1,9);
-        IUItem.module8= new ItemStack(IUItem.module7,1,10);
-        IUItem.module1= new ItemStack(IUItem.basemodules,1,0);
-        IUItem.module2= new ItemStack(IUItem.basemodules,1,3);
-        IUItem.module3= new ItemStack(IUItem.basemodules,1,6);
-        IUItem.module4= new ItemStack(IUItem.basemodules,1,9);
-        IUItem.genmodule= new ItemStack(IUItem.basemodules,1,1);
-        IUItem.genmodule1= new ItemStack(IUItem.basemodules,1,2);
-        IUItem.gennightmodule= new ItemStack(IUItem.basemodules,1,4);
-        IUItem.gennightmodule1= new ItemStack(IUItem.basemodules,1,5);
-        IUItem.storagemodule= new ItemStack(IUItem.basemodules,1,7);
-        IUItem.storagemodule1= new ItemStack(IUItem.basemodules,1,8);
-        IUItem.outputmodule= new ItemStack(IUItem.basemodules,1,10);
-        IUItem.outputmodule1= new ItemStack(IUItem.basemodules,1,11);
-        IUItem.phase_module = new ItemStack(IUItem.basemodules,1,12);
-        IUItem.phase_module1 = new ItemStack(IUItem.basemodules,1,13);
-        IUItem.phase_module2 = new ItemStack(IUItem.basemodules,1,14);
-        IUItem.moonlinse_module = new ItemStack(IUItem.basemodules,1,15);
-        IUItem.moonlinse_module1 = new ItemStack(IUItem.basemodules,1,16);
-        IUItem.moonlinse_module2 = new ItemStack(IUItem.basemodules,1,17);
-        if(Loader.isModLoaded("exnihilocreatio")){
+        IUItem.circuitSpectral = new ItemStack(IUItem.basecircuit, 1, 11);
+        IUItem.cirsuitQuantum = new ItemStack(IUItem.basecircuit, 1, 10);
+        IUItem.QuantumItems9 = new ItemStack(IUItem.basecircuit, 1, 9);
+        IUItem.module8 = new ItemStack(IUItem.module7, 1, 10);
+        IUItem.module1 = new ItemStack(IUItem.basemodules, 1, 0);
+        IUItem.module2 = new ItemStack(IUItem.basemodules, 1, 3);
+        IUItem.module3 = new ItemStack(IUItem.basemodules, 1, 6);
+        IUItem.module4 = new ItemStack(IUItem.basemodules, 1, 9);
+        IUItem.genmodule = new ItemStack(IUItem.basemodules, 1, 1);
+        IUItem.genmodule1 = new ItemStack(IUItem.basemodules, 1, 2);
+        IUItem.gennightmodule = new ItemStack(IUItem.basemodules, 1, 4);
+        IUItem.gennightmodule1 = new ItemStack(IUItem.basemodules, 1, 5);
+        IUItem.storagemodule = new ItemStack(IUItem.basemodules, 1, 7);
+        IUItem.storagemodule1 = new ItemStack(IUItem.basemodules, 1, 8);
+        IUItem.outputmodule = new ItemStack(IUItem.basemodules, 1, 10);
+        IUItem.outputmodule1 = new ItemStack(IUItem.basemodules, 1, 11);
+        IUItem.phase_module = new ItemStack(IUItem.basemodules, 1, 12);
+        IUItem.phase_module1 = new ItemStack(IUItem.basemodules, 1, 13);
+        IUItem.phase_module2 = new ItemStack(IUItem.basemodules, 1, 14);
+        IUItem.moonlinse_module = new ItemStack(IUItem.basemodules, 1, 15);
+        IUItem.moonlinse_module1 = new ItemStack(IUItem.basemodules, 1, 16);
+        IUItem.moonlinse_module2 = new ItemStack(IUItem.basemodules, 1, 17);
+        if (Loader.isModLoaded("exnihilocreatio")) {
             ExNihiloIntegration.gravel = new GravelBlocks();
             ExNihiloIntegration.dust = new DustBlocks();
             ExNihiloIntegration.sand = new SandBlocks();

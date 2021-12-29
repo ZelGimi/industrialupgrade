@@ -1,6 +1,6 @@
 //
 // Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
+// (powered by translate decompiler)
 //
 
 package com.denfop.blocks;

@@ -20,24 +20,27 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
 
     private final IDrawableStatic bg;
     private int progress = 0;
-    private int energy = 0;
+    private final int energy = 0;
+
     public HandlerHOCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIHandlerHO" +
                         ".png"), 3, 3, 140,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockBaseMachine1.handler_ho.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine,1,12).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine, 1, 12).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -47,7 +50,6 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
     public IDrawable getBackground() {
         return bg;
     }
-
 
 
     @Override
@@ -61,10 +63,10 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
 
 
         mc.getTextureManager().bindTexture(getTexture());
-            drawTexturedModalRect(45, 28, 177, 32, xScale + 1, 14);
+        drawTexturedModalRect(45, 28, 177, 32, xScale + 1, 14);
 
 
-            drawTexturedModalRect(48, 49, 176, 50, 39, 11);
+        drawTexturedModalRect(48, 49, 176, 50, 39, 11);
 
 
     }
@@ -80,12 +82,12 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
         isg.set(0, recipes.getInput());
         for (int i = 0; i < recipes.getOutput().size(); ++i) {
             isg.init(
-                    1+i,
+                    1 + i,
                     false,
                     98,
                     7 + 18 * i
             );
-            isg.set(1+i, recipes.getOutput().get(i));
+            isg.set(1 + i, recipes.getOutput().get(i));
 
         }
 
@@ -94,7 +96,6 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIHandlerHO.png");
     }
-
 
 
 }

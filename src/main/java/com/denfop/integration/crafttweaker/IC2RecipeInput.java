@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.integration.crafttweaker;
 
 import crafttweaker.api.item.IIngredient;
@@ -16,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class IC2RecipeInput implements IRecipeInput {
+
     private final IIngredient ingredient;
 
     public IC2RecipeInput(IIngredient ingredient) {
@@ -34,8 +30,8 @@ public class IC2RecipeInput implements IRecipeInput {
         List<ItemStack> items = new ArrayList();
         Iterator var2 = this.ingredient.getItems().iterator();
 
-        while(var2.hasNext()) {
-            IItemStack item = (IItemStack)var2.next();
+        while (var2.hasNext()) {
+            IItemStack item = (IItemStack) var2.next();
             items.add(CraftTweakerMC.getItemStack(item));
         }
 
@@ -44,7 +40,7 @@ public class IC2RecipeInput implements IRecipeInput {
 
     public int hashCode() {
         int hash = 7;
-         hash = 89 * hash + (this.ingredient != null ? this.ingredient.hashCode() : 0);
+        hash = 89 * hash + (this.ingredient != null ? this.ingredient.hashCode() : 0);
         return hash;
     }
 
@@ -54,8 +50,9 @@ public class IC2RecipeInput implements IRecipeInput {
         } else if (this.getClass() != obj.getClass()) {
             return false;
         } else {
-            IC2RecipeInput other = (IC2RecipeInput)obj;
+            IC2RecipeInput other = (IC2RecipeInput) obj;
             return this.ingredient == other.ingredient || this.ingredient != null && this.ingredient.equals(other.ingredient);
         }
     }
+
 }

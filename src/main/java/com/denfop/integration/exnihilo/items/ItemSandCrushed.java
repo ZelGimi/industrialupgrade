@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemSandCrushed extends  ItemMulti<ItemSandCrushed.Types> implements IModelRegister {
+public class ItemSandCrushed extends ItemMulti<ItemSandCrushed.Types> implements IModelRegister {
 
     protected static final String NAME = "sandcrushed";
 
@@ -33,12 +33,13 @@ public class ItemSandCrushed extends  ItemMulti<ItemSandCrushed.Types> implement
     public void registerModels() {
         registerModels(null);
     }
+
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
         if (meta >= (Types.values()).length) {
             meta = 0;
         }
-        return Types.values()[meta].getName()+"_sandcrushed" + ".name";
+        return Types.values()[meta].getName() + "_sandcrushed" + ".name";
     }
 
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
@@ -52,13 +53,16 @@ public class ItemSandCrushed extends  ItemMulti<ItemSandCrushed.Types> implement
 
         }
     }
+
     @SideOnly(Side.CLIENT)
     protected void registerModel(final int meta, final ItemName name, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+ "_sandcrushed",
-                        null)
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName() + "_sandcrushed",
+                        null
+                )
         );
     }
 

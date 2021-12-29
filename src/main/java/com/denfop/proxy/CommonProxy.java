@@ -86,13 +86,15 @@ import java.util.ArrayList;
 public class CommonProxy implements IGuiHandler {
 
     public void preInit(FMLPreInitializationEvent event) {
-        if(Loader.isModLoaded("exnihilocreatio"))
+        if (Loader.isModLoaded("exnihilocreatio")) {
             ExNihiloIntegration.init();
+        }
         if (Config.DraconicLoaded && Config.Draconic) {
             DraconicIntegration.init();
         }
-        if (Config.thaumcraft && Config.Thaumcraft)
+        if (Config.thaumcraft && Config.Thaumcraft) {
             ThaumcraftIntegration.init();
+        }
         if (Config.AvaritiaLoaded && Config.Avaritia) {
             AvaritiaIntegration.init();
         }
@@ -103,11 +105,12 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public static void sendPlayerMessage(EntityPlayer player, String text) {
-        if (IC2.platform.isSimulating())
-        IC2.platform.messagePlayer(
-                player,
-                text
-        );
+        if (IC2.platform.isSimulating()) {
+            IC2.platform.messagePlayer(
+                    player,
+                    text
+            );
+        }
     }
 
     public void init(FMLInitializationEvent event) {
@@ -119,13 +122,25 @@ public class CommonProxy implements IGuiHandler {
         Recipes.lavagenrator = new GeneratorRecipeManager();
         Recipes.sunnarium = new GeneratorSunnariumRecipeManager();
         Recipes.sunnarium.addRecipe(null, new ItemStack(IUItem.sunnarium, 1, 4));
-        Recipes.electrolyzer.addRecipe(new FluidStack(FluidRegistry.WATER, 1000), new FluidStack[]{new FluidStack(FluidName.fluidhyd.getInstance(),
-                500),
+        Recipes.electrolyzer.addRecipe(new FluidStack(FluidRegistry.WATER, 1000), new FluidStack[]{new FluidStack(
+                FluidName.fluidhyd.getInstance(),
+                500
+        ),
                 new FluidStack(FluidName.fluidoxy.getInstance(), 250)});
-        Recipes.oilrefiner.addRecipe(new FluidStack(FluidName.fluidneft.getInstance(), 1000),
-                new FluidStack[]{new FluidStack(FluidName.fluidbenz.getInstance(), 600), new FluidStack(FluidName.fluiddizel.getInstance(), 400)});
-        Recipes.oiladvrefiner.addRecipe(new FluidStack(FluidName.fluidneft.getInstance(), 1000),
-                new FluidStack[]{new FluidStack(FluidName.fluidpolyeth.getInstance(), 500), new FluidStack(FluidName.fluidpolyprop.getInstance(), 500)});
+        Recipes.oilrefiner.addRecipe(
+                new FluidStack(FluidName.fluidneft.getInstance(), 1000),
+                new FluidStack[]{new FluidStack(
+                        FluidName.fluidbenz.getInstance(),
+                        600
+                ), new FluidStack(FluidName.fluiddizel.getInstance(), 400)}
+        );
+        Recipes.oiladvrefiner.addRecipe(
+                new FluidStack(FluidName.fluidneft.getInstance(), 1000),
+                new FluidStack[]{new FluidStack(
+                        FluidName.fluidpolyeth.getInstance(),
+                        500
+                ), new FluidStack(FluidName.fluidpolyprop.getInstance(), 500)}
+        );
 
         NBTTagCompound nbt = ModUtils.nbt();
         nbt.setInteger("amount", 20000);
@@ -142,7 +157,8 @@ public class CommonProxy implements IGuiHandler {
             final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
             Recipes.mattergenerator.addRecipe(input.forStack(new ItemStack(IUItem.matter, 1, i)), (int) Config.SolidMatterStorage,
                     new ItemStack(IUItem.matter, 1, i)
-            );  }
+            );
+        }
         Recipes.mechanism = new TemperatureMechanism();
         TileEntityAssamplerScrap.init();
         TileEntityHandlerHeavyOre.init();
@@ -162,17 +178,15 @@ public class CommonProxy implements IGuiHandler {
         TileEntitySunnariumPanelMaker.init();
         TileEntityUpgradeBlock.init();
         TileEntityMatter.addAmplifier(new ItemStack(IUItem.doublescrapBox), 1, 405000);
-       TileEntityDoubleMolecular.init();
+        TileEntityDoubleMolecular.init();
         TileEntityObsidianGenerator.init();
         TileEntityPlasticCreator.init();
         TileEntityPlasticPlateCreator.init();
 
 
-
         if (!Config.disableUpdateCheck) {
             MinecraftForge.EVENT_BUS.register(new EventUpdate());
         }
-
 
 
     }
@@ -181,22 +195,28 @@ public class CommonProxy implements IGuiHandler {
         IUEventHandler sspEventHandler = new IUEventHandler();
         MinecraftForge.EVENT_BUS.register(sspEventHandler);
         FMLCommonHandler.instance().bus().register(sspEventHandler);
-        if (Loader.isModLoaded("compactsolars"))
+        if (Loader.isModLoaded("compactsolars")) {
             CompactSolarIntegration.init();
-        if (Loader.isModLoaded("wirelesstools"))
+        }
+        if (Loader.isModLoaded("wirelesstools")) {
             WirelessIntegration.init();
-        if (Loader.isModLoaded("forestry"))
+        }
+        if (Loader.isModLoaded("forestry")) {
             FIntegration.init();
+        }
     }
 
     public void registerRecipe() {
-       BasicRecipe.recipe();
-        if (Config.BotaniaLoaded && Config.Botania)
+        BasicRecipe.recipe();
+        if (Config.BotaniaLoaded && Config.Botania) {
             BotaniaIntegration.recipe();
-        if (Config.DraconicLoaded && Config.Draconic)
+        }
+        if (Config.DraconicLoaded && Config.Draconic) {
             DraconicIntegration.Recipes();
-        if (Config.AvaritiaLoaded && Config.Avaritia)
+        }
+        if (Config.AvaritiaLoaded && Config.Avaritia) {
             AvaritiaIntegration.recipe();
+        }
         CompressorRecipe.recipe();
         CannerRecipe.recipe();
         FurnaceRecipes.recipe();
@@ -204,7 +224,6 @@ public class CommonProxy implements IGuiHandler {
         MaceratorRecipe.recipe();
         MetalFormerRecipe.init();
         OreWashingRecipe.init();
-
 
 
     }
@@ -256,6 +275,7 @@ public class CommonProxy implements IGuiHandler {
     public boolean isSimulating() {
         return !FMLCommonHandler.instance().getEffectiveSide().isClient();
     }
+
     public void profilerStartSection(final String section) {
     }
 
@@ -264,6 +284,7 @@ public class CommonProxy implements IGuiHandler {
 
     public void profilerEndSection() {
     }
+
     public void regrecipemanager() {
         Recipes.Alloysmelter = new DoubleMachineRecipeManager();
         Recipes.Alloyadvsmelter = new TripleMachineRecipeManager();
@@ -285,7 +306,7 @@ public class CommonProxy implements IGuiHandler {
         Recipes.upgrade = new DoubleMachineRecipeManager();
         Recipes.sunnurium = new SunnariumRecipeManager();
         Recipes.matterrecipe = new ConverterSolidMatterRecipeManager();
-        Recipes.painting= new DoubleMachineRecipeManager();
+        Recipes.painting = new DoubleMachineRecipeManager();
     }
 
 }

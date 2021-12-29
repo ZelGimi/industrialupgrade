@@ -57,11 +57,12 @@ public class TemperatureMechanism implements ITemperatureMechanism {
     @Override
     public boolean hasHeaters(final ITemperature tile) {
         final TileEntityElectricMachine tile1 = tile.getTile();
-        for(EnumFacing facing : EnumFacing.VALUES){
-         TileEntity tile3 =   tile1.getWorld().getTileEntity(tile1.getPos().offset(facing));
-            if(tile3 instanceof ITemperature){
-                if(!((ITemperature)tile3).reveiver() )
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            TileEntity tile3 = tile1.getWorld().getTileEntity(tile1.getPos().offset(facing));
+            if (tile3 instanceof ITemperature) {
+                if (!((ITemperature) tile3).reveiver()) {
                     return true;
+                }
             }
 
         }

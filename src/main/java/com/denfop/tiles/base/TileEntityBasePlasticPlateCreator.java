@@ -59,7 +59,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
         this.outputSlot1 = new InvSlotOutput(this, "output", 1);
-        this.fluidSlot = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1,  FluidName.fluidoxy.getInstance());
+        this.fluidSlot = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidName.fluidoxy.getInstance());
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
     }
 

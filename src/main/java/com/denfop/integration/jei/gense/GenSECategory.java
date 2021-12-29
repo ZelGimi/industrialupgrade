@@ -19,24 +19,25 @@ import net.minecraft.util.ResourceLocation;
 public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> {
 
     private final IDrawableStatic bg;
-    private int progress = 0;
-    private int energy = 0;
+    private final int progress = 0;
+    private final int energy = 0;
 
     public GenSECategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png"), 3, 3, 160,
-                75);
+                75
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockSolarEnergy.se_gen.getName();
     }
 
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.blockSE,1,0).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.blockSE, 1, 0).getUnlocalizedName());
     }
 
     @Override
@@ -50,11 +51,10 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         mc.getTextureManager().bindTexture(getTexture());
-         drawTexturedModalRect( 120,  31, 176, 14, 24 + 1, 16);
+        drawTexturedModalRect(120, 31, 176, 14, 24 + 1, 16);
 
     }
 
@@ -73,7 +73,6 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/sunnariumgenerator.png");
     }
-
 
 
 }

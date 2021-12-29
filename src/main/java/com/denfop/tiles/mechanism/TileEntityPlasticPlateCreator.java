@@ -29,7 +29,7 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     }
 
     public static void init() {
-       final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
         Recipes.plasticplate.addRecipe(input.forStack(new ItemStack(IUItem.plast)), new FluidStack(
                 FluidName.fluidoxy.getInstance(),
                 1000

@@ -195,6 +195,7 @@ public class TileEntityOilGetter extends TileEntityElectricLiquidTankInventory i
         }
         return false;
     }
+
     public String getStartSoundFile() {
         return "Machines/oilgetter.ogg";
     }
@@ -202,6 +203,7 @@ public class TileEntityOilGetter extends TileEntityElectricLiquidTankInventory i
     public String getInterruptSoundFile() {
         return "Machines/InterruptOne.ogg";
     }
+
     public boolean canDrain(Fluid fluid) {
         return true;
     }

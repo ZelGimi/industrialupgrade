@@ -21,16 +21,18 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     private final IDrawableStatic bg;
     private int progress = 0;
     private int energy = 0;
+
     public UpgradeBlockCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIUpgradeBlock" +
                         ".png"), 3, 3, 148,
-                80);
+                80
+        );
     }
 
     @Override
-    public  String getUid() {
+    public String getUid() {
         return BlockUpgradeBlock.upgrade_block.getName();
     }
 
@@ -38,6 +40,7 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.upgradeblock).getUnlocalizedName());
     }
+
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
@@ -49,12 +52,11 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     }
 
 
-
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy/100,14);
+        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 31 * progress / 100;
         int xScale1 = 27 * progress / 100;
         if (xScale > 31) {
@@ -63,15 +65,15 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
 
         mc.getTextureManager().bindTexture(getTexture());
 
-            drawTexturedModalRect( + 28,  + 33, 176, 17, xScale + 1, 11);
+        drawTexturedModalRect(+28, +33, 176, 17, xScale + 1, 11);
 
 
-            drawTexturedModalRect( + 78,  + 31, 176, 29, xScale1 + 1, 15);
+        drawTexturedModalRect(+78, +31, 176, 29, xScale1 + 1, 15);
 
 
-            drawTexturedModalRect( + 21,  + 53 + 14 - energylevel, 176, 14 - energylevel,
-                    14, energylevel
-            );
+        drawTexturedModalRect(+21, +53 + 14 - energylevel, 176, 14 - energylevel,
+                14, energylevel
+        );
 
     }
 
@@ -97,7 +99,6 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIUpgradeBlock.png");
     }
-
 
 
 }

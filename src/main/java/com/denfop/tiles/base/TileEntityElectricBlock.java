@@ -103,18 +103,19 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         this.temp = 0;
         this.l = output1;
         this.energy = this.addComponent((new Energy(this, maxStorage1,
-                EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)), EnumSet.of(EnumFacing.DOWN),   (int) tier,
+                EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)), EnumSet.of(EnumFacing.DOWN), (int) tier,
                 EnergyNet.instance.getTierFromPower(this.output), false
         )));
         this.energy.setDirections(EnumSet.complementOf(EnumSet.copyOf(Util.verticalFacings)), EnumSet.of(EnumFacing.DOWN));
 
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
 
 
-       info.add(Localization.translate("ic2.item.tooltip.Output") + " " + ModUtils.getString(this.getOutput()) + " EU/t ");
+        info.add(Localization.translate("ic2.item.tooltip.Output") + " " + ModUtils.getString(this.getOutput()) + " EU/t ");
         info.add(Localization.translate("iu.maxStoragestored") + " " + ModUtils.getString(this.energy.getCapacity()) + " EU ");
         info.add(Localization.translate("iu.maxStoragestored") + " " + ModUtils.getString(this.maxStorage2) + " RF ");
         NBTTagCompound nbttagcompound = ModUtils.nbt(itemStack);
@@ -126,6 +127,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
 
     }
+
     public TileEntityElectricBlock(EnumElectricBlock electricBlock) {
         this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1);
         electricblock = electricBlock;
@@ -164,7 +166,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         }
         if (personality) {
             if (!(list.contains(player.getDisplayName().getFormattedText()) || player.capabilities.isCreativeMode)) {
-               CommonProxy.sendPlayerMessage(player, Localization.translate("iu.error"));
+                CommonProxy.sendPlayerMessage(player, Localization.translate("iu.error"));
                 return false;
             }
         }
@@ -349,12 +351,15 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                         this.energy.useEnergy(sent);
 
                         this.needsInvUpdate = (sent > 0.0D);
-                        if(sent >0)
-                        CommonProxy.sendPlayerMessage(entityPlayer,
-                                Localization.translate("successfully.charged")
-                                        + armorcharged.getDisplayName()
-                                        + Localization.translate("iu.sendenergy")
-                                        + ModUtils.getString(sent) + " EU");
+                        if (sent > 0) {
+                            CommonProxy.sendPlayerMessage(
+                                    entityPlayer,
+                                    Localization.translate("successfully.charged")
+                                            + armorcharged.getDisplayName()
+                                            + Localization.translate("iu.sendenergy")
+                                            + ModUtils.getString(sent) + " EU"
+                            );
+                        }
 
                     }
 
@@ -381,12 +386,15 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                         }
                         energy_temp -= (sent);
                         this.energy2 = energy_temp;
-                        if(sent >0)
-                        CommonProxy.sendPlayerMessage(entityPlayer,
-                                Localization.translate("successfully.charged")
-                                        + charged.getDisplayName()
-                                        + Localization.translate("iu.sendenergy")
-                                        + ModUtils.getString(sent) + " RF");
+                        if (sent > 0) {
+                            CommonProxy.sendPlayerMessage(
+                                    entityPlayer,
+                                    Localization.translate("successfully.charged")
+                                            + charged.getDisplayName()
+                                            + Localization.translate("iu.sendenergy")
+                                            + ModUtils.getString(sent) + " RF"
+                            );
+                        }
                         entityPlayer.inventoryContainer.detectAndSendChanges();
 
                     }
@@ -402,12 +410,15 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
                         this.energy.useEnergy(sent);
                         this.needsInvUpdate = (sent > 0.0D);
-                        if(sent >0)
-                        CommonProxy.sendPlayerMessage(entityPlayer,
-                                Localization.translate("successfully.charged")
-                                        + charged.getDisplayName()
-                                        + Localization.translate("iu.sendenergy")
-                                        + ModUtils.getString(sent) + " EU");
+                        if (sent > 0) {
+                            CommonProxy.sendPlayerMessage(
+                                    entityPlayer,
+                                    Localization.translate("successfully.charged")
+                                            + charged.getDisplayName()
+                                            + Localization.translate("iu.sendenergy")
+                                            + ModUtils.getString(sent) + " EU"
+                            );
+                        }
                         entityPlayer.inventoryContainer.detectAndSendChanges();
 
                     }
@@ -434,12 +445,15 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                         }
                         energy_temp -= (sent);
                         this.energy2 = energy_temp;
-                        if(sent >0)
-                        CommonProxy.sendPlayerMessage(entityPlayer,
-                                Localization.translate("successfully.charged")
-                                        + charged.getDisplayName()
-                                        + Localization.translate("iu.sendenergy")
-                                        + ModUtils.getString(sent) + " RF");
+                        if (sent > 0) {
+                            CommonProxy.sendPlayerMessage(
+                                    entityPlayer,
+                                    Localization.translate("successfully.charged")
+                                            + charged.getDisplayName()
+                                            + Localization.translate("iu.sendenergy")
+                                            + ModUtils.getString(sent) + " RF"
+                            );
+                        }
                         entityPlayer.inventoryContainer.detectAndSendChanges();
 
                     }
@@ -517,18 +531,18 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
 
                     energy2 += energy.getEnergy() * Config.coefficientrf;
-                    energy.useEnergy(energy.getEnergy()) ;
+                    energy.useEnergy(energy.getEnergy());
 
                 }
                 if (energy2 > maxStorage2) {
                     double rf = (energy2 - maxStorage2);
-                    energy.addEnergy(rf / Config.coefficientrf) ;
+                    energy.addEnergy(rf / Config.coefficientrf);
                     energy2 = maxStorage2;
                 }
             } else {
 
                 if (energy2 > 0 && energy.getEnergy() < energy.getCapacity()) {
-                    energy2 -=  energy.addEnergy(energy2 / Config.coefficientrf) * Config.coefficientrf;
+                    energy2 -= energy.addEnergy(energy2 / Config.coefficientrf) * Config.coefficientrf;
 
                 }
 
@@ -617,10 +631,12 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public double getEUCapacity() {
         return this.energy.getCapacity();
     }
+
     @Override
     public double getRFCapacity() {
         return this.maxStorage2;
     }
+
     public int getOutput() {
         return (int) (this.output + this.output_plus);
     }
@@ -674,7 +690,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         if (!(getWorld()).isRemote) {
             NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
             this.energy.addEnergy(nbt.getDouble("energy"));
-            this.energy2=nbt.getDouble("energy2");
+            this.energy2 = nbt.getDouble("energy2");
         }
     }
 
@@ -682,7 +698,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         super.onPlaced(null, player, side);
         if (!(getWorld()).isRemote) {
             this.energy.addEnergy(eustored);
-            this.energy2=eustored1;
+            this.energy2 = eustored1;
         }
     }
 
@@ -746,7 +762,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
         return true;
     }
-
 
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -818,7 +833,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     }
 
 
-
     public boolean isTeleporterCompatible(EnumFacing side) {
         return true;
     }
@@ -833,7 +847,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     }
 
 
-
     public String getInventoryName() {
         return Localization.translate(this.name);
     }
@@ -842,4 +855,5 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public void onUpgraded() {
         this.rerender();
     }
+
 }

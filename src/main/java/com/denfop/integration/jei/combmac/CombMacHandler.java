@@ -13,12 +13,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class CombMacHandler {
-    private static List<CombMacHandler> recipes = new ArrayList<>();
+
+    private static final List<CombMacHandler> recipes = new ArrayList<>();
 
 
     public static List<CombMacHandler> getRecipes() { // Получатель всех рецептов.
-        if(recipes.isEmpty())
+        if (recipes.isEmpty()) {
             initRecipes();
+        }
         return recipes;
     }
 
@@ -41,18 +43,22 @@ public class CombMacHandler {
 
     public static CombMacHandler addRecipe(ItemStack input, ItemStack output) {
         CombMacHandler recipe = new CombMacHandler(input, output);
-        if (recipes.contains(recipe))
+        if (recipes.contains(recipe)) {
             return null;
+        }
         recipes.add(recipe);
         return recipe;
     }
 
     public static CombMacHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty())
+        if (is == null || is.isEmpty()) {
             return null;
-        for (CombMacHandler recipe : recipes)
-            if (recipe.matchesInput(is))
+        }
+        for (CombMacHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
                 return recipe;
+            }
+        }
         return null;
     }
 
@@ -62,9 +68,10 @@ public class CombMacHandler {
 
     public static void initRecipes() {
         for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.macerator.getRecipes()) {
-            if(new ArrayList<>(container.getOutput()).size() > 0&& container.getInput().getInputs().size() > 0)
-            addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()).get(0)
-            );
+            if (new ArrayList<>(container.getOutput()).size() > 0 && container.getInput().getInputs().size() > 0) {
+                addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()).get(0)
+                );
+            }
 
         }
     }
@@ -76,4 +83,5 @@ public class CombMacHandler {
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
     }
+
 }
