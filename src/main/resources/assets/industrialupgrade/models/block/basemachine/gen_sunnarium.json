@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/blockcombmatter_side",
+    "down": "industrialupgrade:blocks/blockcombmatter_side",
+    "up": "industrialupgrade:blocks/gen_sunnarium",
+    "north": "industrialupgrade:blocks/blockcombmatter_side",
+    "east": "industrialupgrade:blocks/blockcombmatter_side",
+    "south": "industrialupgrade:blocks/blockcombmatter_side",
+    "west": "industrialupgrade:blocks/blockcombmatter_side"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+      "farmer": {
+        "model": "industrialupgrade:moremachine3/farmer"
+      },
+	  
+	  "farmer_active": {
+        "model": "industrialupgrade:moremachine3/farmer_active"
+      },
+      "double_farmer": {
+        "model": "industrialupgrade:moremachine3/double_farmer"
+      },
+      "double_farmer_active": {
+        "model": "industrialupgrade:moremachine3/double_farmer_active"
+      },
+      "triple_farmer": {
+        "model": "industrialupgrade:moremachine3/triple_farmer"
+      },
+	  
+      "triple_farmer_active": {
+        "model": "industrialupgrade:moremachine3/triple_farmer_active"
+      },
+      "quad_farmer": {
+        "model": "industrialupgrade:moremachine3/quad_farmer"
+      },
+      "quad_farmer_active": {
+        "model": "industrialupgrade:moremachine3/quad_farmer_active"
+      },
+      "assamplerscrap": {
+        "model": "industrialupgrade:moremachine3/assamplerscrap"
+      },
+      "assamplerscrap_active": {
+        "model": "industrialupgrade:moremachine3/assamplerscrap_active"
+      },
+      "double_assamplerscrap": {
+        "model": "industrialupgrade:moremachine3/double_assamplerscrap"
+      },
+      "double_assamplerscrap_active": {
+        "model": "industrialupgrade:moremachine3/double_assamplerscrap_active"
+      },
+      "triple_assamplerscrap": {
+        "model": "industrialupgrade:moremachine3/triple_assamplerscrap"
+      },
+      "triple_assamplerscrap_active": {
+        "model": "industrialupgrade:moremachine3/triple_assamplerscrap_active"
+      },
+      "quad_assamplerscrap": {
+        "model": "industrialupgrade:moremachine3/quad_assamplerscrap"
+      },
+      "quad_assamplerscrap_active": {
+        "model": "industrialupgrade:moremachine3/quad_assamplerscrap_active"
+      }
+      
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {
+        "transform": "forge:default-block"
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "forge:fluid",
+		"transform": "forge:default-item"
+	},
+	"variants": {
+		"type": {
+			"fluidneutron": { "custom": { "fluid": "iufluidneutron" } },
+			"fluidneft": { "custom": { "fluid": "iufluidneft" } },
+			"fluidhelium": { "custom": { "fluid": "iufluidhelium" } },
+			"fluiddizel": { "custom": { "fluid": "iufluiddizel" } },
+			"fluidbenz": { "custom": { "fluid": "iufluidbenz" } },
+			"fluidpolyeth": { "custom": { "fluid": "iufluidpolyeth" } },
+			"fluidpolyprop": { "custom": { "fluid": "iufluidpolyprop" } },
+			"fluidoxy": { "custom": { "fluid": "iufluidoxy" } },
+			"fluidhyd": { "custom": { "fluid": "iufluidhyd" } }
+		}
+	}
+}

@@ -1,0 +1,38 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+      "neutron_solar_panel_av": {
+        "model": "industrialupgrade:neutron_solar_panel_av"
+      },
+	  
+	  "infinity_solar_panel": {
+        "model": "industrialupgrade:infinity_solar_panel"
+      }
+      
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {
+        "transform": "forge:default-block"
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}

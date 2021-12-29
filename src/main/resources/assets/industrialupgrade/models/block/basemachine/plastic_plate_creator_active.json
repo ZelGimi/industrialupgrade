@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/blockplasticplatecreator_bottom",
+    "down": "industrialupgrade:blocks/blockplasticplatecreator_bottom",
+    "up": "industrialupgrade:blocks/blockplasticplatecreator_top_active",
+    "north": "industrialupgrade:blocks/blockplasticplatecreator_main_active",
+    "east": "industrialupgrade:blocks/blockplasticplatecreator_side_active",
+    "south": "industrialupgrade:blocks/blockplasticplatecreator_side2",
+    "west": "industrialupgrade:blocks/blockplasticplatecreator_side_active"
+  }
+}

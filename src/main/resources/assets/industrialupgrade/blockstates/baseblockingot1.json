@@ -1,0 +1,29 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"manganese": {
+				"textures": {
+					"all": "industrialupgrade:blocks/manganese_block"
+				}
+			},
+			"iridium": {
+				"textures": {
+					"all": "industrialupgrade:blocks/iridium_block"
+				}
+			},
+			"germanium": {
+				"textures": {
+					"all": "industrialupgrade:blocks/germanium_block"
+				}
+			}
+		},
+		"inventory": [
+      {}
+    ]
+	}
+}
