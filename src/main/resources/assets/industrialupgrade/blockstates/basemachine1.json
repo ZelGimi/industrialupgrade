@@ -1,0 +1,121 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+	  "adv_alloy_smelter": {
+        "model": "industrialupgrade:basemachine/adv_alloy_smelter"
+      },
+	  "adv_alloy_smelter_active": {
+        "model": "industrialupgrade:basemachine/adv_alloy_smelter_active"
+      },
+	  "adv_geo": {
+        "model": "industrialupgrade:basemachine/adv_geo"
+      },
+	  "adv_geo_active": {
+        "model": "industrialupgrade:basemachine/adv_geo_active"
+      },
+	  "imp_geo": {
+        "model": "industrialupgrade:basemachine/imp_geo"
+      },
+	  "imp_geo_active": {
+        "model": "industrialupgrade:basemachine/imp_geo_active"
+      },
+	   "per_geo": {
+        "model": "industrialupgrade:basemachine/per_geo"
+      },
+	  "enrichment": {
+        "model": "industrialupgrade:basemachine/enrichment"
+      },
+	   "per_geo_active": {
+        "model": "industrialupgrade:basemachine/per_geo_active"
+      },
+	  "enrichment_active": {
+        "model": "industrialupgrade:basemachine/enrichment_active"
+      },
+	  "handler_ho": {
+        "model": "industrialupgrade:basemachine/handler_ho"
+      },
+	  "handler_ho_active": {
+        "model": "industrialupgrade:basemachine/handler_ho_active"
+      },
+	  "gen_wither": {
+        "model": "industrialupgrade:basemachine/gen_wither"
+      },
+	  "gen_wither_active": {
+        "model": "industrialupgrade:basemachine/gen_wither_active"
+      },
+	  "adv_reactor": {
+        "model": "industrialupgrade:basemachine/adv_reactor"
+      },
+	  "adv_reactor_active": {
+        "model": "industrialupgrade:basemachine/adv_reactor_active"
+      },
+	  "imp_reactor": {
+        "model": "industrialupgrade:basemachine/imp_reactor"
+      },
+	  "imp_reactor_active": {
+        "model": "industrialupgrade:basemachine/imp_reactor_active"
+      },
+	  "per_reactor": {
+        "model": "industrialupgrade:basemachine/per_reactor"
+      },
+	  "per_reactor_active": {
+        "model": "industrialupgrade:basemachine/per_reactor_active"
+      },
+	  "per_quantum_quarry": {
+        "model": "industrialupgrade:basemachine/per_quantum_quarry"
+      },
+	  "per_quantum_quarry_active": {
+        "model": "industrialupgrade:basemachine/per_quantum_quarry_active"
+      },
+	  "quantum_quarry": {
+        "model": "industrialupgrade:basemachine/quantum_quarry"
+      },
+	  "quantum_quarry_active": {
+        "model": "industrialupgrade:basemachine/quantum_quarry_active"
+      },
+	  "magnet": {
+        "model": "industrialupgrade:basemachine/magnet"
+      },
+	  "magnet_active": {
+        "model": "industrialupgrade:basemachine/magnet_active"
+      },
+	  "synthesis": {
+        "model": "industrialupgrade:basemachine/synthesis"
+      },
+	  "synthesis_active": {
+        "model": "industrialupgrade:basemachine/synthesis_active"
+      },
+	  "magnet_generator": {
+        "model": "industrialupgrade:basemachine/magnet_generator"
+      },
+	  "magnet_generator_active": {
+        "model": "industrialupgrade:basemachine/magnet_generator_active"
+      }
+	  
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {
+        "transform": "forge:default-block"
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}

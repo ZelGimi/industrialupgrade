@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/singulary_side",
+    "down": "industrialupgrade:blocks/singulary_bottom",
+    "up": "industrialupgrade:blocks/singulary_top",
+    "north": "industrialupgrade:blocks/singulary_side",
+    "east": "industrialupgrade:blocks/singulary_side",
+    "south": "industrialupgrade:blocks/singulary_side",
+    "west": "industrialupgrade:blocks/singulary_side"
+  }
+}

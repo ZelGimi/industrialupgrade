@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/blockextruding1_side",
+    "down": "industrialupgrade:blocks/blockextruding1_side",
+    "up": "industrialupgrade:blocks/blockextruding1_side",
+    "north": "industrialupgrade:blocks/blockcutting1_main_active",
+    "east": "industrialupgrade:blocks/blockextruding1_side",
+    "south": "industrialupgrade:blocks/blockextruding1_side",
+    "west": "industrialupgrade:blocks/blockextruding1_side"
+  }
+}

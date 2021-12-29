@@ -1,28 +1,26 @@
 [
-  {
-    "authorList": [
-      "Icedfire",
-      "SeNtiMeL",
-      "Chocohead",
-      "Denfop"
-    ],
-    "credits": "Created by Chocohead and Denfop(Remastered version), based on SeNtiMeL's versions, which were based on original the mod by Icedfire. Textures by Krezzard. Thanks mak326428 for help with developing in the past.",
-    "dependants": [],
-    "dependencies": [
-      "ic2@${ic2_range}"
-    ],
-    "description": "Super Solar Panels is a remastered Advanced Solar Panels and new generation of using solar power. This is addon for IndustrialCraft 2.",
-    "logoFile": "",
-    "mcversion": "1.12.2",
-    "modid": "super_solar_panels",
-    "name": "Super Solar Panels",
-    "parent": "",
-    "requiredMods": [
-      "ic2@${ic2_range}"
-    ],
-    "screenshots": [],
-    "updateUrl": "",
-    "url": "",
-    "version": "${version}"
-  }
+	{
+		"authorList": [
+			"Denfop",
+			"ijo42"
+		],
+		"credits": "Artists of mods: AlexTMe,Christmas,igorek181. Translator: Makandlv. Support of projects: SimpleMinecraft, MythicalWorld, VictoryCraft ",
+		"dependants": [],
+		"dependencies": [
+			"ic2@${ic2_range}"
+		],
+		"description": "IC2 193+",
+		"logoFile": "",
+		"mcversion": "1.12.2",
+		"modid": "industrialupgrade",
+		"name": "Industrial Upgrade",
+		"parent": "",
+		"requiredMods": [
+			"ic2@${ic2_range}"
+		],
+		"screenshots": [],
+		"updateUrl": "https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade",
+		"url": "https://forum.industrial-craft.net/thread/16121-supersolarpanels-remastred-1-7-10-1-12-2/?postID=218762#post218762",
+		"version": "${version}"
+	}
 ]

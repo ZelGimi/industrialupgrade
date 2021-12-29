@@ -27,7 +27,7 @@ version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 //noinspection GroovyAssignabilityCheck
-project.ic2_range = "[${project.ic2_min_ver},${project.ic2_max_ver}]"
+project.ic2_range= "[${project.ic2_min_ver},${project.ic2_max_ver}]"
 
 blossom {
     replaceToken '%VERSION%', modVersion
@@ -52,7 +52,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
+            accessTransformer = file('src/main/resources/tc_at.cfg')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
@@ -71,9 +71,10 @@ minecraft {
         data {
             property 'forge.logging.console.level', 'debug'
             workingDirectory project.file('run')
-            args '--mod', 'supersolarpanels', '--all',
-                    '--output', file('src/generated/resources/'),
-                    '--existing', file('src/main/resources/')
+            args '--mod', 'ssp', '--all',
+                    '--existing', '"' + file('src/main/resources/') + '"',
+                    '--existing', '"' + file('src/generated/resources/') + '"',
+                    '--output', '"' + file('src/generated/resources/') + '"'
         }
     }
 }
@@ -95,9 +96,13 @@ repositories {
     }
     maven {
         url "https://www.cursemaven.com"
-        content {
+       content {
             includeGroup "curse.maven"
         }
+    }
+	 maven {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
     }
 }
 
@@ -108,12 +113,58 @@ dependencies {
             version: "${minecraft_version}-${forge_version}"
     ])
 
-    compileOnly "curse.maven:thaumcraft-223628:2629023"
-    compileOnly "curse.maven:wireless-solar-panels-377164:2954663"
+    runtimeOnly "curse.maven:thaumcraft-223628:2629023"
+    runtimeOnly "curse.maven:wireless-industry-377164:3538850"
+    runtimeOnly "curse.maven:botania-225643:2846950"
+	runtimeOnly "curse.maven:baubles-227083:2518667"
+	compileOnly "mezz.jei:jei_1.12.2:4.15.0.272:api"
+	runtimeOnly "mezz.jei:jei_1.12.2:4.15.0.272"
+	compileOnly "curse.maven:thaumcraft-223628:2629023"
+    compileOnly "curse.maven:wireless-industry-377164:3538850"
     compileOnly "curse.maven:botania-225643:2846950"
-    compileOnly "mezz.jei:jei_1.12.2:4.16.1.302:api"
+	compileOnly "curse.maven:baubles-227083:2518667"
     runtimeOnly "net.industrial-craft:industrialcraft-2:${project.ic2_max_ver}"
     compileOnly "net.industrial-craft:industrialcraft-2:2.8.193-ex112:dev"
+
+    compileOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
+    runtimeOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
+    compileOnly "curse.maven:forestry-59751:2684780"
+    runtimeOnly "curse.maven:forestry-59751:2684780"
+    compileOnly "curse.maven:compact-solars-228759:2633646"
+    runtimeOnly "curse.maven:compact-solars-228759:2633646"
+    compileOnly "curse.maven:avaritia-1-10-261348:3143349"
+    runtimeOnly "curse.maven:avaritia-1-10-261348:3143349"
+    compileOnly "curse.maven:pams-harvestcraft-221857:2904825"
+    runtimeOnly "curse.maven:pams-harvestcraft-221857:2904825"
+
+	runtimeOnly "curse.maven:cofh-core-69162:2920433"
+	compileOnly "curse.maven:cofh-core-69162:2920433"
+	runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
+	compileOnly "curse.maven:thermal-expansion-69163:2926431"
+
+
+    runtimeOnly "curse.maven:external-tweaker-270558:2452858"
+    compileOnly "curse.maven:external-tweaker-270558:2452858"
+//	runtimeOnly "curse.maven:codechicken-lib-1-8-242818:2779848"
+ // compileOnly "curse.maven:codechicken-lib-1-8-242818:2779848"
+  
+	runtimeOnly "curse.maven:redstone-arsenal-70631:2939416"
+	compileOnly "curse.maven:redstone-arsenal-70631:2939416"
+	runtimeOnly "curse.maven:redstone-flux-270789:2920436"
+	compileOnly "curse.maven:redstone-flux-270789:2920436"
+	runtimeOnly "curse.maven:thermal-dynamics-227443:2920505"
+	compileOnly "curse.maven:thermal-dynamics-227443:2920505"
+	runtimeOnly "curse.maven:thermal-foundation-222880:2926428"
+	compileOnly "curse.maven:thermal-foundation-222880:2926428"
+	
+	runtimeOnly "curse.maven:draconic-evolution-223565:3431261"
+	compileOnly "curse.maven:draconic-evolution-223565:3431261"
+	runtimeOnly "curse.maven:brandons-core-231382:3408276"
+	compileOnly "curse.maven:brandons-core-231382:3408276"
+   runtimeOnly "curse.maven:cofh-world-271384:2920434"
+	compileOnly "curse.maven:cofh-world-271384:2920434"
+	runtimeOnly fileTree('lib')
+	compileOnly fileTree('lib')
 }
 
 processResources {
@@ -130,23 +181,27 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
     }
+	rename '(.+_at.cfg)', 'META-INF/$1'
+}
+def commonManifest = {
+	attributes 'FMLAT': 'tc_at.cfg'
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : project.name,
-                "Specification-Vendor"    : "ijo42",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.version,
-                "Implementation-Vendor"   : "Denfop",
+                "Specification-Title": project.name,
+                "Specification-Vendor": "ijo42",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.version,
+                "Implementation-Vendor" :"Denfop",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "Git-Commit-Hash"         : getGitHash()
+                "Git-Commit-Hash": getGitHash()
         ])
     }
     from 'LICENSE'
-
+    manifest commonManifest
     from sourceSets.main.output.classesDirs
     from sourceSets.main.output.resourcesDir
 }
@@ -169,7 +224,7 @@ static def getGitHash() {
         def process = 'git rev-parse --short HEAD'.execute()
         process.waitFor()
         return (process.exitValue() ? 'unknown' : process.text.trim())
-    } catch (IOException ignored) {
+    }catch(IOException ignored){
         return 'unknown'
     }
 }
