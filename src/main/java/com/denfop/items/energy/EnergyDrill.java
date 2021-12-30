@@ -371,8 +371,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                     }
                 }
             }
-        } else if (!IC2.platform.isSimulating()) {
-            world.playEvent(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
         }
         return true;
     }

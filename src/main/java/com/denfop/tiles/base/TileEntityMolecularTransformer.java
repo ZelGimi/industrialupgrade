@@ -235,11 +235,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         addrecipe("ingotMagnesium", OreDictionary.getOres("ingotCaravky").get(0), Config.molecular36);
 
 
-        ItemStack stack = OreDictionary.getOres("ingotIridium").get(0);
-        stack.setCount(4);
-        ItemStack stack1 = ItemName.misc_resource.getItemStack(MiscResourceType.iridium_shard);
-        stack1.setCount(9);
-        addrecipe(stack1, stack, Config.molecular37);
+
         addrecipe("ingotCaravky", new ItemStack(IUItem.iuingot, 1, 18), 600000);
         addrecipe("ingotCobalt", new ItemStack(IUItem.iuingot, 1, 16), 350000);
         addrecipe(new ItemStack(IUItem.iuingot, 1, 16), new ItemStack(IUItem.iuingot, 1, 15), 300000);

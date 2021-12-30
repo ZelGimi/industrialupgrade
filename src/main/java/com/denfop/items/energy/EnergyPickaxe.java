@@ -359,8 +359,6 @@ public class EnergyPickaxe extends ItemTool implements IElectricItem, IModelRegi
                     }
                 }
             }
-        } else if (!IC2.platform.isSimulating()) {
-            world.playEvent(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
         }
         return true;
     }

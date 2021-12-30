@@ -48,16 +48,16 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         INetworkUpdateListener {
 
 
-    public final EnumSolarPanels solarpanels;
+    public EnumSolarPanels solarpanels;
     public int tier;
 
-    public final InvSlotPanel inputslot;
+    public InvSlotPanel inputslot;
     public boolean getmodulerf = false;
 
     public boolean personality = false;
     public int solarType;
     public String player = null;
-    protected final double tierPower;
+    protected double tierPower;
     public EnumType type;
     public boolean work = true;
     public boolean work1 = true;
@@ -80,15 +80,15 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public double storage;
     public double production;
     public double maxStorage;
-    public final double p;
-    public final double k;
-    public final double m;
-    public final double u;
+    public double p;
+    public double k;
+    public double m;
+    public double u;
     public int time;
     public int time1;
     public int time2;
-    public final double o;
-    public final double maxStorage2;
+    public double o;
+    public double maxStorage2;
     public double storage2;
 
     public TileEntitySolarPanel(
@@ -671,6 +671,10 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
 
     public void onUpgraded() {
         this.rerender();
+    }
+
+    public void markDirty1() {
+
     }
 
 

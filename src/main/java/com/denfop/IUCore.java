@@ -62,6 +62,8 @@ import com.denfop.utils.ListInformation;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.GenOre;
 import ic2.api.event.TeBlockFinalCallEvent;
+import ic2.core.ExplosionIC2;
+import ic2.core.IC2;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
 import ic2.core.util.SideGateway;
@@ -69,10 +71,12 @@ import ic2.core.util.Util;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -87,6 +91,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -135,7 +140,13 @@ public final class IUCore {
         IUCore.network = new SideGateway("com.denfop.network.NetworkManager", "com.denfop.network.NetworkManagerClient");
 
     }
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (IC2.platform.isSimulating()) {
+            keyboard.removePlayerReferences(event.player);
+        }
 
+    }
     public static boolean isSimulating() {
         return !FMLCommonHandler.instance().getEffectiveSide().isClient();
     }
@@ -449,8 +460,6 @@ public final class IUCore {
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
         EnumUpgradesMultiMachine.register();
-        EnumUpgradeMultiMachine.register();
-        EnumElectricBlockState.register();
 
 
         list.add(new ItemStack(Items.DIAMOND));

@@ -141,7 +141,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
     }
 
     protected ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return ItemCable.getCable(this.cableType, this.insulation, 0);
+        return  ItemCable.getCable(this.cableType, this.insulation, 0);
     }
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
@@ -437,7 +437,6 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
                 );
             }
 
-            return;
         } else {
             IC2.platform.displayError(
                     "An unknown event type was received over multiplayer.\nThis could happen due to corrupted data or a bug.\n\n(Technical information: event ID " + event + ", tile entity below)\nT: " + this + " (" + this.pos + ")"
@@ -450,9 +449,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
             return false;
         } else {
             World world = this.getWorld();
-            if (world.isRemote) {
-                return true;
-            } else {
+            if (!world.isRemote) {
                 this.foam = foam;
                 if (this.continuousUpdate != null) {
                     IC2.tickHandler.removeContinuousWorldTick(world, this.continuousUpdate);
@@ -487,8 +484,8 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
                     this.markDirty();
                 }
 
-                return true;
             }
+            return true;
         }
     }
 

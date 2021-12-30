@@ -111,6 +111,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
             this.lastEnergy = this.energy.getEnergy();
             if (needsInvUpdate) {
                 this.markDirty();
+                this.setActive(true);
             }
         } else {
 

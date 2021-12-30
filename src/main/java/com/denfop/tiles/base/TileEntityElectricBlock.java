@@ -572,13 +572,14 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             this.energy2 = this.maxStorage2;
         }
         if (!this.inputslotA.isEmpty()) {
+            boolean ignore = this.inputslotC.checkignore();
             if (this.inputslotA.charge(
                     this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0,
                     this.inputslotA.get(0),
-                    true
+                    true,ignore
             ) != 0) {
                 this.energy.useEnergy(this.inputslotA.charge(this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0,
-                        this.inputslotA.get(0), false
+                        this.inputslotA.get(0), false,ignore
                 ));
                 needsInvUpdate = ((this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0) > 0.0D);
             }

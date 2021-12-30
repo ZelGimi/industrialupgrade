@@ -112,6 +112,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
             this.lastEnergy = this.energy.getEnergy();
             if (needsInvUpdate) {
                 this.markDirty();
+                this.setActive(true);
             }
         } else {
 

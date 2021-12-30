@@ -10,8 +10,6 @@ import com.denfop.items.ItemUpgradePanelKit;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.mechanism.EnumUpgradesMultiMachine;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.tiles.panels.entity.EnumType;
-import com.denfop.tiles.wiring.EnumElectricBlockState;
 import ic2.core.block.TileEntityBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -337,11 +335,8 @@ public class IUItem {
     public static Map<Integer, Fluid> celltype1 = new HashMap<>();
     public static Item cable;
     public static Map<String, EnumSolarPanels> map3 = new HashMap<>();
-    public static final Map<Integer, EnumType> type = new HashMap<>();
     public static final Map<String, List> panel_list = new HashMap<>();
     public static final Map<String, EnumUpgradesMultiMachine> map4 = new HashMap<>();
-    public static Map<EnumMultiMachine, TileEntityBlock> map5 = new HashMap<>();
-    public static Map<Integer, EnumElectricBlockState> map6 = new HashMap<>();
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

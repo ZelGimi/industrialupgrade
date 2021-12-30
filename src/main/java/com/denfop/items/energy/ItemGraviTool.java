@@ -3,9 +3,11 @@ package com.denfop.items.energy;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.audio.PositionSpec;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -34,6 +36,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -200,9 +203,10 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                 return this.onTreeTapUse(stack, player, world, pos, facing) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
             case PURIFIER:
                 TileEntity tile = world.getTileEntity(pos);
-                if (!(tile instanceof TileEntitySolarPanel)) {
+                if (!(tile instanceof TileEntitySolarPanel) && !(tile instanceof TileEntityMultiMachine)) {
                     return EnumActionResult.FAIL;
                 }
+                if(tile instanceof TileEntitySolarPanel){
                 double energy = 10000;
                 if (((TileEntitySolarPanel) tile).time > 0) {
                     energy = (double) 10000 / (double) (((TileEntitySolarPanel) tile).time / 20);
@@ -214,6 +218,56 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                     ElectricItem.manager.use(stack, energy, player);
                     return EnumActionResult.SUCCESS;
                 }
+                //
+        } else {
+                    if(!ElectricItem.manager.canUse(stack, 500))
+                        return EnumActionResult.PASS;
+                    TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
+                    ItemStack stack_rf = null;
+                    ItemStack stack_quickly = null;
+                    ItemStack stack_modulesize = null;
+                    ItemStack panel = null;
+                    if( base.rf)
+                        stack_rf = new ItemStack(IUItem.module7,1,4);
+                    if( base.quickly)
+                        stack_quickly = new ItemStack(IUItem.module_quickly);
+                    if( base.modulesize)
+                        stack_modulesize = new ItemStack(IUItem.module_stack);
+                    if( base.solartype != null)
+                        panel = new ItemStack(IUItem.module6,1,base.solartype.meta);
+                    if(stack_rf != null || stack_quickly != null || stack_modulesize != null || panel != null){
+                        final EntityItem item = new EntityItem(world);
+
+                        if(stack_rf != null) {
+                            item.setItem(stack_rf);
+                            base.module=0;
+                            base.rf = false;
+                        }
+                       else if(stack_quickly != null) {
+                            item.setItem(stack_quickly);
+                            base.module=0;
+                            base.quickly = false;
+                        }
+                        else  if(stack_modulesize != null) {
+                            item.setItem(stack_modulesize);
+                            base.modulesize = false;
+                            base.module=0;
+                        }
+                        else     if(panel != null) {
+                            item.setItem(panel);
+                            base.solartype = null;
+                        }
+                        if (!player.getEntityWorld().isRemote) {
+                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                            item.setPickupDelay(0);
+                            world.spawnEntity(item);
+                            ElectricItem.manager.use(stack, 500,null);
+                            return EnumActionResult.SUCCESS;
+                        }
+
+                    }
+                }
+                //
                 return EnumActionResult.FAIL;
             default:
                 return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);

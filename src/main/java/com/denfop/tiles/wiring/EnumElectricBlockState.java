@@ -59,10 +59,9 @@ public enum EnumElectricBlockState {
         this.state = state;
         this.kit_meta = kit_meta;
     }
-
-    public static void register() {
-        for (EnumElectricBlockState state : values()) {
-            IUItem.map6.put(state.block.id, state);
-        }
+    public static EnumElectricBlockState getFromID(final int ID) {
+        return values()[ID % values().length];
     }
+
+
 }

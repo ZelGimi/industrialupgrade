@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
@@ -73,6 +74,7 @@ public class TileEntitySynthesis extends TileEntityDoubleElectricMachine {
         Random rand = new Random();
         if ((rand.nextInt(100) + 1) > (100 - procent)) {
             this.outputSlot.add(processResult);
+
         }
     }
 

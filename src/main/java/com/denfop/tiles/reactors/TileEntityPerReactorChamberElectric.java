@@ -37,7 +37,15 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
         super.onLoaded();
         this.updateRedstoneLink();
     }
-
+    protected void updateEntityServer() {
+        super.updateEntityServer();
+        if(world.provider.getWorldTime() % 40 == 0){
+            this.updateReactor();
+            if (this.reactor == null) {
+                this.destoryChamber(true);
+            }
+        }
+    }
     private void updateRedstoneLink() {
         if (!this.getWorld().isRemote) {
             TileEntityPerNuclearReactor reactor = this.getReactor();

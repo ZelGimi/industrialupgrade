@@ -398,13 +398,14 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
             this.genDay = myArray1[0];
             this.genNight = myArray1[1];
             this.maxStorage = myArray1[2];
-            this.maxStorage2 = myArray1[2] * 4;
+            this.maxStorage2 = myArray1[2] * Config.coefficientrf;
             this.production = myArray1[3];
         }
         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
             this.inputslotA.checkmodule();
         }
         this.gainFuel();
+        this.inputslotA.wirelessmodule();
         if (this.generating > 0D) {
             if (!this.getmodulerf) {
                 if (((this.storage + this.generating)) <= (this.maxStorage)) {
@@ -413,8 +414,8 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
                     this.storage = (this.maxStorage);
                 }
             } else {
-                if (((this.storage2 + this.generating * 4)) <= (this.maxStorage2)) {
-                    this.storage2 += this.generating * 4;
+                if (((this.storage2 + this.generating * Config.coefficientrf)) <= (this.maxStorage2)) {
+                    this.storage2 += this.generating * Config.coefficientrf;
                 } else {
                     this.storage2 = (this.maxStorage2);
                 }

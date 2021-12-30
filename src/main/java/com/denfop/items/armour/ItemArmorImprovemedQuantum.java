@@ -354,7 +354,7 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
             ItemStack armor = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
             if (armor.getItem() == this) {
                 int fallDamage = Math.max((int) event.getDistance() - 10, 0);
-                double energyCost = (getEnergyPerDamage() * fallDamage);
+                double energyCost = (5000 * fallDamage);
                 if (energyCost <= ElectricItem.manager.getCharge(armor)) {
                     ElectricItem.manager.discharge(armor, energyCost, 2147483647, true, false, false);
                     event.setCanceled(true);
@@ -400,7 +400,7 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
 
     public int getEnergyPerDamage() {
-        return 20000;
+        return 15000;
     }
 
 
@@ -591,7 +591,7 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
 
                         if (ElectricItem.manager.canUse(itemStack, 25)) {
 
-                            ElectricItem.manager.use(itemStack, 25, player);
+                            ElectricItem.manager.use(itemStack, 25, null);
                         } else {
                             nbtData.setBoolean("jetpack", false);
                         }

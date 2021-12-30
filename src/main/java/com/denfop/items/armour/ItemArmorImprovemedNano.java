@@ -316,7 +316,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
             ItemStack armor = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
             if (armor.getItem() == this) {
                 int fallDamage = Math.max((int) event.getDistance() - 10, 0);
-                double energyCost = (getEnergyPerDamage() * fallDamage);
+                double energyCost = (5000* fallDamage);
                 if (energyCost <= ElectricItem.manager.getCharge(armor)) {
                     ElectricItem.manager.discharge(armor, energyCost, 2147483647, true, false, false);
                     event.setCanceled(true);
@@ -335,7 +335,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
 
     public int getEnergyPerDamage() {
-        return 90000;
+        return 4000;
     }
 
     @SideOnly(Side.CLIENT)
@@ -527,8 +527,8 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                 if (!player.onGround) {
                     if (nbtData.getBoolean("jetpack")) {
 
-                        if (ElectricItem.manager.canUse(itemStack, 25)) {
-                            ElectricItem.manager.use(itemStack, 25, player);
+                        if (ElectricItem.manager.canUse(itemStack, 25) &&!player.onGround) {
+                            ElectricItem.manager.use(itemStack, 25, null);
                         } else {
                             nbtData.setBoolean("jetpack", false);
                         }

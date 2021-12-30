@@ -122,7 +122,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     protected void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 

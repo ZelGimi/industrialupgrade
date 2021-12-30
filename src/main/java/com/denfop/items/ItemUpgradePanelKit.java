@@ -33,13 +33,18 @@ import ic2.core.IC2;
 import ic2.core.block.generator.tileentity.TileEntitySolarGenerator;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
+import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -49,7 +54,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 
 public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> implements IModelRegister {
@@ -67,7 +74,17 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
     public void registerModels() {
         registerModels(null);
     }
+    @Override
+    public void addInformation(
+            final ItemStack p_77624_1_,
+            @Nullable final World p_77624_2_,
+            final List<String> p_77624_3_,
+            final ITooltipFlag p_77624_4_
+    ) {
+        p_77624_3_.add(Localization.translate("waring_kit"));
+        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
 
+    }
     public EnumActionResult onItemUseFirst(
             EntityPlayer player,
             World world,
@@ -98,30 +115,38 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
 
 
                 final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta - 1);
+                    world.removeTileEntity(pos);
+                    world.setBlockToAir(pos);
+                    ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block,1,kit1.solarpanel_new.meta);
 
-                TileEntitySolarPanel panel = kit1.tile;
-                if (panel != null) {
-                    NBTTagCompound nbt = new NBTTagCompound();
-                    tile.writeToNBT(nbt);
-                    panel.readFromNBT(nbt);
-                    world.setTileEntity(pos, panel);
-                    panel.onUpgraded();
-                    panel.markDirty();
+                    EntityItem item = new EntityItem(world);
+                    item.setItem(stack1);
+                    if (!player.getEntityWorld().isRemote) {
+                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                        item.setPickupDelay(0);
+                        world.spawnEntity(item);
+
+                    }
                     stack.setCount(stack.getCount() - 1);
                     return EnumActionResult.SUCCESS;
-                }
+
 
 
             } else if (tileEntity instanceof TileEntitySolarGenerator) {
                 if (stack.getItemDamage() == 0 && world.getTileEntity(pos) instanceof TileEntitySolarGenerator) {
                     EnumSolarPanels kit = EnumSolarPanels.getFromID(meta);
-                    TileEntitySolarPanel panel = new TileEntityAdvancedSolarPanel();
-                    NBTTagCompound nbt = new NBTTagCompound();
-                    ((TileEntitySolarGenerator) world.getTileEntity(pos)).writeToNBT(nbt);
-                    panel.readFromNBT(nbt);
-                    world.setTileEntity(pos, panel);
-                    panel.onUpgraded();
-                    panel.markDirty();
+                    world.removeTileEntity(pos);
+                    world.setBlockToAir(pos);
+                    ItemStack stack1 = new ItemStack(kit.block,1,kit.meta);
+
+                    EntityItem item = new EntityItem(world);
+                    item.setItem(stack1);
+                    if (!player.getEntityWorld().isRemote) {
+                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                        item.setPickupDelay(0);
+                        world.spawnEntity(item);
+
+                    }
                     stack.setCount(stack.getCount() - 1);
                     return EnumActionResult.SUCCESS;
 
