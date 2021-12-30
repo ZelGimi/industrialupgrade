@@ -91,7 +91,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public TileEntityMultiMachine(
             int energyconsume,
             int OperationsPerTick,
-            IMachineRecipeManager recipe,
+            IMachineRecipeManager<ic2.api.recipe.IRecipeInput, java.util.Collection<ItemStack>, ItemStack> recipe,
             int min,
             int max,
             boolean random,
@@ -380,7 +380,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                 quickly = 100;
             }
             int size = 1;
-            if (this.inputSlots.get1(i) != null) {
+            if (!this.inputSlots.get1(i).isEmpty()) {
                 if (this.modulesize) {
                     for (int j = 0; ; j++) {
                         ItemStack stack = new ItemStack(

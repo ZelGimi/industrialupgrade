@@ -12,9 +12,12 @@ import ic2.core.block.TileEntityBlock;
 import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
+import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,7 +31,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 
 public class ItemUpgradeMachinesKit extends ItemMulti<ItemUpgradeMachinesKit.Types> implements IModelRegister {
@@ -46,7 +51,17 @@ public class ItemUpgradeMachinesKit extends ItemMulti<ItemUpgradeMachinesKit.Typ
     public void registerModels() {
         registerModels(null);
     }
+    @Override
+    public void addInformation(
+            final ItemStack p_77624_1_,
+            @Nullable final World p_77624_2_,
+            final List<String> p_77624_3_,
+            final ITooltipFlag p_77624_4_
+    ) {
+        p_77624_3_.add(Localization.translate("waring_kit"));
+        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
 
+    }
     public EnumActionResult onItemUseFirst(
             EntityPlayer player,
             World world,
@@ -69,18 +84,21 @@ public class ItemUpgradeMachinesKit extends ItemMulti<ItemUpgradeMachinesKit.Typ
                     EnumUpgradesMultiMachine machine = IUItem.map4.get(name);
 
                     if (stack.getItemDamage() == machine.meta_item) {
-                        TileEntityBlock te = machine.blockstate;
 
-                        if (te != null) {
-                            NBTTagCompound nbt = new NBTTagCompound();
-                            tile.writeToNBT(nbt);
-                            te.readFromNBT(nbt);
-                            world.setTileEntity(pos, te);
-                            ((TileEntityMultiMachine) te).onUpgraded();
-                            te.markDirty();
-                            stack.setCount(stack.getCount() - 1);
-                            return EnumActionResult.SUCCESS;
+                        world.removeTileEntity(pos);
+                        world.setBlockToAir(pos);
+                        final ItemStack stack1 = new ItemStack(machine.block, 1, machine.meta);
+                        EntityItem item = new EntityItem(world);
+                        item.setItem(stack1);
+                        if (!player.getEntityWorld().isRemote) {
+                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                            item.setPickupDelay(0);
+                            world.spawnEntity(item);
+
                         }
+                        stack.setCount(stack.getCount() - 1);
+                        return EnumActionResult.SUCCESS;
+
 
                     }
                 }
@@ -90,29 +108,55 @@ public class ItemUpgradeMachinesKit extends ItemMulti<ItemUpgradeMachinesKit.Typ
 
                     EnumMultiMachine type = tile1.getMachine();
                     if (type.upgrade == stack.getItemDamage()) {
-                        TileEntityBlock state = IUItem.map5.get(type);
-                        if (state != null) {
-                            int module = tile1.module;
-                            boolean rf = tile1.rf;
-                            boolean quickly = tile1.quickly;
-                            boolean modulesize = tile1.modulesize;
-                            TileEntityBlock te = state;
-                            if (te != null) {
-                                NBTTagCompound nbt = new NBTTagCompound();
-                                tile1.writeToNBT(nbt);
-                                te.readFromNBT(nbt);
-                                world.setTileEntity(pos, te);
-                                ((TileEntityMultiMachine) te).onUpgraded();
-                                te.markDirty();
-                                ((TileEntityMultiMachine) te).rf = rf;
-                                ((TileEntityMultiMachine) te).module = module;
-                                ((TileEntityMultiMachine) te).quickly = quickly;
-                                ((TileEntityMultiMachine) te).modulesize = modulesize;
-                                stack.setCount(stack.getCount() - 1);
-                                return EnumActionResult.SUCCESS;
-                            }
+                        ItemStack stack_rf = null;
+                        ItemStack stack_quickly = null;
+                        ItemStack stack_modulesize = null;
+                        ItemStack panel = null;
+
+                        if( tile1.rf)
+                            stack_rf = new ItemStack(IUItem.module7,1,4);
+                        if( tile1.quickly)
+                            stack_quickly = new ItemStack(IUItem.module_quickly);
+                        if( tile1.modulesize)
+                            stack_modulesize = new ItemStack(IUItem.module_stack);
+                        if( tile1.solartype != null)
+                            panel = new ItemStack(IUItem.module6,1,tile1.solartype.meta);
+
+                        world.removeTileEntity(pos);
+                        world.setBlockToAir(pos);
+                        final ItemStack stack1 = new ItemStack(type.block_new, 1, type.meta_new);
+                        EntityItem item = new EntityItem(world);
+                        item.setItem(stack1);
+                        if (!player.getEntityWorld().isRemote) {
+                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                            item.setPickupDelay(0);
+                            world.spawnEntity(item);
 
                         }
+                        if(stack_rf != null || stack_quickly != null || stack_modulesize != null || panel != null){
+                            item = new EntityItem(world);
+                            if(stack_rf != null)
+                            item.setItem(stack_rf);
+                            if(stack_quickly != null)
+                                item.setItem(stack_quickly);
+                            if(stack_modulesize != null)
+                                item.setItem(stack_modulesize);
+                            if(panel != null)
+                                item.setItem(panel);
+
+                            if (!player.getEntityWorld().isRemote) {
+                                item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                                item.setPickupDelay(0);
+                                world.spawnEntity(item);
+
+                            }
+                        }
+
+                        stack.setCount(stack.getCount() - 1);
+                        return EnumActionResult.SUCCESS;
+
+
+
                     }
                 }
 

@@ -753,7 +753,7 @@ public class Register {
                 Config.maxenergy_spectral_bow,
                 4f
         );
-        IUItem.spectralSaber = new ItemSpectralSaber("itemNanoSaber", Config.maxCharge, Config.transferLimit, Config.tier,
+        IUItem.spectralSaber = new ItemSpectralSaber("itemNanoSaber", Config.maxCharge, Config.transferLimit, Config.tier1,
                 Config.spectralsaberactive, Config.spectralsabernotactive
         );
         IUItem.quantumSaber = new ItemQuantumSaber("itemNanoSaber1", Config.maxCharge1, Config.transferLimit1,

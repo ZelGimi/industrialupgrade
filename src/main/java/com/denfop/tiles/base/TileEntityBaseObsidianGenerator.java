@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerObsidianGenerator;
 import com.denfop.invslot.InvSlotObsidianGenerator;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -11,6 +12,7 @@ import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
+import ic2.core.block.comp.Fluids;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
@@ -39,6 +41,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     public final InvSlotUpgrade upgradeSlot;
     public final FluidTank fluidTank1;
     public final FluidTank fluidTank2;
+    private final Fluids fluids;
     public int energyConsume;
     public int operationLength;
     public int operationsPerTick;
@@ -61,11 +64,15 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
         this.outputSlot1 = new InvSlotOutput(this, "output1", 1);
 
-        fluidTank1 = new FluidTank(1000 * 12);
-        fluidTank2 = new FluidTank(1000 * 12);
         this.fluidSlot1 = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidRegistry.WATER);
         this.fluidSlot2 = new InvSlotConsumableLiquidByList(this, "fluidSlot1", 1, FluidRegistry.LAVA);
+        this.fluids = this.addComponent(new Fluids(this));
+        this.fluidTank1 = this.fluids.addTank("fluidTank1", 12 * 1000
 
+        );
+        this.fluidTank2 = this.fluids.addTank("fluidTank2", 12 * 1000
+
+        );
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

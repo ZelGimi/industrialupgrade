@@ -1,6 +1,7 @@
 package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import com.denfop.IUItem;
 import com.denfop.items.modules.AdditionModule;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
@@ -34,7 +35,7 @@ public class InvSlotElectricBlock extends InvSlot {
             return ((itemStack.getItemDamage() >= 4 || itemStack.getItemDamage() == 0)
                     && itemStack.getItem() instanceof AdditionModule)
                     || (EnumModule.getFromID(itemStack.getItemDamage()) != null && EnumModule.getFromID(itemStack.getItemDamage()) ==
-                    EnumModule.OUTPUT && itemStack.getItem() instanceof ItemBaseModules);
+                    EnumModule.OUTPUT && itemStack.getItem() instanceof ItemBaseModules ||  itemStack.getItem().equals(IUItem.module_quickly));
         }
         if (type == 2) {
             return itemStack.getItem() instanceof IElectricItem;
@@ -44,8 +45,15 @@ public class InvSlotElectricBlock extends InvSlot {
         }
         return false;
     }
+    public boolean checkignore(){
+        for(int i =0; i < this.size();i++){
+            if(this.get(i).getItem().equals(IUItem.module_quickly))
+                return  true;
+        }
+        return false;
+    }
 
-    public double charge(double amount, ItemStack stack, boolean simulate) {
+    public double charge(double amount, ItemStack stack, boolean simulate,boolean ignore) {
         if (amount < 0.0) {
             throw new IllegalArgumentException("Amount must be > 0.");
         }
@@ -53,7 +61,7 @@ public class InvSlotElectricBlock extends InvSlot {
             return 0;
         }
 
-        return ElectricItem.manager.charge(stack, amount, 2147483647, false, simulate);
+        return ElectricItem.manager.charge(stack, amount, 2147483647, ignore, simulate);
     }
 
     public double discharge(double amount, ItemStack stack, boolean simulate) {

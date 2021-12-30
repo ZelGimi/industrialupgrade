@@ -118,6 +118,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
             this.lastEnergy = this.energy.getEnergy();
             if (needsInvUpdate) {
                 this.markDirty();
+                this.setActive(true);
             }
         } else {
 

@@ -340,8 +340,6 @@ public class EnergyAxe extends ItemTool implements IElectricItem, IModelRegister
                     }
                 }
             }
-        } else if (!IC2.platform.isSimulating()) {
-            world.playEvent(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
         }
         return true;
     }

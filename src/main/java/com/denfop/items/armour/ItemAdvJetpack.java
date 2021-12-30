@@ -302,10 +302,10 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
                 }
             }
             boolean jetpack;
-
+         if(!player.onGround)
             if (nbtData.getBoolean("jetpack")) {
-                if (ElectricItem.manager.canUse(itemStack, 10) && !player.onGround) {
-                    ElectricItem.manager.use(itemStack, 10, player);
+                if (ElectricItem.manager.canUse(itemStack, 10) ) {
+                    ElectricItem.manager.use(itemStack, 10, null);
                 }
             }
             jetpack = nbtData.getBoolean("jetpack");

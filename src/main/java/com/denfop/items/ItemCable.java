@@ -53,7 +53,7 @@ import java.util.Set;
 
 public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxable, IModelRegister {
 
-    private final List<ItemStack> variants = new ArrayList();
+    public static final List<ItemStack> variants = new ArrayList();
     private static final NumberFormat lossFormat = new DecimalFormat("0.00#");
     protected static final String NAME = "cable_iu_item";
 
@@ -175,19 +175,12 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     }
 
     public ItemStack getCable(CableType type, int insulation) {
-        ItemStack ret = new ItemStack(this, 1, type.getId());
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(ret);
-        nbt.setByte("type", (byte) type.ordinal());
-        nbt.setByte("insulation", (byte) insulation);
-        return ret;
+        return new ItemStack(this, 1, type.getId());
     }
 
     public static ItemStack getCable(CableType type, int insulation, int k) {
-        ItemStack ret = new ItemStack(IUItem.cable, 1, type.getId());
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(ret);
-        nbt.setByte("type", (byte) type.ordinal());
-        nbt.setByte("insulation", (byte) insulation);
-        return ret;
+
+        return variants.get(type.getId());
     }
 
     private static CableType getCableType(ItemStack stack) {
@@ -292,9 +285,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
             List<ItemStack> variants = new ArrayList(this.variants);
-            if (IC2.version.isClassic()) {
-                variants.remove(11);
-            }
+
 
             itemList.addAll(variants);
         }

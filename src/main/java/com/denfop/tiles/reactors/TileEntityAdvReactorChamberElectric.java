@@ -83,19 +83,27 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
         this.lastReactorUpdate = 0L;
-        if (this.getReactor() == null) {
+        this.updateReactor();
+        if (this.reactor == null) {
             this.destoryChamber(true);
         }
 
     }
 
+    protected void updateEntityServer() {
+        super.updateEntityServer();
+        if(world.provider.getWorldTime() % 40 == 0){
+        this.updateReactor();
+        if (this.reactor == null) {
+            this.destoryChamber(true);
+        }
+        }
+    }
     public void destoryChamber(boolean wrench) {
         World world = this.getWorld();
         world.setBlockToAir(this.pos);
-        Iterator var3 = this.getSelfDrops(0, wrench).iterator();
 
-        while (var3.hasNext()) {
-            ItemStack drop = (ItemStack) var3.next();
+        for (final ItemStack drop : this.getSelfDrops(0, wrench)) {
             StackUtil.dropAsEntity(world, this.pos, drop);
         }
 

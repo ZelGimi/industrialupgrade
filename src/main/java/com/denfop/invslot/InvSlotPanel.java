@@ -1,6 +1,7 @@
 package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import com.denfop.Config;
 import com.denfop.items.modules.AdditionModule;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
@@ -212,6 +213,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
         tile.genDay = temp_day;
         tile.genNight = temp_night;
         tile.maxStorage = temp_storage;
+        tile.maxStorage2 = temp_storage * Config.coefficientrf;
         tile.production = temp_producing;
 
 

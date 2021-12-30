@@ -45,7 +45,7 @@ public class GUISynthesis extends GuiIC2<ContainerDoubleElectricMachine> {
 
         //      RecipeOutput output = Recipes.synthesis.getOutputFor(this.container.base.inputSlotA.get(0),
         //            this.container.base.inputSlotA.get(1), false, false);
-        final RecipeOutput output = null;
+        final RecipeOutput output = this.container.base.getOutput();
         if (output != null) {
             this.fontRenderer.drawString(
                     TextFormatting.GREEN + Localization.translate("chance") + output.metadata.getInteger(

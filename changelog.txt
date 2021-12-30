@@ -1,6 +1,23 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.2:
+1.RF storage is expandable with modules in panels
+2.fixed module "stack"
+3.added the ability of the module "instant"  to work in storages
+4.Purifier can now clean up upgrades in double, triple and quad machines
+5.fixed spectral saber 
+6.fixed of all kits of upgrades
+7.fixed obsidian generator
+8.fixed cable pick up 
+9.removed crafting of 4 iridium ingots in the molecular transformer
+10.fixed textures in lava and neutronium generators
+11.fixed crash when breaking some blocks with tools
+12.flying no consumes energy from other armor
+13.added the ability for the panel combiner to work with a wireless module
+14.fixed of reactor chambers, which could be safely put on blocks
+15.fixed not the appearance of text in the nuclear fusion reactor
+16.The wireless module has types again (panel and storage) 
 Version:2.1:
 1. Fixed the cobblestone generator
 2. Fixed the helium generator

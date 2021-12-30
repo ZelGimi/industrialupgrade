@@ -12,6 +12,7 @@ import ic2.api.item.IBoxable;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IItemHudInfo;
 import ic2.core.IC2;
+import ic2.core.audio.PositionSpec;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.armor.ItemArmorNanoSuit;
@@ -328,15 +329,14 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
     }
 
     public String getRandomSwingSound() {
-        switch (IC2.random.nextInt(3)) {
-            default:
-                return "Tools/Nanosabre/NanosabreSwing1.ogg";
+        switch(IC2.random.nextInt(3)) {
             case 1:
                 return "Tools/Nanosabre/NanosabreSwing2.ogg";
             case 2:
-                break;
+                return "Tools/Nanosabre/NanosabreSwing3.ogg";
+            default:
+                return "Tools/Nanosabre/NanosabreSwing1.ogg";
         }
-        return "Tools/Nanosabre/NanosabreSwing3.ogg";
     }
 
     @Override
@@ -356,7 +356,21 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
     private static boolean isActive(NBTTagCompound nbt) {
         return nbt.getBoolean("active");
     }
+    public boolean onEntitySwing(EntityLivingBase entity, ItemStack stack) {
+        if (IC2.platform.isRendering() && isActive(stack)) {
+            IC2.audioManager.playOnce(entity, PositionSpec.Hand, this.getRandomSwingSound(), true, IC2.audioManager.getDefaultVolume());
+        }
 
+        return false;
+    }
+
+    protected String getIdleSound(EntityLivingBase player, ItemStack stack) {
+        return "Tools/Nanosabre/NanosabreIdle.ogg";
+    }
+
+    protected String getStartSound(EntityLivingBase player, ItemStack stack) {
+        return "Tools/Nanosabre/NanosabrePowerup.ogg";
+    }
     @Override
     public boolean isFull3D() {
         return true;

@@ -373,8 +373,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                     }
                 }
             }
-        } else if (!IC2.platform.isSimulating()) {
-            world.playEvent(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
         }
         return true;
     }

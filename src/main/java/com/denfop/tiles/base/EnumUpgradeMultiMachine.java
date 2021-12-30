@@ -103,10 +103,6 @@ public enum EnumUpgradeMultiMachine {
         this(multimachine, null);
     }
 
-    public static void register() {
-        for (EnumUpgradeMultiMachine value : values()) {
-            IUItem.map5.put(value.multimachine, value.tile);
-        }
-    }
+
 
 }

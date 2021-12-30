@@ -5,13 +5,17 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.tiles.base.TileEntityElectricBlock;
-import com.denfop.tiles.wiring.EnumElectricBlockState;
+import com.denfop.tiles.wiring.EnumElectricBlock;
+import com.denfop.utils.ModUtils;
 import ic2.core.IC2;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
+import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +29,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 
 public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements IModelRegister {
@@ -37,6 +43,18 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
         this.setCreativeTab(IUCore.ItemTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    @Override
+    public void addInformation(
+            final ItemStack p_77624_1_,
+            @Nullable final World p_77624_2_,
+            final List<String> p_77624_3_,
+            final ITooltipFlag p_77624_4_
+    ) {
+        p_77624_3_.add(Localization.translate("waring_kit"));
+        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+
     }
 
     @Override
@@ -54,45 +72,45 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
             float hitZ,
             EnumHand hand
     ) {
-        if (!IC2.platform.isSimulating()) {
-            return EnumActionResult.PASS;
-        } else {
+        if (IC2.platform.isSimulating()) {
             ItemStack stack = player.getHeldItem(hand);
             int meta = stack.getItemDamage();
             TileEntity tileEntity = world.getTileEntity(pos);
 
 
-            int i;
-
             if (tileEntity instanceof TileEntityElectricBlock) {
                 TileEntityElectricBlock tile = (TileEntityElectricBlock) tileEntity;
-                EnumElectricBlockState enumblock = IUItem.map6.get(TileEntityElectricBlock.getElectricBlock().id);
-
+                final EnumElectricBlock enumblock = tile.getElectricBlock();
                 if (enumblock != null && enumblock.kit_meta == meta) {
+                    ItemStack stack1;
+                    if (tile.getElectricBlock().chargepad)
+                        stack1 = new ItemStack(IUItem.Chargepadelectricblock, 1, tile.getElectricBlock().meta);
+                    else
+                        stack1 = new ItemStack(IUItem.electricblock, 1, tile.getElectricBlock().meta);
+                    final NBTTagCompound nbt = ModUtils.nbt(stack1);
+                    nbt.setDouble("energy", tile.energy.getEnergy());
+                    nbt.setDouble("energy2", tile.energy2);
 
+                    world.removeTileEntity(pos);
+                    world.setBlockToAir(pos);
 
-                    TileEntityElectricBlock te = enumblock.state;
+                    EntityItem item = new EntityItem(world);
+                    item.setItem(stack1);
+                    if (!player.getEntityWorld().isRemote) {
+                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                        item.setPickupDelay(0);
+                        world.spawnEntity(item);
 
-
-                    if (te != null) {
-                        NBTTagCompound nbt = new NBTTagCompound();
-                        tile.writeToNBT(nbt);
-                        te.readFromNBT(nbt);
-                        world.setTileEntity(pos, te);
-                        te.onUpgraded();
-                        te.markDirty();
-                        stack.setCount(stack.getCount() - 1);
-                        return EnumActionResult.SUCCESS;
                     }
-
+                    stack.setCount(stack.getCount() - 1);
 
                 }
                 return EnumActionResult.PASS;
 
             }
-            return EnumActionResult.PASS;
 
         }
+        return EnumActionResult.PASS;
     }
 
 
