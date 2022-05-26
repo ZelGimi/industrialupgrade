@@ -49,6 +49,16 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("bags").append("/").append(name);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
     public String getUnlocalizedName() {
         return "item." + this.internalName + ".name";
     }
@@ -73,16 +83,6 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
             var3.add(var4);
             var3.add(new ItemStack(this, 1, this.getMaxDamage()));
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("bags").append("/").append(name);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {

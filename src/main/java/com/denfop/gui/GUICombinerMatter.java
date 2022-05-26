@@ -25,6 +25,14 @@ public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
         this.container = container1;
     }
 
+    private static List<String> getInformation() {
+        List<String> ret = new ArrayList();
+        ret.add(Localization.translate("iu.combMatterinformation1"));
+        ret.add(Localization.translate("iu.combMatterinformation2"));
+
+
+        return ret;
+    }
 
     private void handleUpgradeTooltip(int x, int y, int minX, int minY, int maxX, int maxY) {
         if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
@@ -40,15 +48,6 @@ public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
 
             this.drawTooltip(x, y, text);
         }
-    }
-
-    private static List<String> getInformation() {
-        List<String> ret = new ArrayList();
-        ret.add(Localization.translate("iu.combMatterinformation1"));
-        ret.add(Localization.translate("iu.combMatterinformation2"));
-
-
-        return ret;
     }
 
     protected void drawForegroundLayer(int par1, int par2) {

@@ -4,7 +4,12 @@ package com.denfop.items.armour;
 import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.IUpgradeItem;
+import com.denfop.api.upgrade.UpgradeItemInform;
+import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.utils.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
@@ -48,6 +53,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -62,16 +68,18 @@ import java.util.Map;
 
 @SuppressWarnings("SameReturnValue")
 public class ItemArmorImprovemedNano extends ItemArmorElectric
-        implements IModelRegister, ISpecialArmor, IElectricItem, IItemHudInfo, IMetalArmor {
+        implements IModelRegister, ISpecialArmor, IUpgradeItem, IElectricItem, IItemHudInfo, IMetalArmor {
 
     protected static final Map<Potion, Integer> potionRemovalCost = new HashMap<Potion, Integer>();
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;
-    private final ThreadLocal<Boolean> allowDamaging;
     private final String armorName;
     private final String name;
     private float jumpCharge;
+    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
+    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
+    private boolean update = false;
 
     public ItemArmorImprovemedNano(
             String name, EntityEquipmentSlot armorType1, double maxCharge1, double transferLimit1,
@@ -87,7 +95,6 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         potionRemovalCost.put(MobEffects.WITHER, 100);
         this.name = name;
         potionRemovalCost.put(MobEffects.HUNGER, 200);
-        this.allowDamaging = new ThreadLocal<>();
         this.maxCharge = maxCharge1;
         this.tier = tier1;
         this.transferLimit = transferLimit1 * 16;
@@ -99,6 +106,61 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         setCreativeTab(IUCore.EnergyTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("armour").append("/").append(name + extraName);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    @SubscribeEvent
+    public void Potion(LivingEvent.LivingUpdateEvent event) {
+        if (!(event.getEntityLiving() instanceof EntityPlayer)) {
+            return;
+        }
+        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+        NBTTagCompound nbtData = player.getEntityData();
+        if (!player.inventory.armorInventory.get(0).isEmpty()
+                && player.inventory.armorInventory.get(0).getItem() == IUItem.quantumBoots) {
+            nbtData.setBoolean("stepHeight", true);
+            player.stepHeight = 1.0F;
+
+            nbtData.setBoolean("falldamage", true);
+            player.fallDistance = 0;
+
+
+        } else {
+            if (nbtData.getBoolean("stepHeight")) {
+                player.stepHeight = 0.5F;
+                nbtData.setBoolean("stepHeight", false);
+            }
+            if (nbtData.getBoolean("falldamage")) {
+                player.fallDistance = 1;
+                nbtData.setBoolean("falldamage", false);
+            }
+
+        }
+    }
+
+    @SubscribeEvent
+    public void jump(LivingEvent.LivingJumpEvent event) {
+        if (!(event.getEntity() instanceof EntityPlayer)) {
+            return;
+        }
+        EntityPlayer player = (EntityPlayer) event.getEntity();
+        if (!player.inventory.armorInventory.get(0).isEmpty()
+                && (player.inventory.armorInventory.get(0).getItem() == IUItem.quantumBoots || player.inventory.armorInventory
+                .get(0)
+                .getItem() == IUItem.NanoLeggings)) {
+            player.motionY = 0.8;
+            ElectricItem.manager.use(player.inventory.armorInventory.get(0), 4000.0D, player);
+
+        }
     }
 
     public void setDamage(ItemStack stack, int damage) {
@@ -115,28 +177,24 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     }
 
     @Override
-    public void getSubItems(final CreativeTabs p_150895_1_, final NonNullList<ItemStack> var3) {
-        if (this.isInCreativeTab(p_150895_1_)) {
-            final ItemStack var4 = new ItemStack(this, 1);
-            ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
-            var3.add(var4);
-            var3.add(new ItemStack(this, 1, this.getMaxDamage()));
+    public void getSubItems(final CreativeTabs subs, final NonNullList<ItemStack> items) {
+        if (this.isInCreativeTab(subs)) {
+            ItemStack stack = new ItemStack(this, 1);
+
+            NBTTagCompound nbt = ModUtils.nbt(stack);
+            ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            items.add(stack);
+            ItemStack itemstack = new ItemStack(this, 1, getMaxDamage());
+            nbt = ModUtils.nbt(itemstack);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            items.add(itemstack);
         }
     }
 
     @Override
     public void registerModels() {
         registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -210,7 +268,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
             return 10511680;
         }
         tNBT = tNBT.getCompoundTag("display");
-        return (tNBT == null) ? 10511680 : (tNBT.hasKey("color") ? tNBT.getInteger("color") : 10511680);
+        return tNBT.hasKey("color") ? tNBT.getInteger("color") : 10511680;
     }
 
     public ISpecialArmor.ArmorProperties getProperties(
@@ -219,15 +277,8 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     ) {
         if (Config.spectralquantumprotection) {
             double absorptionRatio = getBaseAbsorptionRatio() * getDamageAbsorptionRatio();
-            NBTTagCompound nbt = ModUtils.nbt(armor);
-            int protect = 0;
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("protect")) {
-                    protect++;
-                }
-
-            }
-            protect = Math.min(protect, EnumInfoUpgradeModules.PROTECTION.max);
+            int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, armor) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, armor).number : 0);
             int energyPerDamage = (int) (this.getEnergyPerDamage() - this.getEnergyPerDamage() * 0.2 * protect);
             int damageLimit = (int) ((energyPerDamage > 0)
                     ? (25.0D * ElectricItem.manager.getCharge(armor) / energyPerDamage)
@@ -235,16 +286,8 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
             return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
         } else {
             if (source == DamageSource.FALL && this.armorType.getIndex() == 3) {
-                NBTTagCompound nbt = ModUtils.nbt(armor);
-                int protect = 0;
-                for (int i = 0; i < 4; i++) {
-                    if (nbt.getString("mode_module" + i).equals("protect")) {
-                        protect++;
-                    }
-
-                }
-                protect = Math.min(protect, EnumInfoUpgradeModules.PROTECTION.max);
-
+                int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, armor) ?
+                        UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, armor).number : 0);
 
                 int energyPerDamage = (int) (this.getEnergyPerDamage() - this.getEnergyPerDamage() * 0.2 * protect);
                 int damageLimit = 2147483647;
@@ -281,15 +324,8 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     }
 
     public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int protect = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("protect")) {
-                protect++;
-            }
-
-        }
-        protect = Math.min(protect, EnumInfoUpgradeModules.PROTECTION.max);
+        int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, stack).number : 0);
 
 
         ElectricItem.manager.discharge(
@@ -316,7 +352,9 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
             ItemStack armor = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
             if (armor.getItem() == this) {
                 int fallDamage = Math.max((int) event.getDistance() - 10, 0);
-                double energyCost = (5000* fallDamage);
+                double energyCost = (5000 * fallDamage) * (1 - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.REPAIRED,
+                        armor) ?
+                        UpgradeSystem.system.getModules(EnumInfoUpgradeModules.REPAIRED, armor).number : 0) * 0.25);
                 if (energyCost <= ElectricItem.manager.getCharge(armor)) {
                     ElectricItem.manager.discharge(armor, energyCost, 2147483647, true, false, false);
                     event.setCanceled(true);
@@ -355,19 +393,16 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         NBTTagCompound nbtData = ModUtils.nbt(itemStack);
         byte toggleTimer = nbtData.getByte("toggleTimer");
         boolean ret = false;
-        int resistance = 0;
-        int repaired = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbtData.getString("mode_module" + i).equals("invisibility")) {
-                player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300));
-            }
-            if (nbtData.getString("mode_module" + i).equals("resistance")) {
-                resistance++;
-            }
-            if (nbtData.getString("mode_module" + i).equals("repaired")) {
-                repaired++;
-            }
+        int resistance = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RESISTANCE, itemStack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.RESISTANCE, itemStack).number : 0);
+
+
+        int repaired = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.REPAIRED, itemStack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.REPAIRED, itemStack).number : 0);
+        if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.INVISIBILITY, itemStack)) {
+            player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300));
         }
+
         if (repaired != 0) {
             if (world.provider.getWorldTime() % 80 == 0) {
                 ElectricItem.manager.charge(
@@ -413,6 +448,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                         }
                         ElectricItem.manager.use(itemStack, 1000.0D, null);
                         ret = true;
+                        slot = -1;
                     }
                     for (int i = 0; i < player.inventory.mainInventory.size(); ++i) {
                         ItemStack playerStack = player.inventory.mainInventory.get(i);
@@ -508,18 +544,15 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                     }
                     ret = true;
                 }
-                NBTTagCompound nbt = ModUtils.nbt(itemStack);
-                boolean waterBreathing = false;
-                for (int i = 0; i < 4; i++) {
-                    if (nbt.getString("mode_module" + i).equals("waterBreathing")) {
-                        waterBreathing = true;
-                        break;
-                    }
 
-                }
-                if (waterBreathing) {
+
+                if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WATER, itemStack)) {
                     player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 300));
                 }
+                if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.NIGTHVISION, itemStack)) {
+                    player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300));
+                }
+
                 IC2.platform.profilerEndSection();
 
                 break;
@@ -527,7 +560,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                 if (!player.onGround) {
                     if (nbtData.getBoolean("jetpack")) {
 
-                        if (ElectricItem.manager.canUse(itemStack, 25) &&!player.onGround) {
+                        if (ElectricItem.manager.canUse(itemStack, 25) && !player.onGround) {
                             ElectricItem.manager.use(itemStack, 25, null);
                         } else {
                             nbtData.setBoolean("jetpack", false);
@@ -579,16 +612,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                     nbtData.setByte("toggleTimer", toggleTimer);
                 }
 
-                nbt = ModUtils.nbt(itemStack);
-                boolean fireResistance = false;
-                for (int i = 0; i < 4; i++) {
-                    if (nbt.getString("mode_module" + i).equals("fireResistance")) {
-                        fireResistance = true;
-                        break;
-                    }
-
-                }
-
+                boolean fireResistance = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FIRE_PROTECTION, itemStack);
                 if (fireResistance) {
                     player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300));
                 }
@@ -623,15 +647,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                     }
                     player.moveRelative(0.0F, 0.0F, 1.0F, speed);
                 }
-                nbt = ModUtils.nbt(itemStack);
-                boolean moveSpeed = false;
-                for (int i = 0; i < 4; i++) {
-                    if (nbt.getString("mode_module" + i).equals("moveSpeed")) {
-                        moveSpeed = true;
-                        break;
-                    }
-
-                }
+                boolean moveSpeed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SPEED, itemStack);
                 if (moveSpeed) {
                     player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 300));
 
@@ -670,15 +686,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
                         }
                     }
                 }
-                nbt = ModUtils.nbt(itemStack);
-                boolean jump = false;
-                for (int i = 0; i < 4; i++) {
-                    if (nbt.getString("mode_module" + i).equals("jump")) {
-                        jump = true;
-                        break;
-                    }
-
-                }
+                boolean jump = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.JUMP, itemStack);
                 if (jump) {
 
 
@@ -725,6 +733,23 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         List<String> info = new ArrayList<>();
         info.add(ElectricItem.manager.getToolTip(stack));
         return info;
+    }
+
+
+    @Override
+    public void setUpdate(final boolean update) {
+        this.update = update;
+    }
+
+
+    @Override
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean par5) {
+        NBTTagCompound nbt = ModUtils.nbt(itemStack);
+
+        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+            nbt.setBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+        }
     }
 
 }

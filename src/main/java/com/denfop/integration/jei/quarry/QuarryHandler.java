@@ -12,7 +12,11 @@ import java.util.List;
 public class QuarryHandler {
 
     private static final List<QuarryHandler> recipes = new ArrayList<>();
+    private final ItemStack output;
 
+    public QuarryHandler(ItemStack output) {
+        this.output = output;
+    }
 
     public static List<QuarryHandler> getRecipes() { // Получатель всех рецептов.
         if (recipes.isEmpty()) {
@@ -20,19 +24,6 @@ public class QuarryHandler {
         }
         return recipes;
     }
-
-    private final ItemStack output;
-
-
-    public QuarryHandler(ItemStack output) {
-        this.output = output;
-    }
-
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
-    }
-
 
     public static QuarryHandler addRecipe(ItemStack output) {
         QuarryHandler recipe = new QuarryHandler(output);
@@ -55,10 +46,6 @@ public class QuarryHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.getItem() == output.getItem();
-    }
-
     public static void initRecipes() {
         for (ItemStack container : IUCore.list) {
             addRecipe(container);
@@ -72,6 +59,14 @@ public class QuarryHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.getItem() == output.getItem();
     }
 
 }

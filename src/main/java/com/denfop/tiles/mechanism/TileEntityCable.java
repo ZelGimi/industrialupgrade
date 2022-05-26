@@ -52,20 +52,14 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
             "renderstate",
             TileEntityCable.CableRenderState.class
     );
+    private final Obscuration obscuration;
+    public boolean addedToEnergyNet;
     protected CableType cableType;
     protected int insulation;
-
     private CableFoam foam;
-    private final Obscuration obscuration;
     private byte connectivity;
     private volatile TileEntityCable.CableRenderState renderState;
-
-    public boolean addedToEnergyNet;
     private IWorldTickCallback continuousUpdate;
-
-    public static TileEntityCable delegate(CableType cableType, int insulation) {
-        return new TileEntityCable(cableType, insulation);
-    }
 
     public TileEntityCable(CableType cableType, int insulation) {
         this();
@@ -83,6 +77,10 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
                 this,
                 () -> IC2.network.get(true).updateTileEntityField(TileEntityCable.this, "obscuration")
         ));
+    }
+
+    public static TileEntityCable delegate(CableType cableType, int insulation) {
+        return new TileEntityCable(cableType, insulation);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -141,7 +139,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
     }
 
     protected ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return  ItemCable.getCable(this.cableType, this.insulation, 0);
+        return ItemCable.getCable(this.cableType, this.insulation, 0);
     }
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
@@ -252,16 +250,16 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
 
     }
 
+
     private void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         int mask = 1;
         EnumFacing[] var4 = EnumFacing.VALUES;
-        int var5 = var4.length;
 
-        for (int var6 = 0; var6 < var5; ++var6) {
-            EnumFacing dir = var4[var6];
+        for (EnumFacing dir : var4) {
             IEnergyTile tile = EnergyNet.instance.getSubTile(world, this.pos.offset(dir));
+
             if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
                     this,
                     dir.getOpposite()

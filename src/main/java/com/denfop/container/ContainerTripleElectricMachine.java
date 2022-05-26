@@ -87,6 +87,7 @@ public class ContainerTripleElectricMachine extends ContainerFullInv<TileEntityT
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
         ret.add("guiProgress");
+        ret.add("temperature");
         return ret;
     }
 

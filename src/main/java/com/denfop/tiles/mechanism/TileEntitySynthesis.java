@@ -1,6 +1,5 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;

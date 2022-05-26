@@ -15,17 +15,7 @@ import java.util.Map;
 public class PaintingHandler {
 
     private static final List<PaintingHandler> recipes = new ArrayList<>();
-
-
-    public static List<PaintingHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final ItemStack input, input1, output;
-
 
     public PaintingHandler(ItemStack input, ItemStack input1, ItemStack output) {
         this.input = input;
@@ -33,16 +23,11 @@ public class PaintingHandler {
         this.output = output;
     }
 
-    public ItemStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public ItemStack getInput1() { // Получатель входного предмета рецепта.
-        return input1;
-    }
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
+    public static List<PaintingHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static PaintingHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
@@ -66,10 +51,6 @@ public class PaintingHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
-    }
-
     public static void initRecipes() {
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
                 Recipes.painting.getRecipes().entrySet()) {
@@ -86,6 +67,22 @@ public class PaintingHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public ItemStack getInput1() { // Получатель входного предмета рецепта.
+        return input1;
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
 }

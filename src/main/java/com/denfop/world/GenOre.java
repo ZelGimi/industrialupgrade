@@ -155,7 +155,20 @@ public class GenOre implements IWorldGenerator {
         if (Config.SmithsoniteOre) {
             this.addOreSpawn(IUItem.heavyore.getStateFromMeta(11), world, random, x, y, 16, 16, 3 + random.nextInt(2), 9, 10, 70);
         }
-
+        if (Config.IlmeniteOre) {
+            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(12), world, random, x, y, 16, 16, 3 + random.nextInt(2), 9, 10, 70);
+        }
+        if (Config.TodorokiteOre) {
+            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(13), world, random, x, y, 16, 16, 3 + random.nextInt(2), 9, 10, 70);
+        }
+        if (Config.FerroaugiteOre) {
+            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(14), world, random, x, y, 16, 16, 3 + random.nextInt(2), 9, 10, 70);
+        }
+        if (Config.SheeliteeOre) {
+            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(15), world, random, x, y, 16, 16, 3 + random.nextInt(2), 9, 10,
+                    70
+            );
+        }
         if (Config.AmericiumOre) {
             this.addOreSpawn(IUItem.radiationore.getStateFromMeta(0), world, random, x, y, 16, 16, 2 + random.nextInt(2), 14, 10,
                     70

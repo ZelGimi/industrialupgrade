@@ -15,6 +15,7 @@ import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
+import ic2.core.block.comp.Energy;
 import ic2.core.block.comp.Redstone;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotConsumableLiquid;
@@ -52,7 +53,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
     private double energycost;
     private int state, prevState;
     private AudioSource audioSource, audioSourceScrap;
-
+    private double lastEnergy;
 
     public TileEntityCombinerMatter() {
         super("", 0, 14, 12);
@@ -83,10 +84,12 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                 return this.scrap > 0 ? 1 : 0;
             }
         });
+        energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
+
     }
 
     private static int applyModifier(int base) {
-        double ret = Math.round((base + 3) * 1.0);
+        double ret = Math.round((base + 14) * 1.0);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
@@ -103,8 +106,6 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         return nbttagcompound;
 
     }
-
-    private double lastEnergy;
 
     public void updateEntityServer() {
         super.updateEntityServer();

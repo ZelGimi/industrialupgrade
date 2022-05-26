@@ -15,17 +15,7 @@ import java.util.Map;
 public class GenStarHandler {
 
     private static final List<GenStarHandler> recipes = new ArrayList<>();
-
-
-    public static List<GenStarHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final ItemStack input, input1, input2, input3, input4, input5, input6, output;
-
 
     public GenStarHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4,
@@ -42,6 +32,57 @@ public class GenStarHandler {
         this.output = output;
     }
 
+    public static List<GenStarHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
+    }
+
+    public static GenStarHandler addRecipe(
+            ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
+            ItemStack input4, ItemStack input5, ItemStack input6, ItemStack output
+    ) {
+        GenStarHandler recipe = new GenStarHandler(input, input1, input2, input3, input4, input5, input6, output);
+        if (recipes.contains(recipe)) {
+            return null;
+        }
+        recipes.add(recipe);
+        return recipe;
+    }
+
+    public static GenStarHandler getRecipe(ItemStack is) {
+        if (is == null || is.isEmpty()) {
+            return null;
+        }
+        for (GenStarHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    public static void initRecipes() {
+        for (Map.Entry<IWitherMaker.Input, RecipeOutput> container :
+                Recipes.withermaker.getRecipes().entrySet()) {
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
+                    container.getKey().container1.getInputs().get(0), container.getKey().fill1.getInputs().get(0),
+                    container.getKey().fill2.getInputs().get(0), container.getKey().fill3.getInputs().get(0),
+                    container.getKey().fill4.getInputs().get(0),
+                    container.getValue().items.get(0)
+            );
+
+        }
+    }
+
+    private static ItemStack is(Item item) { // Побочный метод.
+        return new ItemStack(item);
+    }
+
+    private static ItemStack is(Block block) { // Побочный метод.
+        return new ItemStack(block);
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
@@ -75,55 +116,9 @@ public class GenStarHandler {
         return output.copy();
     }
 
-    public static GenStarHandler addRecipe(
-            ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack input4, ItemStack input5, ItemStack input6, ItemStack output
-    ) {
-        GenStarHandler recipe = new GenStarHandler(input, input1, input2, input3, input4, input5, input6, output);
-        if (recipes.contains(recipe)) {
-            return null;
-        }
-        recipes.add(recipe);
-        return recipe;
-    }
-
-    public static GenStarHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty()) {
-            return null;
-        }
-        for (GenStarHandler recipe : recipes) {
-            if (recipe.matchesInput(is)) {
-                return recipe;
-            }
-        }
-        return null;
-    }
-
     public boolean matchesInput(ItemStack is) {
         return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3) || is.isItemEqual(
                 input4);
-    }
-
-    public static void initRecipes() {
-        for (Map.Entry<IWitherMaker.Input, RecipeOutput> container :
-                Recipes.withermaker.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getKey().container1.getInputs().get(0), container.getKey().fill1.getInputs().get(0),
-                    container.getKey().fill2.getInputs().get(0), container.getKey().fill3.getInputs().get(0),
-                    container.getKey().fill4.getInputs().get(0),
-                    container.getValue().items.get(0)
-            );
-
-        }
-    }
-
-
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
     }
 
 }

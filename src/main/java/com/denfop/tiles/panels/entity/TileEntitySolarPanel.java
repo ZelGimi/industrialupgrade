@@ -16,6 +16,7 @@ import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
+import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
@@ -41,6 +42,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TileEntitySolarPanel extends TileEntityInventory implements IEnergySource, IHasGui,
@@ -48,6 +51,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         INetworkUpdateListener {
 
 
+    public List<IEnergyTile> list;
     public EnumSolarPanels solarpanels;
     public int tier;
 
@@ -57,7 +61,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public boolean personality = false;
     public int solarType;
     public String player = null;
-    protected double tierPower;
     public EnumType type;
     public boolean work = true;
     public boolean work1 = true;
@@ -65,10 +68,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public boolean charge;
     public int wireless = 0;
     public GenerationState active = GenerationState.NONE;
-    protected boolean canRain;
-    protected boolean hasSky;
-    protected boolean addedToEnet;
-
     public boolean wetBiome;
     public boolean noSunWorld;
     public boolean rain;
@@ -90,6 +89,11 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public double o;
     public double maxStorage2;
     public double storage2;
+    public boolean rf = true;
+    protected double tierPower;
+    protected boolean canRain;
+    protected boolean hasSky;
+    protected boolean addedToEnet;
 
     public TileEntitySolarPanel(
             final int tier, final double gDay,
@@ -99,7 +103,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         this.genDay = gDay;
         this.genNight = gDay / 2;
         this.storage = 0;
-        generating = 0;
+        this.generating = 0;
         this.maxStorage = gmaxStorage;
         this.p = gmaxStorage;
         this.k = gDay;
@@ -117,11 +121,22 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         this.tierPower = EnergyNet.instance.getPowerFromTier(tier);
         this.type = EnumType.DEFAULT;
         this.solarpanels = type;
+        this.list = new ArrayList<>();
     }
 
     public TileEntitySolarPanel(EnumSolarPanels solarpanels) {
         this(solarpanels.tier, solarpanels.genday, solarpanels.producing, solarpanels.maxstorage, solarpanels);
 
+    }
+
+    public List<ItemStack> getDrop() {
+        List<ItemStack> list = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            if (!inputslot.get(i).isEmpty()) {
+                list.add(inputslot.get(i));
+            }
+        }
+        return list;
     }
 
     @Override
@@ -293,7 +308,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
 
     }
 
-
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         if (getmodulerf) {
@@ -350,7 +364,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         return (int) this.maxStorage2;
     }
 
-
     public int extractEnergy(EnumFacing facing, int maxExtract, boolean simulate) {
         return extractEnergy((int) Math.min(this.production * 4, maxExtract), simulate);
     }
@@ -372,6 +385,8 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
 
     protected void updateEntityServer() {
         super.updateEntityServer();
+
+
         if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             updateVisibility();
 
@@ -489,24 +504,23 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
 
     }
 
-
-    public boolean getGuiState(String name) {
-
-        return super.getGuiState(name);
-    }
-
-
     public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing side) {
         return true;
     }
-
 
     public void drawEnergy(double amount) {
         this.storage = (int) (this.storage - amount);
     }
 
     public int getSourceTier() {
-        return Math.max(EnergyNet.instance.getTierFromPower(this.production), 2);
+        return this.tier;
+    }
+
+    protected List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
+        ItemStack drop = this.getPickBlock(null, null);
+        drop = this.adjustDrop(drop, wrench);
+
+        return drop == null ? Collections.emptyList() : Arrays.asList(drop);
     }
 
     @Override
@@ -524,29 +538,13 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     }
 
     @Override
-    public boolean canSetFacing(World world, BlockPos pos, EnumFacing enumFacing, EntityPlayer player) {
-        if (!this.teBlock.allowWrenchRotating()) {
-            return false;
-        } else if (enumFacing == this.getFacing()) {
-            return false;
-        } else {
-            return this.getSupportedFacings().contains(enumFacing);
-        }
-    }
-
-    @Override
     public EnumFacing getFacing(World world, BlockPos blockPos) {
         return this.getFacing();
     }
 
     @Override
     public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-        if (!this.canSetFacingWrench(enumFacing, entityPlayer)) {
-            return false;
-        } else {
-            this.setFacing(enumFacing);
-            return true;
-        }
+        return false;
     }
 
     @Override
@@ -554,10 +552,8 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         return true;
     }
 
-
     public void onGuiClosed(EntityPlayer player) {
     }
-
 
     public ContainerBase<TileEntitySolarPanel> getGuiContainer(EntityPlayer player) {
         return new ContainerSolarPanels(player, this);
@@ -604,8 +600,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         ret.add("type");
         return ret;
     }
-
-    public boolean rf = true;
 
     @Override
     public void onNetworkEvent(EntityPlayer player, int event) {
@@ -667,14 +661,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         }
         setType(EnumType.DEFAULT);
         return 0;
-    }
-
-    public void onUpgraded() {
-        this.rerender();
-    }
-
-    public void markDirty1() {
-
     }
 
 

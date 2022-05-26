@@ -2,6 +2,7 @@ package com.denfop.integration.crafttweaker;
 
 import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.api.Recipes;
+import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
@@ -9,6 +10,7 @@ import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -21,8 +23,9 @@ import java.util.Objects;
 public class CTAdvAlloySmelter {
 
     @ZenMethod
-    public static void addRecipe(IItemStack output, IIngredient container, IIngredient fill, IIngredient fill1) {
-        CraftTweakerAPI.apply(new AddAlloSmelterIngredientAction(container, fill, fill1, output));
+    public static void addRecipe(IItemStack output, IIngredient container, IIngredient fill, IIngredient fill1,
+                                 Short temperature) {
+        CraftTweakerAPI.apply(new AddAlloSmelterIngredientAction(container, fill, fill1, output,temperature));
     }
 
 
@@ -33,13 +36,21 @@ public class CTAdvAlloySmelter {
         private final IIngredient fill;
         private final IIngredient fill1;
         private final IItemStack output;
+        private final short temperature;
 
-        public AddAlloSmelterIngredientAction(IIngredient container, IIngredient fill, IIngredient fill1, IItemStack output) {
+        public AddAlloSmelterIngredientAction(
+                IIngredient container,
+                IIngredient fill,
+                IIngredient fill1,
+                IItemStack output,
+                final Short temperature
+        ) {
             super("advalloysmelter");
             this.container = container;
             this.fill = fill;
             this.fill1 = fill1;
             this.output = output;
+            this.temperature=temperature;
         }
 
         public static ItemStack getItemStack(IItemStack item) {
@@ -59,6 +70,8 @@ public class CTAdvAlloySmelter {
             String ore = "";
             String ore1 = "";
             String ore2 = "";
+            final NBTTagCompound nbt = ModUtils.nbt();
+            nbt.setShort("temperature",  this.temperature);
             ItemStack stack = new IC2RecipeInput(this.container).getInputs().get(0);
             int amount = new IC2RecipeInput(this.container).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
@@ -82,7 +95,7 @@ public class CTAdvAlloySmelter {
                     OreDictionary.getOres(ore2).isEmpty() ? new IC2RecipeInput(this.fill1) : input.forOreDict(ore2, amount2),
 
 
-                    getItemStack(this.output)
+                    getItemStack(this.output),nbt
             );
 
 

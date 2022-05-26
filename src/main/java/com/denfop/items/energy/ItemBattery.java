@@ -29,8 +29,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemBattery extends BaseElectricItem implements IModelRegister {
 
     private static final int maxLevel = 4;
-    private final String name1;
     public final boolean wirellescharge;
+    private final String name1;
 
     public ItemBattery(String name, double maxCharge, double transferLimit, int tier, boolean wirellescharge) {
         super(name, maxCharge, transferLimit, tier);
@@ -38,6 +38,16 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
         this.wirellescharge = wirellescharge;
         this.name1 = name;
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("battery").append("/").append(name + extraName);
+
+        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @Override
@@ -53,16 +63,6 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
     @Override
     public void registerModels() {
         registerModels(this.name1);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("battery").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)

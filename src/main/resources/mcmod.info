@@ -11,7 +11,7 @@
 		],
 		"description": "IC2 193+",
 		"logoFile": "",
-		"mcversion": "1.12.2",
+		"mcversion": "${minecraft_version}",
 		"modid": "industrialupgrade",
 		"name": "Industrial Upgrade",
 		"parent": "",

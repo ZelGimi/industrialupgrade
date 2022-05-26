@@ -60,7 +60,7 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     }
 
     public String getStartSoundFile() {
-        return "Machines/MaceratorOp.ogg";
+        return "Machines/plastic_plate.ogg";
     }
 
     public String getInterruptSoundFile() {

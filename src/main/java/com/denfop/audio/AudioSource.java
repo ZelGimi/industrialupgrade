@@ -48,4 +48,8 @@ public class AudioSource {
         return 0.0F;
     }
 
+    public boolean playing() {
+        return false;
+    }
+
 }

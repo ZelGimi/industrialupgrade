@@ -16,17 +16,7 @@ public class ElectrolyzerHandler {
 
     private static final List<ElectrolyzerHandler> recipes = new ArrayList<>();
     private final FluidStack output1;
-
-
-    public static List<ElectrolyzerHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final FluidStack input, output;
-
 
     public ElectrolyzerHandler(
             FluidStack input, FluidStack output,
@@ -37,17 +27,11 @@ public class ElectrolyzerHandler {
         this.output = output;
     }
 
-
-    public FluidStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public FluidStack getOutput() { // Получатель входного предмета рецепта.
-        return output;
-    }
-
-    public FluidStack getOutput1() { // Получатель выходного предмета рецепта.
-        return output1;
+    public static List<ElectrolyzerHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static ElectrolyzerHandler addRecipe(
@@ -69,7 +53,6 @@ public class ElectrolyzerHandler {
         return recipes.get(0);
     }
 
-
     public static void initRecipes() {
         for (Map.Entry<IFluidRecipeManager.Input, FluidStack[]> container :
                 Recipes.electrolyzer.getRecipes().entrySet()) {
@@ -87,6 +70,18 @@ public class ElectrolyzerHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public FluidStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public FluidStack getOutput() { // Получатель входного предмета рецепта.
+        return output;
+    }
+
+    public FluidStack getOutput1() { // Получатель выходного предмета рецепта.
+        return output1;
     }
 
 }

@@ -46,6 +46,10 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
+    private static boolean isLavaBlock(Block block) {
+        return block == Blocks.LAVA || block == Blocks.FLOWING_LAVA;
+    }
+
     @Override
     public void registerModels() {
         registerModels(null);
@@ -73,10 +77,6 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
         super.updateTick(world, pos, state, random);
 
 
-    }
-
-    private static boolean isLavaBlock(Block block) {
-        return block == Blocks.LAVA || block == Blocks.FLOWING_LAVA;
     }
 
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos) {

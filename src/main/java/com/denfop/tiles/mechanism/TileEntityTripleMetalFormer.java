@@ -30,6 +30,10 @@ public class TileEntityTripleMetalFormer extends TileEntityMultiMachine
         );
     }
 
+    public String getStartSoundFile() {
+        return "Machines/metalformer.ogg";
+    }
+
     @Override
     public EnumMultiMachine getMachine() {
         return EnumMultiMachine.TRIPLE_METAL_FORMER;
@@ -78,7 +82,7 @@ public class TileEntityTripleMetalFormer extends TileEntityMultiMachine
     }
 
     public void setMode(int mode1) {
-        InvSlotProcessableMultiGeneric slot = (InvSlotProcessableMultiGeneric) this.inputSlots;
+        InvSlotProcessableMultiGeneric slot = this.inputSlots;
         switch (mode1) {
             case 0:
                 slot.setRecipeManager(Recipes.metalformerExtruding);

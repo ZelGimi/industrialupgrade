@@ -74,17 +74,6 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
 
     }
 
-
-    @Override
-    public String getName() {
-        return this.name();
-    }
-
-    @Override
-    public int getId() {
-        return this.itemMeta;
-    }
-
     public static void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -101,6 +90,16 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
                 }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
+
+    @Override
+    public int getId() {
+        return this.itemMeta;
     }
 
     @Override
@@ -150,7 +149,7 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
     @Override
     @Nonnull
     public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
+        return TeBlock.DefaultDrop.Machine;
     }
 
     @Override

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:machines",
+      "data": 8
+    },
+    "title": {
+      "translate": "achievement.pho_panel"
+    },
+    "description": {
+      "translate": "achievement.pho_panel.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/pho_core",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:machines",
+            "data": 8
+          }
+        ]
+      }
+    }
+  }
+}

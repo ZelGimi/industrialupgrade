@@ -4,6 +4,9 @@ import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface ISunnariumRecipeManager {
@@ -53,7 +56,14 @@ public interface ISunnariumRecipeManager {
             this.fill2 = fill2;
             this.fill3 = fill3;
         }
-
+        public List<IRecipeInput> getList(){
+            List<IRecipeInput> lst = new ArrayList<>();
+            lst.add(container);
+            lst.add(fill);
+            lst.add(fill2);
+            lst.add(fill3);
+            return  lst;
+        }
         public boolean matches(ItemStack container1, ItemStack fill1, ItemStack fill2, ItemStack fill3) {
             return this.container.matches(container1) && this.fill.matches(fill1) && this.fill2.matches(fill2) && this.fill3.matches(
                     fill3);

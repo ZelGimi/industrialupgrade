@@ -1,15 +1,13 @@
 package com.denfop.proxy;
 
 
-import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.api.IFluidModelProvider;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.FluidName;
 import com.denfop.render.IUModelLoader;
 import com.denfop.render.ModelCable;
-import com.denfop.render.SunnariumMaker.TileEntitySunnariumMakerRender;
-import com.denfop.render.SunnariumPanelMaker.TileEntitySunnariumPanelMakerRender;
+import com.denfop.render.ModelPipes;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.combinersolidmatter.TileEntityCombineSolidMatterRender;
 import com.denfop.render.convertersolidmatter.TileEntityRenderConverterMatter;
@@ -19,9 +17,6 @@ import com.denfop.render.oilgetter.TileEntityOilGetterRender;
 import com.denfop.render.oilquarry.TileEntityQuarryOilRender;
 import com.denfop.render.oilrefiner.TileEntityOilRefinerRender;
 import com.denfop.render.sintezator.TileEntitySintezatorRender;
-import com.denfop.render.solargenerator.TileEntityAdvSolarEnergyRender;
-import com.denfop.render.solargenerator.TileEntityImpSolarEnergyRender;
-import com.denfop.render.solargenerator.TileEntitySolarEnergyRender;
 import com.denfop.render.tank.TileEntityTankRender;
 import com.denfop.render.tile.TileEntityPanelRender;
 import com.denfop.render.upgradeblock.TileEntityUpgradeBlockRender;
@@ -62,6 +57,8 @@ import java.util.ArrayList;
 
 public class ClientProxy extends CommonProxy {
 
+    public static final ArrayList<IModelRegister> modelList = new ArrayList();
+
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         for (IModelRegister register : modelList) {
@@ -87,6 +84,7 @@ public class ClientProxy extends CommonProxy {
 
         IUModelLoader loader = new IUModelLoader();
         loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/cable_iu"), new ModelCable());
+        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/pipes_iu"), new ModelPipes());
         ModelLoaderRegistry.registerLoader(loader);
         ProfileManager.doTextureChanges();
 
@@ -149,15 +147,9 @@ public class ClientProxy extends CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        if (Config.HUB) {
-            new com.denfop.handler.TickHandlerIU();
-        }
 
 
-        ClientRegistry.bindTileEntitySpecialRenderer(TileAdvSolarGenerator.class, new TileEntityAdvSolarEnergyRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileSolarGenerator.class, new TileEntitySolarEnergyRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileImpSolarGenerator.class, new TileEntityImpSolarEnergyRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(
+       ClientRegistry.bindTileEntitySpecialRenderer(
                 TileEntityCombinerSolidMatter.class,
                 new TileEntityCombineSolidMatterRender()
         );
@@ -166,11 +158,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMolecularTransformer.class, new TileEntityMolecularRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOilGetter.class, new TileEntityOilGetterRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdminSolarPanel.class, new TileEntityPanelRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileSunnariumMaker.class, new TileEntitySunnariumMakerRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(
-                TileEntitySunnariumPanelMaker.class,
-                new TileEntitySunnariumPanelMakerRender()
-        );
+
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOilRefiner.class, new TileEntityOilRefinerRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDoubleMolecular.class, new TileEntityDoubleMolecularRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvOilRefiner.class, new TileEntityAdvOilRefinerRender());
@@ -180,8 +168,6 @@ public class ClientProxy extends CommonProxy {
 
 
     }
-
-    private static final ArrayList<IModelRegister> modelList = new ArrayList();
 
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);

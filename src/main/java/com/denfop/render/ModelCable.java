@@ -56,23 +56,6 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
                 });
     }
 
-    public Collection<ResourceLocation> getTextures() {
-        return this.textures.keySet();
-    }
-
-    public IBakedModel bake(
-            IModelState state,
-            VertexFormat format,
-            Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter
-    ) {
-
-        for (final Entry<ResourceLocation, TextureAtlasSprite> resourceLocationTextureAtlasSpriteEntry : this.textures.entrySet()) {
-            resourceLocationTextureAtlasSpriteEntry.setValue(bakedTextureGetter.apply(resourceLocationTextureAtlasSpriteEntry.getKey()));
-        }
-
-        return this;
-    }
-
     private static Map<ResourceLocation, TextureAtlasSprite> generateTextureLocations() {
         Map<ResourceLocation, TextureAtlasSprite> ret = new HashMap<>();
         StringBuilder name = new StringBuilder();
@@ -106,6 +89,23 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
 
 
         return new ResourceLocation(Constants.MOD_ID, loc);
+    }
+
+    public Collection<ResourceLocation> getTextures() {
+        return this.textures.keySet();
+    }
+
+    public IBakedModel bake(
+            IModelState state,
+            VertexFormat format,
+            Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter
+    ) {
+
+        for (final Entry<ResourceLocation, TextureAtlasSprite> resourceLocationTextureAtlasSpriteEntry : this.textures.entrySet()) {
+            resourceLocationTextureAtlasSpriteEntry.setValue(bakedTextureGetter.apply(resourceLocationTextureAtlasSpriteEntry.getKey()));
+        }
+
+        return this;
     }
 
     @Nonnull

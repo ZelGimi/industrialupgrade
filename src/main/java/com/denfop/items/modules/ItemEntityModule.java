@@ -40,11 +40,6 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
     public static String getMobTypeFromStack(ItemStack item) {
 
 
@@ -54,6 +49,10 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
         return ModUtils.nbt(item).getString("id");
     }
 
+    @Override
+    public void registerModels() {
+        registerModels(null);
+    }
 
     @Override
     public boolean itemInteractionForEntity(

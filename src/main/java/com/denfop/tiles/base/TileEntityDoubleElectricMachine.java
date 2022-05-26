@@ -5,6 +5,7 @@ import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlotDoubleMachineRecipe;
+import com.denfop.tiles.mechanism.TileEntityAlloySmelter;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.recipe.RecipeOutput;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -30,36 +31,24 @@ import java.util.Set;
 public abstract class TileEntityDoubleElectricMachine extends TileEntityInventory implements IHasGui,
         INetworkTileEntityEventListener, IUpgradableBlock {
 
-    protected final String name;
-    protected final EnumDoubleElectricMachine type;
     public final Energy energy;
     public final InvSlotDischarge dischargeSlot;
-
-    protected short progress;
-
     public final int defaultEnergyConsume;
-
     public final int defaultOperationLength;
-
     public final int defaultTier;
-
     public final int defaultEnergyStorage;
-
-    public int energyConsume;
-
-    public int operationLength;
-
-    public int operationsPerTick;
-
-    protected double guiProgress;
-
-    public AudioSource audioSource;
-
     public final InvSlotDoubleMachineRecipe inputSlotA;
     public final InvSlotOutput outputSlot;
-
     public final InvSlotUpgrade upgradeSlot;
-
+    protected final String name;
+    protected final EnumDoubleElectricMachine type;
+    public int energyConsume;
+    public int operationLength;
+    public int operationsPerTick;
+    public AudioSource audioSource;
+    protected short progress;
+    protected double guiProgress;
+    public short temperature;
 
     public TileEntityDoubleElectricMachine(
             int energyPerTick,
@@ -99,11 +88,13 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getShort("progress");
+        this.temperature = nbttagcompound.getShort("temperature");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.setShort("progress", this.progress);
+        nbttagcompound.setShort("temperature", this.temperature);
         return nbttagcompound;
     }
 
@@ -143,6 +134,10 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
         RecipeOutput output = getOutput();
         if (output != null && this.energy.getEnergy() >= this.energyConsume) {
+            if(this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER))
+            if (output.metadata.getShort("temperature") == 0 || output.metadata.getInteger("temperature") > ((TileEntityAlloySmelter)this).temperature) {
+                return;
+            }
             setActive(true);
             if (this.progress == 0) {
                 IC2.network.get(true).initiateTileEntityEvent(this, 0, true);

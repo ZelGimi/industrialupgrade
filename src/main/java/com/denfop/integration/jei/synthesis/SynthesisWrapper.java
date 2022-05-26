@@ -78,7 +78,8 @@ public class SynthesisWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawSplitString(TextFormatting.GREEN + Localization.translate("chance") + this.getPercent() + "%",
+        minecraft.fontRenderer.drawSplitString(
+                TextFormatting.GREEN + Localization.translate("chance") + this.getPercent() + "%",
                 69,
                 67,
                 recipeWidth - 69,

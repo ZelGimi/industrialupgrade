@@ -30,6 +30,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityBlaze;
+import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -60,12 +61,12 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
     public final int maxprogress;
     public final InvSlotUpgradeModule module_upgrade;
     public final int tempcostenergy;
+    public final int[] progress;
+    public final double maxEnergy2;
     public int costenergy;
     public int tempprogress;
     public int expstorage;
-    public final int[] progress;
     public FakePlayerSpawner player;
-    public final double maxEnergy2;
     public double energy2;
 
     public TileEntityAutoSpawner() {
@@ -199,7 +200,6 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
                     CapturedMob capturedMob = CapturedMob.create(module_slot.get(i));
                     Entity entity = capturedMob.getEntity(this.world, true);
 
-
                     if (module_slot.get(i).serializeNBT().getInteger("type") != 0) {
                         if (entity instanceof EntitySheep) {
                             ((EntitySheep) entity).setFleeceColor(EnumDyeColor.byDyeDamage(module_slot
@@ -288,7 +288,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
                                 smelt.setCount(drop.getCount());
                             }
                         }
-                        if (smelt == null) {
+                        if (smelt == null || smelt.isEmpty()) {
                             if (this.outputSlot.canAdd(drop)) {
                                 this.outputSlot.add(drop);
                             }

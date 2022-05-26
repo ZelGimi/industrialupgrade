@@ -13,9 +13,12 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GUISolarGeneratorEnergy extends GuiIC2<ContainerSolarGeneratorEnergy> {
 
+    private static final ResourceLocation background = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/SunnariumGenerator.png"
+    );
     private final ContainerSolarGeneratorEnergy container;
     private final String name;
-
 
     public GUISolarGeneratorEnergy(ContainerSolarGeneratorEnergy container1) {
         super(container1);
@@ -54,10 +57,5 @@ public class GUISolarGeneratorEnergy extends GuiIC2<ContainerSolarGeneratorEnerg
     protected ResourceLocation getTexture() {
         return background;
     }
-
-    private static final ResourceLocation background = new ResourceLocation(
-            Constants.MOD_ID,
-            "textures/gui/SunnariumGenerator.png"
-    );
 
 }

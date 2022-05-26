@@ -9,7 +9,6 @@ import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.items.modules.ModuleType;
 import com.denfop.tiles.base.TileEntitySintezator;
 import com.denfop.tiles.panels.entity.EnumType;
-import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.utils.ModUtils;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.TileEntityInventory;
@@ -36,6 +35,7 @@ public class InvSlotSintezator extends InvSlot {
             this.setStackSizeLimit(1);
         }
     }
+
     public void wirelessmodule() {
         TileEntitySintezator tile = (TileEntitySintezator) base;
 
@@ -69,6 +69,7 @@ public class InvSlotSintezator extends InvSlot {
         }
 
     }
+
     public boolean accepts(ItemStack itemStack) {
         if (this.type == 0) {
             return IUItem.map3.containsKey(itemStack.getUnlocalizedName()) || IUItem.panel_list.containsKey(itemStack.getUnlocalizedName());

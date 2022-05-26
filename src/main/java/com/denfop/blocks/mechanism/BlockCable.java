@@ -42,6 +42,24 @@ public enum BlockCable implements ITeBlock {
 
     }
 
+    public static void buildDummies() {
+        final ModContainer mc = Loader.instance().activeModContainer();
+        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
+            throw new IllegalAccessError("Don't mess with this please.");
+        }
+        for (final BlockCable block : values()) {
+            if (block.teClass != null) {
+                try {
+                    block.dummyTe = block.teClass.newInstance();
+                } catch (Exception e) {
+                    if (Util.inDev()) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
     public float getHardness() {
         return 0.5F;
     }
@@ -66,24 +84,6 @@ public enum BlockCable implements ITeBlock {
     @Override
     public int getId() {
         return this.itemMeta;
-    }
-
-    public static void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
-        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
-            throw new IllegalAccessError("Don't mess with this please.");
-        }
-        for (final BlockCable block : values()) {
-            if (block.teClass != null) {
-                try {
-                    block.dummyTe = block.teClass.newInstance();
-                } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
     }
 
     @Override

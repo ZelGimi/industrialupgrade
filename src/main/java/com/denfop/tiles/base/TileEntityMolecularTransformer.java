@@ -10,6 +10,7 @@ import com.denfop.invslot.InvSlotProcessable;
 import com.denfop.items.modules.AdditionModule;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
+import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
@@ -17,6 +18,7 @@ import ic2.api.recipe.RecipeOutput;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
+import ic2.core.block.comp.Energy;
 import ic2.core.item.type.MiscResourceType;
 import ic2.core.item.type.NuclearResourceType;
 import ic2.core.ref.ItemName;
@@ -29,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -41,23 +44,16 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
     public List<Double> time;
     public boolean queue;
-    protected double progress;
-
     public byte redstoneMode;
-
     public int operationLength;
     public boolean rf = false;
     public int operationsPerTick;
-
-    protected double guiProgress;
-
     public AudioSource audioSource;
-
     public InvSlotProcessable inputSlot;
-
-
     public double perenergy;
     public double differenceenergy;
+    protected double progress;
+    protected double guiProgress;
 
     public TileEntityMolecularTransformer() {
         super("", 0, 14, 1);
@@ -65,66 +61,10 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         this.time = new ArrayList<>();
         this.queue = false;
         this.redstoneMode = 0;
-
+        this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
         this.inputSlot = new InvSlotProcessable(this, "input", Recipes.molecular, 1);
 
     }
-
-    @Override
-    public ContainerBase<? extends TileEntityMolecularTransformer> getGuiContainer(EntityPlayer entityPlayer) {
-        return new ContainerBaseMolecular(entityPlayer, this);
-    }
-
-    protected boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    @Override
-    protected boolean isNormalCube() {
-        return false;
-    }
-
-    @Override
-    protected boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (player.getHeldItem(hand).getItem() instanceof AdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
-            if (!this.rf) {
-                this.rf = true;
-                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
-                return true;
-            }
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
-
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("queue");
-        ret.add("redstoneMode");
-        ret.add("energy");
-        ret.add("perenergy");
-        ret.add("differenceenergy");
-        ret.add("time");
-
-        return ret;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
 
     public static void init() {
 
@@ -234,6 +174,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
         addrecipe("ingotMagnesium", OreDictionary.getOres("ingotCaravky").get(0), Config.molecular36);
 
+        addrecipe("ingotManganese", OreDictionary.getOres("ingotCobalt").get(0), 350000);
 
 
         addrecipe("ingotCaravky", new ItemStack(IUItem.iuingot, 1, 18), 600000);
@@ -256,6 +197,65 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         Recipes.molecular.addRecipe(input.forOreDict(stack), nbt, false, stack1);
     }
 
+    @Override
+    public ContainerBase<? extends TileEntityMolecularTransformer> getGuiContainer(EntityPlayer entityPlayer) {
+        return new ContainerBaseMolecular(entityPlayer, this);
+    }
+
+    protected boolean doesSideBlockRendering(EnumFacing side) {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+        return false;
+    }
+
+    @Override
+    protected boolean isNormalCube() {
+        return false;
+    }
+
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.blockmolecular);
+    }
+
+    @Override
+    protected boolean onActivated(
+            final EntityPlayer player,
+            final EnumHand hand,
+            final EnumFacing side,
+            final float hitX,
+            final float hitY,
+            final float hitZ
+    ) {
+        if (player.getHeldItem(hand).getItem() instanceof AdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
+            if (!this.rf) {
+                this.rf = true;
+                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
+                return true;
+            }
+        }
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    }
+
+    public List<String> getNetworkedFields() {
+        List<String> ret = super.getNetworkedFields();
+        ret.add("guiProgress");
+        ret.add("queue");
+        ret.add("redstoneMode");
+        ret.add("energy");
+        ret.add("perenergy");
+        ret.add("differenceenergy");
+        ret.add("time");
+
+        return ret;
+    }
+
+    public boolean shouldRenderInPass(int pass) {
+        return true;
+    }
 
     public String getInventoryName() {
         return "Molecular Transformer";
@@ -372,7 +372,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         RecipeOutput output = getOutput();
         if (!queue) {
             if (output != null) {
-                this.differenceenergy = this.energy.getEnergy() - this.perenergy;
+                this.differenceenergy = EnergyNet.instance.getNodeStats(this.energy.getDelegate()).getEnergyIn();
                 this.perenergy = this.energy.getEnergy();
                 setActive(true);
                 markDirty();
@@ -410,7 +410,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             if (output != null) {
                 setActive(true);
                 markDirty();
-                this.differenceenergy = this.energy.getEnergy() - this.perenergy;
+                this.differenceenergy = EnergyNet.instance.getNodeStats(this.energy.getDelegate()).getEnergyIn();
                 this.perenergy = this.energy.getEnergy();
                 if (this.getWorld().provider.getWorldTime() % 200 == 0) {
                     if (energy.getEnergy() > 0) {
@@ -503,11 +503,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
     public int receiveEnergy(int paramInt, boolean paramBoolean) {
         int i = (int) Math.min(
-                (this.energy.getFreeEnergy()) / Config.coefficientrf,
+                ((IEnergySink)this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
                 Math.min(EnergyNet.instance.getPowerFromTier(14) * Config.coefficientrf, paramInt)
         );
         if (!paramBoolean) {
-            this.energy.addEnergy(i / Config.coefficientrf);
+            this.energy.addEnergy(i* 1F /  Config.coefficientrf);
         }
         return i;
     }

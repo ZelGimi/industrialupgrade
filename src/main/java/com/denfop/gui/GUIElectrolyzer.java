@@ -2,8 +2,10 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerElectrolyzer;
+import ic2.api.upgrade.IUpgradableBlock;
 import ic2.core.GuiIC2;
 import ic2.core.gui.TankGauge;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,9 +13,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
 
-    public ContainerElectrolyzer container;
-
     private static final ResourceLocation background;
+
+    static {
+        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png");
+    }
+
+    public ContainerElectrolyzer container;
 
     public GUIElectrolyzer(ContainerElectrolyzer container1) {
         super(container1);
@@ -36,7 +42,13 @@ public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        if (this.container.base != null) {
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        }
         this.mc.getTextureManager().bindTexture(background);
         int energy = (int) ((this.container.base.energy.getEnergy() / this.container.base.energy.getCapacity()) * 29);
         int xOffset = (this.width - this.xSize) / 2;
@@ -48,9 +60,5 @@ public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
         TankGauge.createNormal(this, 106, 6, container.base.fluidTank[2]).drawBackground(xOffset, yOffset);
 
 
-    }
-
-    static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIElectolyzer.png");
     }
 }

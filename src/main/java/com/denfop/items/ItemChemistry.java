@@ -28,7 +28,7 @@ public class ItemChemistry extends ItemIC2 implements ICustomDamageItem, IModelR
     public ItemChemistry(String name) {
         super(null);
         this.setCreativeTab(IUCore.ItemTab);
-        this.setMaxStackSize(64);
+        this.setMaxStackSize(1);
         setUnlocalizedName(name);
         this.name = name;
         setMaxDamage(1000);

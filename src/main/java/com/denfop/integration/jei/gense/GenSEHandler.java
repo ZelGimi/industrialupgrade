@@ -14,7 +14,11 @@ import java.util.Map;
 public class GenSEHandler {
 
     private static final List<GenSEHandler> recipes = new ArrayList<>();
+    private final ItemStack output;
 
+    public GenSEHandler(ItemStack output) {
+        this.output = output;
+    }
 
     public static List<GenSEHandler> getRecipes() { // Получатель всех рецептов.
         if (recipes.isEmpty()) {
@@ -22,19 +26,6 @@ public class GenSEHandler {
         }
         return recipes;
     }
-
-    private final ItemStack output;
-
-
-    public GenSEHandler(ItemStack output) {
-        this.output = output;
-    }
-
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
-    }
-
 
     public static GenSEHandler addRecipe(ItemStack output) {
         GenSEHandler recipe = new GenSEHandler(output);
@@ -55,7 +46,6 @@ public class GenSEHandler {
         return null;
     }
 
-
     public static void initRecipes() {
         for (Map.Entry<NBTTagCompound, ItemStack> container : Recipes.sunnarium.getRecipes().entrySet()) {
             addRecipe(container.getValue());
@@ -69,6 +59,10 @@ public class GenSEHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
     }
 
 }

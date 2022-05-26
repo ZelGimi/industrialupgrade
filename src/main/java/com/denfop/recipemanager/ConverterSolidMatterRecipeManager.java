@@ -31,14 +31,39 @@ import java.util.Set;
 
 public class ConverterSolidMatterRecipeManager implements IUpgradeBasicMachineRecipeManager {
 
-    public ConverterSolidMatterRecipeManager() {
-    }
-
+    private static final Set<ConverterSolidMatterRecipeManager> watchingManagers =
+            Collections.newSetFromMap(new IdentityHashMap());
+    private static boolean oreRegisterEventSubscribed;
     protected final Map<IRecipeInput, MachineRecipe<IRecipeInput, Collection<ItemStack>>> recipes = new HashMap();
     private final List<MachineRecipe<IRecipeInput, Collection<ItemStack>>> uncacheableRecipes = new ArrayList();
     private final Map<Item, List<MachineRecipe<IRecipeInput, Collection<ItemStack>>>> recipeCache = new IdentityHashMap();
-    private static final Set<ConverterSolidMatterRecipeManager> watchingManagers =
-            Collections.newSetFromMap(new IdentityHashMap());
+
+    public ConverterSolidMatterRecipeManager() {
+    }
+
+    private static boolean checkListEquality(Collection<ItemStack> a, Collection<ItemStack> b) {
+        if (a.size() != b.size()) {
+            return false;
+        } else {
+            ListIterator<ItemStack> itB = (new ArrayList(b)).listIterator();
+
+            for (final ItemStack stack : a) {
+                do {
+                    if (!itB.hasNext()) {
+                        return false;
+                    }
+                } while (!StackUtil.checkItemEqualityStrict(stack, itB.next()));
+
+                itB.remove();
+
+                while (itB.hasPrevious()) {
+                    itB.previous();
+                }
+            }
+
+            return true;
+        }
+    }
 
     protected IRecipeInput getForInput(IRecipeInput input) {
         return input;
@@ -107,8 +132,6 @@ public class ConverterSolidMatterRecipeManager implements IUpgradeBasicMachineRe
         }
 
     }
-
-    private static boolean oreRegisterEventSubscribed;
 
     public boolean addRecipe(IRecipeInput input, Collection<ItemStack> output, NBTTagCompound metadata, boolean replace) {
         if (input == null) {
@@ -361,30 +384,6 @@ public class ConverterSolidMatterRecipeManager implements IUpgradeBasicMachineRe
             this.removeCachedRecipes(recipe.getInput());
         }
 
-    }
-
-    private static boolean checkListEquality(Collection<ItemStack> a, Collection<ItemStack> b) {
-        if (a.size() != b.size()) {
-            return false;
-        } else {
-            ListIterator<ItemStack> itB = (new ArrayList(b)).listIterator();
-
-            for (final ItemStack stack : a) {
-                do {
-                    if (!itB.hasNext()) {
-                        return false;
-                    }
-                } while (!StackUtil.checkItemEqualityStrict(stack, itB.next()));
-
-                itB.remove();
-
-                while (itB.hasPrevious()) {
-                    itB.previous();
-                }
-            }
-
-            return true;
-        }
     }
 
     private void displayError(String msg) {

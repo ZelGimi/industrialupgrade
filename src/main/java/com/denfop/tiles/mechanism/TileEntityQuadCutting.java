@@ -29,5 +29,8 @@ public class TileEntityQuadCutting extends TileEntityMultiMachine {
         return "Machines/InterruptOne.ogg";
     }
 
+    public String getStartSoundFile() {
+        return "Machines/cutter.ogg";
+    }
 
 }

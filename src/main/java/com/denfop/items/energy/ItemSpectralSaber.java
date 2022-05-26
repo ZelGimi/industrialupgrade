@@ -3,6 +3,10 @@ package com.denfop.items.energy;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.IUpgradeItem;
+import com.denfop.api.upgrade.UpgradeItemInform;
+import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.utils.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
@@ -12,6 +16,7 @@ import ic2.api.item.IBoxable;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IItemHudInfo;
 import ic2.core.IC2;
+import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
@@ -27,22 +32,18 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Enchantments;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -51,26 +52,34 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxable, IItemHudInfo, IModelRegister {
+public class ItemSpectralSaber extends ItemTool implements IElectricItem, IUpgradeItem, IBoxable, IItemHudInfo, IModelRegister {
 
-    public static final int ticker = 0;
+    public static int ticker = 0;
     public static int activedamage;
     private static int damage1;
     public final int maxCharge;
     public final int transferLimit;
     public final int tier;
     private final EnumSet<ToolClass> toolClasses;
-    private int soundTicker;
     private final String name;
+    protected AudioSource audioSource;
+    private int soundTicker;
+    private boolean wasEquipped;
+    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
+    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
+    private boolean update = false;
 
     public ItemSpectralSaber(
             String internalName, int maxCharge, int transferLimit, int tier, int activedamage,
@@ -83,7 +92,7 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
             String name, HarvestLevel harvestLevel, int maxCharge,
             int transferLimit, int tier, int activedamage, int damage
     ) {
-        super(0, harvestLevel.toolMaterial.getAttackDamage(), harvestLevel.toolMaterial, null);
+        super(0, 2, harvestLevel.toolMaterial, Collections.emptySet());
         this.soundTicker = 0;
         this.toolClasses = EnumSet.of(ToolClass.Sword);
         this.maxCharge = maxCharge;
@@ -97,10 +106,38 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         setNoRepair();
         setUnlocalizedName(name);
         setCreativeTab(IUCore.EnergyTab);
+
+        for (final ToolClass aClass : toolClasses) {
+            if (((IToolClass) aClass).getName() != null) {
+                this.setHarvestLevel(((IToolClass) aClass).getName(), harvestLevel.level);
+            }
+        }
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
 
 
+    }
+
+    private static boolean isActive(ItemStack stack) {
+        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
+        return isActive(nbt);
+    }
+
+    private static boolean isActive(NBTTagCompound nbt) {
+        return nbt.getBoolean("active");
+    }
+
+    private static void setActive(NBTTagCompound nbt, boolean active) {
+        nbt.setBoolean("active", active);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "energy_tools" + "/" + name + extraName;
+
+        return new ModelResourceLocation(loc, null);
     }
 
     @Override
@@ -143,53 +180,19 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         return true;
     }
 
-    public static void drainSaber(ItemStack itemStack, double amount, EntityLivingBase entity) {
-        NBTTagCompound nbt = ModUtils.nbt(itemStack);
-        int saberenergy = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("saberenergy")) {
-                saberenergy++;
-            }
+    public int getItemEnchantability() {
+        return 0;
+    }
 
-        }
-        saberenergy = Math.min(saberenergy, EnumInfoUpgradeModules.SABERENERGY.max);
+    public void drainSaber(ItemStack itemStack, double amount, EntityLivingBase entity) {
+        int saberenergy = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABERENERGY, itemStack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABERENERGY, itemStack).number : 0);
 
-        if (!ElectricItem.manager.use(itemStack, amount - amount * 0.15 * saberenergy, entity)) {
+        if (!ElectricItem.manager.use(itemStack, amount - amount * 0.15 * saberenergy, null)) {
             NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(itemStack);
             nbtData.setBoolean("active", false);
-            updateAttributes(nbtData);
         }
     }
-
-    private static void updateAttributes(NBTTagCompound nbtData) {
-        boolean active = nbtData.getBoolean("active");
-
-        int saberdamage = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbtData.getString("mode_module" + i).equals("saberdamage")) {
-                saberdamage++;
-            }
-
-        }
-        saberdamage = Math.min(saberdamage, EnumInfoUpgradeModules.SABER_DAMAGE.max);
-
-
-        int damage = (int) (damage1 + damage1 * 0.15 * saberdamage);
-        if (active) {
-            damage = (int) (activedamage + activedamage * 0.15 * saberdamage);
-        }
-        NBTTagCompound entry = new NBTTagCompound();
-        entry.setString("AttributeName", SharedMonsterAttributes.ATTACK_DAMAGE.getName());
-        entry.setLong("UUIDMost", ATTACK_DAMAGE_MODIFIER.getMostSignificantBits());
-        entry.setLong("UUIDLeast", ATTACK_DAMAGE_MODIFIER.getLeastSignificantBits());
-        entry.setString("Name", "Tool modifier");
-        entry.setDouble("Amount", damage);
-        entry.setInteger("Operation", 0);
-        NBTTagList list = new NBTTagList();
-        list.appendTag(entry);
-        nbtData.setTag("AttributeModifiers", list);
-    }
-
 
     @Override
     public double getMaxCharge(ItemStack itemStack) {
@@ -200,16 +203,15 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         return true;
     }
 
-
     @Override
     public boolean canProvideEnergy(ItemStack itemStack) {
         return true;
     }
 
-    public int getItemEnchantability() {
-        return 0;
+    public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player) {
+        this.removeAudioSource();
+        return true;
     }
-
 
     public float getDestroySpeed(ItemStack itemStack, IBlockState state) {
 
@@ -229,16 +231,8 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
             final EntityEquipmentSlot p_getAttributeModifiers_1_,
             final ItemStack stack
     ) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int saberdamage = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("saberdamage")) {
-                saberdamage++;
-            }
-
-        }
-        saberdamage = Math.min(saberdamage, EnumInfoUpgradeModules.SABER_DAMAGE.max);
-
+        int saberdamage = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0);
         int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
         if (ElectricItem.manager.canUse(stack, 400.0D)) {
             NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(stack);
@@ -248,12 +242,17 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         }
         HashMultimap<String, AttributeModifier> hashMultimap = HashMultimap.create();
         hashMultimap.put(
-                SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
-                new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", dmg, 0)
+                SharedMonsterAttributes.ATTACK_SPEED.getName(),
+                new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0)
         );
+        hashMultimap.put(
+                SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
+                new AttributeModifier(Item.ATTACK_DAMAGE_MODIFIER, "Tool modifier", dmg, 0)
+        );
+
+
         return hashMultimap;
     }
-
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase source) {
@@ -263,22 +262,10 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         }
         if (IC2.platform.isSimulating()) {
             drainSaber(stack, 400.0D, source);
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            int vampires = 0;
-            boolean wither = false;
-            boolean poison = false;
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("vampires")) {
-                    vampires++;
-                }
-                if (nbt.getString("mode_module" + i).equals("wither")) {
-                    wither = true;
-                }
-                if (nbt.getString("mode_module" + i).equals("poison")) {
-                    poison = true;
-                }
-            }
-            vampires = Math.min(vampires, EnumInfoUpgradeModules.VAMPIRES.max);
+            int vampires = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.VAMPIRES, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.VAMPIRES, stack).number : 0);
+            boolean wither = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WITHER, stack);
+            boolean poison = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.POISON, stack);
             if (vampires != 0) {
                 target.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 40, vampires));
             }
@@ -288,39 +275,42 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
             if (poison) {
                 target.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
             }
-
-
-            Iterator<EntityEquipmentSlot> var4 = null;
-            if (!(source instanceof EntityPlayer) || ((EntityPlayerMP) source).canAttackPlayer((EntityPlayer) target)
-                    || !(target instanceof EntityPlayer)) {
-                var4 = ArmorSlot.getAll().iterator();
+            if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.HUNGRY, stack)) {
+                target.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 60));
             }
-            while (var4.hasNext()) {
-                EntityEquipmentSlot slot = var4.next();
-                if (!ElectricItem.manager.canUse(stack, 2000.0D)) {
-                    break;
-                }
 
-                ItemStack armor = target.getItemStackFromSlot(slot);
-                if (!armor.isEmpty()) {
-                    double amount = 0.0D;
-                    if (armor.getItem() instanceof ItemArmorNanoSuit) {
-                        amount = 48000.0D;
-                    } else if (armor.getItem() instanceof ItemArmorQuantumSuit) {
-                        amount = 300000.0D;
+            Iterator<EntityEquipmentSlot> var4;
+            if (!(source instanceof EntityPlayerMP) || !(target instanceof EntityPlayer) || ((EntityPlayerMP) source).canAttackPlayer(
+                    (EntityPlayer) target)) {
+                var4 = ArmorSlot.getAll().iterator();
+
+                while (var4.hasNext()) {
+                    EntityEquipmentSlot slot = var4.next();
+                    if (!ElectricItem.manager.canUse(stack, 2000.0D)) {
+                        break;
                     }
 
-                    if (amount > 0.0D) {
-                        ElectricItem.manager.discharge(armor, amount, this.tier, true, false, false);
-                        if (!ElectricItem.manager.canUse(armor, 1.0D)) {
-                            target.setItemStackToSlot(slot, null);
+                    ItemStack armor = target.getItemStackFromSlot(slot);
+                    if (armor.isEmpty()) {
+                        double amount = 0.0D;
+                        if (armor.getItem() instanceof ItemArmorNanoSuit) {
+                            amount = 48000.0D;
+                        } else if (armor.getItem() instanceof ItemArmorQuantumSuit) {
+                            amount = 300000.0D;
                         }
 
-                        drainSaber(stack, 2000.0D, source);
+                        if (amount > 0.0D) {
+                            ElectricItem.manager.discharge(armor, amount, this.tier, true, false, false);
+                            if (!ElectricItem.manager.canUse(armor, 1.0D)) {
+                                target.setItemStackToSlot(slot, ItemStack.EMPTY);
+                            }
+
+                            drainSaber(stack, 2000.0D, source);
+                        }
                     }
                 }
-            }
 
+            }
         }
         if (IC2.platform.isRendering()) {
             IC2.platform.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
@@ -329,14 +319,15 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
     }
 
     public String getRandomSwingSound() {
-        switch(IC2.random.nextInt(3)) {
+        switch (IC2.random.nextInt(3)) {
+            default:
+                return "Tools/Nanosabre/NanosabreSwing1.ogg";
             case 1:
                 return "Tools/Nanosabre/NanosabreSwing2.ogg";
             case 2:
-                return "Tools/Nanosabre/NanosabreSwing3.ogg";
-            default:
-                return "Tools/Nanosabre/NanosabreSwing1.ogg";
+                break;
         }
+        return "Tools/Nanosabre/NanosabreSwing3.ogg";
     }
 
     @Override
@@ -348,36 +339,14 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         return false;
     }
 
-    private static boolean isActive(ItemStack stack) {
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-        return isActive(nbt);
-    }
-
-    private static boolean isActive(NBTTagCompound nbt) {
-        return nbt.getBoolean("active");
-    }
-    public boolean onEntitySwing(EntityLivingBase entity, ItemStack stack) {
-        if (IC2.platform.isRendering() && isActive(stack)) {
-            IC2.audioManager.playOnce(entity, PositionSpec.Hand, this.getRandomSwingSound(), true, IC2.audioManager.getDefaultVolume());
-        }
-
-        return false;
-    }
-
-    protected String getIdleSound(EntityLivingBase player, ItemStack stack) {
-        return "Tools/Nanosabre/NanosabreIdle.ogg";
-    }
-
-    protected String getStartSound(EntityLivingBase player, ItemStack stack) {
-        return "Tools/Nanosabre/NanosabrePowerup.ogg";
-    }
     @Override
     public boolean isFull3D() {
         return true;
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult onItemRightClick(World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
         ItemStack stack = StackUtil.get(player, hand);
         if (world.isRemote) {
             return new ActionResult(EnumActionResult.PASS, stack);
@@ -395,37 +364,102 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         }
     }
 
-    private static void setActive(NBTTagCompound nbt, boolean active) {
-        nbt.setBoolean("active", active);
+    protected String getIdleSound() {
+        return "Tools/Nanosabre/NanosabreIdle.ogg";
+    }
+
+    protected String getStartSound() {
+        return "Tools/Nanosabre/NanosabrePowerup.ogg";
+    }
+
+    public void onUpdate1(ItemStack itemstack, Entity entity, boolean flag) {
+        boolean isEquipped = flag && entity instanceof EntityLivingBase;
+        if (IC2.platform.isRendering()) {
+            if (isEquipped && !this.wasEquipped) {
+                String initSound;
+                if (this.audioSource == null) {
+                    initSound = this.getIdleSound();
+                    if (initSound != null) {
+                        this.audioSource = IC2.audioManager.createSource(
+                                entity,
+                                ic2.core.audio.PositionSpec.Hand,
+                                initSound,
+                                true,
+                                false,
+                                IC2.audioManager.getDefaultVolume()
+                        );
+                    }
+                }
+
+                if (this.audioSource != null) {
+                    this.audioSource.play();
+                }
+
+                initSound = this.getStartSound();
+                if (initSound != null) {
+                    IC2.audioManager.playOnce(
+                            entity,
+                            ic2.core.audio.PositionSpec.Hand,
+                            initSound,
+                            true,
+                            IC2.audioManager.getDefaultVolume()
+                    );
+                }
+            } else if (!isEquipped && this.audioSource != null) {
+                if (entity instanceof EntityLivingBase) {
+                    EntityLivingBase theEntity = (EntityLivingBase) entity;
+                    ItemStack stack = theEntity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+                    if (stack.isEmpty() || stack.getItem() != this || stack == itemstack) {
+                        this.removeAudioSource();
+                        String sound = this.getStopSound();
+                        if (sound != null) {
+                            IC2.audioManager.playOnce(
+                                    entity,
+                                    PositionSpec.Hand,
+                                    sound,
+                                    true,
+                                    IC2.audioManager.getDefaultVolume()
+                            );
+                        }
+                    }
+                }
+            } else if (this.audioSource != null) {
+                this.audioSource.updatePosition();
+            }
+
+            this.wasEquipped = isEquipped;
+        }
+
+    }
+
+    protected String getStopSound() {
+        return null;
+    }
+
+    protected void removeAudioSource() {
+        if (this.audioSource != null) {
+            this.audioSource.stop();
+            this.audioSource.remove();
+            this.audioSource = null;
+        }
+
     }
 
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean par5) {
+        NBTTagCompound nbt = ModUtils.nbt(itemStack);
+
+        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+            nbt.setBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+        }
+        onUpdate1(itemStack, entity, par5 && isActive(itemStack));
+
         NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(itemStack);
+
         if (!nbtData.getBoolean("active")) {
             return;
         }
-        int loot = 0;
-        int fire = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbtData.getString("mode_module" + i).equals("loot")) {
-                loot++;
-            }
-            if (nbtData.getString("mode_module" + i).equals("fire")) {
-                fire++;
-            }
-
-        }
-        loot = Math.min(loot, EnumInfoUpgradeModules.LOOT.max);
-        fire = Math.min(fire, EnumInfoUpgradeModules.FIRE.max);
-        Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(itemStack);
-        if (loot != 0) {
-            enchantmentMap.put(Enchantments.LOOTING, loot);
-        }
-        if (fire != 0) {
-            enchantmentMap.put(Enchantments.FIRE_ASPECT, fire);
-        }
-        EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
         if (ticker % 16 == 0 && entity instanceof net.minecraft.entity.player.EntityPlayerMP) {
             if (slot < 9) {
                 drainSaber(itemStack, 64.0D, (EntityLivingBase) entity);
@@ -450,7 +484,6 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         return Localization.translate(getUnlocalizedName(itemStack));
     }
 
-
     @Override
     public int getTier(ItemStack itemStack) {
 
@@ -462,7 +495,6 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
 
         return this.transferLimit;
     }
-
 
     public boolean canBeStoredInToolbox(ItemStack itemstack) {
         return true;
@@ -486,16 +518,6 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
     }
 
     @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy_tools").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
-    }
-
-    @SideOnly(Side.CLIENT)
     public void registerModels(final String name) {
         ModelLoader.setCustomMeshDefinition(this, stack -> {
             final NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -508,5 +530,11 @@ public class ItemSpectralSaber extends ItemTool implements IElectricItem, IBoxab
         }
 
     }
+
+    @Override
+    public void setUpdate(final boolean update) {
+        this.update = update;
+    }
+
 
 }

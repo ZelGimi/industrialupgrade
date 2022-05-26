@@ -3,6 +3,9 @@ package com.denfop.integration.jei.microchip;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -110,7 +113,38 @@ public class MicrochipRecipeWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        int temperature = 38 * this.temperature / 5000;
+        int temp = this.temperature;
+        if (temperature > 0) {
+            drawTexturedModalRect(67, 60, 176, 21, temperature + 1, 11);
+        }
+        minecraft.fontRenderer.drawString("" + temp + "°C", 32, 61, 4210752);
 
+    }
+
+    public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(x + 0, y + height, 0).tex(
+                (float) (textureX + 0) * 0.00390625F,
+                (float) (textureY + height) * 0.00390625F
+        ).endVertex();
+        bufferbuilder
+                .pos(x + width, y + height, 0)
+                .tex((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F)
+                .endVertex();
+        bufferbuilder
+                .pos(x + width, y + 0, 0)
+                .tex((float) (textureX + width) * 0.00390625F, (float) (textureY + 0) * 0.00390625F)
+                .endVertex();
+        bufferbuilder.pos(x + 0, y + 0, 0).tex(
+                (float) (textureX + 0) * 0.00390625F,
+                (float) (textureY + 0) * 0.00390625F
+        ).endVertex();
+        tessellator.draw();
     }
 
 }

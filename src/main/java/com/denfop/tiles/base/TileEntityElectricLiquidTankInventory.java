@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.google.common.base.Predicate;
 import ic2.core.block.comp.Fluids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -15,6 +16,14 @@ public abstract class TileEntityElectricLiquidTankInventory extends TileEntityEl
     public Fluids fluids;
     public FluidTank fluidTank;
 
+    public TileEntityElectricLiquidTankInventory(final String name, final double MaxEnergy, final int tier, final int tanksize,
+                                                 Predicate<Fluid> fluids_list) {
+        super(name, MaxEnergy, tier, 1);
+
+        this.fluids = this.addComponent(new Fluids(this));
+        this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000,fluids_list);
+
+    }
     public TileEntityElectricLiquidTankInventory(final String name, final double MaxEnergy, final int tier, final int tanksize) {
         super(name, MaxEnergy, tier, 1);
 
@@ -22,7 +31,6 @@ public abstract class TileEntityElectricLiquidTankInventory extends TileEntityEl
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
 
     }
-
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
     }

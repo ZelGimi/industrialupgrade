@@ -26,10 +26,20 @@ public class GUIModuleMachine extends GuiIC2<ContainerModuleMachine> {
         this.container = container1;
     }
 
+    private static List<String> getInformation() {
+        List<String> ret = new ArrayList();
+        ret.add(Localization.translate("iu.moduleinformation1"));
+        ret.add(Localization.translate("iu.moduleinformation2"));
+        ret.add(Localization.translate("iu.moduleinformation3"));
+
+
+        return ret;
+    }
+
     public void initGui() {
         super.initGui();
         this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 21,
-                68, 17, Localization.translate("button.write")
+                68, 9, Localization.translate("button.write")
         ));
     }
 
@@ -68,17 +78,6 @@ public class GUIModuleMachine extends GuiIC2<ContainerModuleMachine> {
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
-
-    private static List<String> getInformation() {
-        List<String> ret = new ArrayList();
-        ret.add(Localization.translate("iu.moduleinformation1"));
-        ret.add(Localization.translate("iu.moduleinformation2"));
-        ret.add(Localization.translate("iu.moduleinformation3"));
-
-
-        return ret;
-    }
-
 
     public String getName() {
         return this.container.base.getInventoryName();

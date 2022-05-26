@@ -5,6 +5,7 @@ import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.container.ContainerHandlerHeavyOre;
 import com.denfop.utils.ModUtils;
+import ic2.api.recipe.RecipeOutput;
 import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,11 +32,13 @@ public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
         super.drawForegroundLayer(par1, par2);
         new AdvArea(this, 51, 52, 89, 63)
                 .withTooltip(Localization.translate("iu.temperature") + ModUtils.getString(this.container.base.getTemperature()) + "/" + ModUtils.getString(
-                        this.container.base.getMaxTemperature()))
+                        this.container.base.getMaxTemperature()) + "°C")
                 .drawForeground(par1, par2);
 
-        if (this.container.base.inputSlotA.process() != null) {
-            if (!Recipes.mechanism.hasHeaters(this.container.base)) {
+        final RecipeOutput output = this.container.base.inputSlotA.process();
+        if (output != null) {
+            if (!Recipes.mechanism.hasHeaters(this.container.base) && this.container.base.getTemperature() < output.metadata.getShort(
+                    "temperature")) {
                 new AdvArea(this, 33, 50, 51, 68)
                         .withTooltip(Localization.translate("iu.needheaters"))
                         .drawForeground(par1, par2);

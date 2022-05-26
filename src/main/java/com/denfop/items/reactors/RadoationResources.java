@@ -3,12 +3,20 @@ package com.denfop.items.reactors;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.items.armour.ItemArmorAdvHazmat;
+import com.denfop.items.armour.ItemArmorImprovemedQuantum;
+import ic2.core.IC2Potion;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
+import ic2.core.item.armor.ItemArmorHazmat;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,6 +45,18 @@ public class RadoationResources extends ItemMulti<RadoationResources.Types> impl
                 meta,
                 new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
         );
+    }
+
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
+
+        if (entity instanceof EntityLivingBase) {
+            EntityLivingBase entityLiving = (EntityLivingBase) entity;
+            if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
+                    entityLiving)) {
+                IC2Potion.radiation.applyTo(entityLiving, 150, 10);
+            }
+        }
+
     }
 
     @Override

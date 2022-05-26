@@ -39,8 +39,8 @@ public class TileEntityTankRender extends TileEntitySpecialRenderer<TileEntityLi
         if (tile.getFluidTank().getFluid() != null) {
             GL11.glPushMatrix();
             GL11.glTranslated(x, y, z);
-            double m1 = (tile.gaugeLiquidScaled(0.51));
-            GL11.glTranslatef(0.6F, (float) m1, 0.7F);
+            double m1 = (tile.gaugeLiquidScaled(0.41));
+            GL11.glTranslatef(0.6F, (float) ((float) m1 + 0.1), 0.7F);
 
             GL11.glRotatef(0F, 0.0F, 0F, 0F);
             double m = (tile.gaugeLiquidScaled(0.8));
@@ -50,7 +50,9 @@ public class TileEntityTankRender extends TileEntitySpecialRenderer<TileEntityLi
             final ResourceLocation resorce = new ResourceLocation(tex.getResourceDomain(), "textures/" + tex.getResourcePath() +
                     ".png");
             bindTexture(resorce);
-            model1.renderAll();
+            if (m1 != 0) {
+                model1.renderAll();
+            }
 
 
             GL11.glPopMatrix();

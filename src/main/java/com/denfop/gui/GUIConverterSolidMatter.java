@@ -40,6 +40,22 @@ public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
         this.container = container1;
     }
 
+    private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
+        List<ItemStack> ret = new ArrayList();
+        Set<UpgradableProperty> properties = block.getUpgradableProperties();
+        Iterator var3 = UpgradeRegistry.getUpgrades().iterator();
+
+        while (var3.hasNext()) {
+            ItemStack stack = (ItemStack) var3.next();
+            IUpgradeItem item = (IUpgradeItem) stack.getItem();
+            if (item.isSuitableFor(stack, properties)) {
+                ret.add(stack);
+            }
+        }
+
+        return ret;
+    }
+
     protected void drawForegroundLayer(int par1, int par2) {
         this.fontRenderer.drawString(
                 this.getName(),
@@ -92,22 +108,6 @@ public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
 
             this.drawTooltip(mouseX, mouseY, text);
         }
-    }
-
-    private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
-        List<ItemStack> ret = new ArrayList();
-        Set<UpgradableProperty> properties = block.getUpgradableProperties();
-        Iterator var3 = UpgradeRegistry.getUpgrades().iterator();
-
-        while (var3.hasNext()) {
-            ItemStack stack = (ItemStack) var3.next();
-            IUpgradeItem item = (IUpgradeItem) stack.getItem();
-            if (item.isSuitableFor(stack, properties)) {
-                ret.add(stack);
-            }
-        }
-
-        return ret;
     }
 
     @Override

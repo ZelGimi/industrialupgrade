@@ -9,10 +9,21 @@ import java.lang.ref.WeakReference;
 
 public class AudioPosition {
 
-    private final WeakReference<World> worldRef;
     public final float x;
     public final float y;
     public final float z;
+    private final WeakReference<World> worldRef;
+
+    public AudioPosition(World world, float x, float y, float z) {
+        this.worldRef = new WeakReference(world);
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public AudioPosition(World world, BlockPos pos) {
+        this(world, (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F);
+    }
 
     public static AudioPosition getFrom(Object obj, PositionSpec positionSpec) {
         if (obj instanceof AudioPosition) {
@@ -31,17 +42,6 @@ public class AudioPosition {
         } else {
             return null;
         }
-    }
-
-    public AudioPosition(World world, float x, float y, float z) {
-        this.worldRef = new WeakReference(world);
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    public AudioPosition(World world, BlockPos pos) {
-        this(world, (float) pos.getX() + 0.5F, (float) pos.getY() + 0.5F, (float) pos.getZ() + 0.5F);
     }
 
     public World getWorld() {

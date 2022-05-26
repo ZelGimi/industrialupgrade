@@ -34,6 +34,15 @@ public class BaseArmor extends ItemArmor implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("armour").append("/").append(name);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
 
@@ -44,19 +53,8 @@ public class BaseArmor extends ItemArmor implements IModelRegister {
         }
     }
 
-
     public void registerModels() {
         registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)

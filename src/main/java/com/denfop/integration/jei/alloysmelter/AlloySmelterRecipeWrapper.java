@@ -3,6 +3,9 @@ package com.denfop.integration.jei.alloysmelter;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -13,9 +16,10 @@ import java.util.List;
 public class AlloySmelterRecipeWrapper implements IRecipeWrapper {
 
 
-    private final ItemStack inputstack;
-    private final ItemStack outputstack;
-    private final ItemStack inputstack1;
+    public final ItemStack inputstack;
+    public final ItemStack outputstack;
+    public final ItemStack inputstack1;
+    public final short temperature;
 
 
     public AlloySmelterRecipeWrapper(AlloySmelterHandler container) {
@@ -24,6 +28,7 @@ public class AlloySmelterRecipeWrapper implements IRecipeWrapper {
         this.inputstack = container.getInput();
         this.inputstack1 = container.getInput1();
         this.outputstack = container.getOutput();
+        this.temperature = container.temperature;
 
     }
 
@@ -71,7 +76,37 @@ public class AlloySmelterRecipeWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        int temperature = 38 * this.temperature / 5000;
+        int temp = this.temperature;
+        if (temperature > 0) {
+            drawTexturedModalRect(99, 42, 176, 35, temperature + 1, 11);
+        }
+        minecraft.fontRenderer.drawString("" + temp + "°C", 72, 44, 4210752);
 
     }
 
+    public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(x + 0, y + height, 0).tex(
+                (float) (textureX + 0) * 0.00390625F,
+                (float) (textureY + height) * 0.00390625F
+        ).endVertex();
+        bufferbuilder
+                .pos(x + width, y + height, 0)
+                .tex((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F)
+                .endVertex();
+        bufferbuilder
+                .pos(x + width, y + 0, 0)
+                .tex((float) (textureX + width) * 0.00390625F, (float) (textureY + 0) * 0.00390625F)
+                .endVertex();
+        bufferbuilder.pos(x + 0, y + 0, 0).tex(
+                (float) (textureX + 0) * 0.00390625F,
+                (float) (textureY + 0) * 0.00390625F
+        ).endVertex();
+        tessellator.draw();
+    }
 }

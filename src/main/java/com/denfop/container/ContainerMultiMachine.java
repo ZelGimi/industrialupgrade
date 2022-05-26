@@ -14,7 +14,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileEntityMultiMachi
         super(entityPlayer, tileEntity1, 166);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             int xDisplayPosition1 = 80 + (32 - sizeWorkingSlot) * i - sizeWorkingSlot * 10;
-            addSlotToContainer(new SlotInvSlot((InvSlot) tileEntity1.inputSlots, i,
+            addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlots, i,
                     xDisplayPosition1, 16
             ));
             addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, i,

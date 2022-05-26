@@ -25,6 +25,28 @@ public class CompressorRecipe {
         addcompressor(new ItemStack(IUItem.compressIridiumplate), 9, new ItemStack(IUItem.doublecompressIridiumplate));
         addcompressor("doubleplateTungsten", 1, new ItemStack(IUItem.cell_all));
         addcompressor(new ItemStack(IUItem.neutronium), 9, new ItemStack(IUItem.neutroniumingot, 1));
+        addcompressor(  new ItemStack(Ic2Items.cell.getItem()), 1, Ic2Items.airCell);
+
+        for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
+
+            addcompressor(
+                    "block" + RegisterOreDict.itemNames().get(i),
+                    1,
+                    "doubleplate" + RegisterOreDict.itemNames().get(i)
+            );
+
+
+        }
+        for (int i = 0; i < RegisterOreDict.itemNames1().size(); i++) {
+
+            addcompressor(
+                    "block" + RegisterOreDict.itemNames1().get(i),
+                    1,
+                    "doubleplate" + RegisterOreDict.itemNames1().get(i)
+            );
+
+
+        }
         for (int j = 0; j < recipe.length; j++) {
             for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
 

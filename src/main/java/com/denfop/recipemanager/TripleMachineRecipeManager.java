@@ -5,6 +5,7 @@ import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
 import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class TripleMachineRecipeManager implements ITripleMachineRecipeManager {
 
     private final Map<ITripleMachineRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
 
-    public void addRecipe(IRecipeInput container, IRecipeInput fill, IRecipeInput fill1, ItemStack output) {
+    public void addRecipe(IRecipeInput container, IRecipeInput fill, IRecipeInput fill1, ItemStack output, NBTTagCompound tag) {
         if (container == null) {
             throw new NullPointerException("The container recipe input is null");
         }
@@ -48,7 +49,7 @@ public class TripleMachineRecipeManager implements ITripleMachineRecipeManager {
         }
         this.recipes.put(
                 new ITripleMachineRecipeManager.Input(container, fill, fill1),
-                new RecipeOutput(null, output)
+                new RecipeOutput(tag, output)
         );
     }
 
@@ -60,27 +61,27 @@ public class TripleMachineRecipeManager implements ITripleMachineRecipeManager {
             boolean acceptTest
     ) {
         if (acceptTest) {
-            if (container == null && fill == null && fill1 == null) {
+            if (container.isEmpty() && fill.isEmpty() && fill1.isEmpty()) {
                 return null;
             }
-        } else if (container == null || fill == null || fill1 == null) {
+        } else if (container.isEmpty() || fill.isEmpty() || fill1.isEmpty()) {
             return null;
         }
         for (Map.Entry<ITripleMachineRecipeManager.Input, RecipeOutput> entry : this.recipes.entrySet()) {
             ITripleMachineRecipeManager.Input recipeInput = entry.getKey();
-            if (acceptTest && container == null) {
+            if (acceptTest && container.isEmpty()) {
                 if (recipeInput.fill.matches(fill)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill == null) {
+            if (acceptTest && fill.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill1 == null) {
+            if (acceptTest && fill1.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }

@@ -37,6 +37,10 @@ import java.util.Set;
 
 public abstract class GuiIC2<T extends ContainerBase<? extends IInventory>> extends GuiContainer {
 
+    public static final int textHeight = 8;
+    protected final T container;
+    protected final List<GuiElement<?>> elements;
+    private final Queue<GuiIC2.Tooltip> queuedTooltips;
     private boolean fixKeyEvents;
     private boolean tick;
     private boolean background;
@@ -44,10 +48,6 @@ public abstract class GuiIC2<T extends ContainerBase<? extends IInventory>> exte
     private boolean mouseRelease;
     private boolean mouseScroll;
     private boolean key;
-    private final Queue<GuiIC2.Tooltip> queuedTooltips;
-    protected final T container;
-    protected final List<GuiElement<?>> elements;
-    public static final int textHeight = 8;
 
     public GuiIC2(T container) {
         this(container, 176, 166);
@@ -71,6 +71,22 @@ public abstract class GuiIC2<T extends ContainerBase<? extends IInventory>> exte
         this.container = container;
         this.ySize = ySize;
         this.xSize = xSize;
+    }
+
+    private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
+        List<ItemStack> ret = new ArrayList();
+        Set<UpgradableProperty> properties = block.getUpgradableProperties();
+        Iterator var3 = UpgradeRegistry.getUpgrades().iterator();
+
+        while (var3.hasNext()) {
+            ItemStack stack = (ItemStack) var3.next();
+            IUpgradeItem item = (IUpgradeItem) stack.getItem();
+            if (item.isSuitableFor(stack, properties)) {
+                ret.add(stack);
+            }
+        }
+
+        return ret;
     }
 
     public T getContainer() {
@@ -177,22 +193,6 @@ public abstract class GuiIC2<T extends ContainerBase<? extends IInventory>> exte
 
             this.drawTooltip(mouseX, mouseY, text);
         }
-    }
-
-    private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
-        List<ItemStack> ret = new ArrayList();
-        Set<UpgradableProperty> properties = block.getUpgradableProperties();
-        Iterator var3 = UpgradeRegistry.getUpgrades().iterator();
-
-        while (var3.hasNext()) {
-            ItemStack stack = (ItemStack) var3.next();
-            IUpgradeItem item = (IUpgradeItem) stack.getItem();
-            if (item.isSuitableFor(stack, properties)) {
-                ret.add(stack);
-            }
-        }
-
-        return ret;
     }
 
     public void handleMouseInput() throws IOException {

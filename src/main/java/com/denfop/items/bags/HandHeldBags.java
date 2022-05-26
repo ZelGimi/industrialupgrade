@@ -42,6 +42,10 @@ public class HandHeldBags extends HandHeldInventory {
     }
 
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+        if (itemstack.getItem() instanceof ItemEnergyBags) {
+            return false;
+        }
+
 
         if (ElectricItem.manager.canUse(itemStack1, 50)) {
             return !itemstack.isEmpty();

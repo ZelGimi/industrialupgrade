@@ -19,15 +19,15 @@ import net.minecraft.util.ResourceLocation;
 public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHORecipeWrapper> {
 
     private final IDrawableStatic bg;
-    private int progress = 0;
     private final int energy = 0;
+    private int progress = 0;
 
     public HandlerHOCategory(
             final IGuiHelper guiHelper
     ) {
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIHandlerHO" +
                         ".png"), 3, 3, 140,
-                75
+                80
         );
     }
 
@@ -66,7 +66,7 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
         drawTexturedModalRect(45, 28, 177, 32, xScale + 1, 14);
 
 
-        drawTexturedModalRect(48, 49, 176, 50, 39, 11);
+        //   drawTexturedModalRect(48, 49, 176, 50, 39, 11);
 
 
     }

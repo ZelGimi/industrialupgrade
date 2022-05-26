@@ -43,7 +43,6 @@ public class GUIOilGetter extends GuiIC2<ContainerOilGetter> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int xOffset = (this.width - this.xSize) / 2;
         int yOffset = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
         TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawBackground(xOffset, yOffset);
 
         int temp = 0;
@@ -51,6 +50,7 @@ public class GUIOilGetter extends GuiIC2<ContainerOilGetter> {
             temp = 14 * this.container.base.number / this.container.base.max;
         }
         temp = Math.min(14, temp);
+        this.mc.getTextureManager().bindTexture(getTexture());
         if (temp > 0) {
             drawTexturedModalRect(xOffset + 43, yOffset + 39 + 14 - temp, 177, 130 - temp, 10, temp);
 

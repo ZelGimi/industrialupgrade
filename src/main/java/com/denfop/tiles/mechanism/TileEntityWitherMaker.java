@@ -8,6 +8,7 @@ import com.denfop.tiles.base.TileEntityBaseWitherMaker;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
+import ic2.core.block.invslot.InvSlot;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -45,6 +46,15 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker {
 
     }
 
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        } else {
+            InvSlot invSlot = this.getInventorySlot(this.inputSlotA.name);
+            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack);
+        }
+    }
+
     public String getInventoryName() {
 
         return "wither maker";
@@ -56,7 +66,7 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker {
     }
 
     public String getStartSoundFile() {
-        return "Machines/MaceratorOp.ogg";
+        return "Machines/WitherSpawn1.ogg";
     }
 
     public String getInterruptSoundFile() {

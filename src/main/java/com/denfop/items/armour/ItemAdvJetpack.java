@@ -68,6 +68,16 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("armour").append("/").append(name + extraName);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
@@ -98,16 +108,6 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     @Override
     public void registerModels() {
         registerModels(this.armorName);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -302,10 +302,11 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
                 }
             }
             boolean jetpack;
-         if(!player.onGround)
-            if (nbtData.getBoolean("jetpack")) {
-                if (ElectricItem.manager.canUse(itemStack, 10) ) {
-                    ElectricItem.manager.use(itemStack, 10, null);
+            if (!player.onGround) {
+                if (nbtData.getBoolean("jetpack")) {
+                    if (ElectricItem.manager.canUse(itemStack, 10)) {
+                        ElectricItem.manager.use(itemStack, 10, null);
+                    }
                 }
             }
             jetpack = nbtData.getBoolean("jetpack");

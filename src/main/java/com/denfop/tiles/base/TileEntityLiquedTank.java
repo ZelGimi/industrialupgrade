@@ -10,8 +10,11 @@ import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
+import ic2.core.block.TileEntityInventory;
+import ic2.core.block.comp.Fluids;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotConsumableLiquid;
+import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,15 +26,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory implements IHasGui, IUpgradableBlock {
+public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui, IUpgradableBlock, IFluidHandler {
 
     public final InvSlotUpgrade upgradeSlot;
 
@@ -39,7 +46,36 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
     public final InvSlotConsumableLiquidByList containerslot;
     public final InvSlotConsumableLiquidByList containerslot1;
     public final ResourceLocation texture;
-    private final String name;
+    public final String name;
+    public final Fluids fluids;
+    public final FluidTank fluidTank;
+    public final InvSlotOutput outputSlot;
+
+    public TileEntityLiquedTank(String name, int tanksize, String texturename) {
+
+
+        this.containerslot = new InvSlotConsumableLiquidByList(this,
+                "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill
+        );
+        this.containerslot1 = new InvSlotConsumableLiquidByList(this,
+                "containerslot1", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Drain
+        );
+        this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
+        this.texture = new ResourceLocation(
+                Constants.TEXTURES,
+                "textures/models/" + texturename + ".png"
+        );
+        this.name = name;
+        this.fluids = this.addComponent(new Fluids(this));
+        this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
+        this.outputSlot = new InvSlotOutput(this, "output", 1);
+
+    }
+
+    private static int applyModifier(int extra) {
+        double ret = Math.round((14 + extra) * 1.0);
+        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
+    }
 
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
@@ -57,6 +93,21 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
     @Override
     public void onNetworkUpdate(String field) {
 
+    }
+
+    @Override
+    public IFluidTankProperties[] getTankProperties() {
+        return this.getFluidTank().getTankProperties();
+    }
+
+    @Nullable
+    @Override
+    public FluidStack drain(final FluidStack resource, final boolean doDrain) {
+        if (resource != null && resource.isFluidEqual(this.getFluidTank().getFluid())) {
+            return !this.canDrain(resource.getFluid()) ? null : this.getFluidTank().drain(resource.amount, doDrain);
+        } else {
+            return null;
+        }
     }
 
     public double gaugeLiquidScaled(double i) {
@@ -77,32 +128,8 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
         return true;
     }
 
-    public TileEntityLiquedTank(String name, int tanksize, String texturename) {
-        super(name, 1000, 1, tanksize);
-
-
-        this.containerslot = new InvSlotConsumableLiquidByList(this,
-                "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill
-        );
-        this.containerslot1 = new InvSlotConsumableLiquidByList(this,
-                "containerslot1", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Drain
-        );
-        this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
-        this.texture = new ResourceLocation(
-                Constants.TEXTURES,
-                "textures/models/" + texturename + ".png"
-        );
-        this.name = name;
-    }
-
-    private static int applyModifier(int extra) {
-        double ret = Math.round((14 + extra) * 1.0);
-        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
-    }
-
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
         ret.add("fluidTank");
         return ret;
     }
@@ -115,7 +142,7 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = false;
-        if (this.world.provider.getWorldTime() % 20 == 0) {
+        if (this.world.provider.getWorldTime() % 10 == 0) {
             IC2.network.get(true).updateTileEntityField(this, "fluidTank");
         }
 
@@ -154,17 +181,20 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
 
     }
 
-    @Override
+
     public boolean canFill(Fluid paramFluid) {
         return true;
     }
 
-    @Override
+
     public boolean canDrain(Fluid paramFluid) {
         return true;
     }
 
-    @Override
+    public FluidTank getFluidTank() {
+        return this.fluidTank;
+    }
+
     public String getInventoryName() {
         return Localization.translate(this.name);
     }
@@ -213,7 +243,6 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
 
     public void setUpgradestat() {
         this.upgradeSlot.onChanged();
-        this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
     }
 
 
@@ -224,6 +253,16 @@ public class TileEntityLiquedTank extends TileEntityElectricLiquidTankInventory 
         }
     }
 
+
+    @Override
+    public double getEnergy() {
+        return 0;
+    }
+
+    @Override
+    public boolean useEnergy(final double v) {
+        return false;
+    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,

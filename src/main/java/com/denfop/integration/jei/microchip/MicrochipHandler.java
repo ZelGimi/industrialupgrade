@@ -16,17 +16,7 @@ public class MicrochipHandler {
 
     private static final List<MicrochipHandler> recipes = new ArrayList<>();
     private final short temperature;
-
-
-    public static List<MicrochipHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final ItemStack input, input1, input2, input3, input4, output;
-
 
     public MicrochipHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4,
@@ -39,6 +29,57 @@ public class MicrochipHandler {
         this.input4 = input4;
         this.temperature = temperature;
         this.output = output;
+    }
+
+    public static List<MicrochipHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
+    }
+
+    public static MicrochipHandler addRecipe(
+            ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
+            ItemStack input4, ItemStack output, short temperature
+    ) {
+        MicrochipHandler recipe = new MicrochipHandler(input, input1, input2, input3, input4, output, temperature);
+        if (recipes.contains(recipe)) {
+            return null;
+        }
+        recipes.add(recipe);
+        return recipe;
+    }
+
+    public static MicrochipHandler getRecipe(ItemStack is) {
+        if (is == null || is.isEmpty()) {
+            return null;
+        }
+        for (MicrochipHandler recipe : recipes) {
+            if (recipe.matchesInput(is)) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    public static void initRecipes() {
+        for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> container :
+                Recipes.GenerationMicrochip.getRecipes().entrySet()) {
+            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
+                    container.getKey().fill1.getInputs().get(0), container.getKey().fill2.getInputs().get(0),
+                    container.getKey().container1.getInputs().get(0),
+                    container.getValue().items.get(0), container.getValue().metadata.getShort("temperature")
+            );
+
+        }
+    }
+
+    private static ItemStack is(Item item) { // Побочный метод.
+        return new ItemStack(item);
+    }
+
+    private static ItemStack is(Block block) { // Побочный метод.
+        return new ItemStack(block);
     }
 
     public short getTemperature() { // Получатель входного предмета рецепта.
@@ -69,53 +110,9 @@ public class MicrochipHandler {
         return output.copy();
     }
 
-    public static MicrochipHandler addRecipe(
-            ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack input4, ItemStack output, short temperature
-    ) {
-        MicrochipHandler recipe = new MicrochipHandler(input, input1, input2, input3, input4, output, temperature);
-        if (recipes.contains(recipe)) {
-            return null;
-        }
-        recipes.add(recipe);
-        return recipe;
-    }
-
-    public static MicrochipHandler getRecipe(ItemStack is) {
-        if (is == null || is.isEmpty()) {
-            return null;
-        }
-        for (MicrochipHandler recipe : recipes) {
-            if (recipe.matchesInput(is)) {
-                return recipe;
-            }
-        }
-        return null;
-    }
-
     public boolean matchesInput(ItemStack is) {
         return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3) || is.isItemEqual(
                 input4);
-    }
-
-    public static void initRecipes() {
-        for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> container :
-                Recipes.GenerationMicrochip.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getKey().fill1.getInputs().get(0), container.getKey().fill2.getInputs().get(0),
-                    container.getKey().container1.getInputs().get(0),
-                    container.getValue().items.get(0), container.getValue().metadata.getShort("temperature")
-            );
-
-        }
-    }
-
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
     }
 
 }

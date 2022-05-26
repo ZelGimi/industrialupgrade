@@ -3,17 +3,23 @@ package com.denfop.items.modules;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.utils.EnumInfoUpgradeModules;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 
 public class UpgradeModule extends ItemMulti<UpgradeModule.Types> implements IModelRegister {
@@ -25,6 +31,23 @@ public class UpgradeModule extends ItemMulti<UpgradeModule.Types> implements IMo
         this.setCreativeTab(IUCore.tabssp1);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    public static EnumInfoUpgradeModules getType(int meta) {
+        return EnumInfoUpgradeModules.getFromID(meta);
+
+    }
+
+    @Override
+    public void addInformation(
+            final ItemStack stack,
+            @Nullable final World worldIn,
+            final List<String> tooltip,
+            final ITooltipFlag flagIn
+    ) {
+        tooltip.add(new UpgradeItemInform(getType(stack.getItemDamage()), 1).getName());
+
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     @Override
@@ -43,64 +66,6 @@ public class UpgradeModule extends ItemMulti<UpgradeModule.Types> implements IMo
                 meta,
                 new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
         );
-    }
-
-    public static EnumInfoUpgradeModules getType(int meta) {
-        switch (meta) {
-            case 0:
-                return EnumInfoUpgradeModules.GENDAY;
-            case 1:
-                return EnumInfoUpgradeModules.GENNIGHT;
-            case 2:
-                return EnumInfoUpgradeModules.PROTECTION;
-            case 3:
-                return EnumInfoUpgradeModules.EFFICIENCY;
-            case 4:
-                return EnumInfoUpgradeModules.BOWENERGY;
-            case 5:
-                return EnumInfoUpgradeModules.SABERENERGY;
-            case 6:
-                return EnumInfoUpgradeModules.DIG_DEPTH;
-            case 7:
-                return EnumInfoUpgradeModules.FIRE_PROTECTION;
-            case 8:
-                return EnumInfoUpgradeModules.WATER;
-            case 9:
-                return EnumInfoUpgradeModules.SPEED;
-            case 10:
-                return EnumInfoUpgradeModules.JUMP;
-            case 11:
-                return EnumInfoUpgradeModules.BOWDAMAGE;
-            case 12:
-                return EnumInfoUpgradeModules.SABER_DAMAGE;
-            case 13:
-                return EnumInfoUpgradeModules.AOE_DIG;
-            case 14:
-                return EnumInfoUpgradeModules.FLYSPEED;
-            case 15:
-                return EnumInfoUpgradeModules.STORAGE;
-            case 16:
-                return EnumInfoUpgradeModules.ENERGY;
-            case 17:
-                return EnumInfoUpgradeModules.VAMPIRES;
-            case 18:
-                return EnumInfoUpgradeModules.RESISTANCE;
-            case 19:
-                return EnumInfoUpgradeModules.POISON;
-            case 20:
-                return EnumInfoUpgradeModules.WITHER;
-            case 21:
-                return EnumInfoUpgradeModules.SILK_TOUCH;
-            case 22:
-                return EnumInfoUpgradeModules.INVISIBILITY;
-            case 23:
-                return EnumInfoUpgradeModules.LOOT;
-            case 24:
-                return EnumInfoUpgradeModules.FIRE;
-            case 25:
-                return EnumInfoUpgradeModules.REPAIRED;
-        }
-        return null;
     }
 
     public enum Types implements IIdProvider {
@@ -130,6 +95,20 @@ public class UpgradeModule extends ItemMulti<UpgradeModule.Types> implements IMo
         upgrademodule23(23),
         upgrademodule24(24),
         upgrademodule25(25),
+        upgrademodule26(26),
+        upgrademodule27(27),
+        upgrademodule28(28),
+        upgrademodule29(29),
+        upgrademodule30(30),
+        upgrademodule31(31),
+        upgrademodule32(32),
+        upgrademodule33(33),
+        upgrademodule34(34),
+        upgrademodule35(35),
+        upgrademodule36(36),
+        upgrademodule37(37),
+        upgrademodule38(38),
+        upgrademodule39(39),
         ;
 
         private final String name;

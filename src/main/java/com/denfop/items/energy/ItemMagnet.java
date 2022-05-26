@@ -10,7 +10,6 @@ import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -42,6 +41,21 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
         this.name = name;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("energy").append("/").append(name);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void registerModel(Item item, int meta, String name, String extraName) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
     @Override
     public void registerModels() {
         registerModels(this.name);
@@ -60,21 +74,6 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name, String extraName) {
         registerModel(this, meta, name, extraName);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy").append("/").append(name);
-
-        return new ModelResourceLocation(loc.toString(), null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
     @Override
@@ -99,7 +98,7 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
                             if (mode == 1) {
                                 if (player.inventory.addItemStackToInventory(stack)) {
 
-                                    ElectricItem.manager.use(itemStack, 500, (EntityLivingBase) p_77663_3_);
+                                    ElectricItem.manager.use(itemStack, 500, null);
                                     player.inventoryContainer.detectAndSendChanges();
                                 } else {
                                     boolean xcoord = item.posX + 2 >= p_77663_3_.posX && item.posX - 2 <= p_77663_3_.posX;

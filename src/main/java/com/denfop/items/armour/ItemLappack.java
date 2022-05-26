@@ -77,6 +77,25 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("armour").append("/").append(name + extraName);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    public static int readToolMode(ItemStack itemstack) {
+        NBTTagCompound nbttagcompound = ModUtils.nbt(itemstack);
+        int toolMode = nbttagcompound.getInteger("toolMode");
+        if (toolMode < 0 || toolMode > 1) {
+            toolMode = 0;
+        }
+        return toolMode;
+    }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
@@ -105,16 +124,6 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
     }
 
     @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
-    }
-
-    @SideOnly(Side.CLIENT)
     public void registerModels(final String name) {
         ModelLoader.setCustomMeshDefinition(this, stack -> {
             final NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -137,15 +146,6 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
 
         return Constants.TEXTURES + ":textures/armor/" + this.name + ".png";
-    }
-
-    public static int readToolMode(ItemStack itemstack) {
-        NBTTagCompound nbttagcompound = ModUtils.nbt(itemstack);
-        int toolMode = nbttagcompound.getInteger("toolMode");
-        if (toolMode < 0 || toolMode > 1) {
-            toolMode = 0;
-        }
-        return toolMode;
     }
 
     public ISpecialArmor.ArmorProperties getProperties(

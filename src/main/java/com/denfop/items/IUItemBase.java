@@ -21,10 +21,6 @@ public class IUItemBase extends ItemIC2 implements IModelRegister {
         this(name, "");
     }
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4) + ".name";
-    }
-
     public IUItemBase(String name, String path) {
         super(null);
         this.setCreativeTab(IUCore.ItemTab);
@@ -35,6 +31,10 @@ public class IUItemBase extends ItemIC2 implements IModelRegister {
         setUnlocalizedName(name);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    public String getUnlocalizedName() {
+        return "iu." + super.getUnlocalizedName().substring(4) + ".name";
     }
 
     @Override

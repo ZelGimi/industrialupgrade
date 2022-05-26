@@ -14,8 +14,17 @@ import java.util.Map;
 
 public class AdvAlloySmelterHandler {
 
-    private static final List<AdvAlloySmelterHandler> recipes = new ArrayList<>();
+    public static final List<AdvAlloySmelterHandler> recipes = new ArrayList<>();
+    public final ItemStack input, input1, input2, output;
+    public final short temperature;
 
+    public AdvAlloySmelterHandler(ItemStack input, ItemStack input1, ItemStack input2, ItemStack output, final short temperature) {
+        this.input = input;
+        this.input1 = input1;
+        this.input2 = input2;
+        this.output = output;
+        this.temperature=temperature;
+    }
 
     public static List<AdvAlloySmelterHandler> getRecipes() { // Получатель всех рецептов.
         if (recipes.isEmpty()) {
@@ -24,34 +33,14 @@ public class AdvAlloySmelterHandler {
         return recipes;
     }
 
-    private final ItemStack input, input1, input2, output;
-
-
-    public AdvAlloySmelterHandler(ItemStack input, ItemStack input1, ItemStack input2, ItemStack output) {
-        this.input = input;
-        this.input1 = input1;
-        this.input2 = input2;
-        this.output = output;
-    }
-
-    public ItemStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public ItemStack getInput1() { // Получатель входного предмета рецепта.
-        return input1;
-    }
-
-    public ItemStack getInput2() { // Получатель входного предмета рецепта.
-        return input2;
-    }
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
-    }
-
-    public static AdvAlloySmelterHandler addRecipe(ItemStack input, ItemStack input1, ItemStack input2, ItemStack output) {
-        AdvAlloySmelterHandler recipe = new AdvAlloySmelterHandler(input, input1, input2, output);
+    public static AdvAlloySmelterHandler addRecipe(
+            ItemStack input,
+            ItemStack input1,
+            ItemStack input2,
+            ItemStack output,
+            final short temperature
+    ) {
+        AdvAlloySmelterHandler recipe = new AdvAlloySmelterHandler(input, input1, input2, output,temperature);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -71,16 +60,12 @@ public class AdvAlloySmelterHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2);
-    }
-
     public static void initRecipes() {
         for (Map.Entry<ITripleMachineRecipeManager.Input, RecipeOutput> container :
                 Recipes.Alloyadvsmelter.getRecipes().entrySet()) {
             addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
                     container.getKey().fill1.getInputs().get(0),
-                    container.getValue().items.get(0)
+                    container.getValue().items.get(0),container.getValue().metadata.getShort("temperature")
             );
 
         }
@@ -92,6 +77,26 @@ public class AdvAlloySmelterHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public ItemStack getInput1() { // Получатель входного предмета рецепта.
+        return input1;
+    }
+
+    public ItemStack getInput2() { // Получатель входного предмета рецепта.
+        return input2;
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2);
     }
 
 }

@@ -27,20 +27,14 @@ import java.util.Set;
 public abstract class TileMatterGenerator extends TileEntityInventory implements IHasGui,
         IUpgradableBlock {
 
-    private final Energy energy;
-    private double progress;
-
-    public AudioSource audioSource;
-
-
     public final InvSlotOutput outputSlot;
-
     public final ItemStack itemstack;
-
     public final InvSlotUpgrade upgradeSlot;
-
+    private final Energy energy;
     private final int defaultTier;
     private final String name;
+    public AudioSource audioSource;
+    private double progress;
 
     public TileMatterGenerator(ItemStack itemstack, String name) {
         this.itemstack = itemstack;
@@ -67,17 +61,6 @@ public abstract class TileMatterGenerator extends TileEntityInventory implements
 
     protected void initiate(int soundEvent) {
         IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
-    }
-
-    protected void onLoaded() {
-        super.onLoaded();
-
-
-    }
-
-    protected void onUnloaded() {
-
-
     }
 
 

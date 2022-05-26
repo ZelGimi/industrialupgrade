@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:baseore",
+      "data": 9
+    },
+    "title": {
+      "translate": "achievement.chromeore"
+    },
+    "description": {
+      "translate": "achievement.chromeore.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/root",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:baseore",
+            "data": 9
+          }
+        ]
+      }
+    }
+  }
+}

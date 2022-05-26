@@ -16,10 +16,13 @@ import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
+import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +43,10 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         ITransformerUpgrade, IItemHudInfo {
 
     protected static final String NAME = "upgrades";
+    private static final List<StackUtil.AdjacentInv> emptyInvList = Collections.emptyList();
+    private static final DecimalFormat decimalformat = new DecimalFormat("0.##");
     private final List<String> itemNames;
+
 
     public ItemUpgradeModule() {
         super(null, Types.class);
@@ -54,13 +61,34 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         IUCore.proxy.addIModelRegister(this);
     }
 
+    private static List<StackUtil.AdjacentInv> getTargetInventories(ItemStack stack, TileEntity parent) {
+        EnumFacing dir = getDirection(stack);
+        if (dir == null) {
+            return StackUtil.getAdjacentInventories(parent);
+        } else {
+            StackUtil.AdjacentInv inv = StackUtil.getAdjacentInventory(parent, dir);
+            return inv == null ? emptyInvList : Collections.singletonList(inv);
+        }
+    }
+
+    private static EnumFacing getDirection(ItemStack stack) {
+        int rawDir = StackUtil.getOrCreateNbtData(stack).getByte("dir");
+        return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
+    }
+
+    public static Type getType(int meta) {
+        if (meta < 0 || meta >= Type.Values.length) {
+            return null;
+        }
+        return Type.Values[meta];
+    }
+
     public void addItemsNames() {
         this.itemNames.add("overclockerUpgrade1");
         this.itemNames.add("overclockerUpgrade2");
         this.itemNames.add("transformerUpgrade1");
         this.itemNames.add("transformerUpgrade2");
     }
-
 
     @Override
     public List<String> getHudInfo(final ItemStack itemStack, final boolean b) {
@@ -92,6 +120,8 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
     public boolean onTick(final ItemStack stack, final IUpgradableBlock types) {
 
         return false;
+
+
     }
 
     @Override
@@ -160,8 +190,6 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         return 1.0D;
     }
 
-    private static final DecimalFormat decimalformat = new DecimalFormat("0.##");
-
     @Override
     public void addInformation(
             final ItemStack stack,
@@ -199,23 +227,6 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         }
     }
 
-    private enum Type {
-        Overclocker1,
-        Overclocker2,
-        transformer,
-        transformer1;
-
-        public static final Type[] Values = values();
-
-    }
-
-    public static Type getType(int meta) {
-        if (meta < 0 || meta >= Type.Values.length) {
-            return null;
-        }
-        return Type.Values[meta];
-    }
-
     @Override
     public void registerModels() {
         registerModels(null);
@@ -232,6 +243,16 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
                 meta,
                 new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
         );
+    }
+
+    private enum Type {
+        Overclocker1,
+        Overclocker2,
+        transformer,
+        transformer1;
+
+        public static final Type[] Values = values();
+
     }
 
     public enum Types implements IIdProvider {

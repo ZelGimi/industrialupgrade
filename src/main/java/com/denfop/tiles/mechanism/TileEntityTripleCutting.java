@@ -27,6 +27,9 @@ public class TileEntityTripleCutting extends TileEntityMultiMachine {
         return Localization.translate("iu.blockCutting2.name");
     }
 
+    public String getStartSoundFile() {
+        return "Machines/cutter.ogg";
+    }
 
     public String getInterruptSoundFile() {
         return "Machines/InterruptOne.ogg";

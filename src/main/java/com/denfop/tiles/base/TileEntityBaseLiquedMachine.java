@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.blocks.FluidName;
 import com.denfop.invslot.InvSlotConsumableLiquidByListRemake;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
@@ -10,6 +11,7 @@ import ic2.core.block.invslot.InvSlotConsumableLiquid;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByTank;
 import ic2.core.block.invslot.InvSlotUpgrade;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -42,10 +44,22 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         this.fill = fill;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluid = name1;
+        this.tier=tier;
         for (int i = 0; i < fluidTank.length; i++) {
-            this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 8000,
-                    Fluids.fluidPredicate(name1[i])
+
+            this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 8000, i == 0 ? InvSlot.Access.I : InvSlot.Access.O,
+                    InvSlot.InvSide.ANY,
+                    i == 0 && name1[i].getName().equals(FluidName.fluidneft.getInstance().getName())
+                            ? Fluids.fluidPredicate(name1[i],
+                            FluidRegistry.getFluid("oil_heavy"), FluidRegistry.getFluid("oil_heavy_heat_1"),
+                            FluidRegistry.getFluid("oil_heavy_heat_2"), FluidRegistry.getFluid("oil_heat_2"),
+                            FluidRegistry.getFluid("oil_heat_1"), FluidRegistry.getFluid("oil"),
+                            FluidRegistry.getFluid("fluid_cride_oil"), FluidRegistry.getFluid("refined_oil")
+                    )
+                            :
+                                    Fluids.fluidPredicate(name1[i])
             );
+
         }
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
         Fluid[] fluid = getFluids(drain, name1);
@@ -56,11 +70,10 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
                     InvSlotConsumableLiquid.OpType.Fill, fluid[i]
             );
         }
-        fluid = getFluidsFill(fill, name1);
-        this.fluidSlot = new InvSlotConsumableLiquidByTank[fluid.length];
+        this.fluidSlot = new InvSlotConsumableLiquidByTank[1];
         for (int i = 0; i < fluidSlot.length; i++) {
             this.fluidSlot[i] = new InvSlotConsumableLiquidByTank(this, "fluidSlot" + i, InvSlot.Access.I, 1, InvSlot.InvSide.ANY,
-                    InvSlotConsumableLiquid.OpType.Drain, getTank(this.fluidTank, fluid[i], name1)
+                    InvSlotConsumableLiquid.OpType.Drain, this.fluidTank[0]
             );
 
 
@@ -68,15 +81,6 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
     }
 
-    public FluidTank getTank(FluidTank[] tanks, Fluid fluid, Fluid[] fluidlist) {
-        for (int i = 0; i < fluidlist.length; i++) {
-            if (fluidlist[i].equals(fluid)) {
-                return tanks[i];
-            }
-        }
-
-        return null;
-    }
 
     public FluidTank getFluidTank(int num) {
         return this.fluidTank[num];
@@ -143,6 +147,8 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
             if (!tank.equals(fluidTank[0])) {
                 for (InvSlotConsumableLiquidByListRemake slot : this.containerslot) {
                     needsInvUpdate |= slot.processFromTank(tank, this.outputSlot);
+                    IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+
                 }
             }
         }
@@ -151,8 +157,12 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         }
         for (final InvSlotConsumableLiquidByTank itemStacks : fluidSlot) {
             for (final FluidTank tank : fluidTank) {
-                if (itemStacks.processIntoTank(tank, this.outputSlot)) {
-                    this.markDirty();
+                if (tank.equals(fluidTank[0])) {
+                    if (itemStacks.processIntoTank(tank, this.outputSlot)) {
+                        this.markDirty();
+                        IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+
+                    }
                 }
             }
         }
@@ -168,7 +178,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
     public void setUpgradestat() {
         this.upgradeSlot.onChanged();
-        this.energy.setSinkTier(1 + this.upgradeSlot.extraTier);
+        this.energy.setSinkTier(this.tier + this.upgradeSlot.extraTier);
     }
 
 
@@ -196,7 +206,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     @Nullable
     @Override
     public FluidStack drain(final FluidStack resource, final boolean doDrain) {
-        for (int i = 0; i < fluidTank.length; i++) {
+        for (int i = 1; i < fluidTank.length; i++) {
             if (resource != null && resource.isFluidEqual(fluidTank[i].getFluid()) && this.drain[i] && fluidTank[i].getFluidAmount() > 0) {
                 return fluidTank[i].drain(resource.amount, doDrain);
             }
@@ -208,7 +218,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     @Nullable
     @Override
     public FluidStack drain(final int maxDrain, final boolean doDrain) {
-        for (int i = 0; i < fluidTank.length; i++) {
+        for (int i = 1; i < fluidTank.length; i++) {
             if (this.drain[i] && fluidTank[i].getFluidAmount() > 0) {
                 return fluidTank[i].drain(maxDrain, doDrain);
             }

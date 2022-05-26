@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:machines",
+      "data": 7
+    },
+    "title": {
+      "translate": "achievement.dif_panel"
+    },
+    "description": {
+      "translate": "achievement.dif_panel.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/dif_core",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:machines",
+            "data": 7
+          }
+        ]
+      }
+    }
+  }
+}

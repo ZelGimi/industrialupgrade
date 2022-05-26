@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,10 +48,10 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
 
     @Override
     public void addInformation(
-            final ItemStack p_77624_1_,
+            @Nonnull final ItemStack p_77624_1_,
             @Nullable final World p_77624_2_,
             final List<String> p_77624_3_,
-            final ITooltipFlag p_77624_4_
+            @Nonnull final ITooltipFlag p_77624_4_
     ) {
         p_77624_3_.add(Localization.translate("waring_kit"));
         super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
@@ -62,15 +63,16 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
         registerModels(null);
     }
 
+    @Nonnull
     public EnumActionResult onItemUseFirst(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumFacing side,
+            @Nonnull EntityPlayer player,
+            @Nonnull World world,
+            @Nonnull BlockPos pos,
+            @Nonnull EnumFacing side,
             float hitX,
             float hitY,
             float hitZ,
-            EnumHand hand
+            @Nonnull EnumHand hand
     ) {
         if (IC2.platform.isSimulating()) {
             ItemStack stack = player.getHeldItem(hand);
@@ -80,13 +82,14 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
 
             if (tileEntity instanceof TileEntityElectricBlock) {
                 TileEntityElectricBlock tile = (TileEntityElectricBlock) tileEntity;
-                final EnumElectricBlock enumblock = tile.getElectricBlock();
+                final EnumElectricBlock enumblock = TileEntityElectricBlock.getElectricBlock();
                 if (enumblock != null && enumblock.kit_meta == meta) {
                     ItemStack stack1;
-                    if (tile.getElectricBlock().chargepad)
-                        stack1 = new ItemStack(IUItem.Chargepadelectricblock, 1, tile.getElectricBlock().meta);
-                    else
-                        stack1 = new ItemStack(IUItem.electricblock, 1, tile.getElectricBlock().meta);
+                    if (tile.getElectricBlock().chargepad) {
+                        stack1 = new ItemStack(IUItem.Chargepadelectricblock, 1, TileEntityElectricBlock.getElectricBlock().meta);
+                    } else {
+                        stack1 = new ItemStack(IUItem.electricblock, 1, TileEntityElectricBlock.getElectricBlock().meta);
+                    }
                     final NBTTagCompound nbt = ModUtils.nbt(stack1);
                     nbt.setDouble("energy", tile.energy.getEnergy());
                     nbt.setDouble("energy2", tile.energy2);
@@ -102,6 +105,20 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
                         world.spawnEntity(item);
 
                     }
+                    List<ItemStack> list = tile.getDrop();
+                    EntityItem[] item1 = new EntityItem[list.size()];
+
+                    for (ItemStack stack2 : list) {
+                        item1[list.indexOf(stack2)] = new EntityItem(world);
+                        item1[list.indexOf(stack2)].setItem(stack2);
+
+                        if (!player.getEntityWorld().isRemote) {
+                            item1[list.indexOf(stack2)].setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                            item1[list.indexOf(stack2)].setPickupDelay(0);
+                            world.spawnEntity(item1[list.indexOf(stack2)]);
+                        }
+                    }
+
                     stack.setCount(stack.getCount() - 1);
 
                 }

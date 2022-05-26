@@ -27,6 +27,9 @@ public class TileEntityDoubleExtruding extends TileEntityMultiMachine {
         return Localization.translate("iu.blockExtruding1.name");
     }
 
+    public String getStartSoundFile() {
+        return "Machines/extruder.ogg";
+    }
 
     public String getInterruptSoundFile() {
         return "Machines/InterruptOne.ogg";

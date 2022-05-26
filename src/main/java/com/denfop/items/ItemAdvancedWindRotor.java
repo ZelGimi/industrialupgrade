@@ -47,21 +47,6 @@ public class ItemAdvancedWindRotor extends ItemGradualInt implements IKineticRot
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name);
-    }
-
-    @SideOnly(Side.CLIENT)
     public static void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
@@ -74,6 +59,21 @@ public class ItemAdvancedWindRotor extends ItemGradualInt implements IKineticRot
 
         loc.append("rotor").append("/").append(name);
         return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name) {
+        registerModel(this, meta, name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name, String extraName) {
+        registerModel(this, meta, name);
     }
 
     @SideOnly(Side.CLIENT)

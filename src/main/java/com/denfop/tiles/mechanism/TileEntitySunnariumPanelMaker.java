@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -27,36 +28,6 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
 
     public TileEntitySunnariumPanelMaker() {
         super(1, 300, 1, Localization.translate("iu.SunnariumPanelMaker.name"), EnumDoubleElectricMachine.SUNNARIUM_PANEL);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    protected boolean isNormalCube() {
-        return false;
-    }
-
-    protected boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    @Override
-    public void onNetworkUpdate(String field) {
-
-    }
-
-    protected boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    protected boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
     }
 
     public static void init() {
@@ -146,6 +117,35 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
         }
     }
 
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.sunnariummaker);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+        return false;
+    }
+
+    protected boolean isNormalCube() {
+        return false;
+    }
+
+    protected boolean doesSideBlockRendering(EnumFacing side) {
+        return false;
+    }
+
+    protected boolean isSideSolid(EnumFacing side) {
+        return false;
+    }
+
+    protected boolean clientNeedsExtraModelInfo() {
+        return true;
+    }
+
+    public boolean shouldRenderInPass(int pass) {
+        return true;
+    }
 
     public String getInventoryName() {
 

@@ -5,12 +5,9 @@ import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.integration.avaritia.AvaritiaIntegration;
 import com.denfop.integration.botania.BotaniaIntegration;
-import com.denfop.integration.compactsolar.CompactSolarIntegration;
 import com.denfop.integration.de.DraconicIntegration;
 import com.denfop.integration.thaumcraft.ThaumcraftIntegration;
-import com.denfop.integration.wireless.WirelessIntegration;
 import net.minecraft.block.Block;
-import net.minecraftforge.fml.common.Loader;
 
 public enum EnumSolarPanels {
 
@@ -371,8 +368,7 @@ public enum EnumSolarPanels {
 
     LV_SOLAR_PANEL(
             null,
-            Loader.isModLoaded("compactsolars") ? CompactSolarIntegration.solar : null,
-            0,
+            null, 0,
             null,
             "tile.compactsolars:low_voltage_block",
             1,
@@ -384,13 +380,13 @@ public enum EnumSolarPanels {
             "lv_model",
             false
     ),
-    HV_SOLAR_PANEL(LV_SOLAR_PANEL, Loader.isModLoaded("compactsolars") ? CompactSolarIntegration.solar : null, 1, null, "tile" +
+    HV_SOLAR_PANEL(LV_SOLAR_PANEL, null, 1, null, "tile" +
             ".compactsolars:medium_voltage_block", 2, 64, 256, 64, false, "compact", "mv_model", false),
-    MV_SOLAR_PANEL(HV_SOLAR_PANEL, Loader.isModLoaded("compactsolars") ? CompactSolarIntegration.solar : null, 2, null, "tile" +
+    MV_SOLAR_PANEL(HV_SOLAR_PANEL, null, 2, null, "tile" +
             ".compactsolars:high_voltage_block", 3, 512, 1024, 512, false, "compact", "hv_model", false),
     ADVANCED_SOLAR_PANEL_W(
             null,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
+            null,
             0,
             null,
             "wirelesstools.machines.advanced_solar_panel_personal",
@@ -405,8 +401,7 @@ public enum EnumSolarPanels {
     ),
     HYBRID_SOLAR_PANEL_W(
             ADVANCED_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.hybrid_solar_panel_personal",
             2,
@@ -420,8 +415,7 @@ public enum EnumSolarPanels {
     ),
     PERFECT_SOLAR_PANEL_W(
             HYBRID_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.ultimate_solar_panel_personal",
             3,
@@ -435,8 +429,7 @@ public enum EnumSolarPanels {
     ),
     QUANTUM_SOLAR_PANEL_W(
             PERFECT_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.quantum_solar_panel_personal",
             4,
@@ -450,8 +443,7 @@ public enum EnumSolarPanels {
     ),
     SPECTRAL_SOLAR_PANEL_W(
             QUANTUM_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.spectral_solar_panel_personal",
             5,
@@ -465,8 +457,7 @@ public enum EnumSolarPanels {
     ),
     PROTON_SOLAR_PANEL_W(
             SPECTRAL_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.proton_solar_panel_personal",
             6,
@@ -480,8 +471,7 @@ public enum EnumSolarPanels {
     ),
     SINGULAR_SOLAR_PANEL_W(
             PROTON_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.singular_solar_panel_personal",
             7,
@@ -495,8 +485,7 @@ public enum EnumSolarPanels {
     ),
     DIFFRACTION_SOLAR_PANEL_W(
             SINGULAR_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.absorbing_solar_panel_personal",
             8,
@@ -510,8 +499,7 @@ public enum EnumSolarPanels {
     ),
     PHOTONIC_SOLAR_PANEL_W(
             DIFFRACTION_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.photonic_solar_panel_personal",
             9,
@@ -525,8 +513,7 @@ public enum EnumSolarPanels {
     ),
     NEUTRONIUN_SOLAR_PANEL_W(
             PHOTONIC_SOLAR_PANEL_W,
-            Loader.isModLoaded("wirelesstools") ? WirelessIntegration.panel : null,
-            0,
+            null, 0,
             null,
             "wirelesstools.machines.neutron_solar_panel_personal",
             10,

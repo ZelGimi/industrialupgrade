@@ -3,6 +3,7 @@ package com.denfop.api;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public interface ITripleMachineRecipeManager {
      * @param fill      Item to fill into the container
      * @param output    Filled container
      */
-    void addRecipe(IRecipeInput container, IRecipeInput fill, IRecipeInput fill1, ItemStack output);
+    void addRecipe(IRecipeInput container, IRecipeInput fill, IRecipeInput fill1, ItemStack output, NBTTagCompound tag);
 
     /**
      * Gets the recipe output for the given input.

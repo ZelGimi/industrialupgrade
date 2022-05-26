@@ -17,8 +17,8 @@ import java.io.IOException;
 @SideOnly(Side.CLIENT)
 public class GuiTransformer extends GuiIC2<ContainerTransformer> {
 
-    public String[] mode = new String[]{"", "", "", ""};
     private static final ResourceLocation background = new ResourceLocation("ic2", "textures/gui/GUITransfomer.png");
+    public String[] mode = new String[]{"", "", "", ""};
 
     public GuiTransformer(ContainerTransformer container) {
         super(container, 219);

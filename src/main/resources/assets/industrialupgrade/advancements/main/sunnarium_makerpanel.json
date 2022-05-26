@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:sunnarium_maker_plate_item"
+    },
+    "title": {
+      "translate": "achievement.sunnarium_makerpanel"
+    },
+    "description": {
+      "translate": "achievement.sunnarium_makerpanel.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/sunnarium_enrich",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:sunnarium_maker_plate_item"
+          }
+        ]
+      }
+    }
+  }
+}

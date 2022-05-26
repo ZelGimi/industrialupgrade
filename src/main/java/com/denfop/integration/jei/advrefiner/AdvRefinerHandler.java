@@ -16,17 +16,7 @@ public class AdvRefinerHandler {
 
     private static final List<AdvRefinerHandler> recipes = new ArrayList<>();
     private final FluidStack output1;
-
-
-    public static List<AdvRefinerHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final FluidStack input, output;
-
 
     public AdvRefinerHandler(
             FluidStack input, FluidStack output,
@@ -37,17 +27,11 @@ public class AdvRefinerHandler {
         this.output = output;
     }
 
-
-    public FluidStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public FluidStack getOutput() { // Получатель входного предмета рецепта.
-        return output;
-    }
-
-    public FluidStack getOutput1() { // Получатель выходного предмета рецепта.
-        return output1;
+    public static List<AdvRefinerHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static AdvRefinerHandler addRecipe(
@@ -69,7 +53,6 @@ public class AdvRefinerHandler {
         return recipes.get(0);
     }
 
-
     public static void initRecipes() {
         for (Map.Entry<IFluidRecipeManager.Input, FluidStack[]> container :
                 Recipes.oiladvrefiner.getRecipes().entrySet()) {
@@ -87,6 +70,18 @@ public class AdvRefinerHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public FluidStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public FluidStack getOutput() { // Получатель входного предмета рецепта.
+        return output;
+    }
+
+    public FluidStack getOutput1() { // Получатель выходного предмета рецепта.
+        return output1;
     }
 
 }

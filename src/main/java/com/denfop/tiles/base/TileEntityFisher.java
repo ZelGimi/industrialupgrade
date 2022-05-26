@@ -30,13 +30,24 @@ import java.util.concurrent.atomic.AtomicLong;
 public class TileEntityFisher extends TileEntityElectricMachine
         implements IHasGui, INetworkTileEntityEventListener {
 
-    private boolean checkwater;
-    public int progress;
-    public final int energyconsume;
-    protected Random _rand = null;
-    public final InvSlotFisher inputslot;
-    protected float _next = (float) (Double.NaN);
     private static Field _Random_seed = null;
+
+    static {
+        try {
+            Field var0 = Random.class.getDeclaredField("seed");
+            var0.setAccessible(true);
+            _Random_seed = var0;
+        } catch (Throwable ignored) {
+        }
+
+    }
+
+    public final int energyconsume;
+    public final InvSlotFisher inputslot;
+    public int progress;
+    protected Random _rand = null;
+    protected float _next = (float) (Double.NaN);
+    private boolean checkwater;
 
     public TileEntityFisher() {
         super("", 1E4, 14, 9);
@@ -205,15 +216,5 @@ public class TileEntityFisher extends TileEntityElectricMachine
 
 
         }
-    }
-
-    static {
-        try {
-            Field var0 = Random.class.getDeclaredField("seed");
-            var0.setAccessible(true);
-            _Random_seed = var0;
-        } catch (Throwable ignored) {
-        }
-
     }
 }

@@ -15,7 +15,12 @@ import java.util.List;
 public class CuttingHandler {
 
     private static final List<CuttingHandler> recipes = new ArrayList<>();
+    private final ItemStack input, output;
 
+    public CuttingHandler(ItemStack input, ItemStack output) {
+        this.input = input;
+        this.output = output;
+    }
 
     public static List<CuttingHandler> getRecipes() { // Получатель всех рецептов.
         if (recipes.isEmpty()) {
@@ -23,23 +28,6 @@ public class CuttingHandler {
         }
         return recipes;
     }
-
-    private final ItemStack input, output;
-
-
-    public CuttingHandler(ItemStack input, ItemStack output) {
-        this.input = input;
-        this.output = output;
-    }
-
-    public ItemStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
-    }
-
 
     public static CuttingHandler addRecipe(ItemStack input, ItemStack output) {
         CuttingHandler recipe = new CuttingHandler(input, output);
@@ -62,10 +50,6 @@ public class CuttingHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.getItem() == input.getItem();
-    }
-
     public static void initRecipes() {
         for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.metalformerCutting.getRecipes()) {
             addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()).get(0)
@@ -80,6 +64,18 @@ public class CuttingHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.getItem() == input.getItem();
     }
 
 }

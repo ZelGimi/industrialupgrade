@@ -29,7 +29,7 @@ public class InvSlotAnalyzer extends InvSlot {
     public boolean accepts(ItemStack itemStack) {
         if (this.type == 0) {
             for (int i = 0; i < this.size(); i++) {
-                if (this.get(i) != null) {
+                if (!this.get(i).isEmpty()) {
                     if (this.get(i).getItemDamage() == itemStack.getItemDamage() && this
                             .get(i)
                             .getItem() == itemStack.getItem() && (itemStack.getItem() instanceof QuarryModule)) {

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:baseore",
+      "data": 0
+    },
+    "title": {
+      "translate": "achievement.mikhailore"
+    },
+    "description": {
+      "translate": "achievement.mikhailore.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/root",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:baseore",
+            "data": 0
+          }
+        ]
+      }
+    }
+  }
+}

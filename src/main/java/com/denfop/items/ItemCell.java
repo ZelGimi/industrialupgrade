@@ -35,6 +35,51 @@ import java.util.List;
 
 public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
 
+    protected static final String NAME = "itemcell";
+    public static IItemUseHandler emptyCellFill = (stack, player, pos, hand, side) -> {
+        assert stack.getItem() == IUItem.cell_all;
+
+        World world = player.getEntityWorld();
+        RayTraceResult position = Util.traceBlocks(player, true);
+        if (position == null) {
+            return EnumActionResult.FAIL;
+        } else {
+            if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
+                pos = position.getBlockPos();
+                if (!world.canMineBlockBody(player, pos)) {
+                    return EnumActionResult.FAIL;
+                }
+
+                if (!player.canPlayerEdit(pos, position.sideHit, player.getHeldItem(hand))) {
+                    return EnumActionResult.FAIL;
+                }
+
+                LiquidUtil.LiquidData data = LiquidUtil.getLiquid(world, pos);
+                if (data != null && data.isSource) {
+                    if (IUItem.celltype.containsKey(data.liquid) && stack.getItemDamage() != 0) {
+                        if (IUItem.celltype.containsKey(data.liquid) && StackUtil.storeInventoryItem(
+                                new ItemStack(IUItem.cell_all, 1, IUItem.celltype.get(data.liquid)),
+                                player,
+                                true
+                        )) {
+                            world.setBlockToAir(pos);
+                            StackUtil.consumeOrError(player, hand, 1);
+                            StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1, IUItem.celltype.get(data.liquid)),
+                                    player, false
+                            );
+                            return EnumActionResult.SUCCESS;
+                        }
+                    }
+
+
+                }
+
+            }
+
+            return EnumActionResult.PASS;
+        }
+    };
+
     public ItemCell() {
         super(null, CellType.class);
         this.setCreativeTab(IUCore.ItemTab);
@@ -95,51 +140,6 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(4);
     }
-
-    public static IItemUseHandler emptyCellFill = (stack, player, pos, hand, side) -> {
-        assert stack.getItem() == IUItem.cell_all;
-
-        World world = player.getEntityWorld();
-        RayTraceResult position = Util.traceBlocks(player, true);
-        if (position == null) {
-            return EnumActionResult.FAIL;
-        } else {
-            if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
-                pos = position.getBlockPos();
-                if (!world.canMineBlockBody(player, pos)) {
-                    return EnumActionResult.FAIL;
-                }
-
-                if (!player.canPlayerEdit(pos, position.sideHit, player.getHeldItem(hand))) {
-                    return EnumActionResult.FAIL;
-                }
-
-                LiquidUtil.LiquidData data = LiquidUtil.getLiquid(world, pos);
-                if (data != null && data.isSource) {
-                    if (IUItem.celltype.containsKey(data.liquid) && stack.getItemDamage() != 0) {
-                        if (IUItem.celltype.containsKey(data.liquid) && StackUtil.storeInventoryItem(
-                                new ItemStack(IUItem.cell_all, 1, IUItem.celltype.get(data.liquid)),
-                                player,
-                                true
-                        )) {
-                            world.setBlockToAir(pos);
-                            StackUtil.consumeOrError(player, hand, 1);
-                            StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1, IUItem.celltype.get(data.liquid)),
-                                    player, false
-                            );
-                            return EnumActionResult.SUCCESS;
-                        }
-                    }
-
-
-                }
-
-            }
-
-            return EnumActionResult.PASS;
-        }
-    };
-    protected static final String NAME = "itemcell";
 
     public EnumActionResult onItemUseFirst(
             EntityPlayer player,

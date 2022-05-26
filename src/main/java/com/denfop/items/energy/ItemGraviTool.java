@@ -7,6 +7,8 @@ import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.audio.PositionSpec;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.tiles.base.TileEntityDoubleMolecular;
+import com.denfop.tiles.base.TileEntityMolecularTransformer;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.google.common.collect.HashMultimap;
@@ -88,6 +90,51 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
         this.name = name;
     }
 
+    public static boolean hasToolMode(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey("toolMode", 4);
+    }
+
+    public static GraviToolMode readToolMode(ItemStack stack) {
+        return GraviToolMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode"));
+    }
+
+    public static GraviToolMode readNextToolMode(ItemStack stack) {
+        return GraviToolMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode") + 1);
+    }
+
+    public static void saveToolMode(ItemStack stack, ItemGraviTool.GraviToolMode mode) {
+        StackUtil.getOrCreateNbtData(stack).setInteger("toolMode", mode.ordinal());
+    }
+
+    public static boolean hasNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
+        ElectricItem.manager.chargeFromArmor(stack, player);
+        return Util.isSimilar(ElectricItem.manager.discharge(stack, usage, Integer.MAX_VALUE, true, false, true), usage);
+    }
+
+    protected static boolean checkNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
+        return checkNecessaryPower(stack, usage, player, false);
+    }
+
+    protected static boolean checkNecessaryPower(ItemStack stack, double usage, EntityPlayer player, boolean supressSound) {
+        if (ElectricItem.manager.use(stack, usage, player)) {
+            if (!supressSound && player.world.isRemote) {
+                IUCore.audioManager.playOnce(
+                        player,
+                        PositionSpec.Hand,
+                        "Tools/wrench.ogg",
+                        true,
+                        IUCore.audioManager.getDefaultVolume()
+                );
+            }
+
+            return true;
+        }
+
+
+        CommonProxy.sendPlayerMessage(player, Localization.translate("message.text.noenergy"));
+
+        return false;
+    }
 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
@@ -109,23 +156,6 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
     public boolean isFull3D() {
         return true;
     }
-
-    public static boolean hasToolMode(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey("toolMode", 4);
-    }
-
-    public static GraviToolMode readToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode"));
-    }
-
-    public static GraviToolMode readNextToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode") + 1);
-    }
-
-    public static void saveToolMode(ItemStack stack, ItemGraviTool.GraviToolMode mode) {
-        StackUtil.getOrCreateNbtData(stack).setInteger("toolMode", mode.ordinal());
-    }
-
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
@@ -203,57 +233,78 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                 return this.onTreeTapUse(stack, player, world, pos, facing) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
             case PURIFIER:
                 TileEntity tile = world.getTileEntity(pos);
-                if (!(tile instanceof TileEntitySolarPanel) && !(tile instanceof TileEntityMultiMachine)) {
-                    return EnumActionResult.FAIL;
+                final ItemStack itemstack = stack;
+                if (!(tile instanceof TileEntitySolarPanel) && !(tile instanceof TileEntityMultiMachine) && !(tile instanceof TileEntityMolecularTransformer) && !(tile instanceof TileEntityDoubleMolecular)) {
+                    return EnumActionResult.PASS;
                 }
-                if(tile instanceof TileEntitySolarPanel){
-                double energy = 10000;
-                if (((TileEntitySolarPanel) tile).time > 0) {
-                    energy = (double) 10000 / (double) (((TileEntitySolarPanel) tile).time / 20);
-                }
-                if (ElectricItem.manager.canUse(stack, energy)) {
-                    ((TileEntitySolarPanel) tile).time = 28800;
-                    ((TileEntitySolarPanel) tile).time1 = 14400;
-                    ((TileEntitySolarPanel) tile).time2 = 14400;
-                    ElectricItem.manager.use(stack, energy, player);
-                    return EnumActionResult.SUCCESS;
-                }
-                //
-        } else {
-                    if(!ElectricItem.manager.canUse(stack, 500))
+                if (tile instanceof TileEntitySolarPanel) {
+                    TileEntitySolarPanel base = (TileEntitySolarPanel) tile;
+                    double energy = 10000;
+                    if (base.time > 0) {
+                        energy = (double) 10000 / (double) (base.time / 20);
+                    }
+                    if (base.time1 > 0 && base.time <= 0) {
+                        energy += (double) 10000 / (double) (base.time1 / 20);
+                    }
+                    if (base.time2 > 0 && base.time <= 0 && base.time1 <= 0) {
+                        energy += ((double) 10000 / (double) (base.time2 / 20)) + 10000;
+                    }
+                    if (ElectricItem.manager.canUse(itemstack, energy)) {
+                        base.time = 28800;
+                        base.time1 = 14400;
+                        base.time2 = 14400;
+                        base.work = true;
+                        base.work1 = true;
+                        base.work2 = true;
+                        ElectricItem.manager.use(itemstack, 1000, player);
+                        if (IC2.platform.isRendering()) {
+                            IUCore.audioManager.playOnce(
+                                    player,
+                                    com.denfop.audio.PositionSpec.Hand,
+                                    "Tools/purifier.ogg",
+                                    true,
+                                    IC2.audioManager.getDefaultVolume()
+                            );
+                        }
+                        return EnumActionResult.SUCCESS;
+                    }
+                    return super.onItemUseFirst(player, world, pos, facing, hitX, hitY, hitZ, hand);
+                } else if (tile instanceof TileEntityMultiMachine) {
+                    if (!ElectricItem.manager.canUse(itemstack, 500)) {
                         return EnumActionResult.PASS;
+                    }
                     TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
-                    ItemStack stack_rf = null;
-                    ItemStack stack_quickly = null;
-                    ItemStack stack_modulesize = null;
-                    ItemStack panel = null;
-                    if( base.rf)
-                        stack_rf = new ItemStack(IUItem.module7,1,4);
-                    if( base.quickly)
+                    ItemStack stack_rf = ItemStack.EMPTY;
+                    ItemStack stack_quickly = ItemStack.EMPTY;
+                    ItemStack stack_modulesize = ItemStack.EMPTY;
+                    ItemStack panel = ItemStack.EMPTY;
+                    if (base.rf) {
+                        stack_rf = new ItemStack(IUItem.module7, 1, 4);
+                    }
+                    if (base.quickly) {
                         stack_quickly = new ItemStack(IUItem.module_quickly);
-                    if( base.modulesize)
+                    }
+                    if (base.modulesize) {
                         stack_modulesize = new ItemStack(IUItem.module_stack);
-                    if( base.solartype != null)
-                        panel = new ItemStack(IUItem.module6,1,base.solartype.meta);
-                    if(stack_rf != null || stack_quickly != null || stack_modulesize != null || panel != null){
+                    }
+                    if (base.solartype != null) {
+                        panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
+                    }
+                    if (!stack_rf.isEmpty() || !stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
                         final EntityItem item = new EntityItem(world);
-
-                        if(stack_rf != null) {
+                        if (!stack_rf.isEmpty()) {
                             item.setItem(stack_rf);
-                            base.module=0;
+                            base.module--;
                             base.rf = false;
-                        }
-                       else if(stack_quickly != null) {
+                        } else if (!stack_quickly.isEmpty()) {
                             item.setItem(stack_quickly);
-                            base.module=0;
+                            base.module--;
                             base.quickly = false;
-                        }
-                        else  if(stack_modulesize != null) {
+                        } else if (!stack_modulesize.isEmpty()) {
                             item.setItem(stack_modulesize);
                             base.modulesize = false;
-                            base.module=0;
-                        }
-                        else     if(panel != null) {
+                            base.module--;
+                        } else if (!panel.isEmpty()) {
                             item.setItem(panel);
                             base.solartype = null;
                         }
@@ -261,14 +312,77 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                             item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
                             item.setPickupDelay(0);
                             world.spawnEntity(item);
-                            ElectricItem.manager.use(stack, 500,null);
+                            ElectricItem.manager.use(itemstack, 500, null);
+                            if (IC2.platform.isRendering()) {
+                                IUCore.audioManager.playOnce(
+                                        player,
+                                        com.denfop.audio.PositionSpec.Hand,
+                                        "Tools/purifier.ogg",
+                                        true,
+                                        IC2.audioManager.getDefaultVolume()
+                                );
+                            }
                             return EnumActionResult.SUCCESS;
                         }
 
                     }
+                } else if (tile instanceof TileEntityMolecularTransformer) {
+                    TileEntityMolecularTransformer base = (TileEntityMolecularTransformer) tile;
+                    if (!ElectricItem.manager.canUse(itemstack, 500)) {
+                        return EnumActionResult.PASS;
+                    }
+                    if (base.rf) {
+                        final ItemStack stack_rf = new ItemStack(IUItem.module7, 1, 4);
+                        base.rf = false;
+                        final EntityItem item = new EntityItem(world);
+                        item.setItem(stack_rf);
+                        if (!player.getEntityWorld().isRemote) {
+                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                            item.setPickupDelay(0);
+                            world.spawnEntity(item);
+                            ElectricItem.manager.use(itemstack, 500, null);
+                            if (IC2.platform.isRendering()) {
+                                IUCore.audioManager.playOnce(
+                                        player,
+                                        com.denfop.audio.PositionSpec.Hand,
+                                        "Tools/purifier.ogg",
+                                        true,
+                                        IC2.audioManager.getDefaultVolume()
+                                );
+                            }
+                            return EnumActionResult.SUCCESS;
+                        }
+                    }
+                } else {
+                    TileEntityDoubleMolecular base = (TileEntityDoubleMolecular) tile;
+                    if (!ElectricItem.manager.canUse(itemstack, 500)) {
+                        return EnumActionResult.PASS;
+                    }
+                    if (base.rf) {
+                        final ItemStack stack_rf = new ItemStack(IUItem.module7, 1, 4);
+                        base.rf = false;
+                        final EntityItem item = new EntityItem(world);
+                        item.setItem(stack_rf);
+                        if (!player.getEntityWorld().isRemote) {
+                            item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                            item.setPickupDelay(0);
+                            world.spawnEntity(item);
+                            ElectricItem.manager.use(itemstack, 500, null);
+                            if (IC2.platform.isRendering()) {
+                                IUCore.audioManager.playOnce(
+                                        player,
+                                        com.denfop.audio.PositionSpec.Hand,
+                                        "Tools/purifier.ogg",
+                                        true,
+                                        IC2.audioManager.getDefaultVolume()
+                                );
+                            }
+                            return EnumActionResult.SUCCESS;
+                        }
+                    }
                 }
-                //
-                return EnumActionResult.FAIL;
+                return EnumActionResult.PASS;
+
             default:
                 return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
         }
@@ -458,36 +572,6 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
         return false;
     }
 
-    public static boolean hasNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
-        ElectricItem.manager.chargeFromArmor(stack, player);
-        return Util.isSimilar(ElectricItem.manager.discharge(stack, usage, Integer.MAX_VALUE, true, false, true), usage);
-    }
-
-    protected static boolean checkNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
-        return checkNecessaryPower(stack, usage, player, false);
-    }
-
-    protected static boolean checkNecessaryPower(ItemStack stack, double usage, EntityPlayer player, boolean supressSound) {
-        if (ElectricItem.manager.use(stack, usage, player)) {
-            if (!supressSound && player.world.isRemote) {
-                IUCore.audioManager.playOnce(
-                        player,
-                        PositionSpec.Hand,
-                        "Tools/wrench.ogg",
-                        true,
-                        IUCore.audioManager.getDefaultVolume()
-                );
-            }
-
-            return true;
-        }
-
-
-        CommonProxy.sendPlayerMessage(player, Localization.translate("message.text.noenergy"));
-
-        return false;
-    }
-
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
         return false;
@@ -568,13 +652,13 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
         WRENCH(TextFormatting.AQUA),
         SCREWDRIVER(TextFormatting.YELLOW),
         PURIFIER(TextFormatting.DARK_AQUA);
+        private static final ItemGraviTool.GraviToolMode[] VALUES = values();
+        public final String translationName = "iu.graviTool.snap." + this.name().toLowerCase(Locale.ENGLISH);
+        public final TextFormatting colour;
         private final ModelResourceLocation model =
                 new ModelResourceLocation(Constants.MOD_ID + ":" + "gravitool/gravitool".toLowerCase(Locale.ENGLISH) + this
                         .name()
                         .toLowerCase(Locale.ENGLISH), null);
-        public final String translationName = "iu.graviTool.snap." + this.name().toLowerCase(Locale.ENGLISH);
-        public final TextFormatting colour;
-        private static final ItemGraviTool.GraviToolMode[] VALUES = values();
 
         GraviToolMode(TextFormatting colour) {
             this.colour = colour;

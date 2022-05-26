@@ -128,7 +128,8 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                             this.guiLeft + 60, this.guiTop + 25, 4210752
                     );
 
-                    this.fontRenderer.drawString(output + output2.stackSize * size + "x" + output1.items.get(0).getDisplayName(),
+                    this.fontRenderer.drawString(
+                            output + output2.stackSize * size + "x" + output1.items.get(0).getDisplayName(),
                             this.guiLeft + 60,
                             this.guiTop + 25 + 11,
                             4210752

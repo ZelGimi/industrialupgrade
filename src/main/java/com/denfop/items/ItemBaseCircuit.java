@@ -57,6 +57,9 @@ public class ItemBaseCircuit extends ItemMulti<ItemBaseCircuit.Types> implements
         nanocircuit(9),
         quantumcircuit(10),
         spectralcircuit(11),
+        advanced_part1(12),
+        advanced_part2(13),
+        advanced_part3(14),
         ;
 
         private final String name;

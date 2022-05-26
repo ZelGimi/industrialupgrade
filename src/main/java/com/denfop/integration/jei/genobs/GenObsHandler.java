@@ -21,14 +21,6 @@ public class GenObsHandler {
     private final ItemStack output;
 
 
-    public static List<GenObsHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
-
     public GenObsHandler(
             FluidStack input, FluidStack input2, ItemStack output
     ) {
@@ -37,17 +29,11 @@ public class GenObsHandler {
         this.output = output;
     }
 
-
-    public FluidStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public FluidStack getInput1() { // Получатель входного предмета рецепта.
-        return input2;
-    }
-
-    public ItemStack getOutput() { // Получатель входного предмета рецепта.
-        return output;
+    public static List<GenObsHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static GenObsHandler addRecipe(
@@ -71,7 +57,6 @@ public class GenObsHandler {
         return null;
     }
 
-
     public static void initRecipes() {
         for (Map.Entry<IObsidianGenerator.Input, RecipeOutput> container :
                 Recipes.obsidianGenerator.getRecipes().entrySet()) {
@@ -86,6 +71,18 @@ public class GenObsHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public FluidStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public FluidStack getInput1() { // Получатель входного предмета рецепта.
+        return input2;
+    }
+
+    public ItemStack getOutput() { // Получатель входного предмета рецепта.
+        return output;
     }
 
 }

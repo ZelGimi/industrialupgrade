@@ -20,13 +20,23 @@ public enum CableType implements IIdProvider {
 
     ;
 
+    public static final CableType[] values = values();
+    private static final Map<String, CableType> nameMap = new HashMap();
+
+    static {
+        CableType[] var0 = values;
+
+        for (CableType type : var0) {
+            nameMap.put(type.getName(), type);
+        }
+
+    }
+
     public final int maxInsulation;
     public final int minColoredInsulation;
     public final float thickness;
     public final double loss;
     public final double capacity;
-    public static final CableType[] values = values();
-    private static final Map<String, CableType> nameMap = new HashMap();
 
     CableType(int maxInsulation, int minColoredInsulation, float thickness, double loss, double capacity) {
         this.maxInsulation = maxInsulation;
@@ -34,6 +44,10 @@ public enum CableType implements IIdProvider {
         this.thickness = thickness;
         this.loss = loss;
         this.capacity = capacity;
+    }
+
+    public static CableType get(String name) {
+        return nameMap.get(name);
     }
 
     public String getName(int insulation) {
@@ -46,18 +60,5 @@ public enum CableType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
-    }
-
-    public static CableType get(String name) {
-        return nameMap.get(name);
-    }
-
-    static {
-        CableType[] var0 = values;
-
-        for (CableType type : var0) {
-            nameMap.put(type.getName(), type);
-        }
-
     }
 }

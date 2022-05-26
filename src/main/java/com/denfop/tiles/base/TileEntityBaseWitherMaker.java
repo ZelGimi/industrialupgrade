@@ -1,5 +1,7 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
+import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerBaseWitherMaker;
 import com.denfop.invslot.InvSlotProcessableWitherMaker;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -9,7 +11,6 @@ import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
 import ic2.core.block.invslot.InvSlotUpgrade;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
+import java.util.Random;
 
 public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachine
         implements IHasGui, INetworkTileEntityEventListener, IUpgradableBlock {
@@ -83,7 +85,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
     }
@@ -102,32 +104,31 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
             if (!this.inputSlotA.isEmpty()) {
                 for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        if (i != j) {
-                            if (this.inputSlotA.get(i) != null && this.inputSlotA.get(i).getCount() > 1 && (this.inputSlotA
+
+
+                            if (!this.inputSlotA.get(i).isEmpty() && this.inputSlotA.get(i).getCount() > 1 && this.inputSlotA
                                     .get(i)
-                                    .getItem() == Items.SKULL && (this.inputSlotA.get(i).getItemDamage() == 1))) {
+                                    .getItem() == Items.SKULL && this.inputSlotA.get(i).getItemDamage() == 1) {
+                                for (int j = 0; j < 3; j++) {
                                 if (this.inputSlotA.get(j).isEmpty()) {
                                     this.inputSlotA.consume(i, 1);
-                                    ItemStack stack = this.inputSlotA.get(i).copy();
-                                    stack.setCount(1);
+                                    ItemStack stack = new ItemStack(Items.SKULL,1,1);
                                     this.inputSlotA.put(j, stack);
                                 }
                             }
-                        }
+
                     }
                 }
                 for (int i = 3; i < 7; i++) {
                     for (int j = 3; j < 7; j++) {
                         if (i != j) {
-                            if (this.inputSlotA.get(i) != null && this.inputSlotA.get(i).getCount() > 1 && (this.inputSlotA
+                            if (!this.inputSlotA.get(i).isEmpty() && this.inputSlotA.get(i).getCount() > 1 && (this.inputSlotA
                                     .get(i)
                                     .getItem() == Item.getItemFromBlock(Blocks.SOUL_SAND))) {
                                 if (this.inputSlotA.get(j).isEmpty()) {
                                     this.inputSlotA.consume(i, 1);
 
-                                    ItemStack stack = this.inputSlotA.get(i).copy();
-                                    stack.setCount(1);
+                                    ItemStack stack =  new ItemStack(Blocks.SOUL_SAND,1);
                                     this.inputSlotA.put(j, stack);
                                 }
                             }
@@ -146,6 +147,9 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
             double k = this.progress;
 
             this.guiProgress = (k / this.operationLength);
+            if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+                IC2.network.get(true).initiateTileEntityEvent(this, 3, true);
+            }
             if (this.progress >= this.operationLength) {
                 this.guiProgress = 0;
                 operate(output);
@@ -254,11 +258,12 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
 
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
         }
         switch (event) {
             case 0:
                 if (this.audioSource != null) {
+                    this.audioSource.stop();
                     this.audioSource.play();
                 }
                 break;
@@ -266,16 +271,39 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;
             case 2:
                 if (this.audioSource != null) {
                     this.audioSource.stop();
+                    IUCore.audioManager.playOnce(this, getInterruptSoundFile1());
+
+                }
+                break;
+            case 3:
+                if (this.audioSource != null) {
+                    this.audioSource.stop();
+                    final Random rand = this.getWorld().rand;
+                    IUCore.audioManager.playOnce(this, rand.nextInt(2) == 0 ? getInterruptSoundFile2() :
+                            getInterruptSoundFile3());
+
                 }
                 break;
         }
+    }
+
+    public String getInterruptSoundFile1() {
+        return "Machines/WitherDeath1.ogg";
+    }
+
+    public String getInterruptSoundFile2() {
+        return "Machines/WitherHurt3.ogg";
+    }
+
+    public String getInterruptSoundFile3() {
+        return "Machines/WitherIdle1.ogg";
     }
 
 

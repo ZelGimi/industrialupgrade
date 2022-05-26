@@ -39,6 +39,21 @@ public class ItemGradualInt extends ItemIC2 implements ICustomDamageItem, IModel
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void registerModel(Item item, int meta, String name, String extraName) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+
+        loc.append("reactors").append("/").append(name);
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
     @Override
     public void registerModels() {
         registerModels(this.name);
@@ -59,23 +74,8 @@ public class ItemGradualInt extends ItemIC2 implements ICustomDamageItem, IModel
         registerModel(this, meta, name, extraName);
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
-    }
-
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(4);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-
-        loc.append("reactors").append("/").append(name);
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     public boolean showDurabilityBar(ItemStack stack) {

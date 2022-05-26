@@ -56,8 +56,9 @@ public interface IPlasticRecipemanager {
         }
 
         public boolean matches(ItemStack container1, ItemStack fill1, FluidStack fluidStack) {
-            return this.fluidStack.isFluidEqual(fluidStack) && fluidStack != null && this.container.matches(container1) && this.fill.matches(
-                    fill1);
+            return this.fluidStack.isFluidEqual(fluidStack) && fluidStack != null && ((this.container.matches(container1) && this.fill.matches(
+                    fill1)) || (this.fill.matches(container1) && this.container.matches(
+                    fill1)) );
         }
 
         public final IRecipeInput container;

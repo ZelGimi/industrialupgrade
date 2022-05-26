@@ -4,6 +4,7 @@ import com.denfop.Constants;
 import com.denfop.container.ContainerOilRefiner;
 import ic2.core.GuiIC2;
 import ic2.core.gui.TankGauge;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,9 +12,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GUIOilRefiner extends GuiIC2<ContainerOilRefiner> {
 
-    public ContainerOilRefiner container;
-
     private static final ResourceLocation background;
+
+    static {
+        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIOilRefiner1.png");
+    }
+
+    public ContainerOilRefiner container;
 
     public GUIOilRefiner(ContainerOilRefiner container1) {
         super(container1);
@@ -36,7 +41,13 @@ public class GUIOilRefiner extends GuiIC2<ContainerOilRefiner> {
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
+        x -= this.guiLeft;
+        y -= this.guiTop;
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(background);
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+
+
         this.mc.getTextureManager().bindTexture(background);
         int energy = (int) ((this.container.base.energy.getEnergy() / this.container.base.energy.getCapacity()) * 29);
         int xOffset = (this.width - this.xSize) / 2;
@@ -46,11 +57,10 @@ public class GUIOilRefiner extends GuiIC2<ContainerOilRefiner> {
         TankGauge.createNormal(this, 12, 6, container.base.fluidTank[0]).drawBackground(xOffset, yOffset);
         TankGauge.createNormal(this, 74, 6, container.base.fluidTank[1]).drawBackground(xOffset, yOffset);
         TankGauge.createNormal(this, 106, 6, container.base.fluidTank[2]).drawBackground(xOffset, yOffset);
+        if (this.container.base != null) {
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        }
 
-
-    }
-
-    static {
-        background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIOilRefiner1.png");
     }
 }

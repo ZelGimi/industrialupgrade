@@ -17,6 +17,14 @@ public class InvSlotElectrolyzer extends InvSlot {
         this.stackSizeLimit = 1;
     }
 
+    public static boolean isStackEqual(ItemStack stack1, ItemStack stack2) {
+        return stack1 == null && stack2 == null || stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
+    }
+
+    public static boolean isStackEqualStrict(ItemStack stack1, ItemStack stack2) {
+        return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
     public boolean accepts(ItemStack itemStack) {
         if (type == 0) {
             return itemStack.getItem().equals(IUItem.anode);
@@ -37,14 +45,6 @@ public class InvSlotElectrolyzer extends InvSlot {
 
     public void consume(int amount) {
         consume(amount, false, false);
-    }
-
-    public static boolean isStackEqual(ItemStack stack1, ItemStack stack2) {
-        return stack1 == null && stack2 == null || stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
-    }
-
-    public static boolean isStackEqualStrict(ItemStack stack1, ItemStack stack2) {
-        return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
     public void consume(int amount, boolean simulate, boolean consumeContainers) {

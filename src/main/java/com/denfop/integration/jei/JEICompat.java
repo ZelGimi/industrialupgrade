@@ -897,6 +897,7 @@ public final class JEICompat implements IModPlugin {
         this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.double_comb_recycler);
         this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.triple_comb_recycler);
         this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.quad_comb_recycler);
+        //  registry.addIngredientInfo(new ItemStack());
     }
 
     public ItemStack getBlockStack(ITeBlock block) {

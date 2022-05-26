@@ -10,18 +10,11 @@ import java.util.List;
 
 public final class Config {
 
-    private static final String GENERAL = "general";
-    private static final String SOLARS = "solars";
-    private static final String QUANTUM_GENERATOR = "quantum generator";
-    private static final String CRAFTING = "recipes settings";
-    private static final String NEW_LINE;
-    private static final String CONFIG_VERSION = "2.0";
-
-
-    public static boolean HUB;
-    private static final String[] defaultSpawnerList = new String[]{"ExampleMob1", "ExampleMob2", "ExampleMob3 (these examples can be deleted)"};
+    public static final List<String> EntityList = new ArrayList<>();
+    public static final List<Integer> DimensionList = new ArrayList<>();
+    private static final String[] defaultSpawnerList = new String[]{"ExampleMob1", "ExampleMob2", "ExampleMob3 (these examples " +
+            "can be deleted)"};
     public static double SolidMatterStorage;
-    public static boolean EnableNetherOres;
     public static int limit;
     public static int tier;
     public static int coefficientrf;
@@ -49,27 +42,19 @@ public final class Config {
     public static double terasteeloutput;
     public static int terasteeltier;
     public static double chaosgenday;
-    public static double chaosgennight;
     public static double chaosstorage;
     public static double chaosoutput;
     public static int chaostier;
     public static boolean blacklist;
     //
     public static double thaumgenday;
-    public static double thaumgennight;
     public static double thaumstorage;
     public static double thaumoutput;
     public static int thaumtier;
     public static double voidgenday;
-    public static double voidgennight;
     public static double voidstorage;
     public static double voidoutput;
     public static int voidtier;
-    public static double ihorgenday;
-    public static double ihorgennight;
-    public static double ihorstorage;
-    public static double ihoroutput;
-    public static int ihortier;
     //
     public static double NanoHelmet;
     public static double NanoBodyarmor;
@@ -81,27 +66,15 @@ public final class Config {
     public static int awakenedtier;
     public static double awakenedoutput;
     public static double awakenedstorage;
-    public static double awakenedgennight;
     public static double awakenedgenday;
     public static int draconictier;
     public static double draconicoutput;
     public static double draconicstorage;
-    public static double draconicgennight;
     public static double draconicgenday;
     public static int toriyRodCells;
     public static int toriyRodHeat;
     public static float toriyPower;
-    public static File configFile;
     public static boolean registerDraconicPanels;
-    public static boolean registerChaosArmour;
-    public static boolean registerChaosFluxCapacitor;
-    public static boolean registerChaosAxe;
-    public static boolean registerChaosBow;
-    public static boolean registerChaosSword;
-    public static boolean registerChaosShovel;
-    public static boolean registerChaosPickaxe;
-    public static boolean registerChaosDestructionStaff;
-    public static boolean nightvision;
     public static float effPower;
     public static float bigHolePower;
     public static int spectralsaberactive;
@@ -109,7 +82,6 @@ public final class Config {
     public static int Storagequantumsuit;
     public static double neutronpanelGenDay;
     public static double neutronpanelOutput;
-    public static double neutronpanelGenNight;
     public static double neutronpanelStorage;
     public static int Radius3;
     public static int durability3;
@@ -129,7 +101,6 @@ public final class Config {
     public static double protonOutput;
     public static double protonstorage;
     public static double protongenDay;
-    public static double protongennitht;
     public static int adv_enegry;
     public static int adv_storage;
     public static int tier1;
@@ -159,7 +130,6 @@ public final class Config {
     public static int fortunelevel;
     public static boolean enableexlposion;
     public static boolean enableIC2EasyMode;
-    public static boolean EnableEndOres;
     public static boolean EnableToriyOre;
     public static boolean damagecable;
     public static boolean newsystem;
@@ -171,44 +141,33 @@ public final class Config {
     public static int percent_day;
     public static int percent_night;
     public static double spectralpanelGenDay;
-    public static double spectralpanelGenNight;
     public static double singularpanelGenDay;
     public static double singularpanelOutput;
     public static double spectralpanelOutput;
-    public static double singularpanelGenNight;
     public static double adminpanelGenDay;
-    public static double adminpanelGenNight;
     public static double AdminpanelStorage;
     public static double AdminpanelOutput;
     public static double photonicpanelGenDay;
-    public static double photonicpanelGenNight;
     public static double photonicpanelOutput;
     public static double photonicpanelStorage;
     public static int tier_advmfsu;
     public static int tier_ultmfsu;
     public static double singularpanelstorage;
     public static boolean thaumcraft;
-    public static double advGenNight;
     public static double advStorage;
     public static double advOutput;
     public static double hGenDay;
-    public static double hGenNight;
     public static double hStorage;
     public static double hOutput;
     public static double uhGenDay;
-    public static double uhGenNight;
     public static double uhStorage;
     public static double uhOutput;
     public static double qpGenDay;
-    public static double qpGenNight;
     public static double qpStorage;
     public static double qpOutput;
     public static double spectralpanelstorage;
     public static int maxCharge;
     public static int transferLimit;
-    public static boolean EnchantingPlus;
-    public static boolean MineFactory;
-    public static boolean EnableMineFactory;
     public static int Radius;
     public static int durability;
     public static int efficiency;
@@ -236,7 +195,6 @@ public final class Config {
     public static int spectralsabernotactive1;
     public static int maxCharge1;
     public static int transferLimit1;
-
     public static double molecular;
     public static double molecular1;
     public static double molecular2;
@@ -275,7 +233,6 @@ public final class Config {
     public static double molecular35;
     public static int enerycost;
     public static int expstorage;
-
     public static double molecular36;
     public static int energyPerultraLowPowerOperation1;
     public static int ultraLowPower1;
@@ -288,11 +245,9 @@ public final class Config {
     public static double BarMFSUStorage;
     public static boolean disableUpdateCheck;
     public static double adrGenDay;
-    public static double adrGenNight;
     public static double adrOutput;
     public static double adrStorage;
     public static double barGenDay;
-    public static double barGenNight;
     public static double barOutput;
     public static double barStorage;
     public static double HadrMFSUStorage;
@@ -301,15 +256,11 @@ public final class Config {
     public static double GraMFSUStorage;
     public static double GraMFSUOutput;
     public static double tierGraMFSU;
-
     public static double KrvMFSUStorage;
     public static double KrvMFSUOutput;
     public static double tierKrvMFSU;
-
     public static int impheatswitch_switchreactor;
     public static int transfer_nano_bow;
-    public static final List<String> EntityList = new ArrayList<>();
-    public static final List<Integer> DimensionList = new ArrayList<>();
     public static int transfer_quantum_bow;
 
     public static int transfer_spectral_bow;
@@ -343,11 +294,9 @@ public final class Config {
     public static double molecular40;
     public static double molecular41;
     public static double graGenDay;
-    public static double graGenNight;
     public static double graOutput;
     public static double graStorage;
     public static double kvrGenDay;
-    public static double kvrGenNight;
     public static double kvrOutput;
     public static double kvrStorage;
     public static boolean amplifierSlot;
@@ -401,11 +350,8 @@ public final class Config {
     public static boolean RubyOre;
     public static boolean TopazOre;
     public static boolean SapphireOre;
-    public static boolean experimental_generating;
     public static int maxVein;
     public static int cost_aspect;
-    public static int Neutronfabricator;
-    public static int Neutronfabricator1;
     public static int nano_transfer;
     public static int nano_energyPerOperation;
     public static int nano_energyPerbigHolePowerOperation;
@@ -436,7 +382,6 @@ public final class Config {
     public static int imp_lappack_maxenergy;
     public static int adv_lappack_transfer;
     public static int adv_lappack_tier;
-    public static int combmacerator;
     public static boolean enableonlyvein;
 
 
@@ -456,19 +401,19 @@ public final class Config {
     public static int impheatswitch_heatStorage1;
     public static int impheatswitch_switchside;
     public static int nano_maxEnergy;
+    public static boolean IlmeniteOre;
+    public static boolean TodorokiteOre;
+    public static boolean FerroaugiteOre;
+    public static boolean SheeliteeOre;
+    public static boolean ProjectE;
 
 
-    static {
-        NEW_LINE = System.getProperty("line.separator");
-    }
 
-    public static void loadConfig(File config, boolean client) {
-        IUCore.log.info("Loading SSP Config from " + config.getAbsolutePath());
-        loadNormalConfig(config, client);
 
-    }
 
-    private static void loadNormalConfig(final File configFile, final boolean client) {
+    public static void loadNormalConfig(final File configFile) {
+        IUCore.log.info("Loading IU Config from " + configFile.getAbsolutePath());
+
         final Configuration config = new Configuration(configFile);
         try {
             config.load();
@@ -480,8 +425,6 @@ public final class Config {
             DraconicLoaded = Loader.isModLoaded("draconicevolution");
             AvaritiaLoaded = Loader.isModLoaded("avaritia");
             BotaniaLoaded = Loader.isModLoaded("botania");
-            EnchantingPlus = Loader.isModLoaded("eplus");
-            MineFactory = Loader.isModLoaded("MineFactoryReloaded");
             nano_maxEnergy = config.get("Configuration nano instruments", "max_energy", 1000000).getInt(1000000);
             nano_transfer = config.get("Configuration nano instruments", "transfer energy", 1000).getInt(1000);
             nano_energyPerOperation = config.get("Configuration nano instruments", "energyPerOperation", 400).getInt(400);
@@ -644,14 +587,13 @@ public final class Config {
             promt = config.get("general", "Enable prompt about information a panel", true).getBoolean(true);
 
             SolidMatterStorage = config.get("Solid Matter Generator Storage", "Matter Generator Storage", 5E7D).getDouble(5E7D);
-            damagecable = config.get("general", "Wire damage", true).getBoolean(true);
-            newsystem = config.get("general", "Easy Mode(turns transformer mode)", true).getBoolean(true);
+            newsystem = config.get("general", "Transformer mode", true).getBoolean(true);
             EnableToriyOre = config.get("spawn ore", "Spawn Thorium Ore", true).getBoolean(true);
-            effPower = config.get("UltimateDrill", "Mode 0 efficiency", 35).getInt(35);
-            lowPower = config.get("UltimateDrill", "Mode 1 efficiency", 20).getInt(20);
-            bigHolePower = config.get("UltimateDrill", "Mode 2 efficiency", 16).getInt(16);
-            ultraLowPower = config.get("UltimateDrill", "Mode 3 efficiency", 12).getInt(12);
-            ultraLowPower1 = config.get("UltimateDrill", "Mode 4 efficiency", 10).getInt(10);
+            effPower = config.get("UltimateDrill", "Mode 0 efficiency", 80).getInt(80);
+            lowPower = config.get("UltimateDrill", "Mode 1 efficiency", 60).getInt(60);
+            bigHolePower = config.get("UltimateDrill", "Mode 2 efficiency", 60).getInt(60);
+            ultraLowPower = config.get("UltimateDrill", "Mode 3 efficiency", 60).getInt(60);
+            ultraLowPower1 = config.get("UltimateDrill", "Mode 4 efficiency", 60).getInt(60);
             ultdrillmaxCharge = config.get("UltimateDrill", "maxCharge", 15000000).getInt(15000000);
             ultdrilltier = config.get("UltimateDrill", "tier", 2).getInt(2);
             ultdrilltransferLimit = config.get("UltimateDrill", "transfer Limit", 500).getInt(500);
@@ -669,16 +611,13 @@ public final class Config {
             } else {
                 efficiencylevel = 10;
             }
-            HUB = config.get("general", "HUB upgrades", true).getBoolean(true);
-            maxVein = config.get("general", "Maximum amount of ore in a vein", 10000).getInt(10000);
-            EnableNetherOres = config.get("general", "Spawn ores in Nether", true).getBoolean(true);
-            EnableEndOres = config.get("general", "Spawn ores in End", true).getBoolean(true);
+            maxVein = config.get("general", "Maximum amount of ore in a vein", 30000).getInt(30000);
             enableIC2EasyMode = config
-                    .get("general", "Easy Mode(turns off not to loss energy in cable)", false)
+                    .get("general", "unlimiting the conduction of energy in the cable and unchecking the tier", false)
                     .getBoolean(false);
             enableexlposion = config.get(
                     "general",
-                    "Enable explosion from mechanisms is on (does not turn off transformer mode) ",
+                    "Enable explosion from mechanisms is on (if enable transformer mode) ",
                     true
             ).getBoolean(true);
             enableefficiency = config.get("UltimateDrill", "Enable Efficiency tool mode 1", true).getBoolean(true);
@@ -734,89 +673,58 @@ public final class Config {
             percent_day = config.get("Modules", "percent generation day", 5).getInt(5);
             percent_night = config.get("Modules", "percent generation night", 5).getInt(5);
             Storagequantumsuit = config.get("Battery", "MaxEnergy", 100000000).getInt(100000000);
-            registerDraconicPanels = config.get("Draconic Integration", "Register Draconic Panels", true).getBoolean(true);
-            registerChaosArmour = config.get("Draconic Integration", "Register Chaos Armour", true).getBoolean(true);
-            registerChaosFluxCapacitor = config
-                    .get("Draconic Integration", "Register Chaos Flux Capacitor", true)
-                    .getBoolean(true);
-            registerChaosDestructionStaff = config
-                    .get("Draconic Integration", "Register Chaos Destruction Staff", true)
-                    .getBoolean(true);
-            registerChaosPickaxe = config.get("Draconic Integration", "Register Chaos Pickaxe", true).getBoolean(true);
-            registerChaosShovel = config.get("Draconic Integration", "Register Chaos Shovel", true).getBoolean(true);
-            registerChaosSword = config.get("Draconic Integration", "Register Chaos Sword", true).getBoolean(true);
-            registerChaosBow = config.get("Draconic Integration", "Register Chaos Bow", true).getBoolean(true);
-            registerChaosAxe = config.get("Draconic Integration", "Register Chaos Axe", true).getBoolean(true);
-            nightvision = config.get(
-                    "general",
-                    "If player have quantum or nano or improvemed helmet and it was dressed and if player has coord y < 60 and skylight < 8,nightvision allow",
-                    true
-            ).getBoolean(true);
+
             thaumcraft = config.get("Integration", "Integration Thaumcraft", true).getBoolean(true);
             Draconic = config.get("Integration", "Integration Draconic Evolution", true).getBoolean(true);
             Botania = config.get("Integration", "Integration Botania", true).getBoolean(true);
             Avaritia = config.get("Integration", "Integration Avaritia", true).getBoolean(true);
-            EnableMineFactory = config.get("Integration", "Integration MineFactoryReloaded", true).getBoolean(true);
+            ProjectE = config.get("Integration", "Integration ProjectE", true).getBoolean(true);
             //TODO config solar panels
             advGenDay = config.get("Configuration Solar Panels", "AdvancedSPGenDay", 5).getDouble(5);
-            advGenNight = config.get("Configuration Solar Panels", "AdvancedSPGenNight", 5D).getDouble(5D);
             advStorage = config.get("Configuration Solar Panels", "AdvancedSPStorage", 3200D).getDouble(3200D);
             advOutput = config.get("Configuration Solar Panels", "AdvancedSPOutput", 10D).getDouble(10D);
             hGenDay = config.get("Configuration Solar Panels", "HybrydSPGenDay", 20).getDouble(20);
-            hGenNight = config.get("Configuration Solar Panels", "HybrydSPGenNight", 10).getDouble(10);
             hStorage = config.get("Configuration Solar Panels", "HybrydSPStorage", 20000D).getDouble(20000D);
             hOutput = config.get("Configuration Solar Panels", "HybrydSPOutput", 40).getDouble(40);
             uhGenDay = config.get("Configuration Solar Panels", "UltimateHSPGenDay", 80).getDouble(80);
-            uhGenNight = config.get("Configuration Solar Panels", "UltimateHSPGenNight", 40D).getDouble(40D);
             uhStorage = config.get("Configuration Solar Panels", "UltimateHSPStorage", 200000D).getDouble(200000D);
             uhOutput = config.get("Configuration Solar Panels", "UltimateHSPOutput", 160D).getDouble(160D);
             qpGenDay = config.get("Configuration Solar Panels", "QuantumSPGenDay", 320).getDouble(320);
-            qpGenNight = config.get("Configuration Solar Panels", "QuantumSPGenNight", 160).getDouble(160);
             qpStorage = config.get("Configuration Solar Panels", "QuantumSPStorage", 1000000D).getDouble(1000000D);
             qpOutput = config.get("Configuration Solar Panels", "QuantumSPOutput", 640).getDouble(640);
             spectralpanelGenDay = config.get("Configuration Solar Panels", "SpectralSPGenDay", 1280).getDouble(1280);
-            spectralpanelGenNight = config.get("Configuration Solar Panels", "SpectralSPGenNight", 640).getDouble(640);
             spectralpanelOutput = config.get("Configuration Solar Panels", "SpectralSPOutput", 2560).getDouble(2560);
             spectralpanelstorage = config.get("Configuration Solar Panels", "SpectralSPStorage", 5000000D).getDouble(500000D);
             protongenDay = config.get("Configuration Solar Panels", "ProtonGenDay", 5120).getDouble(5120);
-            protongennitht = config.get("Configuration Solar Panels", "ProtonGenNight", 2560).getDouble(2560);
-            protonOutput = config.get("Configuration Solar Panels", "ProtonOutput", 10240).getDouble(10240);
+             protonOutput = config.get("Configuration Solar Panels", "ProtonOutput", 10240).getDouble(10240);
             protonstorage = config.get("Configuration Solar Panels", "Protonstorage", 50000000D).getDouble(5000000D);
             singularpanelGenDay = config.get("Configuration Solar Panels", "SingularSPGenDay", 20480).getDouble(20480);
-            singularpanelGenNight = config.get("Configuration Solar Panels", "SingularSPGenNight", 10240).getDouble(10240);
             singularpanelOutput = config.get("Configuration Solar Panels", "SingularSPOutput", 40960).getDouble(40960);
             singularpanelstorage = config
                     .get("Configuration Solar Panels", "SingularSPStorage", 1000000000D)
                     .getDouble(100000000D);
             adminpanelGenDay = config.get("Configuration Solar Panels", "DiffractionPanelGenDay", 81920).getDouble(81920);
-            adminpanelGenNight = config.get("Configuration Solar Panels", "DiffractionPanelGenNight", 40960).getDouble(40960);
-            AdminpanelStorage = config.get("Configuration Solar Panels", "DiffractionPanelStorage", 1500000000D).getDouble(
+           AdminpanelStorage = config.get("Configuration Solar Panels", "DiffractionPanelStorage", 1500000000D).getDouble(
                     1500000000D);
             AdminpanelOutput = config.get("Configuration Solar Panels", "DiffractionPanelOutput", 327680).getDouble(327680);
             photonicpanelGenDay = config.get("Configuration Solar Panels", "PhotonicPanelGenDay", 327680).getDouble(327680);
-            photonicpanelGenNight = config.get("Configuration Solar Panels", "PhotonicPanelGenNight", 327680).getDouble(327680);
             photonicpanelOutput = config.get("Configuration Solar Panels", "PhotonicPanelOutput", 655360).getDouble(655360);
             photonicpanelStorage = config.get("Configuration Solar Panels", "PhotonicPanelStorage", 5000000000D).getDouble(
                     5000000000D);
             neutronpanelGenDay = config.get("Configuration Solar Panels", "NeutronPanelGenDay", 1325720).getDouble(1325720);
-            neutronpanelGenNight = config.get("Configuration Solar Panels", "NeutronPanelGenNight", 1325720).getDouble(1325720);
             neutronpanelOutput = config.get("Configuration Solar Panels", "NeutronPanelOutput", 2651440).getDouble(2651440);
             neutronpanelStorage = config.get("Configuration Solar Panels", "NeutronPanelStorage", 6500000000D).getDouble(
                     6500000000D);
             barGenDay = config.get("Configuration Solar Panels", "BarionGenDay", 5302880).getDouble(5302880);
-            barGenNight = config.get("Configuration Solar Panels", "BarionGenNight", 5302880).getDouble(5302880);
             barOutput = config.get("Configuration Solar Panels", "BarionOutput", 10605760).getDouble(10605760);
             barStorage = config.get("Configuration Solar Panels", "BarionStorage", 10000000000D).getDouble(10000000000D);
             adrGenDay = config.get("Configuration Solar Panels", "HadrionGenDay", 21211520).getDouble(21211520);
-            adrGenNight = config.get("Configuration Solar Panels", "HadrionGenNight", 21211520).getDouble(21211520);
             adrOutput = config.get("Configuration Solar Panels", "HadrionOutput", 42423040).getDouble(42423040);
-            adrStorage = config.get("Configuration Solar Panels", "HadrionStorage", 2500000000D).getDouble(2500000000D);
+            adrStorage = config.get("Configuration Solar Panels", "HadrionStorage", 25000000000D).getDouble(25000000000D);
             graGenDay = config.get("Configuration Solar Panels", "GravitonGenDay", 84846080).getDouble(84846080);
-            graGenNight = config.get("Configuration Solar Panels", "GravitonGenNight", 84846080).getDouble(84846080);
             graOutput = config.get("Configuration Solar Panels", "GravitonOutput", 169692160).getDouble(169692160);
-            graStorage = config.get("Configuration Solar Panels", "GravitonStorage", 25000000000D).getDouble(25000000000D);
+            graStorage = config.get("Configuration Solar Panels", "GravitonStorage", 250000000000D).getDouble(250000000000D);
             kvrGenDay = config.get("Configuration Solar Panels", "KvarkGenDay", 339384320).getDouble(339384320);
-            kvrGenNight = config.get("Configuration Solar Panels", "KvarkGenNight", 339384320).getDouble(339384320);
             kvrOutput = config.get("Configuration Solar Panels", "KvarkOutput", 678768640).getDouble(678768640);
             kvrStorage = config.get("Configuration Solar Panels", "KvarkStorage", 2500000000000D).getDouble(2500000000000D);
 
@@ -886,17 +794,14 @@ public final class Config {
             terasteeloutput = config.get("Configuration Solar Panels(Integration)", "Terasteeloutput", 2560).getDouble(2560);
             terasteeltier = config.get("Configuration Solar Panels(Integration)", "Terasteeltier", 5).getInt(5);
             draconicgenday = config.get("Configuration Solar Panels(Integration)", "Draconicgenday", 80D).getDouble(80D);
-            draconicgennight = config.get("Configuration Solar Panels(Integration)", "Draconicgennight", 40D).getDouble(40D);
             draconicstorage = config.get("Configuration Solar Panels(Integration)", "Draconicstorage", 50000D).getDouble(50000D);
             draconicoutput = config.get("Configuration Solar Panels(Integration)", "Draconicoutput", 160).getDouble(160);
             draconictier = config.get("Configuration Solar Panels(Integration)", "Draconictier", 3).getInt(3);
             awakenedgenday = config.get("Configuration Solar Panels(Integration)", "Awakanedgenday", 20480).getDouble(20480);
-            awakenedgennight = config.get("Configuration Solar Panels(Integration)", "Awakanedgennight", 10240).getDouble(10240);
             awakenedstorage = config.get("Configuration Solar Panels(Integration)", "Awakanedstorage", 1.0E9).getDouble(1.0E9);
             awakenedoutput = config.get("Configuration Solar Panels(Integration)", "Awakanedoutput", 40960).getDouble(40960);
             awakenedtier = config.get("Configuration Solar Panels(Integration)", "Awakanedtier", 7).getInt(7);
             chaosgenday = config.get("Configuration Solar Panels(Integration)", "Chaosgenday", 1325720).getDouble(1325720);
-            chaosgennight = config.get("Configuration Solar Panels(Integration)", "Chaosgennight", 1325720).getDouble(1325720);
             chaosstorage = config.get("Configuration Solar Panels(Integration)", "Chaosstorage", 6.5E9).getDouble(6.5E9);
             chaosoutput = config.get("Configuration Solar Panels(Integration)", "Chaosoutput", 2651440).getDouble(2651440);
             chaostier = config.get("Configuration Solar Panels(Integration)", "Chaostier", 10).getInt(10);
@@ -907,21 +812,14 @@ public final class Config {
             armor_maxcharge_body = config.get("Spectral Armor", "maxcharge Improvemed Quantum Body", 300000000).getInt(300000000);
             //
             thaumgenday = config.get("Configuration Solar Panels(Integration)", "Thaumgenday", 80).getDouble(80);
-            thaumgennight = config.get("Configuration Solar Panels(Integration)", "Thaumgennight", 40).getDouble(40);
             thaumstorage = config.get("Configuration Solar Panels(Integration)", "Thaumstorage", 50000D).getDouble(50000D);
             thaumoutput = config.get("Configuration Solar Panels(Integration)", "Thaumoutput", 160).getDouble(160);
             thaumtier = config.get("Configuration Solar Panels(Integration)", "Thaumtier", 3).getInt(3);
             voidgenday = config.get("Configuration Solar Panels(Integration)", "Voidgenday", 320).getDouble(320);
-            voidgennight = config.get("Configuration Solar Panels(Integration)", "Voidgennight", 80).getDouble(80);
             voidstorage = config.get("Configuration Solar Panels(Integration)", "Voidstorage", 200000D).getDouble(200000D);
             voidoutput = config.get("Configuration Solar Panels(Integration)", "Voidoutput", 640).getDouble(640);
             voidtier = config.get("Configuration Solar Panels(Integration)", "Voidtier", 4).getInt(4);
-            ihorgenday = config.get("Configuration Solar Panels(Integration)", "Ihorgenday", 5120).getDouble(5120);
-            ihorgennight = config.get("Configuration Solar Panels(Integration)", "Ihorgennight", 2560).getDouble(2560);
-            ihorstorage = config.get("Configuration Solar Panels(Integration)", "Ihorstorage", 5.0E7).getDouble(5.0E7);
-            ihoroutput = config.get("Configuration Solar Panels(Integration)", "Ihoroutput", 10240).getDouble(10240);
-            ihortier = config.get("Configuration Solar Panels(Integration)", "Ihortier", 6).getInt(6);
-            String[] spawnerList = config.getStringList(
+               String[] spawnerList = config.getStringList(
                     "Spawn List",
                     "spawner",
                     defaultSpawnerList,
@@ -970,6 +868,11 @@ public final class Config {
             AlfilditOre = config.get("spawn ore", "Enable spawn AlfilditOre", true).getBoolean(true);
             EuxeniteOre = config.get("spawn ore", "Enable spawn EuxeniteOre", true).getBoolean(true);
             SmithsoniteOre = config.get("spawn ore", "Enable spawn SmithsoniteOre", true).getBoolean(true);
+            IlmeniteOre = config.get("spawn ore", "Enable spawn IlmeniteOre", true).getBoolean(true);
+            TodorokiteOre = config.get("spawn ore", "Enable spawn TodorokiteOre", true).getBoolean(true);
+            FerroaugiteOre = config.get("spawn ore", "Enable spawn FerroaugiteOre", true).getBoolean(true);
+            SheeliteeOre = config.get("spawn ore", "Enable spawn SheeliteeOre", true).getBoolean(true);
+
 
             AmericiumOre = config.get("spawn ore", "Enable spawn AmericiumOre", true).getBoolean(true);
             NeptuniumOre = config.get("spawn ore", "Enable spawn NeptuniumOre", true).getBoolean(true);
@@ -978,16 +881,10 @@ public final class Config {
             RubyOre = config.get("spawn ore", "Enable spawn RubyOre", true).getBoolean(true);
             SapphireOre = config.get("spawn ore", "Enable spawn SapphireOre", true).getBoolean(true);
             TopazOre = config.get("spawn ore", "Enable spawn TopazOre", true).getBoolean(true);
-            experimental_generating = config.get(
-                    "Experimental",
-                    "Solar panels will generate energy using phase Sun or Moon",
-                    true
-            ).getBoolean(true);
 
 
-            Neutronfabricator = config.get("Settings Neutron fabricator", "1 mb = 15625000.0F (default)", 15625000.0F).getInt(
-                    15625000);
-            Neutronfabricator1 = config.get("Settings Neutron fabricator", "tier", 14).getInt(14);
+
+
             adv_jetpack_maxenergy = config.get("Configuration jetpacks", "adv_jetpack_maxenergy", 60000).getInt(60000);
             adv_jetpack_transfer = config.get("Configuration jetpacks", "adv_jetpack_transfer energy", 120).getInt(120);
             adv_jetpack_tier = config.get("Configuration jetpacks", "adv_jetpack_tier", 2).getInt(2);

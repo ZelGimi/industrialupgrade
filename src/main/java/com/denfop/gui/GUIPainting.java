@@ -25,6 +25,17 @@ public class GUIPainting extends GuiIC2<ContainerDoubleElectricMachine> {
         this.container = container1;
     }
 
+    private static List<String> getInformation() {
+        List<String> ret = new ArrayList();
+        ret.add(Localization.translate("iu.paintinginformation1"));
+        ret.add(Localization.translate("iu.paintinginformation2"));
+        ret.add(Localization.translate("iu.paintinginformation3"));
+        ret.add(Localization.translate("iu.paintinginformation4"));
+        ret.add(Localization.translate("iu.paintinginformation5"));
+
+
+        return ret;
+    }
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -46,19 +57,6 @@ public class GUIPainting extends GuiIC2<ContainerDoubleElectricMachine> {
 
             this.drawTooltip(mouseX, mouseY, text);
         }
-    }
-
-
-    private static List<String> getInformation() {
-        List<String> ret = new ArrayList();
-        ret.add(Localization.translate("iu.paintinginformation1"));
-        ret.add(Localization.translate("iu.paintinginformation2"));
-        ret.add(Localization.translate("iu.paintinginformation3"));
-        ret.add(Localization.translate("iu.paintinginformation4"));
-        ret.add(Localization.translate("iu.paintinginformation5"));
-
-
-        return ret;
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {

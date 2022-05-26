@@ -4,6 +4,7 @@ import ic2.api.recipe.IBasicMachineRecipeManager;
 
 public class Recipes {
 
+    public static IMaceratorRecipeManager maceratorold;
     public static IUpgradeBasicMachineRecipeManager matterrecipe;
     public static IDoubleMachineRecipeManager Alloysmelter;
     public static ITripleMachineRecipeManager Alloyadvsmelter;

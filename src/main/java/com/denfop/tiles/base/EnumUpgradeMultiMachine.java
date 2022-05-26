@@ -1,6 +1,5 @@
 package com.denfop.tiles.base;
 
-import com.denfop.IUItem;
 import com.denfop.tiles.mechanism.TileEntityCombDoubleMacerator;
 import com.denfop.tiles.mechanism.TileEntityCombQuadMacerator;
 import com.denfop.tiles.mechanism.TileEntityCombTripleMacerator;
@@ -102,7 +101,6 @@ public enum EnumUpgradeMultiMachine {
     EnumUpgradeMultiMachine(EnumMultiMachine multimachine) {
         this(multimachine, null);
     }
-
 
 
 }

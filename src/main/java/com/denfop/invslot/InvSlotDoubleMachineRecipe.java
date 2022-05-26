@@ -36,7 +36,7 @@ public class InvSlotDoubleMachineRecipe extends InvSlot implements IInvSlotProce
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> entry : getRecipeList().entrySet()) {
             if ((entry.getKey()).container.matches(itemStack)
                     || (entry.getKey()).fill.matches(itemStack)) {
-                return itemStack != null;
+                return !itemStack.isEmpty();
             }
         }
         return false;

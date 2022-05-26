@@ -11,12 +11,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class IULoot {
 
-    public static void init() {
-        new IULoot();
-    }
-
     private IULoot() {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static void init() {
+        new IULoot();
     }
 
     @SubscribeEvent

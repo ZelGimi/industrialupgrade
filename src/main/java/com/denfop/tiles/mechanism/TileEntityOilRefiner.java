@@ -1,16 +1,18 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerOilRefiner;
 import com.denfop.gui.GUIOilRefiner;
 import com.denfop.tiles.base.TileEntityBaseLiquedMachine;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,6 +26,11 @@ public class TileEntityOilRefiner extends TileEntityBaseLiquedMachine {
                         FluidName.fluiddizel.getInstance()}
         );
 
+    }
+
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.oilrefiner);
     }
 
     @SideOnly(Side.CLIENT)
@@ -99,9 +106,6 @@ public class TileEntityOilRefiner extends TileEntityBaseLiquedMachine {
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        IBlockState state = this.getBlockState();
-        this.getWorld().notifyBlockUpdate(this.getPos(), state, state, 2);
-
 
         boolean drain = false;
         boolean drain1 = false;
@@ -128,13 +132,15 @@ public class TileEntityOilRefiner extends TileEntityBaseLiquedMachine {
                 initiate(0);
                 this.useEnergy(25);
 
-                IC2.network.get(true).updateTileEntityField(this, "fluidTank");
 
                 setActive(true);
             } else {
                 initiate(2);
                 setActive(false);
             }
+        }
+        if (this.world.provider.getWorldTime() % 10 == 0) {
+            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
         }
 
 

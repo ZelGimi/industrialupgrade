@@ -65,6 +65,10 @@ public class RegisterOreDict {
         list.add("Alfildit");
         list.add("Euxenite");
         list.add("Smithsonite");
+        list.add("Ilmenite");
+        list.add("Todorokite");
+        list.add("Ferroaugite");
+        list.add("Scheelite");
         return list;
     }
 
@@ -149,6 +153,7 @@ public class RegisterOreDict {
 
         OreDictionary.registerOre("oreThorium", IUItem.toriyore);
         OreDictionary.registerOre("gemThorium", new ItemStack(IUItem.toriy, 1, 0));
+        OreDictionary.registerOre("ingotUranium", new ItemStack(IUItem.itemSSP,1,2));
 
         for (int j = 0; j < list_item1.size(); j++) {
             for (int i = 0; i < list_string1.size(); i++) {
@@ -236,6 +241,8 @@ public class RegisterOreDict {
         if (Loader.isModLoaded("exnihilocreatio")) {
             ExNihiloIntegration.oredictionary();
         }
+        OreDictionary.registerOre("ingotAluminum", new ItemStack(IUItem.iuingot,1,1));
+
         OreDictionary.registerOre("gemAmericium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 0));
         OreDictionary.registerOre("gemNeptunium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 1));
         OreDictionary.registerOre("gemCurium", new ItemStack(IUItem.radiationresources.setUnlocalizedName(string2[3]), 1, 2));

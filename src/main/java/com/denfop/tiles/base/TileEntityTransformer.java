@@ -26,10 +26,15 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         INetworkClientTileEntityEventListener {
 
     private static final TileEntityTransformer.Mode defaultMode;
+
+    static {
+        defaultMode = TileEntityTransformer.Mode.redstone;
+    }
+
+    protected final Energy energy;
+    private final int defaultTier;
     private double inputFlow = 0.0D;
     private double outputFlow = 0.0D;
-    private final int defaultTier;
-    protected final Energy energy;
     private TileEntityTransformer.Mode configuredMode;
     private TileEntityTransformer.Mode transformMode;
 
@@ -201,12 +206,8 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         return this.isStepUp() ? this.inputFlow : this.outputFlow;
     }
 
-    private boolean isStepUp() {
+    public boolean isStepUp() {
         return this.transformMode == TileEntityTransformer.Mode.stepup;
-    }
-
-    static {
-        defaultMode = TileEntityTransformer.Mode.redstone;
     }
 
     public enum Mode {

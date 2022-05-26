@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class ObsidianRecipeManager implements IObsidianGenerator {
 
+    private final Map<IObsidianGenerator.Input, RecipeOutput> recipes = new HashMap<>();
+
     @Override
     public void addRecipe(FluidStack fluidStack, FluidStack fluidStack1, ItemStack output) {
         if (fluidStack == null) {
@@ -81,7 +83,5 @@ public class ObsidianRecipeManager implements IObsidianGenerator {
         return this.recipes;
 
     }
-
-    private final Map<IObsidianGenerator.Input, RecipeOutput> recipes = new HashMap<>();
 
 }

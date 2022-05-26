@@ -48,20 +48,6 @@ public enum BlockAdminPanel implements ITeBlock {
 
     }
 
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
-    }
-
-    @Override
-    public String getName() {
-        return this.name();
-    }
-
-    @Override
-    public int getId() {
-        return this.itemMeta;
-    }
-
     public static void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -80,6 +66,20 @@ public enum BlockAdminPanel implements ITeBlock {
         }
     }
 
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
+    }
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
+
+    @Override
+    public int getId() {
+        return this.itemMeta;
+    }
+
     @Override
     @Nonnull
     public ResourceLocation getIdentifier() {
@@ -88,7 +88,7 @@ public enum BlockAdminPanel implements ITeBlock {
 
     @Override
     public boolean hasItem() {
-        return true;
+        return false;
     }
 
     @Override

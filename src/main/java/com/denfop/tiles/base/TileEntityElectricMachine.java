@@ -19,27 +19,30 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
 
     public final String name;
-    public final double guiChargeLevel;
-    public final int tier;
+    public int tier;
+    public double guiChargeLevel = 0;
     public AudioSource audioSource;
 
 
     public InvSlotOutput outputSlot = null;
 
-    public Energy energy;
+    public Energy energy = null;
     public InvSlotDischarge dischargeSlot;
 
     public TileEntityElectricMachine(String name, double MaxEnergy, int tier, int count) {
         this.name = name;
         this.tier = tier;
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.NONE, tier, false, InvSlot.InvSide.ANY);
-
-        energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
+        if (MaxEnergy != 0) {
+            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
+        }
 
         if (count != 0) {
             this.outputSlot = new InvSlotOutput(this, "output", count);
         }
-        this.guiChargeLevel = this.energy.getFillRatio();
+        if (MaxEnergy != 0) {
+            this.guiChargeLevel = this.energy.getFillRatio();
+        }
 
     }
 
@@ -61,11 +64,6 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
         IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
     }
 
-    protected void onLoaded() {
-        super.onLoaded();
-
-
-    }
 
     protected void onUnloaded() {
         super.onUnloaded();

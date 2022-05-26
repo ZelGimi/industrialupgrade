@@ -85,16 +85,6 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         this.redstone = this.addComponent(new Redstone(this));
     }
 
-    public double getGuiValue(String name) {
-        if ("heat".equals(name)) {
-            return this.maxHeat == 0 ? 0.0D : (double) this.heat / (double) this.maxHeat;
-        } else {
-            throw new IllegalArgumentException("Invalid value: " + name);
-        }
-    }
-
-    abstract void setblock();
-
     public static void showHeatEffects(World world, BlockPos pos, int heat) {
         Random rnd = world.rand;
         if (rnd.nextInt(8) == 0) {
@@ -132,6 +122,16 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
         }
     }
+
+    public double getGuiValue(String name) {
+        if ("heat".equals(name)) {
+            return this.maxHeat == 0 ? 0.0D : (double) this.heat / (double) this.maxHeat;
+        } else {
+            throw new IllegalArgumentException("Invalid value: " + name);
+        }
+    }
+
+    abstract void setblock();
 
     public void onLoaded() {
         super.onLoaded();
@@ -293,10 +293,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
 
     public boolean calculateHeatEffects() {
-        if (this.heat >= 4000 && IC2.platform.isSimulating() && !(ConfigUtil.getFloat(
-                MainConfig.get(),
-                "protection/reactorExplosionPowerLimit"
-        ) <= 0.0F)) {
+        if (this.heat >= 4000 && IC2.platform.isSimulating()) {
             float power = (float) this.heat / (float) this.maxHeat;
             if (power >= 1.0F) {
                 if (Config.explode) {

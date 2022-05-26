@@ -27,5 +27,8 @@ public class TileEntityRolling extends TileEntityMultiMachine {
         return "Machines/InterruptOne.ogg";
     }
 
+    public String getStartSoundFile() {
+        return "Machines/plate.ogg";
+    }
 
 }

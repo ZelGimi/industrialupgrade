@@ -36,8 +36,8 @@ public enum CellType implements IIdProvider {
     oxy(8, FluidName.fluidoxy.getInstance()),
     hyd(9, FluidName.fluidhyd.getInstance());
 
-    private final int id;
     final Fluid fluid;
+    private final int id;
 
     CellType(int id) {
         this(id, null);
@@ -100,8 +100,8 @@ public enum CellType implements IIdProvider {
 
         public static final String NBT = "hydration";
         public static final int CHARGES = 10000;
-        protected ItemStack container;
         protected final boolean manual;
+        protected ItemStack container;
 
         public HydrationHandler(ItemStack stack, boolean manual) {
             this.container = stack;
@@ -213,14 +213,6 @@ public enum CellType implements IIdProvider {
             return type != null && type.fluid != null ? new FluidStack(type.fluid, 1000) : null;
         }
 
-        public boolean canFillFluidType(FluidStack fluid) {
-            assert fluid != null;
-
-            assert fluid.getFluid() != null;
-
-            return this.typeGetter.get() == CellType.empty && VALID_FLUIDS.containsKey(fluid.getFluid());
-        }
-
         protected void setFluid(FluidStack stack) {
             if (stack == null) {
                 assert this.typeGetter.get() != CellType.empty;
@@ -234,6 +226,14 @@ public enum CellType implements IIdProvider {
                 this.container = new ItemStack(IUItem.cell_all, 1, VALID_FLUIDS.get(stack.getFluid()).id);
             }
 
+        }
+
+        public boolean canFillFluidType(FluidStack fluid) {
+            assert fluid != null;
+
+            assert fluid.getFluid() != null;
+
+            return this.typeGetter.get() == CellType.empty && VALID_FLUIDS.containsKey(fluid.getFluid());
         }
 
     }

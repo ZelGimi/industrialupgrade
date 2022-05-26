@@ -43,7 +43,7 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
             MainConfig.get(),
             "balance/energy/generator/geothermal"
     ));
-    public boolean addedToEnergyNet = false;
+
     public AudioSource audioSource;
 
     public TileEntityPetrolGenerator() {
@@ -75,10 +75,7 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
         return nbttagcompound;
     }
 
-    @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
 
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -135,6 +132,15 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
         return "Machines/InterruptOne.ogg";
     }
 
+    protected void onUnloaded() {
+        super.onUnloaded();
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
+        }
+
+    }
+
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
             this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
@@ -149,7 +155,7 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;

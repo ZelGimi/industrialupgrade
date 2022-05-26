@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GUIQuantumQuarry extends GuiIC2 {
+public class GUIQuantumQuarry extends GuiIC2<ContainerQuantumQuarry> {
 
     public final ContainerQuantumQuarry container;
 

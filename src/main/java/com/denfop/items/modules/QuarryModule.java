@@ -74,7 +74,7 @@ public class QuarryModule extends ItemMulti<QuarryModule.CraftingTypes> implemen
             case 12:
                 info.add(Localization.translate("iu.blacklist"));
 
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 18; i++) {
                     String l = "number_" + i;
 
                     String ore = ModUtils.NBTGetString(itemStack, l);
@@ -91,7 +91,7 @@ public class QuarryModule extends ItemMulti<QuarryModule.CraftingTypes> implemen
                 break;
             case 13:
                 info.add(Localization.translate("iu.whitelist"));
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 18; i++) {
                     String l = "number_" + i;
 
                     String ore = ModUtils.NBTGetString(itemStack, l);

@@ -4,6 +4,10 @@ package com.denfop.items.energy;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.IUpgradeItem;
+import com.denfop.api.upgrade.UpgradeItemInform;
+import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.utils.EnumInfoUpgradeModules;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
@@ -23,12 +27,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -39,14 +45,18 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister {
+public class EnergyBow extends ItemBow implements IElectricItem, IUpgradeItem, IModelRegister {
 
 
     static final int[] CHARGE = new int[]{1500, 750, 2000, 5000, 1000};
@@ -58,6 +68,9 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
     private final int tier;
     private final int transferenergy;
     private final int maxenergy;
+    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
+    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
+    private boolean update = false;
 
     public EnergyBow(String name, double nanoBowBoost, int tier, int transferenergy, int maxenergy, float type) {
         setMaxDamage(27);
@@ -82,12 +95,24 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
                 return entityIn != null && entityIn.isHandActive() && entityIn.getActiveItemStack() == stack ? 1.0F : 0.0F;
             }
         });
+        MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
     }
+
 
     public static float getArrowVelocity(int charge) {
         float f = charge / 20.0F;
         f = (f * f + f * 2.0F) / 3.0F;
         return Math.min(f, 1.5F);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name) {
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "energy_tools" + "/" + name;
+
+        return new ModelResourceLocation(loc, null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -133,15 +158,20 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
     }
 
     @Override
-    public void getSubItems(final CreativeTabs tabs, final NonNullList<ItemStack> items) {
-        if (this.isInCreativeTab(tabs)) {
-            ItemStack charged = new ItemStack(this, 1);
-            ElectricItem.manager.charge(charged, 2.147483647E9D, 2147483647, true, false);
-            items.add(charged);
-            items.add(new ItemStack(this, 1, getMaxDamage()));
+    public void getSubItems(final CreativeTabs subs, final NonNullList<ItemStack> items) {
+        if (this.isInCreativeTab(subs)) {
+            ItemStack stack = new ItemStack(this, 1);
+
+            NBTTagCompound nbt = ModUtils.nbt(stack);
+            ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            items.add(stack);
+            ItemStack itemstack = new ItemStack(this, 1, getMaxDamage());
+            nbt = ModUtils.nbt(itemstack);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            items.add(itemstack);
         }
     }
-
 
     public boolean isRepairable() {
         return false;
@@ -150,7 +180,6 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
     public int getItemEnchantability() {
         return 0;
     }
-
 
     public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase EntityLivingBase, int timeLeft) {
         if (!(EntityLivingBase instanceof EntityPlayer)) {
@@ -185,15 +214,9 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
             if (f == 1.5F) {
                 arrow.setIsCritical(true);
             }
-            int bowdamage = 0;
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("bowdamage")) {
-                    bowdamage++;
-                }
 
-            }
-            bowdamage = Math.min(bowdamage, EnumInfoUpgradeModules.BOWDAMAGE.max);
-
+            int bowdamage = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWDAMAGE, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWDAMAGE, stack).number : 0;
             arrow.setDamage(arrow.getDamage() + type * 2.5D + 0.5D + type * 2.5D * 0.25 * bowdamage);
             int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
             if (j > 0) {
@@ -229,18 +252,12 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
             }
             arrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
 
-            int bowenergy = 0;
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("bowenergy")) {
-                    bowenergy++;
-                }
-
-            }
-            bowenergy = Math.min(bowenergy, EnumInfoUpgradeModules.BOWENERGY.max);
+            int bowenergy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWENERGY, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWENERGY, stack).number : 0;
 
             if (mode == 2) {
                 if (ElectricItem.manager.canUse(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy)) {
-                    ElectricItem.manager.use(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy, player);
+                    ElectricItem.manager.use(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy, null);
                     world.spawnEntity(arrow);
                     if (arrow.getIsCritical()) {
                         ItemArrow itemarrow2 = (ItemArrow) (stack.getItem() instanceof ItemArrow ? stack.getItem() : Items.ARROW);
@@ -288,24 +305,34 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
                         world.spawnEntity(arrow4);
                         world.spawnEntity(arrow5);
                     }
+                    if (IC2.platform.isRendering()) {
+                        IUCore.audioManager.playOnce(
+                                player,
+                                com.denfop.audio.PositionSpec.Hand,
+                                "Tools/bow.ogg",
+                                true,
+                                IC2.audioManager.getDefaultVolume()
+                        );
+                    }
                 }
             } else {
                 if (ElectricItem.manager.canUse(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy)) {
-                    ElectricItem.manager.use(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy, player);
+                    ElectricItem.manager.use(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy, null);
 
                     world.spawnEntity(arrow);
+                    if (IC2.platform.isRendering()) {
+                        IUCore.audioManager.playOnce(
+                                player,
+                                com.denfop.audio.PositionSpec.Hand,
+                                "Tools/bow.ogg",
+                                true,
+                                IC2.audioManager.getDefaultVolume()
+                        );
+                    }
                 }
             }
         }
-        if (IC2.platform.isRendering()) {
-            IUCore.audioManager.playOnce(
-                    player,
-                    com.denfop.audio.PositionSpec.Hand,
-                    "Tools/bow.ogg",
-                    true,
-                    IC2.audioManager.getDefaultVolume()
-            );
-        }
+
     }
 
     public int getMaxItemUseDuration(ItemStack stack) {
@@ -330,14 +357,8 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
         NBTTagCompound nbt = ModUtils.nbt(stack);
 
         int mode = nbt.getInteger("bowMode");
-        int bowenergy = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("bowenergy")) {
-                bowenergy++;
-            }
-
-        }
-        bowenergy = Math.min(bowenergy, EnumInfoUpgradeModules.BOWENERGY.max);
+        int bowenergy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWENERGY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWENERGY, stack).number : 0;
 
         if (IUCore.keyboard.isChangeKeyDown(player) && nbt.getByte("toggleTimer") == 0) {
             if (!world.isRemote) {
@@ -366,13 +387,30 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
             return event.getAction();
         }
 
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 
     }
-
-
+    @SubscribeEvent
+    void blindness(AttackEntityEvent event){
+        if(!(event.getEntityLiving() instanceof  EntityPlayer))
+            return;
+        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+     ItemStack stack =   event.getEntityPlayer().getHeldItemMainhand();
+     if(stack.getItem() != this)
+         return;
+     boolean blindness = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BLINDNESS,stack);
+     if(!blindness)
+         return;
+        player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 60));
+    }
     public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
         NBTTagCompound nbt = ModUtils.nbt(stack);
+
+        if (!UpgradeSystem.system.hasInMap(stack)) {
+            nbt.setBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, stack));
+        }
+
         byte toggle = nbt.getByte("toggleTimer");
         if (toggle > 0) {
             toggle = (byte) (toggle - 1);
@@ -380,7 +418,6 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
         }
 
     }
-
 
     public void onUsingTick(ItemStack stack, EntityLivingBase EntityLivingBase, int i) {
         if (!(EntityLivingBase instanceof EntityPlayer)) {
@@ -391,14 +428,8 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
         int mode = nbt.getInteger("bowMode");
 
         if (mode == 1) {
-            int bowenergy = 0;
-            for (int k = 0; k < 4; k++) {
-                if (nbt.getString("mode_module" + k).equals("bowenergy")) {
-                    bowenergy++;
-                }
-
-            }
-            bowenergy = Math.min(bowenergy, EnumInfoUpgradeModules.BOWENERGY.max);
+            int bowenergy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BOWENERGY, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.BOWENERGY, stack).number : 0;
 
             int j = getMaxItemUseDuration(stack) - i;
             if (j >= 10 && ElectricItem.manager.canUse(stack, CHARGE[1] - CHARGE[1] * 0.1 * bowenergy)) {
@@ -406,7 +437,6 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
             }
         }
     }
-
 
     public boolean canProvideEnergy(ItemStack is) {
         return false;
@@ -436,7 +466,6 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
         return nbt.getDouble("transferLimit");
     }
 
-
     public int getDefaultMaxCharge() {
         return maxenergy;
     }
@@ -449,19 +478,9 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
         return this.transferenergy;
     }
 
-
     @Override
     public void registerModels() {
         registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "energy_tools" + "/" + name;
-
-        return new ModelResourceLocation(loc, null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -471,5 +490,12 @@ public class EnergyBow extends ItemBow implements IElectricItem, IModelRegister 
 
 
     }
+
+
+    @Override
+    public void setUpdate(final boolean update) {
+        this.update = update;
+    }
+
 
 }

@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class PlasticRecipeManager implements IPlasticRecipemanager {
 
+    private final Map<IPlasticRecipemanager.Input, RecipeOutput> recipes = new HashMap<>();
+
     @Override
     public void addRecipe(IRecipeInput container, IRecipeInput fill, FluidStack fluidStack, ItemStack output) {
         if (container == null) {
@@ -89,18 +91,24 @@ public class PlasticRecipeManager implements IPlasticRecipemanager {
                     }
                     return entry.getValue();
                 }
+                else if (container.getCount() >= recipeInput.fill.getAmount() && fill.getCount() >= recipeInput.container.getAmount() && fluidStack.amount >= recipeInput.fluidStack.amount) {
+                    if (adjustInput) {
+
+                        container.setCount(container.getCount() - recipeInput.fill.getAmount());
+                        fluidStack.amount -= recipeInput.fluidStack.amount;
+                        fill.setCount(fill.getCount() - recipeInput.container.getAmount());
+                    }
+                    return entry.getValue();
+                }
                 break;
             }
         }
         return null;
     }
 
-
     @Override
     public Map<IPlasticRecipemanager.Input, RecipeOutput> getRecipes() {
         return this.recipes;
     }
-
-    private final Map<IPlasticRecipemanager.Input, RecipeOutput> recipes = new HashMap<>();
 
 }

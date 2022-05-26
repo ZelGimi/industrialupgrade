@@ -17,7 +17,7 @@ public class InvSlotBook extends InvSlot {
     }
 
     public boolean accepts(ItemStack itemStack) {
-        if (itemStack != null && itemStack.getItem() instanceof ItemEnchantedBook) {
+        if (!itemStack.isEmpty() && itemStack.getItem() instanceof ItemEnchantedBook) {
             NBTTagList bookNBT = ((ItemEnchantedBook) itemStack.getItem()).getEnchantments(itemStack);
             if (bookNBT.tagCount() == 1) {
                 short id = bookNBT.getCompoundTagAt(0).getShort("id");

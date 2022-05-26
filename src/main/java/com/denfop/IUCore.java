@@ -1,7 +1,13 @@
 package com.denfop;
 
+import aroma1997.uncomplication.enet.EnergyNetGlobal;
 import com.denfop.api.IElectricBlock;
 import com.denfop.api.IStorage;
+import com.denfop.api.cooling.CoolNet;
+import com.denfop.api.heat.HeatNet;
+import com.denfop.api.qe.QENet;
+import com.denfop.api.upgrade.BaseUpgradeSystem;
+import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.audio.AudioManager;
 import com.denfop.blocks.BlockIUFluid;
 import com.denfop.blocks.BlocksItems;
@@ -26,6 +32,7 @@ import com.denfop.blocks.mechanism.BlockMoreMachine2;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.blocks.mechanism.BlockPerChamber;
 import com.denfop.blocks.mechanism.BlockPetrolQuarry;
+import com.denfop.blocks.mechanism.BlockPipes;
 import com.denfop.blocks.mechanism.BlockQuarryVein;
 import com.denfop.blocks.mechanism.BlockRefiner;
 import com.denfop.blocks.mechanism.BlockSintezator;
@@ -39,45 +46,51 @@ import com.denfop.blocks.mechanism.BlockUpgradeBlock;
 import com.denfop.blocks.mechanism.IUChargepadStorage;
 import com.denfop.blocks.mechanism.IUStorage;
 import com.denfop.blocks.mechanism.SSPBlock;
+import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.CoolComponent;
+import com.denfop.componets.QEComponent;
+import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
+import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.avaritia.BlockAvaritiaSolarPanel;
 import com.denfop.integration.botania.BlockBotSolarPanel;
 import com.denfop.integration.de.BlockDESolarPanel;
+import com.denfop.integration.projecte.ProjectEIntegration;
 import com.denfop.integration.thaumcraft.blockThaumcraftSolarPanel;
 import com.denfop.items.CellType;
 import com.denfop.items.ItemUpgradePanelKit;
+import com.denfop.items.book.core.CoreBook;
+import com.denfop.items.energy.ItemQuantumSaber;
+import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.network.NetworkManager;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.qe.QENetGlobal;
 import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDict;
 import com.denfop.tabs.IUTab;
-import com.denfop.tiles.base.EnumUpgradeMultiMachine;
 import com.denfop.tiles.mechanism.EnumUpgradesMultiMachine;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.tiles.wiring.EnumElectricBlockState;
+import com.denfop.utils.CraftManager;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.Keys;
 import com.denfop.utils.ListInformation;
 import com.denfop.utils.ModUtils;
 import com.denfop.world.GenOre;
+import ic2.api.energy.EnergyNet;
 import ic2.api.event.TeBlockFinalCallEvent;
-import ic2.core.ExplosionIC2;
 import ic2.core.IC2;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
+import ic2.core.block.comp.Components;
 import ic2.core.util.SideGateway;
 import ic2.core.util.Util;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
@@ -92,6 +105,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -114,10 +128,11 @@ public final class IUCore {
     public static final CreativeTabs ItemTab = new IUTab(2, "ItemTab");
     public static final CreativeTabs OreTab = new IUTab(3, "OreTab");
     public static final CreativeTabs EnergyTab = new IUTab(4, "EnergyTab");
-
-    public static Logger log;
     public static final Map<Integer, EnumModule> modules = new HashMap<>();
-
+    public static final List<ItemStack> list = new ArrayList<>();
+    public static final List<ItemStack> get_ore = new ArrayList<>();
+    public static final List<ItemStack> get_ingot = new ArrayList<>();
+    public static Logger log;
     @SidedProxy(clientSide = "com.denfop.proxy.ClientProxy", serverSide = "com.denfop.proxy.CommonProxy")
     public static CommonProxy proxy;
     @SidedProxy(clientSide = "com.denfop.audio.AudioManagerClient", serverSide = "com.denfop.audio.AudioManager")
@@ -130,8 +145,8 @@ public final class IUCore {
             serverSide = "com.denfop.utils.KeyboardIU"
     )
     public static KeyboardIU keyboard;
-
     public static SideGateway<NetworkManager> network;
+    private static ic2.core.util.Config config;
 
     static {
         FluidRegistry.enableUniversalBucket();
@@ -140,17 +155,10 @@ public final class IUCore {
         IUCore.network = new SideGateway("com.denfop.network.NetworkManager", "com.denfop.network.NetworkManagerClient");
 
     }
-    @SubscribeEvent
-    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (IC2.platform.isSimulating()) {
-            keyboard.removePlayerReferences(event.player);
-        }
 
-    }
     public static boolean isSimulating() {
         return !FMLCommonHandler.instance().getEffectiveSide().isClient();
     }
-
 
     public static <E extends Enum<E> & ITeBlock> void register(Class<E> enumClass, ResourceLocation ref) {
         TeBlockRegistry.addAll(enumClass, ref);
@@ -213,6 +221,7 @@ public final class IUCore {
         register(BlockDoubleMolecularTransfomer.class, BlockDoubleMolecularTransfomer.IDENTITY);
         register(BlockAdminPanel.class, BlockAdminPanel.IDENTITY);
         register(BlockCable.class, BlockCable.IDENTITY);
+        register(BlockPipes.class, BlockPipes.IDENTITY);
         register(BlockQuarryVein.class, BlockQuarryVein.IDENTITY);
 
         register(BlockTank.class, BlockTank.IDENTITY);
@@ -221,8 +230,6 @@ public final class IUCore {
         Config.DraconicLoaded = Loader.isModLoaded("draconicevolution");
         Config.AvaritiaLoaded = Loader.isModLoaded("avaritia");
         Config.BotaniaLoaded = Loader.isModLoaded("botania");
-        Config.EnchantingPlus = Loader.isModLoaded("eplus");
-        Config.MineFactory = Loader.isModLoaded("MineFactoryReloaded");
         if (Config.AvaritiaLoaded) {
             register(BlockAvaritiaSolarPanel.class, BlockAvaritiaSolarPanel.IDENTITY);
         }
@@ -240,9 +247,26 @@ public final class IUCore {
 
     }
 
-
     public static ResourceLocation getIdentifier(final String name) {
         return new ResourceLocation(Constants.MOD_ID, name);
+    }
+
+    public static void initENet() {
+        if (Config.newsystem)
+        EnergyNet.instance = EnergyNetGlobal.initialize();
+        else
+            EnergyNet.instance = aroma1997.uncomplication.enet.old.EnergyNetGlobal.initialize();
+        HeatNet.instance = HeatNetGlobal.initialize();
+        CoolNet.instance = CoolNetGlobal.initialize();
+        QENet.instance = QENetGlobal.initialize();
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (IC2.platform.isSimulating()) {
+            keyboard.removePlayerReferences(event.player);
+        }
+
     }
 
     @Mod.EventHandler
@@ -250,8 +274,8 @@ public final class IUCore {
 
         MinecraftForge.EVENT_BUS.register(this);
         IUCore.log = event.getModLog();
-        Config.loadConfig(event.getSuggestedConfigurationFile(), event.getSide().isClient());
-        //    MainConfig.get().get("misc/enableEnetExplosions").set(false);
+        Config.loadNormalConfig(event.getSuggestedConfigurationFile());
+        UpgradeSystem.system = new BaseUpgradeSystem();
         proxy.regrecipemanager();
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
         FMLCommonHandler.instance().bus().register(new TickHandlerIU());
@@ -292,6 +316,7 @@ public final class IUCore {
         BlockDoubleMolecularTransfomer.buildDummies();
         BlockAdminPanel.buildDummies();
         BlockCable.buildDummies();
+        BlockPipes.buildDummies();
         BlockTank.buildDummies();
         BlockConverterMatter.buildDummies();
 
@@ -309,6 +334,7 @@ public final class IUCore {
             blockThaumcraftSolarPanel.buildDummies();
         }
         proxy.preInit(event);
+
         ListInformation.init();
         GenOre.init();
         RegisterOreDict.oredict();
@@ -319,15 +345,8 @@ public final class IUCore {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
         EnumSolarPanels.registerTile();
         ItemUpgradePanelKit.EnumSolarPanelsKit.registerkit();
-        if (event.getSide().isClient()) {
-            ForgeHooksClient.registerTESRItemStack(
-                    Item.getItemFromBlock(IUItem.blockmolecular), 0,
-                    BlockMolecular.molecular.getTeClass()
-            );
-        }
 
     }
-
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
@@ -335,7 +354,7 @@ public final class IUCore {
 
         SPPRecipes.addCraftingRecipes();
         proxy.registerRecipe();
-
+        initENet();
     }
 
     @SubscribeEvent
@@ -450,30 +469,56 @@ public final class IUCore {
         }
     }
 
-    public static final List<ItemStack> list = new ArrayList<>();
-    public static final List<ItemStack> get_ore = new ArrayList<>();
-    public static final List<ItemStack> get_ingot = new ArrayList<>();
+    void addInList1(ItemStack stack) {
+        boolean add = true;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isItemEqual(stack)) {
+                add = false;
+                break;
+            }
+        }
+        if (add) {
+            list.add(stack);
+        }
+    }
 
-    private static ic2.core.util.Config config;
+    void addInList(ItemStack stack) {
+        boolean add = true;
+        for (int i = 0; i < get_ingot.size(); i++) {
+            if (get_ingot.get(i).isItemEqual(stack)) {
+                add = false;
+                break;
+            }
+        }
+        if (add) {
+            get_ingot.add(stack);
+        }
+    }
 
     @Mod.EventHandler
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
+        if(Components.getId(AdvEnergy.class) == null)
+        Components.register(AdvEnergy.class,"AdvEnergy");
+        if(Components.getId(QEComponent.class) == null)
+        Components.register(QEComponent.class,"QEComponent");
+        if(Components.getId(CoolComponent.class) == null)
+            Components.register(CoolComponent.class,"CoolComponent");
         EnumUpgradesMultiMachine.register();
 
+        addInList1(new ItemStack(Items.DIAMOND));
+        addInList1(new ItemStack(Items.EMERALD));
+        addInList1(new ItemStack(Items.REDSTONE));
+        addInList1(new ItemStack(Items.DYE, 1, 4));
+        addInList1(new ItemStack(Items.COAL));
+        addInList1(new ItemStack(Items.GLOWSTONE_DUST));
 
-        list.add(new ItemStack(Items.DIAMOND));
-        list.add(new ItemStack(Items.EMERALD));
-        list.add(new ItemStack(Items.REDSTONE));
-        list.add(new ItemStack(Items.DYE, 1, 4));
-        list.add(new ItemStack(Items.COAL));
-        list.add(new ItemStack(Items.GLOWSTONE_DUST));
-        get_ingot.add(new ItemStack(Items.DIAMOND));
-        get_ingot.add(new ItemStack(Items.EMERALD));
-        get_ingot.add(new ItemStack(Items.REDSTONE));
-        get_ingot.add(new ItemStack(Items.DYE, 1, 4));
-        get_ingot.add(new ItemStack(Items.COAL));
-        get_ingot.add(new ItemStack(Items.GLOWSTONE_DUST));
+        addInList(new ItemStack(Items.DIAMOND));
+        addInList(new ItemStack(Items.EMERALD));
+        addInList(new ItemStack(Items.REDSTONE));
+        addInList(new ItemStack(Items.DYE, 1, 4));
+        addInList(new ItemStack(Items.COAL));
+        addInList(new ItemStack(Items.GLOWSTONE_DUST));
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isItemEqual(Ic2Items.iridiumOre)) {
                 list.remove(i);
@@ -483,10 +528,44 @@ public final class IUCore {
         for (int i = 0; i < get_ingot.size(); i++) {
             if (get_ingot.get(i).isItemEqual(Ic2Items.iridiumOre)) {
                 get_ingot.remove(i);
+                break;
             }
         }
         get_ingot.add(new ItemStack(IUItem.iuingot, 1, 14));
-
+        addOre("oreCoal");
+        addOre("oreIron");
+        addOre("oreGold");
+        addOre("oreDiamond");
+        addOre("oreRedstone");
+        addOre("oreEmerald");
+        addOre1("oreIron");
+        addOre1("oreGold");
+        removeOre("oreEndLapis");
+        removeOre("oreEndEmerald");
+        removeOre("oreEndDiamond");
+        removeOre("oreEndGold");
+        removeOre("oreEndIron");
+        removeOre("oreNetherGold");
+        removeOre("oreNetherIron");
+        removeOre("oreNetherRedstone");
+        removeOre("oreEndRedstone");
+        removeOre("oreNetherCoal");
+        removeOre("oreNetherLapis");
+        removeOre("oreNetherEmerald");
+        removeOre("oreNetherDiamond");
+        removeOre("oreEndCoal");
+        if (Loader.isModLoaded("projecte") && Config.ProjectE) {
+            ProjectEIntegration.init();
+        }
+        CoreBook.init();
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.mfeUnit));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.mfsukit));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.mfsUnit));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.batBox));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.cesuUnit));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.advancedCircuit));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.advancedCircuit));
+        CraftManager.removeCrafting(CraftManager.getRecipe(Ic2Items.metalformer));
     }
 
     @SubscribeEvent
@@ -500,6 +579,14 @@ public final class IUCore {
         }
     }
 
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            ++ItemQuantumSaber.ticker;
+            ++ItemSpectralSaber.ticker;
+        }
+
+    }
 
     @Mod.EventHandler
     public void init(final FMLFingerprintViolationEvent event) {
@@ -508,6 +595,33 @@ public final class IUCore {
                 "Invalid fingerprint detected! The file " + event.getSource().getName() +
                         " may have been tampered with. This version will NOT be supported by the author!"
         );
+    }
+
+    public void addOre(String name) {
+        if (OreDictionary.getOres(name).size() >= 1) {
+            if (!get_ore.contains(OreDictionary.getOres(name).get(0))) {
+                get_ore.add(OreDictionary.getOres(name).get(0));
+
+            }
+        }
+    }
+
+    public void addOre1(String name) {
+        if (OreDictionary.getOres(name).size() >= 1) {
+            if (!list.contains(OreDictionary.getOres(name).get(0))) {
+                list.add(OreDictionary.getOres(name).get(0));
+
+            }
+        }
+    }
+
+    public void removeOre(String name) {
+        if (OreDictionary.getOres(name).size() >= 1) {
+            if (list.contains(OreDictionary.getOres(name).get(0))) {
+                list.remove(OreDictionary.getOres(name).get(0));
+
+            }
+        }
     }
 
 }

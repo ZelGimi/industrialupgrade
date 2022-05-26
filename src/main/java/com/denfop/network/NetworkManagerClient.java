@@ -36,6 +36,36 @@ public class NetworkManagerClient extends NetworkManager {
     public NetworkManagerClient() {
     }
 
+    private static void processChatPacket(GrowingBuffer buffer) {
+        final String messages = buffer.readString();
+        IC2.platform.requestTick(false, new Runnable() {
+            public void run() {
+                String[] var1 = messages.split("[\\r\\n]+");
+                int var2 = var1.length;
+
+                for (int var3 = 0; var3 < var2; ++var3) {
+                    String line = var1[var3];
+                    IC2.platform.messagePlayer(null, line);
+                }
+
+            }
+        });
+    }
+
+    private static void processConsolePacket(GrowingBuffer buffer) {
+        String messages = buffer.readString();
+        PrintStream console = new PrintStream(new FileOutputStream(FileDescriptor.out));
+        String[] var3 = messages.split("[\\r\\n]+");
+        int var4 = var3.length;
+
+        for (int var5 = 0; var5 < var4; ++var5) {
+            String line = var3[var5];
+            console.println(line);
+        }
+
+        console.flush();
+    }
+
     protected boolean isClient() {
         return true;
     }
@@ -237,7 +267,8 @@ public class NetworkManagerClient extends NetworkManager {
                                             if (subGUI && currentItem.getItem() instanceof IHandHeldSubInventory) {
                                                 IC2.platform.launchGuiClient(
                                                         player,
-                                                        ((IHandHeldSubInventory) currentItem.getItem()).getSubInventory(player,
+                                                        ((IHandHeldSubInventory) currentItem.getItem()).getSubInventory(
+                                                                player,
                                                                 currentItem,
                                                                 ID
                                                         ),
@@ -268,36 +299,6 @@ public class NetworkManagerClient extends NetworkManager {
 
             }
         }
-    }
-
-    private static void processChatPacket(GrowingBuffer buffer) {
-        final String messages = buffer.readString();
-        IC2.platform.requestTick(false, new Runnable() {
-            public void run() {
-                String[] var1 = messages.split("[\\r\\n]+");
-                int var2 = var1.length;
-
-                for (int var3 = 0; var3 < var2; ++var3) {
-                    String line = var1[var3];
-                    IC2.platform.messagePlayer(null, line);
-                }
-
-            }
-        });
-    }
-
-    private static void processConsolePacket(GrowingBuffer buffer) {
-        String messages = buffer.readString();
-        PrintStream console = new PrintStream(new FileOutputStream(FileDescriptor.out));
-        String[] var3 = messages.split("[\\r\\n]+");
-        int var4 = var3.length;
-
-        for (int var5 = 0; var5 < var4; ++var5) {
-            String line = var3[var5];
-            console.println(line);
-        }
-
-        console.flush();
     }
 
 }

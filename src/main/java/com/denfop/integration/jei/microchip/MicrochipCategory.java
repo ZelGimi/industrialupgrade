@@ -76,8 +76,6 @@ public class MicrochipCategory extends Gui implements IRecipeCategory<MicrochipR
         drawTexturedModalRect(85, 20, 176, 85, (int) (xScale2 + 1), 7);
 
 
-        drawTexturedModalRect(67, 59, 176, 20, 38 + 1, 11);
-
         drawTexturedModalRect(3, 73 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );

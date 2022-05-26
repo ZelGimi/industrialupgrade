@@ -42,6 +42,36 @@ public class ItemIU extends Item implements IItemModelProvider {
     }
 
     @SideOnly(Side.CLIENT)
+    public static void registerModel(Item item, int meta, ItemName name, String extraName) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(ItemName name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append("ic2");
+        loc.append(':');
+        loc.append(name.getPath(extraName));
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    public static boolean shouldReequip(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        if (!StackUtil.checkItemEquality(newStack, oldStack)) {
+            return true;
+        } else if (oldStack == null) {
+            return false;
+        } else if (StackUtil.getSize(oldStack) != StackUtil.getSize(newStack)) {
+            return true;
+        } else {
+            return slotChanged && StackUtil.checkItemEqualityStrict(oldStack, newStack);
+        }
+    }
+
+    protected static int getRemainingUses(ItemStack stack) {
+        return stack.getMaxDamage() - stack.getItemDamage() + 1;
+    }
+
+    @SideOnly(Side.CLIENT)
     public void registerModels(ItemName name) {
         this.registerModel(0, name, null);
     }
@@ -54,20 +84,6 @@ public class ItemIU extends Item implements IItemModelProvider {
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, ItemName name, String extraName) {
         registerModel(this, meta, name, extraName);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, ItemName name, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(ItemName name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append("ic2");
-        loc.append(':');
-        loc.append(name.getPath(extraName));
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -114,22 +130,6 @@ public class ItemIU extends Item implements IItemModelProvider {
 
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return shouldReequip(oldStack, newStack, slotChanged);
-    }
-
-    public static boolean shouldReequip(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        if (!StackUtil.checkItemEquality(newStack, oldStack)) {
-            return true;
-        } else if (oldStack == null) {
-            return false;
-        } else if (StackUtil.getSize(oldStack) != StackUtil.getSize(newStack)) {
-            return true;
-        } else {
-            return slotChanged && StackUtil.checkItemEqualityStrict(oldStack, newStack);
-        }
-    }
-
-    protected static int getRemainingUses(ItemStack stack) {
-        return stack.getMaxDamage() - stack.getItemDamage() + 1;
     }
 
     public <T> void addCapability(Capability<T> cap, Function<ItemStack, T> lookup) {

@@ -446,6 +446,8 @@ public final class Ic2Items {
     public static ItemStack transformerUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.transformer);
     public static ItemStack energyStorageUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.energy_storage);
     public static ItemStack ejectorUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.ejector);
+    public static ItemStack advejectorUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.advanced_ejector);
+
     public static ItemStack fluidEjectorUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.fluid_ejector);
     public static ItemStack redstoneinvUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.redstone_inverter);
     public static ItemStack pullingUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.pulling);

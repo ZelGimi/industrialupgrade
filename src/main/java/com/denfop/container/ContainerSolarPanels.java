@@ -53,9 +53,5 @@ public class ContainerSolarPanels extends ContainerFullInv<TileEntitySolarPanel>
         return ret;
     }
 
-    @Override
-    public boolean canInteractWith(final EntityPlayer playerIn) {
-        return true;
-    }
 
 }

@@ -23,7 +23,7 @@ import java.util.List;
 public class TileEntityImpNuclearReactor extends TileEntityBaseNuclearReactorElectric {
 
     public TileEntityImpNuclearReactor() {
-        super(11, 6, "textures/gui/GUIImpNuclearReaktor.png", 1.4);
+        super(11, 6, "textures/gui/GUIImpNuclearReaktor.png", 2);
     }
 
 

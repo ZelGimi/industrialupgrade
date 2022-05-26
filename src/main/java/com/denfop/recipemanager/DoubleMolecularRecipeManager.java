@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class DoubleMolecularRecipeManager implements IDoubleMolecularRecipeManager {
 
+    private final Map<IDoubleMolecularRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
+
     public void addRecipe(IRecipeInput container, IRecipeInput fill, NBTTagCompound metadata, ItemStack output) {
         if (container == null) {
             throw new NullPointerException("The container recipe input is null");
@@ -43,24 +45,23 @@ public class DoubleMolecularRecipeManager implements IDoubleMolecularRecipeManag
         );
     }
 
-
     public RecipeOutput getOutputFor(ItemStack container, ItemStack fill, boolean adjustInput, boolean acceptTest) {
         if (acceptTest) {
-            if (container == null && fill == null) {
+            if (container.isEmpty() && fill.isEmpty()) {
                 return null;
             }
-        } else if (container == null || fill == null) {
+        } else if (container.isEmpty() || fill.isEmpty()) {
             return null;
         }
         for (Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> entry : this.recipes.entrySet()) {
             IDoubleMolecularRecipeManager.Input recipeInput = entry.getKey();
-            if (acceptTest && container == null) {
+            if (acceptTest && container.isEmpty()) {
                 if (recipeInput.fill.matches(fill)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill == null) {
+            if (acceptTest && fill.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
@@ -84,7 +85,5 @@ public class DoubleMolecularRecipeManager implements IDoubleMolecularRecipeManag
     public Map<IDoubleMolecularRecipeManager.Input, RecipeOutput> getRecipes() {
         return this.recipes;
     }
-
-    private final Map<IDoubleMolecularRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
 
 }

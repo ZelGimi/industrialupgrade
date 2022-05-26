@@ -12,7 +12,7 @@ public class InvSlotSolidMatter extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotSolidMatter(TileEntityInventory base1) {
-        super(base1, "input5", InvSlot.Access.IO, 9, InvSlot.InvSide.TOP);
+        super(base1, "input5", InvSlot.Access.I, 9, InvSlot.InvSide.TOP);
 
         this.stackSizeLimit = 1;
     }
@@ -32,7 +32,7 @@ public class InvSlotSolidMatter extends InvSlot {
     public double getMaxEnergy() {
         double maxEnergy = 0;
         for (int i = 0; i < size(); i++) {
-            if (get(i) != null) {
+            if (!get(i).isEmpty()) {
                 maxEnergy += 1E5D;
             }
 

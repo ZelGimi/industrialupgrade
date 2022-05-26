@@ -14,6 +14,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -47,12 +48,9 @@ public class TileSunnariumMaker extends TileEntityBaseSunnariumMaker {
 
     }
 
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    protected boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.sunnariumpanelmaker);
     }
 
     @SideOnly(Side.CLIENT)
@@ -60,9 +58,24 @@ public class TileSunnariumMaker extends TileEntityBaseSunnariumMaker {
         return false;
     }
 
-    @Override
     protected boolean isNormalCube() {
         return false;
+    }
+
+    protected boolean doesSideBlockRendering(EnumFacing side) {
+        return false;
+    }
+
+    protected boolean isSideSolid(EnumFacing side) {
+        return false;
+    }
+
+    protected boolean clientNeedsExtraModelInfo() {
+        return true;
+    }
+
+    public boolean shouldRenderInPass(int pass) {
+        return true;
     }
 
     public String getInventoryName() {

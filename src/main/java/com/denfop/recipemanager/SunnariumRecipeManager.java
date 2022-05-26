@@ -6,10 +6,14 @@ import ic2.api.recipe.RecipeOutput;
 import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SunnariumRecipeManager implements ISunnariumRecipeManager {
+
+    private final Map<ISunnariumRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
 
     public void addRecipe(IRecipeInput container, IRecipeInput fill, IRecipeInput fill1, IRecipeInput fill2, ItemStack output) {
         if (container == null) {
@@ -64,60 +68,63 @@ public class SunnariumRecipeManager implements ISunnariumRecipeManager {
             boolean acceptTest
     ) {
         if (acceptTest) {
-            if (container == null && fill == null && fill1 == null && fill2 == null) {
+            if (container.isEmpty() && fill.isEmpty() && fill1.isEmpty() && fill2.isEmpty()) {
                 return null;
             }
-        } else if (container == null || fill == null || fill1 == null || fill2 == null) {
+        } else if (container.isEmpty() || fill.isEmpty() || fill1.isEmpty() || fill2.isEmpty()) {
             return null;
         }
+
+        List<ItemStack> stack1 = new ArrayList<>();
+        stack1.add(container);
+        stack1.add(fill);
+        stack1.add(fill1);
+        stack1.add(fill2);
         for (Map.Entry<ISunnariumRecipeManager.Input, RecipeOutput> entry : this.recipes.entrySet()) {
             ISunnariumRecipeManager.Input recipeInput = entry.getKey();
-            if (acceptTest && container == null) {
-                if (recipeInput.fill.matches(fill)) {
-                    return entry.getValue();
-                }
-                continue;
-            }
-            if (acceptTest && fill == null) {
-                if (recipeInput.container.matches(container)) {
-                    return entry.getValue();
-                }
-                continue;
-            }
-            if (acceptTest && fill1 == null) {
-                if (recipeInput.container.matches(container)) {
-                    return entry.getValue();
-                }
-                continue;
-            }
-            if (acceptTest && fill2 == null) {
-                if (recipeInput.container.matches(container)) {
-                    return entry.getValue();
-                }
-                continue;
-            }
-            if (recipeInput.matches(container, fill, fill1, fill2)) {
-                if (acceptTest || container.getCount() >= recipeInput.container.getAmount() && fill.getCount() >= recipeInput.fill.getAmount() && fill1 != null && fill1.getCount() >= recipeInput.fill2.getAmount() && fill2 != null && fill2.getCount() >= recipeInput.fill3.getAmount()) {
-                    if (adjustInput) {
-
-                        container.setCount(container.getCount() - recipeInput.container.getAmount());
-
-                        fill.setCount(fill.getCount() - recipeInput.fill.getAmount());
-                        fill1.setCount(fill1.getCount() - recipeInput.fill2.getAmount());
-                        fill2.setCount(fill2.getCount() - recipeInput.fill3.getAmount());
+            List<IRecipeInput> recipeInputList = recipeInput.getList();
+            int[] col = new int[4];
+            int[] col1 = new int[4];
+            List<Integer> lst = new ArrayList<>();
+            lst.add(0);
+            lst.add(1);
+            lst.add(2);
+            lst.add(3);
+            List<Integer> lst1 = new ArrayList<>();
+            for (int j = 0; j < stack1.size(); j++) {
+                for (int i = 0; i < recipeInputList.size(); i++) {
+                    if (recipeInputList.get(i).matches(stack1.get(j)) && !lst1.contains(i)) {
+                        lst1.add(i);
+                        col1[j] = i;
+                        break;
                     }
+                }
+            }
+            if (lst.size() == lst1.size()) {
+                for (int j = 0; j < stack1.size(); j++) {
+                    ItemStack stack2 = recipeInputList.get(col1[j]).getInputs().get(0);
+                    ItemStack stack = stack1.get(j);
+                    if (stack.getCount() < stack2.getCount()) {
+                        return null;
+                    }
+                    col[j] = stack2.getCount();
+                }
+                if (adjustInput) {
+                    for (int j = 0; j < stack1.size(); j++) {
+                        stack1.get(j).setCount(stack1.get(j).getCount() - col[j]);
+                    }
+                    break;
+                } else {
                     return entry.getValue();
                 }
-                break;
             }
         }
+
         return null;
     }
 
     public Map<ISunnariumRecipeManager.Input, RecipeOutput> getRecipes() {
         return this.recipes;
     }
-
-    private final Map<ISunnariumRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
 
 }

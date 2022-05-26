@@ -43,22 +43,80 @@ import java.util.Queue;
 @SideOnly(Side.CLIENT)
 public final class AudioManagerClient extends AudioManager {
 
+    private final int streamingSourceCount = 4;
+    private final Map<AudioManagerClient.WeakObject, List<AudioSourceClient>> objectToAudioSourceMap = new HashMap();
+    private final Queue<AudioSource> validAudioSources = new PriorityQueue();
+    private final Map<String, FutureSound> singleSoundQueue = new HashMap();
     public float fadingDistance = 16.0F;
+    float masterVolume = 0.5F;
     private boolean enabled = true;
     private boolean wasPaused = false;
     private int maxSourceCount = 32;
-    private final int streamingSourceCount = 4;
     private SoundManager soundManager;
     private Field soundManagerLoaded;
     private volatile Thread initThread;
     private SoundSystem soundSystem = null;
-    float masterVolume = 0.5F;
     private int nextId = 0;
-    private final Map<AudioManagerClient.WeakObject, List<AudioSourceClient>> objectToAudioSourceMap = new HashMap();
-    private final Queue<AudioSource> validAudioSources = new PriorityQueue();
-    private final Map<String, FutureSound> singleSoundQueue = new HashMap();
 
     public AudioManagerClient() {
+    }
+
+    private static SoundManager getSoundManager() {
+        SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
+        return ReflectionUtil.getValue(handler, SoundManager.class);
+    }
+
+    private static SoundSystem getSoundSystem(SoundManager soundManager) {
+        try {
+            return ReflectionUtil.getValueRecursive(soundManager, SoundSystem.class, false);
+        } catch (NoSuchFieldException var2) {
+            return null;
+        }
+    }
+
+    static URL getSourceURL(String soundFile) {
+        int colonIndex = soundFile.indexOf(58);
+        if (colonIndex > -1) {
+            ClassLoader var10000 = AudioSource.class.getClassLoader();
+            StringBuilder var10001 = (new StringBuilder()).append("assets/").append(soundFile, 0, colonIndex).append(
+                    "/sounds/");
+            ++colonIndex;
+            return var10000.getResource(var10001.append(soundFile.substring(colonIndex)).toString());
+        } else {
+            return AudioSource.class.getClassLoader().getResource("ic2/sounds/" + soundFile);
+        }
+    }
+
+    private static void removeSources(List<AudioSourceClient> sources) {
+        Iterator var1 = sources.iterator();
+
+        while (var1.hasNext()) {
+            AudioSourceClient audioSource = (AudioSourceClient) var1.next();
+            audioSource.remove();
+        }
+
+    }
+
+    private static RayTraceResult getMovingObjectPositionFromPlayer(World worldIn, EntityPlayer playerIn, boolean useLiquids) {
+        float f = playerIn.rotationPitch;
+        float f1 = playerIn.rotationYaw;
+        double d0 = playerIn.posX;
+        double d1 = playerIn.posY + (double) playerIn.getEyeHeight();
+        double d2 = playerIn.posZ;
+        Vec3d vec3 = new Vec3d(d0, d1, d2);
+        float f2 = MathHelper.cos(-f1 * 0.017453292F - 3.1415927F);
+        float f3 = MathHelper.sin(-f1 * 0.017453292F - 3.1415927F);
+        float f4 = -MathHelper.cos(-f * 0.017453292F);
+        float f5 = MathHelper.sin(-f * 0.017453292F);
+        float f6 = f3 * f4;
+        float f7 = f2 * f4;
+        double d3 = 5.0D;
+        Vec3d vec31 = vec3.addVector((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
+        return worldIn.rayTraceBlocks(vec3, vec31, useLiquids, !useLiquids, false);
+    }
+
+    private static String getSourceName(int id) {
+        return "asm_snd" + id;
     }
 
     public void initialize() {
@@ -155,19 +213,6 @@ public final class AudioManagerClient extends AudioManager {
             }, "IC2 audio init thread");
             this.initThread.setDaemon(true);
             this.initThread.start();
-        }
-    }
-
-    private static SoundManager getSoundManager() {
-        SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
-        return ReflectionUtil.getValue(handler, SoundManager.class);
-    }
-
-    private static SoundSystem getSoundSystem(SoundManager soundManager) {
-        try {
-            return ReflectionUtil.getValueRecursive(soundManager, SoundSystem.class, false);
-        } catch (NoSuchFieldException var2) {
-            return null;
         }
     }
 
@@ -315,27 +360,10 @@ public final class AudioManagerClient extends AudioManager {
             );
 
             AudioManagerClient.WeakObject key = new AudioManagerClient.WeakObject(obj);
-            List<AudioSourceClient> sources = this.objectToAudioSourceMap.get(key);
-            if (sources == null) {
-                sources = new ArrayList();
-                this.objectToAudioSourceMap.put(key, sources);
-            }
+            List<AudioSourceClient> sources = this.objectToAudioSourceMap.computeIfAbsent(key, k -> new ArrayList());
 
             sources.add(audioSource);
             return audioSource;
-        }
-    }
-
-    static URL getSourceURL(String soundFile) {
-        int colonIndex = soundFile.indexOf(58);
-        if (colonIndex > -1) {
-            ClassLoader var10000 = AudioSource.class.getClassLoader();
-            StringBuilder var10001 = (new StringBuilder()).append("assets/").append(soundFile, 0, colonIndex).append(
-                    "/sounds/");
-            ++colonIndex;
-            return var10000.getResource(var10001.append(soundFile.substring(colonIndex)).toString());
-        } else {
-            return AudioSource.class.getClassLoader().getResource("ic2/sounds/" + soundFile);
         }
     }
 
@@ -355,16 +383,6 @@ public final class AudioManagerClient extends AudioManager {
                 removeSources(sources);
             }
         }
-    }
-
-    private static void removeSources(List<AudioSourceClient> sources) {
-        Iterator var1 = sources.iterator();
-
-        while (var1.hasNext()) {
-            AudioSourceClient audioSource = (AudioSourceClient) var1.next();
-            audioSource.remove();
-        }
-
     }
 
     public void playOnce(Object obj, String soundFile) {
@@ -472,28 +490,6 @@ public final class AudioManagerClient extends AudioManager {
             }
         }
 
-    }
-
-    private static RayTraceResult getMovingObjectPositionFromPlayer(World worldIn, EntityPlayer playerIn, boolean useLiquids) {
-        float f = playerIn.rotationPitch;
-        float f1 = playerIn.rotationYaw;
-        double d0 = playerIn.posX;
-        double d1 = playerIn.posY + (double) playerIn.getEyeHeight();
-        double d2 = playerIn.posZ;
-        Vec3d vec3 = new Vec3d(d0, d1, d2);
-        float f2 = MathHelper.cos(-f1 * 0.017453292F - 3.1415927F);
-        float f3 = MathHelper.sin(-f1 * 0.017453292F - 3.1415927F);
-        float f4 = -MathHelper.cos(-f * 0.017453292F);
-        float f5 = MathHelper.sin(-f * 0.017453292F);
-        float f6 = f3 * f4;
-        float f7 = f2 * f4;
-        double d3 = 5.0D;
-        Vec3d vec31 = vec3.addVector((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
-        return worldIn.rayTraceBlocks(vec3, vec31, useLiquids, !useLiquids, false);
-    }
-
-    private static String getSourceName(int id) {
-        return "asm_snd" + id;
     }
 
     public static class WeakObject extends WeakReference<Object> {

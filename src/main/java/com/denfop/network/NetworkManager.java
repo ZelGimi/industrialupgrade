@@ -30,10 +30,10 @@ import java.util.zip.DeflaterOutputStream;
 
 public class NetworkManager implements INetworkManager {
 
-    private static final Field playerInstancePlayers = ReflectionUtil.getField(PlayerChunkMapEntry.class, List.class);
-    private static FMLEventChannel channel;
-    private static final int maxPacketDataLength = 32766;
     public static final String channelName = "ic2";
+    private static final Field playerInstancePlayers = ReflectionUtil.getField(PlayerChunkMapEntry.class, List.class);
+    private static final int maxPacketDataLength = 32766;
+    private static FMLEventChannel channel;
 
     public NetworkManager() {
         if (channel == null) {
@@ -43,10 +43,30 @@ public class NetworkManager implements INetworkManager {
         channel.register(this);
     }
 
+    static void writeFieldData(Object object, String fieldName, GrowingBuffer out) throws IOException {
+        int pos = fieldName.indexOf(61);
+        if (pos != -1) {
+            out.writeString(fieldName.substring(0, pos));
+            DataEncoder.encode(out, fieldName.substring(pos + 1));
+        } else {
+            out.writeString(fieldName);
+
+            try {
+                DataEncoder.encode(out, ReflectionUtil.getValueRecursive(object, fieldName));
+            } catch (NoSuchFieldException var5) {
+                throw new RuntimeException("Can't find field " + fieldName + " in " + object.getClass().getName(), var5);
+            }
+        }
+
+    }
+
+    private static FMLProxyPacket makePacket(GrowingBuffer buffer, boolean advancePos) {
+        return new FMLProxyPacket(new PacketBuffer(buffer.toByteBuf(advancePos)), "IU");
+    }
+
     protected boolean isClient() {
         return false;
     }
-
 
     public final void updateTileEntityField(TileEntity te, String field) {
 
@@ -65,7 +85,6 @@ public class NetworkManager implements INetworkManager {
             return field;
         }
     }
-
 
     public final void initiateTileEntityEvent(TileEntity te, int event, boolean limitRange) {
         assert !this.isClient();
@@ -87,19 +106,16 @@ public class NetworkManager implements INetworkManager {
 
     }
 
-
     public void requestGUI(IHasGui inventory) {
         assert false;
 
     }
-
 
     public final void sendInitialData(TileEntity te) {
         assert !this.isClient();
 
 
     }
-
 
     final void sendLargePacket(EntityPlayerMP player, int id, GrowingBuffer data) {
         GrowingBuffer buffer = new GrowingBuffer(16384);
@@ -184,13 +200,11 @@ public class NetworkManager implements INetworkManager {
         }
     }
 
-
     public void initiateKeyUpdate(int keyState) {
     }
 
     public void sendLoginData() {
     }
-
 
     protected final void sendPacket(GrowingBuffer buffer) {
         if (!this.isClient()) {
@@ -205,28 +219,6 @@ public class NetworkManager implements INetworkManager {
         assert !this.isClient();
 
         channel.sendTo(makePacket(buffer, advancePos), player);
-    }
-
-
-    static void writeFieldData(Object object, String fieldName, GrowingBuffer out) throws IOException {
-        int pos = fieldName.indexOf(61);
-        if (pos != -1) {
-            out.writeString(fieldName.substring(0, pos));
-            DataEncoder.encode(out, fieldName.substring(pos + 1));
-        } else {
-            out.writeString(fieldName);
-
-            try {
-                DataEncoder.encode(out, ReflectionUtil.getValueRecursive(object, fieldName));
-            } catch (NoSuchFieldException var5) {
-                throw new RuntimeException("Can't find field " + fieldName + " in " + object.getClass().getName(), var5);
-            }
-        }
-
-    }
-
-    private static FMLProxyPacket makePacket(GrowingBuffer buffer, boolean advancePos) {
-        return new FMLProxyPacket(new PacketBuffer(buffer.toByteBuf(advancePos)), "IU");
     }
 
 }

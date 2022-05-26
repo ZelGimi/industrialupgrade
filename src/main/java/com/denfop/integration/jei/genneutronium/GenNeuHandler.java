@@ -19,14 +19,6 @@ public class GenNeuHandler {
     private final double input;
 
 
-    public static List<GenNeuHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
-
     public GenNeuHandler(
             double input, FluidStack input2
     ) {
@@ -34,13 +26,11 @@ public class GenNeuHandler {
         this.input2 = input2;
     }
 
-
-    public double getEnergy() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public FluidStack getOutput() { // Получатель входного предмета рецепта.
-        return input2;
+    public static List<GenNeuHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static GenNeuHandler addRecipe(
@@ -64,7 +54,6 @@ public class GenNeuHandler {
         return null;
     }
 
-
     public static void initRecipes() {
         for (Map.Entry<NBTTagCompound, FluidStack> container :
                 Recipes.neutroniumgenrator.getRecipes().entrySet()) {
@@ -79,6 +68,14 @@ public class GenNeuHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public double getEnergy() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public FluidStack getOutput() { // Получатель входного предмета рецепта.
+        return input2;
     }
 
 }

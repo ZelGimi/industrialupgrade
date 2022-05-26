@@ -12,7 +12,11 @@ import java.util.List;
 public class FQuarryHandler {
 
     private static final List<FQuarryHandler> recipes = new ArrayList<>();
+    private final ItemStack output;
 
+    public FQuarryHandler(ItemStack output) {
+        this.output = output;
+    }
 
     public static List<FQuarryHandler> getRecipes() { // Получатель всех рецептов.
         if (recipes.isEmpty()) {
@@ -20,19 +24,6 @@ public class FQuarryHandler {
         }
         return recipes;
     }
-
-    private final ItemStack output;
-
-
-    public FQuarryHandler(ItemStack output) {
-        this.output = output;
-    }
-
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
-    }
-
 
     public static FQuarryHandler addRecipe(ItemStack output) {
         FQuarryHandler recipe = new FQuarryHandler(output);
@@ -55,10 +46,6 @@ public class FQuarryHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.getItem() == output.getItem();
-    }
-
     public static void initRecipes() {
         for (ItemStack container : IUCore.get_ingot) {
             addRecipe(container);
@@ -72,6 +59,14 @@ public class FQuarryHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.getItem() == output.getItem();
     }
 
 }

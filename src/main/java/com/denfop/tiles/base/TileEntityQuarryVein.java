@@ -2,33 +2,36 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.BlockVein;
+import com.denfop.container.ContainerQuarryVein;
+import com.denfop.gui.GuiQuarryVein;
+import com.denfop.items.ItemUpgradeMachinesKit;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Map;
 import java.util.Random;
 
 public class TileEntityQuarryVein extends TileEntityElectricMachine implements INetworkUpdateListener, INetworkDataProvider,
         INetworkClientTileEntityEventListener {
 
 
+    public int level;
+    public int time;
     public boolean empty;
     public int x;
     public int y;
@@ -36,10 +39,10 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
     public int progress;
     public int number;
     public boolean analysis;
-
+    public int max;
 
     public TileEntityQuarryVein() {
-        super("", 20, 14, 1);
+        super("", 400, 14, 1);
         this.analysis = true;
         this.number = 0;
         this.progress = 0;
@@ -47,17 +50,18 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         this.y = 0;
         this.z = 0;
         this.empty = true;
+        this.time = 0;
+        this.level = 1;
     }
 
-    private void updateTileEntityField() {
-
-        IC2.network.get(true).updateTileEntityField(this, "x");
-        IC2.network.get(true).updateTileEntityField(this, "y");
-        IC2.network.get(true).updateTileEntityField(this, "z");
-        IC2.network.get(true).updateTileEntityField(this, "analysis");
-        IC2.network.get(true).updateTileEntityField(this, "empty");
-
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        ItemStack stack = new ItemStack(IUItem.oilquarry);
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        nbt.setInteger("level", this.level);
+        return stack;
     }
+
 
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
@@ -72,10 +76,10 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         return false;
     }
 
-    @Override
-    public void onNetworkUpdate(String field) {
-
+    public String getStartSoundFile() {
+        return "Machines/rig.ogg";
     }
+
 
     protected boolean isSideSolid(EnumFacing side) {
         return false;
@@ -98,47 +102,41 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             final float hitY,
             final float hitZ
     ) {
-        if (player.isSneaking()) {
-            return false;
-        }
-        if (world.isRemote) {
-            return true;
-        }
-        Map map = this.getWorld().getChunkFromBlockCoords(this.pos).tileEntities;
-
-        for (Object o : map.values()) {
-            TileEntity tile3 = (TileEntity) o;
-            if (tile3 instanceof TileOilBlock) {
-                TileOilBlock tile2 = (TileOilBlock) tile3;
-                if (!tile2.empty) {
-                    IC2.platform.messagePlayer(player, Localization.translate("iu.fluidneft") + ": " + tile2.number + " mb");
-                } else {
-                    IC2.platform.messagePlayer(player, Localization.translate("iu.empty"));
+        if (!player.getHeldItem(hand).isEmpty()) {
+            if (player.getHeldItem(hand).getItem() instanceof ItemUpgradeMachinesKit) {
+                if (this.level < 4 && this.level ==
+                        (player.getHeldItem(hand).getItemDamage() + 1)) {
+                    this.level++;
+                    player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
+                    return true;
+                } else if (this.level < 4 && player.getHeldItem(hand).getItemDamage() == 3) {
+                    this.level = 4;
+                    player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
+                    return true;
                 }
-
-
-                return true;
-            } else if (tile3 instanceof TileEntityVein) {
-                TileEntityVein tile2 = (TileEntityVein) tile3;
-                IC2.platform.messagePlayer(
-                        player,
-                        new ItemStack(IUItem.heavyore, 1, tile2.getBlockMetadata()).getDisplayName() + ": " + tile2.number +
-                                "/" + tile2.max
-                );
-
-
-                return true;
             }
-
         }
-        if (this.analysis) {
-            IC2.platform.messagePlayer(player, ModUtils.getString(((double) this.progress / 1200) * 100) + Localization.translate(
-                    "scanning"));
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    }
 
-
-            return true;
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        this.level = nbt.getInteger("level") != 0 ? nbt.getInteger("level") : 1;
+        if (getWorld().provider.getDimension() != 0) {
+            this.empty = true;
         }
-        return true;
+
+    }
+
+    private void updateTileEntityField() {
+        IC2.network.get(true).updateTileEntityField(this, "analysis");
+        IC2.network.get(true).updateTileEntityField(this, "empty");
+        IC2.network.get(true).updateTileEntityField(this, "level");
+        IC2.network.get(true).updateTileEntityField(this, "x");
+        IC2.network.get(true).updateTileEntityField(this, "y");
+        IC2.network.get(true).updateTileEntityField(this, "z");
     }
 
     public void updateEntityServer() {
@@ -146,11 +144,6 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         if (getWorld().provider.getWorldTime() % 40 == 0) {
             updateTileEntityField();
         }
-        if (getWorld().provider.getDimension() != 0) {
-            this.empty = true;
-            return;
-        }
-
         {
             int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
             int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
@@ -161,37 +154,57 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
                 if (this.getWorld().getTileEntity(pos) instanceof TileEntityVein) {
                     TileEntityVein tile1 = (TileEntityVein) this.getWorld().getTileEntity(pos);
                     if (tile1.change) {
-                        number = tile1.number;
-                        this.analysis = false;
+                        this.number = tile1.number;
                         this.empty = false;
-                        progress = 1200;
+                        this.progress = 1200;
+                        this.max = tile1.max;
                         this.x = chunkx;
                         this.y = 0;
                         this.z = chunkz;
+                        this.analysis = false;
                         return;
                     }
+
                 } else if (this.getWorld().getTileEntity(pos) instanceof TileOilBlock) {
                     TileOilBlock tile1 = (TileOilBlock) this.getWorld().getTileEntity(pos);
                     if (tile1.change && !tile1.empty) {
-                        number = tile1.number;
-                        this.analysis = false;
-                        progress = 1200;
+                        this.number = tile1.number;
                         this.x = chunkx;
                         this.y = 0;
                         this.z = chunkz;
-                        this.empty = tile1.empty;
-                        return;
+                        this.empty = false;
+                        this.max = tile1.max;
+                        this.analysis = false;
                     } else {
+                        this.analysis = false;
                         this.empty = true;
                     }
+                    this.progress = 1200;
+                    return;
 
                 }
+                return;
             }
         }
+
         if (this.analysis && this.energy.getEnergy() >= 5) {
-            progress++;
+            if (progress == 0) {
+                initiate(2);
+                time = 0;
+                initiate(0);
+            }
+            if (time > 340) {
+                initiate(2);
+                time = 0;
+            }
+            if (time == 0) {
+                initiate(0);
+            }
+            time++;
+            progress += Math.pow(2, this.level - 1);
             this.energy.useEnergy(5);
             if (progress >= 1200) {
+                initiate(2);
                 this.analysis = false;
 
                 int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
@@ -199,7 +212,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
                 BlockPos pos = new BlockPos(chunkx, 0, chunkz);
                 Random rand = new Random();
                 int p = rand.nextInt(100);
-                if (p >= 10) {
+                if (p >= 20 + ((this.level - 1) * 2)) {
                     getWorld().setBlockState(pos, IUItem.oilblock.getDefaultState());
                     TileOilBlock oil = (TileOilBlock) getWorld().getTileEntity(pos);
                     oil.change = true;
@@ -207,10 +220,10 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
                     this.x = chunkx;
                     this.y = 0;
                     this.z = chunkz;
-                    number = oil.number;
+                    this.number = oil.number;
 
                 } else if (!getWorld().getBlockState(pos).getBlock().equals(Blocks.AIR)) {
-                    int k = rand.nextInt(12);
+                    int k = rand.nextInt(16);
 
                     getWorld().setBlockState(pos, IUItem.vein.getBlockState().getBaseState().withProperty(
                             BlockVein.VARIANT,
@@ -220,7 +233,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
                     TileEntityVein vein = (TileEntityVein) getWorld().getTileEntity(pos);
                     vein.change = true;
                     vein.meta = k;
-                    number = vein.number;
+                    this.number = vein.number;
                     this.x = chunkx;
                     this.y = 0;
                     this.z = chunkz;
@@ -229,6 +242,11 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             }
 
 
+        } else {
+            if (this.time > 0) {
+                initiate(2);
+                this.time = 0;
+            }
         }
     }
 
@@ -238,7 +256,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
 
         if (Biome.getIdForBiome(biome) == 2) {
             int random = rand.nextInt(100);
-            if (random > 40) {
+            if (random > 40 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(50000) + 20000;
             } else {
                 tile.empty = true;
@@ -247,7 +265,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else if (Biome.getIdForBiome(biome) == 0) {
             int random;
             random = rand.nextInt(100);
-            if (random > 65) {
+            if (random > 65 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(80000);
             } else {
                 tile.empty = true;
@@ -256,7 +274,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else if (Biome.getIdForBiome(biome) == 24) {
             int random;
             random = rand.nextInt(100);
-            if (random > 40) {
+            if (random > 40 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(80000);
             } else {
                 tile.empty = true;
@@ -265,7 +283,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else if (Biome.getIdForBiome(biome) == 10) {
             int random;
             random = rand.nextInt(100);
-            if (random > 65) {
+            if (random > 65 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(80000);
             } else {
                 tile.empty = true;
@@ -274,7 +292,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else if (Biome.getIdForBiome(biome) == 17) {
             int random;
             random = rand.nextInt(100);
-            if (random > 40) {
+            if (random > 40 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(60000) + 20000;
             } else {
                 tile.empty = true;
@@ -283,7 +301,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else if (Biome.getIdForBiome(biome) == 7) {
             int random;
             random = rand.nextInt(100);
-            if (random > 55) {
+            if (random > 55 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(20000);
             } else {
                 tile.empty = true;
@@ -292,7 +310,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else if (Biome.getIdForBiome(biome) == 35) {
             int random;
             random = rand.nextInt(100);
-            if (random > 55) {
+            if (random > 55 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(40000);
             } else {
                 tile.empty = true;
@@ -301,7 +319,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         } else {
             int random;
             random = rand.nextInt(100);
-            if (random > 75) {
+            if (random > 75 - ((this.level - 1) * 3)) {
                 tile.number = rand.nextInt(20000);
             } else {
                 tile.empty = true;
@@ -309,6 +327,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             }
         }
         tile.max = tile.number;
+        tile.change = true;
     }
 
 
@@ -321,6 +340,9 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         this.x = nbttagcompound.getInteger("x1");
         this.y = nbttagcompound.getInteger("y1");
         this.z = nbttagcompound.getInteger("z1");
+        this.level = nbttagcompound.getInteger("level");
+        this.max = nbttagcompound.getInteger("max");
+
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
@@ -332,21 +354,19 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         nbttagcompound.setInteger("x1", this.x);
         nbttagcompound.setInteger("y1", this.y);
         nbttagcompound.setInteger("z1", this.z);
+        nbttagcompound.setInteger("level", this.level);
+        nbttagcompound.setInteger("max", this.max);
         return nbttagcompound;
     }
 
 
-    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-        return true;
-    }
-
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return null;
+        return new GuiQuarryVein(getGuiContainer(entityPlayer));
     }
 
-    public ContainerBase<? extends TileEntityQuarryVein> getGuiContainer(EntityPlayer entityPlayer) {
-        return null;
+    public ContainerQuarryVein getGuiContainer(EntityPlayer entityPlayer) {
+        return new ContainerQuarryVein(entityPlayer, this);
     }
 
 

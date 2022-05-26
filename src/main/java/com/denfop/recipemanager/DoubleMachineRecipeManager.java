@@ -19,6 +19,30 @@ public class DoubleMachineRecipeManager implements IDoubleMachineRecipeManager {
 
     private final Map<IDoubleMachineRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
 
+    private static boolean checkListEquality(Collection<ItemStack> a, Collection<ItemStack> b) {
+        if (a.size() != b.size()) {
+            return false;
+        } else {
+            ListIterator<ItemStack> itB = (new ArrayList(b)).listIterator();
+
+            for (final ItemStack stack : a) {
+                do {
+                    if (!itB.hasNext()) {
+                        return false;
+                    }
+                } while (!StackUtil.checkItemEqualityStrict(stack, itB.next()));
+
+                itB.remove();
+
+                while (itB.hasPrevious()) {
+                    itB.previous();
+                }
+            }
+
+            return true;
+        }
+    }
+
     public void addRecipe(IRecipeInput container, IRecipeInput fill, NBTTagCompound metadata, ItemStack output) {
         if (container == null) {
             throw new NullPointerException("The container recipe input is null");
@@ -55,21 +79,21 @@ public class DoubleMachineRecipeManager implements IDoubleMachineRecipeManager {
 
     public RecipeOutput getOutputFor(ItemStack container, ItemStack fill, boolean adjustInput, boolean acceptTest) {
         if (acceptTest) {
-            if (container == null && fill == null) {
+            if (container.isEmpty() && fill.isEmpty()) {
                 return null;
             }
-        } else if (container == null || fill == null) {
+        } else if (container.isEmpty() || fill.isEmpty()) {
             return null;
         }
         for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> entry : this.recipes.entrySet()) {
             IDoubleMachineRecipeManager.Input recipeInput = entry.getKey();
-            if (acceptTest && container == null) {
+            if (acceptTest && container.isEmpty()) {
                 if (recipeInput.fill.matches(fill)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill == null) {
+            if (acceptTest && fill.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
@@ -115,7 +139,8 @@ public class DoubleMachineRecipeManager implements IDoubleMachineRecipeManager {
                     .entrySet()
                     .iterator(); it.hasNext(); ) {
                 Map.Entry<Input, RecipeOutput> iRecipeInputRecipeOutputEntry = it.next();
-                if (getOutputFor(iRecipeInputRecipeOutputEntry.getKey().container.getInputs().get(0),
+                if (getOutputFor(
+                        iRecipeInputRecipeOutputEntry.getKey().container.getInputs().get(0),
                         iRecipeInputRecipeOutputEntry.getKey().fill.getInputs().get(0),
                         false,
                         false
@@ -124,30 +149,6 @@ public class DoubleMachineRecipeManager implements IDoubleMachineRecipeManager {
                     return;
                 }
             }
-        }
-    }
-
-    private static boolean checkListEquality(Collection<ItemStack> a, Collection<ItemStack> b) {
-        if (a.size() != b.size()) {
-            return false;
-        } else {
-            ListIterator<ItemStack> itB = (new ArrayList(b)).listIterator();
-
-            for (final ItemStack stack : a) {
-                do {
-                    if (!itB.hasNext()) {
-                        return false;
-                    }
-                } while (!StackUtil.checkItemEqualityStrict(stack, itB.next()));
-
-                itB.remove();
-
-                while (itB.hasPrevious()) {
-                    itB.previous();
-                }
-            }
-
-            return true;
         }
     }
 

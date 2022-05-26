@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:adv_refiner_item"
+    },
+    "title": {
+      "translate": "achievement.adv_oil_refinery"
+    },
+    "description": {
+      "translate": "achievement.adv_oil_refinery.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/oil_refinery",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:adv_refiner_item"
+          }
+        ]
+      }
+    }
+  }
+}

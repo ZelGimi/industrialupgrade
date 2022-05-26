@@ -48,21 +48,6 @@ public abstract class BaseElectricItem extends Item implements IPseudoDamageItem
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name, extraName);
-    }
-
-    @SideOnly(Side.CLIENT)
     public static void registerModel(Item item, int meta, String name, String extraName) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
     }
@@ -75,6 +60,21 @@ public abstract class BaseElectricItem extends Item implements IPseudoDamageItem
 
         loc.append("energy").append("/").append(name);
         return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name) {
+        registerModel(this, meta, name, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name, String extraName) {
+        registerModel(this, meta, name, extraName);
     }
 
     public boolean canProvideEnergy(ItemStack stack) {

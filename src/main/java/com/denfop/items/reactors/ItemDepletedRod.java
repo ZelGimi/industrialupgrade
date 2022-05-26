@@ -40,32 +40,6 @@ public class ItemDepletedRod extends ItemIC2 implements IReactorComponent, IMode
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name, "depleted");
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void doModelGuf() {
-        ((IItemModelProvider) this).registerModels(null);
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name, null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name, extraName);
-    }
-
     @SideOnly(Side.CLIENT)
     public static void registerModel(Item item, int meta, String name, String extraName) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
@@ -82,6 +56,31 @@ public class ItemDepletedRod extends ItemIC2 implements IReactorComponent, IMode
             loc.append(name);
         }
         return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    @Override
+    public void registerModels() {
+        registerModels(this.name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name, "depleted");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void doModelGuf() {
+        ((IItemModelProvider) this).registerModels(null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name) {
+        registerModel(this, meta, name, null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name, String extraName) {
+        registerModel(this, meta, name, extraName);
     }
 
     public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {

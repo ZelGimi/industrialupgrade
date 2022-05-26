@@ -18,6 +18,14 @@ public class InvSlotProcessableWitherMaker extends InvSlotProcessable {
 
     }
 
+    public static boolean isStackEqual(ItemStack stack1, ItemStack stack2) {
+        return stack1 == null && stack2 == null || stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
+    }
+
+    public static boolean isStackEqualStrict(ItemStack stack1, ItemStack stack2) {
+        return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
     public Map<IWitherMaker.Input, RecipeOutput> getRecipeList() {
         return Recipes.withermaker.getRecipes();
     }
@@ -38,23 +46,11 @@ public class InvSlotProcessableWitherMaker extends InvSlotProcessable {
         this.consume(number, amount, false, false);
     }
 
-    public static boolean isStackEqual(ItemStack stack1, ItemStack stack2) {
-        return stack1 == null && stack2 == null || stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
-    }
-
-    public static boolean isStackEqualStrict(ItemStack stack1, ItemStack stack2) {
-        return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
-    }
-
     public void consume(int number, int amount, boolean simulate, boolean consumeContainers) {
-        ItemStack ret = null;
 
 
         ItemStack stack = this.get(number);
-        if (stack != null && stack.getCount() >= 1 && this.accepts(stack) && (ret == null || isStackEqualStrict(
-                stack,
-                ret
-        )) && (stack.getCount() == 1 || consumeContainers || !stack.getItem().hasContainerItem(stack))) {
+        if (!stack.isEmpty() && stack.getCount() >= 1 && this.accepts(stack)  && (stack.getCount() >= 1 || consumeContainers || !stack.getItem().hasContainerItem(stack))) {
             int currentAmount = Math.min(amount, stack.getCount());
             if (!simulate) {
                 if (stack.getCount() == currentAmount) {
@@ -68,10 +64,7 @@ public class InvSlotProcessableWitherMaker extends InvSlotProcessable {
                 }
             }
 
-            if (ret == null) {
-            } else {
-                ret.setCount(ret.getCount() + currentAmount);
-            }
+
 
 
         }
@@ -106,19 +99,19 @@ public class InvSlotProcessableWitherMaker extends InvSlotProcessable {
         ItemStack input4 = ((TileEntityWitherMaker) this.base).inputSlotA.get(4);
         ItemStack input5 = ((TileEntityWitherMaker) this.base).inputSlotA.get(5);
         ItemStack input6 = ((TileEntityWitherMaker) this.base).inputSlotA.get(6);
-        if (input == null) {
+        if (input.isEmpty()) {
             return null;
         }
-        if (input1 == null) {
+        if (input1.isEmpty()) {
             return null;
         }
-        if (input2 == null) {
+        if (input2.isEmpty()) {
             return null;
         }
-        if (input3 == null) {
+        if (input3.isEmpty()) {
             return null;
         }
-        if (input4 == null) {
+        if (input4.isEmpty()) {
             return null;
         }
         RecipeOutput output = getOutputFor(input, input1, input2, input3, input4, input5, input6, false);
@@ -142,27 +135,7 @@ public class InvSlotProcessableWitherMaker extends InvSlotProcessable {
         ItemStack input6 = ((TileEntityWitherMaker) this.base).inputSlotA.get(6);
         getOutputFor(input, input1, input2, input3, input4, input5, input6, true);
 
-        if (input != null && input.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(0, null);
-        }
-        if (input1 != null && input1.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(1, null);
-        }
-        if (input2 != null && input2.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(2, null);
-        }
-        if (input3 != null && input3.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(3, null);
-        }
-        if (input4 != null && input4.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(4, null);
-        }
-        if (input5 != null && input5.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(5, null);
-        }
-        if (input6 != null && input6.getCount() <= 0) {
-            ((TileEntityWitherMaker) this.base).inputSlotA.put(6, null);
-        }
+
 
     }
 

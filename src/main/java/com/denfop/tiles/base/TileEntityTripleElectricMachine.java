@@ -2,6 +2,8 @@ package com.denfop.tiles.base;
 
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.invslot.InvSlotTripleMachineRecipe;
+import com.denfop.tiles.mechanism.TileEntityAdvAlloySmelter;
+import com.denfop.tiles.mechanism.TileEntityAlloySmelter;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.recipe.RecipeOutput;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -27,32 +29,22 @@ import java.util.Set;
 public abstract class TileEntityTripleElectricMachine extends TileEntityStandartMachine
         implements IHasGui, INetworkTileEntityEventListener, IUpgradableBlock {
 
+    public final InvSlotDischarge dischargeSlot;
+    public final int defaultEnergyConsume;
+    public final int defaultOperationLength;
+    public final int defaultTier;
+    public final int defaultEnergyStorage;
+    public final InvSlotTripleMachineRecipe inputSlotA;
+    public final InvSlotUpgrade upgradeSlot;
     protected final String name;
     protected final EnumTripleElectricMachine type;
-    public final InvSlotDischarge dischargeSlot;
-    protected short progress;
-
-    public final int defaultEnergyConsume;
-
-    public final int defaultOperationLength;
-
-    public final int defaultTier;
-
-    public final int defaultEnergyStorage;
-
     public int energyConsume;
-
     public int operationLength;
-
     public int operationsPerTick;
-
-    protected double guiProgress;
-
     public AudioSource audioSource;
-
-    public final InvSlotTripleMachineRecipe inputSlotA;
-
-    public final InvSlotUpgrade upgradeSlot;
+    protected short progress;
+    protected double guiProgress;
+    public short temperature;
 
     public TileEntityTripleElectricMachine(
             int energyPerTick,
@@ -131,7 +123,12 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
 
 
         RecipeOutput output = getOutput();
+
         if (output != null && this.energy.getEnergy() >= this.energyConsume) {
+            if(this.type.equals(EnumTripleElectricMachine.ADV_ALLOY_SMELTER))
+                if (output.metadata.getShort("temperature") == 0 || output.metadata.getInteger("temperature") > ((TileEntityAdvAlloySmelter)this).temperature) {
+                    return;
+                }
             setActive(true);
             if (this.progress == 0) {
                 IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
@@ -149,6 +146,10 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
                 IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
             }
         } else {
+            if(this.type.equals(EnumTripleElectricMachine.ADV_ALLOY_SMELTER))
+                if (((TileEntityAdvAlloySmelter)this).temperature > 0) {
+                    ((TileEntityAdvAlloySmelter)this).temperature--;
+                }
             if (this.progress != 0 && getActive()) {
                 IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
             }

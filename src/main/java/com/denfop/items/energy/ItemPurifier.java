@@ -5,9 +5,12 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.items.BaseElectricItem;
+import com.denfop.tiles.base.TileEntityDoubleMolecular;
+import com.denfop.tiles.base.TileEntityMolecularTransformer;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import ic2.api.item.ElectricItem;
+import ic2.core.IC2;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,6 +37,21 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("energy").append("/").append(name);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void registerModel(Item item, int meta, String name, String extraName) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
     @Override
     public void registerModels() {
         registerModels(this.name);
@@ -54,22 +72,6 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
         registerModel(this, meta, name, extraName);
     }
 
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy").append("/").append(name);
-
-        return new ModelResourceLocation(loc.toString(), null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
-
-
     public boolean canProvideEnergy(ItemStack stack) {
         return true;
     }
@@ -88,7 +90,7 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
 
         TileEntity tile = world.getTileEntity(pos);
         ItemStack itemstack = player.getHeldItem(hand);
-        if (!(tile instanceof TileEntitySolarPanel) && !(tile instanceof TileEntityMultiMachine) ) {
+        if (!(tile instanceof TileEntitySolarPanel) && !(tile instanceof TileEntityMultiMachine) && !(tile instanceof TileEntityMolecularTransformer) && !(tile instanceof TileEntityDoubleMolecular)) {
             return EnumActionResult.PASS;
         }
         if (tile instanceof TileEntitySolarPanel) {
@@ -111,43 +113,54 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
                 base.work1 = true;
                 base.work2 = true;
                 ElectricItem.manager.use(itemstack, 1000, player);
+                if (IC2.platform.isRendering()) {
+                    IUCore.audioManager.playOnce(
+                            player,
+                            com.denfop.audio.PositionSpec.Hand,
+                            "Tools/purifier.ogg",
+                            true,
+                            IC2.audioManager.getDefaultVolume()
+                    );
+                }
                 return EnumActionResult.SUCCESS;
             }
             return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
-        }else {
-            if(!ElectricItem.manager.canUse(itemstack, 500))
+        } else if (tile instanceof TileEntityMultiMachine) {
+            if (!ElectricItem.manager.canUse(itemstack, 500)) {
                 return EnumActionResult.PASS;
+            }
             TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
-            ItemStack stack_rf = null;
-            ItemStack stack_quickly = null;
-            ItemStack stack_modulesize = null;
-            ItemStack panel = null;
-            if( base.rf)
-                stack_rf = new ItemStack(IUItem.module7,1,4);
-            if( base.quickly)
+            ItemStack stack_rf = ItemStack.EMPTY;
+            ItemStack stack_quickly = ItemStack.EMPTY;
+            ItemStack stack_modulesize = ItemStack.EMPTY;
+            ItemStack panel = ItemStack.EMPTY;
+            if (base.rf) {
+                stack_rf = new ItemStack(IUItem.module7, 1, 4);
+            }
+            if (base.quickly) {
                 stack_quickly = new ItemStack(IUItem.module_quickly);
-            if( base.modulesize)
+            }
+            if (base.modulesize) {
                 stack_modulesize = new ItemStack(IUItem.module_stack);
-            if( base.solartype != null)
-                panel = new ItemStack(IUItem.module6,1,base.solartype.meta);
-            if(stack_rf != null || stack_quickly != null || stack_modulesize != null || panel != null){
+            }
+            if (base.solartype != null) {
+                panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
+            }
+            if (!stack_rf.isEmpty() || !stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
                 final EntityItem item = new EntityItem(world);
-                if(stack_rf != null) {
+                if (!stack_rf.isEmpty()) {
                     item.setItem(stack_rf);
-                    base.module=0;
+                    base.module--;
                     base.rf = false;
-                }
-                else    if(stack_quickly != null) {
+                } else if (!stack_quickly.isEmpty()) {
                     item.setItem(stack_quickly);
-                    base.module=0;
+                    base.module--;
                     base.quickly = false;
-                }
-                else  if(stack_modulesize != null) {
+                } else if (!stack_modulesize.isEmpty()) {
                     item.setItem(stack_modulesize);
                     base.modulesize = false;
-                    base.module=0;
-                }
-                else  if(panel != null) {
+                    base.module--;
+                } else if (!panel.isEmpty()) {
                     item.setItem(panel);
                     base.solartype = null;
                 }
@@ -155,10 +168,73 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
                     item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
                     item.setPickupDelay(0);
                     world.spawnEntity(item);
-                    ElectricItem.manager.use(itemstack, 500,null);
+                    ElectricItem.manager.use(itemstack, 500, null);
+                    if (IC2.platform.isRendering()) {
+                        IUCore.audioManager.playOnce(
+                                player,
+                                com.denfop.audio.PositionSpec.Hand,
+                                "Tools/purifier.ogg",
+                                true,
+                                IC2.audioManager.getDefaultVolume()
+                        );
+                    }
                     return EnumActionResult.SUCCESS;
                 }
 
+            }
+        } else if (tile instanceof TileEntityMolecularTransformer) {
+            TileEntityMolecularTransformer base = (TileEntityMolecularTransformer) tile;
+            if (!ElectricItem.manager.canUse(itemstack, 500)) {
+                return EnumActionResult.PASS;
+            }
+            if (base.rf) {
+                final ItemStack stack_rf = new ItemStack(IUItem.module7, 1, 4);
+                base.rf = false;
+                final EntityItem item = new EntityItem(world);
+                item.setItem(stack_rf);
+                if (!player.getEntityWorld().isRemote) {
+                    item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                    item.setPickupDelay(0);
+                    world.spawnEntity(item);
+                    ElectricItem.manager.use(itemstack, 500, null);
+                    if (IC2.platform.isRendering()) {
+                        IUCore.audioManager.playOnce(
+                                player,
+                                com.denfop.audio.PositionSpec.Hand,
+                                "Tools/purifier.ogg",
+                                true,
+                                IC2.audioManager.getDefaultVolume()
+                        );
+                    }
+                    return EnumActionResult.SUCCESS;
+                }
+            }
+        } else {
+            TileEntityDoubleMolecular base = (TileEntityDoubleMolecular) tile;
+            if (!ElectricItem.manager.canUse(itemstack, 500)) {
+                return EnumActionResult.PASS;
+            }
+            if (base.rf) {
+                final ItemStack stack_rf = new ItemStack(IUItem.module7, 1, 4);
+                base.rf = false;
+                final EntityItem item = new EntityItem(world);
+                item.setItem(stack_rf);
+                if (!player.getEntityWorld().isRemote) {
+                    item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                    item.setPickupDelay(0);
+                    world.spawnEntity(item);
+                    ElectricItem.manager.use(itemstack, 500, null);
+                    if (IC2.platform.isRendering()) {
+                        IUCore.audioManager.playOnce(
+                                player,
+                                com.denfop.audio.PositionSpec.Hand,
+                                "Tools/purifier.ogg",
+                                true,
+                                IC2.audioManager.getDefaultVolume()
+                        );
+                    }
+                    return EnumActionResult.SUCCESS;
+                }
             }
         }
         return EnumActionResult.PASS;

@@ -5,7 +5,7 @@ import com.denfop.tiles.base.TileEntityAdvGenerator;
 public class TileEntityGeneratorAdv extends TileEntityAdvGenerator {
 
     public TileEntityGeneratorAdv() {
-        super(1.2, 8000, "iu.blockAdvgenerator.name");
+        super(2.2, 8000, "iu.blockAdvgenerator.name");
     }
 
 }

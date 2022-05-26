@@ -40,6 +40,19 @@ public class InvSlotProcessableMultiGeneric extends InvSlot implements IInvSlotP
         }
     }
 
+    public ItemStack getItem() {
+
+        int var2 = this.size();
+
+        for (int var3 = 0; var3 < var2; ++var3) {
+            ItemStack stack = this.get1(var3);
+            if (!StackUtil.isEmpty(stack)) {
+                return stack;
+            }
+        }
+
+        return null;
+    }
 
     public RecipeOutput process(int slotId) {
         ItemStack input = this.get(slotId);
@@ -76,6 +89,10 @@ public class InvSlotProcessableMultiGeneric extends InvSlot implements IInvSlotP
 
             }
         }
+    }
+
+    public void put1(int i, ItemStack stack) {
+        this.put(i, stack);
     }
 
     protected MachineRecipeResult getOutputFor(ItemStack input, boolean adjustInput) {

@@ -24,7 +24,9 @@ public abstract class ContainerBaseDoubleElectricMachine extends ContainerFullIn
     }
 
     public List<String> getNetworkedFields() {
+
         return super.getNetworkedFields();
+
     }
 
 }

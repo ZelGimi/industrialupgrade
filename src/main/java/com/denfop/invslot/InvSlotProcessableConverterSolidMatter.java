@@ -36,7 +36,7 @@ public class InvSlotProcessableConverterSolidMatter extends InvSlotProcessable {
 
     public RecipeOutput process() {
         ItemStack input = get();
-        if (input == null) {
+        if (input.isEmpty()) {
             return null;
         }
         RecipeOutput output = getOutputFor1(input, false);

@@ -2,7 +2,6 @@ package com.denfop.items;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.tiles.mechanism.CableType;
 import com.denfop.tiles.mechanism.TileEntityCable;
@@ -54,8 +53,14 @@ import java.util.Set;
 public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxable, IModelRegister {
 
     public static final List<ItemStack> variants = new ArrayList();
-    private static final NumberFormat lossFormat = new DecimalFormat("0.00#");
     protected static final String NAME = "cable_iu_item";
+    private static final NumberFormat lossFormat = new DecimalFormat("0.00#");
+    String[] name = {"itemcable", "itemcableo", "itemgoldсable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
+            "itemironcableii",
+            "itemironcableiiii"
+            , "itemglasscable"
+            , "itemglasscablei"};
+
 
     public ItemCable() {
         super(null);
@@ -65,42 +70,12 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
 
         for (CableType type : var1) {
             for (int insulation = 0; insulation <= type.maxInsulation; ++insulation) {
-                this.variants.add(getCable(type, insulation));
+                variants.add(getCable(type, insulation));
             }
         }
         this.setCreativeTab(IUCore.ItemTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels() {
-
-        ModelLoader.setCustomMeshDefinition(this, ItemCable::getModelLocation);
-        for (final ItemStack stack : this.variants) {
-            ModelLoader.setCustomModelResourceLocation(
-                    this,
-                    stack.getItemDamage(),
-                    getModelLocation(stack)
-            );
-        }
-        for (final ItemStack stack : this.variants) {
-            ModelBakery.registerItemVariants(this, getModelLocation(stack));
-        }
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + NAME + "/" + ItemBaseCircuit.Types.getFromID(meta).getName(),
-                        null
-                )
-        );
     }
 
     @Nonnull
@@ -114,6 +89,57 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         return new ModelResourceLocation(loc.toString(), null);
     }
 
+    public static ItemStack getCable(CableType type, int insulation, int k) {
+
+        return variants.get(type.getId());
+    }
+
+    private static CableType getCableType(ItemStack stack) {
+        int type = stack.getItemDamage();
+        return type < CableType.values.length ? CableType.values[type] : CableType.glass;
+    }
+
+    private static int getInsulation(ItemStack stack) {
+        CableType type = getCableType(stack);
+        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
+        int insulation = nbt.getByte("insulation") & 255;
+        return Math.min(insulation, type.maxInsulation);
+    }
+
+    private static String getName(ItemStack stack) {
+        CableType type = getCableType(stack);
+        int insulation = getInsulation(stack);
+        return type.getName(insulation);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels() {
+
+        ModelLoader.setCustomMeshDefinition(this, ItemCable::getModelLocation);
+        for (final ItemStack stack : variants) {
+            ModelLoader.setCustomModelResourceLocation(
+                    this,
+                    stack.getItemDamage(),
+                    getModelLocation(stack)
+            );
+        }
+        for (final ItemStack stack : variants) {
+            ModelBakery.registerItemVariants(this, getModelLocation(stack));
+        }
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+        ModelLoader.setCustomModelResourceLocation(
+                this,
+                meta,
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + CableType.values[meta].getName(),
+                        null
+                )
+        );
+    }
 
     public ItemStack getItemStack(CableType type) {
         return getCable(type, 0);
@@ -177,35 +203,6 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     public ItemStack getCable(CableType type, int insulation) {
         return new ItemStack(this, 1, type.getId());
     }
-
-    public static ItemStack getCable(CableType type, int insulation, int k) {
-
-        return variants.get(type.getId());
-    }
-
-    private static CableType getCableType(ItemStack stack) {
-        int type = stack.getItemDamage();
-        return type < CableType.values.length ? CableType.values[type] : CableType.glass;
-    }
-
-    private static int getInsulation(ItemStack stack) {
-        CableType type = getCableType(stack);
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-        int insulation = nbt.getByte("insulation") & 255;
-        return Math.min(insulation, type.maxInsulation);
-    }
-
-    private static String getName(ItemStack stack) {
-        CableType type = getCableType(stack);
-        int insulation = getInsulation(stack);
-        return type.getName(insulation);
-    }
-
-    String[] name = {"itemcable", "itemcableo", "itemgoldсable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
-            "itemironcableii",
-            "itemironcableiiii"
-            , "itemglasscable"
-            , "itemglasscablei"};
 
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
@@ -284,7 +281,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
 
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
-            List<ItemStack> variants = new ArrayList(this.variants);
+            List<ItemStack> variants = new ArrayList(ItemCable.variants);
 
 
             itemList.addAll(variants);
@@ -296,7 +293,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     }
 
     public Set<ItemStack> getAllStacks() {
-        return new HashSet(this.variants);
+        return new HashSet(variants);
     }
 
     public boolean canBeStoredInToolbox(ItemStack itemstack) {

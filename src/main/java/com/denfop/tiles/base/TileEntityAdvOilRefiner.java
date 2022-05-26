@@ -1,15 +1,17 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerAdvOilRefiner;
 import com.denfop.gui.GUIAdvOilRefiner;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,6 +25,11 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
                         FluidName.fluidpolyprop.getInstance()}
         );
 
+    }
+
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.oiladvrefiner, 1, 0);
     }
 
     @SideOnly(Side.CLIENT)
@@ -101,9 +108,6 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        IBlockState state = this.getBlockState();
-        this.getWorld().notifyBlockUpdate(this.getPos(), state, state, 2);
-
 
         boolean drain = false;
         boolean drain1 = false;
@@ -124,20 +128,23 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
             }
             if (drain || drain1) {
                 int drains = 0;
-                drains = drain ? drains + 3 : drains;
-                drains = drain1 ? drains + 2 : drains;
+                drains = drain ? drains + 5 : drains;
+                drains = drain1 ? drains + 5 : drains;
 
                 this.getFluidTank(0).drain(drains, true);
                 initiate(0);
                 this.useEnergy(25);
 
-                IC2.network.get(true).updateTileEntityField(this, "fluidTank");
 
                 setActive(true);
             } else {
                 initiate(2);
                 setActive(false);
             }
+            if (this.world.provider.getWorldTime() % 10 == 0) {
+                IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            }
+
         }
 
 

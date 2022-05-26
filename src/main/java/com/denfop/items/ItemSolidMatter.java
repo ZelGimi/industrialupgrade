@@ -27,11 +27,6 @@ public class ItemSolidMatter extends ItemMulti<ItemSolidMatter.Types> implements
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
     public static EnumSolidMatter getsolidmatter(int meta) {
         switch (meta) {
             case 0:
@@ -53,6 +48,11 @@ public class ItemSolidMatter extends ItemMulti<ItemSolidMatter.Types> implements
 
         }
 
+    }
+
+    @Override
+    public void registerModels() {
+        registerModels(null);
     }
 
     public String getUnlocalizedName() {

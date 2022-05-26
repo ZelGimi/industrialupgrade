@@ -19,6 +19,10 @@ import java.util.List;
 
 public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
 
+    private static final ResourceLocation background = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/GUIElectricBlockEuRf.png"
+    );
     private final ContainerElectricBlock container;
     private final String armorInv;
     private final String name;
@@ -129,10 +133,5 @@ public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
-
-    private static final ResourceLocation background = new ResourceLocation(
-            Constants.MOD_ID,
-            "textures/gui/GUIElectricBlockEuRf.png"
-    );
 
 }

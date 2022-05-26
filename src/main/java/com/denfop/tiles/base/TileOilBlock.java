@@ -19,18 +19,18 @@ public class TileOilBlock extends TileEntity {
 
     public void readFromNBT(final NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        number = nbttagcompound.getInteger("number");
-        max = nbttagcompound.getInteger("max");
-        change = nbttagcompound.getBoolean("change");
-        empty = nbttagcompound.getBoolean("empty");
+        this.number = nbttagcompound.getInteger("number");
+        this.max = nbttagcompound.getInteger("max");
+        this.change = nbttagcompound.getBoolean("change");
+        this.empty = nbttagcompound.getBoolean("empty");
     }
 
     public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("number", number);
-        nbttagcompound.setBoolean("change", change);
-        nbttagcompound.setBoolean("empty", empty);
-        nbttagcompound.setInteger("max", max);
+        nbttagcompound.setInteger("number", this.number);
+        nbttagcompound.setBoolean("change", this.change);
+        nbttagcompound.setBoolean("empty", this.empty);
+        nbttagcompound.setInteger("max", this.max);
         return nbttagcompound;
     }
 

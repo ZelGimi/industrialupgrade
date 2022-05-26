@@ -1,17 +1,22 @@
 package com.denfop.recipemanager;
 
 import com.denfop.api.IMicrochipFarbricatorRecipeManager;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.RecipeOutput;
 import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MicrochipRecipeManager implements IMicrochipFarbricatorRecipeManager {
 
+    private  Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
+    private  List<BaseMachineRecipe>  recipe = new ArrayList<>();
     public void addRecipe(
             IRecipeInput container, IRecipeInput fill, IRecipeInput container1, IRecipeInput fill1,
             IRecipeInput fill2, ItemStack output, NBTTagCompound tag
@@ -45,12 +50,11 @@ public class MicrochipRecipeManager implements IMicrochipFarbricatorRecipeManage
                             for (ItemStack fillStack2 : fill2.getInputs()) {
 
                                 if (input.matches(containerStack, fillStack, fillStack1, fillStack2, containerStack1)) {
-                                    throw new RuntimeException("ambiguous recipe: [" + container.getInputs() + "+"
-                                            + fill.getInputs() + "+" + fill1.getInputs() + "+" + fill2.getInputs() + "+"
-                                            + container1.getInputs() + " -> " + output + "], conflicts with ["
-                                            + input.container.getInputs() + "+" + input.fill.getInputs() + "+"
-                                            + input.fill1.getInputs() + "+" + input.fill2.getInputs() + "+"
-                                            + input.container1.getInputs() + " -> " + this.recipes.get(input) + "]");
+                                    this.recipes.replace(
+                                            new IMicrochipFarbricatorRecipeManager.Input(container, fill, fill1, fill2, container1),
+                                            new RecipeOutput(tag, output)
+                                    );
+
                                 }
                             }
                         }
@@ -62,39 +66,100 @@ public class MicrochipRecipeManager implements IMicrochipFarbricatorRecipeManage
                 new IMicrochipFarbricatorRecipeManager.Input(container, fill, fill1, fill2, container1),
                 new RecipeOutput(tag, output)
         );
+        this.recipe.add(new BaseMachineRecipe( new IMicrochipFarbricatorRecipeManager.Input(container, fill, fill1, fill2,
+                container1), new RecipeOutput(tag, output)));
     }
 
     public RecipeOutput getOutputFor(
             ItemStack container, ItemStack fill, ItemStack container1, ItemStack fill1,
             ItemStack fill2, boolean adjustInput, boolean acceptTest
     ) {
-        if (container == null || fill == null || container1 == null || fill1 == null || fill2 == null) {
+        if (container.isEmpty() || fill.isEmpty() || container1.isEmpty() || fill1.isEmpty() || fill2.isEmpty()) {
             return null;
         }
+        List<ItemStack> stack1 = new ArrayList<>();
+        stack1.add(container);
+        stack1.add(fill);
+        stack1.add(container1);
+        stack1.add(fill1);
+        stack1.add(fill2);
         for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> entry : this.recipes.entrySet()) {
             IMicrochipFarbricatorRecipeManager.Input recipeInput = entry.getKey();
+            List<IRecipeInput> recipeInputList = recipeInput.getList();
+            int[] col = new int[5];
+            int[] col1 = new int[5];
+            List<Integer> lst = new ArrayList<>();
+            lst.add(0);
+            lst.add(1);
+            lst.add(2);
+            lst.add(3);
+            lst.add(4);
+            List<Integer> lst1 = new ArrayList<>();
+            for (int j = 0; j < stack1.size(); j++) {
+                for (int i = 0; i < recipeInputList.size(); i++) {
+                    if (recipeInputList.get(i).matches(stack1.get(j)) && !lst1.contains(i)) {
+                        lst1.add(i);
 
-            if (recipeInput.matches(container, fill, container1, fill1, fill2)) {
-                if (acceptTest || container.getCount() >= recipeInput.container.getAmount() && container1.getCount() >= recipeInput.fill1.getAmount() && fill.getCount() >= recipeInput.fill.getAmount() && fill1.getCount() >= recipeInput.fill2.getAmount() && fill2.getCount() >= recipeInput.container1.getAmount()) {
-                    if (adjustInput) {
-                        container.setCount(container.getCount() - recipeInput.container.getAmount());
-                        container1.setCount(container1.getCount() - recipeInput.fill1.getAmount());
-                        fill.setCount(fill.getCount() - recipeInput.fill.getAmount());
-                        fill1.setCount(fill1.getCount() - recipeInput.fill2.getAmount());
-                        fill2.setCount(fill2.getCount() - recipeInput.container1.getAmount());
+                        col1[j] = i;
+                        break;
                     }
+                }
+            }
+            if (lst.size() == lst1.size()) {
+                for (int j = 0; j < stack1.size(); j++) {
+                    ItemStack stack2 = recipeInputList.get(col1[j]).getInputs().get(0);
+                    ItemStack stack = stack1.get(j);
+                    if (stack.getCount() < stack2.getCount()) {
+                        return null;
+                    }
+                    col[j] = stack2.getCount();
+                }
+                if (adjustInput) {
+                    for (int j = 0; j < stack1.size(); j++) {
+                        stack1.get(j).setCount(stack1.get(j).getCount() - col[j]);
+                    }
+                    break;
+                } else {
                     return entry.getValue();
                 }
-                break;
             }
         }
+
+
         return null;
+
+
+    }
+
+    @Override
+    public Map<Input, RecipeOutput> getRecipe(
+            final ItemStack output
+    ) {
+        Map<Input, RecipeOutput> map = new HashMap<>();
+        if (output.isEmpty()) {
+            return map;
+        }
+
+        for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> entry : this.recipes.entrySet()) {
+            if(entry.getValue().items.get(0).isItemEqual(output)){
+                map.put(entry.getKey(),entry.getValue());
+                return map;
+            }
+
+        }
+
+
+        return map;
     }
 
     public Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> getRecipes() {
         return this.recipes;
     }
 
-    private final Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
+    @Override
+    public List<BaseMachineRecipe> getListRecipe() {
+        return this.recipe;
+    }
+
 
 }

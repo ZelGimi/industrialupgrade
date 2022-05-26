@@ -17,17 +17,7 @@ public class PlasticCrreatorHandler {
 
     private static final List<PlasticCrreatorHandler> recipes = new ArrayList<>();
     private final FluidStack input2;
-
-
-    public static List<PlasticCrreatorHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final ItemStack input, input1, output;
-
 
     public PlasticCrreatorHandler(
             ItemStack input, ItemStack input1, FluidStack input2,
@@ -39,21 +29,11 @@ public class PlasticCrreatorHandler {
         this.output = output;
     }
 
-
-    public ItemStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public ItemStack getInput1() { // Получатель входного предмета рецепта.
-        return input1;
-    }
-
-    public FluidStack getInput2() { // Получатель входного предмета рецепта.
-        return input2;
-    }
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
+    public static List<PlasticCrreatorHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static PlasticCrreatorHandler addRecipe(
@@ -80,10 +60,6 @@ public class PlasticCrreatorHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
-    }
-
     public static void initRecipes() {
         for (Map.Entry<IPlasticRecipemanager.Input, RecipeOutput> container :
                 Recipes.plastic.getRecipes().entrySet()) {
@@ -102,6 +78,26 @@ public class PlasticCrreatorHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public ItemStack getInput1() { // Получатель входного предмета рецепта.
+        return input1;
+    }
+
+    public FluidStack getInput2() { // Получатель входного предмета рецепта.
+        return input2;
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
 }

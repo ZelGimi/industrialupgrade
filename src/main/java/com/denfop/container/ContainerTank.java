@@ -22,7 +22,6 @@ public class ContainerTank extends ContainerFullInv<TileEntityLiquedTank> {
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
         ret.add("fluidTank");
         return ret;
     }

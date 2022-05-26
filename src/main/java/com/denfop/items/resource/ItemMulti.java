@@ -35,15 +35,6 @@ public class ItemMulti<T extends Enum<T> & IIdProvider> extends ItemIC2 implemen
     private final Map<T, ItemMulti.IItemUpdateHandler> updateHandlers;
     private final Map<T, EnumRarity> rarityFilter;
 
-    public static <T extends Enum<T> & IIdProvider> ItemMulti<T> create(ItemName name, Class<T> typeClass) {
-        EnumProperty<T> typeProperty = new EnumProperty("type", typeClass);
-        if (typeProperty.getAllowedValues().size() > 32767) {
-            throw new IllegalArgumentException("Too many values to fit in a short for " + typeClass);
-        } else {
-            return new ItemMulti(name, typeProperty);
-        }
-    }
-
     private ItemMulti(ItemName name, EnumProperty<T> typeProperty) {
         super(name);
         this.rightClickHandlers = new IdentityHashMap();
@@ -56,6 +47,15 @@ public class ItemMulti<T extends Enum<T> & IIdProvider> extends ItemIC2 implemen
 
     protected ItemMulti(ItemName name, Class<T> typeClass) {
         this(name, new EnumProperty("type", typeClass));
+    }
+
+    public static <T extends Enum<T> & IIdProvider> ItemMulti<T> create(ItemName name, Class<T> typeClass) {
+        EnumProperty<T> typeProperty = new EnumProperty("type", typeClass);
+        if (typeProperty.getAllowedValues().size() > 32767) {
+            throw new IllegalArgumentException("Too many values to fit in a short for " + typeClass);
+        } else {
+            return new ItemMulti(name, typeProperty);
+        }
     }
 
     @SideOnly(Side.CLIENT)

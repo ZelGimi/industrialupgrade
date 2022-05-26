@@ -24,8 +24,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -39,8 +41,8 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     public final InvSlotProcessableConverterSolidMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final int defaultOperationLength;
-    public int energyConsume;
     public final int defaultEnergyConsume;
+    public int energyConsume;
     public double defaultEnergyStorage;
     public AudioSource audioSource;
     public double progress;
@@ -57,20 +59,6 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultEnergyStorage = 50000;
         this.defaultEnergyConsume = this.energyConsume = 2;
-    }
-
-    public void setOverclockRates() {
-        this.upgradeSlot.onChanged();
-        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
-        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
-        this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
-
-        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
-                (int) this.defaultEnergyStorage,
-                this.defaultOperationLength,
-                this.defaultEnergyConsume
-        ));
-
     }
 
     public static void init() {
@@ -108,9 +96,33 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
             ModUtils.SetDoubleWithoutItem(nbt, ("quantitysolid_" + i), quantitysolid[i]);
         }
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.matterrecipe.addRecipe(input.forStack(stack), nbt, false, stack);
+        final int[] i = OreDictionary.getOreIDs(stack);
+        if (i.length < 1) {
+            Recipes.matterrecipe.addRecipe(input.forStack(stack), nbt, false, stack);
+        } else {
+            Recipes.matterrecipe.addRecipe(input.forOreDict(OreDictionary.getOreName(i[0])), nbt, false, stack);
+        }
+
     }
 
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.convertersolidmatter);
+    }
+
+    public void setOverclockRates() {
+        this.upgradeSlot.onChanged();
+        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
+        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
+        this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
+
+        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
+                (int) this.defaultEnergyStorage,
+                this.defaultOperationLength,
+                this.defaultEnergyConsume
+        ));
+
+    }
 
     @Override
     public void onNetworkUpdate(String field) {

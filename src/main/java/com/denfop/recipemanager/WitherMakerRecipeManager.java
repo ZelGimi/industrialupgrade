@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class WitherMakerRecipeManager implements IWitherMaker {
 
+    private final Map<IWitherMaker.Input, RecipeOutput> recipes = new HashMap<>();
+
     public void addRecipe(
             IRecipeInput container, IRecipeInput fill, IRecipeInput container1, IRecipeInput fill1,
             IRecipeInput fill2, IRecipeInput fill3, IRecipeInput fill4, ItemStack output
@@ -88,52 +90,52 @@ public class WitherMakerRecipeManager implements IWitherMaker {
             ItemStack fill2, ItemStack fill3, ItemStack fill4, boolean adjustInput, boolean acceptTest
     ) {
         if (acceptTest) {
-            if (container == null && fill == null) {
+            if (container.isEmpty() && fill.isEmpty()) {
                 return null;
             }
-        } else if (container == null || fill == null || container1 == null || fill1 == null || fill2 == null || fill3 == null || fill4 == null) {
+        } else if (container.isEmpty() || fill.isEmpty() || container1 .isEmpty() || fill1 .isEmpty() || fill2.isEmpty() || fill3.isEmpty() || fill4 .isEmpty()) {
             return null;
         }
         for (Map.Entry<IWitherMaker.Input, RecipeOutput> entry : this.recipes.entrySet()) {
             IWitherMaker.Input recipeInput = entry.getKey();
-            if (acceptTest && container == null) {
+            if (acceptTest && container.isEmpty()) {
                 if (recipeInput.fill.matches(fill)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && container1 == null) {
+            if (acceptTest && container1.isEmpty()) {
                 if (recipeInput.fill.matches(fill)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill == null) {
+            if (acceptTest && fill.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill1 == null) {
+            if (acceptTest && fill1.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
                 continue;
             }
 
-            if (acceptTest && fill2 == null) {
+            if (acceptTest && fill2.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill3 == null) {
+            if (acceptTest && fill3.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
                 continue;
             }
-            if (acceptTest && fill4 == null) {
+            if (acceptTest && fill4.isEmpty()) {
                 if (recipeInput.container.matches(container)) {
                     return entry.getValue();
                 }
@@ -144,7 +146,7 @@ public class WitherMakerRecipeManager implements IWitherMaker {
                     if (adjustInput) {
 
                         container.setCount(container.getCount() - recipeInput.container.getAmount());
-                        container1.setCount(container.getCount() - recipeInput.container1.getAmount());
+                        container1.setCount(container1.getCount() - recipeInput.container1.getAmount());
                         fill.setCount(fill.getCount() - recipeInput.fill.getAmount());
                         fill1.setCount(fill1.getCount() - recipeInput.fill1.getAmount());
                         fill2.setCount(fill2.getCount() - recipeInput.fill2.getAmount());
@@ -162,7 +164,5 @@ public class WitherMakerRecipeManager implements IWitherMaker {
     public Map<IWitherMaker.Input, RecipeOutput> getRecipes() {
         return this.recipes;
     }
-
-    private final Map<IWitherMaker.Input, RecipeOutput> recipes = new HashMap<>();
 
 }

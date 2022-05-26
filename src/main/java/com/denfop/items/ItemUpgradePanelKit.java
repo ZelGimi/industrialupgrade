@@ -15,7 +15,6 @@ import com.denfop.integration.thaumcraft.TileEntityThaumSolarPanel;
 import com.denfop.integration.thaumcraft.TileEntityVoidSolarPanel;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityAdvancedSolarPanel;
 import com.denfop.tiles.panels.overtime.TileEntityBarionSolarPanel;
 import com.denfop.tiles.panels.overtime.TileEntityDiffractionSolarPanel;
 import com.denfop.tiles.panels.overtime.TileEntityGravitonSolarPanel;
@@ -40,11 +39,8 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -74,6 +70,7 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
     public void registerModels() {
         registerModels(null);
     }
+
     @Override
     public void addInformation(
             final ItemStack p_77624_1_,
@@ -85,6 +82,7 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
         super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
 
     }
+
     public EnumActionResult onItemUseFirst(
             EntityPlayer player,
             World world,
@@ -115,21 +113,33 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
 
 
                 final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta - 1);
-                    world.removeTileEntity(pos);
-                    world.setBlockToAir(pos);
-                    ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block,1,kit1.solarpanel_new.meta);
+                world.removeTileEntity(pos);
+                world.setBlockToAir(pos);
+                ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block, 1, kit1.solarpanel_new.meta);
 
-                    EntityItem item = new EntityItem(world);
-                    item.setItem(stack1);
+                EntityItem item = new EntityItem(world);
+                item.setItem(stack1);
+                if (!player.getEntityWorld().isRemote) {
+                    item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                    item.setPickupDelay(0);
+                    world.spawnEntity(item);
+
+                }
+                List<ItemStack> list = tile.getDrop();
+                EntityItem[] item1 = new EntityItem[list.size()];
+
+                for (ItemStack stack2 : list) {
+                    item1[list.indexOf(stack2)] = new EntityItem(world);
+                    item1[list.indexOf(stack2)].setItem(stack2);
+
                     if (!player.getEntityWorld().isRemote) {
-                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                        item.setPickupDelay(0);
-                        world.spawnEntity(item);
-
+                        item1[list.indexOf(stack2)].setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
+                        item1[list.indexOf(stack2)].setPickupDelay(0);
+                        world.spawnEntity(item1[list.indexOf(stack2)]);
                     }
-                    stack.setCount(stack.getCount() - 1);
-                    return EnumActionResult.SUCCESS;
-
+                }
+                stack.setCount(stack.getCount() - 1);
+                return EnumActionResult.SUCCESS;
 
 
             } else if (tileEntity instanceof TileEntitySolarGenerator) {
@@ -137,7 +147,7 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
                     EnumSolarPanels kit = EnumSolarPanels.getFromID(meta);
                     world.removeTileEntity(pos);
                     world.setBlockToAir(pos);
-                    ItemStack stack1 = new ItemStack(kit.block,1,kit.meta);
+                    ItemStack stack1 = new ItemStack(kit.block, 1, kit.meta);
 
                     EntityItem item = new EntityItem(world);
                     item.setItem(stack1);

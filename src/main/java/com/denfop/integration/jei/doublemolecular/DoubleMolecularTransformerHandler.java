@@ -16,16 +16,7 @@ public class DoubleMolecularTransformerHandler {
 
     private static final List<DoubleMolecularTransformerHandler> recipes = new ArrayList<>();
     private final double energy;
-
-    public static List<DoubleMolecularTransformerHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final ItemStack input, input1, output;
-
 
     public DoubleMolecularTransformerHandler(ItemStack input, ItemStack input1, ItemStack output, double energy) {
         this.input = input;
@@ -34,22 +25,12 @@ public class DoubleMolecularTransformerHandler {
         this.energy = energy;
     }
 
-    public ItemStack getInput() { // Получатель входного предмета рецепта.
-        return input;
+    public static List<DoubleMolecularTransformerHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
-
-    public ItemStack getInput1() { // Получатель входного предмета рецепта.
-        return input1;
-    }
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
-    }
-
-    public double getEnergy() { // Получатель выходного предмета рецепта.
-        return energy;
-    }
-
 
     public static DoubleMolecularTransformerHandler addRecipe(
             ItemStack input,
@@ -77,10 +58,6 @@ public class DoubleMolecularTransformerHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1);
-    }
-
     public static void initRecipes() {
         for (Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> container :
                 Recipes.doublemolecular.getRecipes().entrySet()) {
@@ -98,6 +75,26 @@ public class DoubleMolecularTransformerHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public ItemStack getInput1() { // Получатель входного предмета рецепта.
+        return input1;
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public double getEnergy() { // Получатель выходного предмета рецепта.
+        return energy;
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.isItemEqual(input) || is.isItemEqual(input1);
     }
 
 }

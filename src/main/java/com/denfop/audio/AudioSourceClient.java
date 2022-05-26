@@ -22,17 +22,17 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
 
     private final SoundSystem soundSystem;
     private final String sourceName;
-    private boolean valid = false;
-    private boolean culled = false;
     private final String initialSoundFile;
     private final boolean loop;
     private final boolean prioritized;
     private final Reference<Object> obj;
-    private AudioPosition position;
     private final PositionSpec positionSpec;
+    public boolean isPlaying = false;
+    private boolean valid = false;
+    private boolean culled = false;
+    private AudioPosition position;
     private float configuredVolume;
     private float realVolume;
-    private boolean isPlaying = false;
 
     AudioSourceClient(
             SoundSystem soundSystem,
@@ -70,6 +70,10 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
             this.valid = true;
             this.setVolume(volume);
         }
+    }
+
+    public boolean playing() {
+        return isPlaying;
     }
 
     void setup() {
@@ -176,15 +180,15 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
         return !this.check() ? 0.0F : this.soundSystem.getVolume(this.sourceName);
     }
 
-    public float getRealVolume() {
-        return this.realVolume;
-    }
-
     public void setVolume(float volume) {
         if (this.check()) {
             this.configuredVolume = volume;
             this.soundSystem.setVolume(this.sourceName, 0.001F);
         }
+    }
+
+    public float getRealVolume() {
+        return this.realVolume;
     }
 
     public void setPitch(float pitch) {

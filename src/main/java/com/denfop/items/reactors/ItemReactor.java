@@ -31,6 +31,24 @@ public class ItemReactor extends AbstractDamageableReactorComponent {
         this.numberOfCells = cells;
     }
 
+    protected static int checkPulseable(IReactor reactor, int x, int y, ItemStack stack, int mex, int mey, boolean heatrun) {
+        ItemStack other = reactor.getItemAt(x, y);
+        return other != null && other.getItem() instanceof IReactorComponent && ((IReactorComponent) other.getItem()).acceptUraniumPulse(
+                other,
+                reactor,
+                stack,
+                x,
+                y,
+                mex,
+                mey,
+                heatrun
+        ) ? 1 : 0;
+    }
+
+    protected static int triangularNumber(int x) {
+        return (x * x + x) / 2;
+    }
+
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(5);
     }
@@ -145,24 +163,6 @@ public class ItemReactor extends AbstractDamageableReactorComponent {
         }
 
         return ret.copy();
-    }
-
-    protected static int checkPulseable(IReactor reactor, int x, int y, ItemStack stack, int mex, int mey, boolean heatrun) {
-        ItemStack other = reactor.getItemAt(x, y);
-        return other != null && other.getItem() instanceof IReactorComponent && ((IReactorComponent) other.getItem()).acceptUraniumPulse(
-                other,
-                reactor,
-                stack,
-                x,
-                y,
-                mex,
-                mey,
-                heatrun
-        ) ? 1 : 0;
-    }
-
-    protected static int triangularNumber(int x) {
-        return (x * x + x) / 2;
     }
 
     protected void checkHeatAcceptor(IReactor reactor, int x, int y, Collection<ItemReactor.ItemStackCoord> heatAcceptors) {

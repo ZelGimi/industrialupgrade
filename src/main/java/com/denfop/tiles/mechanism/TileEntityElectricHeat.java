@@ -8,4 +8,9 @@ public class TileEntityElectricHeat extends TileEntityBaseHeatMachine {
         super("iu.Electricheat.name", false);
     }
 
+    @Override
+    public double getOfferedHeat() {
+        return Math.min(4, this.temperature);
+    }
+
 }

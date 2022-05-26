@@ -35,7 +35,9 @@ public class InvSlotElectricBlock extends InvSlot {
             return ((itemStack.getItemDamage() >= 4 || itemStack.getItemDamage() == 0)
                     && itemStack.getItem() instanceof AdditionModule)
                     || (EnumModule.getFromID(itemStack.getItemDamage()) != null && EnumModule.getFromID(itemStack.getItemDamage()) ==
-                    EnumModule.OUTPUT && itemStack.getItem() instanceof ItemBaseModules ||  itemStack.getItem().equals(IUItem.module_quickly));
+                    EnumModule.OUTPUT && itemStack.getItem() instanceof ItemBaseModules || itemStack
+                    .getItem()
+                    .equals(IUItem.module_quickly));
         }
         if (type == 2) {
             return itemStack.getItem() instanceof IElectricItem;
@@ -45,15 +47,17 @@ public class InvSlotElectricBlock extends InvSlot {
         }
         return false;
     }
-    public boolean checkignore(){
-        for(int i =0; i < this.size();i++){
-            if(this.get(i).getItem().equals(IUItem.module_quickly))
-                return  true;
+
+    public boolean checkignore() {
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getItem().equals(IUItem.module_quickly)) {
+                return true;
+            }
         }
         return false;
     }
 
-    public double charge(double amount, ItemStack stack, boolean simulate,boolean ignore) {
+    public double charge(double amount, ItemStack stack, boolean simulate, boolean ignore) {
         if (amount < 0.0) {
             throw new IllegalArgumentException("Amount must be > 0.");
         }

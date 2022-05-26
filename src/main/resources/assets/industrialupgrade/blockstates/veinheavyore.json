@@ -65,6 +65,26 @@
 				"textures": {
 					"all": "industrialupgrade:blocks/smithsonite"
 				}
+			},
+			"ilmenite": {
+				"textures": {
+					"all": "industrialupgrade:blocks/ilmenite"
+				}
+			},
+			"todorokite": {
+				"textures": {
+					"all": "industrialupgrade:blocks/todorokite"
+				}
+			},
+			"ferroaugite": {
+				"textures": {
+					"all": "industrialupgrade:blocks/ferroaugite"
+				}
+			},
+			"sheelite": {
+				"textures": {
+					"all": "industrialupgrade:blocks/sheelite"
+				}
 			}
 		},
 		"inventory": [

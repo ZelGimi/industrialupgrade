@@ -10,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityRadiationPurifier extends TileEntityElectricMachine
         implements INetworkTileEntityEventListener {
@@ -126,6 +128,7 @@ public class TileEntityRadiationPurifier extends TileEntityElectricMachine
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
         return null;

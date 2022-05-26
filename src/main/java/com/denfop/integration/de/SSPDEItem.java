@@ -22,10 +22,6 @@ public class SSPDEItem extends ItemIC2 implements IModelRegister {
         this(name, "");
     }
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4) + ".name";
-    }
-
     public SSPDEItem(String name, String path) {
         super(null);
         this.setCreativeTab(IUCore.ItemTab);
@@ -36,6 +32,10 @@ public class SSPDEItem extends ItemIC2 implements IModelRegister {
         setUnlocalizedName(name);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    public String getUnlocalizedName() {
+        return "iu." + super.getUnlocalizedName().substring(4) + ".name";
     }
 
     @Override

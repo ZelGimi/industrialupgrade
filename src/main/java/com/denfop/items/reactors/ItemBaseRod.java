@@ -80,7 +80,7 @@ public class ItemBaseRod extends ItemReactor {
     ) {
         if (!heatrun) {
             float breedereffectiveness = (float) reactor.getHeat() / (float) reactor.getMaxHeat();
-            float ReaktorOutput = (power / 2) * breedereffectiveness + this.power;
+            float ReaktorOutput = (this.power / 2) * breedereffectiveness + this.power;
             reactor.addOutput(ReaktorOutput);
         }
 

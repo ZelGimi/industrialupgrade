@@ -1,6 +1,5 @@
 package com.denfop.tiles.wiring;
 
-import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityElectricBlock;
 import com.denfop.tiles.wiring.chargepad.TileEntityChargepadAdvMFSU;
 import com.denfop.tiles.wiring.chargepad.TileEntityChargepadBarMFSU;
@@ -59,6 +58,7 @@ public enum EnumElectricBlockState {
         this.state = state;
         this.kit_meta = kit_meta;
     }
+
     public static EnumElectricBlockState getFromID(final int ID) {
         return values()[ID % values().length];
     }

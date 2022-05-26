@@ -5,18 +5,30 @@ import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.Recipes;
+import com.denfop.api.upgrade.IUpgradeWithBlackList;
+import com.denfop.api.upgrade.UpgradeItemInform;
+import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.utils.ExperienceUtils;
+import com.denfop.utils.GetRetrace;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import ic2.api.info.Info;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import ic2.api.recipe.IRecipeInput;
+import ic2.api.recipe.MachineRecipeResult;
+import ic2.api.recipe.RecipeOutput;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
-import ic2.core.util.StackUtil;
+import ic2.core.init.MainConfig;
+import ic2.core.util.ConfigUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -26,7 +38,6 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,6 +50,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
@@ -50,13 +62,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,14 +76,13 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegister {
+public class EnergyDrill extends ItemTool implements IElectricItem, IUpgradeWithBlackList, IModelRegister {
 
     public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(
             Blocks.COBBLESTONE.getDefaultState(),
@@ -116,8 +126,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
 
     private static final Set<String> toolType = ImmutableSet.of("pickaxe", "shovel");
     public final String name;
-    public final int efficienty;
-    public final int lucky;
     private final float bigHolePower;
     private final float normalPower;
     private final int maxCharge;
@@ -125,9 +133,14 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
     private final int energyPerOperation;
     private final int energyPerbigHolePowerOperation;
     private final int transferLimit;
+    private boolean hasBlackList = false;
+    private final List<String> blacklist = new ArrayList<>();
+    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
+    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
+    private boolean update = false;
 
     public EnergyDrill(
-            Item.ToolMaterial toolMaterial, String name, int efficienty, int lucky, int transferlimit,
+            Item.ToolMaterial toolMaterial, String name, int transferlimit,
             int maxCharge, int tier, int normalPower, int bigHolesPower, int energyPerOperation,
             int energyPerbigHolePowerOperation
     ) {
@@ -135,8 +148,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         setMaxDamage(27);
 
         setCreativeTab(IUCore.EnergyTab);
-        this.efficienty = efficienty;
-        this.lucky = lucky;
         this.name = name;
         this.transferLimit = transferlimit;
         this.maxCharge = maxCharge;
@@ -177,50 +188,40 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         return toolMode;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "energy_tools" + "/" + name + extraName;
 
-    public static RayTraceResult raytraceFromEntity(World world, Entity player, boolean par3, double range) {
-        float pitch = player.rotationPitch;
-        float yaw = player.rotationYaw;
-        double x = player.posX;
-        double y = player.posY;
-        double z = player.posZ;
-        if (!world.isRemote && player instanceof EntityPlayer) {
-            y++;
-        }
-        Vec3d vec3 = new Vec3d(x, y, z);
-        float f3 = MathHelper.cos(-yaw * 0.017453292F - 3.1415927F);
-        float f4 = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
-        float f5 = -MathHelper.cos(-pitch * 0.017453292F);
-        float f6 = MathHelper.sin(-pitch * 0.017453292F);
-        float f7 = f4 * f5;
-        float f8 = f3 * f5;
-        if (player instanceof EntityPlayerMP) {
-            range = ((EntityPlayerMP) player).interactionManager.getBlockReachDistance();
-        }
-        Vec3d vec31 = vec3.addVector(range * f7, range * f6, range * f8);
-        return world.rayTraceBlocks(vec3, vec31, par3, !par3, par3);
+        return new ModelResourceLocation(loc, null);
     }
-
+    private int getExpierence(
+            IBlockState state,
+            World world,
+            BlockPos pos_block,
+            int fortune,
+            ItemStack stack,
+            final Block localBlock
+    ) {
+        int col =   localBlock.getExpDrop(state, world, pos_block, fortune);
+        col *= (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EXPERIENCE, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EXPERIENCE, stack).number*0.5+1 : 1);
+        return col;
+    }
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean par5) {
-        NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(itemStack);
+        NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
-
-        for (int i = 0; i < 4; i++) {
-            if (nbtData.getString("mode_module" + i).equals("silk")) {
-                Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(itemStack);
-                enchantmentMap.put(Enchantments.SILK_TOUCH, 1);
-                EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
-                break;
-            }
+        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+            nbt.setBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(world, this, itemStack, itemStack.getTagCompound()));
         }
-
-
     }
 
     boolean break_block(
-            World world, Block block, int meta, RayTraceResult mop, byte mode_item, EntityPlayer player, BlockPos pos,
-            ItemStack stack, IBlockState state_block
+            World world, Block block, RayTraceResult mop, byte mode_item, EntityPlayer player, BlockPos pos,
+            ItemStack stack
     ) {
         byte xRange = mode_item;
         byte yRange = mode_item;
@@ -251,19 +252,12 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         Yy = yRange > 0 ? yRange - 1 : 0;
         NBTTagCompound nbt = ModUtils.nbt(stack);
         float energy = energy(stack);
-        byte dig_depth = 0;
-
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("dig_depth")) {
-                dig_depth++;
-            }
-        }
-        dig_depth = (byte) Math.min(dig_depth, EnumInfoUpgradeModules.DIG_DEPTH.max);
+        byte dig_depth = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.DIG_DEPTH, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.DIG_DEPTH, stack).number : 0);
         zRange = zRange > 0 ? zRange : (byte) (zRange + dig_depth);
         xRange = xRange > 0 ? xRange : (byte) (xRange + dig_depth);
-        nbt.setInteger("zRange", zRange);
-        nbt.setInteger("xRange", xRange);
-        nbt.setInteger("yRange", yRange);
+        yRange = yRange > 0 ? yRange : (byte) (yRange + dig_depth);
+
         boolean save = nbt.getBoolean("save");
         if (!player.capabilities.isCreativeMode) {
             for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
@@ -287,9 +281,8 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                                     );
                                 }
                                 if (!silktouch) {
-                                    localBlock.dropXpOnBlockBreak(world, pos_block,
-                                            localBlock.getExpDrop(state, world, pos_block, fortune)
-                                    );
+                                    ExperienceUtils.addPlayerXP(player,getExpierence(state, world, pos_block, fortune,stack
+                                            ,localBlock));
                                 }
                                 if (mop.typeOfHit == RayTraceResult.Type.MISS) {
                                     updateGhostBlocks(player, player.getEntityWorld());
@@ -407,21 +400,12 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         return toolType;
     }
 
-
     public float getDestroySpeed(ItemStack stack, IBlockState state) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int energy = 0;
-        int speed = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("speed")) {
-                speed++;
-            }
-            if (nbt.getString("mode_module" + i).equals("energy")) {
-                energy++;
-            }
-        }
-        energy = Math.min(energy, EnumInfoUpgradeModules.ENERGY.max);
-        speed = Math.min(speed, EnumInfoUpgradeModules.EFFICIENCY.max);
+        int energy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number : 0;
+        int speed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EFFICIENCY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EFFICIENCY, stack).number : 0;
+
         return !ElectricItem.manager.canUse(stack, (this.energyPerOperation - (int) (this.energyPerOperation * 0.25 * energy)))
                 ? 1.0F
                 : (canHarvestBlock(state, stack) ? (this.efficiency + (int) (this.efficiency * 0.2 * speed)) : 1.0F);
@@ -444,7 +428,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                 : this.toolMaterial.getHarvestLevel();
     }
 
-
     @Override
     public boolean canHarvestBlock(final IBlockState state, final ItemStack stack) {
         return (Items.DIAMOND_PICKAXE.canHarvestBlock(state, stack)
@@ -457,27 +440,19 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
         if (readToolMode(stack) == 0) {
             World world = player.getEntityWorld();
-            IBlockState state = world.getBlockState(pos);
             Block block = world.getBlockState(pos).getBlock();
-            int meta = state.getBlock().getMetaFromState(state);
             if (block == Blocks.AIR) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
 
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
+            RayTraceResult mop = GetRetrace.retrace(player);
             NBTTagCompound nbt = ModUtils.nbt(stack);
-            byte aoe = 0;
+            byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack).number : 0);
 
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("AOE_dig")) {
-                    aoe++;
-
-                }
+            if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
+                return break_block(world, block, mop, aoe, player, pos, stack);
             }
-            aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
-
-
-            return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
         }
         if (readToolMode(stack) == 1) {
             World world = player.getEntityWorld();
@@ -489,26 +464,21 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
             if (block.equals(Blocks.AIR)) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
-
+            RayTraceResult mop = GetRetrace.retrace(player);
 
             NBTTagCompound nbt = ModUtils.nbt(stack);
-            byte aoe = 0;
-
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("AOE_dig")) {
-                    aoe++;
-
-                }
-            }
-            aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
+            byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack).number : 0);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
                 if (player.isSneaking()) {
-                    return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                    if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
+                        return break_block(world, block, mop, aoe, player, pos, stack);
+                    }
                 }
 
-
-                return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
+                if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
+                    return break_block(world, block, mop, (byte) (1 + aoe), player, pos, stack);
+                }
             }
         }
         if (readToolMode(stack) == 2) {
@@ -516,13 +486,11 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
 
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            int meta = block.getMetaFromState(state);
 
             if (block.equals(Blocks.AIR)) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
-
+            RayTraceResult mop = GetRetrace.retrace(player);
             boolean silktouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
             int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
 
@@ -622,7 +590,11 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                 return false;
             }
 
+
             if (!world.isRemote) {
+                if (ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos) == -1) {
+                    return false;
+                }
                 block.onBlockHarvested(world, pos, state, (EntityPlayerMP) entity);
 
                 if (block.removedByPlayer(state, world, pos, (EntityPlayerMP) entity, true)) {
@@ -630,26 +602,72 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                     block.harvestBlock(world, (EntityPlayerMP) entity, pos, state, null, stack);
                     NBTTagCompound nbt = ModUtils.nbt(stack);
 
-                    int xMin = nbt.getInteger("xRange"), xMax = nbt.getInteger("xRange");
-                    int yMin = nbt.getInteger("yRange"), yMax = nbt.getInteger("yRange");
-                    int zMin = nbt.getInteger("zRange"), zMax = nbt.getInteger("zRange");
                     List<EntityItem> items = entity.getEntityWorld().getEntitiesWithinAABB(
                             EntityItem.class,
-                            new AxisAlignedBB(pos.getX() - xMin, pos.getY() - yMin, pos.getZ() - zMin, pos.getX() + xMax + 1,
-                                    pos.getY() + yMax + 1,
-                                    pos.getZ() + zMax + 1
+                            new AxisAlignedBB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 1,
+                                    pos.getY() + 1,
+                                    pos.getZ() + 1
                             )
                     );
+                    boolean smelter = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SMELTER, stack);
+                    boolean comb = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.COMB_MACERATOR, stack);
+                    boolean mac = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.MACERATOR, stack);
+                    boolean generator = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.GENERATOR, stack);
 
 
                     ((EntityPlayerMP) entity).addExhaustion(-0.025F);
-                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && nbt.getBoolean("black") && check_list(
-                            block,
-                            block.getMetaFromState(state),
-                            stack
-                    )) || !Config.blacklist || !nbt.getBoolean("black")) {
+                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && check_list(block, block.getMetaFromState(state)
+                            , stack)) || (!Config.blacklist) || !nbt.getBoolean("black")) {
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
+                                ItemStack stack1 = item.getItem();
+
+                                if (comb) {
+                                    RecipeOutput rec = Recipes.macerator.getOutputFor(stack1, false);
+                                    stack1 = rec.items.get(0);
+                                } else if (mac) {
+                                    final MachineRecipeResult<IRecipeInput, Collection<ItemStack>, ItemStack> rec = ic2.api.recipe.Recipes.macerator.apply(
+                                            stack1,
+                                            false
+                                    );
+                                    stack1 = rec.getOutput().iterator().next();
+                                }
+                                ItemStack smelt = new ItemStack(Items.AIR);
+                                if (smelter) {
+                                    smelt = FurnaceRecipes.instance().getSmeltingResult(stack1);
+                                    if (!smelt.isEmpty()) {
+                                        smelt.setCount(stack1.getCount());
+                                    }
+                                }
+                                if (generator) {
+                                    final boolean rec = Info.itemInfo.getFuelValue(stack1, false) > 0;
+                                    if (rec) {
+                                        int amount = stack1.getCount();
+                                        int value = Info.itemInfo.getFuelValue(stack1, false) / 4;
+                                        amount *= value;
+                                        amount *= Math.round(10.0F * ConfigUtil.getFloat(
+                                                MainConfig.get(),
+                                                "balance/energy/generator/generator"
+                                        ));
+                                        double sentPacket = ElectricItem.manager.charge(
+                                                stack,
+                                                amount,
+                                                2147483647,
+                                                true,
+                                                false
+                                        );
+                                        amount -= sentPacket;
+                                        amount /= (value * Math.round(10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance" +
+                                                "/energy/generator/generator")));
+                                        stack1.setCount(amount);
+                                    }
+                                }
+                                if (!smelt.isEmpty()) {
+                                    item.setItem(smelt);
+                                } else {
+                                    item.setItem(stack1);
+                                }
+
                                 item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
                                 ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(item));
                                 item.setPickupDelay(0);
@@ -668,7 +686,18 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                         }
                     }
                 }
-                ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos);
+                int random = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RANDOM, stack) ?
+                        UpgradeSystem.system.getModules(EnumInfoUpgradeModules.RANDOM, stack).number : 0;
+                if(random !=0){
+                    final int rand = world.rand.nextInt(100001);
+                    if(rand >= 100000-random){
+                        EntityItem item = new EntityItem(world);
+                        item.setItem(IUCore.get_ingot.get(world.rand.nextInt(IUCore.get_ingot.size())));
+                        item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
+                        ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(item));
+                        item.setPickupDelay(0);
+                    }
+                }
                 EntityPlayerMP mpPlayer = (EntityPlayerMP) entity;
                 mpPlayer.connection.sendPacket(new SPacketBlockChange(world, new BlockPos(pos)));
             } else {
@@ -685,7 +714,7 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
             if (entity.isEntityAlive()) {
                 float energy = energy(stack);
                 if (energy != 0.0F && state.getBlockHardness(world, pos) != 0.0F) {
-                    ElectricItem.manager.use(stack, energy, entity);
+                    ElectricItem.manager.use(stack, energy, null);
                 }
             }
 
@@ -693,18 +722,9 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         }
     }
 
-
     public float energy(ItemStack stack) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int energy1 = 0;
-
-        for (int i = 0; i < 4; ++i) {
-            if (nbt.getString("mode_module" + i).equals("energy")) {
-                ++energy1;
-            }
-        }
-
-        energy1 = Math.min(energy1, EnumInfoUpgradeModules.ENERGY.max);
+        int energy1 = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number : 0;
         int toolMode = readToolMode(stack);
         float energy;
         switch (toolMode) {
@@ -746,17 +766,19 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                 if (item instanceof net.minecraft.item.ItemBlock) {
                     int oldMeta = torchStack.getItemDamage();
                     int oldSize = torchStack.stackSize;
+                    ItemStack stack = player.getHeldItem(hand).copy();
                     boolean result = torchStack.onItemUse(player, world, pos, hand, facing, hitX,
                             hitY, hitZ
                     ) == EnumActionResult.SUCCESS;
                     if (player.capabilities.isCreativeMode) {
                         torchStack.setItemDamage(oldMeta);
                         torchStack.stackSize = oldSize;
-                    } else if (torchStack.stackSize <= 0) {
-                        ForgeEventFactory.onPlayerDestroyItem(player, torchStack, hand);
-                        player.inventory.mainInventory.set(i, new ItemStack(Items.AIR));
                     }
                     if (result) {
+                        ForgeEventFactory.onPlayerDestroyItem(player, torchStack, null);
+                        torchStack = player.inventory.mainInventory.get(i);
+                        player.setHeldItem(hand, stack);
+                        torchStack.setCount(torchStack.getCount() - 1);
                         return EnumActionResult.SUCCESS;
                     }
                 }
@@ -764,7 +786,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         }
         return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
     }
-
 
     @Override
     public ActionResult onItemRightClick(final World worldIn, final EntityPlayer player, final EnumHand hand) {
@@ -805,7 +826,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                 toolMode = 0;
             }
             saveToolMode(itemStack, toolMode);
-            Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(itemStack);
             switch (toolMode) {
                 case 0:
                     if (IC2.platform.isSimulating()) {
@@ -816,22 +836,13 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
                         );
                     }
                     this.efficiency = this.normalPower;
-                    if (this.efficienty != 0) {
-                        enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
-                    }
-                    if (this.lucky != 0) {
-                        enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
-                    }
 
-                    EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
+
                     break;
 
                 case 1:
 
-                    enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
-                    enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
 
-                    EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
                     if (IC2.platform.isSimulating()) {
                         IC2.platform.messagePlayer(
                                 player,
@@ -905,10 +916,11 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
     }
 
     public boolean check_list(Block block, int metaFromState, ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        if (!nbt.getBoolean("list")) {
+
+        if (!UpgradeSystem.system.hasBlackList(stack)) {
             return true;
         }
+
         ItemStack stack1 = new ItemStack(block, 1, metaFromState);
 
         if (OreDictionary.getOreIDs(stack1).length < 1) {
@@ -916,17 +928,9 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         }
 
         String name = OreDictionary.getOreName(OreDictionary.getOreIDs(stack1)[0]);
-        List<String> lst = new ArrayList();
-        for (int j = 0; j < 9; j++) {
-            String l = "number_" + j;
-            if (!nbt.getString(l).isEmpty()) {
-                lst.add(nbt.getString(l));
-            }
-
-        }
 
 
-        return !lst.isEmpty() && !lst.contains(name);
+        return !UpgradeSystem.system.getBlackList(stack).contains(name);
     }
 
     @Override
@@ -934,20 +938,13 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
         if (this.isInCreativeTab(subs)) {
             ItemStack stack = new ItemStack(this, 1);
 
-            Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-            if (this.efficienty != 0) {
-                enchantmentMap.put(Enchantments.EFFICIENCY, this.efficienty);
-            }
-            if (this.lucky != 0) {
-                enchantmentMap.put(Enchantments.FORTUNE, this.lucky);
-            }
-            EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-
+            NBTTagCompound nbt = ModUtils.nbt(stack);
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
             items.add(stack);
             ItemStack itemstack = new ItemStack(this, 1, getMaxDamage());
-
-            EnchantmentHelper.setEnchantments(enchantmentMap, itemstack);
+            nbt = ModUtils.nbt(itemstack);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
             items.add(itemstack);
         }
     }
@@ -955,16 +952,6 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
     @Override
     public void registerModels() {
         registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy_tools").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -981,6 +968,26 @@ public class EnergyDrill extends ItemTool implements IElectricItem, IModelRegist
 
         }
 
+    }
+
+    @Override
+    public void setUpdate(final boolean update) {
+        this.update = update;
+    }
+
+    @Override
+    public List<String> getBlackList() {
+        return this.blacklist;
+    }
+
+    @Override
+    public void setBlackList(final boolean set) {
+        this.hasBlackList = set;
+    }
+
+    @Override
+    public boolean haveBlackList() {
+        return this.hasBlackList;
     }
 
 }

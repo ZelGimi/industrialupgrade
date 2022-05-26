@@ -2,7 +2,6 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
-import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerObsidianGenerator;
 import com.denfop.invslot.InvSlotObsidianGenerator;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -67,10 +66,10 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         this.fluidSlot1 = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidRegistry.WATER);
         this.fluidSlot2 = new InvSlotConsumableLiquidByList(this, "fluidSlot1", 1, FluidRegistry.LAVA);
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = this.fluids.addTank("fluidTank1", 12 * 1000
+        this.fluidTank1 = this.fluids.addTank("fluidTank1", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.WATER)
 
         );
-        this.fluidTank2 = this.fluids.addTank("fluidTank2", 12 * 1000
+        this.fluidTank2 = this.fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
 
         );
     }

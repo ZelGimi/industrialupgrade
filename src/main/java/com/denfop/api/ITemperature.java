@@ -20,4 +20,5 @@ public interface ITemperature {
 
     boolean reveiver();
 
+    boolean requairedTemperature();
 }

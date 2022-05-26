@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:itemsunnarium",
+      "data": 4
+    },
+    "title": {
+      "translate": "achievement.sunnarium_part"
+    },
+    "description": {
+      "translate": "achievement.sunnarium_part.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/se_generator",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:itemsunnarium",
+            "data": 4
+          }
+        ]
+      }
+    }
+  }
+}

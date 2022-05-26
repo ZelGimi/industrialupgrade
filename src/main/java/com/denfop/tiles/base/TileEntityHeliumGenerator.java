@@ -38,15 +38,14 @@ import java.util.Set;
 public class TileEntityHeliumGenerator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock {
 
     private static final int DEFAULT_TIER = ConfigUtil.getInt(MainConfig.get(), "balance/matterFabricatorTier");
-    private final float energycost;
-
-    private double lastEnergy;
-    private AudioSource audioSource;
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
     public final FluidTank fluidTank;
     protected final Fluids fluids;
+    private final float energycost;
+    private double lastEnergy;
+    private AudioSource audioSource;
 
     public TileEntityHeliumGenerator() {
         super(50000, 14);
@@ -64,6 +63,10 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
 
     }
 
+    private static int applyModifier(int extra) {
+        double ret = (double) Math.round(((double) DEFAULT_TIER + (double) extra));
+        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
+    }
 
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -138,7 +141,6 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
         return "" + p + "%";
     }
 
-
     public ContainerBase<TileEntityHeliumGenerator> getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerHeliumGenerator(entityPlayer, this);
     }
@@ -150,7 +152,6 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
 
     public void onGuiClosed(EntityPlayer player) {
     }
-
 
     public List<String> getNetworkedFields() {
         List<String> ret = new ArrayList<>();
@@ -176,11 +177,6 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
     public void setUpgradestat() {
         this.upgradeSlot.onChanged();
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
-    }
-
-    private static int applyModifier(int extra) {
-        double ret = (double) Math.round(((double) DEFAULT_TIER + (double) extra));
-        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
     public double getEnergy() {

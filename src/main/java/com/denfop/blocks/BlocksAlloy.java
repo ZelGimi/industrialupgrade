@@ -127,6 +127,9 @@ public class BlocksAlloy extends BlockCore implements IModelRegister {
             this.name = this.name().toLowerCase(Locale.US);
         }
 
+        public static Type getFromID(final int ID) {
+            return values()[ID % values().length];
+        }
 
         public int getMetadata() {
             return this.metadata;
@@ -134,10 +137,6 @@ public class BlocksAlloy extends BlockCore implements IModelRegister {
 
         public String getName() {
             return this.name;
-        }
-
-        public static Type getFromID(final int ID) {
-            return values()[ID % values().length];
         }
 
         public int getLight() {

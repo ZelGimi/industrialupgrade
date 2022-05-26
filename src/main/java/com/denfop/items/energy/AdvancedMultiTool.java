@@ -5,18 +5,28 @@ import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.Recipes;
+import com.denfop.api.upgrade.IUpgradeWithBlackList;
+import com.denfop.api.upgrade.UpgradeItemInform;
+import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.utils.ExperienceUtils;
+import com.denfop.utils.GetRetrace;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import ic2.api.info.Info;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
+import ic2.api.recipe.RecipeOutput;
 import ic2.core.IC2;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
-import ic2.core.util.StackUtil;
+import ic2.core.init.MainConfig;
+import ic2.core.util.ConfigUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -26,7 +36,6 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,6 +48,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
@@ -50,13 +60,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,14 +74,12 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModelRegister {
+public class AdvancedMultiTool extends ItemTool implements IElectricItem, IUpgradeWithBlackList, IModelRegister {
 
     public static final Set<IBlockState> mineableBlocks = Sets.newHashSet(
             Blocks.COBBLESTONE.getDefaultState(),
@@ -123,13 +130,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
             Material.ROCK, Material.GRASS, Material.ICE, Material.PACKED_ICE, Material.GRASS, Material.GROUND,
             Material.SAND, Material.SNOW, Material.CRAFTED_SNOW, Material.CLAY
     );
-
     private static final Set<String> toolType = ImmutableSet.of("pickaxe", "shovel", "axe");
     public final String name;
     public final float energyPerultraLowPowerOperation1 = Config.energyPerultraLowPowerOperation1;
     private final float bigHolePower = Config.bigHolePower;
     private final float normalPower = Config.effPower;
-    private final float lowPower = Config.lowPower;
     private final float ultraLowPower = Config.ultraLowPower;
     private final int maxCharge = Config.ultdrillmaxCharge;
     private final int tier = Config.ultdrilltier;
@@ -138,8 +143,12 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
     private final int energyPerbigHolePowerOperation = Config.energyPerbigHolePowerOperation;
     private final int energyPerultraLowPowerOperation = Config.energyPerultraLowPowerOperation;
     private final int transferLimit = Config.ultdrilltransferLimit;
-
     private final float ultraLowPower1 = Config.ultraLowPower1;
+    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
+    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
+    private boolean update = false;
+    private boolean hasBlackList = false;
+    private final List<String> blacklist = new ArrayList<>();
 
     public AdvancedMultiTool(Item.ToolMaterial toolMaterial, String name) {
         super(0.0F, 0.0F + toolMaterial.getAttackDamage(), toolMaterial, new HashSet());
@@ -153,76 +162,40 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         IUCore.proxy.addIModelRegister(this);
     }
 
-    public static void updateGhostBlocks(EntityPlayer player, World world) {
-        if (world.isRemote) {
-            return;
-        }
-        int xPos = (int) player.posX;
-        int yPos = (int) player.posY;
-        int zPos = (int) player.posZ;
-        for (int x = xPos - 6; x < xPos + 6; x++) {
-            for (int y = yPos - 6; y < yPos + 6; y++) {
-                for (int z = zPos - 6; z < zPos + 6; z++) {
-                    ((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, new BlockPos(x, y, z)));
-                }
-            }
-        }
-    }
 
     public static int readToolMode(ItemStack itemstack) {
         NBTTagCompound nbt = ModUtils.nbt(itemstack);
         int toolMode = nbt.getInteger("toolMode");
 
-        if (toolMode < 0 || toolMode > 6) {
+        if (toolMode < 0 || toolMode > 5) {
             toolMode = 0;
         }
         return toolMode;
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("energy_tools").append("/").append(name + extraName);
 
-    public static RayTraceResult raytraceFromEntity(World world, Entity player, boolean par3, double range) {
-        float pitch = player.rotationPitch;
-        float yaw = player.rotationYaw;
-        double x = player.posX;
-        double y = player.posY;
-        double z = player.posZ;
-        if (!world.isRemote && player instanceof EntityPlayer) {
-            y++;
-        }
-        Vec3d vec3 = new Vec3d(x, y, z);
-        float f3 = MathHelper.cos(-yaw * 0.017453292F - 3.1415927F);
-        float f4 = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
-        float f5 = -MathHelper.cos(-pitch * 0.017453292F);
-        float f6 = MathHelper.sin(-pitch * 0.017453292F);
-        float f7 = f4 * f5;
-        float f8 = f3 * f5;
-        if (player instanceof EntityPlayerMP) {
-            range = ((EntityPlayerMP) player).interactionManager.getBlockReachDistance();
-        }
-        Vec3d vec31 = vec3.addVector(range * f7, range * f6, range * f8);
-        return world.rayTraceBlocks(vec3, vec31, par3, !par3, par3);
+        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean par5) {
-        NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(itemStack);
+        NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
-
-        for (int i = 0; i < 4; i++) {
-            if (nbtData.getString("mode_module" + i).equals("silk")) {
-                Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(itemStack);
-                enchantmentMap.put(Enchantments.SILK_TOUCH, 1);
-                EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
-                break;
-            }
+        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+            nbt.setBoolean("hasID", false);
+            MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(world, this, itemStack, itemStack.getTagCompound()));
         }
-
-
     }
 
     boolean break_block(
-            World world, Block block, int meta, RayTraceResult mop, byte mode_item, EntityPlayer player, BlockPos pos,
-            ItemStack stack, IBlockState state_block
+            World world, Block block, RayTraceResult mop, byte mode_item, EntityPlayer player, BlockPos pos,
+            ItemStack stack
     ) {
         byte xRange = mode_item;
         byte yRange = mode_item;
@@ -230,7 +203,7 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        switch (mop.sideHit.ordinal()) {
+        switch (mop.sideHit.getIndex()) {
             case 0:
             case 1:
                 yRange = 0;
@@ -253,19 +226,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         Yy = yRange > 0 ? yRange - 1 : 0;
         NBTTagCompound nbt = ModUtils.nbt(stack);
         float energy = energy(stack);
-        byte dig_depth = 0;
-
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("dig_depth")) {
-                dig_depth++;
-            }
-        }
-        dig_depth = (byte) Math.min(dig_depth, EnumInfoUpgradeModules.DIG_DEPTH.max);
+        byte dig_depth = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.DIG_DEPTH, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.DIG_DEPTH, stack).number : 0);
         zRange = zRange > 0 ? zRange : (byte) (zRange + dig_depth);
         xRange = xRange > 0 ? xRange : (byte) (xRange + dig_depth);
-        nbt.setInteger("zRange", zRange);
-        nbt.setInteger("xRange", xRange);
-        nbt.setInteger("yRange", yRange);
+        yRange = yRange > 0 ? yRange : (byte) (yRange + dig_depth);
         boolean save = nbt.getBoolean("save");
         if (!player.capabilities.isCreativeMode) {
             for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
@@ -280,7 +245,7 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                                     continue;
                                 }
                             }
-                            if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
+                            if (canHarvestBlock(state, stack)
                                     && state.getBlockHardness(world, pos_block) >= 0.0F
                             ) {
                                 if (state.getBlockHardness(world, pos_block) > 0.0F) {
@@ -289,12 +254,8 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                                     );
                                 }
                                 if (!silktouch) {
-                                    localBlock.dropXpOnBlockBreak(world, pos_block,
-                                            localBlock.getExpDrop(state, world, pos_block, fortune)
-                                    );
-                                }
-                                if (mop.typeOfHit == RayTraceResult.Type.MISS) {
-                                    updateGhostBlocks(player, player.getEntityWorld());
+                                    ExperienceUtils.addPlayerXP(player,getExpierence(state, world, pos_block, fortune,stack
+                                            ,localBlock));
                                 }
 
                             } else {
@@ -329,9 +290,8 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         );
                     }
                     if (!silktouch) {
-                        localBlock.dropXpOnBlockBreak(world, pos,
-                                localBlock.getExpDrop(state, world, pos, fortune)
-                        );
+                        ExperienceUtils.addPlayerXP(player,getExpierence(state, world, pos, fortune,stack
+                                ,localBlock));
                     }
 
 
@@ -359,9 +319,8 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         );
                     }
                     if (!silktouch) {
-                        localBlock.dropXpOnBlockBreak(world, pos,
-                                localBlock.getExpDrop(state, world, pos, fortune)
-                        );
+                        ExperienceUtils.addPlayerXP(player,getExpierence(state, world, pos, fortune,stack
+                                ,localBlock));
                     }
 
 
@@ -409,21 +368,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         return toolType;
     }
 
-
     public float getDestroySpeed(ItemStack stack, IBlockState state) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int energy = 0;
-        int speed = 0;
-        for (int i = 0; i < 4; i++) {
-            if (nbt.getString("mode_module" + i).equals("speed")) {
-                speed++;
-            }
-            if (nbt.getString("mode_module" + i).equals("energy")) {
-                energy++;
-            }
-        }
-        energy = Math.min(energy, EnumInfoUpgradeModules.ENERGY.max);
-        speed = Math.min(speed, EnumInfoUpgradeModules.EFFICIENCY.max);
+        int energy = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number : 0;
+        int speed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EFFICIENCY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EFFICIENCY, stack).number : 0;
         return !ElectricItem.manager.canUse(stack, (this.energyPerOperation - (int) (this.energyPerOperation * 0.25 * energy)))
                 ? 1.0F
                 : (canHarvestBlock(state, stack) ? (this.efficiency + (int) (this.efficiency * 0.2 * speed)) : 1.0F);
@@ -441,7 +390,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                 super.getHarvestLevel(stack, toolClass, player, blockState)
                 : this.toolMaterial.getHarvestLevel();
     }
-
 
     @Override
     public boolean canHarvestBlock(final IBlockState state, final ItemStack stack) {
@@ -503,7 +451,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
     private boolean isTree(World world, BlockPos pos) {
         Block wood = world.getBlockState(pos).getBlock();
-        IBlockState state = world.getBlockState(pos);
         if (wood.equals(Blocks.AIR) || !wood.isWood(world, pos)) {
             return false;
         }
@@ -536,57 +483,37 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
         if (readToolMode(stack) == 0) {
             World world = player.getEntityWorld();
-            IBlockState state = world.getBlockState(pos);
             Block block = world.getBlockState(pos).getBlock();
-            int meta = state.getBlock().getMetaFromState(state);
             if (block == Blocks.AIR) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
 
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            byte aoe = 0;
+            RayTraceResult mop = GetRetrace.retrace(player);
+            byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack).number : 0);
 
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("AOE_dig")) {
-                    aoe++;
-
-                }
-            }
-            aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
-
-
-            return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+            return break_block(world, block, mop, aoe, player, pos, stack);
         }
         if (readToolMode(stack) == 1) {
             World world = player.getEntityWorld();
 
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            int meta = block.getMetaFromState(state);
 
             if (block.equals(Blocks.AIR)) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
 
+            RayTraceResult mop = GetRetrace.retrace(player);
 
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            byte aoe = 0;
-
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("AOE_dig")) {
-                    aoe++;
-
-                }
-            }
-            aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
+            byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack).number : 0);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
                 if (player.isSneaking()) {
-                    return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                    return break_block(world, block, mop, aoe, player, pos, stack);
                 }
 
-                return break_block(world, block, meta, mop, (byte) (1 + aoe), player, pos, stack, state);
+                return break_block(world, block, mop, (byte) (1 + aoe), player, pos, stack);
             }
         }
         if (readToolMode(stack) == 2) {
@@ -594,31 +521,23 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            int meta = block.getMetaFromState(state);
 
             if (block.equals(Blocks.AIR)) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
+            RayTraceResult mop = GetRetrace.retrace(player);
 
 
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            byte aoe = 0;
-
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("AOE_dig")) {
-                    aoe++;
-
-                }
-            }
-            aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
+            byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack).number : 0);
 
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
                 if (player.isSneaking()) {
-                    return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                    if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
+                        return break_block(world, block, mop, aoe, player, pos, stack);
+                    }
                 }
-
-                return break_block(world, block, meta, mop, (byte) (2 + aoe), player, pos, stack, state);
+                return break_block(world, block, mop, (byte) (2 + aoe), player, pos, stack);
             }
         }
         if (readToolMode(stack) == 3) {
@@ -626,30 +545,23 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            int meta = block.getMetaFromState(state);
 
             if (block.equals(Blocks.AIR)) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
+
+            RayTraceResult mop = GetRetrace.retrace(player);
 
 
-            NBTTagCompound nbt = ModUtils.nbt(stack);
-            byte aoe = 0;
-
-            for (int i = 0; i < 4; i++) {
-                if (nbt.getString("mode_module" + i).equals("AOE_dig")) {
-                    aoe++;
-
-                }
-            }
-            aoe = (byte) Math.min(aoe, EnumInfoUpgradeModules.AOE_DIG.max);
+            byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack).number : 0);
             if (materials.contains(state.getMaterial()) || block == Blocks.MONSTER_EGG) {
                 if (player.isSneaking()) {
-                    return break_block(world, block, meta, mop, aoe, player, pos, stack, state);
+                    if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
+                        return break_block(world, block, mop, aoe, player, pos, stack);
+                    }
                 }
-
-                return break_block(world, block, meta, mop, (byte) (3 + aoe), player, pos, stack, state);
+                return break_block(world, block, mop, (byte) (3 + aoe), player, pos, stack);
             }
         }
         if (readToolMode(stack) == 5) {
@@ -675,12 +587,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            int meta = block.getMetaFromState(state);
 
             if (block.equals(Blocks.AIR)) {
                 return super.onBlockStartBreak(stack, pos, player);
             }
-            RayTraceResult mop = raytraceFromEntity(world, player, true, 4.5D);
+            RayTraceResult mop = GetRetrace.retrace(player);
 
             boolean silktouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
             int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
@@ -737,9 +648,8 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
                                     }
                                     if (!silktouch) {
-                                        localBlock.dropXpOnBlockBreak(world, pos_block,
-                                                localBlock.getExpDrop(state, world, pos_block, fortune)
-                                        );
+                                        ExperienceUtils.addPlayerXP(player,getExpierence(state, world, pos_block, fortune,stack
+                                                ,localBlock));
                                     }
 
 
@@ -764,6 +674,20 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
 
     }
 
+    private int getExpierence(
+            IBlockState state,
+            World world,
+            BlockPos pos_block,
+            int fortune,
+            ItemStack stack,
+            final Block localBlock
+    ) {
+     int col =   localBlock.getExpDrop(state, world, pos_block, fortune);
+        col *= (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EXPERIENCE, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EXPERIENCE, stack).number*0.5+1 : 1);
+     return col;
+    }
+
     public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity) {
 
         Block block = state.getBlock();
@@ -782,33 +706,81 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
             }
 
             if (!world.isRemote) {
+                if (ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos) == -1) {
+                    return false;
+                }
+
                 block.onBlockHarvested(world, pos, state, (EntityPlayerMP) entity);
 
                 if (block.removedByPlayer(state, world, pos, (EntityPlayerMP) entity, true)) {
                     block.onBlockDestroyedByPlayer(world, pos, state);
                     block.harvestBlock(world, (EntityPlayerMP) entity, pos, state, null, stack);
                     NBTTagCompound nbt = ModUtils.nbt(stack);
-
-                    int xMin = nbt.getInteger("xRange"), xMax = nbt.getInteger("xRange");
-                    int yMin = nbt.getInteger("yRange"), yMax = nbt.getInteger("yRange");
-                    int zMin = nbt.getInteger("zRange"), zMax = nbt.getInteger("zRange");
                     List<EntityItem> items = entity.getEntityWorld().getEntitiesWithinAABB(
                             EntityItem.class,
-                            new AxisAlignedBB(pos.getX() - xMin, pos.getY() - yMin, pos.getZ() - zMin, pos.getX() + xMax + 1,
-                                    pos.getY() + yMax + 1,
-                                    pos.getZ() + zMax + 1
+                            new AxisAlignedBB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 1,
+                                    pos.getY() + 1,
+                                    pos.getZ() + 1
                             )
                     );
+                    boolean smelter = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SMELTER, stack);
+                    boolean comb = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.COMB_MACERATOR, stack);
+                    boolean mac = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.MACERATOR, stack);
+                    boolean generator = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.GENERATOR, stack);
 
 
                     ((EntityPlayerMP) entity).addExhaustion(-0.025F);
-                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && check_list(
-                            block,
-                            block.getMetaFromState(state),
-                            stack
-                    ) && nbt.getBoolean("black")) || !Config.blacklist || !nbt.getBoolean("black")) {
+                    if ((ModUtils.getore(block, block.getMetaFromState(state)) && check_list(block, block.getMetaFromState(state)
+                            , stack)) || (!Config.blacklist) || !nbt.getBoolean("black")) {
                         for (EntityItem item : items) {
                             if (!entity.getEntityWorld().isRemote) {
+                                ItemStack stack1 = item.getItem();
+
+                                if (comb) {
+                                    RecipeOutput rec = Recipes.macerator.getOutputFor(stack1, false);
+                                    stack1 = rec.items.get(0);
+                                } else if (mac) {
+                                    final RecipeOutput output = Recipes.maceratorold.getOutputFor(stack1, false, false);
+                                    if (output != null) {
+                                        stack1 = output.items.get(0);
+                                    }
+                                }
+                                ItemStack smelt = new ItemStack(Items.AIR);
+                                if (smelter) {
+                                    smelt = FurnaceRecipes.instance().getSmeltingResult(stack1);
+                                    if (!smelt.isEmpty()) {
+                                        smelt.setCount(stack1.getCount());
+                                    }
+                                }
+                                if (generator) {
+                                    final boolean rec = Info.itemInfo.getFuelValue(stack1, false) > 0;
+                                    if (rec) {
+                                        int amount = stack1.getCount();
+                                        int value = Info.itemInfo.getFuelValue(stack1, false) / 4;
+                                        amount *= value;
+                                        amount *= Math.round(10.0F * ConfigUtil.getFloat(
+                                                MainConfig.get(),
+                                                "balance/energy/generator/generator"
+                                        ));
+                                        double sentPacket = ElectricItem.manager.charge(
+                                                stack,
+                                                amount,
+                                                2147483647,
+                                                true,
+                                                false
+                                        );
+                                        amount -= sentPacket;
+                                        amount /= (value * Math.round(10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance" +
+                                                "/energy/generator/generator")));
+                                        stack1.setCount(amount);
+                                    }
+                                }
+                                if (!smelt.isEmpty()) {
+                                    item.setItem(smelt);
+                                } else {
+                                    item.setItem(stack1);
+                                }
+
                                 item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
                                 ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(item));
                                 item.setPickupDelay(0);
@@ -827,7 +799,18 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         }
                     }
                 }
-                ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos);
+                int random = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RANDOM, stack) ?
+                        UpgradeSystem.system.getModules(EnumInfoUpgradeModules.RANDOM, stack).number : 0;
+                if(random !=0){
+                    final int rand = world.rand.nextInt(100001);
+                    if(rand >= 100000-random){
+                        EntityItem item = new EntityItem(world);
+                        item.setItem(IUCore.get_ingot.get(world.rand.nextInt(IUCore.get_ingot.size())));
+                        item.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, 0.0F, 0.0F);
+                        ((EntityPlayerMP) entity).connection.sendPacket(new SPacketEntityTeleport(item));
+                        item.setPickupDelay(0);
+                    }
+                }
                 EntityPlayerMP mpPlayer = (EntityPlayerMP) entity;
                 mpPlayer.connection.sendPacket(new SPacketBlockChange(world, new BlockPos(pos)));
             } else {
@@ -844,7 +827,7 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
             if (entity.isEntityAlive()) {
                 float energy = energy(stack);
                 if (energy != 0.0F && state.getBlockHardness(world, pos) != 0.0F) {
-                    ElectricItem.manager.use(stack, energy, entity);
+                    ElectricItem.manager.use(stack, energy, null);
                 }
             }
 
@@ -853,10 +836,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
     }
 
     public boolean check_list(Block block, int metaFromState, ItemStack stack) {
-        final NBTTagCompound nbt = ModUtils.nbt(stack);
-        if (!nbt.getBoolean("list")) {
+
+        if (!UpgradeSystem.system.hasBlackList(stack)) {
             return true;
         }
+
         ItemStack stack1 = new ItemStack(block, 1, metaFromState);
 
         if (OreDictionary.getOreIDs(stack1).length < 1) {
@@ -864,30 +848,29 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         }
 
         String name = OreDictionary.getOreName(OreDictionary.getOreIDs(stack1)[0]);
-        List<String> lst = new ArrayList();
-        for (int j = 0; j < 9; j++) {
-            String l = "number_" + j;
-            if (!nbt.getString(l).isEmpty()) {
-                lst.add(nbt.getString(l));
-            }
-
-        }
 
 
-        return !lst.isEmpty() && !lst.contains(name);
+        return !UpgradeSystem.system.getBlackList(stack).contains(name);
+    }
+
+    @Override
+    public List<String> getBlackList() {
+        return this.blacklist;
+    }
+
+    @Override
+    public void setBlackList(final boolean set) {
+        this.hasBlackList = set;
+    }
+
+    @Override
+    public boolean haveBlackList() {
+        return this.hasBlackList;
     }
 
     public float energy(ItemStack stack) {
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        int energy1 = 0;
-
-        for (int i = 0; i < 4; ++i) {
-            if (nbt.getString("mode_module" + i).equals("energy")) {
-                ++energy1;
-            }
-        }
-
-        energy1 = Math.min(energy1, EnumInfoUpgradeModules.ENERGY.max);
+        int energy1 = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
+                UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number : 0;
         int toolMode = readToolMode(stack);
         float energy;
         switch (toolMode) {
@@ -937,17 +920,19 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                 if (item instanceof net.minecraft.item.ItemBlock) {
                     int oldMeta = torchStack.getItemDamage();
                     int oldSize = torchStack.stackSize;
+                    ItemStack stack = player.getHeldItem(hand).copy();
                     boolean result = torchStack.onItemUse(player, world, pos, hand, facing, hitX,
                             hitY, hitZ
                     ) == EnumActionResult.SUCCESS;
                     if (player.capabilities.isCreativeMode) {
                         torchStack.setItemDamage(oldMeta);
                         torchStack.stackSize = oldSize;
-                    } else if (torchStack.stackSize <= 0) {
-                        ForgeEventFactory.onPlayerDestroyItem(player, torchStack, hand);
-                        player.inventory.mainInventory.set(i, new ItemStack(Items.AIR));
                     }
                     if (result) {
+                        ForgeEventFactory.onPlayerDestroyItem(player, torchStack, null);
+                        torchStack = player.inventory.mainInventory.get(i);
+                        player.setHeldItem(hand, stack);
+                        torchStack.setCount(torchStack.getCount() - 1);
                         return EnumActionResult.SUCCESS;
                     }
                 }
@@ -955,7 +940,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         }
         return super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
     }
-
 
     @Override
     public ActionResult onItemRightClick(final World worldIn, final EntityPlayer player, final EnumHand hand) {
@@ -992,7 +976,7 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         IC2.audioManager.getDefaultVolume()
                 );
             }
-            if (toolMode > 6) {
+            if (toolMode > 5) {
                 toolMode = 0;
             }
             saveToolMode(itemStack, toolMode);
@@ -1006,22 +990,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         );
                     }
                     this.efficiency = this.normalPower;
-                    Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(itemStack);
-                    if (Config.enableefficiency) {
-                        enchantmentMap.put(
-                                Enchantments.EFFICIENCY,
-                                Config.efficiencylevel
-                        );
-                    }
-                    if (Config.enablefortune) {
-                        enchantmentMap.remove(
-                                Enchantments.FORTUNE,
-                                Config.fortunelevel
-                        );
-                    }
-                    if (Config.enablefortune || Config.enableefficiency) {
-                        EnchantmentHelper.setEnchantments(enchantmentMap, itemStack);
-                    }
                     break;
 
 
@@ -1034,16 +1002,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         );
                     }
                     this.efficiency = this.bigHolePower;
-                    Map<Enchantment, Integer> enchantmentMap2 = EnchantmentHelper.getEnchantments(itemStack);
-                    enchantmentMap2.remove(
-                            Enchantments.EFFICIENCY,
-                            Config.efficiencylevel1
-                    );
-
-                    if (Config.enablesilkTouch) {
-                        enchantmentMap2.put(Enchantments.SILK_TOUCH, 1);
-                    }
-                    EnchantmentHelper.setEnchantments(enchantmentMap2, itemStack);
                     break;
                 case 2:
                     if (IC2.platform.isSimulating()) {
@@ -1054,19 +1012,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         );
                     }
                     this.efficiency = this.ultraLowPower;
-                    Map<Enchantment, Integer> enchantmentMap1 = EnchantmentHelper.getEnchantments(itemStack);
-                    if (Config.enablesilkTouch) {
-                        enchantmentMap1.remove(Enchantments.SILK_TOUCH, 1);
-                    }
-                    if (Config.enablefortune) {
-                        enchantmentMap1.put(
-                                Enchantments.FORTUNE,
-                                Config.fortunelevel
-                        );
-                    }
-                    if (Config.enablefortune || Config.enablesilkTouch) {
-                        EnchantmentHelper.setEnchantments(enchantmentMap1, itemStack);
-                    }
                     break;
                 case 3:
                     if (IC2.platform.isSimulating()) {
@@ -1088,22 +1033,6 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                         );
                     }
                     this.efficiency = this.normalPower;
-                    Map<Enchantment, Integer> enchantmentMap3 = EnchantmentHelper.getEnchantments(itemStack);
-                    if (Config.enableefficiency) {
-                        enchantmentMap3.put(
-                                Enchantments.EFFICIENCY,
-                                Config.efficiencylevel
-                        );
-                    }
-                    if (Config.enablefortune) {
-                        enchantmentMap3.remove(
-                                Enchantments.FORTUNE,
-                                Config.fortunelevel
-                        );
-                    }
-                    if (Config.enablefortune || Config.enableefficiency) {
-                        EnchantmentHelper.setEnchantments(enchantmentMap3, itemStack);
-                    }
                     break;
                 case 5:
                     if (IC2.platform.isSimulating()) {
@@ -1142,33 +1071,28 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
                 break;
             case 1:
                 par3List.add(TextFormatting.GOLD + Localization.translate("message.text.mode") + ": "
-                        + TextFormatting.WHITE + Localization.translate("message.ultDDrill.mode.lowPower"));
-                par3List.add(Localization.translate("message.description.lowPower"));
-                break;
-            case 2:
-                par3List.add(TextFormatting.GOLD + Localization.translate("message.text.mode") + ": "
                         + TextFormatting.WHITE + Localization.translate("message.ultDDrill.mode.bigHoles"));
                 par3List.add(Localization.translate("message.description.bigHoles"));
 
                 break;
-            case 3:
+            case 2:
 
                 par3List.add(TextFormatting.GOLD + Localization.translate("message.text.mode") + ": "
                         + TextFormatting.WHITE + Localization.translate("message.ultDDrill.mode.bigHoles1"));
                 par3List.add(Localization.translate("message.description.bigHoles1"));
                 break;
-            case 4:
+            case 3:
                 par3List.add(TextFormatting.GOLD + Localization.translate("message.text.mode") + ": "
                         + TextFormatting.WHITE + Localization.translate("message.ultDDrill.mode.bigHoles2"));
                 par3List.add(Localization.translate("message.description.bigHoles2"));
                 break;
-            case 5:
+            case 4:
 
                 par3List.add(TextFormatting.GOLD + Localization.translate("message.text.mode") + ": "
                         + TextFormatting.WHITE + Localization.translate("message.ultDDrill.mode.pickaxe"));
                 par3List.add(Localization.translate("message.description.pickaxe"));
                 break;
-            case 6:
+            case 5:
                 par3List.add(TextFormatting.GOLD + Localization.translate("message.text.mode") + ": "
                         + TextFormatting.WHITE + Localization.translate("message.ultDDrill.mode.treemode"));
                 par3List.add(Localization.translate("message.description.treemode"));
@@ -1195,35 +1119,20 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         if (this.isInCreativeTab(subs)) {
             ItemStack stack = new ItemStack(this, 1);
 
-            Map<Enchantment, Integer> enchantmentMap = new HashMap<>();
-
-
-            enchantmentMap.put(Enchantments.EFFICIENCY, 10);
-            EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-
+            NBTTagCompound nbt = ModUtils.nbt(stack);
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
             items.add(stack);
             ItemStack itemstack = new ItemStack(this, 1, getMaxDamage());
-
-            EnchantmentHelper.setEnchantments(enchantmentMap, itemstack);
+            nbt = ModUtils.nbt(itemstack);
+            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
             items.add(itemstack);
         }
     }
 
-
     @Override
     public void registerModels() {
         registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy_tools").append("/").append(name + extraName);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -1239,5 +1148,11 @@ public class AdvancedMultiTool extends ItemTool implements IElectricItem, IModel
         }
 
     }
+
+    @Override
+    public void setUpdate(final boolean update) {
+        this.update = update;
+    }
+
 
 }

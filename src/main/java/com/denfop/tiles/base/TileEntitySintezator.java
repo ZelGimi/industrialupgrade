@@ -31,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,6 +85,11 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
         this.inputslotA = new InvSlotSintezator(this, "input1", 1, 4);
         this.solartype = 0;
         this.type = EnumType.DEFAULT;
+    }
+
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.blocksintezator);
     }
 
     public boolean shouldRenderInPass(int pass) {

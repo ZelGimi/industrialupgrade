@@ -3,16 +3,25 @@ package com.denfop.tiles.base;
 import com.denfop.api.ITemperature;
 import com.denfop.api.ITemperatureSourse;
 import com.denfop.api.Recipes;
-import ic2.core.ContainerBase;
-import ic2.core.IC2;
+import com.denfop.api.heat.IHeatAcceptor;
+import com.denfop.api.heat.IHeatSource;
+import com.denfop.api.heat.event.HeatTileLoadEvent;
+import com.denfop.api.heat.event.HeatTileUnloadEvent;
+import com.denfop.container.ContainerHeatMachine;
+import com.denfop.gui.GuiHeatMachine;
+import ic2.api.network.INetworkClientTileEntityEventListener;
+import ic2.core.block.comp.Energy;
+import ic2.core.block.comp.Fluids;
+import ic2.core.block.invslot.InvSlot;
+import ic2.core.block.invslot.InvSlotConsumableLiquid;
+import ic2.core.block.invslot.InvSlotConsumableLiquidByTank;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,23 +33,50 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class TileEntityBaseHeatMachine extends TileEntityElectricMachine implements IFluidHandler, ITemperatureSourse {
+public class TileEntityBaseHeatMachine extends TileEntityElectricMachine implements INetworkClientTileEntityEventListener,
+        IFluidHandler, ITemperatureSourse, IHeatSource {
 
 
     public final boolean hasFluid;
-    public final FluidTank fluidTank;
     public final String name;
     public final short maxtemperature;
+    public boolean auto;
+    public FluidTank fluidTank;
+    public Fluids fluids = null;
     public short temperature;
+    public InvSlotConsumableLiquid fluidSlot;
 
     public TileEntityBaseHeatMachine(String name, boolean hasFluid) {
         super("", hasFluid ? 0D : 10000D, 14, 1);
         this.hasFluid = hasFluid;
         this.fluidTank = new FluidTank(12000);
+        if (this.hasFluid) {
+            this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
+        }
+        if (this.hasFluid) {
+            this.fluids = this.addComponent(new Fluids(this));
+            this.fluidTank = this.fluids.addTank("fluidTank", 12000, InvSlot.Access.I, InvSlot.InvSide.ANY, Fluids.fluidPredicate(
+                    FluidRegistry.getFluid("cryotheum"), FluidRegistry.getFluid("petrotheum"),
+                    FluidRegistry.getFluid("redstone"), FluidRegistry.getFluid("ic2pahoehoe_lava"),
+                    FluidRegistry.LAVA, FluidRegistry.getFluid("iufluiddizel"),
+                    FluidRegistry.getFluid("iufluidbenz"), FluidRegistry.getFluid("ic2biomass"),
+                    FluidRegistry.getFluid("biomass")
+            ));
+            this.fluidSlot = new InvSlotConsumableLiquidByTank(
+                    this,
+                    "fluidSlot",
+                    InvSlot.Access.I,
+                    1,
+                    InvSlot.InvSide.ANY,
+                    InvSlotConsumableLiquid.OpType.Drain,
+                    this.fluidTank
+            );
+        }
         this.name = name;
-        this.maxtemperature = 5000;
+        this.maxtemperature = 10000;
         this.temperature = 0;
 
+        this.auto = false;
     }
 
     @Override
@@ -49,22 +85,32 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
     }
 
     @Override
-    protected boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        return true;
+    public boolean requairedTemperature() {
+        return false;
+    }
+
+    @Override
+    public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
+        this.auto = !this.auto;
+    }
+
+    @Override
+    protected void onLoaded() {
+        super.onLoaded();
+        MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this));
+
+    }
+
+    protected void onUnloaded() {
+        MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this));
+        super.onUnloaded();
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.fluidTank.readFromNBT(nbttagcompound.getCompoundTag("fluidTank"));
-
         this.temperature = nbttagcompound.getShort("temperature");
+        this.auto = nbttagcompound.getBoolean("auto");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
@@ -73,24 +119,19 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         this.fluidTank.writeToNBT(fluidTankTag);
         nbttagcompound.setTag("fluidTank", fluidTankTag);
         nbttagcompound.setShort("temperature", this.temperature);
+        nbttagcompound.setBoolean("auto", this.auto);
         return nbttagcompound;
 
     }
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        IC2.network.get(true).updateTileEntityField(this, "temperature");
-        IC2.network.get(true).updateTileEntityField(this, "fluidTank");
-        setActive(Recipes.mechanism.process(this));
-        for (EnumFacing direction : EnumFacing.values()) {
-            TileEntity target = world.getTileEntity(new BlockPos(this.pos.getX() + direction.getFrontOffsetX(),
-                    this.pos.getY() + direction.getFrontOffsetY(), this.pos.getZ() + direction.getFrontOffsetZ()
-            ));
-            if (target instanceof ITemperature && !(target instanceof TileEntityBaseHeatMachine)) {
-                Recipes.mechanism.transfer((ITemperature) target, this);
+        if (this.hasFluid) {
+            if (this.fluidSlot.processIntoTank(this.fluidTank, this.outputSlot)) {
+                this.markDirty();
             }
         }
-
+        setActive(Recipes.mechanism.process(this));
     }
 
 
@@ -145,14 +186,14 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
 
 
     @Override
-    public ContainerBase<?> getGuiContainer(final EntityPlayer entityPlayer) {
-        return null;
+    public ContainerHeatMachine getGuiContainer(final EntityPlayer entityPlayer) {
+        return new ContainerHeatMachine(entityPlayer, this);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return null;
+        return new GuiHeatMachine(getGuiContainer(entityPlayer), b);
     }
 
     @Override
@@ -187,6 +228,33 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
             return null;
         }
         return getFluidTank().drain(maxDrain, doDrain);
+    }
+
+    @Override
+    public boolean emitsHeatTo(final IHeatAcceptor var1, final EnumFacing var2) {
+        return true;
+    }
+
+    @Override
+    public double getOfferedHeat() {
+        return Math.min(4, this.temperature);
+    }
+
+    @Override
+    public void drawHeat(final double var1) {
+        this.temperature -= var1;
+
+    }
+
+
+    @Override
+    public World getWorldTile() {
+        return this.getWorld();
+    }
+
+    @Override
+    public ITemperature getITemperature() {
+        return this;
     }
 
 }

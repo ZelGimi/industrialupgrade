@@ -6,6 +6,7 @@ import com.denfop.container.ContainerPlasticCreator;
 import com.denfop.gui.GUIPlasticCreator;
 import com.denfop.invslot.InvSlotProcessablePlastic;
 import com.denfop.tiles.base.TileEntityBasePlasticCreator;
+import com.denfop.utils.ModUtils;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.init.Localization;
@@ -32,11 +33,9 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator {
         Recipes.plastic.addRecipe(input.forStack(IUItem.PolyethCell), input.forStack(IUItem.PolypropCell),
                 new FluidStack(FluidRegistry.WATER, 1000), new ItemStack(IUItem.plast)
         );
-        Recipes.plastic.addRecipe(
-                input.forStack(IUItem.PolypropCell),
-                input.forStack(IUItem.PolyethCell),
-                new FluidStack(FluidRegistry.WATER, 1000),
-                new ItemStack(IUItem.plast)
+        Recipes.plastic.addRecipe(input.forStack(ModUtils.getCellFromFluid("iufluidpolyeth")),input.forStack( ModUtils.getCellFromFluid(
+                "iufluidpolyprop")),
+                new FluidStack(FluidRegistry.WATER, 1000), new ItemStack(IUItem.plast)
         );
 
     }
@@ -60,7 +59,7 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator {
     }
 
     public String getStartSoundFile() {
-        return "Machines/MaceratorOp.ogg";
+        return "Machines/plastic.ogg";
     }
 
     public String getInterruptSoundFile() {

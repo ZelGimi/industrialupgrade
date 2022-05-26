@@ -15,17 +15,7 @@ import java.util.Map;
 public class SunnariumHandler {
 
     private static final List<SunnariumHandler> recipes = new ArrayList<>();
-
-
-    public static List<SunnariumHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
     private final ItemStack input, input1, input2, input3, output;
-
 
     public SunnariumHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
@@ -38,25 +28,11 @@ public class SunnariumHandler {
         this.output = output;
     }
 
-
-    public ItemStack getInput() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public ItemStack getInput1() { // Получатель входного предмета рецепта.
-        return input1;
-    }
-
-    public ItemStack getInput2() { // Получатель входного предмета рецепта.
-        return input2;
-    }
-
-    public ItemStack getInput3() { // Получатель входного предмета рецепта.
-        return input3;
-    }
-
-    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
-        return output.copy();
+    public static List<SunnariumHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static SunnariumHandler addRecipe(
@@ -83,10 +59,6 @@ public class SunnariumHandler {
         return null;
     }
 
-    public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3);
-    }
-
     public static void initRecipes() {
         for (Map.Entry<ISunnariumRecipeManager.Input, RecipeOutput> container :
                 Recipes.sunnurium.getRecipes().entrySet()) {
@@ -105,6 +77,30 @@ public class SunnariumHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public ItemStack getInput() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public ItemStack getInput1() { // Получатель входного предмета рецепта.
+        return input1;
+    }
+
+    public ItemStack getInput2() { // Получатель входного предмета рецепта.
+        return input2;
+    }
+
+    public ItemStack getInput3() { // Получатель входного предмета рецепта.
+        return input3;
+    }
+
+    public ItemStack getOutput() { // Получатель выходного предмета рецепта.
+        return output.copy();
+    }
+
+    public boolean matchesInput(ItemStack is) {
+        return is.isItemEqual(input) || is.isItemEqual(input1) || is.isItemEqual(input2) || is.isItemEqual(input3);
     }
 
 }

@@ -48,7 +48,7 @@ public class BotaniaIntegration {
         rune_sun = new IUItemBase("rune_sun");
         rune_night = new IUItemBase("rune_night");
         rune_energy = new IUItemBase("rune_energy");
-        teraDDrill = new EnergyDrill(Item.ToolMaterial.DIAMOND, "teraDDrill", 0, 0, 500, 45000, 4, 35, 16, 160, 80);
+        teraDDrill = new EnergyDrill(Item.ToolMaterial.DIAMOND, "teraDDrill", 500, 45000, 4, 50, 25, 160, 80);
 
     }
 
@@ -65,11 +65,20 @@ public class BotaniaIntegration {
                 new ItemStack(IUItem.itemSSP, 1, 0), new ItemStack(IUItem.iuingot, 1, 17),
                 new ItemStack(elementium_plate), new ItemStack(IUItem.compresscarbon)
         );
-        BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_night, 1, 0),
+        BotaniaAPI.registerRuneAltarRecipe(
+                new ItemStack(rune_night, 1, 0),
                 12000,
                 LibOreDict.RUNE[7],
                 LibOreDict.RUNE[5],
-                new ItemStack(Ic2Items.energyCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
                 new ItemStack(IUItem.itemSSP, 1, 0),
                 new ItemStack(IUItem.iuingot, 1, 17),
                 new ItemStack(manasteel_plate),

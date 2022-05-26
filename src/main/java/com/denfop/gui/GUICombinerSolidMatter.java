@@ -17,11 +17,11 @@ public class GUICombinerSolidMatter extends GuiIC2<ContainerCombinerSolidMatter>
 
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
-        super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         drawTexturedModalRect(xoffset, yoffset, 0, 0, this.xSize, this.ySize);
+        this.drawBackgroundAndTitle(f, x - this.guiLeft, y - this.guiTop);
 
 
     }

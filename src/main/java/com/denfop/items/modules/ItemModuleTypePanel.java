@@ -34,6 +34,10 @@ public class ItemModuleTypePanel extends ItemMulti<ItemModuleTypePanel.CraftingT
         IUCore.proxy.addIModelRegister(this);
     }
 
+    public static EnumSolarPanels getSolarType(int meta) {
+        return EnumSolarPanels.getFromID(meta);
+    }
+
     @Override
     public void registerModels() {
         registerModels(null);
@@ -46,10 +50,6 @@ public class ItemModuleTypePanel extends ItemMulti<ItemModuleTypePanel.CraftingT
                 meta,
                 new ModelResourceLocation(Constants.MOD_ID + ":modulestype/" + CraftingTypes.getFromID(meta).getName(), null)
         );
-    }
-
-    public static EnumSolarPanels getSolarType(int meta) {
-        return EnumSolarPanels.getFromID(meta);
     }
 
     @Override

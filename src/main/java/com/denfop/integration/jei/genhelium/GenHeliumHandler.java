@@ -19,14 +19,6 @@ public class GenHeliumHandler {
     private final int input;
 
 
-    public static List<GenHeliumHandler> getRecipes() { // Получатель всех рецептов.
-        if (recipes.isEmpty()) {
-            initRecipes();
-        }
-        return recipes;
-    }
-
-
     public GenHeliumHandler(
             int input, FluidStack input2
     ) {
@@ -34,13 +26,11 @@ public class GenHeliumHandler {
         this.input2 = input2;
     }
 
-
-    public int getEnergy() { // Получатель входного предмета рецепта.
-        return input;
-    }
-
-    public FluidStack getOutput() { // Получатель входного предмета рецепта.
-        return input2;
+    public static List<GenHeliumHandler> getRecipes() { // Получатель всех рецептов.
+        if (recipes.isEmpty()) {
+            initRecipes();
+        }
+        return recipes;
     }
 
     public static GenHeliumHandler addRecipe(
@@ -64,7 +54,6 @@ public class GenHeliumHandler {
         return null;
     }
 
-
     public static void initRecipes() {
         for (Map.Entry<NBTTagCompound, FluidStack> container :
                 Recipes.heliumgenerator.getRecipes().entrySet()) {
@@ -79,6 +68,14 @@ public class GenHeliumHandler {
 
     private static ItemStack is(Block block) { // Побочный метод.
         return new ItemStack(block);
+    }
+
+    public int getEnergy() { // Получатель входного предмета рецепта.
+        return input;
+    }
+
+    public FluidStack getOutput() { // Получатель входного предмета рецепта.
+        return input2;
     }
 
 }

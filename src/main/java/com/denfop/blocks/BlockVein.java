@@ -137,7 +137,10 @@ public class BlockVein extends BlockCore implements IModelRegister, ITileEntityP
         Alfildit(9),
         Euxenite(10),
         Smithsonite(11),
-
+        Ilmenite(12),
+        Todorokite(13),
+        Ferroaugite(14),
+        Sheelite(15),
         ;
 
         private final int metadata;
@@ -148,6 +151,9 @@ public class BlockVein extends BlockCore implements IModelRegister, ITileEntityP
             this.name = this.name().toLowerCase(Locale.US);
         }
 
+        public static Type getFromID(final int ID) {
+            return values()[ID % values().length];
+        }
 
         public int getMetadata() {
             return this.metadata;
@@ -155,10 +161,6 @@ public class BlockVein extends BlockCore implements IModelRegister, ITileEntityP
 
         public String getName() {
             return this.name;
-        }
-
-        public static Type getFromID(final int ID) {
-            return values()[ID % values().length];
         }
 
         public int getLight() {

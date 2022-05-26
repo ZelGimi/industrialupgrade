@@ -43,6 +43,14 @@ public class CTGenMicrochip {
         ));
     }
 
+    public static void removeRecipe(
+            IItemStack output
+    ) {
+        CraftTweakerAPI.apply(new Remove(
+
+                output
+        ));
+    }
 
     private static class AddGenMicrochipIngredientAction extends BaseAction {
 
@@ -155,7 +163,25 @@ public class CTGenMicrochip {
     private static class Remove extends BaseAction {
 
         private final Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes;
+        protected Remove(
+                IItemStack output
+        ) {
 
+
+            this(Recipes.GenerationMicrochip.getRecipe(getItemStack(output)));
+        }
+        public static ItemStack getItemStack(IItemStack item) {
+            if (item == null) {
+                return null;
+            } else {
+                Object internal = item.getInternal();
+                if (!(internal instanceof ItemStack)) {
+                    CraftTweakerAPI.logError("Not a valid item stack: " + item);
+                }
+
+                return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
+            }
+        }
         protected Remove(Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes) {
             super("genmicrochip");
             this.recipes = recipes;

@@ -18,36 +18,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHasGui, INetworkTileEntityEventListener {
+public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHasGui {
 
     public final InvSlotGenSunarrium input;
-    public AudioSource audioSource;
     public final InvSlotOutput outputSlot;
-
     public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
-
-    public double sunenergy;
-
     public final double maxSunEnergy;
-
     public final double cof;
     private final String name;
-
-    public TileSolarGeneratorEnergy(double cof, String name) {
-
-        this.sunenergy = 0D;
-        this.maxSunEnergy = 2500;
-        this.cof = cof;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.input = new InvSlotGenSunarrium(this);
-        this.name = name;
-    }
+    public double sunenergy;
 
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
@@ -62,11 +49,6 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
         return false;
     }
 
-    @Override
-    public void onNetworkUpdate(String field) {
-
-    }
-
     protected boolean isSideSolid(EnumFacing side) {
         return false;
     }
@@ -78,6 +60,17 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
     public boolean shouldRenderInPass(int pass) {
         return true;
     }
+
+    public TileSolarGeneratorEnergy(double cof, String name) {
+
+        this.sunenergy = 0D;
+        this.maxSunEnergy = 2500;
+        this.cof = cof;
+        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.input = new InvSlotGenSunarrium(this);
+        this.name = name;
+    }
+
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
@@ -170,52 +163,14 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements IHa
     }
 
 
-    public void onUnloaded() {
-        super.onUnloaded();
-        if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
-            this.audioSource = null;
-        }
-    }
 
-    public String getStartSoundFile() {
-        return null;
-    }
 
-    public String getInterruptSoundFile() {
-        return null;
-    }
 
     public float getWrenchDropRate() {
         return 0.85F;
     }
 
-    @Override
-    public void onNetworkEvent(int event) {
-        if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
-        }
-        switch (event) {
-            case 0:
-                if (this.audioSource != null) {
-                    this.audioSource.play();
-                }
-                break;
-            case 1:
-                if (this.audioSource != null) {
-                    this.audioSource.stop();
-                    if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
-                    }
-                }
-                break;
-            case 2:
-                if (this.audioSource != null) {
-                    this.audioSource.stop();
-                }
-                break;
-        }
-    }
+
 
     @Override
     public void onGuiClosed(EntityPlayer arg0) {

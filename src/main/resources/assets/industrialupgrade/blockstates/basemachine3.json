@@ -32,11 +32,11 @@
 	  "tuner_active": {
         "model": "industrialupgrade:basemachine/tuner_active"
       },
-	  "gen_stone": {
-        "model": "industrialupgrade:basemachine/gen_stone"
+	  "antimagnet": {
+        "model": "industrialupgrade:basemachine/antimagnet"
       },
-	  "gen_stone_active": {
-        "model": "industrialupgrade:basemachine/gen_stone_active"
+	  "antimagnet_active": {
+        "model": "industrialupgrade:basemachine/antimagnet"
       },
 	  "imp_matter": {
         "model": "industrialupgrade:basemachine/imp_matter"

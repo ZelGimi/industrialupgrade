@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class GenStoneRecipeManager implements IGenStoneRecipeManager {
 
+    private final Map<IGenStoneRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
+
     public void addRecipe(IRecipeInput container, IRecipeInput fill, ItemStack output) {
         if (container == null) {
             throw new NullPointerException("The container recipe input is null");
@@ -83,7 +85,5 @@ public class GenStoneRecipeManager implements IGenStoneRecipeManager {
     public Map<IGenStoneRecipeManager.Input, RecipeOutput> getRecipes() {
         return this.recipes;
     }
-
-    private final Map<IGenStoneRecipeManager.Input, RecipeOutput> recipes = new HashMap<>();
 
 }

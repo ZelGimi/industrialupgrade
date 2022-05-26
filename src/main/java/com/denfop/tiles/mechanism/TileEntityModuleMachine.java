@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.container.ContainerModuleMachine;
 import com.denfop.gui.GUIModuleMachine;
 import com.denfop.invslot.InvSlotModule;
@@ -10,7 +11,6 @@ import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,8 +24,6 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
         implements IHasGui, INetworkTileEntityEventListener, INetworkClientTileEntityEventListener {
 
 
-    public AudioSource audioSource;
-
     public final InvSlotModule inputslot;
     public final InvSlotModule inputslotA;
 
@@ -33,7 +31,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
         super(null, 0, 10, 0);
 
 
-        this.inputslot = new InvSlotModule(this, "input", 0, 9);
+        this.inputslot = new InvSlotModule(this, "input", 0, 18);
         this.inputslotA = new InvSlotModule(this, "input2", 1, 1);
     }
 
@@ -55,17 +53,17 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
     }
 
     public String getStartSoundFile() {
-        return null;
+        return "Machines/pen.ogg";
     }
 
     public String getInterruptSoundFile() {
-        return null;
+        return "Machines/pen.ogg";
     }
 
     public float getWrenchDropRate() {
@@ -75,7 +73,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
     @Override
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
         }
         switch (event) {
             case 0:
@@ -87,7 +85,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getStartSoundFile());
                     }
                 }
                 break;
@@ -112,6 +110,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
     @Override
     public void onNetworkEvent(EntityPlayer player, int event) {
         if (!this.inputslotA.isEmpty()) {
+            initiate(1);
             for (int i = 0; i < this.inputslot.size(); i++) {
                 if (this.inputslot.get(i) != null && !this.inputslot.get(i).getItem().equals(Items.AIR)) {
 

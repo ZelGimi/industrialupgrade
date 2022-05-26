@@ -61,6 +61,23 @@ public class ExNihiloIntegration implements IExNihiloCreatioModule, IRecipeDefau
 
     }
 
+    public static void init() {
+
+        ExNihiloCreatio.loadedModules.add(new ExNihiloIntegration());
+
+
+    }
+
+    public static void oredictionary() {
+        List<String> list = itemNames();
+        for (int i = 0; i < list.size(); i++) {
+            OreDictionary.registerOre("ore" + list.get(i), new ItemStack(Item.getItemFromBlock((gravel)), 1, i));
+            OreDictionary.registerOre("ore" + list.get(i), new ItemStack(Item.getItemFromBlock((dust)), 1, i));
+            OreDictionary.registerOre("ore" + list.get(i), new ItemStack(Item.getItemFromBlock((sand)), 1, i));
+
+        }
+    }
+
     public void registerHammer(HammerRegistry registry) {
         for (int i = 0; i < IUItem.name_mineral1.size(); i++) {
             if (i != 6 && i != 7 && i != 11) {
@@ -105,23 +122,6 @@ public class ExNihiloIntegration implements IExNihiloCreatioModule, IRecipeDefau
                 BlockSieve.MeshType.IRON.getID()
         );
 
-    }
-
-    public static void init() {
-
-        ExNihiloCreatio.loadedModules.add(new ExNihiloIntegration());
-
-
-    }
-
-    public static void oredictionary() {
-        List<String> list = itemNames();
-        for (int i = 0; i < list.size(); i++) {
-            OreDictionary.registerOre("ore" + list.get(i), new ItemStack(Item.getItemFromBlock((gravel)), 1, i));
-            OreDictionary.registerOre("ore" + list.get(i), new ItemStack(Item.getItemFromBlock((dust)), 1, i));
-            OreDictionary.registerOre("ore" + list.get(i), new ItemStack(Item.getItemFromBlock((sand)), 1, i));
-
-        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 
+import com.denfop.IUCore;
 import com.denfop.container.ContainerPrivatizer;
 import com.denfop.gui.GUIPrivatizer;
 import com.denfop.invslot.InvSlotPrivatizer;
@@ -9,9 +10,7 @@ import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ContainerBase;
-import ic2.core.IC2;
 import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +25,7 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
 
     public final InvSlotPrivatizer inputslot;
     public final InvSlotPrivatizer inputslotA;
-    public AudioSource audioSource;
+
 
     public TileEntityPrivatizer() {
         super("", 0, 10, 1);
@@ -63,20 +62,12 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
     }
 
 
-    public void onUnloaded() {
-        super.onUnloaded();
-        if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
-            this.audioSource = null;
-        }
-    }
-
     public String getStartSoundFile() {
-        return null;
+        return "Machines/pen.ogg";
     }
 
     public String getInterruptSoundFile() {
-        return null;
+        return "Machines/pen.ogg";
     }
 
     public float getWrenchDropRate() {
@@ -86,7 +77,7 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
     @Override
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
         }
         switch (event) {
             case 0:
@@ -98,7 +89,7 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;
@@ -123,6 +114,7 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
     @Override
     public void onNetworkEvent(EntityPlayer player, int event) {
         if (!this.inputslotA.isEmpty()) {
+            initiate(1);
             NBTTagCompound nbt = ModUtils.nbt(this.inputslotA.get());
             for (int i = 0; i < this.inputslot.size(); i++) {
                 if (this.inputslot.get(i) != null) {

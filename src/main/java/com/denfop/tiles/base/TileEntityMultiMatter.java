@@ -48,16 +48,7 @@ import java.util.Set;
 public abstract class TileEntityMultiMatter extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock,
         IExplosionPowerOverride {
 
-    private static final int DEFAULT_TIER = ConfigUtil.getInt(MainConfig.get(), "balance/matterFabricatorTier");
-    private final float energycost;
-    public int scrap = 0;
-    private double lastEnergy;
-    private int state = 0;
-    private int prevState = 0;
-    public boolean redstonePowered = false;
-    private AudioSource audioSource;
-    private AudioSource audioSourceScrap;
-    public final InvSlotUpgrade upgradeSlot;
+   public final InvSlotUpgrade upgradeSlot;
     public final InvSlotProcessable<IRecipeInput, Integer, ItemStack> amplifierSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
@@ -65,9 +56,17 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
     public final FluidTank fluidTank;
     protected final Redstone redstone;
     protected final Fluids fluids;
+    private final float energycost;
+    public int scrap = 0;
+    public boolean redstonePowered = false;
+    private double lastEnergy;
+    private int state = 0;
+    private int prevState = 0;
+    private AudioSource audioSource;
+    private AudioSource audioSourceScrap;
 
     public TileEntityMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy) {
-        super(Math.round(maxtempEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor")), DEFAULT_TIER);
+        super(Math.round(maxtempEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor")), 3);
         this.amplifierSlot = new InvSlotProcessable<IRecipeInput, Integer, ItemStack>(this, "scrap", 1, Recipes.matterAmplifier) {
             protected ItemStack getInput(ItemStack stack) {
                 return stack;
@@ -99,6 +98,10 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         });
     }
 
+    private static int applyModifier(int extra) {
+        double ret = (double) Math.round(((double) 3 + (double) extra));
+        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
+    }
 
     @Nonnull
     @Override
@@ -165,10 +168,13 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
                     this.scrap += recipe.getOutput();
                 }
             }
-
+            this.setActive(this.energy.getEnergy() > 0);
             if (this.energy.getEnergy() >= this.energycost) {
                 needsInvUpdate = this.attemptGeneration();
             }
+
+
+
 
             needsInvUpdate |= this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
             this.lastEnergy = this.energy.getEnergy();
@@ -199,7 +205,6 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         int p = Math.min((int) (this.energy.getEnergy() * 100.0D / this.energycost), 100);
         return "" + p + "%";
     }
-
 
     public ContainerBase<TileEntityMultiMatter> getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerMultiMatter(entityPlayer, this);
@@ -310,11 +315,6 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
     public void setUpgradestat() {
         this.upgradeSlot.onChanged();
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
-    }
-
-    private static int applyModifier(int extra) {
-        double ret = (double) Math.round(((double) TileEntityMultiMatter.DEFAULT_TIER + (double) extra));
-        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
     public double getEnergy() {

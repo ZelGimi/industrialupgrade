@@ -2,9 +2,9 @@ package com.denfop.audio;
 
 public class FutureSound {
 
+    private final Runnable onFinish;
     private boolean run;
     private boolean cancelled;
-    private final Runnable onFinish;
 
     public FutureSound(Runnable onFinish) {
         this.onFinish = onFinish;

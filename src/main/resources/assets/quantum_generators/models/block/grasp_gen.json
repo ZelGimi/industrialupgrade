@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "quantum_generators:blocks/grasp_gen",
+    "down": "quantum_generators:blocks/grasp_gen",
+    "up": "quantum_generators:blocks/grasp_gen",
+    "north": "quantum_generators:blocks/grasp_gen",
+    "east": "quantum_generators:blocks/grasp_gen",
+    "south": "quantum_generators:blocks/grasp_gen",
+    "west": "quantum_generators:blocks/grasp_gen"
+  }
+}

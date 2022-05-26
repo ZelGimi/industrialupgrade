@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "quantum_generators:blocks/phsp_gen",
+    "down": "quantum_generators:blocks/phsp_gen",
+    "up": "quantum_generators:blocks/phsp_gen",
+    "north": "quantum_generators:blocks/phsp_gen",
+    "east": "quantum_generators:blocks/phsp_gen",
+    "south": "quantum_generators:blocks/phsp_gen",
+    "west": "quantum_generators:blocks/phsp_gen"
+  }
+}

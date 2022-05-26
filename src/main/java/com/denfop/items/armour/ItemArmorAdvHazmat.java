@@ -59,6 +59,46 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
 
     }
 
+    public static boolean hasCompleteHazmat(EntityLivingBase living) {
+        Iterator var1 = ArmorSlot.getAll().iterator();
+
+        EntityEquipmentSlot slot;
+        ItemStack stack;
+        IHazmatLike hazmat;
+        do {
+            if (!var1.hasNext()) {
+                return true;
+            }
+
+            slot = (EntityEquipmentSlot) var1.next();
+            stack = living.getItemStackFromSlot(slot);
+            if (stack == null || !(stack.getItem() instanceof IHazmatLike)) {
+                return false;
+            }
+
+            hazmat = (IHazmatLike) stack.getItem();
+            if (!hazmat.addsProtection(living, slot, stack)) {
+                return false;
+            }
+        } while (!hazmat.fullyProtects(living, slot, stack));
+
+        return true;
+    }
+
+    public static boolean hazmatAbsorbs(DamageSource source) {
+        return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE || source == IC2DamageSource.electricity || source == IC2DamageSource.radiation;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name) {
+        StringBuilder loc = new StringBuilder();
+        loc.append(Constants.MOD_ID);
+        loc.append(':');
+        loc.append("armour").append("/").append(name);
+
+        return new ModelResourceLocation(loc.toString(), null);
+    }
+
     public int getItemEnchantability() {
         return 0;
     }
@@ -72,7 +112,6 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         int suffix = this.armorType.getSlotIndex() == 2 ? 2 : 1;
         return Constants.TEXTURES + ":textures/armor/" + this.name + "_" + suffix + ".png";
     }
-
 
     public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
         if (this.armorType == EntityEquipmentSlot.HEAD && hazmatAbsorbs(source) && hasCompleteHazmat(player)) {
@@ -191,36 +230,6 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         return true;
     }
 
-    public static boolean hasCompleteHazmat(EntityLivingBase living) {
-        Iterator var1 = ArmorSlot.getAll().iterator();
-
-        EntityEquipmentSlot slot;
-        ItemStack stack;
-        IHazmatLike hazmat;
-        do {
-            if (!var1.hasNext()) {
-                return true;
-            }
-
-            slot = (EntityEquipmentSlot) var1.next();
-            stack = living.getItemStackFromSlot(slot);
-            if (stack == null || !(stack.getItem() instanceof IHazmatLike)) {
-                return false;
-            }
-
-            hazmat = (IHazmatLike) stack.getItem();
-            if (!hazmat.addsProtection(living, slot, stack)) {
-                return false;
-            }
-        } while (!hazmat.fullyProtects(living, slot, stack));
-
-        return true;
-    }
-
-    public static boolean hazmatAbsorbs(DamageSource source) {
-        return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE || source == IC2DamageSource.electricity || source == IC2DamageSource.radiation;
-    }
-
     public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player) {
         return false;
     }
@@ -238,16 +247,6 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         ModelBakery.registerItemVariants(this, getModelLocation1(name));
 
 
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name);
-
-        return new ModelResourceLocation(loc.toString(), null);
     }
 
 }

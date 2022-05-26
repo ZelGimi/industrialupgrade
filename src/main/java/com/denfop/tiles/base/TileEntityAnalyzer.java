@@ -30,38 +30,22 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
     public final InvSlotAnalyzer inputslot;
     public final InvSlotAnalyzer inputslotA;
-    private boolean quarry;
-
     public int breakblock;
-
     public int numberores;
-
     public double sum;
-
     public int sum1;
-
     public boolean analysis;
-
-
-    List<Integer> y1;
-
     public int xTempChunk;
-
     public int zTempChunk;
     public int xChunk;
-
     public int zChunk;
-
     public int xendChunk;
-
     public int zendChunk;
     public int[] listnumberore1;
     public List<String> listore;
-
     public List<Integer> listnumberore;
     public List<Integer> yore;
     public List<Double> middleheightores;
-    private int y;
     public int[][] chunksx;
     public int[][] chunksz;
     public int xcoord;
@@ -69,6 +53,10 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
     public int xendcoord;
     public int zendcoord;
     public boolean start = true;
+    public AudioSource audioSource;
+    List<Integer> y1;
+    private boolean quarry;
+    private int y;
 
     public TileEntityAnalyzer() {
         super("", 100000, 14, 1);
@@ -290,7 +278,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                 if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
                                         .getWorld()
                                         .getBlockState(new BlockPos(x, yy, z))
-                                        .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
+                                        .getMaterial() == Material.ROCK)&& !stack.isEmpty() && OreDictionary.getOreIDs(stack).length > 0) {
 
 
                                     int id = OreDictionary.getOreIDs(stack)[0];
@@ -479,7 +467,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                 if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
                                         .getWorld()
                                         .getBlockState(new BlockPos(x, yy, z))
-                                        .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
+                                        .getMaterial() == Material.ROCK) && !stack.isEmpty()&& OreDictionary.getOreIDs(stack).length > 0) {
                                     int id = OreDictionary.getOreIDs(stack)[0];
                                     String name = OreDictionary.getOreName(id);
                                     if (name.startsWith("ore")) {
@@ -676,8 +664,6 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
             this.audioSource = null;
         }
     }
-
-    public AudioSource audioSource;
 
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {

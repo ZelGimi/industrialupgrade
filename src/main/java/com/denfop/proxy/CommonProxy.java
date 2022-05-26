@@ -2,7 +2,6 @@ package com.denfop.proxy;
 
 import com.denfop.Config;
 import com.denfop.IUItem;
-import com.denfop.api.IBuildManager;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.Recipes;
 import com.denfop.blocks.FluidName;
@@ -10,12 +9,10 @@ import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
 import com.denfop.integration.avaritia.AvaritiaIntegration;
 import com.denfop.integration.botania.BotaniaIntegration;
-import com.denfop.integration.compactsolar.CompactSolarIntegration;
 import com.denfop.integration.de.DraconicIntegration;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.integration.forestry.FIntegration;
 import com.denfop.integration.thaumcraft.ThaumcraftIntegration;
-import com.denfop.integration.wireless.WirelessIntegration;
 import com.denfop.recipemanager.ConverterSolidMatterRecipeManager;
 import com.denfop.recipemanager.DoubleMachineRecipeManager;
 import com.denfop.recipemanager.DoubleMolecularRecipeManager;
@@ -24,6 +21,7 @@ import com.denfop.recipemanager.GenStoneRecipeManager;
 import com.denfop.recipemanager.GeneratorRecipeItemManager;
 import com.denfop.recipemanager.GeneratorRecipeManager;
 import com.denfop.recipemanager.GeneratorSunnariumRecipeManager;
+import com.denfop.recipemanager.MaceratorRecipeManager;
 import com.denfop.recipemanager.MicrochipRecipeManager;
 import com.denfop.recipemanager.ObsidianRecipeManager;
 import com.denfop.recipemanager.PlasticPlateRecipeManager;
@@ -81,9 +79,17 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
 public class CommonProxy implements IGuiHandler {
+
+
+    public static void sendPlayerMessage(EntityPlayer player, String text) {
+        if (IC2.platform.isSimulating()) {
+            IC2.platform.messagePlayer(
+                    player,
+                    text
+            );
+        }
+    }
 
     public void preInit(FMLPreInitializationEvent event) {
         if (Loader.isModLoaded("exnihilocreatio")) {
@@ -104,21 +110,13 @@ public class CommonProxy implements IGuiHandler {
         }
     }
 
-    public static void sendPlayerMessage(EntityPlayer player, String text) {
-        if (IC2.platform.isSimulating()) {
-            IC2.platform.messagePlayer(
-                    player,
-                    text
-            );
-        }
-    }
-
     public void init(FMLInitializationEvent event) {
         IUItem.register_mineral();
         Recipes.electrolyzer = new FluidRecipeManager();
         Recipes.oilrefiner = new FluidRecipeManager();
         Recipes.oiladvrefiner = new FluidRecipeManager();
         Recipes.heliumgenerator = new GeneratorRecipeManager();
+
         Recipes.lavagenrator = new GeneratorRecipeManager();
         Recipes.sunnarium = new GeneratorSunnariumRecipeManager();
         Recipes.sunnarium.addRecipe(null, new ItemStack(IUItem.sunnarium, 1, 4));
@@ -195,12 +193,7 @@ public class CommonProxy implements IGuiHandler {
         IUEventHandler sspEventHandler = new IUEventHandler();
         MinecraftForge.EVENT_BUS.register(sspEventHandler);
         FMLCommonHandler.instance().bus().register(sspEventHandler);
-        if (Loader.isModLoaded("compactsolars")) {
-            CompactSolarIntegration.init();
-        }
-        if (Loader.isModLoaded("wirelesstools")) {
-            WirelessIntegration.init();
-        }
+
         if (Loader.isModLoaded("forestry")) {
             FIntegration.init();
         }
@@ -224,7 +217,7 @@ public class CommonProxy implements IGuiHandler {
         MaceratorRecipe.recipe();
         MetalFormerRecipe.init();
         OreWashingRecipe.init();
-
+        Recipes.maceratorold = new MaceratorRecipeManager();
 
     }
 
@@ -232,19 +225,6 @@ public class CommonProxy implements IGuiHandler {
         return false;
     }
 
-    private static final ArrayList<IBuildManager> buildList = new ArrayList();
-
-    public boolean addIBuildManager(IBuildManager modelRegister) {
-        if (!buildList.contains(modelRegister)) {
-            return buildList.add(modelRegister);
-        } else {
-            return false;
-        }
-    }
-
-    public int addArmor(final String armorName) {
-        return 0;
-    }
 
     @Nullable
     @Override

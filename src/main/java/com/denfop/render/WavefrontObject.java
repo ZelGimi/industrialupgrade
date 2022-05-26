@@ -41,12 +41,12 @@ public class WavefrontObject implements IModelCustom {
     private static Matcher face_V_VN_Matcher;
     private static Matcher face_V_Matcher;
     private static Matcher groupObjectMatcher;
+    private final String fileName;
     public ArrayList<Vertex> vertices = new ArrayList();
     public ArrayList<Vertex> vertexNormals = new ArrayList();
     public ArrayList<WavefrontObject.TextureCoordinate> textureCoordinates = new ArrayList();
     public ArrayList<WavefrontObject.GroupObject> groupObjects = new ArrayList();
     private WavefrontObject.GroupObject currentGroupObject;
-    private final String fileName;
 
     public WavefrontObject(ResourceLocation resource) throws WavefrontObject.ModelFormatException {
         this.fileName = resource.toString();
@@ -62,6 +62,83 @@ public class WavefrontObject implements IModelCustom {
     public WavefrontObject(String filename, InputStream inputStream) throws WavefrontObject.ModelFormatException {
         this.fileName = filename;
         this.loadObjModel(inputStream);
+    }
+
+    private static boolean isValidFaceLine(String line) {
+        return isValidFace_V_VT_VN_Line(line) || isValidFace_V_VT_Line(line) || isValidFace_V_VN_Line(line) || isValidFace_V_Line(
+                line);
+    }
+
+    private static boolean isValidFace_V_VN_Line(String line) {
+        if (face_V_VN_Matcher != null) {
+            face_V_VN_Matcher.reset();
+        }
+
+        face_V_VN_Matcher = face_V_VN_Pattern.matcher(line);
+        return face_V_VN_Matcher.matches();
+    }
+
+    private static boolean isValidFace_V_Line(String line) {
+        if (face_V_Matcher != null) {
+            face_V_Matcher.reset();
+        }
+
+        face_V_Matcher = face_V_Pattern.matcher(line);
+        return face_V_Matcher.matches();
+    }
+
+    private static boolean isValidFace_V_VT_Line(String line) {
+        if (face_V_VT_Matcher != null) {
+            face_V_VT_Matcher.reset();
+        }
+
+        face_V_VT_Matcher = face_V_VT_Pattern.matcher(line);
+        return face_V_VT_Matcher.matches();
+    }
+
+    private static boolean isValidGroupObjectLine(String line) {
+        if (groupObjectMatcher != null) {
+            groupObjectMatcher.reset();
+        }
+
+        groupObjectMatcher = groupObjectPattern.matcher(line);
+        return groupObjectMatcher.matches();
+    }
+
+    private static boolean isValidVertexLine(String line) {
+        if (vertexMatcher != null) {
+            vertexMatcher.reset();
+        }
+
+        vertexMatcher = vertexPattern.matcher(line);
+        return vertexMatcher.matches();
+    }
+
+    private static boolean isValidVertexNormalLine(String line) {
+        if (vertexNormalMatcher != null) {
+            vertexNormalMatcher.reset();
+        }
+
+        vertexNormalMatcher = vertexNormalPattern.matcher(line);
+        return vertexNormalMatcher.matches();
+    }
+
+    private static boolean isValidFace_V_VT_VN_Line(String line) {
+        if (face_V_VT_VN_Matcher != null) {
+            face_V_VT_VN_Matcher.reset();
+        }
+
+        face_V_VT_VN_Matcher = face_V_VT_VN_Pattern.matcher(line);
+        return face_V_VT_VN_Matcher.matches();
+    }
+
+    private static boolean isValidTextureCoordinateLine(String line) {
+        if (textureCoordinateMatcher != null) {
+            textureCoordinateMatcher.reset();
+        }
+
+        textureCoordinateMatcher = textureCoordinatePattern.matcher(line);
+        return textureCoordinateMatcher.matches();
     }
 
     private void loadObjModel(InputStream inputStream) throws WavefrontObject.ModelFormatException {
@@ -206,38 +283,6 @@ public class WavefrontObject implements IModelCustom {
         }
     }
 
-    private static boolean isValidFaceLine(String line) {
-        return isValidFace_V_VT_VN_Line(line) || isValidFace_V_VT_Line(line) || isValidFace_V_VN_Line(line) || isValidFace_V_Line(
-                line);
-    }
-
-    private static boolean isValidFace_V_VN_Line(String line) {
-        if (face_V_VN_Matcher != null) {
-            face_V_VN_Matcher.reset();
-        }
-
-        face_V_VN_Matcher = face_V_VN_Pattern.matcher(line);
-        return face_V_VN_Matcher.matches();
-    }
-
-    private static boolean isValidFace_V_Line(String line) {
-        if (face_V_Matcher != null) {
-            face_V_Matcher.reset();
-        }
-
-        face_V_Matcher = face_V_Pattern.matcher(line);
-        return face_V_Matcher.matches();
-    }
-
-    private static boolean isValidFace_V_VT_Line(String line) {
-        if (face_V_VT_Matcher != null) {
-            face_V_VT_Matcher.reset();
-        }
-
-        face_V_VT_Matcher = face_V_VT_Pattern.matcher(line);
-        return face_V_VT_Matcher.matches();
-    }
-
     private GroupObject parseGroupObject(String line, int lineCount) throws
             thaumcraft.client.lib.obj.WavefrontObject.ModelFormatException {
         GroupObject group = null;
@@ -251,15 +296,6 @@ public class WavefrontObject implements IModelCustom {
         } else {
             throw new ModelFormatException("Error parsing entry ('" + line + "', line " + lineCount + ") in file '" + this.fileName + "' - Incorrect format");
         }
-    }
-
-    private static boolean isValidGroupObjectLine(String line) {
-        if (groupObjectMatcher != null) {
-            groupObjectMatcher.reset();
-        }
-
-        groupObjectMatcher = groupObjectPattern.matcher(line);
-        return groupObjectMatcher.matches();
     }
 
     @SideOnly(Side.CLIENT)
@@ -461,34 +497,6 @@ public class WavefrontObject implements IModelCustom {
         }
     }
 
-    private static boolean isValidVertexLine(String line) {
-        if (vertexMatcher != null) {
-            vertexMatcher.reset();
-        }
-
-        vertexMatcher = vertexPattern.matcher(line);
-        return vertexMatcher.matches();
-    }
-
-    private static boolean isValidVertexNormalLine(String line) {
-        if (vertexNormalMatcher != null) {
-            vertexNormalMatcher.reset();
-        }
-
-        vertexNormalMatcher = vertexNormalPattern.matcher(line);
-        return vertexNormalMatcher.matches();
-    }
-
-
-    private static boolean isValidFace_V_VT_VN_Line(String line) {
-        if (face_V_VT_VN_Matcher != null) {
-            face_V_VT_VN_Matcher.reset();
-        }
-
-        face_V_VT_VN_Matcher = face_V_VT_VN_Pattern.matcher(line);
-        return face_V_VT_VN_Matcher.matches();
-    }
-
     private WavefrontObject.TextureCoordinate parseTextureCoordinate(String line, int lineCount) throws
             WavefrontObject.ModelFormatException {
         WavefrontObject.TextureCoordinate textureCoordinate = null;
@@ -518,16 +526,6 @@ public class WavefrontObject implements IModelCustom {
             throw new WavefrontObject.ModelFormatException("Error parsing entry ('" + line + "', line " + lineCount + ") in file '" + this.fileName + "' - Incorrect format");
         }
     }
-
-    private static boolean isValidTextureCoordinateLine(String line) {
-        if (textureCoordinateMatcher != null) {
-            textureCoordinateMatcher.reset();
-        }
-
-        textureCoordinateMatcher = textureCoordinatePattern.matcher(line);
-        return textureCoordinateMatcher.matches();
-    }
-
 
     public String getType() {
         return "obj";

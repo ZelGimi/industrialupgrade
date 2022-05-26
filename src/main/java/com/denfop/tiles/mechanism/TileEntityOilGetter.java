@@ -1,15 +1,18 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerOilGetter;
 import com.denfop.gui.GUIOilGetter;
 import com.denfop.tiles.base.TileEntityElectricLiquidTankInventory;
 import com.denfop.tiles.base.TileOilBlock;
+import com.google.common.base.Predicate;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
+import ic2.core.block.comp.Fluids;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotConsumableLiquid;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
@@ -21,6 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,14 +46,24 @@ public class TileEntityOilGetter extends TileEntityElectricLiquidTankInventory i
     public boolean notoil = true;
 
     public TileEntityOilGetter() {
-        super("", 50000, 14, 20);
+        super("", 50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance()));
         this.containerslot = new InvSlotConsumableLiquidByList(this,
                 "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidneft.getInstance()
         );
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
-        this.defaultTier = 3;
+        this.defaultTier =14;
         heading = 2;
+    }
+
+    private static int applyModifier(int extra) {
+        double ret = (double) Math.round(((double) 14 + (double) extra));
+        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
+    }
+
+    @Override
+    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.oilgetter);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -181,11 +195,6 @@ public class TileEntityOilGetter extends TileEntityElectricLiquidTankInventory i
 
     public double getEnergy() {
         return this.energy.getEnergy();
-    }
-
-    private static int applyModifier(int extra) {
-        double ret = (double) Math.round(((double) 1 + (double) extra));
-        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
     public boolean useEnergy(double amount) {

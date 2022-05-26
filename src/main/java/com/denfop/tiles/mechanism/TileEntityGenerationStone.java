@@ -43,15 +43,14 @@ public class TileEntityGenerationStone extends TileEntityBaseGenStone {
 
     }
 
-    public String getInventoryName() {
-        return Localization.translate("iu.genstone");
-    }
-
     public static void addGen(IRecipeInput container, IRecipeInput fill, ItemStack output) {
         Recipes.GenStone.addRecipe(container, fill, output);
         Recipes.GenStone.addRecipe(fill, container, output);
     }
 
+    public String getInventoryName() {
+        return Localization.translate("iu.genstone");
+    }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

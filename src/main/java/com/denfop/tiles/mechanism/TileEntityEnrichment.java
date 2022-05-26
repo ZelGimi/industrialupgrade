@@ -34,8 +34,8 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine {
                 new ItemStack(IUItem.radiationresources, 1, 4)
         );
         addenrichment(
-                new ItemStack(IUItem.itemSSP, 1, 2),
                 new ItemStack(Blocks.GLOWSTONE, 1),
+                "ingotUranium",
                 new ItemStack(IUItem.itemSSP, 1, 0)
         );
         addenrichment(new ItemStack(IUItem.itemSSP, 1, 0), Ic2Items.reinforcedGlass, new ItemStack(IUItem.itemSSP, 2, 1));
@@ -51,6 +51,12 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine {
     public static void addenrichment(ItemStack container, ItemStack fill, ItemStack output) {
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
         Recipes.enrichment.addRecipe(input.forStack(container), input.forStack(fill), null, output);
+
+    }
+
+    public static void addenrichment(ItemStack container, String fill, ItemStack output) {
+        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        Recipes.enrichment.addRecipe(input.forStack(container), input.forOreDict(fill), null, output);
 
     }
 

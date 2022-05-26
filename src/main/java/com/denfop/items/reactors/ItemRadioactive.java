@@ -3,6 +3,8 @@ package com.denfop.items.reactors;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.items.armour.ItemArmorAdvHazmat;
+import com.denfop.items.armour.ItemArmorImprovemedQuantum;
 import ic2.core.IC2Potion;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemIC2;
@@ -20,22 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemRadioactive extends ItemIC2 implements IModelRegister {
 
+    protected final int radiationLength;
+    protected final int amplifier;
     private final String name;
     private final String path;
-    protected final int radiationLength;
-
-    protected final int amplifier;
-
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
-        if (this.radiationLength != 0) {
-            if (entity instanceof EntityLivingBase) {
-                EntityLivingBase entityLiving = (EntityLivingBase) entity;
-                if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving)) {
-                    IC2Potion.radiation.applyTo(entityLiving, this.radiationLength, this.amplifier);
-                }
-            }
-        }
-    }
 
     public ItemRadioactive(String name, int radiationLength1, int amplifier1) {
         super(null);
@@ -48,6 +38,18 @@ public class ItemRadioactive extends ItemIC2 implements IModelRegister {
         this.path = "reactors";
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
+        if (this.radiationLength != 0) {
+            if (entity instanceof EntityLivingBase) {
+                EntityLivingBase entityLiving = (EntityLivingBase) entity;
+                if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
+                        entityLiving)) {
+                    IC2Potion.radiation.applyTo(entityLiving, this.radiationLength, this.amplifier);
+                }
+            }
+        }
     }
 
     public String getUnlocalizedName() {

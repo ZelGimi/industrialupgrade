@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:basemachine2",
+      "data": 11
+    },
+    "title": {
+      "translate": "achievement.plastic_creator"
+    },
+    "description": {
+      "translate": "achievement.plastic_creator.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/adv_oil_refinery",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:basemachine2",
+            "data": 11
+          }
+        ]
+      }
+    }
+  }
+}

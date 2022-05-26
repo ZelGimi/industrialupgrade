@@ -22,8 +22,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Iterator;
-
 public class TileEntityAdvReactorChamberElectric extends TileEntityBlock implements IInventory, IReactorChamber, IEnergyEmitter {
 
     public final Redstone redstone = this.addComponent(new Redstone(this));
@@ -92,13 +90,14 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        if(world.provider.getWorldTime() % 40 == 0){
-        this.updateReactor();
-        if (this.reactor == null) {
-            this.destoryChamber(true);
-        }
+        if (world.provider.getWorldTime() % 40 == 0) {
+            this.updateReactor();
+            if (this.reactor == null) {
+                this.destoryChamber(true);
+            }
         }
     }
+
     public void destoryChamber(boolean wrench) {
         World world = this.getWorld();
         world.setBlockToAir(this.pos);

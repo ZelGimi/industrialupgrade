@@ -1,5 +1,7 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
+import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
 import com.denfop.invslot.InvSlotProcessable;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -10,7 +12,7 @@ import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
+import ic2.core.block.comp.Fluids;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
@@ -52,7 +54,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
     }
 
     public TileEntityBasePlasticPlateCreator(int energyPerTick, int length, int aDefaultTier) {
-        super("", energyPerTick * length, 1, 12);
+        super("", energyPerTick * length, 1, 12, Fluids.fluidPredicate(FluidName.fluidoxy.getInstance()));
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
@@ -94,7 +96,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
     }
@@ -255,7 +257,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
 
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
         }
         switch (event) {
             case 0:
@@ -267,7 +269,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;

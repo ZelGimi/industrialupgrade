@@ -3,7 +3,7 @@
   "variants": {
     "type": {
 	  "adv_se_gen": {
-        "model": "industrialupgrade:basemachine/adv_se_gen"
+        "model": "industrialupgrade:solarenergy/adv_se_gen"
       }
 	  
     },
