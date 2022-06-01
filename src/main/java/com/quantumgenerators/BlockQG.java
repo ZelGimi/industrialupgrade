@@ -1,7 +1,6 @@
 package com.quantumgenerators;
 
 
-
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.TeBlock;
@@ -49,17 +48,6 @@ public enum BlockQG implements ITeBlock {
 
     }
 
-
-    @Override
-    public String getName() {
-        return this.name();
-    }
-
-    @Override
-    public int getId() {
-        return this.itemMeta;
-    }
-
     public static void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -76,6 +64,16 @@ public enum BlockQG implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
+
+    @Override
+    public int getId() {
+        return this.itemMeta;
     }
 
     @Override
@@ -103,7 +101,7 @@ public enum BlockQG implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.allFacings;
+        return Util.horizontalFacings;
     }
 
     @Override
@@ -127,6 +125,7 @@ public enum BlockQG implements ITeBlock {
     public TeBlock.DefaultDrop getDefaultDrop() {
         return TeBlock.DefaultDrop.Machine;
     }
+
     @Override
     @Nonnull
     public EnumRarity getRarity() {

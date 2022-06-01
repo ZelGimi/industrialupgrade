@@ -1,11 +1,15 @@
 package com.denfop.integration.jei.painting;
 
+import com.denfop.utils.ModUtils;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.List;
 public class PaintingWrapper implements IRecipeWrapper {
 
 
+    public final NBTTagCompound nbt;
     private final ItemStack inputstack;
     private final ItemStack outputstack;
     private final ItemStack inputstack1;
@@ -24,7 +29,7 @@ public class PaintingWrapper implements IRecipeWrapper {
         this.inputstack = container.getInput();
         this.inputstack1 = container.getInput1();
         this.outputstack = container.getOutput();
-
+        this.nbt = container.metadata;
     }
 
     public ItemStack getInput() {
@@ -54,13 +59,13 @@ public class PaintingWrapper implements IRecipeWrapper {
     }
 
     public List<ItemStack> getOutputs() {
-        return new ArrayList(Collections.singleton(this.outputstack));
+        return new ArrayList<>(Collections.singleton(this.outputstack));
     }
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputLists(ItemStack.class, this.getInputs());
-        ingredients.setOutputs(ItemStack.class, this.getOutputs());
+        ingredients.setInputLists(VanillaTypes.ITEM, this.getInputs());
+        ingredients.setOutputs(VanillaTypes.ITEM, this.getOutputs());
     }
 
 
@@ -68,8 +73,8 @@ public class PaintingWrapper implements IRecipeWrapper {
         return outputstack;
     }
 
-    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-
+    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        minecraft.fontRenderer.drawString(ModUtils.mode(this.nbt), 64, 52, 4210752);
     }
 
 }

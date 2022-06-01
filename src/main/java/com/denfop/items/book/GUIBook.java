@@ -66,7 +66,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
         this.player = player;
         this.back = false;
         this.col = 0;
-        this.colmax = Math.min(12,MainPage.lst.size());
+        this.colmax = Math.min(12, MainPage.lst.size());
         this.colindex = 0;
         this.colindexmax = 9;
         this.mainindexbef = 0;
@@ -275,10 +275,10 @@ public class GUIBook extends GuiIC2<ContainerBook> {
     public void drawForegroundLayer(int par1, int par2) {
         handleUpgradeTooltip(par1, par2);
         if (this.next) {
-            draw(par1, par2, 111, 129, 160, 170, "description.next");
+            draw(par1, par2, 111, 129, "description.next");
         }
         if (this.back) {
-            draw(par1, par2, 11, 29, 160, 170, "description.back");
+            draw(par1, par2, 11, 29, "description.back");
         }
         if (mainindex > 0) {
             MainPage page = MainPage.lst.get(mainindex - 1);
@@ -290,7 +290,8 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                     Pages page1 = lst.get(m);
                     int k = m % 9;
                     this.fontRenderer.drawString(Localization.translate(page1.text), x + 20, 2 + y + 15 * k,
-                            ModUtils.convertRGBcolorToInt(13, 229, 34));
+                            ModUtils.convertRGBcolorToInt(13, 229, 34)
+                    );
                 }
             } else {
                 Pages page1 = Pages.lst.get(index - 1);
@@ -320,7 +321,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                             }
                         }
                     } else {
-                        List<String> list = splitEqually(Localization.translate(addpag.textbefore), 30);
+                        List<String> list = splitEqually(Localization.translate(addpag.textBefore), 30);
                         int x0 = 16;
                         int y = 20;
                         if (indexpage > 0) {
@@ -347,8 +348,8 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                         int y1 = y;
                         y = y0 + y1 + 3;
                         if (y + 8 < 165) {
-                            if (addpag.centerdescription.isEmpty()) {
-                                List<String> list1 = splitEqually(Localization.translate(addpag.textafter), 30);
+                            if (addpag.centerDescription.isEmpty()) {
+                                List<String> list1 = splitEqually(Localization.translate(addpag.textAfter), 30);
                                 for (String str : list1) {
                                     this.fontRenderer.drawString(str, x0, y,
                                             ModUtils.convertRGBcolorToInt(13, 229, 34)
@@ -359,13 +360,13 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                                     }
                                 }
                             } else {
-                                String name = Localization.translate(addpag.centerdescription);
+                                String name = Localization.translate(addpag.centerDescription);
                                 int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
 
                                 this.fontRenderer.drawString(name, nmPos, y, ModUtils.convertRGBcolorToInt(13, 229, 34));
                                 y += 10;
                                 if (y + 8 < 165) {
-                                    List<String> list1 = splitEqually(Localization.translate(addpag.textafter), 30);
+                                    List<String> list1 = splitEqually(Localization.translate(addpag.textAfter), 30);
                                     for (String str : list1) {
                                         this.fontRenderer.drawString(str, x0, y,
                                                 ModUtils.convertRGBcolorToInt(13, 229, 34)
@@ -384,8 +385,8 @@ public class GUIBook extends GuiIC2<ContainerBook> {
         }
     }
 
-    private void draw(int mouseX, int mouseY, int x, int x1, int y, int y1, String text) {
-        if (mouseX >= x && mouseX < x1 && mouseY >= y && mouseY < y1) {
+    private void draw(int mouseX, int mouseY, int x, int x1, String text) {
+        if (mouseX >= x && mouseX < x1 && mouseY >= 160 && mouseY < 170) {
             this.drawTooltip(mouseX, mouseY, Collections.singletonList(Localization.translate(text)));
         }
     }
@@ -587,10 +588,10 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                 List<AddPages> lst1 = Pages.pages.get(page1);
                 if (indexpage < lst1.size()) {
                     AddPages addpag = lst1.get(indexpage);
-                    if (addpag.resource == null) {
 
-                    } else {
-                        List<String> list = splitEqually(Localization.translate(addpag.textbefore), 30);
+
+                    if (addpag.resource != null) {
+                        List<String> list = splitEqually(Localization.translate(addpag.textBefore), 30);
                         int x0 = 16;
                         int y = 20;
                         if (indexpage > 0) {
@@ -613,7 +614,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                         int x2 = Math.min(125 - x0, (addpag.x1 - addpag.x));
 
                         this.mc.getTextureManager().bindTexture(addpag.resource);
-                        if (!addpag.rendercenter) {
+                        if (!addpag.renderCenter) {
                             drawTexturedModalRect(this.guiLeft + x0, this.guiTop + y0, addpag.x, addpag.y,
                                     x2, y2
                             );

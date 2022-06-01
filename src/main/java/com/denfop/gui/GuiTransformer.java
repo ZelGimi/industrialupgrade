@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
@@ -27,7 +28,7 @@ public class GuiTransformer extends GuiIC2<ContainerTransformer> {
         this.mode[3] = Localization.translate("ic2.Transformer.gui.switch.mode3");
     }
 
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
+    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         IC2.network.get(false).initiateClientTileEntityEvent(
                 this.container.base,

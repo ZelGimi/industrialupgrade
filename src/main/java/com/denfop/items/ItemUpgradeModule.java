@@ -16,23 +16,19 @@ import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -43,37 +39,17 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         ITransformerUpgrade, IItemHudInfo {
 
     protected static final String NAME = "upgrades";
-    private static final List<StackUtil.AdjacentInv> emptyInvList = Collections.emptyList();
     private static final DecimalFormat decimalformat = new DecimalFormat("0.##");
-    private final List<String> itemNames;
-
 
     public ItemUpgradeModule() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.UpgradeTab);
         IUItem.overclockerUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker1.ordinal()));
         IUItem.overclockerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker2.ordinal()));
         IUItem.tranformerUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer.ordinal()));
         IUItem.tranformerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer1.ordinal()));
-        this.itemNames = new ArrayList<>();
-        this.addItemsNames();
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
-    }
-
-    private static List<StackUtil.AdjacentInv> getTargetInventories(ItemStack stack, TileEntity parent) {
-        EnumFacing dir = getDirection(stack);
-        if (dir == null) {
-            return StackUtil.getAdjacentInventories(parent);
-        } else {
-            StackUtil.AdjacentInv inv = StackUtil.getAdjacentInventory(parent, dir);
-            return inv == null ? emptyInvList : Collections.singletonList(inv);
-        }
-    }
-
-    private static EnumFacing getDirection(ItemStack stack) {
-        int rawDir = StackUtil.getOrCreateNbtData(stack).getByte("dir");
-        return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
     }
 
     public static Type getType(int meta) {
@@ -83,12 +59,6 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         return Type.Values[meta];
     }
 
-    public void addItemsNames() {
-        this.itemNames.add("overclockerUpgrade1");
-        this.itemNames.add("overclockerUpgrade2");
-        this.itemNames.add("transformerUpgrade1");
-        this.itemNames.add("transformerUpgrade2");
-    }
 
     @Override
     public List<String> getHudInfo(final ItemStack itemStack, final boolean b) {
@@ -194,8 +164,8 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
     public void addInformation(
             final ItemStack stack,
             @Nullable final World worldIn,
-            final List<String> list,
-            final ITooltipFlag flagIn
+            @Nonnull final List<String> list,
+            @Nonnull final ITooltipFlag flagIn
     ) {
         Type type = getType(stack.getItemDamage());
         if (type == null) {

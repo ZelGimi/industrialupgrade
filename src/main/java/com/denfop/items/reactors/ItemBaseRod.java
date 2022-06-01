@@ -4,14 +4,16 @@ import com.denfop.IUCore;
 import com.denfop.utils.ModUtils;
 import ic2.api.reactor.IReactor;
 import ic2.core.init.Localization;
+import ic2.core.item.type.IRadioactiveItemType;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class ItemBaseRod extends ItemReactor {
+public class ItemBaseRod extends ItemReactor implements IRadioactiveItemType {
 
     private final ItemStack[] depletedreactorrod;
     private final int heat;
@@ -23,7 +25,7 @@ public class ItemBaseRod extends ItemReactor {
         this.heat = heat;
         this.power = power;
         this.depletedreactorrod = depletedrod;
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.ReactorsTab);
     }
 
     protected int getFinalHeat(ItemStack stack, IReactor reactor, int x, int y, int heat) {
@@ -51,10 +53,10 @@ public class ItemBaseRod extends ItemReactor {
 
     @Override
     public void addInformation(
-            final ItemStack stack,
+            @Nonnull final ItemStack stack,
             final World world,
-            final List<String> tooltip,
-            final ITooltipFlag advanced
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag advanced
     ) {
         super.addInformation(stack, world, tooltip, advanced);
         double[] p = new double[]{5.0D, 20D, 60D, 200D};
@@ -85,6 +87,16 @@ public class ItemBaseRod extends ItemReactor {
         }
 
         return true;
+    }
+
+    @Override
+    public int getRadiationDuration() {
+        return 200;
+    }
+
+    @Override
+    public int getRadiationAmplifier() {
+        return 100;
     }
 
 }

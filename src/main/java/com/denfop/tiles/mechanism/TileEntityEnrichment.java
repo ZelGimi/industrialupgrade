@@ -4,12 +4,15 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.gui.GUIEnriched;
+import com.denfop.gui.GuiEnriched;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +42,11 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine {
                 new ItemStack(IUItem.itemSSP, 1, 0)
         );
         addenrichment(new ItemStack(IUItem.itemSSP, 1, 0), Ic2Items.reinforcedGlass, new ItemStack(IUItem.itemSSP, 2, 1));
-        addenrichment(new ItemStack(IUItem.Helium, 1), new ItemStack(IUItem.cell_all, 1), new ItemStack(IUItem.cell_all, 4, 2));
+        addenrichment(
+                new ItemStack(IUItem.Helium, 1),
+                new ItemStack(IUItem.cell_all, 1),
+                new ItemStack(IUItem.cell_all, 4, 2)
+        );
         addenrichment(
                 new ItemStack(IUItem.sunnarium, 1, 3),
                 new ItemStack(IUItem.itemSSP, 1, 0),
@@ -50,25 +57,32 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine {
 
     public static void addenrichment(ItemStack container, ItemStack fill, ItemStack output) {
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.enrichment.addRecipe(input.forStack(container), input.forStack(fill), null, output);
-
+        Recipes.recipes.addRecipe(
+                "enrichment",
+                new BaseMachineRecipe(
+                        new Input(input.forStack(container), input.forStack(fill)),
+                        new RecipeOutput(null, output)
+                )
+        );
     }
 
     public static void addenrichment(ItemStack container, String fill, ItemStack output) {
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.enrichment.addRecipe(input.forStack(container), input.forOreDict(fill), null, output);
-
+        Recipes.recipes.addRecipe("enrichment", new BaseMachineRecipe(
+                new Input(input.forStack(container), input.forOreDict(fill)),
+                new RecipeOutput(null, output)
+        ));
     }
 
     @Override
-    public void operateOnce(RecipeOutput output, List<ItemStack> processResult) {
-        this.inputSlotA.consume(0);
+    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
+        this.inputSlotA.consume();
         this.outputSlot.add(processResult);
     }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIEnriched(new ContainerDoubleElectricMachine(entityPlayer, this, type));
+        return new GuiEnriched(new ContainerDoubleElectricMachine(entityPlayer, this, type));
     }
 
     public String getStartSoundFile() {

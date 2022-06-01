@@ -34,11 +34,6 @@ public enum BlockAvaritiaSolarPanel implements ITeBlock {
     private TileEntityBlock dummyTe;
 
 
-    BlockAvaritiaSolarPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
-
     BlockAvaritiaSolarPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;

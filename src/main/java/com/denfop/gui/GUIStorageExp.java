@@ -9,14 +9,15 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 
-public class GUIStorageExp extends GuiIC2<ContainerStorageExp> {
+public class GuiStorageExp extends GuiIC2<ContainerStorageExp> {
 
     public final ContainerStorageExp container;
 
-    public GUIStorageExp(ContainerStorageExp container1) {
+    public GuiStorageExp(ContainerStorageExp container1) {
         super(container1);
         this.container = container1;
     }
@@ -32,7 +33,7 @@ public class GUIStorageExp extends GuiIC2<ContainerStorageExp> {
 
     }
 
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
+    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         if (guibutton.id == 0) {
             IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
@@ -60,10 +61,13 @@ public class GUIStorageExp extends GuiIC2<ContainerStorageExp> {
         drawTexturedModalRect(xoffset, yoffset, 0, 0, this.xSize, this.ySize);
         String name = Localization.translate(this.container.base.getName());
         this.drawXCenteredString(this.xSize / 2, 6, name, 4210752, false);
-        int chargeLevel = (int) (47.0F * this.container.base.storage
-                / this.container.base.maxStorage);
-        int chargeLevel1 = (int) (47.0F * this.container.base.storage1
-                / this.container.base.maxStorage);
+        int chargeLevel = (int) (47.0F * Math.min(this.container.base.energy.getEnergy()
+                / this.container.base.energy.getCapacity(), 1));
+        int chargeLevel1 = 0;
+        if (this.container.base.energy.getCapacity() > 2000000000) {
+            chargeLevel1 = (int) (47.0F * Math.min(Math.max(this.container.base.energy.getEnergy() - 2000000000, 0)
+                    / Math.max(this.container.base.energy.getCapacity() - 2000000000, 0), 1));
+        }
         chargeLevel = Math.min(chargeLevel, 47);
         chargeLevel1 = Math.min(chargeLevel1, 47);
         if (chargeLevel > 0) {

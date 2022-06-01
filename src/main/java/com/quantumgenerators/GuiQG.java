@@ -18,7 +18,7 @@ public class GuiQG extends GuiIC2<ContainerQG> {
     public GuiQG(ContainerQG container1) {
         super(container1);
         this.container = container1;
-        this.ySize=195;
+        this.ySize = 195;
     }
 
 
@@ -29,18 +29,19 @@ public class GuiQG extends GuiIC2<ContainerQG> {
         int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
         this.fontRenderer.drawString(name, nmPos, 6, 4210752);
         String generatingString = Localization.translate("gui.SuperSolarPanel.generating") + ": ";
-         this.fontRenderer.drawString(TextFormatting.GREEN+ generatingString + ModUtils.getString(this.container.base.gen)  + " " +
+        this.fontRenderer.drawString(TextFormatting.GREEN + generatingString + ModUtils.getString(this.container.base.gen) + " " +
                         "QE/t", 36
-                , 30,  ModUtils.convertRGBcolorToInt(217, 217, 217));
-        new AdvArea(this,22,64,32,74).withTooltip("+"+ModUtils.getString(1000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,40,64,60,74).withTooltip("+"+ModUtils.getString(10000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,67,64,97,74).withTooltip("+"+ModUtils.getString(100000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,105,64,145,74).withTooltip("+"+ModUtils.getString(1000000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,22,82,32,92).withTooltip("-"+ModUtils.getString(1000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,40,82,60,92).withTooltip("-"+ModUtils.getString(10000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,67,82,97,92).withTooltip("-"+ModUtils.getString(100000)).drawForeground(mouseX, mouseY);
-        new AdvArea(this,105,82,145,92).withTooltip("-"+ModUtils.getString(1000000)).drawForeground(mouseX, mouseY);
+                , 30, ModUtils.convertRGBcolorToInt(217, 217, 217));
+        new AdvArea(this, 22, 64, 32, 74).withTooltip("+" + ModUtils.getString(1000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 40, 64, 60, 74).withTooltip("+" + ModUtils.getString(10000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 67, 64, 97, 74).withTooltip("+" + ModUtils.getString(100000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 105, 64, 145, 74).withTooltip("+" + ModUtils.getString(1000000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 22, 82, 32, 92).withTooltip("-" + ModUtils.getString(1000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 40, 82, 60, 92).withTooltip("-" + ModUtils.getString(10000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 67, 82, 97, 92).withTooltip("-" + ModUtils.getString(100000)).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 105, 82, 145, 92).withTooltip("-" + ModUtils.getString(1000000)).drawForeground(mouseX, mouseY);
     }
+
     protected void mouseClicked(int i, int j, int k) throws IOException {
         super.mouseClicked(i, j, k);
         int xMin = (this.width - this.xSize) / 2;
@@ -73,6 +74,7 @@ public class GuiQG extends GuiIC2<ContainerQG> {
             IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 7);
         }
     }
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         int h = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
@@ -81,10 +83,7 @@ public class GuiQG extends GuiIC2<ContainerQG> {
         this.mc.getTextureManager().bindTexture(getTexture());
 
 
-
     }
-
-
 
 
     public ResourceLocation getTexture() {

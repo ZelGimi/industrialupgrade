@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import com.denfop.invslot.InvSlotConsumableLiquidByListRemake;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -10,6 +11,11 @@ import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotConsumableLiquid;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByTank;
 import ic2.core.block.invslot.InvSlotUpgrade;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,18 +39,20 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     public final InvSlotConsumableLiquidByListRemake[] containerslot;
     public final InvSlotConsumableLiquidByTank[] fluidSlot;
     public final Fluid[] fluid;
+    public int level;
 
     public TileEntityBaseLiquedMachine(
-            final String name, final double MaxEnergy, final int tier, final int count,
+            final double MaxEnergy, final int tier, final int count,
             final int count_tank, boolean[] drain, boolean[] fill, Fluid[] name1
     ) {
-        super(name, MaxEnergy, tier, count);
+        super(MaxEnergy, tier, count);
         this.fluidTank = new FluidTank[count_tank];
         this.drain = drain;
         this.fill = fill;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluid = name1;
-        this.tier=tier;
+        this.tier = tier;
+        this.level = 0;
         for (int i = 0; i < fluidTank.length; i++) {
 
             this.fluidTank[i] = this.fluids.addTank("fluidTank" + i, 8000, i == 0 ? InvSlot.Access.I : InvSlot.Access.O,
@@ -54,7 +62,8 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
                             FluidRegistry.getFluid("oil_heavy"), FluidRegistry.getFluid("oil_heavy_heat_1"),
                             FluidRegistry.getFluid("oil_heavy_heat_2"), FluidRegistry.getFluid("oil_heat_2"),
                             FluidRegistry.getFluid("oil_heat_1"), FluidRegistry.getFluid("oil"),
-                            FluidRegistry.getFluid("fluid_cride_oil"), FluidRegistry.getFluid("refined_oil")
+                            FluidRegistry.getFluid("fluid_cride_oil"), FluidRegistry.getFluid("refined_oil"),
+                            FluidRegistry.getFluid("crude_oil")
                     )
                             :
                                     Fluids.fluidPredicate(name1[i])
@@ -81,17 +90,21 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
     }
 
+    @Override
+    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+        super.writeToNBT(nbttagcompound);
+        nbttagcompound.setInteger("level", this.level);
+        return nbttagcompound;
+    }
+
+    @Override
+    public void readFromNBT(final NBTTagCompound nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        this.level = nbttagcompound.getInteger("level");
+    }
 
     public FluidTank getFluidTank(int num) {
         return this.fluidTank[num];
-    }
-
-    public int getTankAmount(int num) {
-        return this.fluidTank[num].getFluidAmount();
-    }
-
-    public FluidStack getFluidStackfromTank1(int num) {
-        return this.fluidTank[num].getFluid();
     }
 
     public double gaugeLiquidScaled(double i, int num) {
@@ -104,22 +117,6 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
         for (final boolean b : drain) {
             if (b) {
-                fluidlist.add(name[0]);
-            }
-
-        }
-        Fluid[] fluid = new Fluid[fluidlist.size()];
-        for (int i = 0; i < fluidlist.size(); i++) {
-            fluid[i] = fluidlist.get(i);
-        }
-        return fluid;
-    }
-
-    public Fluid[] getFluidsFill(boolean[] fill, Fluid[] name) {
-        List<Fluid> fluidlist = new ArrayList<>();
-
-        for (final boolean b : fill) {
-            if (!b) {
                 fluidlist.add(name[0]);
             }
 
@@ -146,25 +143,28 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         for (FluidTank tank : fluidTank) {
             if (!tank.equals(fluidTank[0])) {
                 for (InvSlotConsumableLiquidByListRemake slot : this.containerslot) {
-                    needsInvUpdate |= slot.processFromTank(tank, this.outputSlot);
-                    IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+                    if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
+                        slot.processFromTank(tank, this.outputSlot);
+                        needsInvUpdate = true;
+                    }
+                }
+            }
+        }
 
+        for (final InvSlotConsumableLiquidByTank itemStacks : fluidSlot) {
+            for (final FluidTank tank : fluidTank) {
+                if (tank.equals(fluidTank[0])) {
+                    if (itemStacks.processIntoTank(tank, this.outputSlot)) {
+                        needsInvUpdate = true;
+
+                    }
                 }
             }
         }
         if (needsInvUpdate) {
             this.markDirty();
-        }
-        for (final InvSlotConsumableLiquidByTank itemStacks : fluidSlot) {
-            for (final FluidTank tank : fluidTank) {
-                if (tank.equals(fluidTank[0])) {
-                    if (itemStacks.processIntoTank(tank, this.outputSlot)) {
-                        this.markDirty();
-                        IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
 
-                    }
-                }
-            }
         }
     }
 
@@ -201,6 +201,29 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
             }
         }
         return 0;
+    }
+
+    @Override
+    protected boolean onActivated(
+            final EntityPlayer player,
+            final EnumHand hand,
+            final EnumFacing side,
+            final float hitX,
+            final float hitY,
+            final float hitZ
+    ) {
+        if (level < 10) {
+            ItemStack stack = player.getHeldItem(hand);
+            if (!stack.getItem().equals(IUItem.upgrade_speed_creation)) {
+                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            } else {
+                stack.shrink(1);
+                this.level++;
+                return false;
+            }
+        } else {
+            return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        }
     }
 
     @Nullable

@@ -4,18 +4,15 @@ package com.denfop.tiles.panels.entity;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.api.energy.IAdvEnergySource;
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.gui.GuiSolarPanels;
 import com.denfop.invslot.InvSlotPanel;
-import com.denfop.items.modules.EnumBaseType;
-import com.denfop.items.modules.EnumModule;
-import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergySource;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
@@ -30,6 +27,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,15 +40,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntitySolarPanel extends TileEntityInventory implements IEnergySource, IHasGui,
+public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEnergySource, IHasGui,
         IWrenchable, IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
         INetworkUpdateListener {
 
 
+    public double coef;
     public List<IEnergyTile> list;
     public EnumSolarPanels solarpanels;
     public int tier;
@@ -66,7 +64,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public boolean work1 = true;
     public boolean work2 = true;
     public boolean charge;
-    public int wireless = 0;
+    public boolean wireless = false;
     public GenerationState active = GenerationState.NONE;
     public boolean wetBiome;
     public boolean noSunWorld;
@@ -90,10 +88,14 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
     public double maxStorage2;
     public double storage2;
     public boolean rf = true;
+    public double moonPhase;
+    public double tick;
     protected double tierPower;
     protected boolean canRain;
     protected boolean hasSky;
     protected boolean addedToEnet;
+    protected double pastEnergy;
+    protected double perenergy;
 
     public TileEntitySolarPanel(
             final int tier, final double gDay,
@@ -112,7 +114,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         this.time1 = 14400;
         this.time2 = 14400;
         this.maxStorage2 = this.maxStorage * 4;
-
         this.production = gOutput;
         this.u = gOutput;
         this.tier = tier;
@@ -122,6 +123,10 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         this.type = EnumType.DEFAULT;
         this.solarpanels = type;
         this.list = new ArrayList<>();
+        this.coef = 0;
+        this.pastEnergy = 0;
+        this.perenergy = 0;
+        this.tick = 0;
     }
 
     public TileEntitySolarPanel(EnumSolarPanels solarpanels) {
@@ -209,23 +214,15 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         double coefficient_phase;
         double moonPhase = 1;
         coefficient_phase = experimental_generating();
-        if (this.active == GenerationState.NIGHT || this.active == GenerationState.RAINNIGHT) {
-            for (int i = 0; i < this.inputslot.size(); i++) {
-                if (this.inputslot.get(i) != null && EnumModule.getFromID(this.inputslot
-                        .get(i).getItemDamage()) != null && this.inputslot.get(i).getItem() instanceof ItemBaseModules) {
-                    EnumModule module = EnumModule.getFromID(this.inputslot.get(i).getItemDamage());
-                    EnumBaseType type = module.type;
-                    if (type == EnumBaseType.MOON_LINSE) {
-                        moonPhase = module.percent;
-                        break;
-                    }
-
-                }
-            }
-        }
 
 
         this.generating *= coefpollution * coefficient_phase * moonPhase;
+    }
+
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
+        this.player = placer.getName();
     }
 
     protected void onLoaded() {
@@ -235,6 +232,11 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
             this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
             this.hasSky = !this.world.provider.isNether();
             updateVisibility();
+            this.inputslot.checkmodule();
+            this.inputslot.getrfmodule();
+            this.inputslot.personality();
+            this.solarType = this.inputslot.solartype();
+
         }
     }
 
@@ -259,19 +261,8 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
             k = 1 - celestialAngle / 90;
         }
 
-        double coef = 0;
-        for (int i = 0; i < this.inputslot.size(); i++) {
-            if (this.inputslot.get(i) != null && EnumModule.getFromID(this.inputslot
-                    .get(i).getItemDamage()) != null && this.inputslot.get(i).getItem() instanceof ItemBaseModules) {
-                EnumModule module = EnumModule.getFromID(this.inputslot.get(i).getItemDamage());
-                EnumBaseType type = module.type;
-                if (type == EnumBaseType.PHASE) {
-                    coef = module.percent;
-                    break;
-                }
+        double coef = this.coef;
 
-            }
-        }
         return Math.max(coef, k);
 
     }
@@ -283,52 +274,18 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         this.time = nbttagcompound.getInteger("time");
         this.time1 = nbttagcompound.getInteger("time1");
         this.time2 = nbttagcompound.getInteger("time2");
-        this.production = nbttagcompound.getDouble("production");
-        this.generating = nbttagcompound.getDouble("generating");
-        this.tier = nbttagcompound.getInteger("tier");
-
-
-        if (nbttagcompound.getInteger("solarType") != 0) {
-            this.solarType = nbttagcompound.getInteger("solarType");
-        }
-        if (nbttagcompound.getBoolean("getmodulerf")) {
-            this.getmodulerf = nbttagcompound.getBoolean("getmodulerf");
-        }
-        if (getmodulerf) {
-            this.rf = nbttagcompound.getBoolean("rf");
-        }
-        if (!nbttagcompound.getString("player").isEmpty()) {
-            this.player = nbttagcompound.getString("player");
-        }
-        this.wireless = nbttagcompound.getInteger("wireless");
-        if (nbttagcompound.getBoolean("getmodulerf")) {
-            this.storage2 = nbttagcompound.getDouble("storage2");
-        }
-
-
+        this.player = nbttagcompound.getString("player");
+        this.storage2 = nbttagcompound.getDouble("storage2");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        if (getmodulerf) {
-            nbttagcompound.setBoolean("getmodulerf", this.getmodulerf);
-        }
-
         nbttagcompound.setInteger("time", this.time);
         nbttagcompound.setInteger("time1", this.time1);
         nbttagcompound.setInteger("time2", this.time2);
-        nbttagcompound.setInteger("tier", this.tier);
-        nbttagcompound.setDouble("production", this.production);
-        if (player != null) {
-            nbttagcompound.setString("player", player);
-        }
-        nbttagcompound.setInteger("wireless", this.wireless);
-        nbttagcompound.setInteger("solarType", this.solarType);
+        nbttagcompound.setString("player", player);
         nbttagcompound.setDouble("storage", this.storage);
-        if (this.getmodulerf) {
-            nbttagcompound.setDouble("storage2", this.storage2);
-            nbttagcompound.setBoolean("rf", this.rf);
-        }
+        nbttagcompound.setDouble("storage2", this.storage2);
         return nbttagcompound;
     }
 
@@ -391,13 +348,12 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
             updateVisibility();
 
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-            this.inputslot.getrfmodule();
-            this.inputslot.time();
-            this.inputslot.checkmodule();
+        if (this.charge) {
+            this.inputslot.charge();
         }
-        this.inputslot.wirelessmodule();
-        gainFuel();
+        if (this.charge && this.getmodulerf) {
+            this.inputslot.rfcharge();
+        }
         if (this.getmodulerf) {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 BlockPos pos = new BlockPos(
@@ -421,23 +377,26 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
                 }
             }
         }
-        if (this.charge) {
-            this.inputslot.charge();
+
+        if (this.active == GenerationState.NONE) {
+            this.generating = 0;
+            return;
         }
-        if (this.charge && this.getmodulerf) {
-            this.inputslot.rfcharge();
+        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+            this.inputslot.time();
         }
-        this.inputslot.personality();
+        if (this.wireless) {
+            this.inputslot.wirelessmodule();
+        }
+        gainFuel();
+
 
         if (this.storage2 >= this.maxStorage2) {
             this.storage2 = this.maxStorage2;
         } else if (this.storage2 < 0) {
             this.storage2 = 0;
         }
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
-            this.solarType = this.inputslot.solartype();
 
-        }
 
         if (this.generating > 0) {
             if (getmodulerf) {
@@ -520,7 +479,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         ItemStack drop = this.getPickBlock(null, null);
         drop = this.adjustDrop(drop, wrench);
 
-        return drop == null ? Collections.emptyList() : Arrays.asList(drop);
+        return drop == null ? Collections.emptyList() : Collections.singletonList(drop);
     }
 
     @Override
@@ -661,6 +620,31 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IEnergy
         }
         setType(EnumType.DEFAULT);
         return 0;
+    }
+
+    @Override
+    public double getPerEnergy() {
+        return this.perenergy;
+    }
+
+    @Override
+    public double getPastEnergy() {
+        return this.pastEnergy;
+    }
+
+    @Override
+    public void setPastEnergy(final double pastEnergy) {
+        this.pastEnergy = pastEnergy;
+    }
+
+    @Override
+    public void addPerEnergy(final double setEnergy) {
+        this.perenergy += setEnergy;
+    }
+
+    @Override
+    public boolean isSource() {
+        return true;
     }
 
 

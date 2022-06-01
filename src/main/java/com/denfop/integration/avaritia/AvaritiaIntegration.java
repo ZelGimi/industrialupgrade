@@ -2,7 +2,7 @@ package com.denfop.integration.avaritia;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.integration.de.SSPDEItem;
+import com.denfop.integration.de.IUDEItem;
 import ic2.api.recipe.Recipes;
 import ic2.core.block.TeBlockRegistry;
 import morph.avaritia.init.ModItems;
@@ -15,12 +15,11 @@ public class AvaritiaIntegration {
     public static Block blockAvSolarPanel;
     public static Item neutroncore;
     public static Item infinitycore;
-    public static Item singularity;
 
     public static void init() {
         blockAvSolarPanel = TeBlockRegistry.get(BlockAvaritiaSolarPanel.IDENTITY).setCreativeTab(IUCore.SSPTab);
-        neutroncore = new SSPDEItem("neutroncore");
-        infinitycore = new SSPDEItem("infinitycore");
+        neutroncore = new IUDEItem("neutroncore");
+        infinitycore = new IUDEItem("infinitycore");
 
     }
 

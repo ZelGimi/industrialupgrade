@@ -52,7 +52,7 @@ import java.util.Set;
 
 public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxable, IModelRegister {
 
-    public static final List<ItemStack> variants = new ArrayList();
+    public static final List<ItemStack> variants = new ArrayList<>();
     protected static final String NAME = "cable_iu_item";
     private static final NumberFormat lossFormat = new DecimalFormat("0.00#");
     String[] name = {"itemcable", "itemcableo", "itemgoldсable", "itemgoldcablei", "itemgoldcableii", "itemironcable", "itemironcablei",
@@ -70,7 +70,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
 
         for (CableType type : var1) {
             for (int insulation = 0; insulation <= type.maxInsulation; ++insulation) {
-                variants.add(getCable(type, insulation));
+                variants.add(getCable(type));
             }
         }
         this.setCreativeTab(IUCore.ItemTab);
@@ -81,18 +81,13 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     @Nonnull
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(ItemStack stack) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("cable").append("/").append(getName(stack));
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "cable" + "/" + getName(stack);
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
-    public static ItemStack getCable(CableType type, int insulation, int k) {
-
-        return variants.get(type.getId());
-    }
 
     private static CableType getCableType(ItemStack stack) {
         int type = stack.getItemDamage();
@@ -108,8 +103,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
 
     private static String getName(ItemStack stack) {
         CableType type = getCableType(stack);
-        int insulation = getInsulation(stack);
-        return type.getName(insulation);
+        return type.getName();
     }
 
     @SideOnly(Side.CLIENT)
@@ -142,7 +136,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     }
 
     public ItemStack getItemStack(CableType type) {
-        return getCable(type, 0);
+        return getCable(type);
     }
 
     public ItemStack getItemStack(String variant) {
@@ -181,7 +175,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         if (type == null) {
             return null;
         } else if (insulation >= 0 && insulation <= type.maxInsulation) {
-            return getCable(type, insulation);
+            return getCable(type);
         } else {
             IC2.log.warn(LogCategory.Item, "Invalid cable insulation: %d", insulation);
             return null;
@@ -200,7 +194,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         }
     }
 
-    public ItemStack getCable(CableType type, int insulation) {
+    public ItemStack getCable(CableType type) {
         return new ItemStack(this, 1, type.getId());
     }
 
@@ -214,7 +208,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
 
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> info, ITooltipFlag b) {
+    public void addInformation(@Nonnull ItemStack stack, World world, List<String> info, @Nonnull ITooltipFlag b) {
         CableType type = getCableType(stack);
         double capacity;
         double loss;
@@ -227,12 +221,13 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         info.add(Localization.translate("ic2.cable.tooltip.loss", lossFormat.format(loss)));
     }
 
+    @Nonnull
     public EnumActionResult onItemUse(
-            EntityPlayer player,
+            @Nonnull EntityPlayer player,
             World world,
-            BlockPos pos,
-            EnumHand hand,
-            EnumFacing side,
+            @Nonnull BlockPos pos,
+            @Nonnull EnumHand hand,
+            @Nonnull EnumFacing side,
             float hitX,
             float hitY,
             float hitZ
@@ -279,9 +274,9 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         }
     }
 
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemList) {
+    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
-            List<ItemStack> variants = new ArrayList(ItemCable.variants);
+            List<ItemStack> variants = new ArrayList<>(ItemCable.variants);
 
 
             itemList.addAll(variants);
@@ -293,7 +288,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     }
 
     public Set<ItemStack> getAllStacks() {
-        return new HashSet(variants);
+        return new HashSet<>(variants);
     }
 
     public boolean canBeStoredInToolbox(ItemStack itemstack) {

@@ -1,10 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.api.Recipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerBaseMolecular;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
@@ -14,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
@@ -44,10 +44,10 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
         double chargeLevel = (15.0D * this.container.base.energy.getFillRatio());
 
 
-        if (chargeLevel > 0 && !this.container.base.inputSlot.isEmpty() && Recipes.molecular.getOutputFor(this.container.base.inputSlot.get(
-                0), false) != null) {
-            RecipeOutput output1 = Recipes.molecular.getOutputFor(this.container.base.inputSlot.get(0), false);
+        if (chargeLevel > 0 && !this.container.base.inputSlot.isEmpty() && this.container.base.inputSlot.continue_proccess(this.container.base.outputSlot)) {
+            MachineRecipe output1 = this.container.base.output;
 
+            List<Double> time;
             if (!this.container.base.queue) {
                 this.bindTexture();
                 drawTexturedModalRect(this.guiLeft + 23, this.guiTop + 48, 221, 7, 10, (int) chargeLevel);
@@ -56,10 +56,12 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                         this.guiLeft + 60, this.guiTop + 25, 4210752
                 );
 
-                this.fontRenderer.drawString(output + output1.items.get(0).getDisplayName(), this.guiLeft + 60,
+                this.fontRenderer.drawString(output + output1.getRecipe().output.items.get(0).getDisplayName(), this.guiLeft + 60,
                         this.guiTop + 25 + 11, 4210752
                 );
-                this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output1.metadata.getDouble("energy")) + " EU",
+                this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output1.getRecipe().output.metadata.getDouble(
+                                "energy")) +
+                                " EU",
                         this.guiLeft + 60, this.guiTop + 25 + 22, 4210752
                 );
                 if (this.container.base.getProgress() * 100 <= 100) {
@@ -81,10 +83,11 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                 double hours = 0;
                 double minutes = 0;
                 double seconds = 0;
-                if (this.container.base.time.size() > 0) {
-                    hours = this.container.base.time.get(0);
-                    minutes = this.container.base.time.get(1);
-                    seconds = this.container.base.time.get(2);
+                time = this.container.base.getTime(output1.getRecipe().output.metadata.getDouble("energy"));
+                if (time.size() > 0) {
+                    hours = time.get(0);
+                    minutes = time.get(1);
+                    seconds = time.get(2);
                 }
                 String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") + "" : "";
                 String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") + "" : "";
@@ -96,23 +99,12 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                 );
 
             } else {
-                ItemStack output2;
-                int size;
-                for (int i = 0; ; i++) {
-                    ItemStack stack = new ItemStack(
-                            this.container.base.inputSlot.get().getItem(),
-                            i,
-                            this.container.base.inputSlot.get().getItemDamage()
-                    );
-                    if (Recipes.molecular.getOutputFor(stack, false) != null) {
-                        output2 = Recipes.molecular.getOutputFor(stack, false).items.get(0);
-                        size = i;
-                        break;
-                    }
-                }
+                ItemStack output2 = this.container.base.output.getRecipe().output.items.get(0);
+                int size = this.container.base.output.getRecipe().input.getInputs().get(0).getInputs().get(0).getCount();
+
                 int col = size;
                 size = (int) Math.floor((float) this.container.base.inputSlot.get().getCount() / size);
-                int size1 = this.container.base.outputSlot.get() != null
+                int size1 = !this.container.base.outputSlot.get().isEmpty()
                         ? (64 - this.container.base.outputSlot.get().stackSize) / output2.stackSize
                         : 64 / output2.stackSize;
 
@@ -129,12 +121,13 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                     );
 
                     this.fontRenderer.drawString(
-                            output + output2.stackSize * size + "x" + output1.items.get(0).getDisplayName(),
+                            output + output2.stackSize * size + "x" + output1.getRecipe().output.items.get(0).getDisplayName(),
                             this.guiLeft + 60,
                             this.guiTop + 25 + 11,
                             4210752
                     );
-                    this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output1.metadata.getDouble("energy") * size) + " EU",
+                    this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output1.getRecipe().output.metadata.getDouble(
+                                    "energy") * size) + " EU",
                             this.guiLeft + 60, this.guiTop + 25 + 22, 4210752
                     );
                     if (this.container.base.getProgress() * 100 <= 100) {
@@ -157,10 +150,13 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                     double hours = 0;
                     double minutes = 0;
                     double seconds = 0;
-                    if (this.container.base.time.size() > 0) {
-                        hours = this.container.base.time.get(0);
-                        minutes = this.container.base.time.get(1);
-                        seconds = this.container.base.time.get(2);
+                    time = this.container.base.getTime(output1.getRecipe().output.metadata.getDouble("energy") * size);
+
+
+                    if (time.size() > 0) {
+                        hours = time.get(0);
+                        minutes = time.get(1);
+                        seconds = time.get(2);
                     }
                     String time1 = hours > 0 ? ModUtils.getString(hours) + Localization.translate("iu.hour") : "";
                     String time2 = minutes > 0 ? ModUtils.getString(minutes) + Localization.translate("iu.minutes") : "";

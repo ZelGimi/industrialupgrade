@@ -4,21 +4,25 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBaseMolecular;
 import com.denfop.gui.GuiMolecularTransformer;
-import com.denfop.invslot.InvSlotProcessable;
-import com.denfop.items.modules.AdditionModule;
+import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
-import ic2.core.block.comp.Energy;
 import ic2.core.item.type.MiscResourceType;
 import ic2.core.item.type.NuclearResourceType;
 import ic2.core.ref.ItemName;
@@ -36,34 +40,33 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TileEntityMolecularTransformer extends TileEntityElectricMachine implements INetworkTileEntityEventListener,
-        IEnergyReceiver, INetworkClientTileEntityEventListener {
+        IEnergyReceiver, INetworkClientTileEntityEventListener, IUpdateTick {
 
-    public List<Double> time;
     public boolean queue;
     public byte redstoneMode;
     public int operationLength;
     public boolean rf = false;
     public int operationsPerTick;
     public AudioSource audioSource;
-    public InvSlotProcessable inputSlot;
+    public InvSlotRecipes inputSlot;
+    public MachineRecipe output;
     public double perenergy;
     public double differenceenergy;
+    public double size;
     protected double progress;
     protected double guiProgress;
 
     public TileEntityMolecularTransformer() {
-        super("", 0, 14, 1);
+        super(0, 14, 1);
         this.progress = 0;
-        this.time = new ArrayList<>();
         this.queue = false;
         this.redstoneMode = 0;
-        this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
-        this.inputSlot = new InvSlotProcessable(this, "input", Recipes.molecular, 1);
-
+        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
+        this.inputSlot = new InvSlotRecipes(this, "molecular", this);
+        this.output = null;
     }
 
     public static void init() {
@@ -187,14 +190,32 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setDouble("energy", energy);
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.molecular.addRecipe(input.forStack(stack), nbt, false, stack1);
+        Recipes.recipes.addRecipe(
+                "molecular",
+                new BaseMachineRecipe(new Input(input.forStack(stack)), new RecipeOutput(nbt, stack1))
+        );
     }
 
     public static void addrecipe(String stack, ItemStack stack1, double energy) {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setDouble("energy", energy);
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.molecular.addRecipe(input.forOreDict(stack), nbt, false, stack1);
+        Recipes.recipes.addRecipe(
+                "molecular",
+                new BaseMachineRecipe(new Input(input.forOreDict(stack)), new RecipeOutput(nbt, stack1))
+        );
+
+    }
+
+    public List<Double> getTime(final double energy) {
+        final double dif = this.differenceenergy;
+        return ModUtils.Time((energy - this.energy.getEnergy()) / (dif * 20));
+    }
+
+    public double getInput() {
+        return EnergyNet.instance
+                .getNodeStats(this.energy.getDelegate())
+                .getEnergyIn();
     }
 
     @Override
@@ -230,7 +251,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             final float hitY,
             final float hitZ
     ) {
-        if (player.getHeldItem(hand).getItem() instanceof AdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
+        if (player.getHeldItem(hand).getItem() instanceof ItemAdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
             if (!this.rf) {
                 this.rf = true;
                 player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
@@ -246,9 +267,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         ret.add("queue");
         ret.add("redstoneMode");
         ret.add("energy");
-        ret.add("perenergy");
-        ret.add("differenceenergy");
-        ret.add("time");
 
         return ret;
     }
@@ -296,6 +314,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             if (this.redstoneMode >= 8) {
                 this.redstoneMode = 0;
             }
+            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
             this.getWorld().notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 2);
         }
         if (event == 1) {
@@ -312,13 +331,13 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         }
     }
 
-    public void operate(RecipeOutput output) {
-        List<ItemStack> processResult = output.items;
+    public void operate(MachineRecipe output) {
+        List<ItemStack> processResult = output.getRecipe().output.items;
         operateOnce(processResult);
     }
 
-    public void operate(RecipeOutput output, int size) {
-        List<ItemStack> processResult = output.items;
+    public void operate(MachineRecipe output, int size) {
+        List<ItemStack> processResult = output.getRecipe().output.items;
         operateOnce(processResult, size);
     }
 
@@ -326,7 +345,9 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
         this.inputSlot.consume();
         this.outputSlot.add(processResult);
-
+        if (!this.inputSlot.continue_process(this.output)) {
+            getOutput();
+        }
     }
 
     public void operateOnce(List<ItemStack> processResult, int size) {
@@ -336,28 +357,47 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             this.outputSlot.add(processResult);
 
         }
+        if (!this.inputSlot.continue_process(this.output)) {
+            getOutput();
+        }
+    }
+
+    protected void onLoaded() {
+        super.onLoaded();
+        if (IC2.platform.isSimulating()) {
+            inputSlot.load();
+            this.setOverclockRates();
+
+        }
+
     }
 
     public void setOverclockRates() {
-        RecipeOutput output = getOutput();
-
+        MachineRecipe output = getOutput();
         if (!this.queue) {
-            if (inputSlot.isEmpty()) {
+            if (inputSlot.isEmpty() || !this.inputSlot.continue_proccess(this.outputSlot)) {
                 this.energy.setCapacity(0);
             } else if (output != null) {
-                this.energy.setCapacity(output.metadata.getDouble("energy"));
+                this.energy.setCapacity(output.getRecipe().output.metadata.getDouble("energy"));
             } else {
                 this.energy.setCapacity(0);
             }
         } else {
 
-            if (inputSlot.isEmpty()) {
+            if (inputSlot.isEmpty() || !this.inputSlot.continue_proccess(this.outputSlot)) {
                 this.energy.setCapacity(0);
             } else if (output != null) {
                 int size;
-                size = this.outputSlot.get() != null ? 64 - this.outputSlot.get().getCount() : 64;
-                size = Math.min(this.inputSlot.get().getCount(), size);
-                this.energy.setCapacity(output.metadata.getDouble("energy") * size);
+                ItemStack output1 = this.output.getRecipe().output.items.get(0);
+                size = this.output.getRecipe().input.getInputs().get(0).getInputs().get(0).getCount();
+                size = (int) Math.floor((float) this.inputSlot.get().getCount() / size);
+                int size1 = this.outputSlot.get() != null
+                        ? (64 - this.outputSlot.get().getCount()) / output1.stackSize
+                        : 64 / output1.stackSize;
+
+                size = Math.min(size1, size);
+                size = Math.min(size, output1.getMaxStackSize());
+                this.energy.setCapacity(output.getRecipe().output.metadata.getDouble("energy") * size);
             } else {
                 this.energy.setCapacity(0);
             }
@@ -369,27 +409,24 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     public void updateEntityServer() {
         super.updateEntityServer();
 
-        RecipeOutput output = getOutput();
+        MachineRecipe output = this.output;
         if (!queue) {
-            if (output != null) {
-                this.differenceenergy = EnergyNet.instance.getNodeStats(this.energy.getDelegate()).getEnergyIn();
+            if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items)) {
+                this.differenceenergy = this.energy.getEnergy() - this.perenergy;
                 this.perenergy = this.energy.getEnergy();
                 setActive(true);
                 markDirty();
                 if (energy.getCapacity() > 0) {
                     IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
                 }
-                if (this.getWorld().provider.getWorldTime() % 200 == 0) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
-                }
+
 
                 this.progress = this.energy.getEnergy();
                 double k = this.progress;
-                this.guiProgress = (k / output.metadata.getDouble("energy"));
-                this.time =
-                        ModUtils.Time(((output.metadata.getDouble("energy") - this.energy.getEnergy())) / (this.differenceenergy * 20));
+                this.guiProgress = (k / output.getRecipe().output.metadata.getDouble("energy"));
 
-                if (this.energy.getEnergy() >= output.metadata.getDouble("energy")) {
+
+                if (this.energy.getEnergy() >= output.getRecipe().output.metadata.getDouble("energy")) {
                     operate(output);
 
                     this.progress = 0;
@@ -407,31 +444,20 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             }
 
         } else {
-            if (output != null) {
+            if (output != null && this.inputSlot.continue_proccess(this.outputSlot)) {
+                this.differenceenergy = this.energy.getEnergy() - this.perenergy;
+                this.perenergy = this.energy.getEnergy();
                 setActive(true);
                 markDirty();
-                this.differenceenergy = EnergyNet.instance.getNodeStats(this.energy.getDelegate()).getEnergyIn();
-                this.perenergy = this.energy.getEnergy();
-                if (this.getWorld().provider.getWorldTime() % 200 == 0) {
-                    if (energy.getEnergy() > 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
-                    }
+                if (energy.getEnergy() > 0) {
+                    IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
                 }
-                if (this.world.provider.getWorldTime() % 200 == 0) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
-                }
+
 
                 int size;
-                ItemStack output1;
-                for (int i = 0; ; i++) {
-                    ItemStack stack = new ItemStack(this.inputSlot.get().getItem(), i, this.inputSlot.get().getItemDamage());
-                    if (Recipes.molecular.getOutputFor(stack, false) != null) {
-                        size = i;
-                        output1 = Recipes.molecular.getOutputFor(stack, false).items.get(0);
+                ItemStack output1 = this.output.getRecipe().output.items.get(0);
+                size = this.output.getRecipe().input.getInputs().get(0).getInputs().get(0).getCount();
 
-                        break;
-                    }
-                }
                 size = (int) Math.floor((float) this.inputSlot.get().getCount() / size);
                 int size1 = this.outputSlot.get() != null
                         ? (64 - this.outputSlot.get().getCount()) / output1.stackSize
@@ -440,16 +466,14 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 size = Math.min(size1, size);
                 size = Math.min(size, output1.getMaxStackSize());
 
-                double p = (this.energy.getEnergy() / (output.metadata.getDouble("energy") * size));
-                this.time =
-                        ModUtils.Time(((output.metadata.getDouble("energy") * size - this.energy.getEnergy())) / (this.differenceenergy * 20));
+                double p = (this.energy.getEnergy() / (output.getRecipe().output.metadata.getDouble("energy") * size));
                 if (p <= 1) {
                     this.guiProgress = p;
                 }
                 if (p > 1) {
                     this.guiProgress = 1;
                 }
-                if (this.energy.getEnergy() >= (output.metadata.getDouble("energy") * size)) {
+                if (this.energy.getEnergy() >= (output.getRecipe().output.metadata.getDouble("energy") * size)) {
                     operate(output, size);
 
                     this.progress = 0;
@@ -472,19 +496,10 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         }
     }
 
-    public RecipeOutput getOutput() {
-        if (this.inputSlot.isEmpty()) {
-            return null;
-        }
-        RecipeOutput output = this.inputSlot.process();
-        if (output == null) {
-            return null;
-        }
+    public MachineRecipe getOutput() {
 
-        if (this.outputSlot.canAdd(output.items)) {
-            return output;
-        }
-        return null;
+        this.output = this.inputSlot.process();
+        return this.output;
     }
 
     public double getProgress() {
@@ -503,11 +518,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
     public int receiveEnergy(int paramInt, boolean paramBoolean) {
         int i = (int) Math.min(
-                ((IEnergySink)this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
+                ((IEnergySink) this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
                 Math.min(EnergyNet.instance.getPowerFromTier(14) * Config.coefficientrf, paramInt)
         );
         if (!paramBoolean) {
-            this.energy.addEnergy(i* 1F /  Config.coefficientrf);
+            this.energy.addEnergy(i * 1F / Config.coefficientrf);
         }
         return i;
     }
@@ -529,6 +544,21 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     @Override
     public boolean canConnectEnergy(final EnumFacing enumFacing) {
         return true;
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.output;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.output = output;
     }
 
 }

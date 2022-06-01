@@ -5,7 +5,7 @@ import com.denfop.tiles.base.TileEntityGeoGenerator;
 public class TileEntityAdvGeoGenerator extends TileEntityGeoGenerator {
 
     public TileEntityAdvGeoGenerator() {
-        super(16, 2.2, "iu.blockAdvGeo.name");
+        super(16, 2.2);
     }
 
 }

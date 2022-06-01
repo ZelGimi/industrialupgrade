@@ -13,13 +13,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUIMultiMatter extends GuiIC2<ContainerMultiMatter> {
+public class GuiMultiMatter extends GuiIC2<ContainerMultiMatter> {
 
     public final ContainerMultiMatter container;
     public final String progressLabel;
     public final String amplifierLabel;
 
-    public GUIMultiMatter(ContainerMultiMatter container1) {
+    public GuiMultiMatter(ContainerMultiMatter container1) {
         super(container1);
         this.container = container1;
         this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");
@@ -45,10 +45,6 @@ public class GUIMultiMatter extends GuiIC2<ContainerMultiMatter> {
         }
     }
 
-
-    public String getName() {
-        return this.container.base.getName();
-    }
 
     public ResourceLocation getTexture() {
 

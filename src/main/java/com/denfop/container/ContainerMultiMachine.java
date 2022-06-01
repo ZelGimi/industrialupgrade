@@ -2,7 +2,6 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.core.ContainerFullInv;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -35,6 +34,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileEntityMultiMachi
         ret.add("energy2");
         ret.add("maxEnergy2");
         ret.add("energy");
+        ret.add("cold");
         return ret;
     }
 

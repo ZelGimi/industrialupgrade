@@ -5,6 +5,7 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.IModelRegister;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
@@ -21,6 +22,7 @@ import ic2.core.util.LogCategory;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,7 +38,10 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +75,33 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name + extraName;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
+    }
+
+    @Override
+    public void addInformation(
+            @Nonnull final ItemStack stack,
+            @Nullable final World p_77624_2_,
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag p_77624_4_
+    ) {
+        super.addInformation(stack, p_77624_2_, tooltip, p_77624_4_);
+        NBTTagCompound nbtData = ModUtils.nbt(stack);
+        if (stack.getItem() == IUItem.perjetpack) {
+            tooltip.add(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack")));
+            if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                tooltip.add(Localization.translate("press.lshift"));
+            }
+
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                tooltip.add(Localization.translate("iu.changemode_fly") + Keyboard.getKeyName(KeyboardClient.flymode.getKeyCode()));
+            }
+        }
     }
 
     public void setDamage(ItemStack stack, int damage) {
@@ -249,13 +275,6 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         return false;
     }
 
-    public Item getChargedItem(ItemStack itemStack) {
-        return this;
-    }
-
-    public Item getEmptyItem(ItemStack itemStack) {
-        return this;
-    }
 
     public double getMaxCharge(ItemStack itemStack) {
         return maxStorage;
@@ -269,21 +288,18 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         return this.TransferLimit;
     }
 
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b) {
-    }
-
     @Override
     public void getSubItems(final CreativeTabs p_150895_1_, final NonNullList<ItemStack> var3) {
         if (this.isInCreativeTab(p_150895_1_)) {
             final ItemStack var4 = new ItemStack(this, 1);
             ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             var3.add(var4);
-            var3.add(new ItemStack(this, 1, this.getMaxDamage()));
+            var3.add(new ItemStack(this, 1, 27));
         }
     }
 
 
-    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+    public void onArmorTick(@Nonnull World world, EntityPlayer player, @Nonnull ItemStack itemStack) {
         if (player.inventory.armorInventory.get(2).isItemEqual(itemStack)) {
             NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(itemStack);
             boolean hoverMode = nbtData.getBoolean("hoverMode");
@@ -383,16 +399,20 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         return true;
     }
 
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+    public ArmorProperties getProperties(
+            EntityLivingBase player,
+            @Nonnull ItemStack armor,
+            DamageSource source,
+            double damage,
+            int slot
+    ) {
         return new ArmorProperties(0, 0.0D, 0);
     }
 
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+    public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
         return 0;
     }
 
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
-    }
 
     public List<String> getHudInfo(ItemStack stack, boolean advanced) {
         List<String> info = new ArrayList<>();

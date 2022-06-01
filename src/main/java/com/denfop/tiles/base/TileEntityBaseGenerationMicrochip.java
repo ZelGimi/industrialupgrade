@@ -2,15 +2,14 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.api.ITemperature;
-import com.denfop.api.Recipes;
 import com.denfop.api.heat.IHeatSink;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerBaseGenerationChipMachine;
-import com.denfop.invslot.InvSlotProcessable;
 import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.api.recipe.RecipeOutput;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.ContainerBase;
@@ -41,16 +40,18 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
     public AudioSource audioSource;
 
 
-    public InvSlotProcessable inputSlotA;
+    public InvSlotRecipes inputSlotA;
+    public MachineRecipe output;
     protected short progress;
     protected double guiProgress;
+    private ITemperature source;
 
     public TileEntityBaseGenerationMicrochip(int energyPerTick, int length, int outputSlots) {
         this(energyPerTick, length, outputSlots, 1);
     }
 
     public TileEntityBaseGenerationMicrochip(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super("", energyPerTick * length, 1, outputSlots);
+        super(energyPerTick * length, 1, outputSlots);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
@@ -60,6 +61,8 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
         this.temperature = 0;
         this.maxtemperature = 5000;
         this.needTemperature = false;
+        this.output = null;
+        this.source = null;
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -68,8 +71,13 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
     }
 
     @Override
-    public boolean requairedTemperature() {
-        return this.needTemperature;
+    public ITemperature getSource() {
+        return this.source;
+    }
+
+    @Override
+    public void setSource(final ITemperature source) {
+        this.source = source;
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -96,6 +104,9 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
         if (IC2.platform.isSimulating()) {
             setOverclockRates();
         }
+        inputSlotA.load();
+        this.getOutput();
+
     }
 
     public void onUnloaded() {
@@ -117,13 +128,13 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = false;
-        IC2.network.get(true).updateTileEntityField(this, "temperature");
-        RecipeOutput output = getOutput();
-        if (output != null && this.energy.canUseEnergy(energyConsume) && output.metadata != null) {
-            if (output.metadata.getInteger("temperature") > this.temperature) {
+        MachineRecipe output = this.output;
+        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.canUseEnergy(energyConsume) && output.getRecipe().output.metadata != null) {
+            if (output.getRecipe().output.metadata.getInteger("temperature") > this.temperature) {
                 needTemperature = true;
             }
-            if (output.metadata.getShort("temperature") == 0 || output.metadata.getInteger("temperature") > this.temperature) {
+            if (output.getRecipe().output.metadata.getShort("temperature") == 0 || output.getRecipe().output.metadata.getInteger(
+                    "temperature") > this.temperature) {
                 return;
             }
             if (needTemperature) {
@@ -152,9 +163,7 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
                 this.progress = 0;
             }
             setActive(false);
-            if (this.temperature > 0) {
-                this.temperature--;
-            }
+
         }
         for (int i = 0; i < this.upgradeSlot.size(); i++) {
             ItemStack stack = this.upgradeSlot.get(i);
@@ -164,7 +173,9 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
                 }
             }
         }
-
+        if (this.temperature > 0) {
+            this.temperature--;
+        }
         if (needsInvUpdate) {
             super.markDirty();
         }
@@ -192,9 +203,9 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
         this.progress = (short) (int) Math.floor(previousProgress * this.operationLength + 0.1D);
     }
 
-    public void operate(RecipeOutput output) {
+    public void operate(MachineRecipe output) {
         for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.items;
+            List<ItemStack> processResult = output.getRecipe().output.items;
             for (int j = 0; j < this.upgradeSlot.size(); j++) {
                 ItemStack stack = this.upgradeSlot.get(j);
                 if (stack != null && stack.getItem() instanceof IUpgradeItem) {
@@ -202,8 +213,10 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
                 }
             }
             operateOnce(processResult);
-            output = getOutput();
-            if (output == null) {
+            if (!this.inputSlotA.continue_process(this.output)) {
+                getOutput();
+            }
+            if (this.output == null) {
                 break;
             }
         }
@@ -215,20 +228,11 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
         this.outputSlot.add(processResult);
     }
 
-    public RecipeOutput getOutput() {
-        if (this.inputSlotA.isEmpty()) {
-            return null;
-        }
-        RecipeOutput output = this.inputSlotA.process();
+    public MachineRecipe getOutput() {
+        this.output = this.inputSlotA.process();
 
-        if (output == null) {
-            return null;
-        }
-        if (this.outputSlot.canAdd(output.items)) {
-            return output;
-        }
 
-        return null;
+        return this.output;
     }
 
     public abstract String getInventoryName();

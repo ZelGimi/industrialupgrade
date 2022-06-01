@@ -12,7 +12,6 @@ import ic2.core.ref.ItemName;
 import ic2.core.util.LiquidUtil;
 import ic2.core.util.StackUtil;
 import ic2.core.util.Util;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +30,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
@@ -116,7 +116,6 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
         ItemStack stack = player.getHeldItem(hand);
         if (stack.getItemDamage() != 0) {
             Fluid fluid = IUItem.celltype1.get(stack.getItemDamage());
-            Block block = fluid.getBlock();
             if (StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all), player, true)) {
                 if (LiquidUtil.fillBlock(new FluidStack(fluid, 1000), world, pos, false)) {
                     StackUtil.consumeOrError(player, hand, 1);
@@ -141,24 +140,23 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
         return "iu." + super.getUnlocalizedName().substring(4);
     }
 
+    @Nonnull
     public EnumActionResult onItemUseFirst(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumFacing side,
+            @Nonnull EntityPlayer player,
+            @Nonnull World world,
+            @Nonnull BlockPos pos,
+            @Nonnull EnumFacing side,
             float hitX,
             float hitY,
             float hitZ,
-            EnumHand hand
+            @Nonnull EnumHand hand
     ) {
         ItemStack stack = StackUtil.get(player, hand);
         CellType type = this.getType(stack);
         if (type.hasCropAction()) {
             TileEntity te = world.getTileEntity(pos);
             if (te instanceof TileEntityCrop) {
-                return type.doCropAction(stack, (result) -> {
-                    StackUtil.set(player, hand, result);
-                }, (TileEntityCrop) te, true);
+                return type.doCropAction();
             }
         }
 
@@ -177,26 +175,26 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
         );
     }
 
-    public int getItemStackLimit(ItemStack stack) {
+    public int getItemStackLimit(@Nonnull ItemStack stack) {
         CellType type = this.getType(stack);
         return type != null ? type.getStackSize() : 0;
     }
 
-    public boolean showDurabilityBar(ItemStack stack) {
-        return this.getType(stack).getUsage(stack) > 0;
+    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
+        return this.getType(stack).getUsage() > 0;
     }
 
-    public double getDurabilityForDisplay(ItemStack stack) {
+    public double getDurabilityForDisplay(@Nonnull ItemStack stack) {
         CellType type = this.getType(stack);
-        return (double) type.getUsage(stack) / (double) type.getMaximum(stack);
+        return (double) type.getUsage() / (double) type.getMaximum();
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(@Nonnull ItemStack stack, World world, @Nonnull List<String> tooltip, ITooltipFlag advanced) {
         CellType type = this.getType(stack);
         if (type.getStackSize() == 1 && advanced.isAdvanced()) {
-            int max = type.getMaximum(stack);
-            tooltip.add(Localization.translate("item.durability", max - type.getUsage(stack), max));
+            int max = type.getMaximum();
+            tooltip.add(Localization.translate("item.durability", max - type.getUsage(), max));
         }
 
     }

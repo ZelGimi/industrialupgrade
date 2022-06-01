@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -31,22 +33,26 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine1.enrichment.getName();
     }
 
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine, 1, 10).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -54,22 +60,22 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
         double energylevel = Math.min(14.0F * energy / 100, 14);
-        double xScale = 15 * progress / 100;
+        double xScale = 15D * progress / 100;
         if (xScale > 15) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+22, +54 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(+22, 54 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
 
 
-        drawTexturedModalRect(+64 + 1, +32, 177, 32, (int) xScale + 1, 15);
+        drawTexturedModalRect(64 + 1, +32, 177, 32, (int) xScale + 1, 15);
 
     }
 
@@ -77,7 +83,7 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
     public void setRecipe(
             final IRecipeLayout layout,
             final EnrichRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 10, 30); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true

@@ -22,6 +22,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.annotation.Nonnull;
+
 public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -31,27 +33,31 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
     public GenStoneCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIGenStone" +
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone" +
                         ".png"), 3, 3, 140,
                 75
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine.gen_stone.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.machines, 1, 7).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -66,7 +72,8 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
 
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+54 - 48, +33 + 14 - energylevel, 176,
+        drawTexturedModalRect(
+                54 - 48, +33 + 14 - energylevel, 176,
                 14 - energylevel, 14, energylevel
         );
         RenderHelper.enableGUIStandardItemLighting();
@@ -94,7 +101,7 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
     public void setRecipe(
             final IRecipeLayout layout,
             final GenStoneRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 34, 6); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true
@@ -110,7 +117,7 @@ public class GenStoneCategory extends Gui implements IRecipeCategory<GenStoneRec
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIGenStone.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png");
     }
 
 

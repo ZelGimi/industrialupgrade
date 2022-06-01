@@ -13,54 +13,54 @@ public class CannerRecipe {
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.proton, 1), 1),
-                IUItem.reactorprotonSimple
+                IUItem.reactorprotonSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 4), 1),
-                IUItem.reactortoriySimple
+                IUItem.reactortoriySimple, false
         );
 
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 0), 1),
-                IUItem.reactoramericiumSimple
+                IUItem.reactoramericiumSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 1), 1),
-                IUItem.reactorneptuniumSimple
+                IUItem.reactorneptuniumSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 2), 1),
-                IUItem.reactorcuriumSimple
+                IUItem.reactorcuriumSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 3), 1),
-                IUItem.reactorcaliforniaSimple
+                IUItem.reactorcaliforniaSimple, false
         );
 
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 5), 1),
-                IUItem.reactormendeleviumSimple
+                IUItem.reactormendeleviumSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 6), 1),
-                IUItem.reactorberkeliumSimple
+                IUItem.reactorberkeliumSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 7), 1),
-                IUItem.reactoreinsteiniumSimple
+                IUItem.reactoreinsteiniumSimple, false
         );
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(IUItem.radiationresources, 1, 8), 1),
-                IUItem.reactoruran233Simple
+                IUItem.reactoruran233Simple, false
         );
     }
 

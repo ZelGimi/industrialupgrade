@@ -2,7 +2,7 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.base.TileSunnariumMaker;
+import com.denfop.tiles.base.TileEntitySunnariumMaker;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 public enum BlockSunnariumPanelMaker implements ITeBlock, ITeBlockSpecialItem {
 
-    gen_sunnarium(TileSunnariumMaker.class, 0),
+    gen_sunnarium(TileEntitySunnariumMaker.class, 0),
 
     ;
 

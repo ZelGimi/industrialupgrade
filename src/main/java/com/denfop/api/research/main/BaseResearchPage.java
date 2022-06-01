@@ -1,6 +1,7 @@
 package com.denfop.api.research.main;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +10,21 @@ public class BaseResearchPage implements IResearchPages {
 
     public final String name;
     public final ItemStack stack;
+    public final int minLevel;
+    public final ResourceLocation background;
     List<IResearch> list = new ArrayList<>();
-    public BaseResearchPage(String name,ItemStack stack){
-        this.name=name;
-        this.stack=stack;
+
+    public BaseResearchPage(String name, ItemStack stack, int minLevel, ResourceLocation background) {
+        this.name = name;
+        this.stack = stack;
+        this.minLevel = minLevel;
+        this.background = background;
     }
 
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     @Override
@@ -28,17 +34,22 @@ public class BaseResearchPage implements IResearchPages {
 
     @Override
     public ItemStack getIcon() {
-        return null;
+        return this.stack;
     }
 
     @Override
     public int getMinLevel() {
-        return 0;
+        return this.minLevel;
     }
 
     @Override
     public boolean hasMinLevel() {
         return false;
+    }
+
+    @Override
+    public ResourceLocation getBackground() {
+        return this.background;
     }
 
 }

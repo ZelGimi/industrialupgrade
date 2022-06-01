@@ -21,7 +21,7 @@ public class ItemNugget extends ItemMulti<ItemNugget.Types> implements IModelReg
 
     public ItemNugget() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }

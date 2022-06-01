@@ -21,7 +21,7 @@ public abstract class AbstractReactorComponent extends ItemIC2 implements IReact
     protected AbstractReactorComponent(String name) {
         super(null);
         this.setNoRepair();
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.ReactorsTab);
         this.setUnlocalizedName(name);
         BlocksItems.registerItem(this, IUCore.getIdentifier(name));
         IUCore.proxy.addIModelRegister(this);
@@ -29,18 +29,17 @@ public abstract class AbstractReactorComponent extends ItemIC2 implements IReact
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
+    public static void registerModel(Item item, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
     @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
+    public static ModelResourceLocation getModelLocation(String name) {
 
-        loc.append("reactors").append("/").append(name);
-        return new ModelResourceLocation(loc.toString(), null);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "reactors" + "/" + name;
+        return new ModelResourceLocation(loc, null);
     }
 
     @Override
@@ -54,18 +53,14 @@ public abstract class AbstractReactorComponent extends ItemIC2 implements IReact
 
     @SideOnly(Side.CLIENT)
     public void registerModels(String name) {
-        this.registerModel(0, name, null);
+        this.registerModel(0, name);
     }
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name, null);
+        registerModel(this, meta, name);
     }
 
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name, extraName);
-    }
 
     public void processChamber(ItemStack stack, IReactor reactor, int x, int y, boolean heatrun) {
     }

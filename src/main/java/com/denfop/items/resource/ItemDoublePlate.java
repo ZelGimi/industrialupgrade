@@ -21,7 +21,7 @@ public class ItemDoublePlate extends ItemMulti<ItemDoublePlate.ItemDoublePlateTy
 
     public ItemDoublePlate() {
         super(null, ItemDoublePlateTypes.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }

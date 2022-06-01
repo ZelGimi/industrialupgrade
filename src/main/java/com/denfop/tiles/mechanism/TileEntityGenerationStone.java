@@ -1,9 +1,14 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerGenStone;
-import com.denfop.gui.GUIGenStone;
-import com.denfop.invslot.InvSlotProcessableStone;
+import com.denfop.gui.GuiGenStone;
+import com.denfop.utils.ModUtils;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
@@ -26,7 +31,7 @@ public class TileEntityGenerationStone extends TileEntityBaseGenStone {
 
     public TileEntityGenerationStone() {
         super(1, 100, 12);
-        this.inputSlotA = new InvSlotProcessableStone(this, "inputA", 2);
+        this.inputSlotA = new InvSlotRecipes(this, "genstone", this);
     }
 
     public static void init() {
@@ -40,12 +45,19 @@ public class TileEntityGenerationStone extends TileEntityBaseGenStone {
                 input.forStack(ItemName.cell.getItemStack(CellType.water)),
                 new ItemStack(Blocks.COBBLESTONE, 8)
         );
+        addGen(
+                input.forStack(ModUtils.getCellFromFluid("lava")),
+                input.forStack(ModUtils.getCellFromFluid("water")),
+                new ItemStack(Blocks.COBBLESTONE, 8)
+        );
 
     }
 
     public static void addGen(IRecipeInput container, IRecipeInput fill, ItemStack output) {
-        Recipes.GenStone.addRecipe(container, fill, output);
-        Recipes.GenStone.addRecipe(fill, container, output);
+        Recipes.recipes.addRecipe("genstone", new BaseMachineRecipe(
+                new Input(container, fill),
+                new RecipeOutput(null, output)
+        ));
     }
 
     public String getInventoryName() {
@@ -54,7 +66,7 @@ public class TileEntityGenerationStone extends TileEntityBaseGenStone {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIGenStone(new ContainerGenStone(entityPlayer, this));
+        return new GuiGenStone(new ContainerGenStone(entityPlayer, this));
     }
 
     public String getStartSoundFile() {
@@ -65,16 +77,6 @@ public class TileEntityGenerationStone extends TileEntityBaseGenStone {
         return "Machines/InterruptOne.ogg";
     }
 
-
-    @Override
-    public double getEnergy() {
-        return 0;
-    }
-
-    @Override
-    public boolean useEnergy(final double v) {
-        return false;
-    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
@@ -89,6 +91,21 @@ public class TileEntityGenerationStone extends TileEntityBaseGenStone {
     @Override
     public void onNetworkEvent(final int i) {
 
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.output;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.output = output;
     }
 
 }

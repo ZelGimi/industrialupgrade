@@ -11,11 +11,11 @@ import net.minecraft.util.ResourceLocation;
 import java.util.List;
 
 
-public class GUIMagnetGenerator extends GuiIC2<ContainerMagnetGenerator> {
+public class GuiMagnetGenerator extends GuiIC2<ContainerMagnetGenerator> {
 
     public final ContainerMagnetGenerator container;
 
-    public GUIMagnetGenerator(ContainerMagnetGenerator container1) {
+    public GuiMagnetGenerator(ContainerMagnetGenerator container1) {
         super(container1);
         this.container = container1;
 

@@ -2,8 +2,6 @@ package com.denfop.integration.jei.fquarry;
 
 
 import com.denfop.IUCore;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -53,13 +51,6 @@ public class FQuarryHandler {
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();

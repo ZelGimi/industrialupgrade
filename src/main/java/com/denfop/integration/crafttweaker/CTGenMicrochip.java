@@ -1,20 +1,20 @@
 package com.denfop.integration.crafttweaker;
 
 import com.blamejared.mtlib.utils.BaseAction;
-import com.denfop.api.IMicrochipFarbricatorRecipeManager;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import ic2.api.recipe.RecipeOutput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.Map;
 import java.util.Objects;
 
 @ZenClass("mods.industrialupgrade.GenMicrochip")
@@ -43,13 +43,66 @@ public class CTGenMicrochip {
         ));
     }
 
-    public static void removeRecipe(
-            IItemStack output
-    ) {
-        CraftTweakerAPI.apply(new Remove(
+    @ZenMethod
+    public static void removeRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new Remove(output));
+    }
 
-                output
-        ));
+    private static class Remove extends BaseAction {
+
+
+        private final IItemStack output;
+
+        public Remove(
+                IItemStack output
+        ) {
+            super("genmicrochip");
+            this.output = output;
+        }
+
+        public static ItemStack getItemStack(IItemStack item) {
+            if (item == null) {
+                return null;
+            } else {
+                Object internal = item.getInternal();
+                if (!(internal instanceof ItemStack)) {
+                    CraftTweakerAPI.logError("Not a valid item stack: " + item);
+                }
+                assert internal instanceof ItemStack;
+                return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
+            }
+        }
+
+        public void apply() {
+            Recipes.recipes.removeRecipe("microchip", new RecipeOutput(null, getItemStack(this.output)));
+        }
+
+        public String describe() {
+            return "removing recipe " + this.output;
+        }
+
+        public Object getOverrideKey() {
+            return null;
+        }
+
+        public int hashCode() {
+            int hash = 7;
+            hash = 67 * hash + ((this.output != null) ? this.output.hashCode() : 0);
+            return hash;
+        }
+
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            Remove other = (Remove) obj;
+
+            return Objects.equals(this.output, other.output);
+        }
+
     }
 
     private static class AddGenMicrochipIngredientAction extends BaseAction {
@@ -93,24 +146,22 @@ public class CTGenMicrochip {
                 if (!(internal instanceof ItemStack)) {
                     CraftTweakerAPI.logError("Not a valid item stack: " + item);
                 }
-
+                assert internal instanceof ItemStack;
                 return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
             }
         }
 
         public void apply() {
-            Recipes.GenerationMicrochip.addRecipe(
-
-                    new IC2RecipeInput(this.container),
-                    new IC2RecipeInput(this.fill),
-                    new IC2RecipeInput(this.fill1),
-                    new IC2RecipeInput(this.fill2),
-                    new IC2RecipeInput(this.fill3),
-
-
-                    getItemStack(this.output), this.nbt
-            );
-
+            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
+                    new Input(
+                            new IC2RecipeInput(this.container),
+                            new IC2RecipeInput(this.fill),
+                            new IC2RecipeInput(this.fill1),
+                            new IC2RecipeInput(this.fill2),
+                            new IC2RecipeInput(this.fill3)
+                    ),
+                    new RecipeOutput(this.nbt, getItemStack(this.output))
+            ));
         }
 
         public String describe() {
@@ -160,49 +211,5 @@ public class CTGenMicrochip {
 
     }
 
-    private static class Remove extends BaseAction {
-
-        private final Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes;
-        protected Remove(
-                IItemStack output
-        ) {
-
-
-            this(Recipes.GenerationMicrochip.getRecipe(getItemStack(output)));
-        }
-        public static ItemStack getItemStack(IItemStack item) {
-            if (item == null) {
-                return null;
-            } else {
-                Object internal = item.getInternal();
-                if (!(internal instanceof ItemStack)) {
-                    CraftTweakerAPI.logError("Not a valid item stack: " + item);
-                }
-
-                return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
-            }
-        }
-        protected Remove(Map<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> recipes) {
-            super("genmicrochip");
-            this.recipes = recipes;
-        }
-
-        protected String getRecipeInfo() {
-            return recipes.toString();
-        }
-
-
-        @Override
-        public void apply() {
-            for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> iRecipeInputRecipeOutputEntry : recipes.entrySet()) {
-                Recipes.GenerationMicrochip.getRecipes().remove(
-                        iRecipeInputRecipeOutputEntry.getKey(),
-                        iRecipeInputRecipeOutputEntry.getValue()
-                );
-            }
-        }
-
-
-    }
 
 }

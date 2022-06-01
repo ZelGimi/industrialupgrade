@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.container.ContainerMultiMatter;
-import com.denfop.gui.GUIMultiMatter;
+import com.denfop.gui.GuiMultiMatter;
 import ic2.api.energy.tile.IExplosionPowerOverride;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipeResult;
@@ -23,7 +23,6 @@ import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotProcessable;
 import ic2.core.block.invslot.InvSlotUpgrade;
-import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.init.MainConfig;
 import ic2.core.network.GuiSynced;
 import ic2.core.profile.NotClassic;
@@ -38,7 +37,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -48,7 +46,7 @@ import java.util.Set;
 public abstract class TileEntityMultiMatter extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock,
         IExplosionPowerOverride {
 
-   public final InvSlotUpgrade upgradeSlot;
+    public final InvSlotUpgrade upgradeSlot;
     public final InvSlotProcessable<IRecipeInput, Integer, ItemStack> amplifierSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
@@ -66,7 +64,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
     private AudioSource audioSourceScrap;
 
     public TileEntityMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy) {
-        super(Math.round(maxtempEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor")), 3);
+        super(Math.round(maxtempEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor")), 3, 1);
         this.amplifierSlot = new InvSlotProcessable<IRecipeInput, Integer, ItemStack>(this, "scrap", 1, Recipes.matterAmplifier) {
             protected ItemStack getInput(ItemStack stack) {
                 return stack;
@@ -103,13 +101,6 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
-    @Nonnull
-    @Override
-    public String getName() {
-        return getInventoryName();
-    }
-
-    public abstract String getInventoryName();
 
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -173,10 +164,9 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
                 needsInvUpdate = this.attemptGeneration();
             }
 
-
-
-
-            needsInvUpdate |= this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
+            if (!needsInvUpdate) {
+                needsInvUpdate = this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
+            }
             this.lastEnergy = this.energy.getEnergy();
             if (needsInvUpdate) {
                 this.markDirty();
@@ -212,7 +202,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIMultiMatter(new ContainerMultiMatter(entityPlayer, this));
+        return new GuiMultiMatter(new ContainerMultiMatter(entityPlayer, this));
     }
 
     public void onGuiClosed(EntityPlayer player) {

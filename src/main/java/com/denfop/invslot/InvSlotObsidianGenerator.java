@@ -1,8 +1,8 @@
 package com.denfop.invslot;
 
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.tiles.base.TileEntityObsidianGenerator;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.item.upgrade.ItemUpgradeModule;
 import net.minecraft.item.ItemStack;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public class InvSlotObsidianGenerator extends InvSlotProcessable {
 
-    public InvSlotObsidianGenerator(TileEntityInventory base1, String name1, int oldStartIndex1, int count) {
-        super(base1, name1, null, count);
+    public InvSlotObsidianGenerator(TileEntityInventory base1, String name1, int count) {
+        super(base1, name1, count);
 
     }
 
     public boolean accepts(ItemStack itemStack) {
-        return itemStack == null || !(itemStack.getItem() instanceof ItemUpgradeModule);
+        return itemStack.isEmpty() || !(itemStack.getItem() instanceof ItemUpgradeModule);
 
     }
 
@@ -36,10 +36,7 @@ public class InvSlotObsidianGenerator extends InvSlotProcessable {
     public RecipeOutput process() {
         FluidStack input = ((TileEntityObsidianGenerator) this.base).fluidTank2.getFluid();
         FluidStack input1 = ((TileEntityObsidianGenerator) this.base).fluidTank1.getFluid();
-        if (input == null) {
-            return null;
-        }
-        if (input1 == null) {
+        if (input == null || input1 == null) {
             return null;
         }
         RecipeOutput output = getOutputFor(input1, input, false);

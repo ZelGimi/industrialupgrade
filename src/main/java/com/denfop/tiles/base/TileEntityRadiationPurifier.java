@@ -22,7 +22,7 @@ public class TileEntityRadiationPurifier extends TileEntityElectricMachine
 
 
     public TileEntityRadiationPurifier() {
-        super("", 50000, 14, 1);
+        super(50000, 14, 1);
         this.type = 1;
     }
 

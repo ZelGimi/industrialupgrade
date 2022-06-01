@@ -5,9 +5,14 @@ import com.denfop.Ic2Items;
 import com.denfop.api.ITemperature;
 import com.denfop.api.Recipes;
 import com.denfop.api.heat.IHeatEmitter;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerBaseGenerationChipMachine;
-import com.denfop.gui.GUIGenerationMicrochip;
-import com.denfop.invslot.InvSlotProcessableGenerationMicrochip;
+import com.denfop.gui.GuiGenerationMicrochip;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.tiles.base.TileEntityBaseGenerationMicrochip;
 import com.denfop.tiles.base.TileEntityElectricMachine;
@@ -20,6 +25,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,19 +35,20 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicrochip {
+public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicrochip implements IUpdateTick {
+
+    private boolean auto;
 
     public TileEntityGenerationMicrochip() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotProcessableGenerationMicrochip(this, "inputA", 5
-        );
-
+        this.inputSlotA = new InvSlotRecipes(this, "microchip", this);
+        this.auto = false;
     }
 
     public static void init() {
         add(new ItemStack(Items.FLINT), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.IRON_INGOT),
                 new ItemStack(IUItem.iuingot, 1
-                        , 11), new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.basecircuit), false
+                        , 11), new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.basecircuit), (short) 2000, false
         );
         add(
                 new ItemStack(IUItem.iuingot, 1, 1),
@@ -50,7 +57,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.iuingot, 1, 7),
                 new ItemStack(IUItem.iuingot, 1, 14),
                 new ItemStack(IUItem.basecircuit, 1, 1),
-                true
+                (short) 3000, true
         );
 
         add(
@@ -60,7 +67,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.iuingot, 1, 0),
                 new ItemStack(IUItem.iuingot, 1, 5),
                 new ItemStack(IUItem.basecircuit, 1, 2),
-                true
+                (short) 4000, true
         );
         add(
                 new ItemStack(IUItem.iuingot, 1, 18),
@@ -69,18 +76,30 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.iuingot, 1, 0),
                 new ItemStack(IUItem.iuingot, 1, 5),
                 new ItemStack(IUItem.basecircuit, 1, 2),
+                (short) 4000, true
+        );
+
+
+        add(
+                new ItemStack(IUItem.iuingot, 1, 2),
+                new ItemStack(IUItem.iuingot, 1, 3),
+                new ItemStack(IUItem.basecircuit, 1, 0),
+                new ItemStack(IUItem.basecircuit, 1, 3),
+                new ItemStack(IUItem.basecircuit, 1, 6),
+                new ItemStack(IUItem.basecircuit, 1, 9),
+                (short) 2000,
                 true
         );
 
-
-        add(new ItemStack(IUItem.iuingot, 1, 2), new ItemStack(IUItem.iuingot, 1, 3), new ItemStack(IUItem.basecircuit, 1, 0),
-                new ItemStack(IUItem.basecircuit, 1, 3), new ItemStack(IUItem.basecircuit, 1, 6),
-                new ItemStack(IUItem.basecircuit, 1, 9), true
-        );
-
-        add(new ItemStack(IUItem.iuingot, 1, 8), new ItemStack(IUItem.iuingot, 1, 6), new ItemStack(IUItem.basecircuit, 1, 1),
-                new ItemStack(IUItem.basecircuit, 1, 4), new ItemStack(IUItem.basecircuit, 1, 7),
-                new ItemStack(IUItem.basecircuit, 1, 10), true
+        add(
+                new ItemStack(IUItem.iuingot, 1, 8),
+                new ItemStack(IUItem.iuingot, 1, 6),
+                new ItemStack(IUItem.basecircuit, 1, 1),
+                new ItemStack(IUItem.basecircuit, 1, 4),
+                new ItemStack(IUItem.basecircuit, 1, 7),
+                new ItemStack(IUItem.basecircuit, 1, 10),
+                (short) 3000,
+                true
         );
         add(
                 new ItemStack(IUItem.iuingot, 1, 2),
@@ -89,7 +108,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.basecircuit, 1, 5),
                 new ItemStack(IUItem.basecircuit, 1, 8),
                 new ItemStack(IUItem.basecircuit, 1, 11),
-                true
+                (short) 4000, true
         );
         add(new ItemStack(Items.GLOWSTONE_DUST),
                 new ItemStack(Items.DYE, 1, 4),
@@ -97,7 +116,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 new ItemStack(IUItem.basecircuit, 1, 13),
                 new ItemStack(IUItem.basecircuit, 1, 14),
                 Ic2Items.advancedCircuit,
-                false
+                (short) 1000, false
         );
         add(
                 new ItemStack(Items.FLINT),
@@ -118,6 +137,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
             ItemStack four,
             ItemStack five,
             ItemStack output,
+            short temperatures,
             boolean check
     ) {
         IRecipeInput first1;
@@ -127,7 +147,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
         IRecipeInput five1;
 
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 4500);
+        nbt.setShort("temperature", temperatures);
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
         if (check) {
             if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
@@ -165,20 +185,27 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
             } else {
                 five1 = input.forStack(five);
             }
-            Recipes.GenerationMicrochip.addRecipe(first1, second1, three1, four1, five1, output, nbt);
-        } else {
-            Recipes.GenerationMicrochip.addRecipe(
-                    input.forStack(first),
-                    input.forStack(second),
-                    input.forStack(three),
-                    input.forStack(four),
-                    input.forStack(five),
-                    output,
-                    nbt
+            Recipes.recipes.addRecipe(
+                    "microchip",
+                    new BaseMachineRecipe(
+                            new Input(first1, second1, three1, four1, five1),
+                            new RecipeOutput(nbt, output)
+                    )
             );
-
+        } else {
+            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
+                    new Input(
+                            input.forStack(first),
+                            input.forStack(second),
+                            input.forStack(three),
+                            input.forStack(four),
+                            input.forStack(five)
+                    ),
+                    new RecipeOutput(nbt, output)
+            ));
         }
     }
+
     public static void add(
             String first,
             ItemStack second,
@@ -227,20 +254,29 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
             } else {
                 five1 = input.forStack(five);
             }
-            Recipes.GenerationMicrochip.addRecipe(first1, second1, three1, four1, five1, output, nbt);
-        } else {
-            Recipes.GenerationMicrochip.addRecipe(
-                    input.forOreDict(first),
-                    input.forStack(second),
-                    input.forStack(three),
-                    input.forStack(four),
-                    input.forStack(five),
-                    output,
-                    nbt
+            Recipes.recipes.addRecipe(
+                    "microchip",
+                    new BaseMachineRecipe(
+                            new Input(first1, second1, three1, four1, five1),
+                            new RecipeOutput(nbt, output)
+                    )
             );
+        } else {
+            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
+                    new Input(
+                            input.forOreDict(first),
+                            input.forStack(second),
+                            input.forStack(three),
+                            input.forStack(four),
+                            input.forStack(five)
+                    ),
+                    new RecipeOutput(nbt, output)
+            ));
+
 
         }
     }
+
     public static void add(
             ItemStack first,
             ItemStack second,
@@ -257,7 +293,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
         IRecipeInput five1;
 
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setShort("temperature", (short) 4500);
+        nbt.setShort("temperature", (short) 1000);
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
         if (check) {
             if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
@@ -289,20 +325,64 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
             } else {
                 five1 = input.forStack(five);
             }
-            Recipes.GenerationMicrochip.addRecipe(first1, second1, three1, four1, five1, output, nbt);
-        } else {
-            Recipes.GenerationMicrochip.addRecipe(
-                    input.forStack(first),
-                    input.forStack(second),
-                    input.forStack(three),
-                    input.forOreDict(four),
-                    input.forStack(five),
-                    output,
-                    nbt
+            Recipes.recipes.addRecipe(
+                    "microchip",
+                    new BaseMachineRecipe(
+                            new Input(first1, second1, three1, four1, five1),
+                            new RecipeOutput(nbt, output)
+                    )
             );
+        } else {
+            Recipes.recipes.addRecipe(
+                    "microchip",
+                    new BaseMachineRecipe(
+                            new Input(
+                                    input.forStack(first),
+                                    input.forStack(second),
+                                    input.forStack(three),
+                                    input.forOreDict(four),
+                                    input.forStack(five)
+                            ),
+                            new RecipeOutput(nbt, output)
+                    )
+            );
+
 
         }
     }
+
+    @Override
+    protected boolean onActivated(
+            final EntityPlayer player,
+            final EnumHand hand,
+            final EnumFacing side,
+            final float hitX,
+            final float hitY,
+            final float hitZ
+    ) {
+        final ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
+            this.auto = true;
+            stack.shrink(1);
+        }
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.output;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.output = output;
+    }
+
     public String getInventoryName() {
 
         return "Generation Microchip";
@@ -310,7 +390,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIGenerationMicrochip(new ContainerBaseGenerationChipMachine(entityPlayer, this));
+        return new GuiGenerationMicrochip(new ContainerBaseGenerationChipMachine(entityPlayer, this));
     }
 
     public String getStartSoundFile() {
@@ -362,7 +442,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
     }
 
     @Override
-    public boolean reveiver() {
+    public boolean receiver() {
         return true;
     }
 
@@ -373,17 +453,42 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
 
     @Override
     public double getDemandedHeat() {
-        return Math.max(0.0D, this.maxtemperature - this.temperature);
+        return Math.max(0.0D, this.maxtemperature);
     }
 
     public void setHeatStored(double amount) {
-        this.temperature = (short) amount;
+        if (this.temperature < amount) {
+            this.temperature = (short) amount;
+        }
+    }
+
+    public void readFromNBT(NBTTagCompound nbttagcompound) {
+        super.readFromNBT(nbttagcompound);
+        this.temperature = nbttagcompound.getShort("temperature");
+        this.auto = nbttagcompound.getBoolean("auto");
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
+        super.writeToNBT(nbttagcompound);
+        nbttagcompound.setShort("temperature", this.temperature);
+        nbttagcompound.setBoolean("auto", this.auto);
+        return nbttagcompound;
     }
 
     @Override
     public double injectHeat(final EnumFacing var1, final double var2, final double var4) {
-        this.setHeatStored(this.getTemperature() + var2);
+        this.setHeatStored(var2);
         return 0.0D;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.auto) {
+            if (this.temperature + 2 <= this.maxtemperature) {
+                this.temperature += 2;
+            }
+        }
     }
 
     @Override

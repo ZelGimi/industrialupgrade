@@ -5,7 +5,6 @@ import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.container.ContainerHandlerHeavyOre;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,11 +18,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
+public class GuiHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
 
     public final ContainerHandlerHeavyOre container;
 
-    public GUIHandlerHeavyOre(ContainerHandlerHeavyOre container1) {
+    public GuiHandlerHeavyOre(ContainerHandlerHeavyOre container1) {
         super(container1);
         this.container = container1;
     }
@@ -35,15 +34,16 @@ public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
                         this.container.base.getMaxTemperature()) + "°C")
                 .drawForeground(par1, par2);
 
-        final RecipeOutput output = this.container.base.inputSlotA.process();
-        if (output != null) {
-            if (!Recipes.mechanism.hasHeaters(this.container.base) && this.container.base.getTemperature() < output.metadata.getShort(
-                    "temperature")) {
-                new AdvArea(this, 33, 50, 51, 68)
-                        .withTooltip(Localization.translate("iu.needheaters"))
-                        .drawForeground(par1, par2);
-            }
-        }
+
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 26, 56, 37, 71)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
 
     }
 
@@ -59,6 +59,12 @@ public class GUIHandlerHeavyOre extends GuiIC2<ContainerHandlerHeavyOre> {
         int temperature = 38 * this.container.base.getTemperature() / this.container.base.getMaxTemperature();
         if (temperature > 0) {
             drawTexturedModalRect(this.guiLeft + 51, this.guiTop + 52, 176, 50, temperature + 1, 11);
+        }
+        int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
+        if (chargeLevel > 0) {
+            drawTexturedModalRect(this.guiLeft + 25, this.guiTop + 57 + 14 - chargeLevel, 176, 14 - chargeLevel,
+                    14, chargeLevel
+            );
         }
         if (this.container.base.inputSlotA.process() != null) {
             if (!Recipes.mechanism.hasHeaters(this.container.base)) {

@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerAnalyzer;
-import com.denfop.gui.GUIAnalyzer;
+import com.denfop.gui.GuiAnalyzer;
 import com.denfop.invslot.InvSlotAnalyzer;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
@@ -30,6 +30,9 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
     public final InvSlotAnalyzer inputslot;
     public final InvSlotAnalyzer inputslotA;
+    public boolean furnace;
+    public int lucky;
+    public int size;
     public int breakblock;
     public int numberores;
     public double sum;
@@ -54,12 +57,16 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
     public int zendcoord;
     public boolean start = true;
     public AudioSource audioSource;
+    public boolean quarry;
+    public List<String> blacklist;
+    public List<String> whitelist;
     List<Integer> y1;
-    private boolean quarry;
+    private int chunkx;
+    private int chunkz;
     private int y;
 
     public TileEntityAnalyzer() {
-        super("", 100000, 14, 1);
+        super(100000, 14, 1);
         this.listore = new ArrayList<>();
 
         this.listnumberore = new ArrayList<>();
@@ -75,6 +82,23 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         this.inputslotA = new InvSlotAnalyzer(this, "input1", 1, 1);
         this.y1 = new ArrayList<>();
         this.y = 257;
+        this.blacklist = new ArrayList<>();
+        this.whitelist = new ArrayList<>();
+        this.furnace = false;
+        this.lucky = 0;
+        this.size = 0;
+        this.chunkx = 0;
+        this.chunkz = 0;
+    }
+
+    public void update_chunk() {
+        this.chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
+        this.chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
+        int size = this.size;
+        this.xChunk = chunkx - 16 * size;
+        this.zChunk = chunkz - 16 * size;
+        this.xendChunk = chunkx + 16 + 16 * size;
+        this.zendChunk = chunkz + 16 + 16 * size;
     }
 
     public double getProgress() {
@@ -158,13 +182,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-        int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
-        int size = this.inputslot.getChunksize();
-        this.xChunk = chunkx - 16 * size;
-        this.zChunk = chunkz - 16 * size;
-        this.xendChunk = chunkx + 16 + 16 * size;
-        this.zendChunk = chunkz + 16 + 16 * size;
+
         if (this.analysis) {
             analyze();
         }
@@ -208,20 +226,21 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
 
         if (this.y >= 257 && this.start) {
-            int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-            int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
             this.y = 0;
             this.breakblock = 0;
             this.numberores = 0;
             this.sum = 0;
             this.sum1 = 0;
-            setActive(true);
+            if (!this.getActive()) {
+                initiate(0);
+                setActive(true);
+            }
             this.yore = new ArrayList<>();
             this.listore = new ArrayList<>();
             this.listnumberore = new ArrayList<>();
             this.y1 = new ArrayList<>();
             this.middleheightores = new ArrayList<>();
-            int size = this.inputslot.getChunksize();
+            int size = this.size;
             int size1 = size * 2 + 1;
             this.xTempChunk = chunkx - 16 * size;
             this.zTempChunk = chunkz - 16 * size;
@@ -229,8 +248,8 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
             this.chunksz = new int[size1][size1];
             this.xcoord = 0;
             this.zcoord = 0;
-            xendcoord = size1;
-            zendcoord = size1;
+            this.xendcoord = size1;
+            this.zendcoord = size1;
             for (int i = 0; i < size1; i++) {
                 for (int j = 0; j < size1; j++) {
                     int m1 = 1;
@@ -241,8 +260,6 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                     if (j < size) {
                         m2 = -1;
                     }
-                    m1 = i == size1 ? 0 : m1;
-                    m2 = j == size1 ? 0 : m2;
                     this.chunksx[i][j] = chunkx + 16 * i * m1;
                     this.chunksz[i][j] = chunkz + 16 * j * m2;
                 }
@@ -256,8 +273,8 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         }
         int tempx = this.chunksx[this.xcoord][this.zcoord];
         int tempz = this.chunksz[this.xcoord][this.zcoord];
-        List<String> blacklist = this.inputslot.getblacklist();
-        List<String> whitelist = this.inputslot.getwhitelist();
+        List<String> blacklist = this.blacklist;
+        List<String> whitelist = this.whitelist;
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
             for (int x = tempx; x < tempx + 16; x++) {
                 for (int z = tempz; z < tempz + 16; z++) {
@@ -266,7 +283,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                             break;
                         }
                         this.energy.useEnergy(1);
-                        initiate(0);
+
                         if (!this.getWorld().isAirBlock(new BlockPos(x, yy, z))) {
                             if (!this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock().equals(Blocks.AIR)) {
                                 this.breakblock++;
@@ -274,89 +291,93 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                 ItemStack stack = new ItemStack(block, 1,
                                         block.getMetaFromState(this.getWorld().getBlockState(new BlockPos(x, yy, z)))
                                 );
+                                if (!stack.isEmpty()) {
+                                    if ((this
+                                            .getWorld()
+                                            .getBlockState(new BlockPos(x, yy, z))
+                                            .getMaterial() == Material.IRON || this
+                                            .getWorld()
+                                            .getBlockState(new BlockPos(x, yy, z))
+                                            .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
 
-                                if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
-                                        .getWorld()
-                                        .getBlockState(new BlockPos(x, yy, z))
-                                        .getMaterial() == Material.ROCK)&& !stack.isEmpty() && OreDictionary.getOreIDs(stack).length > 0) {
 
+                                        int id = OreDictionary.getOreIDs(stack)[0];
+                                        String name = OreDictionary.getOreName(id);
+                                        if (name.startsWith("ore")) {
+                                            if (!this.inputslot.CheckBlackList(
+                                                    blacklist,
+                                                    name
+                                            ) && this.inputslot.CheckWhiteList(whitelist, name)) {
 
-                                    int id = OreDictionary.getOreIDs(stack)[0];
-                                    String name = OreDictionary.getOreName(id);
-                                    if (name.startsWith("ore")) {
-                                        if (!this.inputslot.CheckBlackList(
-                                                blacklist,
-                                                name
-                                        ) && this.inputslot.CheckWhiteList(whitelist, name)) {
+                                                if (this.listore.isEmpty()) {
+                                                    this.listore.add(name);
+                                                    this.listnumberore.add(1);
+                                                    this.yore.add(yy);
+                                                    this.y1.add(yy);
+                                                    this.numberores = this.listore.size();
+                                                    this.listnumberore1 = new int[this.listnumberore.size()];
+                                                    for (int i = 0; i < this.listnumberore.size(); i++) {
+                                                        this.listnumberore1[i] = this.listnumberore.get(i);
+                                                    }
 
-                                            if (listore.isEmpty()) {
-                                                listore.add(name);
-                                                listnumberore.add(1);
-                                                yore.add(yy);
-                                                this.y1.add(yy);
-                                                this.numberores = listore.size();
-                                                listnumberore1 = new int[listnumberore.size()];
-                                                for (int i = 0; i < listnumberore.size(); i++) {
-                                                    listnumberore1[i] = listnumberore.get(i);
+                                                    this.sum = ModUtils.getsum1(this.listnumberore) - this.listnumberore.size();
+                                                    this.sum1 = ModUtils.getsum1(this.y1);
+                                                    this.middleheightores = new ArrayList<>();
+                                                    for (int i = 0; i < this.listore.size(); i++) {
+                                                        this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
+                                                                i)));
+                                                    }
+
                                                 }
 
-                                                this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
-                                                this.sum1 = ModUtils.getsum1(this.y1);
-                                                this.middleheightores = new ArrayList<>();
-                                                for (int i = 0; i < this.listore.size(); i++) {
-                                                    this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
-                                                            i)));
+                                                if (!this.listore.contains(name)) {
+
+
+                                                    this.listore.add(name);
+                                                    this.listnumberore.add(1);
+                                                    this.yore.add(yy);
+                                                    this.y1.add(yy);
+                                                    this.numberores = this.listore.size();
+                                                    this.listnumberore1 = new int[this.listnumberore.size()];
+                                                    for (int i = 0; i < this.listnumberore.size(); i++) {
+                                                        this.listnumberore1[i] = this.listnumberore.get(i);
+                                                    }
+
+                                                    this.sum = ModUtils.getsum1(this.listnumberore) - this.listnumberore.size();
+                                                    this.sum1 = ModUtils.getsum1(this.y1);
+                                                    this.middleheightores = new ArrayList<>();
+                                                    for (int i = 0; i < this.listore.size(); i++) {
+                                                        this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
+                                                                i)));
+                                                    }
+
                                                 }
+                                                if (listore.contains(name)) {
+                                                    yore.set(listore.indexOf(name), yore.get(listore.indexOf(name)) + yy);
+
+                                                    this.listnumberore.set(
+                                                            listore.indexOf(name),
+                                                            listnumberore.get(listore.indexOf(name)) + 1
+                                                    );
+                                                    this.y1.add(yy);
+                                                    this.numberores = listore.size();
+                                                    this.listnumberore1 = new int[this.listnumberore.size()];
+                                                    for (int i = 0; i < this.listnumberore.size(); i++) {
+                                                        this.listnumberore1[i] = this.listnumberore.get(i);
+                                                    }
+
+                                                    this.sum = ModUtils.getsum1(this.listnumberore) - this.listnumberore.size();
+                                                    this.sum1 = ModUtils.getsum1(this.y1);
+                                                    this.middleheightores = new ArrayList<>();
+                                                    for (int i = 0; i < this.listore.size(); i++) {
+                                                        this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
+                                                                i)));
+                                                    }
+
+                                                }
+
 
                                             }
-
-                                            if (!listore.contains(name)) {
-
-
-                                                listore.add(name);
-                                                listnumberore.add(1);
-                                                yore.add(yy);
-                                                this.y1.add(yy);
-                                                this.numberores = listore.size();
-                                                listnumberore1 = new int[listnumberore.size()];
-                                                for (int i = 0; i < listnumberore.size(); i++) {
-                                                    listnumberore1[i] = listnumberore.get(i);
-                                                }
-
-                                                this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
-                                                this.sum1 = ModUtils.getsum1(this.y1);
-                                                this.middleheightores = new ArrayList<>();
-                                                for (int i = 0; i < this.listore.size(); i++) {
-                                                    this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
-                                                            i)));
-                                                }
-
-                                            }
-                                            if (listore.contains(name)) {
-                                                yore.set(listore.indexOf(name), yore.get(listore.indexOf(name)) + yy);
-
-                                                listnumberore.set(
-                                                        listore.indexOf(name),
-                                                        listnumberore.get(listore.indexOf(name)) + 1
-                                                );
-                                                this.y1.add(yy);
-                                                this.numberores = listore.size();
-                                                listnumberore1 = new int[listnumberore.size()];
-                                                for (int i = 0; i < listnumberore.size(); i++) {
-                                                    listnumberore1[i] = listnumberore.get(i);
-                                                }
-
-                                                this.sum = ModUtils.getsum1(listnumberore) - listnumberore.size();
-                                                this.sum1 = ModUtils.getsum1(this.y1);
-                                                this.middleheightores = new ArrayList<>();
-                                                for (int i = 0; i < this.listore.size(); i++) {
-                                                    this.middleheightores.add((this.yore.get(i) / (double) this.listnumberore.get(
-                                                            i)));
-                                                }
-
-                                            }
-
-
                                         }
                                     }
                                 }
@@ -387,8 +408,8 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
             if (xcoord == xendcoord && zcoord == zendcoord) {
                 this.analysis = false;
                 this.setActive(false);
-                xTempChunk = this.chunksx[this.xcoord - 1][this.zcoord - 1];
-                zTempChunk = this.chunksz[this.xcoord - 1][this.zcoord - 1];
+                this.xTempChunk = this.chunksx[this.xcoord - 1][this.zcoord - 1];
+                this.zTempChunk = this.chunksz[this.xcoord - 1][this.zcoord - 1];
                 this.y = 257;
                 this.start = true;
                 this.middleheightores = new ArrayList<>();
@@ -402,15 +423,16 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
     public void quarry(TileEntityBaseQuantumQuarry target1) {
         if (this.y >= 257 && this.start) {
-            int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-            int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
             this.y = 0;
             this.breakblock = 0;
             this.numberores = 0;
             this.sum = 0;
             this.sum1 = 0;
-            setActive(true);
-            int size = this.inputslot.getChunksize();
+            if (!this.getActive()) {
+                initiate(0);
+                setActive(true);
+            }
+            int size = this.size;
             int size1 = size * 2 + 1;
             this.xTempChunk = chunkx - 16 * size;
             this.zTempChunk = chunkz - 16 * size;
@@ -418,8 +440,8 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
             this.chunksz = new int[size1][size1];
             this.xcoord = 0;
             this.zcoord = 0;
-            xendcoord = size1;
-            zendcoord = size1;
+            this.xendcoord = size1;
+            this.zendcoord = size1;
             for (int i = 0; i < size1; i++) {
                 for (int j = 0; j < size1; j++) {
                     int m1 = 1;
@@ -430,8 +452,6 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                     if (j < size) {
                         m2 = -1;
                     }
-                    m1 = i == size1 ? 0 : m1;
-                    m2 = j == size1 ? 0 : m2;
                     this.chunksx[i][j] = chunkx + 16 * i * m1;
                     this.chunksz[i][j] = chunkz + 16 * j * m2;
                 }
@@ -445,8 +465,8 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         }
         int tempx = this.chunksx[this.xcoord][this.zcoord];
         int tempz = this.chunksz[this.xcoord][this.zcoord];
-        List<String> blacklist = this.inputslot.getblacklist();
-        List<String> whitelist = this.inputslot.getwhitelist();
+        List<String> blacklist = this.blacklist;
+        List<String> whitelist = this.whitelist;
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
             for (int x = tempx; x < tempx + 16; x++) {
                 for (int z = tempz; z < tempz + 16; z++) {
@@ -455,7 +475,6 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                             break;
                         }
                         this.energy.useEnergy(1);
-                        initiate(0);
                         if (!this.getWorld().isAirBlock(new BlockPos(x, yy, z))) {
                             if (!this.getWorld().getBlockState(new BlockPos(x, yy, z)).getBlock().equals(Blocks.AIR)) {
                                 this.breakblock++;
@@ -463,49 +482,42 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                 ItemStack stack = new ItemStack(block, 1,
                                         block.getMetaFromState(this.getWorld().getBlockState(new BlockPos(x, yy, z)))
                                 );
+                                if (!stack.isEmpty()) {
+                                    if ((this
+                                            .getWorld()
+                                            .getBlockState(new BlockPos(x, yy, z))
+                                            .getMaterial() == Material.IRON || this
+                                            .getWorld()
+                                            .getBlockState(new BlockPos(x, yy, z))
+                                            .getMaterial() == Material.ROCK) && OreDictionary.getOreIDs(stack).length > 0) {
+                                        int id = OreDictionary.getOreIDs(stack)[0];
+                                        String name = OreDictionary.getOreName(id);
+                                        if (name.startsWith("ore")) {
+                                            if (!(!this.inputslot.CheckBlackList(
+                                                    blacklist,
+                                                    name
+                                            ) && this.inputslot.CheckWhiteList(
+                                                    whitelist,
+                                                    name
+                                            ))) {
+                                                continue;
+                                            }
+                                            double energycost = this.inputslot.getenergycost(target1);
+                                            String temp = name.substring(3);
 
-                                if ((this.getWorld().getBlockState(new BlockPos(x, yy, z)).getMaterial() == Material.IRON || this
-                                        .getWorld()
-                                        .getBlockState(new BlockPos(x, yy, z))
-                                        .getMaterial() == Material.ROCK) && !stack.isEmpty()&& OreDictionary.getOreIDs(stack).length > 0) {
-                                    int id = OreDictionary.getOreIDs(stack)[0];
-                                    String name = OreDictionary.getOreName(id);
-                                    if (name.startsWith("ore")) {
-                                        if (!(!this.inputslot.CheckBlackList(blacklist, name) && this.inputslot.CheckWhiteList(
-                                                whitelist,
-                                                name
-                                        ))) {
-                                            continue;
-                                        }
-                                        double energycost = this.inputslot.getenergycost(target1);
-                                        String temp = name.substring(3);
+                                            if (temp.startsWith("Infused")) {
+                                                temp = name.substring("Infused".length() + 3);
+                                            }
 
-                                        if (temp.startsWith("Infused")) {
-                                            temp = name.substring("Infused".length() + 3);
-                                        }
+                                            if (!name.equals("oreRedstone") && (OreDictionary.getOres("gem" + temp) == null || OreDictionary
+                                                    .getOres("gem" + temp)
+                                                    .size() < 1) && (OreDictionary.getOres("shard" + temp) == null || OreDictionary
+                                                    .getOres("shard" + temp)
+                                                    .size() < 1)) {
 
-                                        if (!name.equals("oreRedstone") && (OreDictionary.getOres("gem" + temp) == null || OreDictionary
-                                                .getOres("gem" + temp)
-                                                .size() < 1) && (OreDictionary.getOres("shard" + temp) == null || OreDictionary
-                                                .getOres("shard" + temp)
-                                                .size() < 1)) {
-
-                                            boolean furnace = this.inputslot.getFurnaceModule();
-                                            if (!furnace) {
-                                                if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
-                                                    if (target1.energy.getEnergy() >= energycost &&
-                                                            target1.outputSlot.canAdd(stack)) {
-                                                        target1.outputSlot.add(stack);
-                                                        this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
-                                                        target1.energy.useEnergy(energycost);
-                                                        target1.getblock++;
-                                                    }
-                                                }
-                                            } else {
-                                                temp = name.substring(3);
-                                                temp = "ingot" + temp;
-                                                if (OreDictionary.getOres(temp).isEmpty()) {
-                                                    if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
+                                                boolean furnace = this.furnace;
+                                                if (!furnace) {
+                                                    if (!target1.list(target1, stack)) {
                                                         if (target1.energy.getEnergy() >= energycost &&
                                                                 target1.outputSlot.canAdd(stack)) {
                                                             target1.outputSlot.add(stack);
@@ -515,51 +527,65 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                                         }
                                                     }
                                                 } else {
+                                                    temp = name.substring(3);
+                                                    temp = "ingot" + temp;
+                                                    if (OreDictionary.getOres(temp).isEmpty()) {
+                                                        if (!target1.list(target1, stack)) {
+                                                            if (target1.energy.getEnergy() >= energycost &&
+                                                                    target1.outputSlot.canAdd(stack)) {
+                                                                target1.outputSlot.add(stack);
+                                                                this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
+                                                                target1.energy.useEnergy(energycost);
+                                                                target1.getblock++;
+                                                            }
+                                                        }
+                                                    } else {
 
-                                                    ItemStack stack1 = OreDictionary.getOres(temp).get(0);
-                                                    if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
-                                                        if (target1.energy.getEnergy() >= energycost &&
-                                                                target1.outputSlot.canAdd(stack1)) {
-                                                            target1.outputSlot.add(stack1);
-                                                            this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
-                                                            target1.energy.useEnergy(energycost);
-                                                            target1.getblock++;
+                                                        ItemStack stack1 = OreDictionary.getOres(temp).get(0);
+                                                        if (!target1.list(target1, stack)) {
+                                                            if (target1.energy.getEnergy() >= energycost &&
+                                                                    target1.outputSlot.canAdd(stack1)) {
+                                                                target1.outputSlot.add(stack1);
+                                                                this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
+                                                                target1.energy.useEnergy(energycost);
+                                                                target1.getblock++;
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        } else {
-                                            ItemStack gem = null;
+                                            } else {
+                                                ItemStack gem = null;
 
-                                            if (OreDictionary.getOres("gem" + temp).size() != 0) {
-                                                gem = OreDictionary.getOres("gem" + temp).get(0);
-                                            } else if (OreDictionary.getOres("shard" + temp).size() != 0) {
-                                                gem = OreDictionary.getOres("shard" + temp).get(0);
-                                            } else if (OreDictionary.getOres("dust" + temp).size() != 0) {
-                                                gem = OreDictionary.getOres("dust" + temp).get(0);
-                                            }
-                                            int chance2 = this.inputslot.lucky();
+                                                if (OreDictionary.getOres("gem" + temp).size() != 0) {
+                                                    gem = OreDictionary.getOres("gem" + temp).get(0);
+                                                } else if (OreDictionary.getOres("shard" + temp).size() != 0) {
+                                                    gem = OreDictionary.getOres("shard" + temp).get(0);
+                                                } else if (OreDictionary.getOres("dust" + temp).size() != 0) {
+                                                    gem = OreDictionary.getOres("dust" + temp).get(0);
+                                                }
+                                                int chance2 = this.lucky;
 
 
-                                            List<Boolean> get = new ArrayList<>();
-                                            if (!TileEntityBaseQuantumQuarry.list(target1, stack)) {
-                                                if (target1.energy.getEnergy() >= energycost) {
-                                                    for (int j = 0; j < chance2 + 1; j++) {
-                                                        if (target1.outputSlot.canAdd(gem)) {
-                                                            target1.outputSlot.add(gem);
-                                                            get.add(true);
-                                                        } else {
-                                                            get.add(false);
+                                                List<Boolean> get = new ArrayList<>();
+                                                if (!target1.list(target1, stack)) {
+                                                    if (target1.energy.getEnergy() >= energycost) {
+                                                        for (int j = 0; j < chance2 + 1; j++) {
+                                                            if (target1.outputSlot.canAdd(gem)) {
+                                                                target1.outputSlot.add(gem);
+                                                                get.add(true);
+                                                            } else {
+                                                                get.add(false);
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
-                                            if (ModUtils.Boolean(get)) {
-                                                this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
-                                                target1.energy.useEnergy(energycost);
-                                                target1.getblock++;
-                                            }
+                                                if (ModUtils.Boolean(get)) {
+                                                    this.getWorld().setBlockToAir(new BlockPos(x, yy, z));
+                                                    target1.energy.useEnergy(energycost);
+                                                    target1.getblock++;
+                                                }
 
+                                            }
                                         }
                                     }
                                 }
@@ -575,27 +601,27 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
 
             if (this.y >= 256) {
-                zcoord++;
+                this.zcoord++;
                 this.y = 0;
-                if (zcoord == zendcoord) {
-                    xcoord++;
-                    zcoord = 0;
-                    if (xcoord == xendcoord) {
-                        zcoord = zendcoord;
+                if (this.zcoord == this.zendcoord) {
+                    this.xcoord++;
+                    this.zcoord = 0;
+                    if (this.xcoord == this.xendcoord) {
+                        this.zcoord = this.zendcoord;
                     }
                 }
 
             }
 
-            if (xcoord == xendcoord && zcoord == zendcoord) {
+            if (this.xcoord == this.xendcoord && this.zcoord == this.zendcoord) {
                 this.setActive(false);
-                xTempChunk = this.chunksx[this.xcoord - 1][this.zcoord - 1];
-                zTempChunk = this.chunksz[this.xcoord - 1][this.zcoord - 1];
+                this.xTempChunk = this.chunksx[this.xcoord - 1][this.zcoord - 1];
+                this.zTempChunk = this.chunksz[this.xcoord - 1][this.zcoord - 1];
                 this.y = 257;
                 this.start = true;
                 this.quarry = false;
                 this.analysis = true;
-                initiate(2);
+                this.initiate(2);
                 this.analyze();
             }
         }
@@ -657,6 +683,12 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
         return nbttagcompound;
     }
 
+    @Override
+    protected void onLoaded() {
+        super.onLoaded();
+        this.inputslot.update();
+    }
+
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
@@ -696,7 +728,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIAnalyzer(new ContainerAnalyzer(entityPlayer, this));
+        return new GuiAnalyzer(new ContainerAnalyzer(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityAnalyzer> getGuiContainer(EntityPlayer entityPlayer) {

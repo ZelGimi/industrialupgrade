@@ -2,8 +2,8 @@ package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.IUItem;
-import com.denfop.items.modules.AdditionModule;
 import com.denfop.items.modules.EnumModule;
+import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.tiles.base.TileEntityElectricBlock;
 import com.denfop.utils.ModUtils;
@@ -30,10 +30,36 @@ public class InvSlotElectricBlock extends InvSlot {
         this.setStackSizeLimit(1);
     }
 
+    @Override
+    public void onChanged() {
+        super.onChanged();
+        TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
+        if (this.type == 3) {
+            if (tile.UUID != null) {
+                tile.personality = this.personality();
+            }
+            tile.output_plus = this.output_plus(tile.l);
+            tile.output = tile.l + tile.output_plus;
+            tile.movementcharge = this.getstats().get(0);
+            tile.movementchargeitem = this.getstats().get(1);
+            tile.movementchargerf = this.getstats().get(2);
+            tile.movementchargeitemrf = this.getstats().get(3);
+
+            tile.rf = this.getstats().get(4);
+        }
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
+                    .get(i)
+                    .getItemDamage() == 10) {
+                tile.wireless = true;
+            }
+        }
+    }
+
     public boolean accepts(ItemStack itemStack) {
         if (type == 3) {
             return ((itemStack.getItemDamage() >= 4 || itemStack.getItemDamage() == 0)
-                    && itemStack.getItem() instanceof AdditionModule)
+                    && itemStack.getItem() instanceof ItemAdditionModule)
                     || (EnumModule.getFromID(itemStack.getItemDamage()) != null && EnumModule.getFromID(itemStack.getItemDamage()) ==
                     EnumModule.OUTPUT && itemStack.getItem() instanceof ItemBaseModules || itemStack
                     .getItem()
@@ -149,7 +175,7 @@ public class InvSlotElectricBlock extends InvSlot {
                 continue;
             }
             ItemStack stack = this.get(i);
-            if (stack.getItem() instanceof AdditionModule) {
+            if (stack.getItem() instanceof ItemAdditionModule) {
                 if (stack.getItemDamage() == 0) {
                     return true;
                 }
@@ -162,7 +188,7 @@ public class InvSlotElectricBlock extends InvSlot {
         TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
 
         for (int i = 0; i < this.size(); i++) {
-            if (this.get(i) != null && this.get(i).getItem() instanceof AdditionModule && this.get(i).getItemDamage() == 10) {
+            if (this.get(i) != null && this.get(i).getItem() instanceof ItemAdditionModule && this.get(i).getItemDamage() == 10) {
 
                 int x;
                 int y;
@@ -179,6 +205,7 @@ public class InvSlotElectricBlock extends InvSlot {
                         && y != 0 && z != 0) {
                     TileEntityBlock tile1 = (TileEntityBlock) tile.getWorld().getTileEntity(pos);
 
+                    assert tile1 != null;
                     if (tile1.getComponent(Energy.class) != null) {
                         final Energy energy = tile1.getComponent(Energy.class);
                         tile.energy.useEnergy(energy.addEnergy(tile.energy.getEnergy()));

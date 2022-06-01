@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUCore;
 import com.denfop.container.ContainerTunerWireless;
-import com.denfop.gui.GUITunerWireless;
+import com.denfop.gui.GuiTunerWireless;
 import com.denfop.invslot.InvSlotTuner;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import com.denfop.utils.ModUtils;
@@ -25,7 +25,7 @@ public class TileEntityTunerWireless extends TileEntityElectricMachine
 
 
     public TileEntityTunerWireless() {
-        super("", 0, 10, 1);
+        super(0, 10, 1);
 
 
         this.inputslot = new InvSlotTuner(this, "input");
@@ -45,7 +45,7 @@ public class TileEntityTunerWireless extends TileEntityElectricMachine
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUITunerWireless(new ContainerTunerWireless(entityPlayer, this));
+        return new GuiTunerWireless(new ContainerTunerWireless(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityTunerWireless> getGuiContainer(EntityPlayer entityPlayer) {

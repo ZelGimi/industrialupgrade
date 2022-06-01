@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerAdvOilRefiner;
-import com.denfop.gui.GUIAdvOilRefiner;
+import com.denfop.gui.GuiAdvOilRefiner;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,7 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
 
     public TileEntityAdvOilRefiner() {
-        super("", 24000, 14, 2, 3, new boolean[]{false, true, true}, new boolean[]{true, false, false},
+        super(
+                24000, 14, 2, 3, new boolean[]{false, true, true}, new boolean[]{true, false, false},
                 new Fluid[]{FluidName.fluidneft.getInstance(), FluidName.fluidpolyeth.getInstance(),
                         FluidName.fluidpolyprop.getInstance()}
         );
@@ -96,15 +97,6 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
                 this.getFluidTank(2).getFluidAmount() * i / this.getFluidTank(2).getCapacity();
     }
 
-    public int gaugeLiquidScaled1(int i) {
-        return this.getFluidTank(1).getFluidAmount() <= 0 ? 0 :
-                this.getFluidTank(1).getFluidAmount() * i / this.getFluidTank(1).getCapacity();
-    }
-
-    public int gaugeLiquidScaled2(int i) {
-        return this.getFluidTank(2).getFluidAmount() <= 0 ? 0 :
-                this.getFluidTank(2).getFluidAmount() * i / this.getFluidTank(2).getCapacity();
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -115,21 +107,29 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
         if (getWorld().provider.getWorldTime() % 200 == 0) {
             initiate(2);
         }
-        if (this.getFluidTank(0).getFluidAmount() >= 10 && this.energy.getEnergy() >= 25) {
 
-            if (this.fluidTank[1].getFluidAmount() + 5 <= this.fluidTank[1].getCapacity()) {
-                fill(new FluidStack(FluidName.fluidpolyeth.getInstance(), 5), true);
+        if (this.getFluidTank(0).getFluidAmount() >= 10 && this.energy.getEnergy() >= 25) {
+            int size = this.getFluidTank(0).getFluidAmount() / 10;
+            size = Math.min(this.level + 1, size);
+            int cap = this.fluidTank[1].getCapacity() - this.fluidTank[1].getFluidAmount();
+            cap /= 5;
+            cap = Math.min(cap, size);
+            int cap1 = this.fluidTank[2].getCapacity() - this.fluidTank[2].getFluidAmount();
+            cap1 /= 5;
+            cap1 = Math.min(cap1, size);
+            if (this.fluidTank[1].getCapacity() - this.fluidTank[1].getFluidAmount() >= 5) {
+                fill(new FluidStack(FluidName.fluidpolyeth.getInstance(), cap * 5), true);
                 drain = true;
 
             }
-            if (this.fluidTank[2].getFluidAmount() + 5 <= this.fluidTank[2].getCapacity()) {
-                fill(new FluidStack(FluidName.fluidpolyprop.getInstance(), 5), true);
+            if (this.fluidTank[2].getCapacity() - this.fluidTank[2].getFluidAmount() >= 5) {
+                fill(new FluidStack(FluidName.fluidpolyprop.getInstance(), cap1 * 5), true);
                 drain1 = true;
             }
             if (drain || drain1) {
                 int drains = 0;
-                drains = drain ? drains + 5 : drains;
-                drains = drain1 ? drains + 5 : drains;
+                drains = drain ? drains + 5 * cap : drains;
+                drains = drain1 ? drains + 5 * cap1 : drains;
 
                 this.getFluidTank(0).drain(drains, true);
                 initiate(0);
@@ -152,7 +152,7 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIAdvOilRefiner(new ContainerAdvOilRefiner(entityPlayer, this));
+        return new GuiAdvOilRefiner(new ContainerAdvOilRefiner(entityPlayer, this));
 
     }
 

@@ -17,6 +17,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper> {
 
     private final IDrawableStatic bg;
@@ -32,21 +34,25 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine2.gen_obsidian.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 10).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -54,7 +60,7 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
 
 
         progress++;
@@ -67,12 +73,12 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(+20, +52 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(20, 52 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
 
-        drawTexturedModalRect(+96, +29, 176, 32, xScale, 16);
+        drawTexturedModalRect(96, 29, 176, 32, xScale, 16);
 
 
     }
@@ -81,7 +87,7 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
     public void setRecipe(
             final IRecipeLayout layout,
             final GenObsWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
 
 

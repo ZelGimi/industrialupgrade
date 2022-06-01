@@ -3,7 +3,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUCore;
 import com.denfop.container.ContainerPrivatizer;
-import com.denfop.gui.GUIPrivatizer;
+import com.denfop.gui.GuiPrivatizer;
 import com.denfop.invslot.InvSlotPrivatizer;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import com.denfop.utils.ModUtils;
@@ -28,7 +28,7 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
 
 
     public TileEntityPrivatizer() {
-        super("", 0, 10, 1);
+        super(0, 10, 1);
 
 
         this.inputslot = new InvSlotPrivatizer(this, "input", 0, 9);
@@ -54,7 +54,7 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIPrivatizer(new ContainerPrivatizer(entityPlayer, this));
+        return new GuiPrivatizer(new ContainerPrivatizer(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityPrivatizer> getGuiContainer(EntityPlayer entityPlayer) {

@@ -1,21 +1,23 @@
 package com.denfop.gui;
 
+import com.denfop.Config;
 import com.denfop.Constants;
-import com.denfop.api.inv.IInvSlotProcessableMulti;
+import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
+import ic2.core.init.Localization;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GUIMultiMachine3 extends GuiIC2<ContainerMultiMachine> {
+public class GuiMultiMachine3 extends GuiIC2<ContainerMultiMachine> {
 
     private final ContainerMultiMachine container;
 
-    public GUIMultiMachine3(ContainerMultiMachine container1) {
+    public GuiMultiMachine3(ContainerMultiMachine container1) {
         super(container1);
         this.container = container1;
 
@@ -45,7 +47,7 @@ public class GUIMultiMachine3 extends GuiIC2<ContainerMultiMachine> {
                 int xX = xoffset + slot.xPos;
                 int yY = yoffset + slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof IInvSlotProcessableMulti) {
+                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
                     int down = 24 * (tile.getMachine().meta / 4);
                     drawTexturedModalRect(xX, yY + 19, 176, 14 + down, 16, 24);
                     int progress = (int) (24.0F * tile.getProgress(i));
@@ -72,24 +74,37 @@ public class GUIMultiMachine3 extends GuiIC2<ContainerMultiMachine> {
                     chargeLevel1
             );
         }
-        this.drawXCenteredString(this.xSize / 2, 6, this.container.base.getInventoryName(), 4210752, false);
+        int heat = (int) (14.0F * tile.getComponent().getFillRatio());
+        if (Config.coolingsystem) {
+            if (heat >= 0) {
+                drawTexturedModalRect(
+                        xoffset + 27, yoffset + 47 + 14 - heat, 216, 14 - heat, 4,
+                        heat
+                );
+            }
+        }
+        this.drawXCenteredString(this.xSize / 2, 6, Localization.translate(this.container.base.getName()), 4210752, false);
         String tooltip1 = ModUtils.getString(this.container.base.energy2) + "/" + ModUtils.getString(this.container.base.maxEnergy2) + " RF";
         String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getEnergy()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
                         "EU";
 
         GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip2, 5, 47, 19, 61);
-        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip1, 14, 47, 28, 61);
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip1, 14, 47, 26, 61);
+        String tooltip =
+                ModUtils.getString(this.container.base
+                        .getComponent()
+                        .getEnergy()) + "°C" + "/" + ModUtils.getString(this.container.base.getComponent().getCapacity()) + "°C";
+
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip, 27, 47, 30, 61);
+
         i = 0;
         for (Slot slot : this.container.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof IInvSlotProcessableMulti) {
+                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
 
                     double progress = (24.0F * this.container.base.getProgress(i));
                     if (progress > 0) {

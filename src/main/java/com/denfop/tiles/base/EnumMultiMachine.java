@@ -44,8 +44,28 @@ public enum EnumMultiMachine {
     TRIPLE_COMB_RRECYCLER("Triple Combined  Recycler", 1, 45, 3, IUItem.machines_base1, 5, 2, 4, EnumTypeMachines.COMBRECYCLER),
     QUAD_COMB_RRECYCLER("Quad Combined  Recycler", 1, 45, 4, null, 0, -1, 5, EnumTypeMachines.COMBRECYCLER),
     COMB_MACERATOR("Combined Macerator", 2, 300, 1, IUItem.machines_base1, 7, 0, 6, EnumTypeMachines.COMBMACERATOR),
-    COMB_DOUBLE_MACERATOR("Combined Macerator Double", 2, 300, 2, IUItem.machines_base1, 8, 1, 7, EnumTypeMachines.COMBMACERATOR),
-    COMB_TRIPLE_MACERATOR("Combined Macerator Triple", 2, 300, 3, IUItem.machines_base1, 9, 2, 8, EnumTypeMachines.COMBMACERATOR),
+    COMB_DOUBLE_MACERATOR(
+            "Combined Macerator Double",
+            2,
+            300,
+            2,
+            IUItem.machines_base1,
+            8,
+            1,
+            7,
+            EnumTypeMachines.COMBMACERATOR
+    ),
+    COMB_TRIPLE_MACERATOR(
+            "Combined Macerator Triple",
+            2,
+            300,
+            3,
+            IUItem.machines_base1,
+            9,
+            2,
+            8,
+            EnumTypeMachines.COMBMACERATOR
+    ),
     COMB_QUAD_MACERATOR("Combined Macerator Quad", 2, 300, 4, null, 0, -1, 9, EnumTypeMachines.COMBMACERATOR),
 
     Rolling("Rolling", 10, 200, 1, IUItem.machines_base2, 1, 0, 0, EnumTypeMachines.ROLLING),
@@ -69,8 +89,29 @@ public enum EnumMultiMachine {
     AssamplerScrap("AssamplerScrap", 1, 25, 1, IUItem.machines_base3, 5, 0, 4, EnumTypeMachines.ASSAMPLERSCRAP),
     DOUBLE_AssamplerScrap("Double AssamplerScrap", 1, 25, 2, IUItem.machines_base3, 6, 1, 5, EnumTypeMachines.ASSAMPLERSCRAP),
     TRIPLE_AssamplerScrap("Triple AssamplerScrap", 1, 25, 3, IUItem.machines_base3, 7, 2, 6, EnumTypeMachines.ASSAMPLERSCRAP),
-    QUAD_AssamplerScrap("Quad AssamplerScrap", 1, 25, 4, null, 0, -1, 7, EnumTypeMachines.ASSAMPLERSCRAP);
+    QUAD_AssamplerScrap("Quad AssamplerScrap", 1, 25, 4, null, 0, -1, 7, EnumTypeMachines.ASSAMPLERSCRAP),
+    MACERATOR("Macerator", 2, 300, 1, IUItem.machines_base, 0, 0, 0, EnumTypeMachines.MACERATOR),
 
+    COMPRESSER("Compressor", 2, 300, 1, IUItem.machines_base, 3, 0, 1, EnumTypeMachines.COMPRESSOR),
+
+    EXTRACTOR("Extractor", 2, 300, 1, IUItem.machines_base, 9, 0, 3, EnumTypeMachines.EXTRACTOR),
+
+    ELECTRIC_FURNACE(
+            "Electric Furnace",
+            3,
+            100,
+            1,
+            IUItem.machines_base,
+            6,
+            0,
+            2,
+            EnumTypeMachines.ELECTRICFURNACE
+    ),
+
+    METAL_FORMER("Metal Former", 10, 200, 1, IUItem.machines_base, 12, 0, 4, EnumTypeMachines.METALFOMER),
+
+    RECYCLER("Recycler", 1, 45, 1, IUItem.machines_base1, 0, 0, 5, EnumTypeMachines.RECYCLER),
+    ;
     public final int usagePerTick;
     public final int lenghtOperation;
     public final int sizeWorkingSlot;
@@ -80,6 +121,7 @@ public enum EnumMultiMachine {
     public final String name;
     public final int meta;
     public final EnumTypeMachines type;
+    public final String recipe;
 
     EnumMultiMachine(
             String name,
@@ -100,6 +142,7 @@ public enum EnumMultiMachine {
         this.upgrade = upgrade;
         this.meta = meta;
         this.type = type;
+        this.recipe = type.recipe;
     }
 
 

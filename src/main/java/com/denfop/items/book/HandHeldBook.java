@@ -8,27 +8,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class HandHeldBook extends HandHeldInventory {
 
 
     public final ItemStack itemStack1;
-    private final ItemBook itemEnergyBags;
 
-    public HandHeldBook(EntityPlayer player, ItemStack stack, ItemBook itemEnergyBags) {
+    public HandHeldBook(EntityPlayer player, ItemStack stack) {
         super(player, stack, 0);
         this.itemStack1 = stack;
-        this.itemEnergyBags = itemEnergyBags;
     }
 
     public ContainerBase<HandHeldBook> getGuiContainer(EntityPlayer player) {
-        return new ContainerBook(player, this);
+        return new ContainerBook(this);
     }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GUIBook(player, itemStack1, new ContainerBook(player, this));
+        return new GUIBook(player, itemStack1, new ContainerBook(this));
     }
 
+    @Nonnull
     public String getName() {
         return "toolbox";
     }

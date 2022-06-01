@@ -1,11 +1,8 @@
 package com.denfop.tiles.base;
 
-import com.denfop.api.ITripleMachineRecipeManager;
-import com.denfop.api.Recipes;
-
 @SuppressWarnings("ALL")
 public enum EnumTripleElectricMachine {
-    ADV_ALLOY_SMELTER(74, 17, 56, 17, 38, 17, 56, 53, true, Recipes.Alloyadvsmelter, 116, 35);
+    ADV_ALLOY_SMELTER("advalloysmelter", 74, 17, 56, 17, 38, 17, 56, 53, true, 116, 35);
 
     public final int inputx;
     public final int inputy;
@@ -16,11 +13,12 @@ public enum EnumTripleElectricMachine {
     public final int outputx;
     public final int outputy;
     public final boolean register;
-    public final ITripleMachineRecipeManager recipe;
     public final int inputx2;
     public final int inputy2;
+    public final String recipe_name;
 
     EnumTripleElectricMachine(
+            String recipe_name,
             int inputx,
             int inputy,
             int inputx1,
@@ -30,10 +28,10 @@ public enum EnumTripleElectricMachine {
             int dischangeX,
             int dischangeY,
             boolean register,
-            ITripleMachineRecipeManager recipe,
             int outputx,
             int outputy
     ) {
+        this.recipe_name = recipe_name;
         this.inputx = inputx;
         this.inputy = inputy;
         this.inputx1 = inputx1;
@@ -43,7 +41,6 @@ public enum EnumTripleElectricMachine {
         this.dischangeX = dischangeX;
         this.dischangeY = dischangeY;
         this.register = register;
-        this.recipe = recipe;
         this.outputx = outputx;
         this.outputy = outputy;
     }

@@ -16,17 +16,17 @@ public class DraconicIntegration {
 
     public static Item chaosingot;
     public static Block blockDESolarPanel;
-    public static SSPDEItem ChaosEnergyCore;
+    public static IUDEItem ChaosEnergyCore;
 
 
     public static void init() {
         if (Config.Draconic) {
 
-            ChaosEnergyCore = new SSPDEItem("ChaosEnergyCore");
+            ChaosEnergyCore = new IUDEItem("ChaosEnergyCore");
 
-            chaosingot = new SSPDEItem("chaosingot");
+            chaosingot = new IUDEItem("chaosingot");
 
-                blockDESolarPanel = TeBlockRegistry.get(BlockDESolarPanel.IDENTITY).setCreativeTab(IUCore.SSPTab);
+            blockDESolarPanel = TeBlockRegistry.get(BlockDESolarPanel.IDENTITY).setCreativeTab(IUCore.SSPTab);
 
         }
     }

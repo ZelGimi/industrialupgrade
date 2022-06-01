@@ -1,21 +1,21 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileMatterGenerator;
+import com.denfop.tiles.base.TileEntityMatterGenerator;
 import ic2.core.ContainerFullInv;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
 
-public class ContainerSolidMatter extends ContainerFullInv<TileMatterGenerator> {
+public class ContainerSolidMatter extends ContainerFullInv<TileEntityMatterGenerator> {
 
-    public ContainerSolidMatter(EntityPlayer entityPlayer, TileMatterGenerator tileEntity1) {
+    public ContainerSolidMatter(EntityPlayer entityPlayer, TileEntityMatterGenerator tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerSolidMatter(
             EntityPlayer entityPlayer,
-            TileMatterGenerator tileEntity1,
+            TileEntityMatterGenerator tileEntity1,
             int height,
             int upgradeX,
             int upgradeY

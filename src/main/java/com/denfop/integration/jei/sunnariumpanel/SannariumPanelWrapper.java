@@ -1,11 +1,13 @@
 package com.denfop.integration.jei.sunnariumpanel;
 
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,13 +56,13 @@ public class SannariumPanelWrapper implements IRecipeWrapper {
     }
 
     public List<ItemStack> getOutputs() {
-        return new ArrayList(Collections.singleton(this.outputstack));
+        return new ArrayList<>(Collections.singleton(this.outputstack));
     }
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputLists(ItemStack.class, this.getInputs());
-        ingredients.setOutputs(ItemStack.class, this.getOutputs());
+        ingredients.setInputLists(VanillaTypes.ITEM, this.getInputs());
+        ingredients.setOutputs(VanillaTypes.ITEM, this.getOutputs());
     }
 
 
@@ -68,7 +70,7 @@ public class SannariumPanelWrapper implements IRecipeWrapper {
         return outputstack;
     }
 
-    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
 
     }

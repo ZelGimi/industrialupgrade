@@ -1,4 +1,3 @@
-
 package com.denfop.api.cooling;
 
 public final class CoolNet {

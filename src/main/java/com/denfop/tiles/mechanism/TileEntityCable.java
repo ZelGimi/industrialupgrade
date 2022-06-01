@@ -1,6 +1,6 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.items.ItemCable;
+import com.denfop.IUItem;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -47,13 +47,13 @@ import java.util.List;
 
 public class TileEntityCable extends TileEntityBlock implements IEnergyConductor, INetworkTileEntityEventListener {
 
-    public static final float insulationThickness = 0.0625F;
-    public static final IUnlistedProperty<TileEntityCable.CableRenderState> renderStateProperty = new UnlistedProperty(
+    public static final IUnlistedProperty<TileEntityCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
             "renderstate",
             TileEntityCable.CableRenderState.class
     );
     private final Obscuration obscuration;
     public boolean addedToEnergyNet;
+    public int type;
     protected CableType cableType;
     protected int insulation;
     private CableFoam foam;
@@ -65,6 +65,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
         this();
         this.cableType = cableType;
         this.insulation = insulation;
+        this.type = cableType.ordinal();
     }
 
     public TileEntityCable() {
@@ -139,7 +140,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
     }
 
     protected ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return ItemCable.getCable(this.cableType, this.insulation, 0);
+        return new ItemStack(IUItem.cable, 1, this.cableType.ordinal());
     }
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
@@ -148,7 +149,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
         } else {
             float th = this.cableType.thickness + (float) (this.insulation * 2) * 0.0625F;
             float sp = (1.0F - th) / 2.0F;
-            List<AxisAlignedBB> ret = new ArrayList(7);
+            List<AxisAlignedBB> ret = new ArrayList<>(7);
             ret.add(new AxisAlignedBB(
                     sp,
                     sp,
@@ -158,7 +159,6 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
                     sp + th
             ));
             EnumFacing[] var5 = EnumFacing.VALUES;
-            int var6 = var5.length;
 
             for (EnumFacing facing : var5) {
                 boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
@@ -266,7 +266,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
             ) || tile instanceof IEnergyEmitter && ((IEnergyEmitter) tile).emitsEnergyTo(
                     this,
                     dir.getOpposite()
-            )) && this.canInteractWith(tile, dir)) {
+            )) && this.canInteractWith()) {
                 newConnectivity = (byte) (newConnectivity | mask);
             }
 
@@ -316,12 +316,9 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
     }
 
 
-    public boolean tryRemoveInsulation(boolean simulate) {
-        if (this.insulation <= 0) {
-            return false;
-        } else if (simulate) {
-            return true;
-        } else {
+    public void tryRemoveInsulation(boolean simulate) {
+
+        if (!simulate) {
             if (this.insulation == this.cableType.minColoredInsulation) {
                 CableFoam foam = this.foam;
                 this.foam = CableFoam.None;
@@ -334,7 +331,6 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
                 IC2.network.get(true).updateTileEntityField(this, "insulation");
             }
 
-            return true;
         }
     }
 
@@ -343,14 +339,14 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing direction) {
-        return this.canInteractWith(emitter, direction);
+        return this.canInteractWith();
     }
 
     public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing direction) {
-        return this.canInteractWith(receiver, direction);
+        return this.canInteractWith();
     }
 
-    public boolean canInteractWith(IEnergyTile tile, EnumFacing side) {
+    public boolean canInteractWith() {
 
         return true;
     }
@@ -388,7 +384,7 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
 
 
     public List<String> getNetworkedFields() {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         ret.add("cableType");
         ret.add("insulation");
         ret.add("foam");
@@ -460,18 +456,16 @@ public class TileEntityCable extends TileEntityBlock implements IEnergyConductor
                 }
 
                 if (foam == CableFoam.Soft) {
-                    this.continuousUpdate = new IWorldTickCallback() {
-                        public void onTick(World world) {
-                            if (world.rand.nextFloat() < BlockFoam.getHardenChance(
-                                    world,
-                                    TileEntityCable.this.pos,
-                                    TileEntityCable.this.getBlockType().getState(TeBlock.cable),
-                                    FoamType.normal
-                            )) {
-                                TileEntityCable.this.changeFoam(CableFoam.Hardened, false);
-                            }
-
+                    this.continuousUpdate = world1 -> {
+                        if (world1.rand.nextFloat() < BlockFoam.getHardenChance(
+                                world1,
+                                TileEntityCable.this.pos,
+                                TileEntityCable.this.getBlockType().getState(TeBlock.cable),
+                                FoamType.normal
+                        )) {
+                            TileEntityCable.this.changeFoam(CableFoam.Hardened, false);
                         }
+
                     };
                     IC2.tickHandler.requestContinuousWorldTick(world, this.continuousUpdate);
                 }

@@ -45,7 +45,7 @@ public final class SimplyQuarries {
     @SubscribeEvent
     public static void register(final TeBlockFinalCallEvent event) {
 
-         register(BlockQuarry.class, BlockQuarry.IDENTITY);
+        register(BlockQuarry.class, BlockQuarry.IDENTITY);
 
 
     }
@@ -59,7 +59,6 @@ public final class SimplyQuarries {
     public void load(final FMLPreInitializationEvent event) {
 
         MinecraftForge.EVENT_BUS.register(this);
-        SQConfig.loadConfig(event.getSuggestedConfigurationFile(), event.getSide().isClient());
         BlockQuarry.buildDummies();
         quarry = TeBlockRegistry.get(BlockQuarry.IDENTITY).setCreativeTab(IUCore.SSPTab);
     }
@@ -68,11 +67,21 @@ public final class SimplyQuarries {
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
 
-        Recipes.advRecipes.addRecipe(new ItemStack(quarry, 1),
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(quarry, 1),
                 "DED",
                 "ABA",
-                "CCC",'A', new ItemStack(IUItem.core,1,3),'B', Ic2Items.advminer,'C', new ItemStack(IUItem.quantumtool),'D',
-                IUItem.cirsuitQuantum,'E',new ItemStack(IUItem.sunnarium,1,1)
+                "CCC",
+                'A',
+                new ItemStack(IUItem.core, 1, 3),
+                'B',
+                Ic2Items.advminer,
+                'C',
+                new ItemStack(IUItem.quantumtool),
+                'D',
+                IUItem.cirsuitQuantum,
+                'E',
+                new ItemStack(IUItem.sunnarium, 1, 1)
 
         );
 
@@ -80,7 +89,7 @@ public final class SimplyQuarries {
                 "ABA",
                 "DCD",
                 "EEE",
-                'C',  new ItemStack(quarry),
+                'C', new ItemStack(quarry),
                 'E',
                 new ItemStack(IUItem.nanoBox),
                 'D',
@@ -95,7 +104,7 @@ public final class SimplyQuarries {
         Recipes.advRecipes.addRecipe(new ItemStack(quarry, 1, 2),
                 "ABA",
                 "DCD",
-                "EEE",  'C',  new ItemStack(quarry,1,1),
+                "EEE", 'C', new ItemStack(quarry, 1, 1),
                 'E',
                 new ItemStack(IUItem.quantumtool),
                 'D',
@@ -110,7 +119,7 @@ public final class SimplyQuarries {
         Recipes.advRecipes.addRecipe(new ItemStack(quarry, 1, 3),
                 "ABA",
                 "DCD",
-                "EEE",'C',  new ItemStack(quarry,1,2),
+                "EEE", 'C', new ItemStack(quarry, 1, 2),
                 'E',
                 new ItemStack(IUItem.advQuantumtool),
                 'D',

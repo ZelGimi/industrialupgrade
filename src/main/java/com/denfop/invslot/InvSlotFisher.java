@@ -16,7 +16,7 @@ public class InvSlotFisher extends InvSlot {
     }
 
     public static boolean isStackEqual(ItemStack stack1, ItemStack stack2) {
-        return stack1 == null && stack2 == null || stack1 != null && stack2 != null && stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
+        return stack1.isEmpty() && stack2.isEmpty() || stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() && !stack1.isItemStackDamageable() || stack1.getItemDamage() == stack2.getItemDamage());
     }
 
     public static boolean isStackEqualStrict(ItemStack stack1, ItemStack stack2) {

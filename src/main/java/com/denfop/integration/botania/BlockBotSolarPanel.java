@@ -35,11 +35,6 @@ public enum BlockBotSolarPanel implements ITeBlock {
     private TileEntityBlock dummyTe;
 
 
-    BlockBotSolarPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
-
     BlockBotSolarPanel(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;

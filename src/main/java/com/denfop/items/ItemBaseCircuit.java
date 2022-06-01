@@ -60,6 +60,13 @@ public class ItemBaseCircuit extends ItemMulti<ItemBaseCircuit.Types> implements
         advanced_part1(12),
         advanced_part2(13),
         advanced_part3(14),
+        circuit_part1(15),
+        circuit_part2(16),
+        circuit_part3(17),
+        photon_part1(18),
+        photon_part2(19),
+        photon_part3(20),
+        photoncircuit(21),
         ;
 
         private final String name;

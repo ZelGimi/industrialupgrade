@@ -8,6 +8,7 @@ import ic2.core.block.comp.Fluids;
 import ic2.core.block.comp.Redstone;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -22,12 +23,16 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
 public class TileEntityAdvReactorChamberElectric extends TileEntityBlock implements IInventory, IReactorChamber, IEnergyEmitter {
 
     public final Redstone redstone = this.addComponent(new Redstone(this));
     protected final Fluids fluids = this.addComponent(new Fluids(this));
     private TileEntityAdvNuclearReactorElectric reactor;
     private long lastReactorUpdate;
+    private boolean destroy = true;
 
     public TileEntityAdvReactorChamberElectric() {
 
@@ -36,6 +41,7 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
     protected void onLoaded() {
         super.onLoaded();
         this.updateRedstoneLink();
+        this.onNeighborChange(this.getBlockType().getBlockState().getBlock(), this.getPos());
     }
 
     private void updateRedstoneLink() {
@@ -78,24 +84,25 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         }
     }
 
-    protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
-        super.onNeighborChange(neighbor, neighborPos);
-        this.lastReactorUpdate = 0L;
-        this.updateReactor();
-        if (this.reactor == null) {
-            this.destoryChamber(true);
-        }
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
 
     }
 
-    protected void updateEntityServer() {
-        super.updateEntityServer();
-        if (world.provider.getWorldTime() % 40 == 0) {
+    protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        if (this.destroy) {
             this.updateReactor();
             if (this.reactor == null) {
                 this.destoryChamber(true);
             }
         }
+    }
+
+    @Override
+    protected void onUnloaded() {
+        super.onUnloaded();
     }
 
     public void destoryChamber(boolean wrench) {
@@ -105,9 +112,10 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         for (final ItemStack drop : this.getSelfDrops(0, wrench)) {
             StackUtil.dropAsEntity(world, this.pos, drop);
         }
-
+        this.destroy = false;
     }
 
+    @Nonnull
     public String getName() {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
         return reactor != null ? reactor.getName() : "<null>";
@@ -118,9 +126,10 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         return reactor != null && reactor.hasCustomName();
     }
 
+    @Nonnull
     public ITextComponent getDisplayName() {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
-        return reactor != null ? reactor.getDisplayName() : new TextComponentString("<null>");
+        return reactor != null ? Objects.requireNonNull(reactor.getDisplayName()) : new TextComponentString("<null>");
     }
 
     public int getSizeInventory() {
@@ -133,22 +142,25 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         return reactor == null || reactor.isEmpty();
     }
 
+    @Nonnull
     public ItemStack getStackInSlot(int index) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
-        return reactor != null ? reactor.getStackInSlot(index) : null;
+        return reactor != null ? reactor.getStackInSlot(index) : ItemStack.EMPTY;
     }
 
+    @Nonnull
     public ItemStack decrStackSize(int index, int count) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
-        return reactor != null ? reactor.decrStackSize(index, count) : null;
+        return reactor != null ? reactor.decrStackSize(index, count) : ItemStack.EMPTY;
     }
 
+    @Nonnull
     public ItemStack removeStackFromSlot(int index) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
-        return reactor != null ? reactor.removeStackFromSlot(index) : null;
+        return reactor != null ? reactor.removeStackFromSlot(index) : ItemStack.EMPTY;
     }
 
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
         if (reactor != null) {
             reactor.setInventorySlotContents(index, stack);
@@ -161,12 +173,12 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         return reactor != null ? reactor.getInventoryStackLimit() : 0;
     }
 
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
         return reactor != null && reactor.isUsableByPlayer(player);
     }
 
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
         if (reactor != null) {
             reactor.openInventory(player);
@@ -174,7 +186,7 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
 
     }
 
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
         if (reactor != null) {
             reactor.closeInventory(player);
@@ -182,7 +194,7 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
 
     }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
+    public boolean isItemValidForSlot(int index, @Nonnull ItemStack stack) {
         TileEntityAdvNuclearReactorElectric reactor = this.getReactor();
         return reactor != null && reactor.isItemValidForSlot(index, stack);
     }

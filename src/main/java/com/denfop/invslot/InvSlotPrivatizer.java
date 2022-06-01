@@ -1,7 +1,7 @@
 package com.denfop.invslot;
 
 
-import com.denfop.items.modules.AdditionModule;
+import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemEntityModule;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.block.invslot.InvSlot;
@@ -22,7 +22,7 @@ public class InvSlotPrivatizer extends InvSlot {
         if (type == 0) {
             return itemStack.getItem() instanceof ItemEntityModule && itemStack.getItemDamage() == 0;
         } else {
-            return itemStack.getItem() instanceof AdditionModule && itemStack.getItemDamage() == 0;
+            return itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 0;
         }
     }
 

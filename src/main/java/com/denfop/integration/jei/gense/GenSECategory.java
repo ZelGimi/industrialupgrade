@@ -16,11 +16,11 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> {
 
     private final IDrawableStatic bg;
-    private final int progress = 0;
-    private final int energy = 0;
 
     public GenSECategory(
             final IGuiHelper guiHelper
@@ -30,21 +30,25 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockSolarEnergy.se_gen.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.blockSE, 1, 0).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -62,7 +66,7 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
     public void setRecipe(
             final IRecipeLayout layout,
             final GenSEWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
 

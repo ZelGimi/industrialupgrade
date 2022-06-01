@@ -1,10 +1,12 @@
 package com.denfop.integration.jei.refiner;
 
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,9 +36,8 @@ public class RefinerRecipeWrapper implements IRecipeWrapper {
     }
 
     public List<List<FluidStack>> getInputs() {
-        FluidStack inputs = this.inputstack;
         List<FluidStack> stack = new ArrayList<>();
-        stack.add(inputs);
+        stack.add(this.inputstack);
         return Collections.singletonList(stack);
     }
 
@@ -49,12 +50,12 @@ public class RefinerRecipeWrapper implements IRecipeWrapper {
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputLists(FluidStack.class, this.getInputs());
-        ingredients.setOutputs(FluidStack.class, this.getOutputs());
+        ingredients.setInputLists(VanillaTypes.FLUID, this.getInputs());
+        ingredients.setOutputs(VanillaTypes.FLUID, this.getOutputs());
     }
 
 
-    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 
     }
 

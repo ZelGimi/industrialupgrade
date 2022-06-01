@@ -10,11 +10,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUISolidMatter extends GuiIC2<ContainerSolidMatter> {
+public class GuiSolidMatter extends GuiIC2<ContainerSolidMatter> {
 
     public final ContainerSolidMatter container;
 
-    public GUISolidMatter(ContainerSolidMatter container1) {
+    public GuiSolidMatter(ContainerSolidMatter container1) {
         super(container1);
         this.container = container1;
     }
@@ -47,7 +47,7 @@ public class GUISolidMatter extends GuiIC2<ContainerSolidMatter> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUISolidMatter.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSolidMatter.png");
     }
 
 }

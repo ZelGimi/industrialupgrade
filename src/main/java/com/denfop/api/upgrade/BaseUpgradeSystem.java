@@ -1,19 +1,27 @@
 package com.denfop.api.upgrade;
 
 import com.denfop.IUItem;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.utils.ModUtils;
+import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,16 +44,71 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
         this.max = 0;
         this.map_col = new HashMap<>();
         this.map_stack = new HashMap<>();
-        this.list_modificators= new ArrayList<>();
-        this.list_modificators.add(new UpgradeModificator(new ItemStack(IUItem.core,1,7)));
-        this.list_modificators.add(new UpgradeModificator(new ItemStack(IUItem.neutroniumingot,1)));
+        this.list_modificators = new ArrayList<>();
         this.map_modification = new HashMap<>();
 
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(this);
 
     }
 
+    public static void addupgrade(Item container, ItemStack fill) {
+        NBTTagCompound nbt = ModUtils.nbt();
+        nbt.setString(
+                "mode_module",
+                fill.getItem() instanceof ItemUpgradeModule ? ItemUpgradeModule.getType(fill.getItemDamage()).name : "blacklist"
+        );
+        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        Recipes.recipes.addRecipe(
+                "upgradeblock",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.forStack(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
+                                input.forStack(fill)
+                        ),
+                        new RecipeOutput(nbt, new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
+                )
+        );
+    }
+
+    public static void addupgrade(Item container, ItemStack fill, String type) {
+        NBTTagCompound nbt = ModUtils.nbt();
+        nbt.setString(
+                "type",
+                type
+        );
+        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        Recipes.recipes.addRecipe(
+                "upgradeblock",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.forStack(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
+                                input.forStack(fill)
+                        ),
+                        new RecipeOutput(nbt, new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
+                )
+        );
+    }
+
+    public void addModification() {
+        this.list_modificators.clear();
+        this.list_modificators.add(new UpgradeModificator(new ItemStack(IUItem.core, 1, 7), "0"));
+        this.list_modificators.add(new UpgradeModificator(new ItemStack(IUItem.neutroniumingot, 1), "1"));
+    }
+
+    public void addModificate(ItemStack container, String name) {
+        NBTTagCompound nbt = ModUtils.nbt(container);
+        nbt.setString("modification_module" + name, name);
+    }
+
+    public boolean needModificate(ItemStack container, ItemStack fill) {
+        final List<UpgradeModificator> list = this.getListModifications(container);
+        for (UpgradeModificator modificator : list) {
+            if (modificator.matches(fill)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @SubscribeEvent
     public void loadItem(EventItemLoad event) {
@@ -58,7 +121,6 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
         this.updateBlackListFromNBT(event.item, event.stack, event.nbt);
         event.item.setUpdate(true);
     }
-
 
     @Override
     public boolean getModifications(final ItemStack item) {
@@ -74,7 +136,8 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
     public int getRemaining(final ItemStack item) {
         final NBTTagCompound nbt = ModUtils.nbt(item);
         final int id = nbt.getInteger("ID_Item");
-        return this.map_col.getOrDefault(id, 4);
+        int k = this.getListModifications(item).size();
+        return this.map_col.getOrDefault(id, 4 + k);
     }
 
     @Override
@@ -88,10 +151,11 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
     public boolean hasInMap(final ItemStack stack) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final int id = nbt.getInteger("ID_Item");
-        if(!this.map_stack.containsKey(id))
+        if (!this.map_stack.containsKey(id)) {
             return false;
-        ItemStack item =  this.map_stack.get(id);
-       int id1 = ModUtils.nbt(item).getInteger("ID_Item");
+        }
+        ItemStack item = this.map_stack.get(id);
+        int id1 = ModUtils.nbt(item).getInteger("ID_Item");
 
         return item.isItemEqual(stack) && id1 == id;
     }
@@ -103,7 +167,6 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
         return this.map_blackList.containsKey(id) ? this.map_blackList.get(id) : new ArrayList<>();
 
     }
-
 
     @Override
     public List<UpgradeItemInform> getInformation(final ItemStack item) {
@@ -138,7 +201,7 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
     public void updateListFromNBT(final IUpgradeItem item, ItemStack stack) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         boolean hasID = nbt.getBoolean("hasID");
-        int id =  nbt.getInteger("ID_Item");
+        int id = nbt.getInteger("ID_Item");
         if (!hasID) {
             id = this.max;
             this.max++;
@@ -147,43 +210,56 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
         }
         List<EnumInfoUpgradeModules> lst = new ArrayList<>();
         List<UpgradeModificator> list = new ArrayList<>();
+        this.addModification();
         for (int i = 0; i < 2; i++) {
-            String name = nbt.getString("modification_module"+i);
-            if(getModification(name) != null)
-            list.add(getModification(name));
+            String name = nbt.getString("modification_module" + i);
+            if (name.isEmpty()) {
+                continue;
+            }
+
+            if (getModification(i) != null) {
+                list.add(getModification(i));
+            }
         }
-        if(this.map_modification.containsKey(id)){
-            this.map_modification.replace(id,list);
-        }else
-            this.map_modification.put(id,list);
-
-
-        boolean canupgrade = nbt.getString("mode_module" + 3).equals("");
-        nbt.setBoolean("canupgrade",canupgrade);
-        int ost = 0;
-            for (int i = 0; i < 4 ; i++) {
+        if (this.map_modification.containsKey(id)) {
+            this.map_modification.replace(id, list);
+        } else {
+            this.map_modification.put(id, list);
+        }
+        int ost;
+        int empty = 0;
+        boolean canupgrade = false;
+        for (int i = 0; i < 4 + list.size(); i++) {
             String name = nbt.getString("mode_module" + i);
             if (name.equals("")) {
-                ost = 4 - i;
-                break;
+                empty++;
+                canupgrade = true;
             }
-            int index = IUItem.list.indexOf(name);
-            lst.add(EnumInfoUpgradeModules.getFromID(index));
+            if (!name.equals("")) {
+                int index = IUItem.list.indexOf(name);
+                lst.add(EnumInfoUpgradeModules.getFromID(index));
+            }
         }
-        if(this.map_col.containsKey(id)){
-            this.map_col.replace(id,ost);
-        }else
-            this.map_col.put(id,ost);
+        ost = empty;
+        nbt.setBoolean("canupgrade", canupgrade);
+
+        if (this.map_col.containsKey(id)) {
+            this.map_col.replace(id, ost);
+        } else {
+            this.map_col.put(id, ost);
+        }
 
         this.setInformation(item, lst, stack);
 
     }
 
-    private UpgradeModificator getModification(String name) {
-        if(name.equals("0"))
+    private UpgradeModificator getModification(int i) {
+        if (i == 0) {
             return this.list_modificators.get(0);
-        if(name.equals("1"))
+        }
+        if (i == 1) {
             return this.list_modificators.get(1);
+        }
         return null;
     }
 
@@ -231,27 +307,39 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
 
         if (this.hasModules(EnumInfoUpgradeModules.SILK_TOUCH, stack)) {
             enchantmentMap.put(Enchantments.SILK_TOUCH, 1);
+        } else {
+            enchantmentMap.remove(Enchantments.SILK_TOUCH);
         }
         if (this.hasModules(EnumInfoUpgradeModules.LUCKY, stack)) {
             enchantmentMap.put(Enchantments.FORTUNE, this.getModules(EnumInfoUpgradeModules.LUCKY, stack).number);
+        } else {
+            enchantmentMap.remove(Enchantments.FORTUNE);
         }
         if (this.hasModules(EnumInfoUpgradeModules.EFFICIENT, stack)) {
             enchantmentMap.put(Enchantments.EFFICIENCY, (1 + (this.getModules(
                     EnumInfoUpgradeModules.EFFICIENT,
                     stack
             ).number - 1) * 2));
+        } else {
+            enchantmentMap.remove(Enchantments.EFFICIENCY);
         }
         if (this.hasModules(EnumInfoUpgradeModules.FIRE, stack)) {
             enchantmentMap.put(Enchantments.FIRE_ASPECT, this.getModules(EnumInfoUpgradeModules.FIRE, stack).number);
+        } else {
+            enchantmentMap.remove(Enchantments.FIRE_ASPECT);
         }
         if (this.hasModules(EnumInfoUpgradeModules.LOOT, stack)) {
             enchantmentMap.put(Enchantments.LOOTING, this.getModules(EnumInfoUpgradeModules.LOOT, stack).number);
+        } else {
+            enchantmentMap.remove(Enchantments.LOOTING);
         }
         if (this.hasModules(EnumInfoUpgradeModules.PROTECTION_ARROW, stack)) {
             enchantmentMap.put(Enchantments.PROJECTILE_PROTECTION, (1 + (this.getModules(
                     EnumInfoUpgradeModules.PROTECTION_ARROW,
                     stack
             ).number - 1) * 2));
+        } else {
+            enchantmentMap.remove(Enchantments.PROJECTILE_PROTECTION);
         }
 
         EnchantmentHelper.setEnchantments(enchantmentMap, stack);
@@ -260,7 +348,7 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
     @Override
     public void updateBlackListFromNBT(final IUpgradeWithBlackList item, final ItemStack stack, NBTTagCompound nbt) {
         this.updateListFromNBT(item, stack);
-        List<String> lst = new ArrayList();
+        List<String> lst = new ArrayList<>();
         for (int j = 0; j < 18; j++) {
             String l = "number_" + j;
             if (!nbt.getString(l).isEmpty()) {
@@ -276,6 +364,58 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
             this.map_blackList.put(id, lst);
         }
 
+    }
+
+    @Override
+    public void removeUpdate(final ItemStack stack, final World world, final int index) {
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        nbt.setString("mode_module" + index, "");
+        MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
+
+    }
+
+    @Override
+    public List<ItemStack> getListStack(final ItemStack stack) {
+        List<ItemStack> list = new ArrayList<>();
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        int size = this.getListModifications(stack).size();
+        for (int i = 0; i < 4 + size; i++) {
+            String name = nbt.getString("mode_module" + i);
+            if (!name.equals("")) {
+                int index = IUItem.list.indexOf(name);
+                list.add(new ItemStack(IUItem.upgrademodule, 1, index));
+            } else {
+                list.add(ItemStack.EMPTY);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void addRecipe(final Item stack, final List<EnumInfoUpgradeModules> lst) {
+        for (EnumInfoUpgradeModules upgrades : lst) {
+            addupgrade(stack, new ItemStack(IUItem.upgrademodule, 1, upgrades.ordinal()));
+        }
+        if (lst.contains(EnumInfoUpgradeModules.DIG_DEPTH)) {
+            addupgrade(stack, new ItemStack(IUItem.module9, 1, 12));
+
+        }
+        for (UpgradeModificator modificator : this.list_modificators) {
+            addupgrade(stack, modificator.itemstack, modificator.type);
+        }
+    }
+
+    @Override
+    public boolean shouldUpdate(final EnumInfoUpgradeModules type, final ItemStack stack1) {
+        List<UpgradeItemInform> list = getInformation(stack1);
+        for (UpgradeItemInform inform : list) {
+            if (inform.upgrade == type) {
+                if (inform.number >= type.max) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

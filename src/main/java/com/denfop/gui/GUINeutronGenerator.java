@@ -11,13 +11,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUINeutronGenerator extends GuiIC2<ContainerNeutronGenerator> {
+public class GuiNeutronGenerator extends GuiIC2<ContainerNeutronGenerator> {
 
     public final ContainerNeutronGenerator container;
     public final String progressLabel;
     public final String amplifierLabel;
 
-    public GUINeutronGenerator(ContainerNeutronGenerator container1) {
+    public GuiNeutronGenerator(ContainerNeutronGenerator container1) {
         super(container1);
         this.container = container1;
         this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");

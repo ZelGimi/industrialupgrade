@@ -2,13 +2,19 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.gui.GUISunnariumPanelMaker;
+import com.denfop.gui.GuiSunnariumPanelMaker;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.RecipeOutput;
+import ic2.api.upgrade.IUpgradeItem;
 import ic2.api.upgrade.UpgradableProperty;
+import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,8 +32,12 @@ import java.util.Set;
 
 public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachine {
 
+    public final SEComponent sunenergy;
+
     public TileEntitySunnariumPanelMaker() {
         super(1, 300, 1, Localization.translate("iu.SunnariumPanelMaker.name"), EnumDoubleElectricMachine.SUNNARIUM_PANEL);
+        this.sunenergy = this.addComponent(SEComponent
+                .asBasicSink(this, 10000, 1));
     }
 
     public static void init() {
@@ -110,11 +120,75 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
         String name = OreDictionary.getOreName(id);
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
         if (name == null && fill.getItem() != IUItem.neutroniumingot) {
-            Recipes.sunnuriumpanel.addRecipe(input.forStack(container), input.forStack(fill), null, output);
+            Recipes.recipes.addRecipe(
+                    "sunnuriumpanel",
+                    new BaseMachineRecipe(
+                            new Input(
+                                    input.forStack(container),
+                                    input.forStack(fill)
+                            ),
+                            new RecipeOutput(null, output)
+                    )
+            );
         } else {
-            Recipes.sunnuriumpanel.addRecipe(input.forStack(container), input.forOreDict(name), null, output);
-
+            Recipes.recipes.addRecipe(
+                    "sunnuriumpanel",
+                    new BaseMachineRecipe(
+                            new Input(
+                                    input.forStack(container),
+                                    input.forOreDict(name)
+                            ),
+                            new RecipeOutput(null, output)
+                    )
+            );
         }
+    }
+
+    protected void updateEntityServer() {
+        boolean needsInvUpdate = false;
+
+
+        MachineRecipe output = this.output;
+        if (output != null && this.energy.getEnergy() >= this.energyConsume && this.sunenergy.getEnergy() >= 5) {
+            setActive(true);
+            if (this.progress == 0) {
+                IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+            }
+            this.progress = (short) (this.progress + 1);
+            this.energy.useEnergy(this.energyConsume);
+            this.sunenergy.useEnergy(5);
+            double k = this.progress;
+
+            this.guiProgress = (k / this.operationLength);
+            if (this.progress >= this.operationLength) {
+                this.guiProgress = 0;
+                operate(output);
+                needsInvUpdate = true;
+                this.progress = 0;
+                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+            }
+        } else {
+            if (this.progress != 0 && getActive()) {
+                IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+            }
+            if (output == null) {
+                this.progress = 0;
+            }
+            setActive(false);
+        }
+        for (int i = 0; i < this.upgradeSlot.size(); i++) {
+            ItemStack stack = this.upgradeSlot.get(i);
+            if (stack != null && stack.getItem() instanceof IUpgradeItem) {
+                if (((IUpgradeItem) stack.getItem()).onTick(stack, this)) {
+                    needsInvUpdate = true;
+                }
+            }
+        }
+
+        if (needsInvUpdate) {
+            super.markDirty();
+        }
+
     }
 
     @Override
@@ -155,13 +229,13 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUISunnariumPanelMaker(new ContainerDoubleElectricMachine(entityPlayer, this, type));
+        return new GuiSunnariumPanelMaker(new ContainerDoubleElectricMachine(entityPlayer, this, type));
 
     }
 
     @Override
-    public void operateOnce(RecipeOutput output, List<ItemStack> processResult) {
-        this.inputSlotA.consume(0);
+    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
+        this.inputSlotA.consume();
         this.outputSlot.add(processResult);
     }
 

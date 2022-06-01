@@ -1,8 +1,13 @@
 package com.denfop.api.research;
 
-public class ResearchSystem {
-    IResearchSystem instance;
-    public ResearchSystem(){
 
+public class ResearchSystem {
+
+    public static IResearchSystem instance;
+    public static IResearchSystemParts systemParts;
+
+    public ResearchSystem() {
     }
+
+
 }

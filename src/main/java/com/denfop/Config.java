@@ -15,6 +15,7 @@ public final class Config {
     private static final String[] defaultSpawnerList = new String[]{"ExampleMob1", "ExampleMob2", "ExampleMob3 (these examples " +
             "can be deleted)"};
     public static double SolidMatterStorage;
+    public static boolean experiment;
     public static int limit;
     public static int tier;
     public static int coefficientrf;
@@ -406,9 +407,10 @@ public final class Config {
     public static boolean FerroaugiteOre;
     public static boolean SheeliteeOre;
     public static boolean ProjectE;
-
-
-
+    public static boolean cableEasyMode;
+    public static boolean coolingsystem;
+    public static int tickupdateenergysystem;
+    public static int ticktransferenergy;
 
 
     public static void loadNormalConfig(final File configFile) {
@@ -417,7 +419,10 @@ public final class Config {
         final Configuration config = new Configuration(configFile);
         try {
             config.load();
-
+            coolingsystem = config.get("Experiment 3.0", "cooling system", true).getBoolean(true);
+            experiment = config.get("Experiment 3.0", "Enable", false).getBoolean(false);
+            tickupdateenergysystem = config.get("general", "Tick update energy system", 20).getInt(20);
+            ticktransferenergy = config.get("general", "Tick transfer energy", 1).getInt(1);
             uran233RodCells = config.get("Configuration of reactor`s rods", "Uran233_Cells", 5000).getInt(5000);
             uran233RodHeat = config.get("Configuration of reactor`s rods", "Uran233_Heat", 1).getInt(1);
             uran233Power = config.get("Configuration of reactor`s rods", "Uran233_Power", 3D).getDouble(3D);
@@ -511,26 +516,26 @@ public final class Config {
             maxenergy_spectral_bow = config.get("Energy Bow", "Spectral MaxEnergy", 150000).getInt(150000);
 
             KrvMFSUStorage = config.get("Configuration Energy storages", "Quarkstorage", 409.6E9D).getDouble(409.6E9D);
-            KrvMFSUOutput = config.get("Configuration Energy storages", "Quarkoutput", 247955456).getDouble(247955456);
+            KrvMFSUOutput = config.get("Configuration Energy storages", "Quarkoutput", 61988864).getDouble(61988864);
             tierKrvMFSU = config.get("Configuration Energy storages", "Quarktier", 11).getDouble(11);
 
             GraMFSUStorage = config.get("Configuration Energy storages", "Gravitonstorage", 102.4E9D).getDouble(102.4E9D);
-            GraMFSUOutput = config.get("Configuration Energy storages", "Gravitonoutput", 61988864).getDouble(61988864);
+            GraMFSUOutput = config.get("Configuration Energy storages", "Gravitonoutput", 15497216).getDouble(15497216);
             tierGraMFSU = config.get("Configuration Energy storages", "Gravitontier", 10).getDouble(10);
 
             HadrMFSUStorage = config.get("Configuration Energy storages", "Hadronstorage", 25.6E9D).getDouble(25.6E9D);
-            HadrMFSUOutput = config.get("Configuration Energy storages", "Hadronoutput", 15497216).getDouble(15497216);
+            HadrMFSUOutput = config.get("Configuration Energy storages", "Hadronoutput", 3874304).getDouble(3874304);
             tierHadrMFSU = config.get("Configuration Energy storages", "Hadrontier", 9).getDouble(9);
 
 
             BarMFSUStorage = config.get("Configuration Energy storages", "Barionstorage", 6.4E9D).getDouble(6.4E9D);
-            BarMFSUOutput = config.get("Configuration Energy storages", "Barionoutput", 3874304).getDouble(3874304);
+            BarMFSUOutput = config.get("Configuration Energy storages", "Barionoutput", 968576).getDouble(968576);
             tierBarMFSU = config.get("Configuration Energy storages", "Bariontier", 8).getDouble(8);
             PerMFSUStorage = config.get("Configuration Energy storages", "Perfectstorage", 1.6E9D).getDouble(1.6E9D);
-            PerMFSUOutput = config.get("Configuration Energy storages", "Perfectoutput", 968576).getDouble(968576);
+            PerMFSUOutput = config.get("Configuration Energy storages", "Perfectoutput", 242144).getDouble(242144);
             tierPerMFSU = config.get("Configuration Energy storages", "Perfecttier", 7).getDouble(7);
             expstorage = config.get("Basic Mechanisms", "exp storage", 500).getInt(500);
-            enerycost = config.get("Quantum Querry", "energy consume", 25000).getInt(25000);
+            enerycost = config.get("Quantum Query", "energy consume in QE (1 QE = 16 EU)", 3000).getInt(3000);
             coefficientrf = config.get("general", "coefficient rf", 4).getInt(4);
             cost_aspect = config.get("general", "Aspect cost for energy", 2000).getInt(2000);
             if (coefficientrf < 1) {
@@ -587,7 +592,7 @@ public final class Config {
             promt = config.get("general", "Enable prompt about information a panel", true).getBoolean(true);
 
             SolidMatterStorage = config.get("Solid Matter Generator Storage", "Matter Generator Storage", 5E7D).getDouble(5E7D);
-            newsystem = config.get("general", "Transformer mode", true).getBoolean(true);
+            newsystem = config.get("Transformer mode", "Transformer mode", true).getBoolean(true);
             EnableToriyOre = config.get("spawn ore", "Spawn Thorium Ore", true).getBoolean(true);
             effPower = config.get("UltimateDrill", "Mode 0 efficiency", 80).getInt(80);
             lowPower = config.get("UltimateDrill", "Mode 1 efficiency", 60).getInt(60);
@@ -613,10 +618,13 @@ public final class Config {
             }
             maxVein = config.get("general", "Maximum amount of ore in a vein", 30000).getInt(30000);
             enableIC2EasyMode = config
-                    .get("general", "unlimiting the conduction of energy in the cable and unchecking the tier", false)
+                    .get("Transformer mode", "unchecking the tier", false)
+                    .getBoolean(false);
+            cableEasyMode = config
+                    .get("Transformer mode", "unlimiting the conduction of energy in the cable", false)
                     .getBoolean(false);
             enableexlposion = config.get(
-                    "general",
+                    "Transformer mode",
                     "Enable explosion from mechanisms is on (if enable transformer mode) ",
                     true
             ).getBoolean(true);
@@ -645,12 +653,12 @@ public final class Config {
             transferLimit = config.get("Spectral Saber", "SpectralSaber transfer Limit", 40000).getInt(20000);
             spectralsaberactive = config.get("Spectral Saber", "SpectralSaber Damage Active", 60).getInt(60);
             spectralsabernotactive = config.get("Spectral Saber", "SpectralSaber Damage Not Active", 12).getInt(12);
-            adv_enegry = config.get("Configuration Energy storages", "Improved denergy transfer Et/t", 32768).getInt(32768);
+            adv_enegry = config.get("Configuration Energy storages", "Improved denergy transfer Et/t", 8192).getInt(8192);
             adv_storage = config.get("Configuration Energy storages", "Improved energy storage", 100000000).getInt(100000000);
             tier_advmfsu = config.get("Configuration Energy storages", "Improved tier", 5).getInt(5);
 
             tier_ultmfsu = config.get("Configuration Energy storages", "Advancedtier", 6).getInt(6);
-            ult_enegry = config.get("Configuration Energy storages", "Advancedenergy transfer Et/t", 242144).getInt(242144);
+            ult_enegry = config.get("Configuration Energy storages", "Advancedenergy transfer Et/t", 32768).getInt(32768);
             ult_storage = config.get("Configuration Energy storages", "Advancedenergy storage", 400000000).getInt(400000000);
             InfinityGenDay = config
                     .get("Configuration Solar Panels(Integration)", "InfinityGenDay", 21211520)
@@ -696,7 +704,7 @@ public final class Config {
             spectralpanelOutput = config.get("Configuration Solar Panels", "SpectralSPOutput", 2560).getDouble(2560);
             spectralpanelstorage = config.get("Configuration Solar Panels", "SpectralSPStorage", 5000000D).getDouble(500000D);
             protongenDay = config.get("Configuration Solar Panels", "ProtonGenDay", 5120).getDouble(5120);
-             protonOutput = config.get("Configuration Solar Panels", "ProtonOutput", 10240).getDouble(10240);
+            protonOutput = config.get("Configuration Solar Panels", "ProtonOutput", 10240).getDouble(10240);
             protonstorage = config.get("Configuration Solar Panels", "Protonstorage", 50000000D).getDouble(5000000D);
             singularpanelGenDay = config.get("Configuration Solar Panels", "SingularSPGenDay", 20480).getDouble(20480);
             singularpanelOutput = config.get("Configuration Solar Panels", "SingularSPOutput", 40960).getDouble(40960);
@@ -704,28 +712,28 @@ public final class Config {
                     .get("Configuration Solar Panels", "SingularSPStorage", 1000000000D)
                     .getDouble(100000000D);
             adminpanelGenDay = config.get("Configuration Solar Panels", "DiffractionPanelGenDay", 81920).getDouble(81920);
-           AdminpanelStorage = config.get("Configuration Solar Panels", "DiffractionPanelStorage", 1500000000D).getDouble(
+            AdminpanelStorage = config.get("Configuration Solar Panels", "DiffractionPanelStorage", 1500000000D).getDouble(
                     1500000000D);
             AdminpanelOutput = config.get("Configuration Solar Panels", "DiffractionPanelOutput", 327680).getDouble(327680);
             photonicpanelGenDay = config.get("Configuration Solar Panels", "PhotonicPanelGenDay", 327680).getDouble(327680);
             photonicpanelOutput = config.get("Configuration Solar Panels", "PhotonicPanelOutput", 655360).getDouble(655360);
             photonicpanelStorage = config.get("Configuration Solar Panels", "PhotonicPanelStorage", 5000000000D).getDouble(
                     5000000000D);
-            neutronpanelGenDay = config.get("Configuration Solar Panels", "NeutronPanelGenDay", 1325720).getDouble(1325720);
-            neutronpanelOutput = config.get("Configuration Solar Panels", "NeutronPanelOutput", 2651440).getDouble(2651440);
+            neutronpanelGenDay = config.get("Configuration Solar Panels", "NeutronPanelGenDay", 1310720).getDouble(1310720);
+            neutronpanelOutput = config.get("Configuration Solar Panels", "NeutronPanelOutput", 2621440).getDouble(2621440);
             neutronpanelStorage = config.get("Configuration Solar Panels", "NeutronPanelStorage", 6500000000D).getDouble(
                     6500000000D);
-            barGenDay = config.get("Configuration Solar Panels", "BarionGenDay", 5302880).getDouble(5302880);
-            barOutput = config.get("Configuration Solar Panels", "BarionOutput", 10605760).getDouble(10605760);
+            barGenDay = config.get("Configuration Solar Panels", "BarionGenDay", 5242880).getDouble(5242880);
+            barOutput = config.get("Configuration Solar Panels", "BarionOutput", 10485760).getDouble(10485760);
             barStorage = config.get("Configuration Solar Panels", "BarionStorage", 10000000000D).getDouble(10000000000D);
-            adrGenDay = config.get("Configuration Solar Panels", "HadrionGenDay", 21211520).getDouble(21211520);
-            adrOutput = config.get("Configuration Solar Panels", "HadrionOutput", 42423040).getDouble(42423040);
+            adrGenDay = config.get("Configuration Solar Panels", "HadrionGenDay", 20971520).getDouble(20971520);
+            adrOutput = config.get("Configuration Solar Panels", "HadrionOutput", 41943040).getDouble(41943040);
             adrStorage = config.get("Configuration Solar Panels", "HadrionStorage", 25000000000D).getDouble(25000000000D);
-            graGenDay = config.get("Configuration Solar Panels", "GravitonGenDay", 84846080).getDouble(84846080);
-            graOutput = config.get("Configuration Solar Panels", "GravitonOutput", 169692160).getDouble(169692160);
+            graGenDay = config.get("Configuration Solar Panels", "GravitonGenDay", 83886080).getDouble(83886080);
+            graOutput = config.get("Configuration Solar Panels", "GravitonOutput", 167772160).getDouble(167772160);
             graStorage = config.get("Configuration Solar Panels", "GravitonStorage", 250000000000D).getDouble(250000000000D);
-            kvrGenDay = config.get("Configuration Solar Panels", "KvarkGenDay", 339384320).getDouble(339384320);
-            kvrOutput = config.get("Configuration Solar Panels", "KvarkOutput", 678768640).getDouble(678768640);
+            kvrGenDay = config.get("Configuration Solar Panels", "KvarkGenDay", 335544320).getDouble(335544320);
+            kvrOutput = config.get("Configuration Solar Panels", "KvarkOutput", 671088640).getDouble(678768640);
             kvrStorage = config.get("Configuration Solar Panels", "KvarkStorage", 2500000000000D).getDouble(2500000000000D);
 
 
@@ -750,18 +758,18 @@ public final class Config {
             minWindStrength1 = config.get("Configuration rotors", "Compress Iridium minWindStrength", 25).getInt(25);
             maxWindStrength1 = config.get("Configuration rotors", "Compress Iridium maxWindStrength", 110).getInt(110);
             Radius2 = config.get("Configuration rotors", "Spectral Radius", 11).getInt(11);
-            durability2 = config.get("Configuration rotors", "Spectral durability", 172800).getInt(172800);
+            durability2 = config.get("Configuration rotors", "Spectral durability", 1728000).getInt(1728000);
             efficiency2 = config.get("Configuration rotors", "Spectral efficiency", 8.0F).getInt((int) 8.0F);
             minWindStrength2 = config.get("Configuration rotors", "Spectral minWindStrength", 25).getInt(25);
             maxWindStrength2 = config.get("Configuration rotors", "Spectral maxWindStrength", 110).getInt(110);
             Streak = config.get("Spectral Armor", "Allow Streak", true).getBoolean(true);
             Radius5 = config.get("Configuration rotors", "Mythical Radius", 11).getInt(11);
-            durability5 = config.get("Configuration rotors", "Mythical durability", 345600).getInt(345600);
+            durability5 = config.get("Configuration rotors", "Mythical durability", 3456000).getInt(3456000);
             efficiency5 = config.get("Configuration rotors", "Mythical efficiency", 16.0F).getInt((int) 16.0F);
             minWindStrength5 = config.get("Configuration rotors", "Mythical minWindStrength", 25).getInt(25);
             maxWindStrength5 = config.get("Configuration rotors", "Mythical maxWindStrength", 110).getInt(110);
             Radius4 = config.get("Configuration rotors", "Neutron Radius", 11).getInt(11);
-            durability4 = config.get("Configuration rotors", "Neutron durability", 2764800).getInt(2764800);
+            durability4 = config.get("Configuration rotors", "Neutron durability", 27648000).getInt(27648000);
             efficiency4 = config.get("Configuration rotors", "Neutron efficiency", 64).getInt(64);
             minWindStrength4 = config.get("Configuration rotors", "Neutron minWindStrength", 25).getInt(25);
             maxWindStrength4 = config.get("Configuration rotors", "Neutron maxWindStrength", 110).getInt(110);
@@ -819,7 +827,7 @@ public final class Config {
             voidstorage = config.get("Configuration Solar Panels(Integration)", "Voidstorage", 200000D).getDouble(200000D);
             voidoutput = config.get("Configuration Solar Panels(Integration)", "Voidoutput", 640).getDouble(640);
             voidtier = config.get("Configuration Solar Panels(Integration)", "Voidtier", 4).getInt(4);
-               String[] spawnerList = config.getStringList(
+            String[] spawnerList = config.getStringList(
                     "Spawn List",
                     "spawner",
                     defaultSpawnerList,
@@ -881,8 +889,6 @@ public final class Config {
             RubyOre = config.get("spawn ore", "Enable spawn RubyOre", true).getBoolean(true);
             SapphireOre = config.get("spawn ore", "Enable spawn SapphireOre", true).getBoolean(true);
             TopazOre = config.get("spawn ore", "Enable spawn TopazOre", true).getBoolean(true);
-
-
 
 
             adv_jetpack_maxenergy = config.get("Configuration jetpacks", "adv_jetpack_maxenergy", 60000).getInt(60000);

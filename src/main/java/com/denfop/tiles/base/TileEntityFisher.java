@@ -2,9 +2,8 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.container.ContainerFisher;
-import com.denfop.gui.GUIFisher;
+import com.denfop.gui.GuiFisher;
 import com.denfop.invslot.InvSlotFisher;
-import com.denfop.utils.FakePlayerSpawner;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
@@ -50,7 +49,7 @@ public class TileEntityFisher extends TileEntityElectricMachine
     private boolean checkwater;
 
     public TileEntityFisher() {
-        super("", 1E4, 14, 9);
+        super(1E4, 14, 9);
         this.progress = 0;
         this.energyconsume = 100;
         this.checkwater = false;
@@ -175,7 +174,7 @@ public class TileEntityFisher extends TileEntityElectricMachine
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIFisher(new ContainerFisher(entityPlayer, this));
+        return new GuiFisher(new ContainerFisher(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityFisher> getGuiContainer(EntityPlayer entityPlayer) {
@@ -217,4 +216,5 @@ public class TileEntityFisher extends TileEntityElectricMachine
 
         }
     }
+
 }

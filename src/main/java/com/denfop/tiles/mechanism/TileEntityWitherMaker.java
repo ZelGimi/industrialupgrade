@@ -1,14 +1,17 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerBaseWitherMaker;
-import com.denfop.gui.GUIWitherMaker;
-import com.denfop.invslot.InvSlotProcessableWitherMaker;
+import com.denfop.gui.GuiWitherMaker;
 import com.denfop.tiles.base.TileEntityBaseWitherMaker;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -24,7 +27,7 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker {
 
     public TileEntityWitherMaker() {
         super(1, 1500, 1);
-        this.inputSlotA = new InvSlotProcessableWitherMaker(this, "inputA", 7);
+        this.inputSlotA = new InvSlotRecipes(this, "wither", this);
 
     }
 
@@ -42,18 +45,16 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker {
             IRecipeInput container,
             IRecipeInput fill2, ItemStack output
     ) {
-        Recipes.withermaker.addRecipe(container, container, fill2, fill2, fill2, container, fill2, output);
+        Recipes.recipes.addRecipe("wither", new BaseMachineRecipe(
+                new Input(container, container, fill2, fill2, fill2, container, fill2),
+                new RecipeOutput(
+                        null,
+                        output
+                )
+        ));
 
     }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        } else {
-            InvSlot invSlot = this.getInventorySlot(this.inputSlotA.name);
-            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack);
-        }
-    }
 
     public String getInventoryName() {
 
@@ -62,7 +63,7 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIWitherMaker(new ContainerBaseWitherMaker(entityPlayer, this));
+        return new GuiWitherMaker(new ContainerBaseWitherMaker(entityPlayer, this));
     }
 
     public String getStartSoundFile() {
@@ -81,6 +82,21 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
         );
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.output;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.output = output;
     }
 
 }

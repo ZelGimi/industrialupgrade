@@ -21,7 +21,7 @@ public class ItemDust extends ItemMulti<ItemDust.ItemDustTypes> implements IMode
 
     public ItemDust() {
         super(null, ItemDustTypes.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }

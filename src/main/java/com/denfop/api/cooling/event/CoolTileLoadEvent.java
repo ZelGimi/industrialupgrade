@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 public class CoolTileLoadEvent extends CoolTileEvent {
 
     public CoolTileLoadEvent(final ICoolTile tile, World world) {
-        super(tile,world);
+        super(tile, world);
     }
 
 }

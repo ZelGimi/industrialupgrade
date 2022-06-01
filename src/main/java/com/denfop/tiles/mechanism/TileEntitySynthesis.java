@@ -3,13 +3,16 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.gui.GUISynthesis;
+import com.denfop.gui.GuiSynthesis;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,14 +64,19 @@ public class TileEntitySynthesis extends TileEntityDoubleElectricMachine {
         NBTTagCompound nbt = ModUtils.nbt();
         nbt.setInteger("percent", number);
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.synthesis.addRecipe(input.forStack(container), input.forStack(fill), nbt, output);
-
+        Recipes.recipes.addRecipe("synthesis", new BaseMachineRecipe(
+                new Input(
+                        input.forStack(container),
+                        input.forStack(fill)
+                ),
+                new RecipeOutput(nbt, output)
+        ));
     }
 
-    public void operateOnce(RecipeOutput output, List<ItemStack> processResult) {
+    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
 
-        this.inputSlotA.consume(0);
-        NBTTagCompound nbt = output.metadata;
+        this.inputSlotA.consume();
+        NBTTagCompound nbt = output.getRecipe().output.metadata;
         int procent = nbt.getInteger("percent");
         Random rand = new Random();
         if ((rand.nextInt(100) + 1) > (100 - procent)) {
@@ -80,7 +88,7 @@ public class TileEntitySynthesis extends TileEntityDoubleElectricMachine {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUISynthesis(new ContainerDoubleElectricMachine(entityPlayer, this, type));
+        return new GuiSynthesis(new ContainerDoubleElectricMachine(entityPlayer, this, type));
     }
 
     public String getStartSoundFile() {

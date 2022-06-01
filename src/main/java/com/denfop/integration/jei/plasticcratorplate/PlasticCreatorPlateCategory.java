@@ -17,6 +17,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<PlasticCreatorPlateWrapper> {
 
     private final IDrawableStatic bg;
@@ -32,21 +34,25 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine2.plastic_plate_creator.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 13).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -54,7 +60,7 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
@@ -67,7 +73,8 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
         mc.getTextureManager().bindTexture(getTexture());
 
 
-        drawTexturedModalRect(+51 + 1, +31 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(
+                51 + 1, 31 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
@@ -81,7 +88,7 @@ public class PlasticCreatorPlateCategory extends Gui implements IRecipeCategory<
     public void setRecipe(
             final IRecipeLayout layout,
             final PlasticCreatorPlateWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
         isg.init(0, true, 50, 11);

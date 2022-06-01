@@ -4,7 +4,7 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.items.IUItemBase;
-import com.denfop.items.energy.EnergyDrill;
+import com.denfop.items.energy.ItemEnergyDrill;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
 import ic2.core.block.TeBlockRegistry;
@@ -48,7 +48,7 @@ public class BotaniaIntegration {
         rune_sun = new IUItemBase("rune_sun");
         rune_night = new IUItemBase("rune_night");
         rune_energy = new IUItemBase("rune_energy");
-        teraDDrill = new EnergyDrill(Item.ToolMaterial.DIAMOND, "teraDDrill", 500, 45000, 4, 50, 25, 160, 80);
+        teraDDrill = new ItemEnergyDrill(Item.ToolMaterial.DIAMOND, "teraDDrill", 500, 45000, 4, 50, 25, 160, 80);
 
     }
 
@@ -70,15 +70,15 @@ public class BotaniaIntegration {
                 12000,
                 LibOreDict.RUNE[7],
                 LibOreDict.RUNE[5],
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
-                new ItemStack(Ic2Items.energiumDust.getItem(),1,Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
+                new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
                 new ItemStack(IUItem.itemSSP, 1, 0),
                 new ItemStack(IUItem.iuingot, 1, 17),
                 new ItemStack(manasteel_plate),
@@ -140,7 +140,7 @@ public class BotaniaIntegration {
         Recipes.cannerBottle.addRecipe(
                 input.forStack(Ic2Items.fuelRod, 1),
                 input.forStack(new ItemStack(ModItems.manaResource, 1, 4), 1),
-                reactorterastrellSimple
+                reactorterastrellSimple, false
         );
         Recipes.compressor.addRecipe(input.forStack(reactorDepletedterastrellSimple, 1),
                 null, false, new ItemStack(ModItems.manaResource, 1, 4)

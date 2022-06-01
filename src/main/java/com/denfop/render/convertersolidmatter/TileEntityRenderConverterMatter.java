@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 public class TileEntityRenderConverterMatter extends TileEntitySpecialRenderer<TileEntityConverterSolidMatter> {
 
     public static final ResourceLocation texture = new ResourceLocation(
@@ -19,7 +21,7 @@ public class TileEntityRenderConverterMatter extends TileEntitySpecialRenderer<T
 
 
     public void render(
-            TileEntityConverterSolidMatter te,
+            @Nonnull TileEntityConverterSolidMatter te,
             double x,
             double y,
             double z,

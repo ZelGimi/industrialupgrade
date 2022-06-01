@@ -3,8 +3,9 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
+import com.denfop.componets.EXPComponent;
 import com.denfop.container.ContainerStorageExp;
-import com.denfop.gui.GUIStorageExp;
+import com.denfop.gui.GuiStorageExp;
 import com.denfop.invslot.InvSlotExpStorage;
 import com.denfop.utils.ExperienceUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
@@ -17,26 +18,21 @@ import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityStorageExp extends TileEntityInventory implements IHasGui, INetworkUpdateListener, INetworkDataProvider,
         INetworkClientTileEntityEventListener, INetworkTileEntityEventListener {
 
-    public final int maxStorage;
     public final InvSlotExpStorage inputSlot;
-    public int storage;
-    public int storage1;
+    public final EXPComponent energy;
     public int expirencelevel;
     public int expirencelevel1;
     public AudioSource audioSource;
 
     public TileEntityStorageExp() {
-        this.maxStorage = 2000000000;
-        this.storage = 0;
-        this.storage1 = 0;
         this.inputSlot = new InvSlotExpStorage(this);
+        this.energy = this.addComponent(EXPComponent.asBasicSink(this, 2000000000, 14));
 
     }
 
@@ -48,34 +44,10 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         return "Machines/zap.ogg";
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.storage = nbttagcompound.getInteger("storage");
-        this.storage1 = nbttagcompound.getInteger("storage1");
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("storage", this.storage);
-        nbttagcompound.setInteger("storage1", this.storage1);
-        return nbttagcompound;
-    }
-
-    public void updateEntityServer() {
-
-        super.updateEntityServer();
-        storage = Math.min(storage, 2000000000);
-        storage1 = Math.min(storage1, 2000000000);
-        if (this.inputSlot.isEmpty()) {
-            storage1 = 0;
-        }
-        this.expirencelevel = ExperienceUtils.getLevelForExperience(storage);
-        this.expirencelevel1 = ExperienceUtils.getLevelForExperience(storage1);
-    }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIStorageExp(new ContainerStorageExp(entityPlayer, this));
+        return new GuiStorageExp(new ContainerStorageExp(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityStorageExp> getGuiContainer(EntityPlayer entityPlayer) {
@@ -96,6 +68,18 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
 
     }
 
+    @Override
+    protected void onLoaded() {
+        super.onLoaded();
+        this.expirencelevel = ExperienceUtils.getLevelForExperience((int) Math.min(this.energy.getEnergy(), 2000000000));
+        this.expirencelevel1 =
+                ExperienceUtils.getLevelForExperience((int) Math.min(
+                        Math.min(this.energy.getEnergy() - 2000000000, 0),
+                        2000000000
+                ));
+
+    }
+
     protected void initiate(int soundEvent) {
         IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
     }
@@ -105,24 +89,29 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         // 0 убрать с меха опыт
         // 1 добавить в мех опыт
         if (event == 1) {
-            if (storage < this.maxStorage && (storage1 == 0)) {
-                storage = ExperienceUtils.removePlayerXP(player, maxStorage, storage);
-                initiate(1);
-            } else if (storage1 < this.maxStorage && !this.inputSlot.isEmpty()) {
-                storage1 = ExperienceUtils.removePlayerXP(player, maxStorage, storage1);
+            if (this.energy.getEnergy() < this.energy.getCapacity()) {
+                this.energy.storage = ExperienceUtils.removePlayerXP(player, this.energy.getCapacity(), this.energy.getEnergy());
                 initiate(1);
             }
 
         }
         if (event == 0) {
-            if (storage1 > 0 && !this.inputSlot.isEmpty()) {
-                storage1 = ExperienceUtils.addPlayerXP1(player, storage1);
-                initiate(0);
-            } else if (storage > 0) {
-                storage = ExperienceUtils.addPlayerXP1(player, storage);
+            if (this.energy.getEnergy() > 0) {
+                int temp = 0;
+                if (this.energy.getEnergy() > 2000000000) {
+                    temp = (int) (this.energy.getEnergy() - 2000000000);
+                }
+                this.energy.storage = ExperienceUtils.addPlayerXP1(player, (int) Math.min(this.energy.getEnergy(), 2000000000));
+                this.energy.addEnergy(temp);
                 initiate(0);
             }
         }
+        this.expirencelevel = ExperienceUtils.getLevelForExperience((int) Math.min(this.energy.getEnergy(), 2000000000));
+        this.expirencelevel1 =
+                ExperienceUtils.getLevelForExperience((int) Math.min(
+                        Math.min(this.energy.getEnergy() - 2000000000, 0),
+                        2000000000
+                ));
 
 
     }

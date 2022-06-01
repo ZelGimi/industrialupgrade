@@ -3,7 +3,7 @@ package com.denfop.invslot;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
-import ic2.core.block.TileEntityInventory;
+import com.denfop.tiles.base.TileEntitySolarGeneratorEnergy;
 import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
@@ -12,15 +12,23 @@ import java.util.List;
 
 public class InvSlotGenSunarrium extends InvSlot {
 
+    private final TileEntitySolarGeneratorEnergy tile;
     private int stackSizeLimit;
 
-    public InvSlotGenSunarrium(TileEntityInventory base1) {
+    public InvSlotGenSunarrium(TileEntitySolarGeneratorEnergy base1) {
         super(base1, "input", InvSlot.Access.I, 4, InvSlot.InvSide.TOP);
         this.stackSizeLimit = 1;
+        this.tile = base1;
     }
 
     public boolean accepts(ItemStack itemStack) {
         return itemStack.getItem() instanceof ItemBaseModules && (itemStack.getItemDamage() < 6 || itemStack.getItemDamage() > 14);
+    }
+
+    @Override
+    public void put(final int index, final ItemStack content) {
+        super.put(index, content);
+        this.tile.lst = this.coefday();
     }
 
     public List<Double> coefday() {

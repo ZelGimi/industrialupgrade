@@ -5,12 +5,8 @@ import com.denfop.tiles.base.TileEntityMultiMatter;
 public class TileEntityImprovedMatter extends TileEntityMultiMatter {
 
     public TileEntityImprovedMatter() {
-        super(800000F, 10, 64000000);
+        super(800000F, 14, 64000000);
     }
 
-    @Override
-    public String getInventoryName() {
-        return "iu.blockMatter2.name";
-    }
 
 }

@@ -1,15 +1,18 @@
 package com.denfop.api.recipe;
 
 import ic2.api.recipe.IRecipeInput;
-import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
 public interface IInput {
 
-   List<IRecipeInput> getInputes();
+    List<IRecipeInput> getInputs();
 
-   boolean matches(ItemStack... stack);
+    boolean hasFluids();
 
-   boolean matches(List<IRecipeInput> stack);
+    FluidStack getFluid();
+
+    List<FluidStack> getFluidInputs();
+
 }

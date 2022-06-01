@@ -2,7 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerHeliumGenerator;
-import com.denfop.gui.GUIHeliumGenerator;
+import com.denfop.gui.GuiHeliumGenerator;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
@@ -17,7 +17,6 @@ import ic2.core.block.invslot.InvSlotConsumableLiquid.OpType;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
-import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.init.MainConfig;
 import ic2.core.profile.NotClassic;
 import ic2.core.util.ConfigUtil;
@@ -29,7 +28,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +46,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
     private AudioSource audioSource;
 
     public TileEntityHeliumGenerator() {
-        super(50000, 14);
+        super(50000, 14, 1);
 
         this.energycost = 1000;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
@@ -147,17 +145,15 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIHeliumGenerator(new ContainerHeliumGenerator(entityPlayer, this));
+        return new GuiHeliumGenerator(new ContainerHeliumGenerator(entityPlayer, this));
     }
 
     public void onGuiClosed(EntityPlayer player) {
     }
 
     public List<String> getNetworkedFields() {
-        List<String> ret = new ArrayList<>();
 
-        ret.addAll(super.getNetworkedFields());
-        return ret;
+        return super.getNetworkedFields();
     }
 
     public void onNetworkUpdate(String field) {

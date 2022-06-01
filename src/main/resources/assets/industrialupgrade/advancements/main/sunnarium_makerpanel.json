@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "industrialupgrade:sunnarium_maker_plate_item"
+      "item": "industrialupgrade:gen_sunnarium_plate"
     },
     "title": {
       "translate": "achievement.sunnarium_makerpanel"
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "industrialupgrade:sunnarium_maker_plate_item"
+            "item": "industrialupgrade:gen_sunnarium_plate"
           }
         ]
       }

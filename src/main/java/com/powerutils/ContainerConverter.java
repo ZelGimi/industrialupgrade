@@ -1,9 +1,6 @@
 package com.powerutils;
 
-import com.denfop.tiles.base.TileEntityElectricBlock;
 import ic2.core.ContainerFullInv;
-import ic2.core.slot.ArmorSlot;
-import ic2.core.slot.SlotArmor;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -11,10 +8,19 @@ import java.util.List;
 
 public class ContainerConverter extends ContainerFullInv<TileEntityConverter> {
 
+    public final EntityPlayer entityPlayer;
+
     public ContainerConverter(EntityPlayer entityPlayer, TileEntityConverter tileEntity) {
         super(entityPlayer, tileEntity, 176);
-        for (int k = 0; k < 4; k++)
+        this.entityPlayer = entityPlayer;
+        for (int k = 0; k < 4; k++) {
             addSlotToContainer(new SlotInvSlot(tileEntity.upgradeSlot, k, 152, 17 + k * 18));
+        }
+    }
+
+    public void onContainerClosed(EntityPlayer playerIn) {
+        this.base.list.remove(playerIn);
+        super.onContainerClosed(playerIn);
     }
 
     public List<String> getNetworkedFields() {

@@ -12,17 +12,13 @@ import java.util.WeakHashMap;
 
 public class KeyboardIU implements IKeyboard {
 
-    private final Map<EntityPlayer, Set<KeyboardIU.Key>> playerKeys = new WeakHashMap();
+    private final Map<EntityPlayer, Set<KeyboardIU.Key>> playerKeys = new WeakHashMap<>();
 
     public KeyboardIU() {
     }
 
     public boolean isChangeKeyDown(EntityPlayer player) {
         return this.get(player, KeyboardIU.Key.CHANGE);
-    }
-
-    public boolean isStreakKeyDown(EntityPlayer player) {
-        return this.get(player, Key.STREAKMODE);
     }
 
     public boolean isVerticalMode(EntityPlayer player) {

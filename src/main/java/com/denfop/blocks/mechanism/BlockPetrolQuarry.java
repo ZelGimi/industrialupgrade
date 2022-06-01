@@ -2,7 +2,7 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.TileEntityOilGetter;
+import com.denfop.tiles.mechanism.TileEntityOilPump;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
 
-    petrol_quarry(TileEntityOilGetter.class, 0),
+    petrol_quarry(TileEntityOilPump.class, 0),
 
 
     ;
@@ -87,7 +87,7 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override
@@ -141,6 +141,7 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
+    @Deprecated
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
     }

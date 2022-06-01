@@ -3,6 +3,7 @@ package com.denfop.integration.jei.genhelium;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,7 +32,7 @@ public class GenHeliumWrapper implements IRecipeWrapper {
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setOutput(FluidStack.class, this.inputstack2);
+        ingredients.setOutput(VanillaTypes.FLUID, this.inputstack2);
     }
 
 

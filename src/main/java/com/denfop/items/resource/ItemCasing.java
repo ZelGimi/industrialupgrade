@@ -21,7 +21,7 @@ public class ItemCasing extends ItemMulti<ItemCasing.Types> implements IModelReg
 
     public ItemCasing() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }

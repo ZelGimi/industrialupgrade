@@ -1,4 +1,3 @@
-
 package com.denfop.api.heat;
 
 public interface IHeatSource extends IHeatEmitter {

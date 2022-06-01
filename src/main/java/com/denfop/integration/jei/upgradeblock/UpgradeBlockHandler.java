@@ -1,26 +1,30 @@
 package com.denfop.integration.jei.upgradeblock;
 
 
-import com.denfop.api.IDoubleMachineRecipeManager;
 import com.denfop.api.Recipes;
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class UpgradeBlockHandler {
 
     private static final List<UpgradeBlockHandler> recipes = new ArrayList<>();
+    public final NBTTagCompound metadata;
     private final ItemStack input, input1, output;
 
-    public UpgradeBlockHandler(ItemStack input, ItemStack input1, ItemStack output) {
+    public UpgradeBlockHandler(
+            ItemStack input,
+            ItemStack input1,
+            ItemStack output,
+            final NBTTagCompound metadata
+    ) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
+        this.metadata = metadata;
     }
 
     public static List<UpgradeBlockHandler> getRecipes() { // Получатель всех рецептов.
@@ -30,8 +34,13 @@ public class UpgradeBlockHandler {
         return recipes;
     }
 
-    public static UpgradeBlockHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
-        UpgradeBlockHandler recipe = new UpgradeBlockHandler(input, input1, output);
+    public static UpgradeBlockHandler addRecipe(
+            ItemStack input,
+            ItemStack input1,
+            ItemStack output,
+            final NBTTagCompound metadata
+    ) {
+        UpgradeBlockHandler recipe = new UpgradeBlockHandler(input, input1, output, metadata);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,22 +61,17 @@ public class UpgradeBlockHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
-                Recipes.upgrade.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0)
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("upgradeblock")) {
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                    container.getOutput().items.get(0), container.output.metadata
             );
+
 
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

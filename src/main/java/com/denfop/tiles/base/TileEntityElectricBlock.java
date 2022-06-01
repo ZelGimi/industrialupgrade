@@ -6,10 +6,11 @@ import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.api.IStorage;
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.gui.GuiElectricBlock;
 import com.denfop.invslot.InvSlotElectricBlock;
-import com.denfop.items.modules.AdditionModule;
+import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.tiles.wiring.EnumElectricBlock;
@@ -24,7 +25,6 @@ import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
-import ic2.core.block.comp.Energy;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
 import ic2.core.ref.TeBlock;
@@ -52,7 +52,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
@@ -65,15 +65,16 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public final double tier;
     public final boolean chargepad;
     public final String name;
-    public final Energy energy;
+    public final AdvEnergy energy;
     public final double maxStorage2;
     public final double l;
     public final InvSlotElectricBlock inputslotA;
     public final InvSlotElectricBlock inputslotB;
     public final InvSlotElectricBlock inputslotC;
+    public boolean wireless;
     public EntityPlayer player;
     public double output;
-    public String UUID = null;
+    public String UUID = "";
     public double energy2;
     public boolean rf;
     public boolean rfeu = false;
@@ -101,8 +102,9 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         this.inputslotC = new InvSlotElectricBlock(this, 3, "input2", 2);
         this.output_plus = 0;
         this.temp = 0;
+        this.wireless = false;
         this.l = output1;
-        this.energy = this.addComponent((new Energy(this, maxStorage1,
+        this.energy = this.addComponent((new AdvEnergy(this, maxStorage1,
                 EnumSet.complementOf(EnumSet.of(EnumFacing.DOWN)), EnumSet.of(EnumFacing.DOWN),
                 EnergyNet.instance.getTierFromPower(this.output),
                 EnergyNet.instance.getTierFromPower(this.output), false
@@ -120,6 +122,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
         return electricblock;
     }
+
 
     public List<ItemStack> getDrop() {
         return getAuxDrops(0);
@@ -156,7 +159,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         List<String> list = new ArrayList<>();
         list.add(UUID);
         for (int h = 0; h < 2; h++) {
-            if (inputslotC.get(h) != null && inputslotC.get(h).getItem() instanceof AdditionModule
+            if (inputslotC.get(h) != null && inputslotC.get(h).getItem() instanceof ItemAdditionModule
                     && inputslotC.get(h).getItemDamage() == 0) {
                 for (int m = 0; m < 9; m++) {
                     NBTTagCompound nbt = ModUtils.nbt(inputslotC.get(h));
@@ -184,7 +187,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         List<String> list = new ArrayList<>();
         list.add(UUID);
         for (int h = 0; h < 2; h++) {
-            if (inputslotC.get(h) != null && inputslotC.get(h).getItem() instanceof AdditionModule
+            if (inputslotC.get(h) != null && inputslotC.get(h).getItem() instanceof ItemAdditionModule
                     && inputslotC.get(h).getItemDamage() == 0) {
                 for (int m = 0; m < 9; m++) {
                     NBTTagCompound nbt = ModUtils.nbt(inputslotC.get(h));
@@ -467,7 +470,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
         if (chargepad) {
-            return Arrays.asList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
+            return Collections.singletonList(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D));
         } else {
             return super.getAabbs(forCollision);
         }
@@ -503,7 +506,9 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     protected void updateEntityServer() {
         super.updateEntityServer();
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
-        this.inputslotC.wirelessmodule();
+        if (this.wireless) {
+            this.inputslotC.wirelessmodule();
+        }
         if (chargepad) {
             if (this.player != null && this.energy.getEnergy() >= 1.0D) {
                 if (!getActive()) {
@@ -517,17 +522,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 needsInvUpdate = true;
             }
         }
-        if (this.UUID != null) {
-            personality = this.inputslotC.personality();
-        }
-        this.output_plus = this.inputslotC.output_plus(this.l);
-        this.output = this.l + this.output_plus;
-        this.movementcharge = this.inputslotC.getstats().get(0);
-        this.movementchargeitem = this.inputslotC.getstats().get(1);
-        this.movementchargerf = this.inputslotC.getstats().get(2);
-        this.movementchargeitemrf = this.inputslotC.getstats().get(3);
 
-        this.rf = this.inputslotC.getstats().get(4);
         if (this.rf) {
             if (!this.rfeu) {
                 if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
@@ -561,12 +556,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 );
             }
         }
-        if (this.energy.getEnergy() >= this.energy.getCapacity()) {
-            this.energy.addEnergy(this.energy.getCapacity() - this.energy.getEnergy());
-        }
-        if (this.energy.getEnergy() < 0) {
-            this.energy.addEnergy(-this.energy.getEnergy());
-        }
         if (this.energy2 < 0) {
             this.energy2 = 0;
         }
@@ -586,7 +575,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 needsInvUpdate = ((this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0) > 0.0D);
             }
         }
-        if (this.inputslotB.get(0) != null) {
+        if (!this.inputslotB.get(0).isEmpty()) {
             if (this.inputslotB.discharge(
                     this.energy.getEnergy() < this.energy.getCapacity() ? this.energy.getEnergy() : 0,
                     this.inputslotB.get(0),
@@ -598,29 +587,29 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 needsInvUpdate = ((this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0) > 0.0D);
             }
         }
-        if (this.rf) {
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                BlockPos pos = new BlockPos(
-                        this.pos.getX() + facing.getFrontOffsetX(),
-                        this.pos.getY() + facing.getFrontOffsetY(),
-                        this.pos.getZ() + facing.getFrontOffsetZ()
-                );
 
-                if (this.getWorld().getTileEntity(pos) == null) {
-                    continue;
-                }
-                TileEntity tile = this.getWorld().getTileEntity(pos);
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            BlockPos pos = new BlockPos(
+                    this.pos.getX() + facing.getFrontOffsetX(),
+                    this.pos.getY() + facing.getFrontOffsetY(),
+                    this.pos.getZ() + facing.getFrontOffsetZ()
+            );
 
-                if (!(tile instanceof TileEntitySolarPanel)) {
+            if (this.getWorld().getTileEntity(pos) == null) {
+                continue;
+            }
+            TileEntity tile = this.getWorld().getTileEntity(pos);
 
-                    if (tile instanceof IEnergyReceiver) {
-                        extractEnergy(facing, ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(),
-                                extractEnergy(facing, (int) this.energy2, true), false
-                        ), false);
-                    }
+            if (!(tile instanceof TileEntitySolarPanel)) {
+
+                if (tile instanceof IEnergyReceiver) {
+                    extractEnergy(facing, ((IEnergyReceiver) tile).receiveEnergy(facing.getOpposite(),
+                            extractEnergy(facing, (int) this.energy2, true), false
+                    ), false);
                 }
             }
         }
+
         if (needsInvUpdate) {
             markDirty();
         }
@@ -688,6 +677,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
             this.energy.addEnergy(nbt.getDouble("energy"));
             this.energy2 = nbt.getDouble("energy2");
+            this.UUID = placer.getName();
         }
     }
 
@@ -696,8 +686,10 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         if (!(getWorld()).isRemote) {
             this.energy.addEnergy(eustored);
             this.energy2 = eustored1;
+
         }
     }
+
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
@@ -724,8 +716,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             EntityPlayer entityPlayer,
             int i
     ) {
-        List<ItemStack> list = new ArrayList<>();
-        return list;
+        return new ArrayList<>();
     }
 
 
@@ -767,34 +758,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 EnumSet.complementOf(EnumSet.of(this.getFacing(), EnumFacing.UP)),
                 EnumSet.of(this.getFacing())
         );
-        if (nbttagcompound.getString("UUID") != null) {
-            this.UUID = nbttagcompound.getString("UUID");
-        }
-        this.temp = nbttagcompound.getShort("temp");
-
-        if (((temp >> 6) & 1) == 1) {
-            this.movementchargeitemrf = true;
-        }
-        if (((temp >> 5) & 1) == 1) {
-            this.movementchargeitem = true;
-        }
-        if (((temp >> 4) & 1) == 1) {
-            this.movementcharge = true;
-        }
-        if (((temp >> 3) & 1) == 1) {
-            this.movementchargerf = true;
-        }
-        if ((temp & 1) == 1) {
-            this.personality = true;
-        }
-
-        if (((temp >> 2) & 1) == 1) {
-            this.rfeu = true;
-        }
-        if (((temp >> 1) & 1) == 1) {
-            this.rf = true;
-        }
-
+        this.UUID = nbttagcompound.getString("UUID");
         this.energy2 = Util.limit(nbttagcompound.getDouble("energy2"), 0.0D,
                 this.maxStorage2
         );
@@ -809,22 +773,9 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        if (energy2 > 0) {
-            nbttagcompound.setDouble("energy2", this.energy2);
-        }
-        this.temp = (short) (this.movementchargeitemrf ? 1 : 0);
-        this.temp = (short) ((this.temp << 1) + (short) (this.movementchargeitem ? 1 : 0));
-        this.temp = (short) ((this.temp << 1) + (short) (this.movementcharge ? 1 : 0));
-        this.temp = (short) ((this.temp << 1) + (short) (this.movementchargerf ? 1 : 0));
-        this.temp = (short) ((this.temp << 1) + (short) (this.rfeu ? 1 : 0));
-        this.temp = (short) ((this.temp << 1) + (short) (this.rf ? 1 : 0));
-        this.temp = (short) ((this.temp << 1) + (short) (this.personality ? 1 : 0));
-        nbttagcompound.setShort("temp", temp);
+        nbttagcompound.setDouble("energy2", this.energy2);
+        nbttagcompound.setString("UUID", this.UUID);
 
-
-        if (this.UUID != null) {
-            nbttagcompound.setString("UUID", this.UUID);
-        }
 
         return nbttagcompound;
     }
@@ -848,9 +799,5 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return Localization.translate(this.name);
     }
 
-
-    public void onUpgraded() {
-        this.rerender();
-    }
 
 }

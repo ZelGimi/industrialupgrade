@@ -46,17 +46,6 @@ public enum BlockPowerConverter implements ITeBlock {
 
     }
 
-
-    @Override
-    public String getName() {
-        return this.name();
-    }
-
-    @Override
-    public int getId() {
-        return this.itemMeta;
-    }
-
     public static void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -73,6 +62,16 @@ public enum BlockPowerConverter implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
+
+    @Override
+    public int getId() {
+        return this.itemMeta;
     }
 
     @Override
@@ -124,6 +123,7 @@ public enum BlockPowerConverter implements ITeBlock {
     public TeBlock.DefaultDrop getDefaultDrop() {
         return TeBlock.DefaultDrop.Machine;
     }
+
     @Override
     @Nonnull
     public EnumRarity getRarity() {

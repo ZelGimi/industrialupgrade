@@ -1,7 +1,7 @@
 package com.denfop.invslot;
 
 
-import com.denfop.items.modules.QuarryModule;
+import com.denfop.items.modules.ItemQuarryModule;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ public class InvSlotModule extends InvSlot {
                 return false;
             }
         } else {
-            return itemStack.getItem() instanceof QuarryModule && itemStack.getItemDamage() >= 12;
+            return itemStack.getItem() instanceof ItemQuarryModule && itemStack.getItemDamage() >= 12;
         }
     }
 

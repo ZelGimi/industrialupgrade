@@ -7,7 +7,8 @@ import net.minecraft.client.renderer.RenderItem;
 public class RenderItemIUM extends RenderItem {
 
     public RenderItemIUM() {
-        super(Minecraft.getMinecraft().getTextureManager(),
+        super(
+                Minecraft.getMinecraft().getTextureManager(),
                 Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager(),
                 Minecraft.getMinecraft().getItemColors()
         );

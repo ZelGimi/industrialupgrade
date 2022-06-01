@@ -2,7 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.api.Recipes;
 import com.denfop.container.ContainerObsidianGenerator;
-import com.denfop.gui.GUIObsidianGenerator;
+import com.denfop.gui.GuiObsidianGenerator;
 import com.denfop.invslot.InvSlotObsidianGenerator;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.init.Localization;
@@ -23,7 +23,7 @@ public class TileEntityObsidianGenerator extends TileEntityBaseObsidianGenerator
 
     public TileEntityObsidianGenerator() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotObsidianGenerator(this, "inputA", 0, 2);
+        this.inputSlotA = new InvSlotObsidianGenerator(this, "inputA", 2);
     }
 
     public static void init() {
@@ -39,7 +39,7 @@ public class TileEntityObsidianGenerator extends TileEntityBaseObsidianGenerator
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIObsidianGenerator(new ContainerObsidianGenerator(entityPlayer, this));
+        return new GuiObsidianGenerator(new ContainerObsidianGenerator(entityPlayer, this));
     }
 
     public String getStartSoundFile() {

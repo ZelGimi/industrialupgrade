@@ -1,9 +1,10 @@
 package com.denfop.tiles.reactors;
 
 import com.denfop.Config;
+import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.container.ContainerBaseNuclearReactor;
 import com.denfop.damagesource.IUDamageSource;
-import com.denfop.gui.GUINuclearReactor;
+import com.denfop.gui.GuiNuclearReactor;
 import com.denfop.invslot.InvSlotReactor;
 import com.denfop.items.armour.ItemArmorAdvHazmat;
 import com.denfop.tiles.base.TileEntityRadiationPurifier;
@@ -14,8 +15,6 @@ import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.energy.tile.IMetaDelegate;
-import ic2.api.reactor.IReactor;
-import ic2.api.reactor.IReactorComponent;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IC2DamageSource;
@@ -31,7 +30,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -51,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInventory implements IHasGui, IReactor,
+public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInventory implements IHasGui, IAdvReactor,
         IEnergySource, IMetaDelegate, IGuiValueProvider {
 
     public final int sizeX;
@@ -69,13 +67,12 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     public AudioSource audioSourceMain;
     public AudioSource audioSourceGeiger;
     public boolean addedToEnergyNet = false;
-
-    protected List<Boolean> redstonelist = new ArrayList<>();
+    public List<ReactorsItem> reactorsItemList = new ArrayList<>();
     protected float lastOutput = 0.0F;
     protected List<IEnergyTile> subTiles = new ArrayList<>();
 
     public TileEntityBaseNuclearReactorElectric(int sizeX, int sizeY, String background, double coef) {
-        this.updateTicker = IC2.random.nextInt(this.getTickRate());
+        this.updateTicker = 0;
         this.reactorSlot = new InvSlotReactor(this, "reactor", sizeX * sizeY);
         this.getblock = false;
         this.sizeX = sizeX;
@@ -123,6 +120,10 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         }
     }
 
+    public List<ReactorsItem> getReactorsItems() {
+        return this.reactorsItemList;
+    }
+
     public double getGuiValue(String name) {
         if ("heat".equals(name)) {
             return this.maxHeat == 0 ? 0.0D : (double) this.heat / (double) this.maxHeat;
@@ -137,10 +138,12 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         super.onLoaded();
         if (IC2.platform.isSimulating() && !this.isFluidCooled()) {
             this.refreshChambers();
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            if (!this.addedToEnergyNet) {
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            }
             this.addedToEnergyNet = true;
         }
-
+        this.reactorSlot.update();
     }
 
     public void onUnloaded() {
@@ -162,15 +165,11 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         return "Nuclear Reactor";
     }
 
-    public int gaugeHeatScaled(int i) {
-        return i * this.heat / (this.maxHeat / 100 * 85);
-    }
-
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.heat = nbttagcompound.getInteger("heat");
         this.output = (float) nbttagcompound.getDouble("output");
-        getblock = nbttagcompound.getBoolean("getblock");
+        this.getblock = nbttagcompound.getBoolean("getblock");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
@@ -236,6 +235,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                                         y,
                                         z
                                 ));
+                                assert tile != null;
                                 if (tile.getActive()) {
                                     getblock = true;
                                     return;
@@ -328,7 +328,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                 }
 
                 if (power >= 0.7F) {
-                    List list1 = this.getWorld().getEntitiesWithinAABB(
+                    List<EntityLivingBase> list1 = this.getWorld().getEntitiesWithinAABB(
                             EntityLivingBase.class,
                             new AxisAlignedBB(
                                     this.getPos().getX() - 3,
@@ -340,9 +340,8 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                             )
                     );
 
-                    for (Object o : list1) {
-                        Entity ent = (Entity) o;
-                        ent.attackEntityFrom(
+                    for (EntityLivingBase o : list1) {
+                        o.attackEntityFrom(
                                 IC2DamageSource.radiation,
                                 (float) ((int) ((float) this.getWorld().rand.nextInt(4) * this.hem))
                         );
@@ -397,30 +396,10 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         }
     }
 
-    public int[] getRandCoord(int radius) {
-        if (radius <= 0) {
-            return null;
-        } else {
-            int[] c = new int[]{this.pos.getX() + this.getWorld().rand.nextInt(2 * radius + 1) - radius,
-                    this.pos.getY() + this.getWorld().rand.nextInt(2 * radius + 1) - radius,
-                    this.pos.getZ() + this.getWorld().rand.nextInt(2 * radius + 1) - radius};
-            return c[0] == this.pos.getX() && c[1] == this.pos.getY() && c[2] == this.pos.getZ() ? null : c;
-        }
-    }
 
     public void processChambers() {
-        int size = this.getReactorSize();
-//TODO y <7 this height of the reactor is 7 maximum, for the rest change 7 to your value
-        for (int pass = 0; pass < 2; ++pass) {
-            for (int y = 0; y < sizeY; ++y) {
-                for (int x = 0; x < size; ++x) {
-                    ItemStack stack = this.reactorSlot.get(x, y);
-                    if (stack != null && stack.getItem() instanceof IReactorComponent) {
-                        IReactorComponent comp = (IReactorComponent) stack.getItem();
-                        comp.processChamber(stack, this, x, y, pass == 0);
-                    }
-                }
-            }
+        for (ReactorsItem reactorsItem : this.getReactorsItems()) {
+            reactorsItem.update();
         }
 
     }
@@ -446,7 +425,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUINuclearReactor(new ContainerBaseNuclearReactor(entityPlayer, this));
+        return new GuiNuclearReactor(new ContainerBaseNuclearReactor(entityPlayer, this));
     }
 
     public void onGuiClosed(EntityPlayer entityPlayer) {

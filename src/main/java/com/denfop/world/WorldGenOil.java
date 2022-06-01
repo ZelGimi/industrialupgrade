@@ -7,23 +7,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class WorldGenOil extends WorldGenerator {
 
     private final Block block;
     private final Block spreadBlock;
-    private final int spreadBlockMeta;
 
-    public WorldGenOil(Block block, Block spreadBlock, int spreadBlockMeta) {
+    public WorldGenOil(Block block, Block spreadBlock) {
         this.block = block;
         this.spreadBlock = spreadBlock;
-        this.spreadBlockMeta = spreadBlockMeta;
     }
 
 
     @Override
-    public boolean generate(final World world, final Random rand, final BlockPos pos) {
+    public boolean generate(@Nonnull final World world, @Nonnull final Random rand, final BlockPos pos) {
         int x = pos.getX() - 8;
         int z = pos.getZ() - 8;
         int y = pos.getY();

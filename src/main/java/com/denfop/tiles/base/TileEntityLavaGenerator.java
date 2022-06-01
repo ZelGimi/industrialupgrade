@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.container.ContainerLavaGenerator;
-import com.denfop.gui.GUILavaGenerator;
+import com.denfop.gui.GuiLavaGenerator;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
@@ -16,7 +16,6 @@ import ic2.core.block.invslot.InvSlotConsumableLiquid.OpType;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
-import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.init.MainConfig;
 import ic2.core.profile.NotClassic;
 import ic2.core.util.ConfigUtil;
@@ -29,7 +28,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +46,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
     private AudioSource audioSource;
 
     public TileEntityLavaGenerator() {
-        super(2000, 14);
+        super(20000, 14, 1);
 
         this.energycost = 80;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
@@ -96,7 +94,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
         super.onUnloaded();
     }
 
-    private void initiate(int soundEvent) {
+    public void initiate(int soundEvent) {
         IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
     }
 
@@ -154,17 +152,14 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUILavaGenerator(new ContainerLavaGenerator(entityPlayer, this));
+        return new GuiLavaGenerator(new ContainerLavaGenerator(entityPlayer, this));
     }
 
     public void onGuiClosed(EntityPlayer player) {
     }
 
     public List<String> getNetworkedFields() {
-        List<String> ret = new ArrayList<>();
-
-        ret.addAll(super.getNetworkedFields());
-        return ret;
+        return super.getNetworkedFields();
     }
 
     public void onNetworkUpdate(String field) {

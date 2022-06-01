@@ -26,37 +26,38 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemBattery extends BaseElectricItem implements IModelRegister {
 
     private static final int maxLevel = 4;
-    public final boolean wirellescharge;
+    public final boolean wirelessCharge;
     private final String name1;
 
-    public ItemBattery(String name, double maxCharge, double transferLimit, int tier, boolean wirellescharge) {
+    public ItemBattery(String name, double maxCharge, double transferLimit, int tier, boolean wirelessCharge) {
         super(name, maxCharge, transferLimit, tier);
         this.setMaxDamage(16);
-        this.wirellescharge = wirellescharge;
+        this.wirelessCharge = wirelessCharge;
         this.name1 = name;
         IUCore.proxy.addIModelRegister(this);
     }
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("battery").append("/").append(name + extraName);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "battery" + "/" + name + extraName;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     @Override
-    public void getSubItems(final CreativeTabs p_150895_1_, final NonNullList<ItemStack> var3) {
+    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
         if (this.isInCreativeTab(p_150895_1_)) {
             final ItemStack var4 = new ItemStack(this, 1);
             ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             var3.add(var4);
-            var3.add(new ItemStack(this, 1, this.getMaxDamage()));
+            var3.add(new ItemStack(this, 1, 16));
         }
     }
 
@@ -87,11 +88,17 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
     }
 
     @Override
-    public void onUpdate(ItemStack itemStack, World p_77663_2_, Entity p_77663_3_, int p_77663_4_, boolean p_77663_5_) {
+    public void onUpdate(
+            @Nonnull ItemStack itemStack,
+            @Nonnull World p_77663_2_,
+            @Nonnull Entity p_77663_3_,
+            int p_77663_4_,
+            boolean p_77663_5_
+    ) {
         if (!(p_77663_3_ instanceof EntityPlayer)) {
             return;
         }
-        if (wirellescharge) {
+        if (wirelessCharge) {
             int mode = ModUtils.NBTGetInteger(itemStack, "mode");
             EntityPlayer entityplayer = (EntityPlayer) p_77663_3_;
             if (mode == 1) {
@@ -99,7 +106,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                     boolean transferred = false;
                     for (int i = 0; i < 9; i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
-                        if (stack != null && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
+                        if (!stack.isEmpty() && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
                             double transfer = ElectricItem.manager.discharge(
                                     itemStack,
                                     2.0D * this.transferLimit,
@@ -126,7 +133,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
-                        if (stack != null && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
+                        if (!stack.isEmpty() && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
                             double transfer = ElectricItem.manager.discharge(
                                     itemStack,
                                     2.0D * this.transferLimit,
@@ -154,7 +161,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.armorInventory.get(i);
-                        if (stack != null && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
+                        if (!stack.isEmpty() && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
                             double transfer = ElectricItem.manager.discharge(
                                     itemStack,
                                     2.0D * this.transferLimit,
@@ -210,7 +217,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
-                        if (stack != null && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
+                        if (!stack.isEmpty() && !(stack.getItem() instanceof ic2.core.item.ItemBattery)) {
                             double transfer = ElectricItem.manager.discharge(
                                     itemStack,
                                     2.0D * this.transferLimit,
@@ -243,8 +250,9 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
         return true;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        if (IC2.platform.isSimulating() && wirellescharge) {
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
+        if (IC2.platform.isSimulating() && wirelessCharge) {
             int mode = ModUtils.NBTGetInteger(player.getHeldItem(hand), "mode");
             mode++;
             if (mode > 4 || mode < 0) {
@@ -266,7 +274,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
 
                 for (int i = 0; i < 9; ++i) {
                     ItemStack target = player.inventory.mainInventory.get(i);
-                    if (target != null && target != stack && !(ElectricItem.manager.discharge(
+                    if (!target.isEmpty() && target != stack && !(ElectricItem.manager.discharge(
                             target,
                             1.0D / 0.0,
                             2147483647,
@@ -292,14 +300,14 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                     }
                 }
 
-                if (transferred && !world.isRemote) {
+                if (transferred) {
                     player.openContainer.detectAndSendChanges();
                 }
             }
 
-            return new ActionResult(EnumActionResult.SUCCESS, stack);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         } else {
-            return new ActionResult(EnumActionResult.PASS, stack);
+            return new ActionResult<>(EnumActionResult.PASS, stack);
         }
     }
 

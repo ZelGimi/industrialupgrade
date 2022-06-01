@@ -6,11 +6,12 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
@@ -30,13 +31,13 @@ import ic2.core.util.LogCategory;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -58,6 +59,8 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -66,20 +69,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("SameReturnValue")
+
 public class ItemArmorImprovemedNano extends ItemArmorElectric
         implements IModelRegister, ISpecialArmor, IUpgradeItem, IElectricItem, IItemHudInfo, IMetalArmor {
 
-    protected static final Map<Potion, Integer> potionRemovalCost = new HashMap<Potion, Integer>();
+    protected static final Map<Potion, Integer> potionRemovalCost = new HashMap<>();
     protected final double maxCharge;
     protected final double transferLimit;
     protected final int tier;
     private final String armorName;
     private final String name;
     private float jumpCharge;
-    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
-    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
-    private boolean update = false;
 
     public ItemArmorImprovemedNano(
             String name, EntityEquipmentSlot armorType1, double maxCharge1, double transferLimit1,
@@ -106,16 +106,29 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         setCreativeTab(IUCore.EnergyTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
+        switch (armorType1) {
+            case HEAD:
+                UpgradeSystem.system.addRecipe(this, EnumUpgrades.HELMET.list);
+                break;
+            case CHEST:
+                UpgradeSystem.system.addRecipe(this, EnumUpgrades.BODY.list);
+                break;
+            case LEGS:
+                UpgradeSystem.system.addRecipe(this, EnumUpgrades.LEGGINGS.list);
+                break;
+            case FEET:
+                UpgradeSystem.system.addRecipe(this, EnumUpgrades.BOOTS.list);
+                break;
+        }
     }
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name + extraName;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     @SubscribeEvent
@@ -183,11 +196,11 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
             NBTTagCompound nbt = ModUtils.nbt(stack);
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
-            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(stack);
-            ItemStack itemstack = new ItemStack(this, 1, getMaxDamage());
+            ItemStack itemstack = new ItemStack(this, 1, 27);
             nbt = ModUtils.nbt(itemstack);
-            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(itemstack);
         }
     }
@@ -201,32 +214,58 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     public void registerModels(final String name) {
         ModelLoader.setCustomMeshDefinition(this, stack -> {
             final NBTTagCompound nbt = ModUtils.nbt(stack);
-
-            return getModelLocation1(name, !nbt.getString("mode").isEmpty() ? "_" + nbt.getString("mode") : "");
+            String mode = nbt.getString("mode");
+            if (nbt.getString("mode").equals("")) {
+                return getModelLocation1(name, "");
+            } else {
+                return getModelLocation1("armor", "_" + this.armorType.ordinal() + "_" + mode);
+            }
         });
-        String[] mode = {"", "_Zelen", "_Demon", "_Dark", "_Cold", "_Ender"};
+        String[] mode = {"", "_Zelen", "_Demon", "_Dark", "_Cold", "_Ender", "_Ukraine", "_Fire", "_Snow", "_Taiga", "_Desert",
+                "_Emerald"};
         for (final String s : mode) {
-            ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
+            if (s.equals("")) {
+                ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
+            } else {
+                ModelBakery.registerItemVariants(this, getModelLocation1("armor", "_" + this.armorType.ordinal() + s));
+            }
+
         }
 
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            @Nonnull final ItemStack stack,
+            @Nullable final World worldIn,
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag flagIn
+    ) {
+        NBTTagCompound nbtData = ModUtils.nbt(stack);
+        if (stack.getItem() == IUItem.NanoBodyarmor) {
+            tooltip.add(Localization.translate("iu.fly") + " " + ModUtils.Boolean(nbtData.getBoolean("jetpack")));
+            if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                tooltip.add(Localization.translate("press.lshift"));
+            }
+
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                tooltip.add(Localization.translate("iu.changemode_fly") + Keyboard.getKeyName(KeyboardClient.flymode.getKeyCode()));
+            }
+        }
+        ModUtils.mode(stack, tooltip);
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         int suffix = (this.armorType == EntityEquipmentSlot.LEGS) ? 2 : 1;
         NBTTagCompound nbtData = ModUtils.nbt(stack);
         if (!nbtData.getString("mode").isEmpty()) {
-            return Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + nbtData.getString("mode") + "_" + suffix + ".png";
+            return Constants.TEXTURES + ":textures/armor/" + "armor" + this.armorType.ordinal() + "_" + nbtData.getString("mode") + ".png";
         }
 
 
         return Constants.TEXTURES + ":textures/armor/" + this.armorName + "_" + suffix + ".png";
-    }
-
-    public List<String> getHudInfo(ItemStack itemStack) {
-        List<String> info = new LinkedList<>();
-        info.add(ElectricItem.manager.getToolTip(itemStack));
-        info.add(Localization.translate("ic2.item.tooltip.PowerTier") + " " + this.tier);
-        return info;
     }
 
 
@@ -247,7 +286,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     }
 
 
-    public boolean hasColor(ItemStack aStack) {
+    public boolean hasColor(@Nonnull ItemStack aStack) {
         return (getColor(aStack) != 10511680);
     }
 
@@ -272,7 +311,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     }
 
     public ISpecialArmor.ArmorProperties getProperties(
-            EntityLivingBase player, ItemStack armor, DamageSource source,
+            EntityLivingBase player, @Nonnull ItemStack armor, DamageSource source,
             double damage, int slot
     ) {
         if (Config.spectralquantumprotection) {
@@ -323,7 +362,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         }
     }
 
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+    public void damageArmor(EntityLivingBase entity, @Nonnull ItemStack stack, DamageSource source, int damage, int slot) {
         int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, stack).number : 0);
 
@@ -342,7 +381,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
 
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return true;
+        return false;
     }
 
     @SubscribeEvent
@@ -352,8 +391,10 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
             ItemStack armor = entity.getItemStackFromSlot(EntityEquipmentSlot.FEET);
             if (armor.getItem() == this) {
                 int fallDamage = Math.max((int) event.getDistance() - 10, 0);
-                double energyCost = (5000 * fallDamage) * (1 - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.REPAIRED,
-                        armor) ?
+                double energyCost = (5000 * fallDamage) * (1 - (UpgradeSystem.system.hasModules(
+                        EnumInfoUpgradeModules.REPAIRED,
+                        armor
+                ) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.REPAIRED, armor).number : 0) * 0.25);
                 if (energyCost <= ElectricItem.manager.getCharge(armor)) {
                     ElectricItem.manager.discharge(armor, energyCost, 2147483647, true, false, false);
@@ -376,10 +417,6 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
         return 4000;
     }
 
-    @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(@Nonnull ItemStack stack) {
-        return EnumRarity.EPIC;
-    }
 
     public boolean canProvideEnergy(ItemStack itemStack) {
         return true;
@@ -614,7 +651,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
                 boolean fireResistance = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FIRE_PROTECTION, itemStack);
                 if (fireResistance) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300));
+                    player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 300));
                 }
 
                 player.extinguish();
@@ -719,7 +756,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
     }
 
 
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+    public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
         if (ElectricItem.manager.getCharge(armor) >= getEnergyPerDamage()) {
             return (int) Math.round(20.0D * getBaseAbsorptionRatio() * getDamageAbsorptionRatio());
         }
@@ -738,12 +775,11 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
     @Override
     public void setUpdate(final boolean update) {
-        this.update = update;
     }
 
 
     @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean par5) {
+    public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
         NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {

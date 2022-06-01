@@ -1,16 +1,12 @@
 package com.denfop.integration.jei.genstone;
 
 
-import com.denfop.api.IGenStoneRecipeManager;
 import com.denfop.api.Recipes;
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GenStoneHandler {
 
@@ -52,22 +48,18 @@ public class GenStoneHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<IGenStoneRecipeManager.Input, RecipeOutput> container :
-                Recipes.GenStone.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0)
+
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("genstone")) {
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                    container.getOutput().items.get(0)
             );
+
 
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

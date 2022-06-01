@@ -2,9 +2,12 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerPlasticCreator;
-import com.denfop.gui.GUIPlasticCreator;
-import com.denfop.invslot.InvSlotProcessablePlastic;
+import com.denfop.gui.GuiPlasticCreator;
 import com.denfop.tiles.base.TileEntityBasePlasticCreator;
 import com.denfop.utils.ModUtils;
 import ic2.api.recipe.IRecipeInputFactory;
@@ -25,19 +28,28 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator {
 
     public TileEntityPlasticCreator() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotProcessablePlastic(this, "inputA", 2);
+        this.inputSlotA = new InvSlotRecipes(this, "plastic", this, this.fluidTank);
     }
 
     public static void init() {
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.plastic.addRecipe(input.forStack(IUItem.PolyethCell), input.forStack(IUItem.PolypropCell),
-                new FluidStack(FluidRegistry.WATER, 1000), new ItemStack(IUItem.plast)
-        );
-        Recipes.plastic.addRecipe(input.forStack(ModUtils.getCellFromFluid("iufluidpolyeth")),input.forStack( ModUtils.getCellFromFluid(
-                "iufluidpolyprop")),
-                new FluidStack(FluidRegistry.WATER, 1000), new ItemStack(IUItem.plast)
-        );
-
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidRegistry.WATER, 1000),
+                        input.forStack(IUItem.PolyethCell),
+                        input.forStack(IUItem.PolypropCell)
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.plast))
+        ));
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidRegistry.WATER, 1000),
+                        input.forStack(ModUtils.getCellFromFluid("iufluidpolyeth")),
+                        input.forStack(ModUtils.getCellFromFluid(
+                                "iufluidpolyprop"))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.plast))
+        ));
     }
 
     public String getInventoryName() {
@@ -54,7 +66,7 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIPlasticCreator(new ContainerPlasticCreator(entityPlayer, this));
+        return new GuiPlasticCreator(new ContainerPlasticCreator(entityPlayer, this));
 
     }
 

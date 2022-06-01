@@ -16,7 +16,9 @@ public enum EnumQuarryModules {
     DEPTH_III(11, EnumQuarryType.DEPTH, 7, Math.pow(1.1, 3)),
 
     BLACKLIST(12, EnumQuarryType.BLACKLIST, 1, 0),
-    WHITELIST(13, EnumQuarryType.WHITELIST, 1, 0);
+    WHITELIST(13, EnumQuarryType.WHITELIST, 1, 0),
+    MACERATOR(14, EnumQuarryType.MACERATOR, 1, 4),
+    COMBMAC(15, EnumQuarryType.COMB_MAC, 1, 4);
     public final int meta;
     public final EnumQuarryType type;
     public final int efficiency;

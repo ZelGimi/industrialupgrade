@@ -6,5 +6,7 @@ public enum EnumQuarryType {
     BLACKLIST(),
     WHITELIST(),
     DEPTH(),
-    FURNACE()
+    FURNACE(),
+    MACERATOR(),
+    COMB_MAC()
 }

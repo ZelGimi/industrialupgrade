@@ -2,7 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerQuantumQuarry;
-import com.denfop.utils.ListInformation;
+import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
@@ -28,7 +28,7 @@ public class GUIQuantumQuarry extends GuiIC2<ContainerQuantumQuarry> {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.quarryinformation"));
-            List<String> compatibleUpgrades = ListInformation.quarryinform;
+            List<String> compatibleUpgrades = ListInformationUtils.quarryinform;
             Iterator<String> var5 = compatibleUpgrades.iterator();
             String itemstack;
             while (var5.hasNext()) {
@@ -43,6 +43,15 @@ public class GUIQuantumQuarry extends GuiIC2<ContainerQuantumQuarry> {
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         handleUpgradeTooltip(par1, par2);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "QE";
+        new AdvArea(this, 147, 27, 158, 76)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
     }
 
 
@@ -66,7 +75,7 @@ public class GUIQuantumQuarry extends GuiIC2<ContainerQuantumQuarry> {
 
         this.drawString(fontRenderer,
                 "" + ModUtils.getString(this.container.base.getblock),
-                h + 151, k + 7, 4210752
+                h + 143, k + 7, 4210752
         );
 
     }

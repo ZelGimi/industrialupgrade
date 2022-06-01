@@ -82,7 +82,7 @@ public enum BlockCombinerSolid implements ITeBlock {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override

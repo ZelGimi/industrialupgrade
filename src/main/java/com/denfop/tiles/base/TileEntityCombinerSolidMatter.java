@@ -1,10 +1,10 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerCombinerSolidMatter;
-import com.denfop.gui.GUICombinerSolidMatter;
+import com.denfop.gui.GuiCombinerSolidMatter;
 import com.denfop.invslot.InvSlotSolidMatter;
-import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -13,30 +13,40 @@ import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 public class TileEntityCombinerSolidMatter extends TileEntityInventory implements IHasGui, INetworkTileEntityEventListener,
         IUpgradableBlock {
 
+    private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(
+            -0.28125,
+            0.0D,
+            -0.28125,
+            1.28125,
+            1.5D,
+            1.28125
+    ));
     public final InvSlotSolidMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotOutput outputSlot;
-    private final Energy energy;
+    public final AdvEnergy energy;
+    public EnumSolidMatter[] solid;
 
     public TileEntityCombinerSolidMatter() {
         this.inputSlot = new InvSlotSolidMatter(this);
@@ -44,11 +54,20 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         this.outputSlot = new InvSlotOutput(this, "output", 9);
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
 
-        this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
-
+        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14));
+        this.solid = new EnumSolidMatter[0];
     }
 
+    protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
+        return aabbs;
+    }
+
+    @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+        return false;
+    }
+
+    protected boolean isNormalCube() {
         return false;
     }
 
@@ -56,8 +75,16 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         return false;
     }
 
-    protected boolean isNormalCube() {
+    protected boolean isSideSolid(EnumFacing side) {
         return false;
+    }
+
+    protected boolean clientNeedsExtraModelInfo() {
+        return true;
+    }
+
+    public boolean shouldRenderInPass(int pass) {
+        return true;
     }
 
     @Override
@@ -78,7 +105,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
 
     protected void onLoaded() {
         super.onLoaded();
-
+        this.inputSlot.update();
 
     }
 
@@ -102,20 +129,10 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     protected void updateEntityServer() {
         super.updateEntityServer();
         boolean update = onUpdateUpgrade();
-        this.energy.setCapacity(inputSlot.getMaxEnergy());
-        EnumSolidMatter[] solid = new EnumSolidMatter[0];
-        for (int i = 0; i < this.inputSlot.size(); i++) {
 
-            if (!StackUtil.isEmpty(this.inputSlot.get(i))) {
-                EnumSolidMatter[] solid1 = solid;
-                solid = new EnumSolidMatter[solid.length + 1];
-                solid[solid.length - 1] = ItemSolidMatter.getsolidmatter(this.inputSlot.get(i).getItemDamage());
-                System.arraycopy(solid1, 0, solid, 0, solid1.length);
-            }
-        }
         if (this.energy.getCapacity() > 0 && this.energy.getEnergy() == this.energy.getCapacity()) {
-            if (solid.length > 0) {
-                for (EnumSolidMatter enumSolidMatter : solid) {
+            if (this.solid.length > 0) {
+                for (EnumSolidMatter enumSolidMatter : this.solid) {
 
                     if (this.outputSlot.canAdd(enumSolidMatter.stack)) {
                         this.outputSlot.add(enumSolidMatter.stack);
@@ -152,7 +169,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUICombinerSolidMatter(new ContainerCombinerSolidMatter(entityPlayer, this));
+        return new GuiCombinerSolidMatter(new ContainerCombinerSolidMatter(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityCombinerSolidMatter> getGuiContainer(EntityPlayer entityPlayer) {

@@ -26,6 +26,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemPurifier extends BaseElectricItem implements IModelRegister {
 
 
@@ -39,16 +41,15 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy").append("/").append(name);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "energy" + "/" + name;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
+    public static void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
@@ -64,28 +65,29 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister {
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name, null);
+        registerModel(this, meta, name);
     }
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name, extraName);
+        registerModel(this, meta, name);
     }
 
     public boolean canProvideEnergy(ItemStack stack) {
         return true;
     }
 
+    @Nonnull
     @Override
     public EnumActionResult onItemUseFirst(
             final EntityPlayer player,
             final World world,
-            final BlockPos pos,
-            final EnumFacing side,
+            @Nonnull final BlockPos pos,
+            @Nonnull final EnumFacing side,
             final float hitX,
             final float hitY,
             final float hitZ,
-            final EnumHand hand
+            @Nonnull final EnumHand hand
     ) {
 
         TileEntity tile = world.getTileEntity(pos);

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileEntitySintezator> {
@@ -42,7 +43,7 @@ public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileEn
 
 
     public void render(
-            TileEntitySintezator tile,
+            @Nonnull TileEntitySintezator tile,
             double x,
             double y,
             double z,

@@ -3,29 +3,21 @@ package aroma1997.uncomplication.enet.old;
 
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class EventHandler {
+
     public EventHandler() {
         MinecraftForge.EVENT_BUS.register(this);
-        FMLCommonHandler.instance().bus().register(this);
     }
-
 
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileLoad(final EnergyTileLoadEvent event) {
-        final IEnergyTile tile = event.tile;
-        if (tile instanceof IEnergySource) {
-            EnergyTransferList.initIEnergySource((IEnergySource) event.tile);
-        }
         final EnergyNetLocal local = EnergyNetGlobal.getForWorld(event.getWorld());
 
         if (local != null) {
@@ -43,9 +35,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public void tick(final TickEvent.WorldTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            EnergyNetGlobal.onTickStart(event.world);
-        } else if (event.phase == TickEvent.Phase.END) {
+
+        if (event.phase == TickEvent.Phase.END) {
             EnergyNetGlobal.onTickEnd(event.world);
         }
     }
@@ -54,4 +45,5 @@ public class EventHandler {
     public void onWorldUnload(final WorldEvent.Unload event) {
         EnergyNetGlobal.onWorldUnload(event.getWorld());
     }
+
 }

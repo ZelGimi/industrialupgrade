@@ -1,11 +1,13 @@
 package com.denfop.integration.jei.fquarry;
 
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class FQuarryWrapper implements IRecipeWrapper {
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setOutputs(ItemStack.class, this.getOutputs());
+        ingredients.setOutputs(VanillaTypes.ITEM, this.getOutputs());
     }
 
 
@@ -45,7 +47,7 @@ public class FQuarryWrapper implements IRecipeWrapper {
         return outputstack;
     }
 
-    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
     }
 
 }

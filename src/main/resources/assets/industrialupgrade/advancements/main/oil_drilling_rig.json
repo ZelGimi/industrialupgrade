@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "industrialupgrade:petrol_quarry_item"
+      "item": "industrialupgrade:petrol_quarry"
     },
     "title": {
       "translate": "achievement.oil_drilling_rig"
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "industrialupgrade:petrol_quarry_item"
+            "item": "industrialupgrade:petrol_quarry"
           }
         ]
       }

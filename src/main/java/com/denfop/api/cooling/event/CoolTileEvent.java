@@ -1,7 +1,6 @@
 package com.denfop.api.cooling.event;
 
 import com.denfop.api.cooling.ICoolTile;
-import com.denfop.api.heat.IHeatTile;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 

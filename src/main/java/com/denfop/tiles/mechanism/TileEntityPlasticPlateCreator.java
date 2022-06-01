@@ -2,10 +2,15 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerPlasticPlateCreator;
-import com.denfop.gui.GUIPlasticPlateCreator;
-import com.denfop.invslot.InvSlotProcessablePlasticPlate;
+import com.denfop.gui.GuiPlasticPlateCreator;
 import com.denfop.tiles.base.TileEntityBasePlasticPlateCreator;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
@@ -21,19 +26,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCreator {
+public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCreator implements IUpdateTick {
 
     public TileEntityPlasticPlateCreator() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotProcessablePlasticPlate(this, "inputA", 0, 1);
+        this.inputSlotA = new InvSlotRecipes(this, "plasticplate", this, this.fluidTank);
     }
 
     public static void init() {
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.plasticplate.addRecipe(input.forStack(new ItemStack(IUItem.plast)), new FluidStack(
-                FluidName.fluidoxy.getInstance(),
-                1000
-        ), new ItemStack(IUItem.plastic_plate));
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidName.fluidoxy.getInstance(), 1000),
+                input.forStack(new ItemStack(IUItem.plast))
+        ), new RecipeOutput(null, new ItemStack(IUItem.plastic_plate))));
     }
 
     public String getInventoryName() {
@@ -50,7 +55,7 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIPlasticPlateCreator(new ContainerPlasticPlateCreator(entityPlayer, this));
+        return new GuiPlasticPlateCreator(new ContainerPlasticPlateCreator(entityPlayer, this));
 
     }
 
@@ -75,6 +80,21 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
         );
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.output;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.output = output;
     }
 
 }

@@ -3,6 +3,7 @@ package com.denfop.integration.jei.synthesis;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -63,13 +64,13 @@ public class SynthesisWrapper implements IRecipeWrapper {
     }
 
     public List<ItemStack> getOutputs() {
-        return new ArrayList(Collections.singleton(this.outputstack));
+        return new ArrayList<>(Collections.singleton(this.outputstack));
     }
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputLists(ItemStack.class, this.getInputs());
-        ingredients.setOutputs(ItemStack.class, this.getOutputs());
+        ingredients.setInputLists(VanillaTypes.ITEM, this.getInputs());
+        ingredients.setOutputs(VanillaTypes.ITEM, this.getOutputs());
     }
 
 

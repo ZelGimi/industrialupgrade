@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUCore;
 import com.denfop.container.ContainerModuleMachine;
-import com.denfop.gui.GUIModuleMachine;
+import com.denfop.gui.GuiModuleMachine;
 import com.denfop.invslot.InvSlotModule;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import com.denfop.utils.ModUtils;
@@ -28,7 +28,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
     public final InvSlotModule inputslotA;
 
     public TileEntityModuleMachine() {
-        super(null, 0, 10, 0);
+        super(0, 10, 0);
 
 
         this.inputslot = new InvSlotModule(this, "input", 0, 18);
@@ -42,7 +42,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIModuleMachine(new ContainerModuleMachine(entityPlayer, this));
+        return new GuiModuleMachine(new ContainerModuleMachine(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityModuleMachine> getGuiContainer(EntityPlayer entityPlayer) {

@@ -41,7 +41,7 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
 
     public ItemUpgradeKit() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.UpgradeTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
@@ -85,8 +85,12 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
                 final EnumElectricBlock enumblock = TileEntityElectricBlock.getElectricBlock();
                 if (enumblock != null && enumblock.kit_meta == meta) {
                     ItemStack stack1;
-                    if (tile.getElectricBlock().chargepad) {
-                        stack1 = new ItemStack(IUItem.Chargepadelectricblock, 1, TileEntityElectricBlock.getElectricBlock().meta);
+                    if (TileEntityElectricBlock.getElectricBlock().chargepad) {
+                        stack1 = new ItemStack(
+                                IUItem.Chargepadelectricblock,
+                                1,
+                                TileEntityElectricBlock.getElectricBlock().meta
+                        );
                     } else {
                         stack1 = new ItemStack(IUItem.electricblock, 1, TileEntityElectricBlock.getElectricBlock().meta);
                     }

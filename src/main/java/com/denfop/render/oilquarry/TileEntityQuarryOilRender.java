@@ -1,19 +1,18 @@
 package com.denfop.render.oilquarry;
 
 import com.denfop.Constants;
+import com.denfop.IUItem;
 import com.denfop.api.render.IModelCustom;
-import com.denfop.blocks.BlockVein;
+import com.denfop.api.vein.Type;
+import com.denfop.blocks.BlockHeavyOre;
 import com.denfop.render.AdvancedModelLoader;
 import com.denfop.tiles.base.TileEntityQuarryVein;
-import com.denfop.tiles.base.TileEntityVein;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 
 public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEntityQuarryVein> {
@@ -77,29 +76,22 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
         model.renderAll();
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
-        if (!tile.analysis) {
-            if (!tile.empty) {
+        if (tile.find) {
+            if (tile.vein.getType() != Type.EMPTY) {
                 GL11.glPushMatrix();
                 GL11.glTranslated(x, y, z);
                 GL11.glTranslatef(0.45F, 0, 0.5F);
                 GL11.glEnable(GL11.GL_BLEND);
-
                 GL11.glRotatef(rotation, 0F, 1F, 0F);
-
-                Block block = tile.getWorld().getBlockState(new BlockPos(tile.x, tile.y, tile.z)).getBlock();
-
-
                 BlockRendererDispatcher ren = Minecraft.getMinecraft().getBlockRendererDispatcher();
                 IBlockState state;
-                if (tile.getWorld().getTileEntity(new BlockPos(tile.x, tile.y, tile.z)) instanceof TileEntityVein) {
-                    state = block.getBlockState().getBaseState().withProperty(
-                            BlockVein.VARIANT,
-                            BlockVein.Type.getFromID(block.getMetaFromState(this
-                                    .getWorld()
-                                    .getBlockState(new BlockPos(tile.x, tile.y, tile.z))))
+                if (tile.vein.getType() == Type.VEIN) {
+                    state = IUItem.heavyore.getDefaultState().withProperty(
+                            BlockHeavyOre.VARIANT,
+                            BlockHeavyOre.Type.getFromID(tile.vein.getMeta())
                     );
                 } else {
-                    state = block.getBlockState().getBaseState();
+                    state = IUItem.oilblock.getDefaultState();
                 }
                 final String texture1 = ren
                         .getModelForState(state)

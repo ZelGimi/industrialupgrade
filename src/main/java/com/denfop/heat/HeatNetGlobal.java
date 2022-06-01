@@ -3,20 +3,15 @@ package com.denfop.heat;
 
 import com.denfop.api.heat.IHeatNet;
 import com.denfop.api.heat.IHeatTile;
-import com.denfop.api.heat.IWirelessSource;
-import com.denfop.api.heat.NodeHeatStats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class HeatNetGlobal implements IHeatNet {
 
-    public static Map<Chunk, List<IHeatTile>> heatTileinChunk;
     private static Map<World, HeatNetLocal> worldToEnergyNetMap;
 
     static {
@@ -25,7 +20,6 @@ public class HeatNetGlobal implements IHeatNet {
 
     public static HeatNetGlobal initialize() {
         new EventHandler();
-        HeatNetLocal.list = new EnergyTransferList();
         return new HeatNetGlobal();
     }
 
@@ -83,27 +77,6 @@ public class HeatNetGlobal implements IHeatNet {
     public void removeTile(final IHeatTile var1) {
         final HeatNetLocal local = getForWorld(var1.getWorldTile());
         local.removeTile(var1);
-    }
-
-    @Override
-    public NodeHeatStats getNodeStats(final IHeatTile var1) {
-        final HeatNetLocal local = getForWorld(var1.getWorldTile());
-        if (local == null) {
-            return new NodeHeatStats(0.0, 0.0);
-        }
-        return local.getNodeStats(var1);
-    }
-
-    @Override
-    public List<IHeatTile> getListHeatInChunk(final Chunk chunk) {
-        final HeatNetLocal local = getForWorld(chunk.getWorld());
-        return local.getListHeatInChunk(chunk);
-    }
-
-    @Override
-    public void transferTemperatureWireless(final IWirelessSource source) {
-        final HeatNetLocal local = getForWorld(source.getWorldTile());
-        local.transferTemperatureWireless(source);
     }
 
 

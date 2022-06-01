@@ -1,20 +1,20 @@
 package com.denfop.qe;
 
 
-import com.denfop.api.qe.*;
+import com.denfop.api.qe.IQENet;
 import com.denfop.api.qe.IQETile;
+import com.denfop.api.qe.NodeQEStats;
+import com.denfop.componets.QEComponent;
+import ic2.core.block.TileEntityBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class QENetGlobal implements IQENet {
 
-    public static Map<Chunk, List<IQETile>> heatTileinChunk;
     private static Map<World, QENetLocal> worldToEnergyNetMap;
 
     static {
@@ -23,7 +23,6 @@ public class QENetGlobal implements IQENet {
 
     public static QENetGlobal initialize() {
         new EventHandler();
-        QENetLocal.list = new EnergyTransferList();
         return new QENetGlobal();
     }
 
@@ -63,6 +62,13 @@ public class QENetGlobal implements IQENet {
         if (var1.getTileEntity(var2) instanceof IQETile) {
             return (IQETile) var1.getTileEntity(var2);
         }
+        if (var1.getTileEntity(var2) instanceof TileEntityBlock) {
+            TileEntityBlock tile = (TileEntityBlock) var1.getTileEntity(var2);
+            assert tile != null;
+            if (tile.hasComponent(QEComponent.class)) {
+                return tile.getComponent(QEComponent.class).getDelegate();
+            }
+        }
         return null;
     }
 
@@ -79,29 +85,17 @@ public class QENetGlobal implements IQENet {
 
     @Override
     public void removeTile(final IQETile var1) {
-        final QENetLocal local = getForWorld(((TileEntity)var1).getWorld());
+        final QENetLocal local = getForWorld(((TileEntity) var1).getWorld());
         local.removeTile(var1);
     }
 
     @Override
-    public NodeQEStats getNodeStats(final IQETile var1,World world) {
+    public NodeQEStats getNodeStats(final IQETile var1, World world) {
         final QENetLocal local = getForWorld(world);
         if (local == null) {
             return new NodeQEStats(0.0, 0.0);
         }
         return local.getNodeStats(var1);
-    }
-
-    @Override
-    public List<IQESink> getListQEInChunk(final Chunk chunk) {
-        final QENetLocal local = getForWorld(chunk.getWorld());
-        return local.getListQEInChunk(chunk);
-    }
-
-    @Override
-    public void transferQEWireless(final IQEWirelessSource source) {
-        final QENetLocal local = getForWorld(((TileEntity)source).getWorld());
-        local.transferTemperatureWireless(source);
     }
 
 

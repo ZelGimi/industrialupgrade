@@ -1,6 +1,7 @@
 package com.denfop.integration.jei.microchip;
 
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -98,13 +100,13 @@ public class MicrochipRecipeWrapper implements IRecipeWrapper {
     }
 
     public List<ItemStack> getOutputs() {
-        return new ArrayList(Collections.singleton(this.outputstack));
+        return new ArrayList<>(Collections.singleton(this.outputstack));
     }
 
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputLists(ItemStack.class, this.getInputs());
-        ingredients.setOutputs(ItemStack.class, this.getOutputs());
+        ingredients.setInputLists(VanillaTypes.ITEM, this.getInputs());
+        ingredients.setOutputs(VanillaTypes.ITEM, this.getOutputs());
     }
 
 
@@ -112,7 +114,7 @@ public class MicrochipRecipeWrapper implements IRecipeWrapper {
         return outputstack;
     }
 
-    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+    public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int temperature = 38 * this.temperature / 5000;
         int temp = this.temperature;
         if (temperature > 0) {
@@ -123,13 +125,11 @@ public class MicrochipRecipeWrapper implements IRecipeWrapper {
     }
 
     public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x + 0, y + height, 0).tex(
-                (float) (textureX + 0) * 0.00390625F,
+        bufferbuilder.pos(x, y + height, 0).tex(
+                (float) (textureX) * 0.00390625F,
                 (float) (textureY + height) * 0.00390625F
         ).endVertex();
         bufferbuilder
@@ -137,12 +137,12 @@ public class MicrochipRecipeWrapper implements IRecipeWrapper {
                 .tex((float) (textureX + width) * 0.00390625F, (float) (textureY + height) * 0.00390625F)
                 .endVertex();
         bufferbuilder
-                .pos(x + width, y + 0, 0)
-                .tex((float) (textureX + width) * 0.00390625F, (float) (textureY + 0) * 0.00390625F)
+                .pos(x + width, y, 0)
+                .tex((float) (textureX + width) * 0.00390625F, (float) (textureY) * 0.00390625F)
                 .endVertex();
-        bufferbuilder.pos(x + 0, y + 0, 0).tex(
-                (float) (textureX + 0) * 0.00390625F,
-                (float) (textureY + 0) * 0.00390625F
+        bufferbuilder.pos(x, y, 0).tex(
+                (float) (textureX) * 0.00390625F,
+                (float) (textureY) * 0.00390625F
         ).endVertex();
         tessellator.draw();
     }

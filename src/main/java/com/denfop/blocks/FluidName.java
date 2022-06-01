@@ -17,7 +17,9 @@ public enum FluidName implements IIdProvider {
     fluidpolyeth,
     fluidpolyprop,
     fluidoxy,
-    fluidhyd;
+    fluidhyd,
+    fluidazot,
+    fluidco2;
 
     public static final FluidName[] values = values();
     private final boolean hasFlowTexture;

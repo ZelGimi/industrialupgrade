@@ -18,7 +18,7 @@ public class ThaumcraftIntegration {
     public static Block blockThaumSolarPanel;
 
     public static void init() {
-        blockThaumSolarPanel = TeBlockRegistry.get(blockThaumcraftSolarPanel.IDENTITY).setCreativeTab(IUCore.SSPTab);
+        blockThaumSolarPanel = TeBlockRegistry.get(BlockThaumSolarPanel.IDENTITY).setCreativeTab(IUCore.SSPTab);
         ENERGY = new Aspect("energy", ModUtils.convertRGBcolorToInt(208, 52, 10), new Aspect[]{Aspect.ENERGY, Aspect.FIRE},
                 new ResourceLocation(Constants.TEXTURES, "textures/aspect/energy.png"), 771
         );

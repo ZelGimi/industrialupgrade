@@ -15,18 +15,18 @@ import java.util.Iterator;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
+public class GuiCombinerMatter extends GuiIC2<ContainerCombinerMatter> {
 
     public final ContainerCombinerMatter container;
 
 
-    public GUICombinerMatter(ContainerCombinerMatter container1) {
+    public GuiCombinerMatter(ContainerCombinerMatter container1) {
         super(container1);
         this.container = container1;
     }
 
     private static List<String> getInformation() {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         ret.add(Localization.translate("iu.combMatterinformation1"));
         ret.add(Localization.translate("iu.combMatterinformation2"));
 
@@ -34,8 +34,8 @@ public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
         return ret;
     }
 
-    private void handleUpgradeTooltip(int x, int y, int minX, int minY, int maxX, int maxY) {
-        if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
+    private void handleUpgradeTooltip(int x, int y) {
+        if (x >= 165 && x <= 175 && y >= 0 && y <= 12) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.combMatterinformation"));
             List<String> compatibleUpgrades = getInformation();
@@ -55,7 +55,7 @@ public class GUICombinerMatter extends GuiIC2<ContainerCombinerMatter> {
 
 
         TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(par1, par2);
-        handleUpgradeTooltip(par1 - this.guiLeft, par2 - this.guiTop, 165, 0, 175, 12);
+        handleUpgradeTooltip(par1 - this.guiLeft, par2 - this.guiTop);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {

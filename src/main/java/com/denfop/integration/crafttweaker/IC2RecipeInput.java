@@ -7,8 +7,8 @@ import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class IC2RecipeInput implements IRecipeInput {
 
@@ -27,11 +27,9 @@ public class IC2RecipeInput implements IRecipeInput {
     }
 
     public List<ItemStack> getInputs() {
-        List<ItemStack> items = new ArrayList();
-        Iterator var2 = this.ingredient.getItems().iterator();
+        List<ItemStack> items = new ArrayList<>();
 
-        while (var2.hasNext()) {
-            IItemStack item = (IItemStack) var2.next();
+        for (final IItemStack item : this.ingredient.getItems()) {
             items.add(CraftTweakerMC.getItemStack(item));
         }
 
@@ -51,7 +49,7 @@ public class IC2RecipeInput implements IRecipeInput {
             return false;
         } else {
             IC2RecipeInput other = (IC2RecipeInput) obj;
-            return this.ingredient == other.ingredient || this.ingredient != null && this.ingredient.equals(other.ingredient);
+            return Objects.equals(this.ingredient, other.ingredient);
         }
     }
 

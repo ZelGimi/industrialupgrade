@@ -1,16 +1,12 @@
 package com.denfop.integration.jei.genhelium;
 
 
-import com.denfop.api.Recipes;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.blocks.FluidName;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GenHeliumHandler {
 
@@ -55,20 +51,12 @@ public class GenHeliumHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<NBTTagCompound, FluidStack> container :
-                Recipes.heliumgenerator.getRecipes().entrySet()) {
-            addRecipe(container.getKey().getInteger("amount"), container.getValue());
 
-        }
+        addRecipe(1000000, new FluidStack(FluidName.fluidHelium.getInstance(), 1000));
+
+
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public int getEnergy() { // Получатель входного предмета рецепта.
         return input;

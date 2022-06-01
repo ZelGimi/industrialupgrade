@@ -36,7 +36,7 @@ public class CTQuarry {
             if (!(internal instanceof ItemStack)) {
                 CraftTweakerAPI.logError("Not a valid item stack: " + item);
             }
-
+            assert internal instanceof ItemStack;
             return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
         }
     }
@@ -65,7 +65,7 @@ public class CTQuarry {
                 if (!(internal instanceof ItemStack)) {
                     CraftTweakerAPI.logError("Not a valid item stack: " + item);
                 }
-
+                assert internal instanceof ItemStack;
                 return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
             }
         }

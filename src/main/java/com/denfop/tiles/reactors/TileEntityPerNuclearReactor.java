@@ -42,7 +42,7 @@ public class TileEntityPerNuclearReactor extends TileEntityBaseNuclearReactorEle
     @Override
     public List<IEnergyTile> getSubTiles() {
         World world = this.getWorld();
-        List<IEnergyTile> newSubTiles = new ArrayList();
+        List<IEnergyTile> newSubTiles = new ArrayList<>();
         newSubTiles.add(this);
         EnumFacing[] var3 = EnumFacing.VALUES;
         for (EnumFacing dir : var3) {
@@ -57,7 +57,7 @@ public class TileEntityPerNuclearReactor extends TileEntityBaseNuclearReactorEle
     @Override
     void getSubs() {
         World world = this.getWorld();
-        List<IEnergyTile> newSubTiles = new ArrayList();
+        List<IEnergyTile> newSubTiles = new ArrayList<>();
         newSubTiles.add(this);
         EnumFacing[] var3 = EnumFacing.VALUES;
         for (EnumFacing dir : var3) {
@@ -66,7 +66,6 @@ public class TileEntityPerNuclearReactor extends TileEntityBaseNuclearReactorEle
                 newSubTiles.add((TileEntityPerReactorChamberElectric) te);
             }
         }
-
         if (!newSubTiles.equals(this.subTiles)) {
             if (this.addedToEnergyNet) {
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
@@ -123,23 +122,21 @@ public class TileEntityPerNuclearReactor extends TileEntityBaseNuclearReactorEle
     }
 
     public short getReactorSize() {
-        if (this.getWorld() == null) {
-            return (short) sizeX;
-        } else {
-            short cols = (short) (this.sizeX - 6);
 
-            EnumFacing[] var2 = EnumFacing.values();
+        short cols = (short) (this.sizeX - 6);
+
+        EnumFacing[] var2 = EnumFacing.values();
 
 
-            for (EnumFacing direction : var2) {
-                TileEntity target = this.getWorld().getTileEntity(pos.offset(direction));
-                if (target instanceof TileEntityPerReactorChamberElectric) {
-                    cols++;
-                }
+        for (EnumFacing direction : var2) {
+            TileEntity target = this.getWorld().getTileEntity(pos.offset(direction));
+            if (target instanceof TileEntityPerReactorChamberElectric) {
+                cols++;
             }
-
-            return cols;
         }
+
+        return cols;
+
     }
 
 

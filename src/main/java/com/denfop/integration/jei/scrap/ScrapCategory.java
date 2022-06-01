@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -30,21 +32,25 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockMoreMachine3.assamplerscrap.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.machines_base3, 1, 4).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -52,7 +58,7 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
@@ -64,7 +70,7 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
         mc.getTextureManager().bindTexture(getTexture());
         drawTexturedModalRect(66 - 1, 12 + 19, 192, 14 + 24, 16, xScale + 1);
         drawTexturedModalRect(
-                +2, +44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +2, 44 + 14 - energylevel, 176, 14 - energylevel, 14,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
@@ -76,7 +82,7 @@ public class ScrapCategory extends Gui implements IRecipeCategory<ScrapRecipeWra
     public void setRecipe(
             final IRecipeLayout layout,
             final ScrapRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 65, 11); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true

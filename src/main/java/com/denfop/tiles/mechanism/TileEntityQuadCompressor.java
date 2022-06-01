@@ -1,9 +1,7 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.invslot.InvSlotProcessableMultiGeneric;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
-import ic2.api.recipe.Recipes;
 import ic2.core.init.Localization;
 
 public class TileEntityQuadCompressor extends TileEntityMultiMachine {
@@ -12,10 +10,8 @@ public class TileEntityQuadCompressor extends TileEntityMultiMachine {
         super(
                 EnumMultiMachine.QUAD_COMPRESSER.usagePerTick,
                 EnumMultiMachine.QUAD_COMPRESSER.lenghtOperation,
-                Recipes.compressor,
                 0
         );
-        this.inputSlots = new InvSlotProcessableMultiGeneric(this, "input", sizeWorkingSlot, Recipes.compressor);
     }
 
     @Override

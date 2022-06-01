@@ -3,7 +3,7 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.container.ContainerAnalyzer;
-import com.denfop.utils.ListInformation;
+import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GUIAnalyzer extends GuiIC2<ContainerAnalyzer> {
+public class GuiAnalyzer extends GuiIC2<ContainerAnalyzer> {
 
     public final ContainerAnalyzer container;
     public final String name;
@@ -33,9 +33,9 @@ public class GUIAnalyzer extends GuiIC2<ContainerAnalyzer> {
     private int yOffset;
 
 
-    public GUIAnalyzer(ContainerAnalyzer container1) {
+    public GuiAnalyzer(ContainerAnalyzer container1) {
         super(container1);
-        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIAnalyzer.png");
+        this.background = new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiAnalyzer.png");
         this.container = container1;
         this.name = Localization.translate("iu.blockAnalyzer.name");
         this.ySize = 256;
@@ -43,7 +43,7 @@ public class GUIAnalyzer extends GuiIC2<ContainerAnalyzer> {
     }
 
     private static List<String> getInformation1(String name, String name1, String name2, String name3) {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         ret.add(name);
         ret.add(name1);
         ret.add(name2);
@@ -191,7 +191,7 @@ public class GUIAnalyzer extends GuiIC2<ContainerAnalyzer> {
         if (x >= 5 && x <= 22 && y >= 173 && y <= 190) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.analyzerinformation"));
-            List<String> compatibleUpgrades = ListInformation.analyzeinform;
+            List<String> compatibleUpgrades = ListInformationUtils.analyzeinform;
             Iterator<String> var5 = compatibleUpgrades.iterator();
             String itemstack;
             while (var5.hasNext()) {

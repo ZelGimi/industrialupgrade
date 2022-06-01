@@ -52,7 +52,12 @@ public class ItemPaints extends ItemMulti<ItemPaints.Types> implements IModelReg
         redpaint(4),
         orangepaint(5),
         darkbluepaint(6),
-        purplepaint(7);
+        purplepaint(7),
+        turquoisepaint(8),
+        whitepaint(9),
+        lightyellowpaint(10),
+        limepaint(11),
+        ;
 
         private final String name;
         private final int ID;

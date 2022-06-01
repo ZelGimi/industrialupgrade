@@ -8,9 +8,7 @@ import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -64,6 +62,7 @@ public enum BlockPipes implements ITeBlock {
         return 0.5F;
     }
 
+    @Nonnull
     public Material getMaterial() {
         return Material.CLOTH;
     }
@@ -72,9 +71,6 @@ public enum BlockPipes implements ITeBlock {
         return true;
     }
 
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
-    }
 
     @Override
     public String getName() {

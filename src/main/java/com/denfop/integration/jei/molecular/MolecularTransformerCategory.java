@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class MolecularTransformerCategory extends Gui implements IRecipeCategory<MolecularTransformerRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -29,21 +31,25 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockMolecular.molecular.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.blockmolecular).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -51,7 +57,7 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         double xScale = 15.0D * progress / 100;
         if (xScale > 15) {
@@ -66,7 +72,7 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
     public void setRecipe(
             final IRecipeLayout layout,
             final MolecularTransformerRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 11, 4); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true

@@ -1,29 +1,33 @@
 package com.denfop.integration.crafttweaker;
 
 import com.blamejared.ModTweaker;
-import com.blamejared.mtlib.helpers.LogHelper;
 import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.RecipeOutput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.Collections;
 import java.util.Objects;
 
 @ZenClass("mods.industrialupgrade.MatterRecipe")
 @ModOnly("industrialupgrade")
 @ZenRegister
 public class CTMatterRecipe {
+
+    @ZenMethod
+    public static void removeRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new Remove(output));
+    }
 
     @ZenMethod
     public static void addRecipe(
@@ -56,7 +60,7 @@ public class CTMatterRecipe {
             if (!(internal instanceof ItemStack)) {
                 CraftTweakerAPI.logError("Not a valid item stack: " + item);
             }
-
+            assert internal instanceof ItemStack;
             return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
         }
     }
@@ -66,6 +70,62 @@ public class CTMatterRecipe {
         ModTweaker.LATE_REMOVALS.add(new CTMatterRecipe.Remove(input));
     }
 
+    private static class Remove extends BaseAction {
+
+
+        private final IItemStack output;
+
+        public Remove(
+                IItemStack output
+        ) {
+            super("matter");
+            this.output = output;
+        }
+
+        public static ItemStack getItemStack(IItemStack item) {
+            if (item == null) {
+                return null;
+            } else {
+                Object internal = item.getInternal();
+                if (!(internal instanceof ItemStack)) {
+                    CraftTweakerAPI.logError("Not a valid item stack: " + item);
+                }
+                assert internal instanceof ItemStack;
+                return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
+            }
+        }
+
+        public void apply() {
+            Recipes.recipes.removeRecipe("converter", new RecipeOutput(null, getItemStack(this.output)));
+        }
+
+        public String describe() {
+            return "removing recipe " + this.output;
+        }
+
+        public Object getOverrideKey() {
+            return null;
+        }
+
+        public int hashCode() {
+            int hash = 7;
+            hash = 67 * hash + ((this.output != null) ? this.output.hashCode() : 0);
+            return hash;
+        }
+
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            Remove other = (Remove) obj;
+
+            return Objects.equals(this.output, other.output);
+        }
+
+    }
 
     private static class AddMolecularAction extends BaseAction {
 
@@ -88,7 +148,7 @@ public class CTMatterRecipe {
                 if (!(internal instanceof ItemStack)) {
                     CraftTweakerAPI.logError("Not a valid item stack: " + item);
                 }
-
+                assert internal instanceof ItemStack;
                 return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
             }
         }
@@ -96,10 +156,12 @@ public class CTMatterRecipe {
         public void apply() {
             final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
             if (!this.delete) {
-                Recipes.matterrecipe.addRecipe(
-                        input.forStack((ItemStack) output.getInternal()),
-                        this.nbt, false,
-                        getItemStack(this.output)
+                Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(
+                                new Input(input.forStack((ItemStack) output.getInternal())), new RecipeOutput(
+                                this.nbt,
+                                getItemStack(this.output)
+                        ))
+
                 );
             }
 
@@ -130,30 +192,6 @@ public class CTMatterRecipe {
             CTMatterRecipe.AddMolecularAction other = (CTMatterRecipe.AddMolecularAction) obj;
 
             return Objects.equals(this.output, other.output);
-        }
-
-    }
-
-    private static class Remove extends BaseAction {
-
-        private final IItemStack input;
-
-        public Remove(IItemStack input) {
-            super("matter");
-            this.input = input;
-        }
-
-        public void apply() {
-            RecipeOutput output = Recipes.matterrecipe.getOutputFor(CraftTweakerMC.getItemStack(input), false);
-            if (output == null || output.items.isEmpty()) {
-                return;
-            }
-            Recipes.matterrecipe.removeRecipe(CraftTweakerMC.getItemStack(input), Collections.singletonList(output.items.get(0)));
-
-        }
-
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.input);
         }
 
     }

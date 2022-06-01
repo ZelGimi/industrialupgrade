@@ -19,6 +19,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
@@ -54,10 +55,10 @@ public class ItemModuleTypePanel extends ItemMulti<ItemModuleTypePanel.CraftingT
 
     @Override
     public void addInformation(
-            final ItemStack itemStack,
+            @Nonnull final ItemStack itemStack,
             @Nullable final World worldIn,
-            final List<String> info,
-            final ITooltipFlag flagIn
+            @Nonnull final List<String> info,
+            @Nonnull final ITooltipFlag flagIn
     ) {
         super.addInformation(itemStack, worldIn, info, flagIn);
         EnumSolarPanels solar = getSolarType(itemStack.getItemDamage());

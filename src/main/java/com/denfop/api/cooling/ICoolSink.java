@@ -1,4 +1,3 @@
-
 package com.denfop.api.cooling;
 
 import net.minecraft.util.EnumFacing;

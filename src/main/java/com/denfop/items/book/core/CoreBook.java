@@ -1,9 +1,7 @@
 package com.denfop.items.book.core;
 
-import com.denfop.Constants;
 import com.denfop.IUItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 public class CoreBook {
 
@@ -33,7 +31,7 @@ public class CoreBook {
 */
         new MainPage("basic", 1, "description.basic", new ItemStack(IUItem.book));
         new Pages("info", "basic", 1, "description.basic.info", new ItemStack(IUItem.book));
-        new AddPages("desinfo", "info", 0, "description.basic.info.desc" , "iu.text1");
+        new AddPages("desinfo", "info", 0, "description.basic.info.desc", "iu.text1");
 
     }
 

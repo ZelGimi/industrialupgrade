@@ -1,9 +1,6 @@
 package com.powerutils;
 
 import com.denfop.IUCore;
-import com.denfop.api.IModelRegister;
-import com.powerutils.Constants;
-import com.powerutils.PowerUtils;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemIC2;
 import ic2.core.ref.ItemName;
@@ -22,10 +19,6 @@ public class PUItemBase extends ItemIC2 implements IModelRender {
         this(name, "");
     }
 
-    public String getUnlocalizedName() {
-        return "pu." + super.getUnlocalizedName().substring(4) + ".name";
-    }
-
     public PUItemBase(String name, String path) {
         super(null);
         this.setCreativeTab(IUCore.ItemTab);
@@ -36,6 +29,10 @@ public class PUItemBase extends ItemIC2 implements IModelRender {
         setUnlocalizedName(name);
         BlocksItems.registerItem((Item) this, PowerUtils.getIdentifier(name)).setUnlocalizedName(name);
         PowerUtils.addIModelRegister(this);
+    }
+
+    public String getUnlocalizedName() {
+        return "pu." + super.getUnlocalizedName().substring(4) + ".name";
     }
 
     @Override

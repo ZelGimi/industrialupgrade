@@ -10,14 +10,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GUITunerWireless extends GuiIC2<ContainerTunerWireless> {
+public class GuiTunerWireless extends GuiIC2<ContainerTunerWireless> {
 
     public final ContainerTunerWireless container;
 
-    public GUITunerWireless(ContainerTunerWireless container1) {
+    public GuiTunerWireless(ContainerTunerWireless container1) {
         super(container1);
         this.container = container1;
     }
@@ -40,7 +41,7 @@ public class GUITunerWireless extends GuiIC2<ContainerTunerWireless> {
         return this.container.base.getInventoryName();
     }
 
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
+    protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         if (guibutton.id == 0) {
             IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
@@ -49,7 +50,7 @@ public class GUITunerWireless extends GuiIC2<ContainerTunerWireless> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUITunerWireless.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiTunerWireless.png");
     }
 
 }

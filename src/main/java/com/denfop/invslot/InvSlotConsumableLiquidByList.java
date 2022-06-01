@@ -22,7 +22,7 @@ public class InvSlotConsumableLiquidByList extends InvSlotConsumableLiquid {
             Fluid... fluidlist
     ) {
         super(base1, name1, access1, count, preferredSide1, opType);
-        this.acceptedFluids = new HashSet(Arrays.asList(fluidlist));
+        this.acceptedFluids = new HashSet<>(Arrays.asList(fluidlist));
     }
 
     protected boolean acceptsLiquid(Fluid fluid) {

@@ -21,7 +21,7 @@ public class ItemAlloysPlate extends ItemMulti<ItemAlloysPlate.Types> implements
 
     public ItemAlloysPlate() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }

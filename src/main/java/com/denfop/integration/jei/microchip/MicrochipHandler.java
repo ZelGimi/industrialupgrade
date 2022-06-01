@@ -1,16 +1,12 @@
 package com.denfop.integration.jei.microchip;
 
 
-import com.denfop.api.IMicrochipFarbricatorRecipeManager;
 import com.denfop.api.Recipes;
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MicrochipHandler {
 
@@ -63,24 +59,19 @@ public class MicrochipHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<IMicrochipFarbricatorRecipeManager.Input, RecipeOutput> container :
-                Recipes.GenerationMicrochip.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getKey().fill1.getInputs().get(0), container.getKey().fill2.getInputs().get(0),
-                    container.getKey().container1.getInputs().get(0),
-                    container.getValue().items.get(0), container.getValue().metadata.getShort("temperature")
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("microchip")) {
+            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                    container.input.getInputs().get(2).getInputs().get(0),
+                    container.input.getInputs().get(3).getInputs().get(0),
+                    container.input.getInputs().get(4).getInputs().get(0),
+                    container.getOutput().items.get(0), container.getOutput().metadata.getShort("temperature")
             );
+
 
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public short getTemperature() { // Получатель входного предмета рецепта.
         return temperature;

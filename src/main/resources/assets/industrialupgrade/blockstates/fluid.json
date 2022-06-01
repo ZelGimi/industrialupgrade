@@ -14,6 +14,8 @@
 			"fluidpolyeth": { "custom": { "fluid": "iufluidpolyeth" } },
 			"fluidpolyprop": { "custom": { "fluid": "iufluidpolyprop" } },
 			"fluidoxy": { "custom": { "fluid": "iufluidoxy" } },
+			"fluidazot": { "custom": { "fluid": "iufluidazot" } },
+			"fluidco2": { "custom": { "fluid": "iufluidco2" } },
 			"fluidhyd": { "custom": { "fluid": "iufluidhyd" } }
 		}
 	}

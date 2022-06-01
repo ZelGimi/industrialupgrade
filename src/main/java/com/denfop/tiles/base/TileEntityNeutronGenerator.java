@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.Config;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerNeutronGenerator;
-import com.denfop.gui.GUINeutronGenerator;
+import com.denfop.gui.GuiNeutronGenerator;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
@@ -18,7 +18,6 @@ import ic2.core.block.invslot.InvSlotConsumableLiquid.OpType;
 import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.block.invslot.InvSlotUpgrade;
-import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.init.MainConfig;
 import ic2.core.network.GuiSynced;
 import ic2.core.profile.NotClassic;
@@ -49,7 +48,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
     private AudioSource audioSource;
 
     public TileEntityNeutronGenerator() {
-        super((int) (Config.energy * 128), 14);
+        super((int) (Config.energy * 128), 14, 1);
 
         this.energycost = (float) Config.energy;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
@@ -148,7 +147,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUINeutronGenerator(new ContainerNeutronGenerator(entityPlayer, this));
+        return new GuiNeutronGenerator(new ContainerNeutronGenerator(entityPlayer, this));
     }
 
     public void onGuiClosed(EntityPlayer player) {

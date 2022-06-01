@@ -1,11 +1,11 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerObsidianGenerator;
 import com.denfop.invslot.InvSlotObsidianGenerator;
 import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.api.recipe.RecipeOutput;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.ContainerBase;
@@ -40,7 +40,6 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     public final InvSlotUpgrade upgradeSlot;
     public final FluidTank fluidTank1;
     public final FluidTank fluidTank2;
-    private final Fluids fluids;
     public int energyConsume;
     public int operationLength;
     public int operationsPerTick;
@@ -54,7 +53,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     }
 
     public TileEntityBaseObsidianGenerator(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super("", energyPerTick * length, 1, outputSlots);
+        super(energyPerTick * length, 1, outputSlots);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
@@ -65,11 +64,11 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
 
         this.fluidSlot1 = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidRegistry.WATER);
         this.fluidSlot2 = new InvSlotConsumableLiquidByList(this, "fluidSlot1", 1, FluidRegistry.LAVA);
-        this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = this.fluids.addTank("fluidTank1", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.WATER)
+        Fluids fluids = this.addComponent(new Fluids(this));
+        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.WATER)
 
         );
-        this.fluidTank2 = this.fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
+        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
 
         );
     }
@@ -315,7 +314,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         return fluid == FluidRegistry.LAVA || fluid == FluidRegistry.WATER;
     }
 
-    public boolean canDrain(Fluid fluid) {
+    public boolean canDrain() {
         return true;
     }
 
@@ -336,38 +335,18 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
 
     public FluidStack drain(FluidStack resource, boolean doDrain) {
         if (resource != null && resource.isFluidEqual(this.getFluidTank1().getFluid())) {
-            return !this.canDrain(resource.getFluid()) ? null : this.getFluidTank1().drain(resource.amount, doDrain);
+            return !this.canDrain() ? null : this.getFluidTank1().drain(resource.amount, doDrain);
         } else if (resource != null && resource.isFluidEqual(this.getFluidTank2().getFluid())) {
-            return !this.canDrain(resource.getFluid()) ? null : this.getFluidTank2().drain(resource.amount, doDrain);
+            return !this.canDrain() ? null : this.getFluidTank2().drain(resource.amount, doDrain);
         } else {
             return null;
         }
     }
 
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        return !this.canDrain(null) ? null : this.getFluidTank2().drain(maxDrain, doDrain);
+        return !this.canDrain() ? null : this.getFluidTank2().drain(maxDrain, doDrain);
     }
 
-
-    public int getTankAmount1() {
-        return this.getFluidTank1().getFluidAmount();
-    }
-
-    public int getTankAmount2() {
-        return this.getFluidTank2().getFluidAmount();
-    }
-
-    public int gaugeLiquidScaled1(int i) {
-        return this.getFluidTank1().getFluidAmount() <= 0
-                ? 0
-                : this.getFluidTank1().getFluidAmount() * i / this.getFluidTank1().getCapacity();
-    }
-
-    public int gaugeLiquidScaled2(int i) {
-        return this.getFluidTank2().getFluidAmount() <= 0
-                ? 0
-                : this.getFluidTank2().getFluidAmount() * i / this.getFluidTank2().getCapacity();
-    }
 
     public FluidTank getFluidTank1() {
         return this.fluidTank1;

@@ -2,7 +2,9 @@ package com.denfop.api.research.main;
 
 import net.minecraft.item.ItemStack;
 
-public class BaseResearch implements IResearch{
+import java.util.List;
+
+public class BaseResearch implements IResearch {
 
     public final String name;
     public final boolean unique;
@@ -12,32 +14,69 @@ public class BaseResearch implements IResearch{
     public final boolean depends;
     public final IResearch dependencies;
     public final ItemStack itemstack;
+    public final Icon icon;
+    public final int id;
+    public List<IResearchPart> parts;
 
-    public BaseResearch(String name, IResearchPages page, boolean unique,ItemStack itemstack){
-        this(name,page,0,0,unique,itemstack);
+    public BaseResearch(
+            String name, IResearchPages page, boolean unique, ItemStack itemstack, Icon icon,
+            List<IResearchPart> list, int id
+    ) {
+        this(name, page, 0, 0, unique, itemstack, icon, list, id);
 
     }
-    public BaseResearch(String name, IResearchPages page,int minlevel, int points, boolean unique,ItemStack itemstack){
-        this(name,page,minlevel,points,unique,null,itemstack);
+
+    public BaseResearch(
+            String name, IResearchPages page, int minlevel, int points, boolean unique, ItemStack itemstack, Icon icon,
+            List<IResearchPart> list, int id
+    ) {
+        this(name, page, minlevel, points, unique, null, itemstack, icon, list, id);
     }
-    public BaseResearch(String name, IResearchPages page,int minlevel, int points,ItemStack itemstack){
-        this(name,page,minlevel,points,false,null,itemstack);
+
+    public BaseResearch(
+            String name, IResearchPages page, int minlevel, int points, ItemStack itemstack, Icon icon,
+            List<IResearchPart> list, int id
+    ) {
+        this(name, page, minlevel, points, false, null, itemstack, icon, list, id);
     }
-    public BaseResearch(String name, IResearchPages page,int minlevel, int points,IResearch research,ItemStack itemstack){
-        this(name,page,minlevel,points,false,research,itemstack);
+
+    public BaseResearch(
+            String name, IResearchPages page, int minlevel, int points, IResearch research, ItemStack itemstack, Icon icon,
+            List<IResearchPart> list, int id
+    ) {
+        this(name, page, minlevel, points, false, research, itemstack, icon, list, id);
     }
-    public BaseResearch(String name, IResearchPages page,int minlevel, int points,boolean unique, IResearch research,ItemStack itemstack){
-        this.name= name;
-        this.unique=unique;
+
+    public BaseResearch(
+            String name,
+            IResearchPages page,
+            int minlevel,
+            int points,
+            boolean unique,
+            IResearch research,
+            ItemStack itemstack,
+            Icon icon,
+            List<IResearchPart> list,
+            int id
+    ) {
+        this.name = name;
+        this.unique = unique;
         this.minlevel = minlevel;
         this.points = points;
         this.page = page;
-        this.depends= research != null;
-        this.dependencies =research;
+        this.depends = research != null;
+        this.dependencies = research;
         this.itemstack = itemstack;
+        this.icon = icon;
+        this.parts = list;
+        this.id = id;
     }
-    public BaseResearch(String name, IResearchPages page,ItemStack itemstack){
-        this(name,page,0,0,false,itemstack);
+
+    public BaseResearch(
+            String name, IResearchPages page, ItemStack itemstack, Icon icon,
+            List<IResearchPart> list, int id
+    ) {
+        this(name, page, 0, 0, false, itemstack, icon, list, id);
     }
 
     @Override
@@ -76,8 +115,28 @@ public class BaseResearch implements IResearch{
     }
 
     @Override
-    public ItemStack getIcon() {
+    public ItemStack getItemStack() {
         return this.itemstack;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return this.icon;
+    }
+
+    @Override
+    public List<IResearchPart> getPartsResearch() {
+        return this.parts;
+    }
+
+    @Override
+    public void setPartsResearch(final List<IResearchPart> list) {
+        this.parts = list;
+    }
+
+    @Override
+    public int getID() {
+        return this.id;
     }
 
 }

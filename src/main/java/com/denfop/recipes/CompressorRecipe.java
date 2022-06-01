@@ -2,7 +2,7 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
-import com.denfop.register.RegisterOreDict;
+import com.denfop.register.RegisterOreDictionary;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
 import net.minecraft.item.ItemStack;
@@ -25,42 +25,46 @@ public class CompressorRecipe {
         addcompressor(new ItemStack(IUItem.compressIridiumplate), 9, new ItemStack(IUItem.doublecompressIridiumplate));
         addcompressor("doubleplateTungsten", 1, new ItemStack(IUItem.cell_all));
         addcompressor(new ItemStack(IUItem.neutronium), 9, new ItemStack(IUItem.neutroniumingot, 1));
-        addcompressor(  new ItemStack(Ic2Items.cell.getItem()), 1, Ic2Items.airCell);
+        addcompressor(new ItemStack(Ic2Items.cell.getItem()), 1, Ic2Items.airCell);
 
-        for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
+        for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 
             addcompressor(
-                    "block" + RegisterOreDict.itemNames().get(i),
+                    "block" + RegisterOreDictionary.itemNames().get(i),
                     1,
-                    "doubleplate" + RegisterOreDict.itemNames().get(i)
+                    "doubleplate" + RegisterOreDictionary.itemNames().get(i)
             );
 
 
         }
-        for (int i = 0; i < RegisterOreDict.itemNames1().size(); i++) {
+        for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
 
             addcompressor(
-                    "block" + RegisterOreDict.itemNames1().get(i),
+                    "block" + RegisterOreDictionary.itemNames1().get(i),
                     1,
-                    "doubleplate" + RegisterOreDict.itemNames1().get(i)
+                    "doubleplate" + RegisterOreDictionary.itemNames1().get(i)
             );
 
 
         }
         for (int j = 0; j < recipe.length; j++) {
-            for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
+            for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 
-                addcompressor(recipe[j] + RegisterOreDict.itemNames().get(i), 9, recipe1[j] + RegisterOreDict.itemNames().get(i));
+                addcompressor(
+                        recipe[j] + RegisterOreDictionary.itemNames().get(i),
+                        9,
+                        recipe1[j] + RegisterOreDictionary.itemNames().get(i)
+                );
 
             }
         }
         for (int j = 0; j < recipe.length; j++) {
-            for (int i = 0; i < RegisterOreDict.itemNames1().size(); i++) {
+            for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
                 if (j == 0) {
                     addcompressor(
-                            recipe[j] + RegisterOreDict.itemNames1().get(i),
+                            recipe[j] + RegisterOreDictionary.itemNames1().get(i),
                             9,
-                            recipe1[j] + RegisterOreDict.itemNames1().get(i)
+                            recipe1[j] + RegisterOreDictionary.itemNames1().get(i)
                     );
                 }
 

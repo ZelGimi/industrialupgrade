@@ -2,11 +2,11 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.items.modules.UpgradeModule;
-import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.GuiIC2;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -18,15 +18,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import static com.denfop.events.IUEventHandler.getUpgradeItem;
 
 @SideOnly(Side.CLIENT)
-public class GUIUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
+public class GuiUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
-    public GUIUpgradeBlock(ContainerDoubleElectricMachine container1) {
+    public GuiUpgradeBlock(ContainerDoubleElectricMachine container1) {
         super(container1);
         this.container = container1;
     }
 
+    @Override
+    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 25, 55, 36, 70)
+                .withTooltip(tooltip2)
+                .drawForeground(mouseX, mouseY);
+    }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
@@ -51,19 +64,19 @@ public class GUIUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
 
         boolean allow = true;
         NBTTagCompound nbt1 = ModUtils.nbt(stack1);
-        RecipeOutput output = Recipes.upgrade.getOutputFor(
-                this.container.base.inputSlotA.get(0),
-                this.container.base.inputSlotA.get(1),
-                false,
-                false
+        BaseMachineRecipe output = Recipes.recipes.getRecipeOutput("upgradeblock",
+                false, this.container.base.inputSlotA.get(0),
+                this.container.base.inputSlotA.get(1)
+
+
         );
 
         if (output != null) {
             if (!nbt1.getString("mode_module" + 3).isEmpty()) {
                 allow = false;
             }
-            if (module.getItem() instanceof UpgradeModule) {
-                EnumInfoUpgradeModules type = UpgradeModule.getType(module.getItemDamage());
+            if (module.getItem() instanceof ItemUpgradeModule) {
+                EnumInfoUpgradeModules type = ItemUpgradeModule.getType(module.getItemDamage());
                 int min = 0;
                 for (int i = 0; i < 4; i++) {
                     if (nbt1.getString("mode_module" + i).equals(type.name)) {
@@ -102,7 +115,7 @@ public class GUIUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIUpgradeBlock.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiUpgradeBlock.png");
     }
 
 }

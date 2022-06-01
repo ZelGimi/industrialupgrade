@@ -2,14 +2,10 @@ package com.denfop.integration.jei.combmac;
 
 
 import com.denfop.api.Recipes;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipe;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CombMacHandler {
@@ -20,6 +16,7 @@ public class CombMacHandler {
     public CombMacHandler(ItemStack input, ItemStack output) {
         this.input = input;
         this.output = output;
+        this.output.setCount(3);
     }
 
     public static List<CombMacHandler> getRecipes() { // Получатель всех рецептов.
@@ -51,22 +48,17 @@ public class CombMacHandler {
     }
 
     public static void initRecipes() {
-        for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.macerator.getRecipes()) {
-            if (new ArrayList<>(container.getOutput()).size() > 0 && container.getInput().getInputs().size() > 0) {
-                addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()).get(0)
-                );
-            }
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("comb_macerator")) {
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.getOutput().items.get(0)
+            );
+
 
         }
+
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

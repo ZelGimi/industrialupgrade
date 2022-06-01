@@ -1,16 +1,13 @@
 package com.denfop.integration.jei.genneutronium;
 
 
-import com.denfop.api.Recipes;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.Config;
+import com.denfop.blocks.FluidName;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GenNeuHandler {
 
@@ -55,20 +52,12 @@ public class GenNeuHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<NBTTagCompound, FluidStack> container :
-                Recipes.neutroniumgenrator.getRecipes().entrySet()) {
-            addRecipe(container.getKey().getDouble("amount"), container.getValue());
 
-        }
+        addRecipe(Config.energy * 1000, new FluidStack(FluidName.fluidNeutron.getInstance(), 1000));
+
+
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public double getEnergy() { // Получатель входного предмета рецепта.
         return input;

@@ -86,7 +86,7 @@ public enum BlockUpgradeBlock implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override

@@ -1,9 +1,9 @@
 pu.module_ic.name=Module IC
 pu.module_te.name=Module TE
 pu.module_rf.name=Module RF
-pu.module_te.name=Module TE
+pu.module_fe.name=Module FE
 pu.module_qe.name=Module QE
 powerutils.powerutils.power_utilities=Power Converter EU/RF
 powerutils.powerutils.power_utilities_fe=Power Converter EU/FE
 powerutils.powerutils.power_utilities_te=Power Converter EU/TE
-powerutils.powerutils.power_utilities_te=Power Converter EU/QE
+powerutils.powerutils.power_utilities_qe=Power Converter EU/QE

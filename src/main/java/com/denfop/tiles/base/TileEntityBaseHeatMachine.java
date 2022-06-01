@@ -1,16 +1,15 @@
 package com.denfop.tiles.base;
 
 import com.denfop.api.ITemperature;
-import com.denfop.api.ITemperatureSourse;
 import com.denfop.api.Recipes;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerHeatMachine;
 import com.denfop.gui.GuiHeatMachine;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.comp.Fluids;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotConsumableLiquid;
@@ -34,12 +33,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 public class TileEntityBaseHeatMachine extends TileEntityElectricMachine implements INetworkClientTileEntityEventListener,
-        IFluidHandler, ITemperatureSourse, IHeatSource {
+        IFluidHandler, ITemperature, IHeatSource {
 
 
     public final boolean hasFluid;
     public final String name;
-    public final short maxtemperature;
+    public short maxtemperature;
     public boolean auto;
     public FluidTank fluidTank;
     public Fluids fluids = null;
@@ -47,11 +46,11 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
     public InvSlotConsumableLiquid fluidSlot;
 
     public TileEntityBaseHeatMachine(String name, boolean hasFluid) {
-        super("", hasFluid ? 0D : 10000D, 14, 1);
+        super(hasFluid ? 0D : 10000D, 14, 1);
         this.hasFluid = hasFluid;
         this.fluidTank = new FluidTank(12000);
         if (this.hasFluid) {
-            this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
+            this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14));
         }
         if (this.hasFluid) {
             this.fluids = this.addComponent(new Fluids(this));
@@ -73,25 +72,48 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
             );
         }
         this.name = name;
-        this.maxtemperature = 10000;
+        this.maxtemperature = 1000;
         this.temperature = 0;
 
         this.auto = false;
+
     }
 
     @Override
-    public boolean reveiver() {
-        return false;
+    public ITemperature getSource() {
+        return null;
     }
 
     @Override
-    public boolean requairedTemperature() {
+    public void setSource(final ITemperature source) {
+
+    }
+
+    @Override
+    public boolean receiver() {
         return false;
     }
 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
-        this.auto = !this.auto;
+        if (i == 0) {
+            this.maxtemperature = (short) (this.maxtemperature + 1000);
+            if (this.maxtemperature > 10000) {
+                this.maxtemperature = 10000;
+            }
+            if (this.temperature > this.maxtemperature) {
+                this.temperature = this.maxtemperature;
+            }
+        }
+        if (i == 1) {
+            this.maxtemperature = (short) (this.maxtemperature - 1000);
+            if (this.maxtemperature < 1000) {
+                this.maxtemperature = 1000;
+            }
+            if (this.temperature > this.maxtemperature) {
+                this.temperature = this.maxtemperature;
+            }
+        }
     }
 
     @Override
@@ -110,6 +132,7 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         super.readFromNBT(nbttagcompound);
         this.fluidTank.readFromNBT(nbttagcompound.getCompoundTag("fluidTank"));
         this.temperature = nbttagcompound.getShort("temperature");
+        this.maxtemperature = nbttagcompound.getShort("maxtemperature");
         this.auto = nbttagcompound.getBoolean("auto");
     }
 
@@ -119,6 +142,7 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         this.fluidTank.writeToNBT(fluidTankTag);
         nbttagcompound.setTag("fluidTank", fluidTankTag);
         nbttagcompound.setShort("temperature", this.temperature);
+        nbttagcompound.setShort("maxtemperature", this.maxtemperature);
         nbttagcompound.setBoolean("auto", this.auto);
         return nbttagcompound;
 
@@ -132,6 +156,11 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
             }
         }
         setActive(Recipes.mechanism.process(this));
+        if (this.world.provider.getWorldTime() % 60 == 0) {
+            if (this.temperature > 0) {
+                this.temperature--;
+            }
+        }
     }
 
 
@@ -149,7 +178,7 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         return hasFluid && fluid.equals(FluidRegistry.LAVA);
     }
 
-    public boolean canDrain(Fluid fluid) {
+    public boolean canDrain() {
         return hasFluid;
     }
 
@@ -215,7 +244,7 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         if (resource == null || !resource.isFluidEqual(getFluidTank().getFluid())) {
             return null;
         }
-        if (!canDrain(resource.getFluid())) {
+        if (!canDrain()) {
             return null;
         }
         return getFluidTank().drain(resource.amount, doDrain);
@@ -224,7 +253,7 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
     @Nullable
     @Override
     public FluidStack drain(final int maxDrain, final boolean doDrain) {
-        if (!canDrain(null)) {
+        if (!canDrain()) {
             return null;
         }
         return getFluidTank().drain(maxDrain, doDrain);
@@ -237,12 +266,12 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
 
     @Override
     public double getOfferedHeat() {
-        return Math.min(4, this.temperature);
+        return this.temperature;
     }
 
     @Override
     public void drawHeat(final double var1) {
-        this.temperature -= var1;
+
 
     }
 

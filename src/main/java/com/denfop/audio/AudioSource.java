@@ -19,20 +19,11 @@ public class AudioSource {
     public void stop() {
     }
 
-    public void flush() {
-    }
-
     public float getVolume() {
         return 0.0F;
     }
 
     public void setVolume(float volume) {
-    }
-
-    public void setPitch(float pitch) {
-    }
-
-    public void updatePosition() {
     }
 
     public void activate() {

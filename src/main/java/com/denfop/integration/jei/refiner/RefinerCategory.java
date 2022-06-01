@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class RefinerCategory extends Gui implements IRecipeCategory<RefinerRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -30,21 +32,25 @@ public class RefinerCategory extends Gui implements IRecipeCategory<RefinerRecip
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockRefiner.refiner.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.oilrefiner, 1).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -68,7 +74,7 @@ public class RefinerCategory extends Gui implements IRecipeCategory<RefinerRecip
     public void setRecipe(
             final IRecipeLayout layout,
             final RefinerRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
 
 

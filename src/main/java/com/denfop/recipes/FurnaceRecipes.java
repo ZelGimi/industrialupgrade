@@ -1,7 +1,7 @@
 package com.denfop.recipes;
 
 import com.denfop.IUItem;
-import com.denfop.register.RegisterOreDict;
+import com.denfop.register.RegisterOreDictionary;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -26,22 +26,26 @@ public class FurnaceRecipes {
         GameRegistry.addSmelting(new ItemStack(IUItem.ore, 1, 14), new ItemStack(IUItem.iuingot, 1, 17), 5);
         GameRegistry.addSmelting(new ItemStack(IUItem.ore, 1, 15), new ItemStack(IUItem.iuingot, 1, 18), 5);
 
-        for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
+        for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
             if (i != 4 && i != 5 && i != 13) {
                 GameRegistry.addSmelting(new ItemStack(IUItem.crushed, 1, i), new ItemStack(IUItem.iuingot, 1, i), 5);
             }
         }
-        for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
+        for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
             GameRegistry.addSmelting(new ItemStack(IUItem.iudust, 1, i), new ItemStack(IUItem.iuingot, 1, i), 5);
         }
 
-        for (int i = 0; i < RegisterOreDict.itemNames1().size(); i++) {
+        for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
             GameRegistry.addSmelting(new ItemStack(IUItem.alloysdust, 1, i), new ItemStack(IUItem.alloysingot, 1, i), 5);
         }
 
         GameRegistry.addSmelting(new ItemStack(IUItem.toriyore, 1), new ItemStack(IUItem.toriy, 1), 5);
         for (int i = 0; i < 3; i++) {
-            GameRegistry.addSmelting(new ItemStack(IUItem.radiationore, 1, i), new ItemStack(IUItem.radiationresources, 1, i), 5);
+            GameRegistry.addSmelting(
+                    new ItemStack(IUItem.radiationore, 1, i),
+                    new ItemStack(IUItem.radiationresources, 1, i),
+                    5
+            );
         }
 
 

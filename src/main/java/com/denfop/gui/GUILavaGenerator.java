@@ -11,13 +11,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUILavaGenerator extends GuiIC2<ContainerLavaGenerator> {
+public class GuiLavaGenerator extends GuiIC2<ContainerLavaGenerator> {
 
     public final ContainerLavaGenerator container;
     public final String progressLabel;
     public final String amplifierLabel;
 
-    public GUILavaGenerator(ContainerLavaGenerator container1) {
+    public GuiLavaGenerator(ContainerLavaGenerator container1) {
         super(container1);
         this.container = container1;
         this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");

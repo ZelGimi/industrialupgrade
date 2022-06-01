@@ -1,12 +1,12 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.componets;
 
-import com.denfop.api.qe.*;
-import com.denfop.api.qe.event.*;
+import com.denfop.api.qe.IQEAcceptor;
+import com.denfop.api.qe.IQEEmitter;
+import com.denfop.api.qe.IQESink;
+import com.denfop.api.qe.IQESource;
+import com.denfop.api.qe.IQETile;
+import com.denfop.api.qe.event.QETileLoadEvent;
+import com.denfop.api.qe.event.QETileUnloadEvent;
 import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
@@ -14,13 +14,6 @@ import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
-import java.io.DataInput;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,9 +21,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.io.DataInput;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 public class QEComponent extends TileEntityComponent {
+
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
+    public final boolean fullEnergy;
     public double capacity;
     public double storage;
     public int sinkTier;
@@ -44,7 +45,47 @@ public class QEComponent extends TileEntityComponent {
     public boolean loaded;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
-    public final boolean fullEnergy;
+    public double tick;
+    protected double pastEnergy;
+    protected double perenergy;
+
+    public QEComponent(TileEntityBlock parent, double capacity) {
+        this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
+    }
+
+    public QEComponent(
+            TileEntityBlock parent,
+            double capacity,
+            Set<EnumFacing> sinkDirections,
+            Set<EnumFacing> sourceDirections,
+            int tier
+    ) {
+        this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
+    }
+
+    public QEComponent(
+            TileEntityBlock parent,
+            double capacity,
+            Set<EnumFacing> sinkDirections,
+            Set<EnumFacing> sourceDirections,
+            int sinkTier,
+            int sourceTier,
+            boolean fullEnergy
+    ) {
+        super(parent);
+        this.multiSource = false;
+        this.sourcePackets = 1;
+        this.capacity = capacity;
+        this.sinkTier = sinkTier;
+        this.sourceTier = sourceTier;
+        this.sinkDirections = sinkDirections;
+        this.sourceDirections = sourceDirections;
+        this.fullEnergy = fullEnergy;
+        this.world = parent.getWorld();
+        this.pastEnergy = 0;
+        this.perenergy = 0;
+        this.tick = 0;
+    }
 
     public static QEComponent asBasicSink(TileEntityBlock parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
@@ -62,31 +103,6 @@ public class QEComponent extends TileEntityComponent {
         return new QEComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 
-    public QEComponent(TileEntityBlock parent, double capacity) {
-        this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
-    }
-
-    public QEComponent(TileEntityBlock parent, double capacity, Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections, int tier) {
-        this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
-    }
-
-    public QEComponent(TileEntityBlock parent, double capacity, Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections, int sinkTier, int sourceTier, boolean fullEnergy) {
-        super(parent);
-        this.multiSource = false;
-        this.sourcePackets = 1;
-        this.capacity = capacity;
-        this.sinkTier = sinkTier;
-        this.sourceTier = sourceTier;
-        this.sinkDirections = sinkDirections;
-        this.sourceDirections = sourceDirections;
-        this.fullEnergy = fullEnergy;
-        this.world = parent.getWorld();
-    }
-
-
-
-
-
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
     }
@@ -103,15 +119,21 @@ public class QEComponent extends TileEntityComponent {
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
                 if (debugLoad) {
-                    IC2.log.debug(LogCategory.Component, "Skipping Energy onLoaded for %s at %s.", new Object[]{this.parent, Util.formatPosition(this.parent)});
+                    IC2.log.debug(LogCategory.Component, "Skipping Energy onLoaded for %s at %s.",
+                            this.parent,
+                            Util.formatPosition(this.parent)
+                    );
                 }
             } else {
                 if (debugLoad) {
-                    IC2.log.debug(LogCategory.Component, "Energy onLoaded for %s at %s.", new Object[]{this.parent, Util.formatPosition(this.parent)});
+                    IC2.log.debug(LogCategory.Component, "Energy onLoaded for %s at %s.",
+                            this.parent,
+                            Util.formatPosition(this.parent)
+                    );
                 }
 
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new QETileLoadEvent(this.delegate,this.parent.getWorld()));
+                MinecraftForge.EVENT_BUS.post(new QETileLoadEvent(this.delegate, this.parent.getWorld()));
             }
 
             this.loaded = true;
@@ -147,7 +169,7 @@ public class QEComponent extends TileEntityComponent {
                 );
             }
 
-            MinecraftForge.EVENT_BUS.post(new QETileUnloadEvent(this.delegate,this.parent.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new QETileUnloadEvent(this.delegate, this.parent.getWorld()));
             this.delegate = null;
         } else if (debugLoad) {
             IC2.log.debug(LogCategory.Component, "Skipping Energy onUnloaded for %s at %s.",
@@ -198,7 +220,7 @@ public class QEComponent extends TileEntityComponent {
     }
 
     public int getComparatorValue() {
-        return Math.min((int)(this.storage * 15.0D / this.capacity), 15);
+        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
     }
 
     public double addEnergy(double amount) {
@@ -264,6 +286,10 @@ public class QEComponent extends TileEntityComponent {
         return this.multiSource;
     }
 
+    public int getPacketOutput() {
+        return this.sourcePackets;
+    }
+
     public void setPacketOutput(int number) {
         if (this.multiSource) {
             this.sourcePackets = number;
@@ -271,20 +297,20 @@ public class QEComponent extends TileEntityComponent {
 
     }
 
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
         if (this.delegate != null) {
             if (debugLoad) {
-                IC2.log.debug(LogCategory.Component, "Energy setDirections unload for %s at %s.", new Object[]{this.parent, Util.formatPosition(this.parent)});
+                IC2.log.debug(
+                        LogCategory.Component,
+                        "Energy setDirections unload for %s at %s.",
+                        this.parent, Util.formatPosition(this.parent)
+                );
             }
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new QETileUnloadEvent(this.delegate,this.world));
+            MinecraftForge.EVENT_BUS.post(new QETileUnloadEvent(this.delegate, this.world));
         }
 
         this.sinkDirections = sinkDirections;
@@ -297,14 +323,22 @@ public class QEComponent extends TileEntityComponent {
 
         if (this.delegate != null) {
             if (debugLoad) {
-                IC2.log.debug(LogCategory.Component, "Energy setDirections load for %s at %s, sink: %s, source: %s.", new Object[]{this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections});
+                IC2.log.debug(
+                        LogCategory.Component,
+                        "Energy setDirections load for %s at %s, sink: %s, source: %s.",
+                        this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections
+                );
             }
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new QETileLoadEvent(this.delegate,this.world));
+            MinecraftForge.EVENT_BUS.post(new QETileLoadEvent(this.delegate, this.world));
         } else if (debugLoad) {
-            IC2.log.debug(LogCategory.Component, "Skipping Energy setDirections load for %s at %s, sink: %s, source: %s, loaded: %b.", new Object[]{this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections, this.loaded});
+            IC2.log.debug(
+                    LogCategory.Component,
+                    "Skipping Energy setDirections load for %s at %s, sink: %s, source: %s, loaded: %b.",
+                    this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections, this.loaded
+            );
         }
 
 
@@ -323,18 +357,19 @@ public class QEComponent extends TileEntityComponent {
     }
 
     private double getSourceEnergy() {
-        if (this.fullEnergy) {
-            return this.storage >= EnergyNet.instance.getPowerFromTier(this.sourceTier) ? this.storage : 0.0D;
-        } else {
-            return this.storage;
-        }
+
+        return this.storage;
     }
 
     private int getPacketCount() {
-        return this.fullEnergy ? Math.min(this.sourcePackets, (int)Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))) : this.sourcePackets;
+        return this.fullEnergy ? Math.min(
+                this.sourcePackets,
+                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
+        ) : this.sourcePackets;
     }
 
     private class EnergyNetDelegateDual extends QEComponent.EnergyNetDelegate implements IQESink, IQESource {
+
         private EnergyNetDelegateDual() {
             super();
         }
@@ -348,9 +383,10 @@ public class QEComponent extends TileEntityComponent {
         }
 
 
-
         public double getOfferedQE() {
-            return !QEComponent.this.sendingSidabled && !QEComponent.this.sourceDirections.isEmpty() ? QEComponent.this.getSourceEnergy() : 0.0D;
+            return !QEComponent.this.sendingSidabled && !QEComponent.this.sourceDirections.isEmpty()
+                    ? QEComponent.this.getSourceEnergy()
+                    : 0.0D;
         }
 
         public int getSinkTier() {
@@ -360,9 +396,12 @@ public class QEComponent extends TileEntityComponent {
         public int getSourceTier() {
             return QEComponent.this.sourceTier;
         }
+
         @Override
         public double getDemandedQE() {
-            return !QEComponent.this.receivingDisabled && !QEComponent.this.sinkDirections.isEmpty() && QEComponent.this.storage < QEComponent.this.capacity ? QEComponent.this.capacity - QEComponent.this.storage : 0.0D;
+            return !QEComponent.this.receivingDisabled && !QEComponent.this.sinkDirections.isEmpty() && QEComponent.this.storage < QEComponent.this.capacity
+                    ? QEComponent.this.capacity - QEComponent.this.storage
+                    : 0.0D;
 
         }
 
@@ -388,10 +427,50 @@ public class QEComponent extends TileEntityComponent {
         }
 
 
+        @Override
+        public double getPerEnergy() {
+            return QEComponent.this.perenergy;
+        }
+
+        @Override
+        public double getPastEnergy() {
+            return QEComponent.this.pastEnergy;
+        }
+
+        @Override
+        public void setPastEnergy(final double pastEnergy) {
+            QEComponent.this.pastEnergy = pastEnergy;
+        }
+
+        @Override
+        public void addPerEnergy(final double setEnergy) {
+            QEComponent.this.perenergy += setEnergy;
+        }
+
+        @Override
+        public boolean isSource() {
+            return !QEComponent.this.sendingSidabled;
+        }
+
+        @Override
+        public void addTick(final double tick) {
+            QEComponent.this.tick = tick;
+        }
+
+        @Override
+        public double getTick() {
+            return QEComponent.this.tick;
+        }
+
+        @Override
+        public boolean isSink() {
+            return QEComponent.this.sendingSidabled;
+        }
 
     }
 
     private class EnergyNetDelegateSink extends QEComponent.EnergyNetDelegate implements IQESink {
+
         private EnergyNetDelegateSink() {
             super();
         }
@@ -407,16 +486,55 @@ public class QEComponent extends TileEntityComponent {
         public double getDemandedQE() {
             assert !QEComponent.this.sinkDirections.isEmpty();
 
-            return !QEComponent.this.receivingDisabled && QEComponent.this.storage < QEComponent.this.capacity ? QEComponent.this.capacity - QEComponent.this.storage : 0.0D;
+            return !QEComponent.this.receivingDisabled && QEComponent.this.storage < QEComponent.this.capacity
+                    ? QEComponent.this.capacity - QEComponent.this.storage
+                    : 0.0D;
         }
 
         public double injectQE(EnumFacing directionFrom, double amount, double voltage) {
             QEComponent.this.storage = QEComponent.this.storage + amount;
             return 0.0D;
         }
+
+        @Override
+        public double getPerEnergy() {
+            return QEComponent.this.perenergy;
+        }
+
+        @Override
+        public double getPastEnergy() {
+            return QEComponent.this.pastEnergy;
+        }
+
+        @Override
+        public void setPastEnergy(final double pastEnergy) {
+            QEComponent.this.pastEnergy = pastEnergy;
+        }
+
+        @Override
+        public void addPerEnergy(final double setEnergy) {
+            QEComponent.this.perenergy += setEnergy;
+        }
+
+        @Override
+        public void addTick(final double tick) {
+            QEComponent.this.tick = tick;
+        }
+
+        @Override
+        public double getTick() {
+            return QEComponent.this.tick;
+        }
+
+        @Override
+        public boolean isSink() {
+            return true;
+        }
+
     }
 
     private class EnergyNetDelegateSource extends QEComponent.EnergyNetDelegate implements IQESource {
+
         private EnergyNetDelegateSource() {
             super();
         }
@@ -441,11 +559,39 @@ public class QEComponent extends TileEntityComponent {
             QEComponent.this.storage = QEComponent.this.storage - amount;
         }
 
+        @Override
+        public double getPerEnergy() {
+            return QEComponent.this.perenergy;
+        }
+
+        @Override
+        public double getPastEnergy() {
+            return QEComponent.this.pastEnergy;
+        }
+
+        @Override
+        public void setPastEnergy(final double pastEnergy) {
+            QEComponent.this.pastEnergy = pastEnergy;
+        }
+
+        @Override
+        public void addPerEnergy(final double setEnergy) {
+            QEComponent.this.perenergy += setEnergy;
+        }
+
+        @Override
+        public boolean isSource() {
+            return true;
+        }
+
 
     }
 
     private abstract class EnergyNetDelegate extends TileEntity implements IQETile {
+
         private EnergyNetDelegate() {
         }
+
     }
+
 }

@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecipeManager> {
 
     private final IDrawableStatic bg;
@@ -25,27 +27,31 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
     public GenStarCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIWitherMaker" +
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiWitherMaker" +
                         ".png"), 3, 3, 147,
                 75
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine1.gen_wither.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine, 1, 13).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -53,20 +59,18 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 40 * progress / 100;
-        double xScale1 = 10.0F * progress / 100;
-        double xScale2 = 19.0F * progress / 100;
         if (xScale > 40) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(+76, +51 + 11 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(+76, 51 + 11 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
@@ -79,7 +83,7 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
     public void setRecipe(
             final IRecipeLayout layout,
             final GenStarRecipeManager recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
         isg.init(0, true, 7, 4);
@@ -104,7 +108,7 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIWitherMaker.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiWitherMaker.png");
     }
 
 

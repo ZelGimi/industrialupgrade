@@ -3,23 +3,15 @@ package com.denfop.items;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import ic2.core.block.state.IIdProvider;
-import ic2.core.crop.TileEntityCrop;
-import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -79,130 +71,34 @@ public enum CellType implements IIdProvider {
         return false;
     }
 
-    public int getUsage(ItemStack stack) {
+    public int getUsage() {
 
 
         return 0;
 
     }
 
-    public int getMaximum(ItemStack stack) {
+    public int getMaximum() {
         return 0;
     }
 
-    public EnumActionResult doCropAction(ItemStack stack, Consumer<ItemStack> result, TileEntityCrop crop, boolean manual) {
+    public EnumActionResult doCropAction() {
         assert this.hasCropAction();
 
         throw new IllegalStateException("Type was " + this);
     }
 
-    private static class HydrationHandler implements IFluidHandlerItem {
-
-        public static final String NBT = "hydration";
-        public static final int CHARGES = 10000;
-        protected final boolean manual;
-        protected ItemStack container;
-
-        public HydrationHandler(ItemStack stack, boolean manual) {
-            this.container = stack;
-            this.manual = manual;
-        }
-
-        public ItemStack getContainer() {
-            return this.container;
-        }
-
-        public int fill(FluidStack resource, boolean doFill) {
-            return 0;
-        }
-
-        public FluidStack drain(FluidStack resource, boolean doDrain) {
-            return resource != null && resource.getFluid() == FluidRegistry.WATER ? this.drain(resource.amount, doDrain) : null;
-        }
-
-        public FluidStack drain(int maxDrain, boolean doDrain) {
-            int remaining;
-            if (this.container.hasTagCompound()) {
-                remaining = 10000 - this.container.getTagCompound().getInteger("hydration");
-            } else {
-                remaining = 10000;
-            }
-
-            int target = Math.min(maxDrain, remaining);
-            if (!this.manual && target > 180) {
-                target = 180;
-            }
-
-            if (doDrain) {
-                NBTTagCompound nbt = StackUtil.getOrCreateNbtData(this.container);
-                int amount = nbt.getInteger("hydration") + target;
-                if (amount >= 10000) {
-                    this.container = StackUtil.decSize(this.container);
-                } else {
-                    nbt.setInteger("hydration", amount);
-                }
-            }
-
-            return new FluidStack(FluidRegistry.WATER, target);
-        }
-
-        public IFluidTankProperties[] getTankProperties() {
-            return new IFluidTankProperties[]{new FluidTankProperties(new FluidStack(
-                    FluidRegistry.WATER,
-                    (10000 - this.container.getItemDamage()) / 200
-            ), 50, false, true)};
-        }
-
-    }
-
-    private static class WeedExHandler implements IFluidHandlerItem {
-
-        public static final String NBT = "weedEX";
-        public static final int CHARGES = 64;
-        private static final int DRAIN = 50;
-        protected ItemStack container;
-
-        public WeedExHandler(ItemStack stack) {
-            this.container = stack;
-        }
-
-        public ItemStack getContainer() {
-            return this.container;
-        }
-
-        public int fill(FluidStack resource, boolean doFill) {
-            return 0;
-        }
-
-        public FluidStack drain(FluidStack resource, boolean doDrain) {
-            return null;
-        }
-
-        public FluidStack drain(int maxDrain, boolean doDrain) {
-            return null;
-        }
-
-        public IFluidTankProperties[] getTankProperties() {
-            return null;
-        }
-
-    }
-
     public static class CellFluidHandler extends FluidBucketWrapper {
 
-        private static final Map<Fluid, CellType> VALID_FLUIDS = new IdentityHashMap(Arrays
-                .stream(CellType.values()).filter((type) -> {
-                    return type.fluid != null;
-                }).collect(Collectors.toMap((type) -> {
-                    return type.fluid;
-                }, Function.identity())));
+        private static final Map<Fluid, CellType> VALID_FLUIDS = new IdentityHashMap<>(Arrays
+                .stream(CellType.values())
+                .filter((type) -> type.fluid != null)
+                .collect(Collectors.toMap((type) -> type.fluid, Function.identity())));
         protected final Supplier<CellType> typeGetter;
 
         public CellFluidHandler(ItemStack container, Function<ItemStack, CellType> typeGetter) {
             super(container);
-            this.typeGetter = () -> {
-                return (CellType) typeGetter.apply(this.container);
-            };
+            this.typeGetter = () -> (CellType) typeGetter.apply(this.container);
         }
 
         public FluidStack getFluid() {
@@ -210,7 +106,7 @@ public enum CellType implements IIdProvider {
 
             assert type.isFluidContainer();
 
-            return type != null && type.fluid != null ? new FluidStack(type.fluid, 1000) : null;
+            return type.fluid != null ? new FluidStack(type.fluid, 1000) : null;
         }
 
         protected void setFluid(FluidStack stack) {

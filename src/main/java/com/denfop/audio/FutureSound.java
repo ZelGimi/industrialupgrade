@@ -10,14 +10,6 @@ public class FutureSound {
         this.onFinish = onFinish;
     }
 
-    public void cancel() {
-        if (this.run) {
-            throw new IllegalStateException("Tried to cancel completed sound");
-        } else {
-            this.cancelled = true;
-        }
-    }
-
     public boolean isCancelled() {
         return this.cancelled;
     }

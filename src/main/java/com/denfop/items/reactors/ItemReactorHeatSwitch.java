@@ -21,7 +21,7 @@ public class ItemReactorHeatSwitch extends ItemReactorHeatStorage {
     public void processChamber(ItemStack stack, IReactor reactor, int x, int y, boolean heatrun) {
         if (heatrun) {
             int myHeat = 0;
-            ArrayList<ItemReactorHeatSwitch.ItemStackCoord> heatAcceptors = new ArrayList();
+            ArrayList<ItemReactorHeatSwitch.ItemStackCoord> heatAcceptors = new ArrayList<>();
             if (this.switchSide > 0) {
                 this.checkHeatAcceptor(reactor, x - 1, y, heatAcceptors);
                 this.checkHeatAcceptor(reactor, x + 1, y, heatAcceptors);

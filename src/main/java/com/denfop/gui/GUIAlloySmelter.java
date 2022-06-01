@@ -4,9 +4,9 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.ITemperature;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,11 +20,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GUIAlloySmelter extends GuiIC2<ContainerDoubleElectricMachine> {
+public class GuiAlloySmelter extends GuiIC2<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
-    public GUIAlloySmelter(ContainerDoubleElectricMachine container1) {
+    public GuiAlloySmelter(ContainerDoubleElectricMachine container1) {
         super(container1);
         this.container = container1;
     }
@@ -32,9 +32,12 @@ public class GUIAlloySmelter extends GuiIC2<ContainerDoubleElectricMachine> {
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        final RecipeOutput output = this.container.base.inputSlotA.process(0);
+        final MachineRecipe output = this.container.base.output;
         if (output != null) {
-            if (!Recipes.mechanism.hasHeaters(this.container.base.getWorld(),this.container.base.getPos()) && ((ITemperature) this.container.base).getTemperature() < output.metadata.getShort(
+            if (!Recipes.mechanism.hasHeaters(
+                    this.container.base.getWorld(),
+                    this.container.base.getPos()
+            ) && ((ITemperature) this.container.base).getTemperature() < output.getRecipe().output.metadata.getShort(
                     "temperature")) {
                 new AdvArea(this, 81, 58, 99, 76)
                         .withTooltip(Localization.translate("iu.needheaters"))
@@ -42,8 +45,17 @@ public class GUIAlloySmelter extends GuiIC2<ContainerDoubleElectricMachine> {
             }
         }
         new AdvArea(this, 104, 58, 142, 69)
-                .withTooltip(Localization.translate("iu.temperature") + ModUtils.getString( ((ITemperature) this.container.base).getTemperature()) + "/" + ModUtils.getString(
+                .withTooltip(Localization.translate("iu.temperature") + ModUtils.getString(((ITemperature) this.container.base).getTemperature()) + "/" + ModUtils.getString(
                         ((ITemperature) this.container.base).getMaxTemperature()) + "°C")
+                .drawForeground(mouseX, mouseY);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 58, 35, 69, 50)
+                .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);
     }
 
@@ -62,14 +74,17 @@ public class GUIAlloySmelter extends GuiIC2<ContainerDoubleElectricMachine> {
         if (progress > 0) {
             drawTexturedModalRect(xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);
         }
-        int temperature = 38 *((ITemperature) this.container.base).getTemperature() / ((ITemperature) this.container.base).getMaxTemperature();
+        int temperature = 38 * ((ITemperature) this.container.base).getTemperature() / ((ITemperature) this.container.base).getMaxTemperature();
         if (temperature > 0) {
             drawTexturedModalRect(this.guiLeft + 104, this.guiTop + 58, 176, 35, temperature + 1, 11);
         }
-        final RecipeOutput output = this.container.base.inputSlotA.process(0);
+        final MachineRecipe output = this.container.base.output;
 
         if (output != null) {
-            if (!Recipes.mechanism.hasHeaters(this.container.base.getWorld(),this.container.base.getPos())&& ((ITemperature) this.container.base).getTemperature() < output.metadata.getShort(
+            if (!Recipes.mechanism.hasHeaters(
+                    this.container.base.getWorld(),
+                    this.container.base.getPos()
+            ) && ((ITemperature) this.container.base).getTemperature() < output.getRecipe().output.metadata.getShort(
                     "temperature")) {
                 drawTexturedModalRect(this.guiLeft + 75, this.guiTop + 57, 177, 52, 9, 16);
 
@@ -97,7 +112,7 @@ public class GUIAlloySmelter extends GuiIC2<ContainerDoubleElectricMachine> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIAlloySmelter.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiAlloySmelter.png");
     }
 
     public String getName() {

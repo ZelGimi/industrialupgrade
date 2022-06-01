@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -27,15 +26,17 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectricItem, IModelRegister {
 
     private final int slots;
-    private final int maxstorage;
+    private final int maxStorage;
     private final int getTransferLimit;
 
     private final String internalName;
 
-    public ItemEnergyBags(String internalName, int slots, int maxstorage, int getTransferLimit) {
+    public ItemEnergyBags(String internalName, int slots, int maxStorage, int getTransferLimit) {
 
         this.setCreativeTab(IUCore.EnergyTab);
         this.setMaxStackSize(1);
@@ -44,21 +45,21 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
         this.slots = slots;
 
         this.getTransferLimit = getTransferLimit;
-        this.maxstorage = maxstorage;
+        this.maxStorage = maxStorage;
         IUCore.proxy.addIModelRegister(this);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
     }
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("bags").append("/").append(name);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "bags" + "/" + name;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
+    @Nonnull
     public String getUnlocalizedName() {
         return "item." + this.internalName + ".name";
     }
@@ -66,7 +67,6 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
     @SideOnly(Side.CLIENT)
     public void registerModels(final String name) {
         ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));
-        ModelBakery.registerItemVariants(this, getModelLocation1(name));
         ModelBakery.registerItemVariants(this, getModelLocation1(name));
     }
 
@@ -76,29 +76,30 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
     }
 
     @Override
-    public void getSubItems(final CreativeTabs p_150895_1_, final NonNullList<ItemStack> var3) {
+    public void getSubItems(@Nonnull final CreativeTabs p_150895_1_, @Nonnull final NonNullList<ItemStack> var3) {
         if (this.isInCreativeTab(p_150895_1_)) {
             final ItemStack var4 = new ItemStack(this, 1);
             ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             var3.add(var4);
-            var3.add(new ItemStack(this, 1, this.getMaxDamage()));
+            var3.add(new ItemStack(this, 1, 27));
         }
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, EntityPlayer player, @Nonnull EnumHand hand) {
         if (ElectricItem.manager.canUse(player.getHeldItem(hand), 350)) {
             ElectricItem.manager.use(player.getHeldItem(hand), 350, player);
             ItemStack stack = StackUtil.get(player, hand);
             if (IC2.platform.isSimulating()) {
                 IC2.platform.launchGui(player, this.getInventory(player, stack));
-                return new ActionResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+                return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
             }
         }
-        return new ActionResult(EnumActionResult.PASS, player.getHeldItem(hand));
+        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
     }
 
-    public boolean onDroppedByPlayer(ItemStack stack, EntityPlayer player) {
+    public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
         if (!player.getEntityWorld().isRemote && !StackUtil.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
             HandHeldBags toolbox = ((ContainerBags) player.openContainer).base;
             if (toolbox.isThisContainer(stack)) {
@@ -110,13 +111,9 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
         return true;
     }
 
-    @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack stack) {
-        return EnumRarity.UNCOMMON;
-    }
 
     public IHasGui getInventory(EntityPlayer player, ItemStack stack) {
-        return new HandHeldBags(player, stack, slots, this);
+        return new HandHeldBags(player, stack, slots);
     }
 
     @Override
@@ -126,7 +123,7 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IElectri
 
     @Override
     public double getMaxCharge(final ItemStack itemStack) {
-        return this.maxstorage;
+        return this.maxStorage;
     }
 
     @Override

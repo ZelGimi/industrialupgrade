@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemReactorHeatStorage extends AbstractDamageableReactorComponent {
@@ -50,7 +51,12 @@ public class ItemReactorHeatStorage extends AbstractDamageableReactorComponent {
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(
+            @Nonnull ItemStack stack,
+            World world,
+            @Nonnull List<String> tooltip,
+            @Nonnull ITooltipFlag advanced
+    ) {
         super.addInformation(stack, world, tooltip, advanced);
         if (this.getCustomDamage(stack) > 0) {
             tooltip.add(Localization.translate("ic2.reactoritem.heatwarning.line1"));

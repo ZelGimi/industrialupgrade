@@ -2,7 +2,7 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.se.TileSolarGenerator;
+import com.denfop.tiles.se.TileEntitySolarGenerator;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 public enum BlockSolarEnergy implements ITeBlock, ITeBlockSpecialItem {
 
-    se_gen(TileSolarGenerator.class, 0),
+    se_gen(TileEntitySolarGenerator.class, 0),
 
     ;
 

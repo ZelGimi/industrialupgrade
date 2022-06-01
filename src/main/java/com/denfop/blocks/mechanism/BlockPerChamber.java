@@ -136,6 +136,7 @@ public enum BlockPerChamber implements ITeBlock {
     }
 
     @Override
+    @Deprecated
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
     }

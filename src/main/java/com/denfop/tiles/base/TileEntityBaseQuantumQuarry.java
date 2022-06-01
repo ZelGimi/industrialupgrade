@@ -4,6 +4,9 @@ import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
+import com.denfop.api.vein.Type;
+import com.denfop.api.vein.Vein;
+import com.denfop.api.vein.VeinSystem;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.QEComponent;
@@ -12,7 +15,6 @@ import com.denfop.gui.GUIQuantumQuarry;
 import com.denfop.invslot.InvSlotQuantumQuarry;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
-import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
@@ -21,15 +23,15 @@ import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.invslot.InvSlotOutput;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -50,19 +52,30 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     public final InvSlotQuantumQuarry inputslot;
     public final InvSlotQuantumQuarry inputslotA;
     private final String name;
+    public double consume;
+    public boolean mac_enabled = false;
+    public boolean comb_mac_enabled = false;
+    public boolean furnace;
+    public int chance;
+    public int col;
     public List<ItemStack> list;
     public AudioSource audioSource;
     public double getblock;
     public QEComponent energy;
-    private boolean analyzer;
-    private int progress;
+    public boolean analyzer;
+    public int progress;
+    public EnumQuarryModules list_modules;
+    public Vein vein;
+    public List<ItemStack> main_list = new ArrayList<>(IUCore.list);
+    public boolean original = true;
+    public boolean can_dig_vein = true;
 
     public TileEntityBaseQuantumQuarry(String name, int coef) {
 
         this.progress = 0;
         this.name = name;
         this.getblock = 0;
-        this.energyconsume = 2000 * coef;
+        this.energyconsume = Config.enerycost * coef;
         this.energy = this.addComponent(QEComponent.asBasicSink(this, 5E7D, 14));
         this.inputslot = new InvSlotQuantumQuarry(this, 25, "input", 0);
         this.inputslotA = new InvSlotQuantumQuarry(this, 26, "input1", 1);
@@ -70,67 +83,31 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         this.outputSlot = new InvSlotOutput(this, "output", 24);
         this.list = new ArrayList<>();
         this.analyzer = false;
+        this.chance = 0;
+        this.col = 1;
+        this.furnace = false;
+        this.list_modules = null;
+        this.consume = this.energyconsume;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean list(TileEntityBaseQuantumQuarry tile, ItemStack stack1) {
-        if (tile.inputslotA.isEmpty()) {
+
+    public boolean list(TileEntityBaseQuantumQuarry tile, ItemStack stack1) {
+        if (tile.list_modules == null) {
             return false;
         }
-        EnumQuarryModules module = EnumQuarryModules.getFromID(tile.inputslotA.get().getItemDamage());
-        EnumQuarryType type = module.type;
-        String stack = OreDictionary.getOreName(OreDictionary.getOreIDs(stack1)[0]);
-        if (type == EnumQuarryType.BLACKLIST) {
-            for (int j = 0; j < 9; j++) {
-                String l = "number_" + j;
-                String temp = ModUtils.NBTGetString(tile.inputslotA.get(), l);
-                if (temp.startsWith("ore") || temp.startsWith("gem") || temp.startsWith("dust") || temp.startsWith("shard")) {
-                    if (temp.equals(stack)) {
-                        return true;
-                    }
-
-                }
-            }
-
-            return false;
-
-
-        } else if (type == EnumQuarryType.WHITELIST) {
-            for (int j = 0; j < 9; j++) {
-                String l = "number_" + j;
-                String temp = ModUtils.NBTGetString(tile.inputslotA.get(), l);
-                if (temp.startsWith("ore") || temp.startsWith("gem") || temp.startsWith("dust") || temp.startsWith("shard")) {
-
-                    if (temp.equals(stack)) {
-                        return false;
-                    }
-
-                }
-
-            }
-            return true;
-        }
-        return false;
+        return list(tile.list_modules, stack1);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.progress = nbttagcompound.getInteger("progress");
         this.getblock = nbttagcompound.getDouble("getblock");
-        if (!this.inputslotA.isEmpty()) {
-            if (this.list.isEmpty()) {
-                this.list = ModUtils.getListFromModule(this.inputslotA.get());
-            }
-        }
-
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-
         nbttagcompound.setDouble("getblock", this.getblock);
         nbttagcompound.setInteger("progress", this.progress);
-
         return nbttagcompound;
     }
 
@@ -140,8 +117,16 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     protected void onLoaded() {
         super.onLoaded();
-
-
+        this.inputslot.update();
+        this.inputslotA.update();
+        this.inputslotB.update();
+        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+        if (this.vein != null) {
+            final ItemStack stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+            if (list(this.list_modules, stack)) {
+                this.can_dig_vein = false;
+            }
+        }
     }
 
     protected void onUnloaded() {
@@ -153,165 +138,76 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     }
 
-    public void markDirty() {
-        super.markDirty();
 
-
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
+        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
     }
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        double proccent = this.energyconsume;
-        boolean vein = false;
+        double proccent = this.consume;
 
-
-        if (getWorld().provider.getWorldTime() % 20 == 0) {
-            this.analyzer = !this.inputslotB.isEmpty();
-            int chunkx =
-                    this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-            int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
-            if (getWorld().getTileEntity(new BlockPos(chunkx, 0, chunkz)) != null && getWorld().getTileEntity(new BlockPos(
-                    chunkx,
-                    0,
-                    chunkz
-            )) instanceof TileEntityVein) {
-                vein = true;
-            }
-        }
-        if (this.analyzer && vein) {
-
-            int chunkx =
-                    this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-            int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
-
-            if (this.getWorld().getTileEntity(new BlockPos(chunkx, 0, chunkz)) != null && this
-                    .getWorld()
-                    .getTileEntity(new BlockPos(chunkx, 0, chunkz)) instanceof TileEntityVein) {
-                TileEntityVein tile = (TileEntityVein) this.getWorld().getTileEntity(new BlockPos(chunkx, 0, chunkz));
-                if (tile.number > 0) {
-                    if (this.inputslot.get() != null) {
-                        EnumQuarryModules module = EnumQuarryModules.getFromID(this.inputslot.get().getItemDamage());
-                        EnumQuarryType type = module.type;
-
-                        if (type == EnumQuarryType.SPEED) {
-                            proccent = this.energyconsume * (1 + module.cost);
-                        }
-
-                    }
-                    if (this.energy.getEnergy() >= proccent && this.outputSlot.canAdd(new ItemStack(IUItem.heavyore, 1,
-                                    this
-                                            .getWorld()
-                                            .getBlockState(new BlockPos(chunkx, 0, chunkz))
-                                            .getBlock()
-                                            .getMetaFromState(this.getWorld().getBlockState(new BlockPos(chunkx, 0, chunkz)))
-                            )
-                    )) {
+        if (this.vein != null) {
+            if (this.analyzer && this.vein.get()) {
+                if (this.vein.getType() == Type.VEIN && this.vein.getCol() > 0) {
+                    final ItemStack stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                    if (!this.can_dig_vein) {
                         this.setActive(true);
-                        this.energy.useEnergy(proccent);
-                        this.getblock++;
-                        this.outputSlot.add(new ItemStack(IUItem.heavyore, 1,
-                                this
-                                        .getWorld()
-                                        .getBlockState(new BlockPos(chunkx, 0, chunkz))
-                                        .getBlock()
-                                        .getMetaFromState(this.getWorld().getBlockState(new BlockPos(chunkx, 0, chunkz)))
-                        ));
-                        tile.number--;
-                        return;
+                        if (this.outputSlot.canAdd(stack)) {
+                            this.energy.useEnergy(proccent);
+                            this.getblock++;
+                            this.outputSlot.add(stack);
+                            this.vein.removeCol(1);
+                        }
                     }
-
                 }
             }
-
-
         }
-        if (this.analyzer && !vein && !Config.enableonlyvein) {
-            double col = 1;
-            int chance2 = 0;
-            boolean furnace = false;
-            EnumQuarryModules list_check = null;
-            if (!this.inputslot.isEmpty()) {
-                ItemStack type1 = this.inputslot.get();
-                EnumQuarryModules module = EnumQuarryModules.getFromID(type1.getItemDamage());
-                EnumQuarryType type = module.type;
-
-                switch (type) {
-                    case SPEED:
-                        break;
-                    case DEPTH:
-                        col = module.efficiency * module.efficiency;
-                        break;
-                    case LUCKY:
-                        chance2 = module.efficiency;
-                        break;
-                    case FURNACE:
-                        furnace = true;
-                        break;
-
-                }
-                proccent = this.energyconsume * (1 + module.cost);
-            }
-
-            if (!this.inputslotA.get().isEmpty()) {
-                EnumQuarryModules module = EnumQuarryModules.getFromID(this.inputslotA.get().getItemDamage());
-                EnumQuarryType type = module.type;
-
-                switch (type) {
-                    case WHITELIST:
-                    case BLACKLIST:
-                        list_check = module;
-                        break;
-
-                }
-            }
+        if (this.analyzer && !Config.enableonlyvein) {
+            double col = this.col;
+            int chance2 = this.chance;
             int coble = rand.nextInt((int) col + 1);
             this.getblock += coble;
             col -= coble;
             for (double i = 0; i < col; i++) {
                 if (this.energy.getEnergy() >= proccent) {
-                    this.setActive(true);
+                    if (!this.getActive()) {
+                        this.setActive(true);
+                        initiate(0);
+                    }
                     this.energy.useEnergy(proccent);
                     this.getblock++;
-                    initiate(0);
-
-                    if (furnace) {
-                        List<ItemStack> list = IUCore.get_ingot;
-                        int num = list.size();
-                        int chance1 = rand.nextInt(num);
-                        if (!list(list_check, list.get(chance1))) {
-                            if (this.outputSlot.canAdd(list.get(chance1))) {
-                                this.outputSlot.add(list.get(chance1));
-                            }
-                        }
-                    } else {
-                        List<ItemStack> list = IUCore.list;
-                        int num = list.size();
-                        int chance1 = rand.nextInt(num);
-                        if (!list(list_check, list.get(chance1))) {
-                            if (OreDictionary.getOreIDs(list.get(chance1)).length > 0) {
-                                if ((!OreDictionary
-                                        .getOreName(OreDictionary.getOreIDs(list.get(chance1))[0])
-                                        .startsWith("gem") && !OreDictionary
-                                        .getOreName(OreDictionary.getOreIDs(list.get(chance1))[0])
-                                        .startsWith("shard")
-                                        && list.get(chance1).getItem() != Items.REDSTONE && list
-                                        .get(chance1)
-                                        .getItem() != Items.DYE && list.get(chance1).getItem() != Items.COAL && list
-                                        .get(chance1)
-                                        .getItem() != Items.GLOWSTONE_DUST) && chance2 >= 0) {
-                                    if (this.outputSlot.canAdd(list.get(chance1))) {
-                                        this.outputSlot.add(list.get(chance1));
-                                    }
-                                } else {
-                                    for (int j = 0; j < chance2 + 1; j++) {
-                                        if (this.outputSlot.canAdd(list.get(chance1))) {
-                                            this.outputSlot.add(list.get(chance1));
-                                        }
+                    int num = main_list.size();
+                    int chance1 = rand.nextInt(num);
+                    ItemStack stack = main_list.get(chance1);
+                    if (this.original) {
+                        if (OreDictionary.getOreIDs(stack).length > 0) {
+                            String name = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
+                            if ((!name
+                                    .startsWith("gem") && !name
+                                    .startsWith("shard")
+                                    && stack.getItem() != Items.REDSTONE && stack
+                                    .getItem() != Items.DYE && stack.getItem() != Items.COAL && stack
+                                    .getItem() != Items.GLOWSTONE_DUST) && chance2 >= 1) {
+                                if (this.outputSlot.canAdd(stack)) {
+                                    this.outputSlot.add(stack);
+                                }
+                            } else {
+                                for (int j = 0; j < chance2 + 1; j++) {
+                                    if (this.outputSlot.canAdd(stack)) {
+                                        this.outputSlot.add(stack);
                                     }
                                 }
                             }
                         }
+                    } else {
+                        if (this.outputSlot.canAdd(main_list.get(chance1))) {
+                            this.outputSlot.add(main_list.get(chance1));
+                        }
                     }
+
 
                 } else {
                     this.setActive(false);
@@ -322,12 +218,12 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             initiate(2);
             this.setActive(false);
         }
-        if (this.getWorld().provider.getWorldTime() % 200 == 0) {
-            initiate(2);
-        }
+
         if (getActive()) {
-            ItemStack stack3 = Ic2Items.ejectorUpgrade;
-            ((IUpgradeItem) stack3.getItem()).onTick(stack3, this);
+            if (this.world.getWorldTime() % 8 == 0) {
+                ItemStack stack3 = Ic2Items.ejectorUpgrade;
+                ((IUpgradeItem) stack3.getItem()).onTick(stack3, this);
+            }
         }
     }
 

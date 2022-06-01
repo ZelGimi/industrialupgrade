@@ -9,10 +9,8 @@ import ic2.api.energy.EnergyNet;
 import ic2.api.energy.NodeStats;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.tile.IEnergyStorage;
-import ic2.api.tile.IWrenchable;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
@@ -20,15 +18,12 @@ import ic2.core.block.invslot.InvSlotUpgrade;
 import ic2.core.util.Util;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaProducer;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,32 +36,31 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityTEConverter extends TileEntityInventory implements IHasGui, IWrenchable,
+public class TileEntityTEConverter extends TileEntityInventory implements IHasGui,
         INetworkClientTileEntityEventListener,
         IEnergyStorage, ITeslaConsumer, ITeslaProducer, IUpgradableBlock {
 
 
-
     public final AdvEnergy energy;
-    public double capacity;
-    public double maxStorage2;
     public final InvSlotUpgrade upgradeSlot;
     public final int defaultEnergyRFStorage;
+    public final int defaultEnergyStorage;
+    public double capacity;
+    public double maxStorage2;
     public double energy2;
     public boolean rf;
     public double differenceenergy = 0;
     public double perenergy = 0;
-    public double perenergy1= 0;
-    public double differenceenergy1= 0;
-    public final int defaultEnergyStorage;
+    public double perenergy1 = 0;
+    public double differenceenergy1 = 0;
     public int tier = 5;
+    public List<EntityPlayer> list = new ArrayList<>();
 
-
-    public TileEntityTEConverter(){
+    public TileEntityTEConverter() {
         this.energy2 = 0.0D;
         this.maxStorage2 = 400000;
         this.rf = true;
-        this.energy = this.addComponent((new AdvEnergy(this, 40000,Util.allFacings,
+        this.energy = this.addComponent((new AdvEnergy(this, 40000, Util.allFacings,
                 Util.allFacings,
                 5,
                 5, false
@@ -77,6 +71,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         this.defaultEnergyRFStorage = 400000;
         this.capacity = this.energy.capacity;
     }
+
     protected void onLoaded() {
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
@@ -84,9 +79,11 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         }
 
     }
+
     public boolean hasCapability(@Nonnull Capability<?> cap, @Nullable EnumFacing side) {
         return cap == CapabilityEnergy.ENERGY || super.hasCapability(cap, side);
     }
+
     @Nullable
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
         if (TeslaHelper.isTeslaCapability(capability)) {
@@ -104,6 +101,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         }
         return super.getCapability(capability, side);
     }
+
     public boolean canExtract() {
         return extractEnergy(1, true) != 0;
     }
@@ -111,18 +109,20 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
     public boolean canReceive() {
         return receiveEnergy(1, true) != 0;
     }
+
     public void setOverclockRates() {
         this.upgradeSlot.onChanged();
         int tier = this.upgradeSlot.getTier(5);
         this.energy.setSinkTier(tier);
         this.energy.setSourceTier(tier);
-        this.energy.setCapacity(this.upgradeSlot.extraEnergyStorage+
+        this.energy.setCapacity(this.upgradeSlot.extraEnergyStorage +
                 this.defaultEnergyStorage
         );
-        this.maxStorage2 = this.defaultEnergyRFStorage+this.upgradeSlot.extraEnergyStorage*Config.coefficientrf;
-        this.tier=tier;
+        this.maxStorage2 = this.defaultEnergyRFStorage + this.upgradeSlot.extraEnergyStorage * Config.coefficientrf;
+        this.tier = tier;
         this.capacity = this.energy.capacity;
     }
+
     public void markDirty() {
         super.markDirty();
         if (IC2.platform.isSimulating()) {
@@ -132,33 +132,42 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
     }
 
     public int receiveEnergy(int paramInt, boolean paramBoolean) {
-        if(this.rf)
+        if (this.rf) {
             return 0;
-        int i = (int) Math.min(this.maxStorage2 - this.energy2,
-                Math.min(EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() * Config.coefficientrf),
-                        paramInt));
+        }
+        int i = (int) Math.min(
+                this.maxStorage2 - this.energy2,
+                Math.min(
+                        EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() * Config.coefficientrf),
+                        paramInt
+                )
+        );
         if (!paramBoolean) {
             this.energy2 += i;
-            this.differenceenergy1=i;
+            this.differenceenergy1 = i;
         }
         return i;
     }
 
     public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-        return extractEnergy((int) Math.min(EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() * Config.coefficientrf), maxExtract), simulate);
+        return extractEnergy((int) Math.min(
+                EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() * Config.coefficientrf),
+                maxExtract
+        ), simulate);
     }
+
     protected void updateEntityServer() {
         super.updateEntityServer();
         this.energy.setReceivingEnabled(!this.shouldEmitEnergy());
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
         this.differenceenergy = 0;
-        this.differenceenergy1=0;
+        this.differenceenergy1 = 0;
 
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
-                double add = Math.min(maxStorage2 -energy2, energy.getEnergy() * Config.coefficientrf);
+                double add = Math.min(maxStorage2 - energy2, energy.getEnergy() * Config.coefficientrf);
                 energy2 += add;
-                energy.useEnergy(add/ Config.coefficientrf);
+                energy.useEnergy(add / Config.coefficientrf);
             }
         } else {
 
@@ -168,21 +177,25 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
             }
 
         }
+        if (!this.list.isEmpty()) {
+            if (this.rf) {
+                NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
+                if (stats != null) {
+                    this.differenceenergy1 = stats.getEnergyIn();
+                }
+                this.differenceenergy = this.energy2 - this.perenergy;
+                this.perenergy = this.energy2;
+            } else {
+                this.perenergy1 = this.energy.getEnergy();
+                NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
+                if (stats != null) {
+                    this.differenceenergy = stats.getEnergyOut();
+                }
 
-        if(this.rf) {
-            NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
-            if(stats != null)
-                this.differenceenergy1=stats.getEnergyIn();
-            this.differenceenergy = this.energy2 - this.perenergy;
-
-        }else{
-            this.perenergy1 = this.energy.getEnergy();
-            NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
-            if(stats != null)
-                this.differenceenergy=stats.getEnergyOut();
+            }
         }
 
-        if(this.rf)
+        if (this.rf) {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 BlockPos pos = new BlockPos(
                         this.pos.getX() + facing.getFrontOffsetX(),
@@ -204,6 +217,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
                     }
                 }
             }
+        }
 
         int transfer = (int) Math.min(this.energy2, 10000);
         this.energy2 -= transfer;
@@ -213,7 +227,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         if (needsInvUpdate) {
             super.markDirty();
         }
-        this.energy2 = Math.min(this.energy2,this.maxStorage2);
+        this.energy2 = Math.min(this.energy2, this.maxStorage2);
 
     }
 
@@ -258,66 +272,35 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
     }
 
     public int extractEnergy(int paramInt, boolean paramBoolean) {
-        if(!this.rf)
+        if (!this.rf) {
             return 0;
+        }
         int i = (int) Math.min(this.energy2, paramInt);
         if (!paramBoolean) {
             this.energy2 -= i;
-            this.differenceenergy=i;
+            this.differenceenergy = i;
         }
         return i;
     }
 
 
-
-    public boolean canConnectEnergy(EnumFacing arg0) {
+    public boolean canConnectEnergy() {
         return true;
     }
 
-    public int getEnergyStored(EnumFacing from) {
+    public int getEnergyStored() {
         return (int) this.energy2;
     }
 
-    public int getMaxEnergyStored(EnumFacing from) {
+    public int getMaxEnergyStored() {
         return (int) this.maxStorage2;
     }
-    @Override
-    public EnumFacing getFacing(World world, BlockPos blockPos) {
-        return this.getFacing();
-    }
 
-    @Override
-    public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-        if (!this.canSetFacingWrench(enumFacing, entityPlayer)) {
-            return false;
-        } else {
-            this.setFacing(enumFacing);
-            return true;
-        }
-    }
-
-    @Override
-    public boolean wrenchCanRemove(World world, BlockPos blockPos, EntityPlayer entityPlayer) {
-        return true;
-    }
-
-    @Override
-    public List<ItemStack> getWrenchDrops(
-            final World world,
-            final BlockPos blockPos,
-            final IBlockState iBlockState,
-            final TileEntity tileEntity,
-            final EntityPlayer entityPlayer,
-            final int i
-    ) {
-        List<ItemStack> list = new ArrayList<>();
-        return list;
-    }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.energy.setDirections(Util.allFacings, Util.allFacings);
-        this.tier= nbttagcompound.getInteger("tier");
+        this.tier = nbttagcompound.getInteger("tier");
 
         this.energy2 = Util.limit(nbttagcompound.getDouble("energy2"), 0.0D,
                 this.maxStorage2
@@ -325,24 +308,22 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         this.rf = nbttagcompound.getBoolean("rf");
 
     }
+
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         if (energy2 > 0) {
             nbttagcompound.setDouble("energy2", this.energy2);
         }
-        nbttagcompound.setInteger("tier",this.tier);
-        nbttagcompound.setBoolean("rf",this.rf);
+        nbttagcompound.setInteger("tier", this.tier);
+        nbttagcompound.setBoolean("rf", this.rf);
         return nbttagcompound;
     }
-
-
-
-
 
 
     public int getOutput() {
         return (int) EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier());
     }
+
     public double getOutputEnergyUnitsPerTick() {
         return EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier());
     }
@@ -371,13 +352,14 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         return true;
     }
 
-    public ContainerBase<TileEntityTEConverter> getGuiContainer(EntityPlayer player) {
+    public ContainerTEConverter getGuiContainer(EntityPlayer player) {
+        list.add(player);
         return new ContainerTEConverter(player, this);
     }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiTEConverter(new ContainerTEConverter(entityPlayer, this));
+        return new GuiTEConverter(getGuiContainer(entityPlayer));
     }
 
     public void onGuiClosed(EntityPlayer player) {
@@ -390,12 +372,12 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
     }
 
     public int gaugeICEnergyScaled(int i) {
-        return (int) Math.min(this.energy.getEnergy() * i / this.energy.getCapacity(),i);
+        return (int) Math.min(this.energy.getEnergy() * i / this.energy.getCapacity(), i);
     }
 
     public int gaugeTEEnergyScaled(int i) {
-        this.maxStorage2 = this.defaultEnergyRFStorage+this.upgradeSlot.extraEnergyStorage*Config.coefficientrf;
-        return (int) Math.min(this.energy2 * i / this.maxStorage2,i);
+        this.maxStorage2 = this.defaultEnergyRFStorage + this.upgradeSlot.extraEnergyStorage * Config.coefficientrf;
+        return (int) Math.min(this.energy2 * i / this.maxStorage2, i);
     }
 
     @Override
@@ -419,12 +401,12 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
 
     @Override
     public long givePower(final long l, final boolean b) {
-        return receiveEnergy((int) l,b);
+        return receiveEnergy((int) l, b);
     }
 
     @Override
     public long takePower(final long l, final boolean b) {
-        return extractEnergy((int) l,b);
+        return extractEnergy((int) l, b);
     }
 
 }

@@ -19,10 +19,6 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
     public final Integer meta;
     private List<ItemStack> ores;
 
-    RecipeInputOreDict(String input) {
-        this(input, 1);
-    }
-
     public RecipeInputOreDict(String input, int amount) {
         this(input, amount, null);
     }
@@ -45,14 +41,12 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
         do {
             do {
                 ItemStack oreStack;
-                do {
-                    if (!var6.hasNext()) {
-                        return false;
-                    }
+                if (!var6.hasNext()) {
+                    return false;
+                }
 
-                    oreStack = (ItemStack) var6.next();
-                    oreItem = oreStack.getItem();
-                } while (oreItem == null);
+                oreStack = (ItemStack) var6.next();
+                oreItem = oreStack.getItem();
 
                 metaRequired = useOreStackMeta ? oreStack.getItemDamage() : this.meta;
             } while (subjectItem != oreItem);
@@ -68,10 +62,8 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
     public List<ItemStack> getInputs() {
         List<ItemStack> ores = this.getOres();
         boolean hasUnsuitableEntries = false;
-        Iterator var3 = ores.iterator();
 
-        while (var3.hasNext()) {
-            ItemStack stack = (ItemStack) var3.next();
+        for (final ItemStack stack : ores) {
             if (StackUtil.getSize(stack) != this.getAmount()) {
                 hasUnsuitableEntries = true;
                 break;
@@ -81,12 +73,10 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
         if (!hasUnsuitableEntries) {
             return ores;
         } else {
-            List<ItemStack> ret = new ArrayList(ores.size());
-            Iterator var7 = ores.iterator();
+            List<ItemStack> ret = new ArrayList<>(ores.size());
 
-            while (var7.hasNext()) {
-                ItemStack stack = (ItemStack) var7.next();
-                if (stack.getItem() != null) {
+            for (ItemStack stack : ores) {
+                if (!stack.isEmpty()) {
                     if (StackUtil.getSize(stack) != this.getAmount()) {
                         stack = StackUtil.copyWithSize(stack, this.getAmount());
                     }
@@ -108,7 +98,7 @@ public class RecipeInputOreDict extends RecipeInputBase implements IRecipeInput 
     public boolean equals(Object obj) {
         RecipeInputOreDict other;
         if (obj != null && this.getClass() == obj.getClass() && this.input.equals((other = (RecipeInputOreDict) obj).input) && other.amount == this.amount) {
-            return this.meta == null ? other.meta == null : this.meta == other.meta;
+            return this.meta == null ? other.meta == null : this.meta.equals(other.meta);
         } else {
             return false;
         }

@@ -1,4 +1,3 @@
-
 package com.denfop.api.qe;
 
 public final class QENet {

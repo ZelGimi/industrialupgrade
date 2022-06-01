@@ -26,12 +26,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -41,6 +42,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +60,6 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
     public ItemLappack(
             String name,
-            ItemArmor.ArmorMaterial armorMaterial,
             int MaxCharge,
             int Tier,
             int TransferLimit
@@ -79,12 +80,11 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name + extraName;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     public static int readToolMode(ItemStack itemstack) {
@@ -150,7 +150,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
     public ISpecialArmor.ArmorProperties getProperties(
             EntityLivingBase player,
-            ItemStack armor,
+            @Nonnull ItemStack armor,
             DamageSource source,
             double damage,
             int slot
@@ -172,7 +172,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         return true;
     }
 
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+    public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
         return (int) Math.round(20.0D * getBaseAbsorptionRatio() * 0);
     }
 
@@ -191,15 +191,10 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             final ItemStack var4 = new ItemStack(this, 1);
             ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             var3.add(var4);
-            var3.add(new ItemStack(this, 1, this.getMaxDamage()));
+            var3.add(new ItemStack(this, 1, 27));
         }
     }
 
-
-    @SideOnly(Side.CLIENT)
-    public EnumRarity getRarity(ItemStack var1) {
-        return EnumRarity.UNCOMMON;
-    }
 
     public boolean canProvideEnergy(ItemStack itemStack) {
         return true;
@@ -217,15 +212,20 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         return this.transferLimit;
     }
 
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
-    }
 
     public void saveToolMode(ItemStack itemstack, Integer toolMode) {
         NBTTagCompound nbttagcompound = ModUtils.nbt(itemstack);
         nbttagcompound.setInteger("toolMode", toolMode);
     }
 
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(
+            @Nonnull final World world,
+            final EntityPlayer player,
+            @Nonnull final EnumHand hand
+    ) {
+        ItemStack itemStack = player.getHeldItem(hand);
         if (IC2.keyboard.isModeSwitchKeyDown(player)) {
             int toolMode = readToolMode(itemStack);
             toolMode++;
@@ -245,15 +245,16 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                         ".powerSupply") + " " + TextFormatting.GREEN + Localization.translate("iu.message.text.enabled"));
             }
         }
-        return itemStack;
+        return new ActionResult<>(EnumActionResult.PASS, itemStack);
     }
+
 
     @Override
     public void addInformation(
-            final ItemStack par1ItemStack,
+            @Nonnull final ItemStack par1ItemStack,
             @Nullable final World p_77624_2_,
-            final List<String> par3List,
-            final ITooltipFlag p_77624_4_
+            @Nonnull final List<String> par3List,
+            @Nonnull final ITooltipFlag p_77624_4_
     ) {
         int toolMode = readToolMode(par1ItemStack);
         if (toolMode == 0) {
@@ -267,7 +268,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
     }
 
 
-    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+    public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack itemStack) {
         NBTTagCompound nbtData = ModUtils.nbt(itemStack);
 
         byte toggleTimer = nbtData.getByte("toggleTimer");
@@ -402,19 +403,6 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                 player.openContainer.detectAndSendChanges();
             }
         }
-    }
-
-    public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
-
-    }
-
-
-    public Item getChargedItem(ItemStack itemStack) {
-        return this;
-    }
-
-    public Item getEmptyItem(ItemStack itemStack) {
-        return this;
     }
 
     public List<String> getHudInfo(ItemStack stack, boolean advanced) {

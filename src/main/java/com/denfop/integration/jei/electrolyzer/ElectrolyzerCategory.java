@@ -17,6 +17,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class ElectrolyzerCategory extends Gui implements IRecipeCategory<ElectrolyzerRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -31,21 +33,25 @@ public class ElectrolyzerCategory extends Gui implements IRecipeCategory<Electro
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine2.electrolyzer_iu.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 15).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -69,7 +75,7 @@ public class ElectrolyzerCategory extends Gui implements IRecipeCategory<Electro
     public void setRecipe(
             final IRecipeLayout layout,
             final ElectrolyzerRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
 
         IGuiItemStackGroup isg = layout.getItemStacks();

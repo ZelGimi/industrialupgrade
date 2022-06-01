@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumWrapper> {
 
     private final IDrawableStatic bg;
@@ -29,21 +31,25 @@ public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumW
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine2.helium_generator.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine1, 1, 14).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -63,7 +69,7 @@ public class GenHeliumCategory extends Gui implements IRecipeCategory<GenHeliumW
     public void setRecipe(
             final IRecipeLayout layout,
             final GenHeliumWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
 
 

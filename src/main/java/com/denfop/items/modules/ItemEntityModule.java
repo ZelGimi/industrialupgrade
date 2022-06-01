@@ -3,7 +3,7 @@ package com.denfop.items.modules;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.utils.CapturedMob;
+import com.denfop.utils.CapturedMobUtils;
 import com.denfop.utils.ModUtils;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
@@ -25,6 +25,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
@@ -40,15 +41,6 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
         IUCore.proxy.addIModelRegister(this);
     }
 
-    public static String getMobTypeFromStack(ItemStack item) {
-
-
-        if (ModUtils.nbt(item) != null) {
-            return null;
-        }
-        return ModUtils.nbt(item).getString("id");
-    }
-
     @Override
     public void registerModels() {
         registerModels(null);
@@ -56,10 +48,10 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
 
     @Override
     public boolean itemInteractionForEntity(
-            final ItemStack stack,
-            final EntityPlayer player,
+            @Nonnull final ItemStack stack,
+            @Nonnull final EntityPlayer player,
             final EntityLivingBase entity,
-            final EnumHand hand
+            @Nonnull final EnumHand hand
     ) {
         if (entity.getEntityWorld().isRemote) {
             return false;
@@ -71,6 +63,7 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
 
             String entityId = EntityList.getEntityString(entity);
             NBTTagCompound root = new NBTTagCompound();
+            assert entityId != null;
             root.setString("id", entityId);
             if (entity instanceof EntitySheep) {
                 root.setInteger("type", ((EntitySheep) entity).getFleeceColor().getColorValue());
@@ -82,11 +75,12 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
             root.setInteger("id_mob", entity.getEntityId());
 
 
-            CapturedMob capturedMob = CapturedMob.create(entity);
+            CapturedMobUtils capturedMobUtils = CapturedMobUtils.create(entity);
 
             entity.setDead();
             stack.setCount(stack.getCount() - 1);
-            ItemStack stack1 = capturedMob.toStack(this, 1, 1);
+            assert capturedMobUtils != null;
+            ItemStack stack1 = capturedMobUtils.toStack(this, 1, 1);
 
 
             if (!player.inventory.addItemStackToInventory(stack1)) {
@@ -146,16 +140,14 @@ public class ItemEntityModule extends ItemMulti<ItemEntityModule.Types> implemen
 
     @Override
     public void addInformation(
-            final ItemStack itemStack,
+            @Nonnull final ItemStack itemStack,
             @Nullable final World worldIn,
-            final List<String> info,
-            final ITooltipFlag flagIn
+            @Nonnull final List<String> info,
+            @Nonnull final ITooltipFlag flagIn
     ) {
         super.addInformation(itemStack, worldIn, info, flagIn);
-        if (itemStack.getItemDamage() == 1) {
+        if (itemStack.getItemDamage() != 1) {
 
-
-        } else {
 
             NBTTagCompound nbt = ModUtils.nbt(itemStack);
             if (!(nbt.getString("name").isEmpty())) {

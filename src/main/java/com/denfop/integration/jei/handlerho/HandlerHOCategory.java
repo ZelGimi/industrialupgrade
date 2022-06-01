@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHORecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -31,21 +33,25 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine1.handler_ho.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine, 1, 12).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -53,7 +59,7 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
 
         int xScale = 44 * progress / 100;
@@ -66,16 +72,13 @@ public class HandlerHOCategory extends Gui implements IRecipeCategory<HandlerHOR
         drawTexturedModalRect(45, 28, 177, 32, xScale + 1, 14);
 
 
-        //   drawTexturedModalRect(48, 49, 176, 50, 39, 11);
-
-
     }
 
     @Override
     public void setRecipe(
             final IRecipeLayout layout,
             final HandlerHORecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
         isg.init(0, true, 21, 25);

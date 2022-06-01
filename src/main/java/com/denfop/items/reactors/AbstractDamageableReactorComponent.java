@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class AbstractDamageableReactorComponent extends ItemGradualInt implements IReactorComponent {
@@ -54,7 +55,12 @@ public abstract class AbstractDamageableReactorComponent extends ItemGradualInt 
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(
+            @Nonnull ItemStack stack,
+            World world,
+            @Nonnull List<String> tooltip,
+            @Nonnull ITooltipFlag advanced
+    ) {
         super.addInformation(stack, world, tooltip, advanced);
         tooltip.add(Localization.translate("ic2.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack)) + "/" + this.getMaxCustomDamage(stack));

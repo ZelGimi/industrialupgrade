@@ -10,7 +10,6 @@ import ic2.api.recipe.Recipes;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
 import ic2.core.block.comp.Components;
-import ic2.core.block.comp.Energy;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 public final class PowerUtils {
 
 
+    public static final List<IModelRender> modelList = new ArrayList<>();
     public Block itemPowerConverter;
 
     public static <E extends Enum<E> & ITeBlock> void register(Class<E> enumClass, ResourceLocation ref) {
@@ -52,27 +53,28 @@ public final class PowerUtils {
     @SubscribeEvent
     public static void register(final TeBlockFinalCallEvent event) {
 
-       register(BlockPowerConverter.class, BlockPowerConverter.IDENTITY);
+        register(BlockPowerConverter.class, BlockPowerConverter.IDENTITY);
     }
-
 
     public static ResourceLocation getIdentifier(final String name) {
         return new ResourceLocation(Constants.MOD_ID, name);
     }
-    public static final ArrayList<IModelRender> modelList = new ArrayList();
 
     public static void addIModelRegister(IModelRender puItemBase) {
-         modelList.add(puItemBase);
+        modelList.add(puItemBase);
     }
+
 
     @Mod.EventHandler
     public void load(final FMLPreInitializationEvent event) {
         PowerItem.init();
-        if(event.getSide() == Side.CLIENT)
+        if (event.getSide() == Side.CLIENT) {
             for (IModelRender register : modelList) {
                 register.registerModels();
             }
+        }
         itemPowerConverter = TeBlockRegistry.get(BlockPowerConverter.IDENTITY).setCreativeTab(IUCore.SSPTab);
+
         MinecraftForge.EVENT_BUS.register(this);
         PowerConfig.loadConfig(event.getSuggestedConfigurationFile(), event.getSide().isClient());
         BlockPowerConverter.buildDummies();
@@ -81,50 +83,128 @@ public final class PowerUtils {
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
-        Components.register(AdvEnergy.class,"AdvEnergy");
-        Components.register(QEComponent.class,"QEComponent");
-        Recipes.advRecipes.addRecipe(new ItemStack(PowerItem.module_ic),
-                    "ABA", "CDC", "ABA", Character.valueOf('A'), Ic2Items.copperCableItem,
-                    Character.valueOf('B'), Ic2Items.mvTransformer, Character.valueOf('C'), Ic2Items.electronicCircuit, Character.valueOf('D'),
-                    new ItemStack(IUItem.electricblock,1,3));
-        Recipes.advRecipes.addRecipe(new ItemStack(PowerItem.module_rf),"ABA", "BDB", "ABA", Character.valueOf('A'),
+        Components.register(AdvEnergy.class, "AdvEnergy");
+        Components.register(QEComponent.class, "QEComponent");
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(PowerItem.module_ic),
+                "ABA",
+                "CDC",
+                "ABA",
+                Character.valueOf('A'),
+                Ic2Items.copperCableItem,
+                Character.valueOf('B'),
+                Ic2Items.mvTransformer,
+                Character.valueOf('C'),
+                Ic2Items.electronicCircuit,
+                Character.valueOf('D'),
+                new ItemStack(IUItem.electricblock, 1, 3)
+        );
+        Recipes.advRecipes.addRecipe(new ItemStack(PowerItem.module_rf), "ABA", "BDB", "ABA", Character.valueOf('A'),
                 OreDictionary.getOres("ingotElectrum"), Character.valueOf('B'), OreDictionary.getOres("plateCaravky"),
                 Character.valueOf('D'),
-                new ItemStack(IUItem.module7,1,4));
+                new ItemStack(IUItem.module7, 1, 4)
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(PowerItem.module_fe),
                 "ABA", "CDC", "ABA", Character.valueOf('A'), new ItemStack(IUItem.basecircuit),
-                Character.valueOf('B'), Ic2Items.hvTransformer, Character.valueOf('C'), new ItemStack(IUItem.basecircuit,1,4),
+                Character.valueOf('B'), Ic2Items.hvTransformer, Character.valueOf('C'), new ItemStack(IUItem.basecircuit, 1, 4),
                 Character.valueOf('D'),
-                new ItemStack(IUItem.core,1,1));
-        Recipes.advRecipes.addRecipe(new ItemStack(PowerItem.module_te),
-                "ABA", "CDC", "ABA", Character.valueOf('A'), new ItemStack(IUItem.sunnarium,1,3),
-                Character.valueOf('B'),new ItemStack(IUItem.photoniy), Character.valueOf('C'), new ItemStack(IUItem.preciousgem,1
-                        ,2),
+                new ItemStack(IUItem.core, 1, 1)
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(PowerItem.module_te),
+                "ABA",
+                "CDC",
+                "ABA",
+                Character.valueOf('A'),
+                new ItemStack(IUItem.sunnarium, 1, 3),
+                Character.valueOf('B'),
+                new ItemStack(IUItem.photoniy),
+                Character.valueOf('C'),
+                new ItemStack(IUItem.preciousgem, 1
+                        , 2),
                 Character.valueOf('D'),
-                new ItemStack(IUItem.core,1,1));
-        Recipes.advRecipes.addRecipe(new ItemStack(itemPowerConverter),
-                "ABA", "CDE", "ABA", Character.valueOf('A'), Ic2Items.advancedAlloy, Character.valueOf('B'), Ic2Items.advancedCircuit,
-                Character.valueOf('C'), new ItemStack(PowerItem.module_ic), Character.valueOf('D'),
-                Ic2Items.machine, Character.valueOf('E'), new ItemStack(PowerItem.module_rf) );
-        Recipes.advRecipes.addRecipe(new ItemStack(itemPowerConverter,1,1),
-                "ABA", "CDE", "ABA", Character.valueOf('A'), Ic2Items.advancedAlloy, Character.valueOf('B'), Ic2Items.advancedCircuit,
-                Character.valueOf('C'), new ItemStack(PowerItem.module_ic), Character.valueOf('D'),
-                Ic2Items.machine, Character.valueOf('E'), new ItemStack(PowerItem.module_fe) );
-        Recipes.advRecipes.addRecipe(new ItemStack(itemPowerConverter,1,2),
-                "ABA", "CDE", "ABA", Character.valueOf('A'), Ic2Items.advancedAlloy, Character.valueOf('B'), Ic2Items.advancedCircuit,
-                Character.valueOf('C'), new ItemStack(PowerItem.module_ic), Character.valueOf('D'),
-                Ic2Items.machine, Character.valueOf('E'), new ItemStack(PowerItem.module_te) );
+                new ItemStack(IUItem.core, 1, 1)
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(itemPowerConverter),
+                "ABA",
+                "CDE",
+                "ABA",
+                Character.valueOf('A'),
+                Ic2Items.advancedAlloy,
+                Character.valueOf('B'),
+                Ic2Items.advancedCircuit,
+                Character.valueOf('C'),
+                new ItemStack(PowerItem.module_ic),
+                Character.valueOf('D'),
+                Ic2Items.machine,
+                Character.valueOf('E'),
+                new ItemStack(PowerItem.module_rf)
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(itemPowerConverter, 1, 1),
+                "ABA",
+                "CDE",
+                "ABA",
+                Character.valueOf('A'),
+                Ic2Items.advancedAlloy,
+                Character.valueOf('B'),
+                Ic2Items.advancedCircuit,
+                Character.valueOf('C'),
+                new ItemStack(PowerItem.module_ic),
+                Character.valueOf('D'),
+                Ic2Items.machine,
+                Character.valueOf('E'),
+                new ItemStack(PowerItem.module_fe)
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(itemPowerConverter, 1, 2),
+                "ABA",
+                "CDE",
+                "ABA",
+                Character.valueOf('A'),
+                Ic2Items.advancedAlloy,
+                Character.valueOf('B'),
+                Ic2Items.advancedCircuit,
+                Character.valueOf('C'),
+                new ItemStack(PowerItem.module_ic),
+                Character.valueOf('D'),
+                Ic2Items.machine,
+                Character.valueOf('E'),
+                new ItemStack(PowerItem.module_te)
+        );
 
-        Recipes.advRecipes.addRecipe(new ItemStack(itemPowerConverter,1,3),
-                "ABA", "CDE", "ABA", Character.valueOf('A'), Ic2Items.advancedAlloy, Character.valueOf('B'), Ic2Items.advancedCircuit,
-                Character.valueOf('C'), new ItemStack(PowerItem.module_ic), Character.valueOf('D'),
-                Ic2Items.machine, Character.valueOf('E'), new ItemStack(PowerItem.module_qe) );
-        Recipes.advRecipes.addRecipe(new ItemStack(PowerItem.module_qe),
-                "ABA", "CDC", "ABA", Character.valueOf('A'), new ItemStack(IUItem.sunnarium,1,3),
-                Character.valueOf('B'),new ItemStack(IUItem.quantumtool), Character.valueOf('C'), new ItemStack(IUItem.radiationresources,1
-                        ,2),
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(itemPowerConverter, 1, 3),
+                "ABA",
+                "CDE",
+                "ABA",
+                Character.valueOf('A'),
+                Ic2Items.advancedAlloy,
+                Character.valueOf('B'),
+                Ic2Items.advancedCircuit,
+                Character.valueOf('C'),
+                new ItemStack(PowerItem.module_ic),
                 Character.valueOf('D'),
-                new ItemStack(IUItem.core,1,3));
+                Ic2Items.machine,
+                Character.valueOf('E'),
+                new ItemStack(PowerItem.module_qe)
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(PowerItem.module_qe),
+                "ABA",
+                "CDC",
+                "ABA",
+                Character.valueOf('A'),
+                new ItemStack(IUItem.sunnarium, 1, 3),
+                Character.valueOf('B'),
+                new ItemStack(IUItem.quantumtool),
+                Character.valueOf('C'),
+                new ItemStack(IUItem.radiationresources, 1
+                        , 2),
+                Character.valueOf('D'),
+                new ItemStack(IUItem.core, 1, 3)
+        );
     }
 
 

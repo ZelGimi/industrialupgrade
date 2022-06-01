@@ -13,8 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import paulscode.sound.SoundSystem;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 
 @SideOnly(Side.CLIENT)
@@ -25,12 +23,10 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
     private final String initialSoundFile;
     private final boolean loop;
     private final boolean prioritized;
-    private final Reference<Object> obj;
-    private final PositionSpec positionSpec;
+    private final AudioPosition position;
     public boolean isPlaying = false;
     private boolean valid = false;
     private boolean culled = false;
-    private AudioPosition position;
     private float configuredVolume;
     private float realVolume;
 
@@ -38,7 +34,6 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
             SoundSystem soundSystem,
             String sourceName,
             Object obj,
-            PositionSpec positionSpec,
             String initialSoundFile,
             boolean loop,
             boolean prioritized,
@@ -49,9 +44,7 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
         this.initialSoundFile = initialSoundFile;
         this.loop = loop;
         this.prioritized = prioritized;
-        this.obj = new WeakReference(obj);
-        this.position = AudioPosition.getFrom(obj, positionSpec);
-        this.positionSpec = positionSpec;
+        this.position = AudioPosition.getFrom(obj);
         this.configuredVolume = volume;
         this.soundSystem = soundSystem;
         URL url = AudioSource.class.getClassLoader().getResource("assets/industrialupgrade/sounds/" + initialSoundFile);
@@ -149,14 +142,6 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
         }
     }
 
-    public void flush() {
-        if (this.check()) {
-            if (this.isPlaying && !this.culled) {
-                this.soundSystem.flush(this.sourceName);
-            }
-        }
-    }
-
     public void cull() {
         if (this.check() && !this.culled) {
             this.soundSystem.cull(this.sourceName);
@@ -189,21 +174,6 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
 
     public float getRealVolume() {
         return this.realVolume;
-    }
-
-    public void setPitch(float pitch) {
-        if (this.check()) {
-            this.soundSystem.setPitch(this.sourceName, pitch);
-        }
-    }
-
-    public void updatePosition() {
-        if (this.check()) {
-            this.position = AudioPosition.getFrom(this.obj.get(), this.positionSpec);
-            if (this.position != null) {
-                this.soundSystem.setPosition(this.sourceName, this.position.x, this.position.y, this.position.z);
-            }
-        }
     }
 
     public void updateVolume(EntityPlayer player) {

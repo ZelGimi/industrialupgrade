@@ -10,8 +10,14 @@ public class ContainerFEConverter extends ContainerFullInv<TileEntityFEConverter
 
     public ContainerFEConverter(EntityPlayer entityPlayer, TileEntityFEConverter tileEntity) {
         super(entityPlayer, tileEntity, 176);
-        for (int k = 0; k < 4; k++)
+        for (int k = 0; k < 4; k++) {
             addSlotToContainer(new SlotInvSlot(tileEntity.upgradeSlot, k, 152, 17 + k * 18));
+        }
+    }
+
+    public void onContainerClosed(EntityPlayer playerIn) {
+        this.base.list.remove(playerIn);
+        super.onContainerClosed(playerIn);
     }
 
     public List<String> getNetworkedFields() {

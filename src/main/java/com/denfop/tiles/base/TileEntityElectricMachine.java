@@ -3,11 +3,11 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
+import com.denfop.componets.AdvEnergy;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.block.invslot.InvSlotOutput;
@@ -18,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 public abstract class TileEntityElectricMachine extends TileEntityInventory implements IHasGui, INetworkTileEntityEventListener {
 
 
-    public final String name;
     public int tier;
     public double guiChargeLevel = 0;
     public AudioSource audioSource;
@@ -26,15 +25,16 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
     public InvSlotOutput outputSlot = null;
 
-    public Energy energy = null;
+    public AdvEnergy energy = null;
     public InvSlotDischarge dischargeSlot;
 
-    public TileEntityElectricMachine(String name, double MaxEnergy, int tier, int count) {
-        this.name = name;
+
+    public TileEntityElectricMachine(double MaxEnergy, int tier, int count) {
+
         this.tier = tier;
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.NONE, tier, false, InvSlot.InvSide.ANY);
         if (MaxEnergy != 0) {
-            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
+            energy = this.addComponent(AdvEnergy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
         }
 
         if (count != 0) {
@@ -136,7 +136,7 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
     public String getInventoryName() {
 
-        return Localization.translate(name);
+        return Localization.translate(this.getName());
     }
 
     public float getChargeLevel() {

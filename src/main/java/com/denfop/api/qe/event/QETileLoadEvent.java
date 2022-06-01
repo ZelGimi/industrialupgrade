@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 public class QETileLoadEvent extends QETileEvent {
 
     public QETileLoadEvent(final IQETile tile, World world) {
-        super(tile,world);
+        super(tile, world);
     }
 
 }

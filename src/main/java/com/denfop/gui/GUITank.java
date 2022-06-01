@@ -9,11 +9,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUITank extends GuiIC2<ContainerTank> {
+public class GuiTank extends GuiIC2<ContainerTank> {
 
     public final ContainerTank container;
 
-    public GUITank(ContainerTank container1) {
+    public GuiTank(ContainerTank container1) {
         super(container1);
         this.container = container1;
     }
@@ -40,7 +40,7 @@ public class GUITank extends GuiIC2<ContainerTank> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUITank.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiTank.png");
     }
 
 }

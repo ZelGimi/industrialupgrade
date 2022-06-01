@@ -7,7 +7,6 @@ import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -25,7 +24,9 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
+import java.util.Objects;
 
 public class BlocksRadiationOre extends BlockCore implements IModelRegister {
 
@@ -43,11 +44,17 @@ public class BlocksRadiationOre extends BlockCore implements IModelRegister {
         setHarvestLevel("pickaxe", 2);
     }
 
+    @Override
+    public IBlockState getStateFromMeta(final int meta) {
+        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
+    }
+
+    @Nonnull
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, VARIANT);
     }
 
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
+    public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
         for (int i = 0; i < (Type.values()).length; i++) {
             items.add(new ItemStack(this, 1, i));
         }
@@ -65,8 +72,8 @@ public class BlocksRadiationOre extends BlockCore implements IModelRegister {
     @Override
     public void getDrops(
             final NonNullList<ItemStack> drops,
-            final IBlockAccess world,
-            final BlockPos pos,
+            @Nonnull final IBlockAccess world,
+            @Nonnull final BlockPos pos,
             final IBlockState state,
             final int fortune
     ) {
@@ -82,20 +89,17 @@ public class BlocksRadiationOre extends BlockCore implements IModelRegister {
         return Type.values()[meta].getRarity();
     }
 
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
-    }
 
     public int getMetaFromState(IBlockState state) {
-        return ((Type) state.getValue((IProperty) VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
     public int damageDropped(IBlockState state) {
-        return ((Type) state.getValue((IProperty) VARIANT)).getMetadata();
+        return state.getValue(VARIANT).getMetadata();
     }
 
-    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return ((Type) state.getValue((IProperty) VARIANT)).getLight();
+    public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+        return state.getValue(VARIANT).getLight();
     }
 
     @SideOnly(Side.CLIENT)
@@ -113,7 +117,7 @@ public class BlocksRadiationOre extends BlockCore implements IModelRegister {
         setRegistryName("blockradiationore");
         ForgeRegistries.BLOCKS.register(this);
         ItemBlockCore itemBlock = new ItemBlockCore(this);
-        itemBlock.setRegistryName(getRegistryName());
+        itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
         ForgeRegistries.ITEMS.register(itemBlock);
         IUCore.proxy.addIModelRegister(this);
 
@@ -149,6 +153,7 @@ public class BlocksRadiationOre extends BlockCore implements IModelRegister {
             return this.metadata;
         }
 
+        @Nonnull
         public String getName() {
             return this.name;
         }

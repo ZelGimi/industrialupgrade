@@ -43,10 +43,10 @@ import java.util.Queue;
 @SideOnly(Side.CLIENT)
 public final class AudioManagerClient extends AudioManager {
 
-    private final int streamingSourceCount = 4;
-    private final Map<AudioManagerClient.WeakObject, List<AudioSourceClient>> objectToAudioSourceMap = new HashMap();
-    private final Queue<AudioSource> validAudioSources = new PriorityQueue();
-    private final Map<String, FutureSound> singleSoundQueue = new HashMap();
+
+    private final Map<AudioManagerClient.WeakObject, List<AudioSourceClient>> objectToAudioSourceMap = new HashMap<>();
+    private final Queue<AudioSource> validAudioSources = new PriorityQueue<>();
+    private final Map<String, FutureSound> singleSoundQueue = new HashMap<>();
     public float fadingDistance = 16.0F;
     float masterVolume = 0.5F;
     private boolean enabled = true;
@@ -88,16 +88,14 @@ public final class AudioManagerClient extends AudioManager {
     }
 
     private static void removeSources(List<AudioSourceClient> sources) {
-        Iterator var1 = sources.iterator();
 
-        while (var1.hasNext()) {
-            AudioSourceClient audioSource = (AudioSourceClient) var1.next();
+        for (final AudioSourceClient audioSource : sources) {
             audioSource.remove();
         }
 
     }
 
-    private static RayTraceResult getMovingObjectPositionFromPlayer(World worldIn, EntityPlayer playerIn, boolean useLiquids) {
+    private static RayTraceResult getMovingObjectPositionFromPlayer(World worldIn, EntityPlayer playerIn) {
         float f = playerIn.rotationPitch;
         float f1 = playerIn.rotationYaw;
         double d0 = playerIn.posX;
@@ -112,7 +110,7 @@ public final class AudioManagerClient extends AudioManager {
         float f7 = f2 * f4;
         double d3 = 5.0D;
         Vec3d vec31 = vec3.addVector((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
-        return worldIn.rayTraceBlocks(vec3, vec31, useLiquids, !useLiquids, false);
+        return worldIn.rayTraceBlocks(vec3, vec31, false, true, false);
     }
 
     private static String getSourceName(int id) {
@@ -131,8 +129,6 @@ public final class AudioManagerClient extends AudioManager {
 
         if (!this.enabled) {
             IC2.log.debug(LogCategory.Audio, "Sounds disabled.");
-        } else if (this.maxSourceCount < 6) {
-            this.enabled = false;
         } else {
             IC2.log.debug(LogCategory.Audio, "Using %d audio sources.", this.maxSourceCount);
             SoundSystemConfig.setNumberStreamingChannels(4);
@@ -150,14 +146,10 @@ public final class AudioManagerClient extends AudioManager {
     @SubscribeEvent
     public void onSoundSetup(SoundLoadEvent event) {
         if (this.enabled) {
-            Iterator var2 = this.objectToAudioSourceMap.values().iterator();
 
-            while (var2.hasNext()) {
-                List<AudioSourceClient> sources = (List) var2.next();
-                Iterator var4 = sources.iterator();
+            for (final List<AudioSourceClient> audioSourceClients : this.objectToAudioSourceMap.values()) {
 
-                while (var4.hasNext()) {
-                    AudioSourceClient source = (AudioSourceClient) var4.next();
+                for (final AudioSourceClient source : audioSourceClients) {
                     if (source.isValid()) {
                         source.setInvalid();
                     }
@@ -171,44 +163,42 @@ public final class AudioManagerClient extends AudioManager {
 
                 try {
                     thread.join();
-                } catch (InterruptedException var6) {
+                } catch (InterruptedException ignored) {
                 }
             }
 
             IC2.log.debug(LogCategory.Audio, "IC2 audio starting.");
             this.soundSystem = null;
             this.soundManager = getSoundManager();
-            this.initThread = new Thread(new Runnable() {
-                public void run() {
-                    while (true) {
-                        try {
-                            if (!Thread.currentThread().isInterrupted()) {
-                                boolean loaded;
-                                try {
-                                    loaded = AudioManagerClient.this.soundManagerLoaded.getBoolean(AudioManagerClient.this.soundManager);
-                                } catch (Exception var3) {
-                                    throw new RuntimeException(var3);
-                                }
-
-                                if (!loaded) {
-                                    Thread.sleep(100L);
-                                    continue;
-                                }
-
-                                AudioManagerClient.this.soundSystem = AudioManagerClient.getSoundSystem(AudioManagerClient.this.soundManager);
-                                if (AudioManagerClient.this.soundSystem == null) {
-                                    IC2.log.warn(LogCategory.Audio, "IC2 audio unavailable.");
-                                    AudioManagerClient.this.enabled = false;
-                                } else {
-                                    IC2.log.debug(LogCategory.Audio, "IC2 audio ready.");
-                                }
+            this.initThread = new Thread(() -> {
+                while (true) {
+                    try {
+                        if (!Thread.currentThread().isInterrupted()) {
+                            boolean loaded;
+                            try {
+                                loaded = AudioManagerClient.this.soundManagerLoaded.getBoolean(AudioManagerClient.this.soundManager);
+                            } catch (Exception var3) {
+                                throw new RuntimeException(var3);
                             }
-                        } catch (InterruptedException var4) {
-                        }
 
-                        AudioManagerClient.this.initThread = null;
-                        return;
+                            if (!loaded) {
+                                Thread.sleep(100L);
+                                continue;
+                            }
+
+                            AudioManagerClient.this.soundSystem = AudioManagerClient.getSoundSystem(AudioManagerClient.this.soundManager);
+                            if (AudioManagerClient.this.soundSystem == null) {
+                                IC2.log.warn(LogCategory.Audio, "IC2 audio unavailable.");
+                                AudioManagerClient.this.enabled = false;
+                            } else {
+                                IC2.log.debug(LogCategory.Audio, "IC2 audio ready.");
+                            }
+                        }
+                    } catch (InterruptedException ignored) {
                     }
+
+                    AudioManagerClient.this.initThread = null;
+                    return;
                 }
             }, "IC2 audio init thread");
             this.initThread.setDaemon(true);
@@ -223,10 +213,8 @@ public final class AudioManagerClient extends AudioManager {
             IC2.platform.profilerStartSection("UpdateSourceVolume");
             EntityPlayer player = IC2.platform.getPlayerInstance();
             if (player == null) {
-                Iterator var2 = this.objectToAudioSourceMap.values().iterator();
 
-                while (var2.hasNext()) {
-                    List<AudioSourceClient> sources = (List) var2.next();
+                for (final List<AudioSourceClient> sources : this.objectToAudioSourceMap.values()) {
                     removeSources(sources);
                 }
 
@@ -263,12 +251,11 @@ public final class AudioManagerClient extends AudioManager {
                         entry = (Entry) it.next();
                         if (((AudioManagerClient.WeakObject) entry.getKey()).get() == null) {
                             it.remove();
-                            removeSources((List) entry.getValue());
+                            removeSources(entry.getValue());
                         } else {
-                            Iterator var5 = ((List) entry.getValue()).iterator();
 
-                            while (var5.hasNext()) {
-                                AudioSource audioSource = (AudioSource) var5.next();
+                            for (final Object o : (List) entry.getValue()) {
+                                AudioSource audioSource = (AudioSource) o;
                                 if (!this.wasPaused) {
                                     audioSource.updateVolume(player);
                                 }
@@ -302,16 +289,13 @@ public final class AudioManagerClient extends AudioManager {
                                 source.cull();
                             }
                         }
-                    } else if (isPaused != this.wasPaused) {
+                    } else if (!this.wasPaused) {
                         this.wasPaused = true;
 
                         while (!this.validAudioSources.isEmpty()) {
                             this.validAudioSources.poll().pause();
                         }
                     } else {
-                        assert isPaused;
-
-                        assert this.wasPaused;
 
                         this.validAudioSources.clear();
                     }
@@ -352,7 +336,6 @@ public final class AudioManagerClient extends AudioManager {
                     this.soundSystem,
                     sourceName,
                     obj,
-                    positionSpec,
                     initialSoundFile,
                     loop,
                     priorized,
@@ -360,7 +343,7 @@ public final class AudioManagerClient extends AudioManager {
             );
 
             AudioManagerClient.WeakObject key = new AudioManagerClient.WeakObject(obj);
-            List<AudioSourceClient> sources = this.objectToAudioSourceMap.computeIfAbsent(key, k -> new ArrayList());
+            List<AudioSourceClient> sources = this.objectToAudioSourceMap.computeIfAbsent(key, k -> new ArrayList<>());
 
             sources.add(audioSource);
             return audioSource;
@@ -397,7 +380,7 @@ public final class AudioManagerClient extends AudioManager {
         } else {
             assert IC2.platform.isRendering();
 
-            AudioPosition position = AudioPosition.getFrom(obj, positionSpec);
+            AudioPosition position = AudioPosition.getFrom(obj);
             if (position == null) {
                 return null;
             } else {
@@ -428,10 +411,6 @@ public final class AudioManagerClient extends AudioManager {
         }
     }
 
-    public void chainSource(String source, FutureSound onFinish) {
-        this.singleSoundQueue.put(source, onFinish);
-    }
-
     public void removeSource(String source) {
         if (source != null) {
             this.soundSystem.stop(source);
@@ -441,7 +420,7 @@ public final class AudioManagerClient extends AudioManager {
     }
 
     public float getDefaultVolume() {
-        return 1.2F;
+        return 1.0F;
     }
 
     public float getMasterVolume() {
@@ -464,9 +443,9 @@ public final class AudioManagerClient extends AudioManager {
                 .endsWith(".break")) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             ItemStack stack = player.inventory.getCurrentItem();
-            if (stack != null && stack.getItem() instanceof IHitSoundOverride) {
+            if (!stack.isEmpty() && stack.getItem() instanceof IHitSoundOverride) {
                 World world = player.getEntityWorld();
-                RayTraceResult mop = getMovingObjectPositionFromPlayer(world, player, false);
+                RayTraceResult mop = getMovingObjectPositionFromPlayer(world, player);
                 BlockPos pos = new BlockPos(
                         event.getSound().getXPosF(),
                         event.getSound().getYPosF(),

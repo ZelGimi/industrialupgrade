@@ -3,24 +3,17 @@ package com.denfop.items.reactors;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.items.armour.ItemArmorAdvHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
-import ic2.core.IC2Potion;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemIC2;
-import ic2.core.item.armor.ItemArmorHazmat;
+import ic2.core.item.type.IRadioactiveItemType;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemRadioactive extends ItemIC2 implements IModelRegister {
+public class ItemRadioactive extends ItemIC2 implements IRadioactiveItemType, IModelRegister {
 
     protected final int radiationLength;
     protected final int amplifier;
@@ -29,7 +22,7 @@ public class ItemRadioactive extends ItemIC2 implements IModelRegister {
 
     public ItemRadioactive(String name, int radiationLength1, int amplifier1) {
         super(null);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.ReactorsTab);
         this.setMaxStackSize(64);
         setUnlocalizedName(name);
         this.name = name;
@@ -40,17 +33,6 @@ public class ItemRadioactive extends ItemIC2 implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
-        if (this.radiationLength != 0) {
-            if (entity instanceof EntityLivingBase) {
-                EntityLivingBase entityLiving = (EntityLivingBase) entity;
-                if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
-                        entityLiving)) {
-                    IC2Potion.radiation.applyTo(entityLiving, this.radiationLength, this.amplifier);
-                }
-            }
-        }
-    }
 
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(4);
@@ -68,6 +50,16 @@ public class ItemRadioactive extends ItemIC2 implements IModelRegister {
                 meta,
                 new ModelResourceLocation(Constants.MOD_ID + ":" + path + "/" + this.name, null)
         );
+    }
+
+    @Override
+    public int getRadiationDuration() {
+        return this.radiationLength;
+    }
+
+    @Override
+    public int getRadiationAmplifier() {
+        return this.amplifier;
     }
 
 }

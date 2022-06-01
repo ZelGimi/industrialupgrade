@@ -1,15 +1,12 @@
 package com.denfop.tiles.base;
 
-import com.denfop.api.IDoubleMachineRecipeManager;
-import com.denfop.api.Recipes;
-
 public enum EnumDoubleElectricMachine {
-    ALLOY_SMELTER(38, 17, 74, 17, 56, 53, true, Recipes.Alloysmelter, 116, 35),
-    SUNNARIUM_PANEL(14, 34, 36, 34, 0, 0, false, Recipes.sunnuriumpanel, 106, 34),
-    ENRICH(14, 34, 36, 34, 0, 0, false, Recipes.enrichment, 106, 34),
-    SYNTHESIS(14, 34, 64, 34, 0, 0, false, Recipes.synthesis, 110, 34),
-    PAINTING(14, 34, 36, 34, 0, 0, false, Recipes.painting, 106, 34),
-    UPGRADE(14, 34, 64, 34, 0, 0, false, Recipes.upgrade, 110, 34),
+    ALLOY_SMELTER("alloysmelter", 38, 17, 74, 17, 56, 53, true, 116, 35),
+    SUNNARIUM_PANEL("sunnuriumpanel", 14, 34, 36, 34, 0, 0, false, 106, 34),
+    ENRICH("enrichment", 14, 34, 36, 34, 0, 0, false, 106, 34),
+    SYNTHESIS("synthesis", 14, 34, 64, 34, 0, 0, false, 110, 34),
+    PAINTING("painter", 14, 34, 36, 34, 0, 0, false, 106, 34),
+    UPGRADE("upgradeblock", 14, 34, 64, 34, 0, 0, false, 110, 34),
     ;
 
     public final int inputx;
@@ -21,9 +18,10 @@ public enum EnumDoubleElectricMachine {
     public final int outputx;
     public final int outputy;
     public final boolean register;
-    public final IDoubleMachineRecipeManager recipe;
+    public final String recipe_name;
 
     EnumDoubleElectricMachine(
+            String name,
             int inputx,
             int inputy,
             int inputx1,
@@ -31,10 +29,10 @@ public enum EnumDoubleElectricMachine {
             int dischangeX,
             int dischangeY,
             boolean register,
-            IDoubleMachineRecipeManager recipe,
             int outputx,
             int outputy
     ) {
+        this.recipe_name = name;
         this.inputx = inputx;
         this.inputy = inputy;
         this.inputx1 = inputx1;
@@ -42,7 +40,6 @@ public enum EnumDoubleElectricMachine {
         this.dischangeX = dischangeX;
         this.dischangeY = dischangeY;
         this.register = register;
-        this.recipe = recipe;
         this.outputx = outputx;
         this.outputy = outputy;
     }

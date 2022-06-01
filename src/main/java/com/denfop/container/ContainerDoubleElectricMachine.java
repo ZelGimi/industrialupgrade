@@ -2,6 +2,7 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
+import com.denfop.tiles.mechanism.TileEntitySunnariumPanelMaker;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -77,6 +78,9 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
         List<String> ret = super.getNetworkedFields();
         ret.add("guiProgress");
         ret.add("temperature");
+        if (this.base instanceof TileEntitySunnariumPanelMaker) {
+            ret.add("sunenergy");
+        }
         return ret;
     }
 

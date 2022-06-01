@@ -1,13 +1,15 @@
 package com.denfop.gui;
 
+import com.denfop.Config;
 import com.denfop.Constants;
-import com.denfop.api.inv.IInvSlotProcessableMulti;
+import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.container.ContainerMultiMetalFormer;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.block.wiring.CableType;
+import ic2.core.gui.GuiElement;
 import ic2.core.gui.VanillaButton;
 import ic2.core.init.Localization;
 import ic2.core.ref.ItemName;
@@ -16,15 +18,15 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
+public class GuiMultiMachine extends GuiIC2<ContainerMultiMachine> {
 
     private final ContainerMultiMachine container;
 
-    public GUIMultiMachine(ContainerMultiMachine container1) {
+    public GuiMultiMachine(ContainerMultiMachine container1) {
         super(container1);
         this.container = container1;
         if (container1 instanceof ContainerMultiMetalFormer) {
-            this.addElement((new VanillaButton(this, 18, 8, 20, 20, this.createEventSender(0))).withIcon(() -> {
+            this.addElement((new VanillaButton(this, 7, 22, 20, 20, this.createEventSender(0))).withIcon(() -> {
                 switch (container1.base.getMode()) {
                     case 1:
                         return ItemName.forge_hammer.getItemStack();
@@ -64,14 +66,14 @@ public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
         int yoffset = (this.height - this.ySize) / 2;
         int chargeLevel = (int) (14.0F * tile.getChargeLevel2());
         int chargeLevel1 = (int) (14.0F * tile.getChargeLevel1());
-
+        int heat = (int) (14.0F * tile.getComponent().getFillRatio());
         int i = 0;
         for (Slot slot : this.container.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
                 int xX = xoffset + slot.xPos;
                 int yY = yoffset + slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof IInvSlotProcessableMulti) {
+                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
                     int down = 24 * (tile.getMachine().meta / 3);
                     drawTexturedModalRect(xX, yY + 19, 176, 14 + down, 16, 24);
                     int progress = (int) (24.0F * tile.getProgress(i));
@@ -84,12 +86,15 @@ public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
                 drawTexturedModalRect(xX - 1, yY - 1, 238, 0, 18, 18);
             }
         }
-        int exp = (int) (24.0F * tile.expstorage / 5000);
-        if (exp > 0) {
-
-            drawTexturedModalRect(xoffset + 9, yoffset + 26, 176, 134, exp + 1, 16);
-
+        if (Config.coolingsystem) {
+            if (heat >= 0) {
+                drawTexturedModalRect(
+                        xoffset + 27, yoffset + 47 + 14 - heat, 216, 14 - heat, 4,
+                        heat
+                );
+            }
         }
+
 
         if (chargeLevel >= 0) {
             drawTexturedModalRect(
@@ -103,27 +108,27 @@ public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
                     chargeLevel1
             );
         }
-        this.drawXCenteredString(this.xSize / 2, 6, this.container.base.getInventoryName(), 4210752, false);
+        this.drawXCenteredString(this.xSize / 2, 6, Localization.translate(this.container.base.getName()), 4210752, false);
         String tooltip1 = ModUtils.getString(this.container.base.energy2) + "/" + ModUtils.getString(this.container.base.maxEnergy2) + " RF";
         String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getEnergy()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
                         "EU";
 
         GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip2, 5, 47, 19, 61);
-        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip1, 14, 47, 28, 61);
-        String tooltip = this.container.base.expstorage + "/" + 5000;
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip1, 14, 47, 26, 61);
+        String tooltip =
+                ModUtils.getString(this.container.base
+                        .getComponent()
+                        .getEnergy()) + "°C" + "/" + ModUtils.getString(this.container.base.getComponent().getCapacity()) + "°C";
 
-        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip, 9, 30, 32, 38);
+        GuiTooltipHelper.drawAreaTooltip(this, x - this.guiLeft, y - this.guiTop, tooltip, 27, 47, 30, 61);
         i = 0;
         for (Slot slot : this.container.inventorySlots) {
             if (slot instanceof SlotInvSlot) {
                 int xX = slot.xPos;
                 int yY = slot.yPos;
                 SlotInvSlot slotInv = (SlotInvSlot) slot;
-                if (slotInv.invSlot instanceof IInvSlotProcessableMulti) {
+                if (slotInv.invSlot instanceof InvSlotMultiRecipes) {
 
                     double progress = (24.0F * this.container.base.getProgress(i));
                     if (progress > 0) {
@@ -135,6 +140,12 @@ public class GUIMultiMachine extends GuiIC2<ContainerMultiMachine> {
                     i++;
                 }
 
+            }
+        }
+
+        for (final GuiElement<?> guiElement : this.elements) {
+            if (guiElement.isEnabled()) {
+                guiElement.drawBackground(x - this.guiLeft, y - this.guiTop);
             }
         }
 

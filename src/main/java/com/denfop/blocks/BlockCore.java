@@ -6,6 +6,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public abstract class BlockCore extends Block {
 
     protected String modName;
@@ -24,7 +26,8 @@ public abstract class BlockCore extends Block {
 
     protected abstract boolean preInit();
 
-    public Block setUnlocalizedName(String name) {
+    @Nonnull
+    public Block setUnlocalizedName(@Nonnull String name) {
         this.name = name;
         name = this.modName + "." + name;
         return super.setUnlocalizedName(name);

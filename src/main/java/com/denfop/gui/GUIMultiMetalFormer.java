@@ -5,9 +5,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUIMultiMetalFormer extends GUIMultiMachine {
+public class GuiMultiMetalFormer extends GuiMultiMachine {
 
-    public GUIMultiMetalFormer(ContainerMultiMetalFormer container1) {
+    public GuiMultiMetalFormer(ContainerMultiMetalFormer container1) {
         super(container1);
 
 

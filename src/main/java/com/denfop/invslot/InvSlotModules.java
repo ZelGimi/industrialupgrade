@@ -2,18 +2,20 @@ package com.denfop.invslot;
 
 
 import com.denfop.items.modules.ItemEntityModule;
-import com.denfop.utils.CapturedMob;
-import ic2.core.block.TileEntityInventory;
+import com.denfop.tiles.base.TileEntityAutoSpawner;
+import com.denfop.utils.CapturedMobUtils;
 import ic2.core.block.invslot.InvSlot;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotModules extends InvSlot {
 
+    private final TileEntityAutoSpawner tile;
     private int stackSizeLimit;
 
-    public InvSlotModules(TileEntityInventory base1) {
-        super(base1, "modules", InvSlot.Access.I, 20, InvSlot.InvSide.TOP);
-
+    public InvSlotModules(TileEntityAutoSpawner base1) {
+        super(base1, "modules", InvSlot.Access.I, 4, InvSlot.InvSide.TOP);
+        this.tile = base1;
         this.stackSizeLimit = 1;
     }
 
@@ -26,7 +28,33 @@ public class InvSlotModules extends InvSlot {
         }
 
 
-        return CapturedMob.containsSoul(itemStack);
+        return CapturedMobUtils.containsSoul(itemStack);
+    }
+
+    public void update() {
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i));
+                assert captured != null;
+                this.tile.mobUtils[i] = (EntityLiving) captured.getEntity(tile.getWorld(), true);
+            } else {
+                this.tile.mobUtils[i] = null;
+            }
+        }
+    }
+
+    @Override
+    public void put(final int index, final ItemStack content) {
+        super.put(index, content);
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                final CapturedMobUtils captured = CapturedMobUtils.create(this.get(i));
+                assert captured != null;
+                this.tile.mobUtils[i] = (EntityLiving) captured.getEntity(tile.getWorld(), true);
+            } else {
+                this.tile.mobUtils[i] = null;
+            }
+        }
     }
 
     public int getStackSizeLimit() {

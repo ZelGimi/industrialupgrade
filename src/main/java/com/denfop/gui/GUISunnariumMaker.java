@@ -2,19 +2,37 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerSunnariumMaker;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUISunnariumMaker extends GuiIC2<ContainerSunnariumMaker> {
+public class GuiSunnariumMaker extends GuiIC2<ContainerSunnariumMaker> {
 
     public final ContainerSunnariumMaker container;
 
-    public GUISunnariumMaker(ContainerSunnariumMaker container1) {
+    public GuiSunnariumMaker(ContainerSunnariumMaker container1) {
         super(container1);
         this.container = container1;
+    }
+
+    @Override
+    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        String tooltip =
+                "SE: " + ModUtils.getString(this.container.base.sunenergy.getEnergy()) + "/" + ModUtils.getString(this.container.base.sunenergy.getCapacity());
+        new AdvArea(this, 51, 63, 76, 73).withTooltip(tooltip).drawForeground(mouseX, mouseY);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 13, 61, 24, 76)
+                .withTooltip(tooltip2)
+                .drawForeground(mouseX, mouseY);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -32,6 +50,10 @@ public class GUISunnariumMaker extends GuiIC2<ContainerSunnariumMaker> {
         if (progress > 0) {
             drawTexturedModalRect(xoffset + 55, yoffset + 20, 176, 31, progress + 1, 31);
         }
+        if (this.container.base.sunenergy.getEnergy() > 0.0D) {
+            int i1 = (int) (24.0D * this.container.base.sunenergy.getFillRatio());
+            drawTexturedModalRect(xoffset + 52, yoffset + 60, 176, 63, i1 + 1, 16);
+        }
     }
 
     public String getName() {
@@ -39,7 +61,7 @@ public class GUISunnariumMaker extends GuiIC2<ContainerSunnariumMaker> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUISunnariumMaker.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiSunnariumMaker.png");
     }
 
 }

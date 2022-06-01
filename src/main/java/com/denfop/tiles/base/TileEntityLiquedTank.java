@@ -2,7 +2,7 @@ package com.denfop.tiles.base;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerTank;
-import com.denfop.gui.GUITank;
+import com.denfop.gui.GuiTank;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
@@ -24,21 +24,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui, IUpgradableBlock, IFluidHandler {
+public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui, IUpgradableBlock {
 
     public final InvSlotUpgrade upgradeSlot;
 
@@ -72,11 +68,6 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
 
     }
 
-    private static int applyModifier(int extra) {
-        double ret = Math.round((14 + extra) * 1.0);
-        return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
-    }
-
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
@@ -95,20 +86,6 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
 
     }
 
-    @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return this.getFluidTank().getTankProperties();
-    }
-
-    @Nullable
-    @Override
-    public FluidStack drain(final FluidStack resource, final boolean doDrain) {
-        if (resource != null && resource.isFluidEqual(this.getFluidTank().getFluid())) {
-            return !this.canDrain(resource.getFluid()) ? null : this.getFluidTank().drain(resource.amount, doDrain);
-        } else {
-            return null;
-        }
-    }
 
     public double gaugeLiquidScaled(double i) {
         return this.getFluidTank().getFluidAmount() <= 0
@@ -142,6 +119,10 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = false;
+        if (this.getFluidTank().getFluidAmount() == 0) {
+            return;
+        }
+
         if (this.world.provider.getWorldTime() % 10 == 0) {
             IC2.network.get(true).updateTileEntityField(this, "fluidTank");
         }
@@ -154,7 +135,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
                 }
             }
         }
-        MutableObject<ItemStack> output = new MutableObject();
+        MutableObject<ItemStack> output = new MutableObject<>();
         if (this.containerslot.transferFromTank(this.fluidTank, output, true)
                 && (output.getValue() == null || this.outputSlot.canAdd(output.getValue()))) {
             this.containerslot.transferFromTank(this.fluidTank, output, false);
@@ -163,7 +144,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
             }
         }
         if (this.needsFluid()) {
-            output = new MutableObject();
+            output = new MutableObject<>();
             if (this.containerslot1.transferToTank(
                     this.fluidTank,
                     output,
@@ -182,12 +163,12 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
     }
 
 
-    public boolean canFill(Fluid paramFluid) {
+    public boolean canFill() {
         return true;
     }
 
 
-    public boolean canDrain(Fluid paramFluid) {
+    public boolean canDrain() {
         return true;
     }
 
@@ -204,17 +185,17 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
     }
 
     public int fill(FluidStack resource, boolean doFill) {
-        return this.canFill(resource.getFluid()) ? this.getFluidTank().fill(resource, doFill) : 0;
+        return this.canFill() ? this.getFluidTank().fill(resource, doFill) : 0;
     }
 
     public FluidStack drain(int maxDrain, boolean doDrain) {
 
-        return !this.canDrain(null) ? null : this.getFluidTank().drain(maxDrain, doDrain);
+        return !this.canDrain() ? null : this.getFluidTank().drain(maxDrain, doDrain);
     }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUITank(new ContainerTank(entityPlayer, this));
+        return new GuiTank(new ContainerTank(entityPlayer, this));
     }
 
 

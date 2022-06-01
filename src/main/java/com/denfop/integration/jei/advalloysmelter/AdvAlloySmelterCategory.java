@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvAlloySmelterRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -31,21 +33,25 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine1.adv_alloy_smelter.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.basemachine, 1, 3).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -53,7 +59,7 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
         double energylevel = Math.min(14.0F * energy / 100, 14);
@@ -74,7 +80,7 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
     public void setRecipe(
             final IRecipeLayout layout,
             final AdvAlloySmelterRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 32, 0); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true

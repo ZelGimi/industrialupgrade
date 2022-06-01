@@ -3,18 +3,17 @@ package com.denfop.blocks;
 
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.damagesource.IUDamageSource;
 import ic2.core.block.BlockBase;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.block.ItemBlockIC2;
 import ic2.core.profile.Version;
-import ic2.core.ref.BlockName;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -25,6 +24,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
@@ -32,7 +32,7 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
     protected final Fluid fluid;
 
 
-    public BlockIUFluid(FluidName name, Fluid fluid, Material material, int color) {
+    public BlockIUFluid(FluidName name, Fluid fluid, Material material) {
         super(fluid, material);
         this.setUnlocalizedName(name.name());
         this.setCreativeTab(IUCore.SSPTab);
@@ -46,21 +46,14 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
-    private static boolean isLavaBlock(Block block) {
-        return block == Blocks.LAVA || block == Blocks.FLOWING_LAVA;
-    }
-
     @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
     @SideOnly(Side.CLIENT)
-    public void registerModels(BlockName name) {
+    public void registerModels() {
         BlockBase.registerDefaultItemModel(this);
     }
 
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
+
+    public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
         boolean defaultState = Version.shouldEnable(FluidName.class);
 
         try {
@@ -73,34 +66,55 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
         }
     }
 
-    public void updateTick(World world, BlockPos pos, IBlockState state, Random random) {
+    public void updateTick(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull Random random) {
         super.updateTick(world, pos, state, random);
 
 
     }
 
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos) {
+    public void neighborChanged(
+            @Nonnull IBlockState state,
+            @Nonnull World world,
+            @Nonnull BlockPos pos,
+            @Nonnull Block block,
+            @Nonnull BlockPos neighborPos
+    ) {
         super.neighborChanged(state, world, pos, block, neighborPos);
 
     }
 
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+    public void onBlockAdded(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         super.onBlockAdded(world, pos, state);
     }
 
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy(
+            @Nonnull World world,
+            @Nonnull BlockPos pos,
+            @Nonnull IBlockState state,
+            @Nonnull EntityLivingBase placer,
+            @Nonnull ItemStack stack
+    ) {
 
     }
 
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+    public void onEntityCollidedWithBlock(
+            @Nonnull World worldIn,
+            @Nonnull BlockPos pos,
+            @Nonnull IBlockState state,
+            @Nonnull Entity entityIn
+    ) {
         this.onEntityWalk(worldIn, pos, entityIn);
-    }
-
-    public void onEntityWalk(World world, BlockPos pos, Entity entity) {
 
     }
 
+    public void onEntityWalk(World world, @Nonnull BlockPos pos, @Nonnull Entity entity) {
+        if (world.getBlockState(pos).getBlock().equals(FluidName.fluidazot.getInstance().getBlock())) {
+            entity.attackEntityFrom(IUDamageSource.frostbite, 1.0F);
+        }
+    }
 
+
+    @Nonnull
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(5);
     }

@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefinerRecipeWrapper> {
 
     private final IDrawableStatic bg;
@@ -30,21 +32,25 @@ public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefine
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockAdvRefiner.adv_refiner.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.oiladvrefiner).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -68,7 +74,7 @@ public class AdvRefinerCategory extends Gui implements IRecipeCategory<AdvRefine
     public void setRecipe(
             final IRecipeLayout layout,
             final AdvRefinerRecipeWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
 
 

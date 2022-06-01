@@ -10,11 +10,11 @@ import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GUIAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
+public class GuiAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
 
     public final ContainerAutoSpawner container;
 
-    public GUIAutoSpawner(ContainerAutoSpawner container1) {
+    public GuiAutoSpawner(ContainerAutoSpawner container1) {
         super(container1, 214, 176);
         this.container = container1;
     }
@@ -42,7 +42,7 @@ public class GUIAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
                 );
             }
         }
-        int exp = 34 * this.container.base.expstorage / this.container.base.expmaxstorage;
+        int exp = (int) (34 * this.container.base.exp.getFillRatio());
         exp = Math.min(exp, 34);
         if (exp > 0) {
             drawTexturedModalRect(xoffset + 94, yoffset + 80, 216, 35, exp, 2);
@@ -64,7 +64,7 @@ public class GUIAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(ModUtils.getString(ExperienceUtils.getLevelForExperience(this.container.base.expstorage)),
+        this.fontRenderer.drawString(ModUtils.getString(ExperienceUtils.getLevelForExperience((int) this.container.base.exp.getEnergy())),
                 106, 70, ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
         this.addElement(new Area(
@@ -89,8 +89,8 @@ public class GUIAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
                 79,
                 128 - 93,
                 82 - 79
-        ).withTooltip("XP: " + ModUtils.getString(this.container.base.expstorage) + "/" + ModUtils.getString(
-                this.container.base.expmaxstorage)));
+        ).withTooltip("XP: " + ModUtils.getString(this.container.base.exp.getEnergy()) + "/" + ModUtils.getString(
+                this.container.base.exp.getCapacity())));
 
         for (int i = 0; i < 4; i++) {
             int progress1 = Math.min(
@@ -114,7 +114,7 @@ public class GUIAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
 
     @Override
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIAutoSpawner.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiAutoSpawner.png");
     }
 
 }

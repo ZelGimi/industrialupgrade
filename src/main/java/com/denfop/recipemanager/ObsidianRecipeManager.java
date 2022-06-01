@@ -1,7 +1,7 @@
 package com.denfop.recipemanager;
 
 import com.denfop.api.IObsidianGenerator;
-import ic2.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.RecipeOutput;
 import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -50,7 +50,7 @@ public class ObsidianRecipeManager implements IObsidianGenerator {
 
             for (Map.Entry<Input, RecipeOutput> inputRecipeOutputEntry : this.recipes.entrySet()) {
                 IObsidianGenerator.Input input = inputRecipeOutputEntry.getKey();
-                if (acceptTest && (fluidStack == null || fluidStack1 == null)) {
+                if (fluidStack == null || fluidStack1 == null) {
 
                     return null;
 

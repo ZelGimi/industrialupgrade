@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class UpgradeBlockCategory extends Gui implements IRecipeCategory<UpgradeBlockWrapper> {
 
     private final IDrawableStatic bg;
@@ -25,27 +27,31 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     public UpgradeBlockCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIUpgradeBlock" +
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock" +
                         ".png"), 3, 3, 148,
                 80
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockUpgradeBlock.upgrade_block.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.upgradeblock).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -53,7 +59,7 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
 
 
     @Override
-    public void drawExtras(final Minecraft mc) {
+    public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
@@ -71,7 +77,7 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
         drawTexturedModalRect(+78, +31, 176, 29, xScale1 + 1, 15);
 
 
-        drawTexturedModalRect(+21, +53 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(+21, 53 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 
@@ -81,7 +87,7 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     public void setRecipe(
             final IRecipeLayout layout,
             final UpgradeBlockWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 10, 30); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true
@@ -97,7 +103,7 @@ public class UpgradeBlockCategory extends Gui implements IRecipeCategory<Upgrade
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIUpgradeBlock.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiUpgradeBlock.png");
     }
 
 

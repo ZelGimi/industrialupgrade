@@ -1,7 +1,5 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.api.Recipes;
-import com.denfop.invslot.InvSlotProcessableMultiGeneric;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.core.init.Localization;
@@ -12,10 +10,8 @@ public class TileEntityCombDoubleMacerator extends TileEntityMultiMachine {
         super(
                 EnumMultiMachine.COMB_DOUBLE_MACERATOR.usagePerTick,
                 EnumMultiMachine.COMB_DOUBLE_MACERATOR.lenghtOperation,
-                Recipes.macerator,
                 1
         );
-        this.inputSlots = new InvSlotProcessableMultiGeneric(this, "input", 2, Recipes.macerator);
     }
 
     @Override

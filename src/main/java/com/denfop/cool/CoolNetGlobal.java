@@ -1,20 +1,19 @@
 package com.denfop.cool;
 
 
-import com.denfop.api.cooling.*;
+import com.denfop.api.cooling.ICoolNet;
 import com.denfop.api.cooling.ICoolTile;
+import com.denfop.componets.CoolComponent;
+import ic2.core.block.TileEntityBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class CoolNetGlobal implements ICoolNet {
 
-    public static Map<Chunk, List<ICoolTile>> heatTileinChunk;
     private static Map<World, CoolNetLocal> worldToEnergyNetMap;
 
     static {
@@ -23,7 +22,6 @@ public class CoolNetGlobal implements ICoolNet {
 
     public static CoolNetGlobal initialize() {
         new EventHandler();
-        CoolNetLocal.list = new EnergyTransferList();
         return new CoolNetGlobal();
     }
 
@@ -63,6 +61,13 @@ public class CoolNetGlobal implements ICoolNet {
         if (var1.getTileEntity(var2) instanceof ICoolTile) {
             return (ICoolTile) var1.getTileEntity(var2);
         }
+        if (var1.getTileEntity(var2) instanceof TileEntityBlock) {
+            TileEntityBlock tile = (TileEntityBlock) var1.getTileEntity(var2);
+            assert tile != null;
+            if (tile.hasComponent(CoolComponent.class)) {
+                return tile.getComponent(CoolComponent.class).getDelegate();
+            }
+        }
         return null;
     }
 
@@ -79,29 +84,8 @@ public class CoolNetGlobal implements ICoolNet {
 
     @Override
     public void removeTile(final ICoolTile var1) {
-        final CoolNetLocal local = getForWorld(((TileEntity)var1).getWorld());
+        final CoolNetLocal local = getForWorld(((TileEntity) var1).getWorld());
         local.removeTile(var1);
-    }
-
-    @Override
-    public NodeCoolStats getNodeStats(final ICoolTile var1,World world) {
-        final CoolNetLocal local = getForWorld(world);
-        if (local == null) {
-            return new NodeCoolStats(0.0, 0.0);
-        }
-        return local.getNodeStats(var1);
-    }
-
-    @Override
-    public List<ICoolSink> getListHeatInChunk(final Chunk chunk) {
-        final CoolNetLocal local = getForWorld(chunk.getWorld());
-        return local.getListCoolInChunk(chunk);
-    }
-
-    @Override
-    public void transferTemperatureWireless(final ICoolWirelessSource source) {
-        final CoolNetLocal local = getForWorld(((TileEntity)source).getWorld());
-        local.transferTemperatureWireless(source);
     }
 
 

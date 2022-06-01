@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "industrialupgrade:adv_solar_energy"
+      "item": "industrialupgrade:adv_se_gen"
     },
     "title": {
       "translate": "achievement.adv_SE_generator"
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "industrialupgrade:adv_solar_energy"
+            "item": "industrialupgrade:adv_se_gen"
           }
         ]
       }

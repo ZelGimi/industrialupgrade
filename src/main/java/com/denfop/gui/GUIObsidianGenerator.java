@@ -2,6 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerObsidianGenerator;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.gui.TankGauge;
 import ic2.core.init.Localization;
@@ -10,11 +11,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUIObsidianGenerator extends GuiIC2<ContainerObsidianGenerator> {
+public class GuiObsidianGenerator extends GuiIC2<ContainerObsidianGenerator> {
 
     public final ContainerObsidianGenerator container;
 
-    public GUIObsidianGenerator(ContainerObsidianGenerator container1) {
+    public GuiObsidianGenerator(ContainerObsidianGenerator container1) {
         super(container1);
         this.container = container1;
     }
@@ -24,8 +25,21 @@ public class GUIObsidianGenerator extends GuiIC2<ContainerObsidianGenerator> {
 
         TankGauge.createNormal(this, 40, 8, container.base.fluidTank1).drawForeground(par1, par2);
         TankGauge.createNormal(this, 64, 8, container.base.fluidTank2).drawForeground(par1, par2);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 26, 56, 37, 71)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
 
+    }
 
+    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -55,7 +69,7 @@ public class GUIObsidianGenerator extends GuiIC2<ContainerObsidianGenerator> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIObsidianGenerator.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiObsidianGenerator.png");
     }
 
 }

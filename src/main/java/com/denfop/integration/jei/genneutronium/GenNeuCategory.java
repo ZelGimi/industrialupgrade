@@ -16,6 +16,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper> {
 
     private final IDrawableStatic bg;
@@ -29,21 +31,25 @@ public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine.neutron_generator.getName();
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.machines, 1, 5).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -63,7 +69,7 @@ public class GenNeuCategory extends Gui implements IRecipeCategory<GenNeuWrapper
     public void setRecipe(
             final IRecipeLayout layout,
             final GenNeuWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
 
 

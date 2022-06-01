@@ -10,24 +10,8 @@ iu.itemiucrafring.itemuraningot=Uranium Ingot
 iu.itemiucrafring.itemirradianturanium=Irradiant Uranium
 iu.itemiucrafring.itemirradiantglasspane=Irradiant Glass Surface
 
-# Chaos Armor
-item.ssp:ChaosHelm.name=§7Chaos Helmet
-item.ssp:ChaosChest.name=§7Chaos Chestplate
-item.ssp:ChaosLeggs.name=§7Chaos Leggings
-item.ssp:ChaosBoots.name=§7Chaos Boots
-
 # Chaotic Energy Storage
 iu.ChaosEnergyCore.name=§7Chaotic Energy Core
-item.supersolarpanel:ChaosFluxCapacitor0.name=§7Chaos Flux Capacitor
-
-# Chaos Tools & Weapons
-item.supersolarpanel:ChaosDistructionStaff.name=§7Chaos Staff of Power
-item.supersolarpanel:ChaosBow.name=§7Chaos Bow
-item.supersolarpanel:ChaosHoe.name=§7Chaos Hoe
-item.supersolarpanel:ChaosAxe.name=§7Chaos Axe
-item.supersolarpanel:ChaosPickaxe.name=§7Chaos Pickaxe
-item.supersolarpanel:ChaosShovel.name=§7Chaos Shovel
-item.supersolarpanel:ChaosSword.name=§7Chaos Sword
 
 # Oil Refinery
 industrialupgrade.refiner.refiner=Oil Refinery
@@ -97,15 +81,15 @@ industrialupgrade.avaritiapanel.infinity_solar_panel=Infinity Solar Panel
 industrialupgrade.thaumcraftpanel.thaum_solar_panel=Thaumium Solar Panel
 industrialupgrade.thaumcraftpanel.void_solar_panel=Void Solar Panel
 
-# Thaumic Tinkerer Panels
-industrialupgrade.tinkererpanel.ichor_solar_panel=Ichorium Solar Panel
-
 # Helmets with Solar Panel
 item.advanced_solar_helmet.name=§8Advanced Solar Helmet
 item.hybrid_solar_helmet.name=§3Hybrid Solar Helmet
 item.ultimate_solar_helmet.name=§9Perfect Solar Helmet
 item.spectral_solar_helmet.name=§eSpectral Solar Helmet
 item.singular_solar_helmet.name=§8Singular Solar Helmet
+
+#Katana
+iu.katana=Katana
 
 # Sabers
 iu.itemNanoSaber1=Quantum Saber
@@ -163,17 +147,37 @@ iu.elementium_core.name=§dElementium Core
 iu.neutroncore.name=§9Neutronium Core
 iu.infinitycore.name=§fInfinity Core
 
+# Excited Cores
+iu.excitednucleus.advcore=Excited Advanced Core
+iu.excitednucleus.hybcore=Excited Hybrid Core
+iu.excitednucleus.ultcore=Excited Perfect Core
+iu.excitednucleus.quacore=Excited Quantum Core
+iu.excitednucleus.specore=Excited Spectral Core
+iu.excitednucleus.procore=Excited Protonic Core
+iu.excitednucleus.sincore=Excited Singular Core
+iu.excitednucleus.admcore=Excited Diffractive Core
+iu.excitednucleus.phocore=Excited Photonic Core
+iu.excitednucleus.neucore=Excited Neutron Core
+iu.excitednucleus.barcore=Excited Baryon Core
+iu.excitednucleus.adrcore=Excited Hadron Core
+iu.excitednucleus.gracore=Excited Graviton Core
+iu.excitednucleus.kvrcore=Excited Quark Core
+
 iu.neutronium.name=§9Neutron Shard
 iu.neutroniumingot.name=§9Neutron Ingot
 
 industrialupgrade.basemachine.neutron_generator=§9Neutron Particle Generator
 iu.Matter.gui.name=§bNeutron Particle Generator
 
-iu.nanobox.name=§8Nano Toolbox
-iu.quantumitems7.name=§eAdvanced Nano Toolbox
-iu.quantumitems6.name=§bQuantum Toolbox
-iu.quantumitems3.name=Improved Quantum Toolbox
+item.lead_box.name=Lead Box
 
+# Boxes
+iu.nanobox.name=§8Nano Box
+iu.quantumitems7.name=§eAdvanced Nano Box
+iu.quantumitems6.name=§bQuantum Box
+iu.quantumitems3.name=Improved Quantum Box
+
+# Cables
 iu.itemcable=§aSpectral Cable
 iu.itemcableo=§9Protonic Cable
 iu.itemgoldсable=§eSingular Cable
@@ -186,11 +190,9 @@ iu.itemironcableiiii=§6Universe Cable
 iu.itemglasscable=§cDiffractive Cable
 iu.itemglasscablei=§7Infinity Cable
 
-iu.circuit.nanocircuit=Nano Circuit
-iu.circuit.quantumcircuit=Quantum Circuit
-iu.circuit.spectralcircuit=§dSpectral Circuit
+iu.qcable=Quantum Energy Cable
+iu.scable=Solar Energy Cable
 
-iu.blockCable=Cable
 iu.chaosingot.name=§7Chaos Ingot
 iu.coal_chunk.name=Coal Chunk
 iu.compresscarbon.name=Compressed Carbon
@@ -283,6 +285,8 @@ iu.quarrymodules.kar2=Module: Region 5x5
 iu.quarrymodules.kar3=Module: Region 7x7
 iu.quarrymodules.blackmodule=Module: Blacklist
 iu.quarrymodules.whitemodule=Module: Whitelist
+iu.quarrymodules.macerator=Module: Macerator
+iu.quarrymodules.comb_macerator=Module: Ore Macerator
 
 iu.expmodule.name=Module: Experience Storage
 iu.module_stack.name=Module: Stack
@@ -308,6 +312,8 @@ iu.modules.moonlinse2=Module: Second Sun III
 iu.analyzermodule.name=Module: Analyzer
 iu.quarrymodule.name=Module: Quarry
 iu.module_storage.name=Module: Sorting
+iu.autoheater.name=Module: Autonomous Heater
+iu.upgrade_speed_creation.name=Module: Performance
 
 iu.moduletype=Module Type: Common
 
@@ -362,6 +368,10 @@ iu.spawnermodules.spawner_module4=Hunter Module: Experience +25%
 iu.spawnermodules.spawner_module5=Hunter Module: Experience +50%
 iu.spawnermodules.spawner_module6=Hunter Module: 2 Mobs
 iu.spawnermodules.spawner_module7=Hunter Module: 3 Mobs
+
+iu.itemcoolupgrade.azote=Nitrogen Cooling Module
+iu.itemcoolupgrade.hydrogen=Hydrogen Cooling Module
+iu.itemcoolupgrade.helium=Helium Cooling Module
 
 ic2.item.tooltip.Output=Output:
 ic2.item.tooltip.Capacity=Store:
@@ -432,6 +442,39 @@ iu.toriy=Thorium
 iu.radiationresources.rad_toriy=Irradiant Thorium
 iu.thorium_ore.name=Thorium Ore
 
+# Rotor Cores
+iu.corewind.core_wind=Wood Rotor Core
+iu.corewind.core_wind1=Bronze Rotor Core
+iu.corewind.core_wind2=Iron Rotor Core
+iu.corewind.core_wind3=Steel Rotor Core
+iu.corewind.core_wind4=Carbon Rotor Core
+iu.corewind.core_wind5=Iridium Rotor Core
+iu.corewind.core_wind6=Compressed Iridium Rotor Core
+iu.corewind.core_wind7=Spectral Rotor Core
+iu.corewind.core_wind8=Mythical Rotor Core
+iu.corewind.core_wind9=Neutron Rotor Core
+iu.corewind.core_wind10=Photonic Rotor Core
+iu.corewind.core_wind11=Baryon Rotor Core
+iu.corewind.core_wind12=Hadron Rotor Core
+iu.corewind.core_wind13=Ultramarine Rotor Core
+
+# Rotor Blades
+iu.windrod.oak_rotor_model=Wood Rotor Blade
+iu.windrod.bronze_rotor_model=Bronze Rotor Blade
+iu.windrod.iron_rotor_model=Iron Rotor Blade
+iu.windrod.steel_rotor_model=Steel Rotor Blade
+iu.windrod.carbon_rotor_model=Carbon Rotor Blade
+iu.windrod.carbon_rotor_model1=Iridium Rotor Blade
+iu.windrod.carbon_rotor_model2=Compressed Iridium Rotor Blade
+iu.windrod.carbon_rotor_model3=Spectral Rotor Blade
+iu.windrod.carbon_rotor_model4=Mythical Rotor Blade
+iu.windrod.carbon_rotor_model5=Neutron Rotor Blade
+iu.windrod.carbon_rotor_model6=Photonic Rotor Blade
+iu.windrod.carbon_rotor_model7=Baryon Rotor Blade
+iu.windrod.carbon_rotor_model8=Hadron Rotor Blade
+iu.windrod.carbon_rotor_model9=Ultramarine Rotor Blade
+
+# Rotors
 iu.compressiridium=§7Compressed Iridium Rotor
 iu.iridium=§fIridium Rotor
 iu.spectral=§eSpectral Rotor
@@ -477,11 +520,14 @@ iu.storage.helmet=Panel Energy Capacity:
 successfully.charged=Successfully Charged 
 iu.sendenergy=. Spent: 
 
-itemGroup.IUTab=Industrial Upgrade Blocks
-itemGroup.ModuleTab=Industrial Upgrade Modules
-itemGroup.EnergyTab=Industrial Upgrade Tools/Armor
-itemGroup.ItemTab=Industrial Upgrade Items
-itemGroup.OreTab=Industrial Upgrade Ores
+itemGroup.IUTab=IU: Blocks
+itemGroup.ModuleTab=IU: Modules
+itemGroup.ItemTab=IU: Items
+itemGroup.OreTab=IU: Ores
+itemGroup.EnergyTab=IU: Tools/Armor
+itemGroup.ResourceTab=IU: Resources
+itemGroup.ReactorsTab=IU: Radioactive
+itemGroup.UpgradeTab=IU: Upgrades
 
 itemCellEmpty.name=Advanced Cell
 itemCellUuMatter.name=Liquefied Neutron
@@ -503,7 +549,6 @@ iu.modulewirelles2=§bWireless: §cnot working
 iu.fly=§3Flight activated:
 iu.fly1=Press Mode Switch Key + Boost Key to enable flight
 iu.vertical=Press Mode Switch Key + Side Key to enable vertical mode
-iu.streak=Press the Hub Expand Key to change the color of the strip behind the player
 iu.effect=Fire resistance enabled:
 storagemodul=Only in energy storage
 storagemodul1=Press SHIFT + Right Click on the storage
@@ -528,17 +573,12 @@ iu.itempipes2=Advanced Heat Pipe
 iu.itempipes3=Perfect Heat Pipe
 iu.itempipes4=Quantum Heat Pipe
 
-iu.blockBatBox.name=BatBox
-iu.blockCESU.name=CESU
-iu.blockMFE1.name=MFE
-iu.blockMFSU1.name=MFSU
-iu.blockMFE.name=§eImproved MFSU
-iu.blockMFSU.name=§bAdvanced MFSU
-iu.blockPerMFSU.name=Perfect MFSU
-iu.blockBarMFSU.name=Baryon MFSU
-iu.blockAdrMFSU.name=Hadron MFSU
-iu.blockGraMFSU.name=Graviton MFSU
-iu.blockKvrMFSU.name=Quark MFSU
+iu.cold.itempipes=Cooling Pipe
+iu.cold.itempipes1=Improved Cooling Pipe
+iu.cold.itempipes2=Advanced Cooling Pipe
+iu.cold.itempipes3=Perfect Cooling Pipe
+iu.cold.itempipes4=Quantum Cooling Pipe
+
 industrialupgrade.wiring_storage.batbox_iu=BatBox
 industrialupgrade.wiring_storage.cesu_iu=CESU
 industrialupgrade.wiring_storage.mfe_iu=MFE
@@ -555,17 +595,6 @@ iu.quarry=Insert in a Quantum Quarry
 iu.quarry1=Smelts ores
 iu.quarry2=Reduces energy costs
 
-iu.blockChargepadBatBox.name=Charge Pad (BatBox)
-iu.blockChargepadCESU.name=Charge Pad (CESU)
-iu.blockChargepadMFE1.name=Charge Pad (MFE)
-iu.blockChargepadMFSU.name=Charge Pad (MFSU)
-iu.blockChargepadMFE.name=Charge Pad (Improved MFSU)
-iu.blockChargepadMFES.name=Charge Pad (Advanced MFSU)
-iu.blockChargepadPerMFSU.name=Charge Pad (Perfect MFSU)
-iu.blockChargepadBarMFSU.name=Charge Pad (Baryon MFSU)
-iu.blockChargepadAdrMFSU.name=Charge Pad (Hadron MFSU)
-iu.blockChargepadGraMFSU.name=Charge Pad (Graviton MFSU)
-iu.blockChargepadKvrMFSU.name=Charge Pad (Quark MFSU)
 industrialupgrade.wiring_chargepad.batbox_iu_chargepad=Charge Pad (BatBox)
 industrialupgrade.wiring_chargepad.cesu_iu_chargepad=Charge Pad (CESU)
 industrialupgrade.wiring_chargepad.mfe_iu_chargepad=Charge Pad (MFE)
@@ -622,6 +651,8 @@ iu.fluidpolyprop=Polypropylene
 iu.fluidhyd=Hydrogen
 iu.fluidoxy=Oxygen
 iu.fluidpolyeth=Polyethylene
+iu.fluidazot=Nitrogen
+iu.fluidco2=Carbon Dioxide
 fluid.luidNeutron=Neutron
 fluid.luidHelium=Helium
 fluid.luidbenz=Gasoline
@@ -631,6 +662,8 @@ fluid.luidpolyprop=Polypropylene
 fluid.luidhyd=Hydrogen
 fluid.luidoxy=Oxygen
 fluid.luidpolyeth=Polyethylene
+fluid.luidazot=Nitrogen
+fluid.luidco2=Carbon Dioxide
 
 #Bucket. The following lines are aligned with other localizations.
 #item.forge.bucketFilled.iufluidneutron
@@ -642,6 +675,8 @@ fluid.luidpolyeth=Polyethylene
 #item.forge.bucketFilled.iufluidhyd
 #item.forge.bucketFilled.iufluidoxy
 #item.forge.bucketFilled.iufluidpolyeth
+#item.forge.bucketFilled.iufluidazot
+#item.forge.bucketFilled.iufluidco2
 
 #Cells
 iu.itemcell.empty=Cell
@@ -792,7 +827,7 @@ iu.actorberkeliumsimple=Berkelium Rod
 
 #Alloy Blocks
 iu.aluminum_bronze_block.name=Block of Aluminium Bronze
-iu.alumel_block.name=Block of Alumel
+iu.alumel_block.name=Block of Titanium Aluminide
 iu.red_brass_block.name=Block of Red Brass
 iu.muntsa_block.name=Block of Muntz Metal
 iu.nichrome_block.name=Block of Nichrome
@@ -825,7 +860,7 @@ iu.germanium_block.name=Block of Germanium
 
 #Alloy Ingots
 iu.alloysingot.aluminum_bronze=Aluminium Bronze Ingot
-iu.alloysingot.alumel=Alumel Ingot
+iu.alloysingot.alumel=Titanium Aluminide Ingot
 iu.alloysingot.red_brass=Red Brass Ingot
 iu.alloysingot.muntsa=Muntz Metal Ingot
 iu.alloysingot.nichrome=Nichrome Ingot
@@ -858,7 +893,7 @@ iu.ingot.germanium_ingot=Germanium Ingot
 
 #Alloy Plates
 iu.alloysplate.aluminum_bronze=Aluminium Bronze Plate 
-iu.alloysplate.alumel=Alumel Plate
+iu.alloysplate.alumel=Titanium Aluminide Plate
 iu.alloysplate.red_brass=Red Brass Plate
 iu.alloysplate.muntsa=Muntz Metal Plate
 iu.alloysplate.nichrome=Nichrome Plate
@@ -877,7 +912,7 @@ iu.elementium_plate.name=§dElementium Plate
 iu.plate.mikhail_plate=Michalov Plate
 iu.plate.aluminium_plate=Aluminium Plate
 iu.plate.vanady_plate=Vanadium Plate
-iu.plate.wolfram_plate=Tungstem Plate
+iu.plate.wolfram_plate=Tungsten Plate
 iu.plate.invar_plate=Invar Plate
 iu.plate.caravky_plate=Caravky Plate
 iu.plate.cobalt_plate=Cobalt Plate
@@ -895,8 +930,8 @@ iu.plate.iridium_plate=Iridium Plate
 iu.plate.germanium_plate=Germanium Plate
 
 #Dense Alloy Plates
-iu.alloysdoubleplate.aluminum_bronze=Dense Aluminium Bronze Plate 
-iu.alloysdoubleplate.alumel=Dense Alumel Plate
+iu.alloysdoubleplate.aluminum_bronze=Dense Aluminium Bronze Plate
+iu.alloysdoubleplate.alumel=Dense Titanium Aluminide Plate
 iu.alloysdoubleplate.red_brass=Dense Red Brass Plate
 iu.alloysdoubleplate.muntsa=Dense Muntz Metal Plate
 iu.alloysdoubleplate.nichrome=Dense Nichrome Plate
@@ -910,7 +945,7 @@ iu.alloysdoubleplate.ferromanganese=Dense Ferromanganese Plate
 iu.doubleplate.mikhail_doubleplate=Dense Michalov Plate
 iu.doubleplate.aluminium_doubleplate=Dense Aluminium Plate
 iu.doubleplate.vanady_doubleplate=Dense Vanadium Plate
-iu.doubleplate.wolfram_doubleplate=Dense Tungstem Plate
+iu.doubleplate.wolfram_doubleplate=Dense Tungsten Plate
 iu.doubleplate.invar_doubleplate=Dense Invar Plate
 iu.doubleplate.caravky_doubleplate=Dense Caravky Plate
 iu.doubleplate.cobalt_doubleplate=Dense Cobalt Plate
@@ -929,7 +964,7 @@ iu.doubleplate.germanium_doubleplate=Dense Germanium Plate
 
 #Alloy Item Casings
 iu.alloyscasing.aluminum_bronze=Aluminium Bronze Item Casing
-iu.alloyscasing.alumel=Alumel Item Casing
+iu.alloyscasing.alumel=Titanium Aluminide Item Casing
 iu.alloyscasing.red_brass=Red Brass Item Casing
 iu.alloyscasing.muntsa=Muntz Metal Item Casing
 iu.alloyscasing.nichrome=Nichrome Item Casing
@@ -962,7 +997,7 @@ iu.casing.germanium=Germanium Item Casing
 
 #Alloy Sticks
 iu.alloysstik.aluminum_bronze=Aluminium Bronze Stick
-iu.alloysstik.alumel=Alumel Stick
+iu.alloysstik.alumel=Titanium Aluminide Stick
 iu.alloysstik.red_brass=Red Brass Stick
 iu.alloysstik.muntsa=Muntz Metal Stick
 iu.alloysstik.nichrome=Nichrome Stick
@@ -995,7 +1030,7 @@ iu.stik.germanium=Germanium Stick
 
 #Alloy Nuggets
 iu.alloysnugget.aluminum_bronze=Aluminium Bronze Nugget
-iu.alloysnugget.alumel=Alumel Nugget
+iu.alloysnugget.alumel=Titanium Aluminide Nugget
 iu.alloysnugget.red_brass=Red Brass Nugget
 iu.alloysnugget.muntsa=Muntz Metal Nugget
 iu.alloysnugget.nichrome=Nichrome Nugget
@@ -1028,7 +1063,7 @@ iu.nugget.germanium=Germanium Nugget
 
 #Alloy Dusts
 iu.alloysdust.aluminum_bronze=Aluminium Bronze Dust
-iu.alloysdust.alumel=Alumel Dust
+iu.alloysdust.alumel=Titanium Aluminide Dust
 iu.alloysdust.red_brass=Red Brass Dust
 iu.alloysdust.muntsa=Muntz Metal Dust
 iu.alloysdust.nichrome=Nichrome Dust
@@ -1261,68 +1296,6 @@ silver_dustore.name=Silver Ore Dust
 zinc_dustore.name=Zinc Ore Dust
 manganese_dustore.name=Manganese Ore Dust
 
-#Ender Ores
-endmikhail_stone.name=Ender Michalov Ore
-endalum_stone.name=Ender Aluminium Ore
-endvanady_stone.name=Ender Vanadium Ore
-endwolfram_stone.name=Ender Tungsten Ore
-endinvar_stone.name=Ender Invar Ore
-endcaravky_stone.name=Ender Caravky Ore
-endcobalt_stone.name=Ender Cobalt Ore
-endmagnesium_stone.name=Ender Magnesium Ore
-endnickel_stone.name=Ender Nickel Ore
-endplatium_stone.name=Ender Platinum Ore
-endtitan_stone.name=Ender Titanium Ore
-endchromium_stone.name=Ender Chromium Ore
-endspinel_stone.name=Ender Spinel Ore
-endelectrium_stone.name=Ender Electrum Ore
-endsilver_stone.name=Ender Silver Ore
-endzinc_stone.name=Ender Zinc Ore
-endmanganese_stone.name=Ender Manganese Ore
-endiridium_stone.name=Ender Iridium Ore
-endcoal_stone.name=Ender Coal Ore
-endcopper_stone.name=Ender Copper Ore
-enddiamond_stone.name=Ender Diamond Ore
-endemerald_stone.name=Ender Emerald Ore
-endgold_stone.name=Ender Gold Ore
-endiron_stone.name=Ender Iron Ore
-endlapis_stone.name=Ender Lapis Lazuli Ore
-endlead_stone.name=Ender Lead Ore
-endredstone_stone.name=Ender Redstone Ore
-endtin_stone.name=Ender Tin Ore
-enduran_stone.name=Ender Uranium Ore
-
-#Nether Ores
-nethermikhailrack.name=Nether Michalov Ore
-netheralumrack.name=Nether Aluminium Ore
-nethervanadyrack.name=Nether Vanadium Ore
-netherwolfram_rack.name=Nether Tungsten Ore
-netherinvarrack.name=Nether Invar Ore
-nethercaravkyrack.name=Nether Caravky Ore
-nethercobaltrack.name=Nether Cobalt Ore
-nethermagnesiumrack.name=Nether Magnesium Ore
-nethernickelrack.name=Nether Nickel Ore
-netherplatiumrack.name=Nether Platinum Ore
-nethertitanrack.name=Nether Titanium Ore
-netherchromiumrack.name=Nether Chromium Ore
-netherspinelrack.name=Nether Spinel Ore
-netherelectriumrack.name=Nether Electrum Ore
-nethersilverrack.name=Nether Silver Ore
-netherzincrack.name=Nether Zinc Ore
-nethermanganeserack.name=Nether Manganese Ore
-netheriridiumrack.name=Nether Iridium Ore
-nethercoalrack.name=Nether Coal Ore
-nethercopperrack.name=Nether Copper Ore
-netherdiamondrack.name=Nether Diamond Ore
-netheremeraldrack.name=Nether Emerald Ore
-nethergoldrack.name=Nether Gold Ore
-netherironrack.name=Nether Iron Ore
-netherlapisrack.name=Nether Lapis Lazuli Ore
-netherleadrack.name=Nether Lead Ore
-netherredstonerack.name=Nether Redstone Ore
-nethertinrack.name=Nether Tin Ore
-netheruranrack.name=Nether Uranium Ore
-
 industrialupgrade.transformer_iu.umv=UV-Transformer 
 industrialupgrade.transformer_iu.uhv=LkV-Transformer
 industrialupgrade.transformer_iu.uev=MkV-Transformer
@@ -1412,61 +1385,44 @@ iu.upgradekitpanel.upgradepanelkit21=Infinity Solar Panel Upgrade Kit
 iu.upgradekitpanel.upgradepanelkit22=Thaumium Solar Panel Upgrade Kit
 iu.upgradekitpanel.upgradepanelkit23=Void Solar Panel Upgrade Kit
 
-##Thaumic Tinkerer
-iu.upgradekitpanel.upgradepanelkit24=Ichorium Solar Panel Upgrade Kit
-
 #Machine Upgrade Kits
 iu.upgradekitmachine.upgradepanelkitmachine=Improved Machine Upgrade Kit
 iu.upgradekitmachine.upgradepanelkitmachine1=Advanced Machine Upgrade Kit
 iu.upgradekitmachine.upgradepanelkitmachine2=Perfect Machine Upgrade Kit
 iu.upgradekitmachine.upgradepanelkitmachine3=Maximum Machine Upgrade Kit
 
-iu.blockRecycler.name=Improved Recycler
-iu.blockRecycler1.name=Advanced Recycler
-iu.blockRecycler2.name=Perfect Recycler
+industrialupgrade.simplemachine.recycler_iu=Recycler
 industrialupgrade.moremachine1.double_recycler=Improved Recycler
 industrialupgrade.moremachine1.triple_recycler=Advanced Recycler
 industrialupgrade.moremachine1.quad_recycler=Perfect Recycler
 
-iu.blockCompressor.name=Improved Compressor
-iu.blockCompressor2.name=Advanced Compressor
-iu.blockCompressor3.name=Perfect Compressor
+industrialupgrade.simplemachine.compressor_iu=Compressor
 industrialupgrade.moremachine.double_commpressor=Improved Compressor
 industrialupgrade.moremachine.triple_commpressor=Advanced Compressor
 industrialupgrade.moremachine.quad_commpressor=Perfect Compressor
 
-iu.blockElecFurnace.name=Improved Electric Furnace
-iu.blockElecFurnace2.name=Advanced Electric Furnace
-iu.blockElecFurnace3.name=Perfect Electric Furnace
+industrialupgrade.simplemachine.furnace_iu=Electric Furnace
 industrialupgrade.moremachine.double_furnace=Improved Electric Furnace
 industrialupgrade.moremachine.triple_furnace=Advanced Electric Furnace
 industrialupgrade.moremachine.quad_furnace=Perfect Electric Furnace
 
-iu.blockExtractor.name=Improved Extractor
-iu.blockExtractor2.name=Advanced Extractor
-iu.blockExtractor3.name=Perfect Extractor
+industrialupgrade.simplemachine.extractor_iu=Extractor
 industrialupgrade.moremachine.double_extractor=Improved Extractor
 industrialupgrade.moremachine.triple_extractor=Advanced Extractor
 industrialupgrade.moremachine.quad_extractor=Perfect Extractor
 
-iu.blockMacerator.name=Improved Macerator
-iu.blockMacerator2.name=Advanced Macerator
-iu.blockMacerator3.name=Perfect Macerator
+industrialupgrade.simplemachine.macerator_iu=Macerator
 industrialupgrade.moremachine.double_macerator=Improved Macerator
 industrialupgrade.moremachine.triple_macerator=Advanced Macerator
 industrialupgrade.moremachine.quad_macerator=Perfect Macerator
 
-iu.blockMatter1.name=Improved Matter Generator
-iu.blockMatter2.name=Advanced Matter Generator
-iu.blockMatter3.name=Perfect Matter Generator
-industrialupgrade.basemachine.adv_matter=Improved Matter Generator
-industrialupgrade.basemachine.imp_matter=Advanced Matter Generator
-industrialupgrade.basemachine.per_matter=Perfect Matter Generator
-industrialupgrade.basemachine2.combiner_matter=§9Combined Matter Generator
+industrialupgrade.simplemachine.generator_matter=Matter Fabricator
+industrialupgrade.basemachine.adv_matter=Improved Matter Fabricator
+industrialupgrade.basemachine.imp_matter=Advanced Matter Fabricator
+industrialupgrade.basemachine.per_matter=Perfect Matter Fabricator
+industrialupgrade.basemachine2.combiner_matter=§9Combined Matter Fabricator
 
-iu.MetalFormer.name=Improved Metal Former
-iu.MetalFormer2.name=Advanced Metal Former
-iu.MetalFormer3.name=Perfect Metal Former
+industrialupgrade.simplemachine.metalformer_iu=Metal Former
 industrialupgrade.moremachine.double_metalformer=Improved Metal Former
 industrialupgrade.moremachine.triple_metalformer=Advanced Metal Former
 industrialupgrade.moremachine.quad_metalformer=Perfect Metal Former
@@ -1476,70 +1432,40 @@ industrialupgrade.basemachine.adv_quantum_quarry=Improved Quantum Quarry
 industrialupgrade.basemachine.imp_quantum_quarry=Advanced Quantum Quarry
 industrialupgrade.basemachine.per_quantum_quarry=Perfect Quantum Quarry
 
-iu.blockExtruding.name=Extruder
-iu.blockExtruding1.name=Improved Extruder
-iu.blockExtruding2.name=Advanced Extruder
-iu.blockExtruding3.name=Perfect Extruder
 industrialupgrade.moremachine2.extruder=Extruder
 industrialupgrade.moremachine2.double_extruder=Improved Extrude
 industrialupgrade.moremachine2.triple_extruder=Advanced Extruder
 industrialupgrade.moremachine2.quad_extruder=Perfect Extruder
 
-iu.blockRolling.name=Rolling Machine
-iu.blockRolling1.name=Improved Rolling Machine
-iu.blockRolling2.name=Advanced Rolling Machine
-iu.blockRolling3.name=Perfect Rolling Machine
 industrialupgrade.moremachine2.rolling=Rolling Machine
 industrialupgrade.moremachine2.double_rolling=Improved Rolling Machine
 industrialupgrade.moremachine2.triple_rolling=Advanced Rolling Machine
 industrialupgrade.moremachine2.quad_rolling=Perfect Rolling Machine
 
-iu.blockCutting.name=Cutting Machine
-iu.blockCutting1.name=Improved Cutting Machine
-iu.blockCutting2.name=Advanced Cutting Machine
-iu.blockCutting3.name=Perfect Cutting Machine
 industrialupgrade.moremachine2.cutting=Cutting Machine
 industrialupgrade.moremachine2.double_cutting=Improved Cutting Machine
 industrialupgrade.moremachine2.triple_cutting=Advanced Cutting Machine
 industrialupgrade.moremachine2.quad_cutting=Perfect Cutting Machine
 
-iu.blockCombRecycler.name=Improved Combined Recycler
-iu.blockCombRecycler1.name=Advanced Combined Recycler
-iu.blockCombRecycler2.name=Perfect Combined Recycler
 industrialupgrade.moremachine1.double_comb_recycler=Improved Combined Recycler
 industrialupgrade.moremachine1.triple_comb_recycler=Advanced Combined Recycler
 industrialupgrade.moremachine1.quad_comb_recycler=Perfect Combined Recycle
 
-iu.blockCombMacerator.name=Combined Macerator
-iu.blockCombMacerator1.name=Improved Combined Macerator
-iu.blockCombMacerator2.name=Advanced Combined Macerator
-iu.blockCombMacerator3.name=Perfect Combined Macerator
 industrialupgrade.moremachine1.comb_macerator=Combined Macerator
 industrialupgrade.moremachine1.double_comb_macerator=Improved Combined Macerator
 industrialupgrade.moremachine1.triple_comb_macerator=Advanced Combined Macerator
 industrialupgrade.moremachine1.quad_comb_macerator=Perfect Combined Macerator
 
-iu.blockAssamplerScrap.name=Scrap Assembler
-iu.blockAssamplerScrap1.name=Improved Scrap Assembler
-iu.blockAssamplerScrap2.name=Advanced Scrap Assembler
-iu.blockAssamplerScrap3.name=Perfect Scrap Assembler
 industrialupgrade.moremachine3.assamplerscrap=Scrap Assembler
 industrialupgrade.moremachine3.double_assamplerscrap=Improved Scrap Assembler
 industrialupgrade.moremachine3.triple_assamplerscrap=Advanced Scrap Assembler
 industrialupgrade.moremachine3.quad_assamplerscrap=Perfect Scrap Assembler
 
-iu.blockFermer.name=Autonomous Farm
-iu.blockFermer1.name=Improved Autonomous Farm
-iu.blockFermer2.name=Advanced Autonomous Farm
-iu.blockFermer3.name=Perfect Autonomous Farm
 industrialupgrade.moremachine3.farmer=Autonomous Farm
 industrialupgrade.moremachine3.double_farmer=Improved Autonomous Farm
 industrialupgrade.moremachine3.triple_farmer=Advanced Autonomous Farm
 industrialupgrade.moremachine3.quad_farmer=Perfect Autonomous Farm
 
-iu.blockAdvgenerator.name=Improved Generator
-iu.blockImpgenerator.name=Advanced Generator
-iu.blockPergenerator.name=Perfect Generator
 industrialupgrade.basemachine.adv_gen=Improved Generator
 industrialupgrade.basemachine.imp_gen=Advanced Generator
 industrialupgrade.basemachine.per_gen=Perfect Generator
@@ -1551,20 +1477,12 @@ industrialupgrade.imp_chamber.imp_chamber=Advanced Reactor Chamber
 industrialupgrade.basemachine1.per_reactor=Perfect Nuclear Reactor
 industrialupgrade.per_chamber.per_chamber=Perfect Reactor Chamber
 
-iu.blockAdvKG.name=Improved Kinetic Generator
-iu.blockImpKG.name=Advanced Kinetic Generator
-iu.blockPerKG.name=Perfect Kinetic Generator
-
 industrialupgrade.basemachine.alloy_smelter=Alloy Smelter
 industrialupgrade.basemachine1.adv_alloy_smelter=Improved Alloy Smelter
-iu.AdvAlloymachine.name=Improved Alloy Smelter
 
 industrialupgrade.basemachine1.adv_geo=Improved Geothermal Generator
 industrialupgrade.basemachine1.imp_geo=Advanced Geothermal Generator
 industrialupgrade.basemachine1.per_geo=Perfect Geothermal Generator
-iu.blockAdvGeo.name=Improved Geothermal Generator
-iu.blockImpGeo.name=Advanced Geothermal Generator
-iu.blockPerGeo.name=Perfect Geothermal Generator
 
 industrialupgrade.basemachine2.adv_pump=Improved Pump
 industrialupgrade.basemachine2.imp_pump=Advanced Pump
@@ -1579,11 +1497,9 @@ industrialupgrade.basemachine.gen_stone=Cobblestone Generator
 industrialupgrade.basemachine2.gen_obsidian=Obsidian Generator
 industrialupgrade.basemachine2.lava_gen=Lava Generator
 industrialupgrade.basemachine2.helium_generator=Helium Generator
-iu.AspGen.name=Aspect Generator
 
 industrialupgrade.basemachine.generator_microchip=Circuit Manufacturer
-blockConverterSolidMatter.name=Solid Matter Transformer
-iu.converter_solid.converter_solid=Solid Matter Transformer
+industrialupgrade.converter_matter.converter_matter=Solid Matter Transformer
 industrialupgrade.basemachine.modulator=Module Handler
 industrialupgrade.basemachine1.enrichment=Enrichment
 industrialupgrade.basemachine1.synthesis=Nuclear Fusion Reactor
@@ -1591,16 +1507,12 @@ industrialupgrade.basemachine1.handler_ho=Mineral Separator
 industrialupgrade.basemachine1.gen_wither=Wither Manufacturer
 industrialupgrade.basemachine1.magnet=Magnetic Catcher
 industrialupgrade.basemachine1.magnet_generator=Magnetic Generator
-iu.blockFisher.name=Fishing Machine
 industrialupgrade.basemachine2.fisher=Fishing Machine
 industrialupgrade.basemachine2.painter=Dyeing Machine
 industrialupgrade.upgrade_block.upgrade_block=Modification Station
-iu.upgrade_block_item.upgrade_block=Modification Station
 iu.quarry_vein_item.quarry_vein_item=Core Search Drilling Rig
 industrialupgrade.petrol_quarry.petrol_quarry=Pumpjack
-iu.petrol_quarry_item.petrol_quarry_item=Pumpjack
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=Solid Matter Generator Combiner
-iu.combiner_solidmatter.combiner_solidmatter=Solid Matter Generator Combiner
 industrialupgrade.basemachine2.expierence_block=Experience Storage
 industrialupgrade.basemachine2.plastic_creator=Chemical Plant
 industrialupgrade.basemachine2.plastic_plate_creator=Plastic Plate Machine
@@ -1611,6 +1523,11 @@ industrialupgrade.basemachine3.tuner=Wireless Adjuster
 industrialupgrade.basemachine3.spawner=Automatic Hunter
 industrialupgrade.basemachine3.elec_heat=Electric Heater
 industrialupgrade.basemachine3.fluid_heat=Liquid Heater
+industrialupgrade.basemachine3.antimagnet=Anit-magnetic Machine
+industrialupgrade.basemachine3.antiupgradeblock=Module Removal Station
+industrialupgrade.basemachine3.watergenerator=Water Generator
+industrialupgrade.basemachine3.cooling=Refrigerator
+industrialupgrade.basemachine3.aircollector=Air Separation Unit
 
 # Solid Matter Generators
 industrialupgrade.solid.aer_solidmatter=Air Solid Matter Generator
@@ -1623,15 +1540,12 @@ industrialupgrade.solid.night_solidmatter=Night Solid Matter Generator
 industrialupgrade.solid.sun_solidmatter=Solar Solid Matter Generator
 
 industrialupgrade.se_gen.se_gen=Solar Energy Generator
-blockSolarGeneratorEnergy.name=Solar Energy Generator
 industrialupgrade.adv_se_gen.adv_se_gen=Improved Solar Energy Generator
-blockAdvSolarGenerator.name=Improved Solar Energy Generator
 industrialupgrade.imp_se_gen.imp_se_gen=Advanced Solar Energy Generator
-blockImpSolarGenerator.name=Advanced Solar Energy Generator
+industrialupgrade.basemachine3.combiner_se_generators=Solar Energy Generator Combiner
+
 industrialupgrade.gen_sunnarium.gen_sunnarium=Sunnarium Manufacturer
-iu.sunnarium_maker_item.sunnarium_maker_item=Sunnarium Manufacturer
 industrialupgrade.gen_sunnarium_plate.gen_sunnarium_plate=Sunnarium Plate Manufacturer
-iu.sunnarium_maker_plate_item.sunnarium_maker_plate_item=Sunnarium Plate Manufacturer
 
 iu.doublescrapbox.name=Double Scrap Box
 
@@ -1655,6 +1569,10 @@ iu.upgrades.transformerupgrade2=Transformer Upgrade x4
 iu.blacklist=Blacklist
 iu.whitelist=Whitelist
 
+# Circuit Parts
+iu.circuit.circuit_part1=Capacitor
+iu.circuit.circuit_part2=SOIC Chip
+iu.circuit.circuit_part3=QFP Chip
 iu.circuit.advanced_part1=Advanced Capacitor
 iu.circuit.advanced_part2=Advanced SOIC Chip
 iu.circuit.advanced_part3=Advanced QFP Chip
@@ -1667,6 +1585,15 @@ iu.circuit.quantumcircuit_part3=Quantum QFP Chip
 iu.circuit.spectralcircuit_part1=Spectral Capacitor
 iu.circuit.spectralcircuit_part2=Spectral SOIC Chip
 iu.circuit.spectralcircuit_part3=Spectral QFP Chip
+iu.circuit.photon_part1=Photonic Capacitor
+iu.circuit.photon_part2=Photonic SOIC Chip
+iu.circuit.photon_part3=Photonic QFP Chip
+
+# Circuits
+iu.circuit.nanocircuit=Nano Circuit
+iu.circuit.quantumcircuit=Quantum Circuit
+iu.circuit.spectralcircuit=§dSpectral Circuit
+iu.circuit.photoncircuit=§aPhotonic Circuit
 
 iu.anode=Anode
 iu.cathode=Cathode
@@ -1679,6 +1606,10 @@ iu.paints.redpaint=Red Paint
 iu.paints.orangepaint=Orange Paint
 iu.paints.darkbluepaint=Blue Paint
 iu.paints.purplepaint=Purple Paint
+iu.paints.turquoisepaint=Turquoise Paint
+iu.paints.whitepaint=White Paint
+iu.paints.lightyellowpaint=Light Yellow Paint
+iu.paints.limepaint=Lime Paint
 
 iu.time=Time left: 
 iu.hour=h. 
@@ -1744,6 +1675,12 @@ demonskin=Skin: §4Demonic
 Darkskin=Skin: §8Dark
 Coldskin=Skin: §bCold
 Enderskin=Skin: §5Ender
+Ukraineskin=Skin: §eUkrainian
+Fireskin=Skin: §6Fiery
+Emeraldskin=Skin: §aEmerald
+Taigaskin=Skin: §3Taiga
+Desertskin=Skin: §eSand
+Snowskin=Skin: §9Winter
 
 iu.plast.name=Plastic
 iu.plastic_plate.name=Plastic Plate
@@ -1769,6 +1706,8 @@ iu.electricstorageinformation7=Instant wireless charging only works with SHIFT +
 button.deny=Off
 button.allow=On
 
+button.sunnarium=§cOFF§r/§aON
+
 iu.quarryinformation=Quarry Information
 iu.quarryinformation1=Use modules to improve your quarry.
 iu.quarryinformation2=Each next level of the "Efficiency" module reduces costs by 5%.
@@ -1778,7 +1717,7 @@ iu.quarryinformation5=To add a black or white list, insert the modules into the 
 iu.quarryinformation6=The rest of the modules are inserted into the middle slot.
 iu.quarryinformation7=To associate the storage with a wireless module, insert it into the module slot.
 iu.quarryinformation8=If communication is successful, insert the module in the solar panel.
-iu.quarryinformation9=The "Radius" module allows you to mine more blocks (3x3, 5x5), but the costs increase.
+iu.quarryinformation9=The "Region" module allows you to mine more blocks (3x3, 5x5, 7x7), but the costs increase.
 
 iu.analyzerinformation=Analyzer Information
 iu.analyzerinformation1=To scan a chunk, click on the "Analyze" button.
@@ -1868,7 +1807,6 @@ iu.random=Chance to get a random item on use:
 iu.hungry=Hunger
 iu.generator=Charging in the Generator
 
-scanning= percent scanned
 button.xpremove=Give experience
 button.xpadd=Put experience
 iu.timetoend=Time left: 
@@ -1880,32 +1818,12 @@ iu.blue=Blue:
 iu.green=Green: 
 iu.rgb=Iridescent
 
-#Singularities (Avaritia integration)
-item.singularity_mikhail.name=Michalov Singularity
-item.singularity_aluminium.name=Aluminium Singularity
-item.singularity_vanady.name=Vanadium Singularity
-item.singularity_wolfram.name=Tungsten Singularity
-item.singularity_cobalt.name=Cobalt Singularity
-item.singularity_magnesium.name=Magnesium Singularity
-item.singularity_platium.name=Platinum Singularity
-item.singularity_titanium.name=Titanium Singularity
-item.singularity_chromium.name=Chrome Singularity
-item.singularity_spinel.name=Spinel Singularity
-item.singularity_zinc.name=Zinc Singularity
-item.singularity_manganese.name=Manganese Singularity
-item.singularity_invar.name=Invar Singularity
-item.singularity_caravky.name=Caravky Singularity
-item.singularity_electrium.name=Electrum Singularity
-item.singularity_iridium.name=Iridium Singularity
-item.singularity_germanium.name=Germanium Singularity
-
 #Bags
 item.iu_bags.name=Bag
 item.adv_iu_bags.name=Improved Bag
 item.imp_iu_bags.name=Advanced Bag
 
 iu.vertical=To active vertical mode, press 
-iu.streak=To change the color of the line behind the player, press 
 iu.magnet_mode=To active the magnet, press 
 iu.notfindoil=No oil found, put the Core Search Drilling Rig to analyze the chunk 
 iu.create_sunnarium=Created in Solar Energy Generator
@@ -2128,4 +2046,11 @@ iu.improved_name=Advanced
 iu.perfect_name=Perfect
 iu.canupdate=You can improve this car with: 
 iu.scanning_accept=Scan
+description.basic=Fundamentals of the IU
+description.basic.info=First Message
+iu.text1=Hello player! Unforgettable adventures await you with IU! Here you will find a variety of technologies: from thermal to quantum, from simple improvements to technologies for transforming objects. IU is a unique mod with its concept of progress, which is unparalleled. The main rule of IU is to collect every resource, because every resource is necessary to advance progress in IU.
 iu.soon=Soon (3.0)
+button.need_mod=Remove
+
+upgradeblock_upgrade=Item Upgrade
+upgradeblock_modification=Item Modification

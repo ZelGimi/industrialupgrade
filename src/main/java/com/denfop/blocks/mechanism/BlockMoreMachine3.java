@@ -150,6 +150,7 @@ public enum BlockMoreMachine3 implements ITeBlock {
     }
 
     @Override
+    @Deprecated
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
     }

@@ -2,7 +2,8 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerFisher;
-import com.denfop.utils.ListInformation;
+import com.denfop.utils.ListInformationUtils;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
@@ -15,11 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GUIFisher extends GuiIC2<ContainerFisher> {
+public class GuiFisher extends GuiIC2<ContainerFisher> {
 
     public final ContainerFisher container;
 
-    public GUIFisher(ContainerFisher container1) {
+    public GuiFisher(ContainerFisher container1) {
         super(container1);
         this.container = container1;
     }
@@ -33,13 +34,22 @@ public class GUIFisher extends GuiIC2<ContainerFisher> {
         );
 
         handleUpgradeTooltip(par1, par2);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 147, 27, 158, 76)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.fisherinformation"));
-            List<String> compatibleUpgrades = ListInformation.fisherinform;
+            List<String> compatibleUpgrades = ListInformationUtils.fisherinform;
             Iterator<String> var5 = compatibleUpgrades.iterator();
             String itemstack;
             while (var5.hasNext()) {
@@ -78,11 +88,11 @@ public class GUIFisher extends GuiIC2<ContainerFisher> {
     }
 
     public String getName() {
-        return Localization.translate("iu.blockFisher.name");
+        return Localization.translate(this.container.base.getName());
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIFisher.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiFisher.png");
     }
 
 }

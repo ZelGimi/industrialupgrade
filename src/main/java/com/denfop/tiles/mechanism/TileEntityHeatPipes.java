@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUItem;
 import com.denfop.api.ITemperature;
 import com.denfop.api.heat.HeatNet;
 import com.denfop.api.heat.IHeatAcceptor;
@@ -8,7 +9,6 @@ import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
-import com.denfop.items.ItemPipes;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
 import ic2.core.IWorldTickCallback;
@@ -140,7 +140,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
     }
 
     protected ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
-        return ItemPipes.getCable(this.cableType, this.insulation, 0);
+        return new ItemStack(IUItem.pipes, 1, this.cableType.ordinal());
     }
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
@@ -357,7 +357,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
     }
 
     public double getConductionLoss() {
-        return this.cableType.loss;
+        return 0;
     }
 
     public double getInsulationEnergyAbsorption() {
@@ -385,7 +385,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
 
 
     public List<String> getNetworkedFields() {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         ret.add("cableType");
         ret.add("insulation");
         ret.add("foam");

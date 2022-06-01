@@ -52,6 +52,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,7 +62,7 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
 
     public ItemUpgradePanelKit() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.UpgradeTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
@@ -73,25 +74,26 @@ public class ItemUpgradePanelKit extends ItemMulti<ItemUpgradePanelKit.Types> im
 
     @Override
     public void addInformation(
-            final ItemStack p_77624_1_,
+            @Nonnull final ItemStack p_77624_1_,
             @Nullable final World p_77624_2_,
             final List<String> p_77624_3_,
-            final ITooltipFlag p_77624_4_
+            @Nonnull final ITooltipFlag p_77624_4_
     ) {
         p_77624_3_.add(Localization.translate("waring_kit"));
         super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
 
     }
 
+    @Nonnull
     public EnumActionResult onItemUseFirst(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumFacing side,
+            @Nonnull EntityPlayer player,
+            @Nonnull World world,
+            @Nonnull BlockPos pos,
+            @Nonnull EnumFacing side,
             float hitX,
             float hitY,
             float hitZ,
-            EnumHand hand
+            @Nonnull EnumHand hand
     ) {
         if (!IC2.platform.isSimulating()) {
             return EnumActionResult.PASS;

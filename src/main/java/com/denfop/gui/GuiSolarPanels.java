@@ -2,7 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
-import com.denfop.utils.ListInformation;
+import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
@@ -48,8 +48,6 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
 
     protected void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
         String formatPanelName = Localization.translate("blockAdministatorSolarPanel.name");
         if (tileentity.getPanels() != null) {
             formatPanelName = Localization.translate(tileentity.getPanels().name1);
@@ -175,22 +173,33 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
             }
 
         }
-        if(!this.tileentity.rf)
-        this.fontRenderer.drawString(
+        if (tileentity.getmodulerf) {
+            if (!this.tileentity.rf) {
+                this.fontRenderer.drawString(
 
-                maxOutputString + ModUtils.getString(this.tileentity.production) + " " + energyPerTickString,
-                50,
-                26 - 4 - 12 + 8 - 6,
-                13487565
-        );
-        else
+                        maxOutputString + ModUtils.getString(this.tileentity.production) + " " + energyPerTickString,
+                        50,
+                        26 - 4 - 12 + 8 - 6,
+                        13487565
+                );
+            } else {
+                this.fontRenderer.drawString(
+
+                        maxOutputString + ModUtils.getString(this.tileentity.production * 4) + " " + "RF/t",
+                        50,
+                        26 - 4 - 12 + 8 - 6,
+                        13487565
+                );
+            }
+        } else {
             this.fontRenderer.drawString(
 
-                    maxOutputString + ModUtils.getString(this.tileentity.production*4) + " " + "RF/t",
+                    maxOutputString + ModUtils.getString(this.tileentity.production) + " " + energyPerTickString,
                     50,
                     26 - 4 - 12 + 8 - 6,
                     13487565
             );
+        }
         this.fontRenderer.drawString(Localization.translate("pollutioninformation"), 50,
                 30, 13487565
         );
@@ -258,7 +267,7 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
 
         new Area(this, 18, 24, 43 - 18, 38 - 24).withTooltip(tooltip).drawForeground(mouseX, mouseY);
         new Area(this, 155, 24, 180 - 155, 38 - 24).withTooltip(tooltip1).drawForeground(mouseX, mouseY);
-        if (this.tileentity.wireless == 1) {
+        if (this.tileentity.wireless) {
             this.fontRenderer.drawString(ModulesString8, 15, 209 - 2, 13487565);
 
         } else {
@@ -272,7 +281,7 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.panelinformation"));
-            List<String> compatibleUpgrades = ListInformation.panelinform;
+            List<String> compatibleUpgrades = ListInformationUtils.panelinform;
             Iterator<String> var5 = compatibleUpgrades.iterator();
             String itemstack;
             while (var5.hasNext()) {

@@ -35,10 +35,8 @@ public class ContainerBaseMolecular extends ContainerBase<TileEntityMolecularTra
         ret.add("queue");
         ret.add("redstoneMode");
         ret.add("energy");
-        ret.add("perenergy");
         ret.add("differenceenergy");
-        ret.add("time");
-
+        ret.add("perenergy");
         return ret;
     }
 

@@ -2,14 +2,10 @@ package com.denfop.integration.jei.convertermatter;
 
 
 import com.denfop.api.Recipes;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipe;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ConverterHandler {
@@ -48,18 +44,14 @@ public class ConverterHandler {
     }
 
     public static void initRecipes() {
-        for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.matterrecipe.getRecipes()) {
-            addRecipe(new ArrayList<>(container.getOutput()).get(0));
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("converter")) {
+            addRecipe(
+                    container.getOutput().items.get(0)
+            );
+
 
         }
-    }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
     }
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.

@@ -1,4 +1,3 @@
-
 package com.denfop.api.qe;
 
 import net.minecraft.util.EnumFacing;

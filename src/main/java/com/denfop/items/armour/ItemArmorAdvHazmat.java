@@ -40,6 +40,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModelRegister, IMetalArmor, ISpecialArmor {
@@ -72,7 +73,7 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
 
             slot = (EntityEquipmentSlot) var1.next();
             stack = living.getItemStackFromSlot(slot);
-            if (stack == null || !(stack.getItem() instanceof IHazmatLike)) {
+            if (stack.isEmpty() || !(stack.getItem() instanceof IHazmatLike)) {
                 return false;
             }
 
@@ -91,29 +92,39 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     public int getItemEnchantability() {
         return 0;
     }
 
-    public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
+    public boolean getIsRepairable(@Nonnull ItemStack par1ItemStack, @Nonnull ItemStack par2ItemStack) {
         return false;
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(
+            @Nonnull ItemStack stack,
+            @Nonnull Entity entity,
+            @Nonnull EntityEquipmentSlot slot,
+            @Nonnull String type
+    ) {
 
         int suffix = this.armorType.getSlotIndex() == 2 ? 2 : 1;
         return Constants.TEXTURES + ":textures/armor/" + this.name + "_" + suffix + ".png";
     }
 
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+    public ArmorProperties getProperties(
+            EntityLivingBase player,
+            @Nonnull ItemStack armor,
+            DamageSource source,
+            double damage,
+            int slot
+    ) {
         if (this.armorType == EntityEquipmentSlot.HEAD && hazmatAbsorbs(source) && hasCompleteHazmat(player)) {
             if (source == DamageSource.IN_FIRE || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR) {
                 player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 60, 1));
@@ -129,7 +140,7 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         }
     }
 
-    public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
+    public void damageArmor(EntityLivingBase entity, @Nonnull ItemStack stack, DamageSource source, int damage, int slot) {
         if (!hazmatAbsorbs(source) || !hasCompleteHazmat(entity)) {
             int damageTotal = damage * 2;
             if (this.armorType == EntityEquipmentSlot.FEET && source == DamageSource.FALL) {
@@ -147,7 +158,7 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         if (IC2.platform.isSimulating() && event.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             ItemStack armor = player.inventory.armorInventory.get(0);
-            if (armor != null && armor.getItem() == this) {
+            if (!armor.isEmpty() && armor.getItem() == this) {
                 int fallDamage = (int) event.getDistance() - 3;
                 if (fallDamage >= 8) {
                     return;
@@ -167,11 +178,11 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         return true;
     }
 
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+    public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
         return 1;
     }
 
-    public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+    public void onArmorTick(World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
         if (!world.isRemote && this.armorType == EntityEquipmentSlot.HEAD) {
             if (player.isBurning() && hasCompleteHazmat(player)) {
                 if (this.isInLava(player)) {

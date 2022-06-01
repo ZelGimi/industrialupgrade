@@ -10,12 +10,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUIBags extends GuiIC2<ContainerBags> {
+public class GuiBags extends GuiIC2<ContainerBags> {
 
     private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png");
     private final String name;
 
-    public GUIBags(ContainerBags container, final ItemStack itemStack1) {
+    public GuiBags(ContainerBags container, final ItemStack itemStack1) {
         super(container);
 
         this.name = Localization.translate(itemStack1.getUnlocalizedName() + ".name");

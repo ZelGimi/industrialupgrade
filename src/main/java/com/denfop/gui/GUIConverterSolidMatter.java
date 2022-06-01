@@ -9,7 +9,6 @@ import ic2.api.upgrade.UpgradableProperty;
 import ic2.api.upgrade.UpgradeRegistry;
 import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -17,36 +16,32 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 @SideOnly(Side.CLIENT)
-public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatter> {
+public class GuiConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatter> {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.TEXTURES,
-            "textures/gui/GUIConverterSolidMatter.png"
+            "textures/gui/GuiConverterSolidMatter.png"
     );
     final TextFormatting[] name = {TextFormatting.DARK_PURPLE, TextFormatting.YELLOW, TextFormatting.BLUE,
             TextFormatting.RED, TextFormatting.GRAY, TextFormatting.GREEN, TextFormatting.DARK_AQUA, TextFormatting.AQUA};
     private final ContainerConverterSolidMatter container;
 
-    public GUIConverterSolidMatter(ContainerConverterSolidMatter container1) {
+    public GuiConverterSolidMatter(ContainerConverterSolidMatter container1) {
         super(container1);
         this.ySize = 240;
         this.container = container1;
     }
 
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
-        List<ItemStack> ret = new ArrayList();
+        List<ItemStack> ret = new ArrayList<>();
         Set<UpgradableProperty> properties = block.getUpgradableProperties();
-        Iterator var3 = UpgradeRegistry.getUpgrades().iterator();
 
-        while (var3.hasNext()) {
-            ItemStack stack = (ItemStack) var3.next();
+        for (final ItemStack stack : UpgradeRegistry.getUpgrades()) {
             IUpgradeItem item = (IUpgradeItem) stack.getItem();
             if (item.isSuitableFor(stack, properties)) {
                 ret.add(stack);
@@ -87,9 +82,7 @@ public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
         new AdvArea(this, 116, 68, 133, 101)
                 .withTooltip(ModUtils.getString(this.container.base.getProgress() * 100) + "%")
                 .drawForeground(par1, par2);
-        if (this.container.base instanceof IUpgradableBlock) {
-            this.handleUpgradeTooltip1(par1, par2);
-        }
+        this.handleUpgradeTooltip1(par1, par2);
 
 
     }
@@ -97,12 +90,10 @@ public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
     private void handleUpgradeTooltip1(int mouseX, int mouseY) {
 
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
-            List<String> text = new ArrayList();
+            List<String> text = new ArrayList<>();
             text.add(Localization.translate("ic2.generic.text.upgrade"));
-            Iterator var5 = getCompatibleUpgrades(this.container.base).iterator();
 
-            while (var5.hasNext()) {
-                ItemStack stack = (ItemStack) var5.next();
+            for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
                 text.add(stack.getDisplayName());
             }
 
@@ -116,7 +107,7 @@ public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
     }
 
     private String getName() {
-        return Localization.translate("blockConverterSolidMatter.name");
+        return Localization.translate(this.container.base.getName());
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -154,14 +145,9 @@ public class GUIConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
                     81, (int) energy, 11
             );
         }
-        if (this.container.base instanceof IUpgradableBlock) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
-            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
-        }
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-    }
 
 }

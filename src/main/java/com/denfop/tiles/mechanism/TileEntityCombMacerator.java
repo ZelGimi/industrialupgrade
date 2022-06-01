@@ -1,7 +1,10 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.api.Recipes;
-import com.denfop.invslot.InvSlotProcessableMultiGeneric;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.api.recipe.IRecipeInputFactory;
@@ -15,10 +18,8 @@ public class TileEntityCombMacerator extends TileEntityMultiMachine {
         super(
                 EnumMultiMachine.COMB_MACERATOR.usagePerTick,
                 EnumMultiMachine.COMB_MACERATOR.lenghtOperation,
-                Recipes.macerator,
                 1
         );
-        this.inputSlots = new InvSlotProcessableMultiGeneric(this, "input", 2, Recipes.macerator);
     }
 
     public static void init() {
@@ -35,22 +36,31 @@ public class TileEntityCombMacerator extends TileEntityMultiMachine {
                         .size() > 0 && OreDictionary.getOres(name1) != null && OreDictionary.getOres(name) != null && OreDictionary
                         .getOres(name)
                         .size() > 0) {
-                    addrecipe(name1, name, 3);
+                    addrecipe(name1, name);
                 }
 
             }
         }
     }
 
-    public static void addrecipe(String input, String output, int n) {
+    public static void addrecipe(String input, String output) {
         ItemStack stack;
 
         stack = OreDictionary.getOres(output).get(0);
 
 
-        stack.setCount(n);
+        stack.setCount(3);
+        IUCore.get_comb_crushed.add(stack);
         final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
-        Recipes.macerator.addRecipe(input1.forOreDict(input), null, false, stack);
+        Recipes.recipes.addRecipe(
+                "comb_macerator",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.forOreDict(input)
+                        ),
+                        new RecipeOutput(null, stack)
+                )
+        );
     }
 
     @Override

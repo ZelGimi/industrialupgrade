@@ -1,26 +1,25 @@
 package com.denfop.integration.jei.painting;
 
 
-import com.denfop.api.IDoubleMachineRecipeManager;
 import com.denfop.api.Recipes;
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PaintingHandler {
 
     private static final List<PaintingHandler> recipes = new ArrayList<>();
+    public final NBTTagCompound metadata;
     private final ItemStack input, input1, output;
 
-    public PaintingHandler(ItemStack input, ItemStack input1, ItemStack output) {
+    public PaintingHandler(ItemStack input, ItemStack input1, ItemStack output, final NBTTagCompound metadata) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
+        this.metadata = metadata;
     }
 
     public static List<PaintingHandler> getRecipes() { // Получатель всех рецептов.
@@ -30,8 +29,13 @@ public class PaintingHandler {
         return recipes;
     }
 
-    public static PaintingHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
-        PaintingHandler recipe = new PaintingHandler(input, input1, output);
+    public static PaintingHandler addRecipe(
+            ItemStack input,
+            ItemStack input1,
+            ItemStack output,
+            final NBTTagCompound metadata
+    ) {
+        PaintingHandler recipe = new PaintingHandler(input, input1, output, metadata);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,22 +56,17 @@ public class PaintingHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<IDoubleMachineRecipeManager.Input, RecipeOutput> container :
-                Recipes.painting.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0)
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("painter")) {
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                    container.getOutput().items.get(0), container.output.metadata
             );
+
 
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

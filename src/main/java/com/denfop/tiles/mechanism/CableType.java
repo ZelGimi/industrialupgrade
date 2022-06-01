@@ -21,12 +21,11 @@ public enum CableType implements IIdProvider {
     ;
 
     public static final CableType[] values = values();
-    private static final Map<String, CableType> nameMap = new HashMap();
+    private static final Map<String, CableType> nameMap = new HashMap<>();
 
     static {
-        CableType[] var0 = values;
 
-        for (CableType type : var0) {
+        for (CableType type : values) {
             nameMap.put(type.getName(), type);
         }
 
@@ -50,13 +49,10 @@ public enum CableType implements IIdProvider {
         return nameMap.get(name);
     }
 
-    public String getName(int insulation) {
-        return this.getName() + "_cable";
+    public String getName() {
+        return this.name() + "_cable";
     }
 
-    public String getName() {
-        return this.name();
-    }
 
     public int getId() {
         return this.ordinal();

@@ -1,17 +1,16 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
-import com.blamejared.mtlib.helpers.LogHelper;
 import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.RecipeOutput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -19,7 +18,6 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 @ZenClass("mods.industrialupgrade.MolecularTransformer")
@@ -27,6 +25,10 @@ import java.util.Objects;
 @ZenRegister
 public class CTMolecularTransformer {
 
+    @ZenMethod
+    public static void removeRecipe(IItemStack output) {
+        CraftTweakerAPI.apply(new Remove(output));
+    }
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient ingredient, double energy) {
@@ -64,23 +66,66 @@ public class CTMolecularTransformer {
             if (!(internal instanceof ItemStack)) {
                 CraftTweakerAPI.logError("Not a valid item stack: " + item);
             }
-
+            assert internal instanceof ItemStack;
             return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
         }
     }
 
-    @ZenMethod
-    public static void remove(IItemStack input) {
-        ModTweaker.LATE_REMOVALS.add(new Remove(input));
-    }
+    private static class Remove extends BaseAction {
 
-    @ZenMethod
-    public static IItemStack[] getOutput(IItemStack input) {
-        RecipeOutput output = Recipes.molecular.getOutputFor(CraftTweakerMC.getItemStack(input), false);
-        if (output == null || output.items.isEmpty()) {
+
+        private final IItemStack output;
+
+        public Remove(
+                IItemStack output
+        ) {
+            super("molecular");
+            this.output = output;
+        }
+
+        public static ItemStack getItemStack(IItemStack item) {
+            if (item == null) {
+                return null;
+            } else {
+                Object internal = item.getInternal();
+                if (!(internal instanceof ItemStack)) {
+                    CraftTweakerAPI.logError("Not a valid item stack: " + item);
+                }
+                assert internal instanceof ItemStack;
+                return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
+            }
+        }
+
+        public void apply() {
+            Recipes.recipes.removeRecipe("molecular", new RecipeOutput(null, getItemStack(this.output)));
+        }
+
+        public String describe() {
+            return "removing recipe " + this.output;
+        }
+
+        public Object getOverrideKey() {
             return null;
         }
-        return CraftTweakerMC.getIItemStacks(output.items);
+
+        public int hashCode() {
+            int hash = 7;
+            hash = 67 * hash + ((this.output != null) ? this.output.hashCode() : 0);
+            return hash;
+        }
+
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            Remove other = (Remove) obj;
+
+            return Objects.equals(this.output, other.output);
+        }
+
     }
 
     private static class AddMolecularAction extends BaseAction {
@@ -106,7 +151,7 @@ public class CTMolecularTransformer {
                 if (!(internal instanceof ItemStack)) {
                     CraftTweakerAPI.logError("Not a valid item stack: " + item);
                 }
-
+                assert internal instanceof ItemStack;
                 return new ItemStack(((ItemStack) internal).getItem(), item.getAmount(), item.getDamage());
             }
         }
@@ -116,26 +161,28 @@ public class CTMolecularTransformer {
             if (oreDictionary) {
                 ItemStack stack = new IC2RecipeInput(this.ingredient).getInputs().get(0);
                 String ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
+                Recipes.recipes.addRecipe("molecular", new BaseMachineRecipe(
+                        new Input(
+                                OreDictionary.getOres(ore).isEmpty()
+                                        ? new IC2RecipeInput(this.ingredient)
+                                        : input.forOreDict(ore)),
+                        new RecipeOutput(tag, output)
+                ));
 
-                Recipes.molecular.addRecipe(
-                        OreDictionary.getOres(ore).isEmpty() ? new IC2RecipeInput(this.ingredient) : input.forOreDict(ore),
-                        tag,
-                        true,
-                        output
-                );
+
             } else {
-                Recipes.molecular.addRecipe(
-                        new IC2RecipeInput(this.ingredient),
-                        tag,
-                        true,
-                        output
-                );
+                Recipes.recipes.addRecipe("molecular", new BaseMachineRecipe(
+                        new Input(
+                                new IC2RecipeInput(this.ingredient)),
+                        new RecipeOutput(tag, output)
+                ));
+
             }
 
         }
 
         public String describe() {
-            return "Adding moleculaqr recipe " + this.ingredient + " + " + this.tag + " => " + this.output;
+            return "Adding moleculaqr recipe " + this.ingredient + " + " + this.tag + " => " + Arrays.toString(this.output);
         }
 
         public Object getOverrideKey() {
@@ -170,28 +217,5 @@ public class CTMolecularTransformer {
 
     }
 
-    private static class Remove extends BaseAction {
-
-        private final IItemStack input;
-
-        public Remove(IItemStack input) {
-            super("MolecularTransformer");
-            this.input = input;
-        }
-
-        public void apply() {
-            RecipeOutput output = Recipes.molecular.getOutputFor(CraftTweakerMC.getItemStack(input), false);
-            if (output == null || output.items.isEmpty()) {
-                return;
-            }
-            Recipes.molecular.removeRecipe(getItemStack(input), Collections.singletonList(output.items.get(0)));
-
-        }
-
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.input);
-        }
-
-    }
 
 }

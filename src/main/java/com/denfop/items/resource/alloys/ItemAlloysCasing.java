@@ -21,7 +21,7 @@ public class ItemAlloysCasing extends ItemMulti<ItemAlloysCasing.Types> implemen
 
     public ItemAlloysCasing() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }

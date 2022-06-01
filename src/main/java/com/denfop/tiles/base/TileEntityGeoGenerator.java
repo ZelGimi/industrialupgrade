@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.container.ContainerGeoGenerator;
-import com.denfop.gui.GUIGeoGenerator;
+import com.denfop.gui.GuiGeoGenerator;
 import ic2.core.ContainerBase;
 import ic2.core.block.comp.Energy;
 import ic2.core.block.comp.Fluids;
@@ -31,9 +31,9 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator {
 
     public final FluidTank fluidTank;
     public final Fluids fluids = this.addComponent(new Fluids(this));
-    public final String name;
 
-    public TileEntityGeoGenerator(int size, double coef, String name) {
+
+    public TileEntityGeoGenerator(int size, double coef) {
         super(20.0D * coef, 1, (int) (2400 * coef));
         this.fluidTank = this.fluids.addTankInsert("fluid", size * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA));
         this.production = Math.round(20.0F * coef * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/geothermal"));
@@ -47,7 +47,6 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator {
                 this.fluidTank
         );
         this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.name = name;
     }
 
     public Energy getEnergy() {
@@ -68,7 +67,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIGeoGenerator(new ContainerGeoGenerator(entityPlayer, this));
+        return new GuiGeoGenerator(new ContainerGeoGenerator(entityPlayer, this));
     }
 
     public boolean gainFuel() {

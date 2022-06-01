@@ -24,6 +24,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ItemMagnet extends BaseElectricItem implements IModelRegister {
@@ -43,16 +44,15 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("energy").append("/").append(name);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "energy" + "/" + name;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
+    public static void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
@@ -68,16 +68,22 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name, null);
+        registerModel(this, meta, name);
     }
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name, extraName);
+        registerModel(this, meta, name);
     }
 
     @Override
-    public void onUpdate(ItemStack itemStack, World p_77663_2_, Entity p_77663_3_, int p_77663_4_, boolean p_77663_5_) {
+    public void onUpdate(
+            @Nonnull ItemStack itemStack,
+            @Nonnull World p_77663_2_,
+            @Nonnull Entity p_77663_3_,
+            int p_77663_4_,
+            boolean p_77663_5_
+    ) {
         if (!(p_77663_3_ instanceof EntityPlayer)) {
             return;
         }
@@ -133,7 +139,8 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
         return true;
     }
 
-    public ActionResult onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    @Nonnull
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
         if (IC2.platform.isSimulating()) {
 
             int mode = ModUtils.NBTGetInteger(player.getHeldItem(hand), "mode");
@@ -150,9 +157,9 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister {
             );
 
 
-            return new ActionResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
         } else {
-            return new ActionResult(EnumActionResult.PASS, player.getHeldItem(hand));
+            return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
         }
     }
 

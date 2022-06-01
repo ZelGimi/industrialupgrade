@@ -1,21 +1,19 @@
 package com.denfop.tiles.base;
 
 import ic2.core.block.TileEntityInventory;
+import ic2.core.block.comp.Fluids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import javax.annotation.Nullable;
-
-public abstract class TileEntityLiquidTankInventory extends TileEntityInventory implements IFluidHandler {
+public abstract class TileEntityLiquidTankInventory extends TileEntityInventory {
 
     public final FluidTank fluidTank;
 
     public TileEntityLiquidTankInventory(int tanksize) {
-        this.fluidTank = new FluidTank(1000 * tanksize);
+        Fluids fluids = this.addComponent(new Fluids(this));
+        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000);
+
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -29,14 +27,6 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
 
     public FluidTank getFluidTank() {
         return this.fluidTank;
-    }
-
-    public FluidStack getFluidStackfromTank() {
-        return this.getFluidTank().getFluid();
-    }
-
-    public Fluid getFluidfromTank() {
-        return this.getFluidStackfromTank().getFluid();
     }
 
     public int getTankAmount() {
@@ -58,32 +48,5 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
 
     public abstract boolean canDrain(Fluid var2);
 
-    @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return this.getFluidTank().getTankProperties();
-    }
-
-    @Override
-    public int fill(final FluidStack resource, final boolean doFill) {
-        return this.canFill(resource.getFluid()) ? this.getFluidTank().fill(resource, doFill) : 0;
-
-    }
-
-    @Nullable
-    @Override
-    public FluidStack drain(final FluidStack resource, final boolean doDrain) {
-        if (resource != null && resource.isFluidEqual(this.getFluidTank().getFluid())) {
-            return !this.canDrain(resource.getFluid()) ? null : this.getFluidTank().drain(resource.amount, doDrain);
-        } else {
-            return null;
-        }
-    }
-
-    @Nullable
-    @Override
-    public FluidStack drain(final int maxDrain, final boolean doDrain) {
-        return !this.canDrain(null) ? null : this.getFluidTank().drain(maxDrain, doDrain);
-
-    }
 
 }

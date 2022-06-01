@@ -14,16 +14,16 @@ public class OreWashingRecipe {
     public static void init() {
         addrecipe(0, null);
         addrecipe(1, new ItemStack(Blocks.SAND));
-        addrecipe(2, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 5));
+        addrecipe(2, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 10));
         addrecipe(3, new ItemStack(IUItem.smalldust, 2, 16));
         addrecipe(6, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 1));
         addrecipe(7, new ItemStack(IUItem.smalldust, 2, 16));
         addrecipe(8, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 0));
         addrecipe(9, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 2));
         addrecipe(10, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 0));
-        addrecipe(11, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 5));
+        addrecipe(11, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 10));
         addrecipe(12, new ItemStack(IUItem.smalldust, 2, 10));
-        addrecipe(15, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 5));
+        addrecipe(15, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 10));
         addrecipe(16, null);
         addrecipe(17, new ItemStack(IUItem.smalldust, 2, 9));
         addrecipe(18, new ItemStack(IUItem.smalldust, 2, 15));

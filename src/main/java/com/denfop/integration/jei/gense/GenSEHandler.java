@@ -1,15 +1,11 @@
 package com.denfop.integration.jei.gense;
 
 
-import com.denfop.api.Recipes;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.IUItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GenSEHandler {
 
@@ -47,19 +43,11 @@ public class GenSEHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<NBTTagCompound, ItemStack> container : Recipes.sunnarium.getRecipes().entrySet()) {
-            addRecipe(container.getValue());
+        addRecipe(new ItemStack(IUItem.sunnarium, 1, 4));
 
-        }
+
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.
         return output.copy();

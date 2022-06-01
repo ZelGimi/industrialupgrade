@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerTransformer;
 import com.denfop.gui.GuiTransformer;
 import ic2.api.energy.EnergyNet;
@@ -7,7 +8,6 @@ import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
-import ic2.core.block.comp.Energy;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -31,7 +31,7 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         defaultMode = TileEntityTransformer.Mode.redstone;
     }
 
-    protected final Energy energy;
+    protected final AdvEnergy energy;
     private final int defaultTier;
     private double inputFlow = 0.0D;
     private double outputFlow = 0.0D;
@@ -42,7 +42,7 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         this.configuredMode = defaultMode;
         this.transformMode = null;
         this.defaultTier = tier;
-        this.energy = this.addComponent((new Energy(
+        this.energy = this.addComponent((new AdvEnergy(
                 this,
                 EnergyNet.instance.getPowerFromTier(tier) * 8.0D,
                 Collections.emptySet(),

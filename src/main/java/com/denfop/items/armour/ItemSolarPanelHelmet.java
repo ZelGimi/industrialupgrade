@@ -4,11 +4,11 @@ import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
-import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
@@ -54,6 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,7 +64,7 @@ import java.util.Map;
 public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectricItem, IModelRegister, IMetalArmor, ISpecialArmor,
         IItemHudInfo, IUpgradeItem {
 
-    protected static final Map<Potion, Integer> potionRemovalCost = new HashMap<Potion, Integer>();
+    protected static final Map<Potion, Integer> potionRemovalCost = new HashMap<>();
     private final int solarType;
     private final String name;
     private double maxCharge;
@@ -77,21 +78,18 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
     private boolean skyIsVisible;
     private boolean ret = false;
     private double storage;
-    private double maxstorage;
-    private final List<EnumInfoUpgradeModules> lst = new ArrayList<>();
-    private final List<UpgradeItemInform> lst1 = new ArrayList<>();
-    private boolean update = false;
+    private double maxStorage;
 
     public ItemSolarPanelHelmet(
-            final int htype, String name
+            final int type, String name
     ) {
         super(null, "", EntityEquipmentSlot.HEAD,
-                htype == 1 ? 1000000.0 : htype == 2 ? 1.0E7 : htype == 3 ? 10000.0 : Config.Storagequantumsuit,
-                htype == 1 ? 3000.0 : htype == 2 ? 10000.0 : htype == 3 ? 10000.0 : 38000.0,
-                htype == 1 ? 1 : htype == 2 ? 2 : htype == 3 ? 3 : htype == 4 ? 5 : 7
+                type == 1 ? 1000000.0 : type == 2 ? 1.0E7 : type == 3 ? 10000.0 : Config.Storagequantumsuit,
+                type == 1 ? 3000.0 : type == 2 ? 10000.0 : type == 3 ? 10000.0 : 38000.0,
+                type == 1 ? 1 : type == 2 ? 2 : type == 3 ? 3 : type == 4 ? 5 : 7
         );
 
-        this.solarType = htype;
+        this.solarType = type;
         this.name = name;
         this.transferLimit = 3000.0;
         this.tier = 1;
@@ -102,7 +100,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             this.energyPerDamage = 800;
             this.damageAbsorptionRatio = 0.9;
             this.storage = 0;
-            this.maxstorage = Config.advStorage / 2;
+            this.maxStorage = Config.advStorage / 2;
 
         }
         if (this.solarType == 2) {
@@ -114,7 +112,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             this.energyPerDamage = 2000;
             this.damageAbsorptionRatio = 1.0;
             this.storage = 0;
-            this.maxstorage = Config.hStorage / 2;
+            this.maxStorage = Config.hStorage / 2;
         }
         if (this.solarType == 3) {
             this.genDay = Config.uhGenDay;
@@ -125,7 +123,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             this.energyPerDamage = 2000;
             this.damageAbsorptionRatio = 1.0;
             this.storage = 0;
-            this.maxstorage = Config.uhStorage / 2;
+            this.maxStorage = Config.uhStorage / 2;
         }
         if (this.solarType == 4) {
             this.genDay = Config.spectralpanelGenDay;
@@ -136,7 +134,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             this.energyPerDamage = 800;
             this.damageAbsorptionRatio = 0.9;
             this.storage = 0;
-            this.maxstorage = Config.spectralpanelstorage / 2;
+            this.maxStorage = Config.spectralpanelstorage / 2;
         }
         if (this.solarType == 5) {
             this.genDay = Config.singularpanelGenDay;
@@ -147,7 +145,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             this.energyPerDamage = 2000;
             this.damageAbsorptionRatio = 1.0;
             this.storage = 0;
-            this.maxstorage = Config.singularpanelstorage / 2;
+            this.maxStorage = Config.singularpanelstorage / 2;
         }
         this.setCreativeTab(IUCore.EnergyTab);
         this.setMaxDamage(27);
@@ -158,16 +156,16 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         this.setUnlocalizedName(name);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
+        UpgradeSystem.system.addRecipe(this, EnumUpgrades.SOLAR_HELMET.list);
     }
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name + extraName);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name + extraName;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
     public void setDamage(ItemStack stack, int damage) {
@@ -197,9 +195,10 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         ModelLoader.setCustomMeshDefinition(this, stack -> {
             final NBTTagCompound nbt = ModUtils.nbt(stack);
 
-            return getModelLocation1(name, nbt.getString("mode"));
+            return getModelLocation1(name, nbt.getString("mode").equals("") ? "" : "_" + nbt.getString("mode"));
         });
-        String[] mode = {"", "Demon", "Dark", "Cold", "Ender"};
+        String[] mode = {"", "_Zelen", "_Demon", "_Dark", "_Cold", "_Ender", "_Ukraine", "_Fire", "_Snow", "_Taiga", "_Desert",
+                "_Emerald"};
         for (final String s : mode) {
             ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
         }
@@ -218,7 +217,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
     }
 
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return true;
+        return false;
     }
 
     private double experimental_generating(World world) {
@@ -247,7 +246,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
 
     }
 
-    public void onArmorTick(World worldObj, EntityPlayer player, ItemStack itemStack) {
+    public void onArmorTick(World worldObj, @Nonnull EntityPlayer player, @Nonnull ItemStack itemStack) {
         if (worldObj.isRemote) {
             return;
         }
@@ -297,8 +296,8 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
             nbtData.setDouble("storage", this.storage);
 
         }
-        if (nbtData.getDouble("storage") >= (maxstorage + maxstorage * 0.05 * storage)) {
-            nbtData.setDouble("storage", (maxstorage + maxstorage * 0.05 * storage));
+        if (nbtData.getDouble("storage") >= (maxStorage + maxStorage * 0.05 * storage)) {
+            nbtData.setDouble("storage", (maxStorage + maxStorage * 0.05 * storage));
         }
         if (nbtData.getDouble("storage") < 0) {
             nbtData.setDouble("storage", 0);
@@ -456,7 +455,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
     }
 
     public ISpecialArmor.ArmorProperties getProperties(
-            final EntityLivingBase player, final ItemStack armor,
+            final EntityLivingBase player, @Nonnull final ItemStack armor,
             final DamageSource source, final double damage, final int slot
     ) {
         if (source.isUnblockable()) {
@@ -474,7 +473,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
         return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
     }
 
-    public int getArmorDisplay(final EntityPlayer player, final ItemStack armor, final int slot) {
+    public int getArmorDisplay(final EntityPlayer player, @Nonnull final ItemStack armor, final int slot) {
         if (ElectricItem.manager.getCharge(armor) >= this.getEnergyPerDamage()) {
             return (int) Math.round(20.0 * this.getBaseAbsorptionRatio() * this.getDamageAbsorptionRatio());
         }
@@ -482,7 +481,7 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
     }
 
     public void damageArmor(
-            final EntityLivingBase entity, final ItemStack stack, final DamageSource source,
+            final EntityLivingBase entity, @Nonnull final ItemStack stack, final DamageSource source,
             final int damage, final int slot
     ) {
         int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, stack) ?
@@ -514,11 +513,11 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
 
             NBTTagCompound nbt = ModUtils.nbt(stack);
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
-            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(stack);
-            ItemStack itemstack = new ItemStack(this, 1, getMaxDamage());
+            ItemStack itemstack = new ItemStack(this, 1, 27);
             nbt = ModUtils.nbt(itemstack);
-            nbt.setInteger("ID_Item",Integer.MAX_VALUE);
+            nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(itemstack);
         }
     }
@@ -543,26 +542,26 @@ public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectric
 
     @Override
     public void addInformation(
-            final ItemStack itemStack,
+            @Nonnull final ItemStack itemStack,
             @Nullable final World p_77624_2_,
             final List<String> info,
-            final ITooltipFlag p_77624_4_
+            @Nonnull final ITooltipFlag p_77624_4_
     ) {
         NBTTagCompound nbtData1 = ModUtils.nbt(itemStack);
 
         info.add(Localization.translate("iu.storage.helmet") + " "
                 + ModUtils.getString(nbtData1.getDouble("storage")) + " EU");
+        ModUtils.mode(itemStack, info);
     }
 
 
     @Override
     public void setUpdate(final boolean update) {
-        this.update = update;
     }
 
 
     @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean par5) {
+    public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
         NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
         if (!UpgradeSystem.system.hasInMap(itemStack)) {

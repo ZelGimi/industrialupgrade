@@ -38,17 +38,17 @@
 	  "antimagnet_active": {
         "model": "industrialupgrade:basemachine/antimagnet"
       },
-	  "imp_matter": {
-        "model": "industrialupgrade:basemachine/imp_matter"
+	  "antiupgradeblock": {
+        "model": "industrialupgrade:basemachine/antiupgradeblock"
       },
-	  "imp_matter_active": {
-        "model": "industrialupgrade:basemachine/imp_matter_active"
+	  "antiupgradeblock_active": {
+        "model": "industrialupgrade:basemachine/antiupgradeblock"
       },
-	  "imp_quantum_quarry": {
-        "model": "industrialupgrade:basemachine/imp_quantum_quarry"
+	  "watergenerator": {
+        "model": "industrialupgrade:basemachine/watergenerator"
       },
-	  "imp_quantum_quarry_active": {
-        "model": "industrialupgrade:basemachine/imp_quantum_quarry_active"
+	  "cooling": {
+        "model": "industrialupgrade:basemachine/cooling"
       },
 	  "modulator": {
         "model": "industrialupgrade:basemachine/modulator"
@@ -56,23 +56,23 @@
 	  "modulator_active": {
         "model": "industrialupgrade:basemachine/modulator_active"
       },
-	  "per_matter": {
-        "model": "industrialupgrade:basemachine/per_matter"
+	  "watergenerator_active": {
+        "model": "industrialupgrade:basemachine/watergenerator_active"
       },
-	  "per_matter_active": {
-        "model": "industrialupgrade:basemachine/per_matter_active"
+	  "aircollector": {
+        "model": "industrialupgrade:basemachine/aircollector"
       },
-	  "per_quantum_quarry": {
-        "model": "industrialupgrade:basemachine/per_quantum_quarry"
+	  "combiner_se_generators": {
+        "model": "industrialupgrade:basemachine/combiner_se_generators"
       },
 	  "per_quantum_quarry_active": {
         "model": "industrialupgrade:basemachine/per_quantum_quarry_active"
       },
-	  "quantum_quarry": {
-        "model": "industrialupgrade:basemachine/quantum_quarry"
+	  "generator_matter": {
+        "model": "ic2:machine/uu/matter_generator"
       },
-	  "quantum_quarry_active": {
-        "model": "industrialupgrade:basemachine/quantum_quarry_active"
+	  "generator_matter_active": {
+        "model": "ic2:machine/uu/matter_generator_active"
       },
 	  "spawner": {
         "model": "industrialupgrade:basemachine/spawner"
@@ -86,53 +86,53 @@
 	  "synthesis_active": {
         "model": "industrialupgrade:basemachine/synthesis_active"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "probe_assembler": {
+        "model": "industrialupgrade:basemachine/probe_assembler"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "research_table_space": {
+        "model": "industrialupgrade:basemachine/research_table_space"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rocket_assembler": {
+        "model": "industrialupgrade:basemachine/rocket_assembler"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rocket_launch_pad": {
+        "model": "industrialupgrade:basemachine/rocket_launch_pad"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rotor_assembler": {
+        "model": "industrialupgrade:basemachine/rotor_assembler"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rotor_modifier": {
+        "model": "industrialupgrade:basemachine/rotor_modifier"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rotor_assembler_active": {
+        "model": "industrialupgrade:basemachine/rotor_assembler_active"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "satellite_assembler": {
+        "model": "industrialupgrade:basemachine/satellite_assembler"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "soil_analyzer": {
+        "model": "industrialupgrade:basemachine/soil_analyzer"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rods_manufacturer": {
+        "model": "industrialupgrade:basemachine/rods_manufacturer"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "rods_manufacturer_active": {
+        "model": "industrialupgrade:basemachine/rods_manufacturer_active"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "kinetic_generator_assembler_active": {
+        "model": "industrialupgrade:basemachine/kinetic_generator_assembler_active"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "ender_assembler": {
+        "model": "industrialupgrade:basemachine/ender_assembler"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "research_table": {
+        "model": "industrialupgrade:basemachine/research_table"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "gas_combiner": {
+        "model": "industrialupgrade:basemachine/gas_combiner"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+	  "creator_schedules": {
+        "model": "industrialupgrade:basemachine/creator_schedules"
       },
 	  
 	  

@@ -2,21 +2,36 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerBaseWitherMaker;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUIWitherMaker extends GuiIC2<ContainerBaseWitherMaker> {
+public class GuiWitherMaker extends GuiIC2<ContainerBaseWitherMaker> {
 
     public final ContainerBaseWitherMaker container;
 
-    public GUIWitherMaker(
+    public GuiWitherMaker(
             ContainerBaseWitherMaker container1
     ) {
         super(container1);
         this.container = container1;
+    }
+
+    @Override
+    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 80, 50, 91, 65)
+                .withTooltip(tooltip2)
+                .drawForeground(mouseX, mouseY);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -43,7 +58,7 @@ public class GUIWitherMaker extends GuiIC2<ContainerBaseWitherMaker> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIWitherMaker.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiWitherMaker.png");
     }
 
 }

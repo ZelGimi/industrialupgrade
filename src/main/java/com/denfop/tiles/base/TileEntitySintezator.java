@@ -5,9 +5,8 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.container.ContainerSinSolarPanel;
-import com.denfop.gui.GUISintezator;
+import com.denfop.gui.GuiSintezator;
 import com.denfop.invslot.InvSlotSintezator;
-import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -49,7 +48,6 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     public double generating;
     public double genDay;
     public double genNight;
-    public boolean initialized;
     public boolean sunIsUp;
     public boolean skyIsVisible;
     public short facing;
@@ -231,7 +229,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
             this.addedToEnergyNet = true;
         }
         intialize();
-
+        this.markDirty();
     }
 
     public void onUnloaded() {
@@ -351,65 +349,8 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
                 }
             }
         }
-        double[] tire_massive = new double[9];
-        double[] myArray1 = new double[4];
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-            for (int i = 0; i < inputslot.size(); i++) {
-                if (this.inputslot.get(i) != null && IUItem.map3.get(inputslot.get(i).getUnlocalizedName()) != null) {
-                    int p = Math.min(inputslot.get(i).getCount(), Config.limit);
-                    ItemStack stack = inputslot.get(i);
-                    EnumSolarPanels solar;
-                    solar = IUItem.map3.get(stack.getUnlocalizedName());
-
-                    if (solar != null) {
 
 
-                        myArray1[0] += (solar.genday * p);
-                        myArray1[1] += (solar.gennight * p);
-                        myArray1[2] += (solar.maxstorage * p);
-                        myArray1[3] += (solar.producing * p);
-                        tire_massive[i] = solar.tier;
-                    }
-                } else if (this.inputslot.get(i) != null && IUItem.panel_list.get(inputslot
-                        .get(i)
-                        .getUnlocalizedName()) != null) {
-                    int p = Math.min(inputslot.get(i).getCount(), Config.limit);
-                    ItemStack stack = inputslot.get(i);
-                    List solar;
-                    solar = IUItem.panel_list.get(stack.getUnlocalizedName() + ".name");
-
-                    if (solar != null) {
-
-
-                        myArray1[0] += ((double) solar.get(0) * p);
-                        myArray1[1] += ((double) solar.get(1) * p);
-                        myArray1[2] += ((double) solar.get(2) * p);
-                        myArray1[3] += ((double) solar.get(3) * p);
-                        tire_massive[i] = (double) solar.get(4);
-                    }
-                }
-            }
-            this.inputslotA.getrfmodule();
-        }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-            double max = tire_massive[0];
-            for (double v : tire_massive) {
-                if (v > max) {
-                    max = v;
-                }
-            }
-
-            this.machineTire = (int) max;
-            this.solartype = this.inputslotA.solartype();
-            this.genDay = myArray1[0];
-            this.genNight = myArray1[1];
-            this.maxStorage = myArray1[2];
-            this.maxStorage2 = myArray1[2] * Config.coefficientrf;
-            this.production = myArray1[3];
-        }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-            this.inputslotA.checkmodule();
-        }
         this.gainFuel();
         this.inputslotA.wirelessmodule();
         if (this.generating > 0D) {
@@ -498,7 +439,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GUISintezator(new ContainerSinSolarPanel(entityPlayer, this));
+        return new GuiSintezator(new ContainerSinSolarPanel(entityPlayer, this));
 
     }
 

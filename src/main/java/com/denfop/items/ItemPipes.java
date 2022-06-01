@@ -41,8 +41,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -51,9 +49,8 @@ import java.util.Set;
 
 public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable, IModelRegister {
 
-    public static final List<ItemStack> variants = new ArrayList();
+    public static final List<ItemStack> variants = new ArrayList<>();
     protected static final String NAME = "pipes_iu_item";
-    private static final NumberFormat lossFormat = new DecimalFormat("0.00#");
     String[] name = {"itempipes", "itempipes1", "itempipes2", "itempipes3", "itempipes4",};
 
 
@@ -65,7 +62,7 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
 
         for (HeatType type : var1) {
             for (int insulation = 0; insulation <= type.maxInsulation; ++insulation) {
-                variants.add(getCable(type, insulation));
+                variants.add(getCable(type));
             }
         }
         this.setCreativeTab(IUCore.ItemTab);
@@ -76,17 +73,11 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
     @Nonnull
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(ItemStack stack) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("pipes").append("/").append(getName(stack));
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "pipes" + "/" + getName(stack);
 
-        return new ModelResourceLocation(loc.toString(), null);
-    }
-
-    public static ItemStack getCable(HeatType type, int insulation, int k) {
-
-        return variants.get(type.getId());
+        return new ModelResourceLocation(loc, null);
     }
 
     private static HeatType getCableType(ItemStack stack) {
@@ -103,8 +94,7 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
 
     private static String getName(ItemStack stack) {
         HeatType type = getCableType(stack);
-        int insulation = getInsulation(stack);
-        return type.getName(insulation);
+        return type.getName();
     }
 
     @SideOnly(Side.CLIENT)
@@ -137,7 +127,7 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
     }
 
     public ItemStack getItemStack(HeatType type) {
-        return getCable(type, 0);
+        return getCable(type);
     }
 
     public ItemStack getItemStack(String variant) {
@@ -176,7 +166,7 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
         if (type == null) {
             return null;
         } else if (insulation >= 0 && insulation <= type.maxInsulation) {
-            return getCable(type, insulation);
+            return getCable(type);
         } else {
             IC2.log.warn(LogCategory.Item, "Invalid cable insulation: %d", insulation);
             return null;
@@ -195,7 +185,7 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
         }
     }
 
-    public ItemStack getCable(HeatType type, int insulation) {
+    public ItemStack getCable(HeatType type) {
         return new ItemStack(this, 1, type.getId());
     }
 
@@ -209,19 +199,20 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
 
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> info, ITooltipFlag b) {
+    public void addInformation(@Nonnull ItemStack stack, World world, List<String> info, @Nonnull ITooltipFlag b) {
         HeatType type = getCableType(stack);
         double capacity;
         capacity = type.capacity;
         info.add(ModUtils.getString(capacity) + " °C");
     }
 
+    @Nonnull
     public EnumActionResult onItemUse(
-            EntityPlayer player,
+            @Nonnull EntityPlayer player,
             World world,
-            BlockPos pos,
-            EnumHand hand,
-            EnumFacing side,
+            @Nonnull BlockPos pos,
+            @Nonnull EnumHand hand,
+            @Nonnull EnumFacing side,
             float hitX,
             float hitY,
             float hitZ
@@ -268,9 +259,9 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
         }
     }
 
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemList) {
+    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
-            List<ItemStack> variants = new ArrayList(ItemPipes.variants);
+            List<ItemStack> variants = new ArrayList<>(ItemPipes.variants);
 
 
             itemList.addAll(variants);
@@ -282,7 +273,7 @@ public class ItemPipes extends ItemIC2 implements IMultiItem<HeatType>, IBoxable
     }
 
     public Set<ItemStack> getAllStacks() {
-        return new HashSet(variants);
+        return new HashSet<>(variants);
     }
 
     public boolean canBeStoredInToolbox(ItemStack itemstack) {

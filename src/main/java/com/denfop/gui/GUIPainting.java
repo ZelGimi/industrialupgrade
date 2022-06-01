@@ -3,6 +3,7 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.ItemPaints;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
@@ -16,17 +17,17 @@ import java.util.Iterator;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GUIPainting extends GuiIC2<ContainerDoubleElectricMachine> {
+public class GuiPainting extends GuiIC2<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
-    public GUIPainting(ContainerDoubleElectricMachine container1) {
+    public GuiPainting(ContainerDoubleElectricMachine container1) {
         super(container1);
         this.container = container1;
     }
 
     private static List<String> getInformation() {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         ret.add(Localization.translate("iu.paintinginformation1"));
         ret.add(Localization.translate("iu.paintinginformation2"));
         ret.add(Localization.translate("iu.paintinginformation3"));
@@ -41,6 +42,15 @@ public class GUIPainting extends GuiIC2<ContainerDoubleElectricMachine> {
         super.drawForegroundLayer(par1, par2);
 
         handleUpgradeTooltip1(par1, par2);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 26, 56, 37, 71)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
     }
 
     private void handleUpgradeTooltip1(int mouseX, int mouseY) {
@@ -63,11 +73,11 @@ public class GUIPainting extends GuiIC2<ContainerDoubleElectricMachine> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
 
         this.mc.getTextureManager().bindTexture(getTexture());
-        if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
-            this.drawTexturedModalRect(this.guiLeft + 165, this.guiTop, 0, 0, 10, 10);
-            this.mc.getTextureManager().bindTexture(this.getTexture());
-        }
+
+        this.mc.getTextureManager().bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+        this.drawTexturedModalRect(this.guiLeft + 165, this.guiTop, 0, 0, 10, 10);
+        this.mc.getTextureManager().bindTexture(this.getTexture());
+
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
         int progress = (int) (14 * this.container.base.getProgress());
 

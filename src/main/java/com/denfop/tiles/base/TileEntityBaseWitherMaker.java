@@ -1,11 +1,12 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerBaseWitherMaker;
-import com.denfop.invslot.InvSlotProcessableWitherMaker;
 import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.api.recipe.RecipeOutput;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.ContainerBase;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachine
-        implements IHasGui, INetworkTileEntityEventListener, IUpgradableBlock {
+        implements IHasGui, INetworkTileEntityEventListener, IUpgradableBlock, IUpdateTick {
 
     public final int defaultEnergyConsume;
     public final int defaultOperationLength;
@@ -34,9 +35,9 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
+    public MachineRecipe output;
 
-
-    public InvSlotProcessableWitherMaker inputSlotA;
+    public InvSlotRecipes inputSlotA;
     protected short progress;
     protected double guiProgress;
 
@@ -45,7 +46,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
     }
 
     public TileEntityBaseWitherMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
-        super("", energyPerTick * length, 1, outputSlots);
+        super(energyPerTick * length, 1, outputSlots);
         this.progress = 0;
         this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.defaultOperationLength = this.operationLength = length;
@@ -53,6 +54,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         this.defaultEnergyStorage = energyPerTick * length;
 
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
+        this.output = null;
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -77,9 +79,12 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
 
     public void onLoaded() {
         super.onLoaded();
+        inputSlotA.load();
         if (IC2.platform.isSimulating()) {
             setOverclockRates();
+            this.output = this.getOutput();
         }
+
     }
 
     public void onUnloaded() {
@@ -100,22 +105,22 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = false;
-        RecipeOutput output = getOutput();
+        MachineRecipe output = this.output;
         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
             if (!this.inputSlotA.isEmpty()) {
                 for (int i = 0; i < 3; i++) {
 
 
-                            if (!this.inputSlotA.get(i).isEmpty() && this.inputSlotA.get(i).getCount() > 1 && this.inputSlotA
-                                    .get(i)
-                                    .getItem() == Items.SKULL && this.inputSlotA.get(i).getItemDamage() == 1) {
-                                for (int j = 0; j < 3; j++) {
-                                if (this.inputSlotA.get(j).isEmpty()) {
-                                    this.inputSlotA.consume(i, 1);
-                                    ItemStack stack = new ItemStack(Items.SKULL,1,1);
-                                    this.inputSlotA.put(j, stack);
-                                }
+                    if (!this.inputSlotA.get(i).isEmpty() && this.inputSlotA.get(i).getCount() > 1 && this.inputSlotA
+                            .get(i)
+                            .getItem() == Items.SKULL && this.inputSlotA.get(i).getItemDamage() == 1) {
+                        for (int j = 0; j < 3; j++) {
+                            if (this.inputSlotA.get(j).isEmpty()) {
+                                this.inputSlotA.consume(i, 1);
+                                ItemStack stack = new ItemStack(Items.SKULL, 1, 1);
+                                this.inputSlotA.put(j, stack);
                             }
+                        }
 
                     }
                 }
@@ -128,7 +133,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
                                 if (this.inputSlotA.get(j).isEmpty()) {
                                     this.inputSlotA.consume(i, 1);
 
-                                    ItemStack stack =  new ItemStack(Blocks.SOUL_SAND,1);
+                                    ItemStack stack = new ItemStack(Blocks.SOUL_SAND, 1);
                                     this.inputSlotA.put(j, stack);
                                 }
                             }
@@ -137,7 +142,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
                 }
             }
         }
-        if (output != null && this.energy.canUseEnergy(energyConsume)) {
+        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.canUseEnergy(energyConsume)) {
             setActive(true);
             if (this.progress == 0) {
                 IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
@@ -202,9 +207,9 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         this.progress = (short) (int) Math.floor(previousProgress * this.operationLength + 0.1D);
     }
 
-    public void operate(RecipeOutput output) {
+    public void operate(MachineRecipe output) {
         for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.items;
+            List<ItemStack> processResult = output.getRecipe().output.items;
             for (int j = 0; j < this.upgradeSlot.size(); j++) {
                 ItemStack stack = this.upgradeSlot.get(j);
                 if (stack != null && stack.getItem() instanceof IUpgradeItem) {
@@ -212,8 +217,10 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
                 }
             }
             operateOnce(processResult);
-            output = getOutput();
-            if (output == null) {
+            if (!this.inputSlotA.continue_process(this.output)) {
+                getOutput();
+            }
+            if (this.output == null) {
                 break;
             }
         }
@@ -225,20 +232,12 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         this.outputSlot.add(processResult);
     }
 
-    public RecipeOutput getOutput() {
-        if (this.inputSlotA.isEmpty()) {
-            return null;
-        }
-        RecipeOutput output = this.inputSlotA.process();
+    public MachineRecipe getOutput() {
 
-        if (output == null) {
-            return null;
-        }
-        if (this.outputSlot.canAdd(output.items)) {
-            return output;
-        }
+        this.output = this.inputSlotA.process();
 
-        return null;
+
+        return this.output;
     }
 
     public abstract String getInventoryName();

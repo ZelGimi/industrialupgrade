@@ -1,12 +1,12 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.componets;
 
-import com.denfop.api.cooling.*;
-import com.denfop.api.cooling.event.*;
+import com.denfop.api.cooling.ICoolAcceptor;
+import com.denfop.api.cooling.ICoolEmitter;
+import com.denfop.api.cooling.ICoolSink;
+import com.denfop.api.cooling.ICoolSource;
+import com.denfop.api.cooling.ICoolTile;
+import com.denfop.api.cooling.event.CoolTileLoadEvent;
+import com.denfop.api.cooling.event.CoolTileUnloadEvent;
 import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
@@ -14,13 +14,6 @@ import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
-import java.io.DataInput;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,9 +21,17 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.io.DataInput;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 public class CoolComponent extends TileEntityComponent {
+
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
+    public final boolean fullEnergy;
     public double capacity;
     public double storage;
     public int sinkTier;
@@ -44,7 +45,42 @@ public class CoolComponent extends TileEntityComponent {
     public boolean loaded;
     public boolean receivingDisabled;
     public boolean sendingSidabled;
-    public final boolean fullEnergy;
+    public boolean upgrade = false;
+
+    public CoolComponent(TileEntityBlock parent, double capacity) {
+        this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
+    }
+
+    public CoolComponent(
+            TileEntityBlock parent,
+            double capacity,
+            Set<EnumFacing> sinkDirections,
+            Set<EnumFacing> sourceDirections,
+            int tier
+    ) {
+        this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
+    }
+
+    public CoolComponent(
+            TileEntityBlock parent,
+            double capacity,
+            Set<EnumFacing> sinkDirections,
+            Set<EnumFacing> sourceDirections,
+            int sinkTier,
+            int sourceTier,
+            boolean fullEnergy
+    ) {
+        super(parent);
+        this.multiSource = false;
+        this.sourcePackets = 1;
+        this.capacity = capacity;
+        this.sinkTier = sinkTier;
+        this.sourceTier = sourceTier;
+        this.sinkDirections = sinkDirections;
+        this.sourceDirections = sourceDirections;
+        this.fullEnergy = fullEnergy;
+        this.world = parent.getWorld();
+    }
 
     public static CoolComponent asBasicSink(TileEntityBlock parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
@@ -62,38 +98,15 @@ public class CoolComponent extends TileEntityComponent {
         return new CoolComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 
-    public CoolComponent(TileEntityBlock parent, double capacity) {
-        this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
-    }
-
-    public CoolComponent(TileEntityBlock parent, double capacity, Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections, int tier) {
-        this(parent, capacity, sinkDirections, sourceDirections, tier, tier, false);
-    }
-
-    public CoolComponent(TileEntityBlock parent, double capacity, Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections, int sinkTier, int sourceTier, boolean fullEnergy) {
-        super(parent);
-        this.multiSource = false;
-        this.sourcePackets = 1;
-        this.capacity = capacity;
-        this.sinkTier = sinkTier;
-        this.sourceTier = sourceTier;
-        this.sinkDirections = sinkDirections;
-        this.sourceDirections = sourceDirections;
-        this.fullEnergy = fullEnergy;
-        this.world = parent.getWorld();
-    }
-
-
-
-
-
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
+        this.upgrade = nbt.getBoolean("upgrade");
     }
 
     public NBTTagCompound writeToNbt() {
         NBTTagCompound ret = new NBTTagCompound();
         ret.setDouble("storage", this.storage);
+        ret.setBoolean("upgrade", this.upgrade);
         return ret;
     }
 
@@ -110,11 +123,15 @@ public class CoolComponent extends TileEntityComponent {
                 }
             } else {
                 if (debugLoad) {
-                    IC2.log.debug(LogCategory.Component, "Energy onLoaded for %s at %s.", new Object[]{this.parent, Util.formatPosition(this.parent)});
+                    IC2.log.debug(
+                            LogCategory.Component,
+                            "Energy onLoaded for %s at %s.",
+                            this.parent, Util.formatPosition(this.parent)
+                    );
                 }
 
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate,this.parent.getWorld()));
+                MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.parent.getWorld()));
             }
 
             this.loaded = true;
@@ -150,7 +167,7 @@ public class CoolComponent extends TileEntityComponent {
                 );
             }
 
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate,this.parent.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.parent.getWorld()));
             this.delegate = null;
         } else if (debugLoad) {
             IC2.log.debug(LogCategory.Component, "Skipping Energy onUnloaded for %s at %s.",
@@ -186,6 +203,9 @@ public class CoolComponent extends TileEntityComponent {
 
     public void setCapacity(double capacity) {
         this.capacity = capacity;
+        if (this.storage > this.capacity) {
+            this.storage = this.capacity;
+        }
     }
 
     public double getEnergy() {
@@ -201,12 +221,18 @@ public class CoolComponent extends TileEntityComponent {
     }
 
     public int getComparatorValue() {
-        return Math.min((int)(this.storage * 15.0D / this.capacity), 15);
+        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
     }
 
     public double addEnergy(double amount) {
-        amount = Math.min(this.capacity - this.storage, amount);
+
         this.storage += amount;
+        this.storage = Math.min(this.storage, this.capacity);
+        this.storage = Math.max(this.storage, 0);
+        if (this.upgrade) {
+            this.storage = 0;
+        }
+
         return amount;
     }
 
@@ -267,6 +293,10 @@ public class CoolComponent extends TileEntityComponent {
         return this.multiSource;
     }
 
+    public int getPacketOutput() {
+        return this.sourcePackets;
+    }
+
     public void setPacketOutput(int number) {
         if (this.multiSource) {
             this.sourcePackets = number;
@@ -274,20 +304,20 @@ public class CoolComponent extends TileEntityComponent {
 
     }
 
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
         if (this.delegate != null) {
             if (debugLoad) {
-                IC2.log.debug(LogCategory.Component, "Energy setDirections unload for %s at %s.", new Object[]{this.parent, Util.formatPosition(this.parent)});
+                IC2.log.debug(
+                        LogCategory.Component,
+                        "Energy setDirections unload for %s at %s.",
+                        this.parent, Util.formatPosition(this.parent)
+                );
             }
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate,this.world));
+            MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this.delegate, this.world));
         }
 
         this.sinkDirections = sinkDirections;
@@ -300,14 +330,22 @@ public class CoolComponent extends TileEntityComponent {
 
         if (this.delegate != null) {
             if (debugLoad) {
-                IC2.log.debug(LogCategory.Component, "Energy setDirections load for %s at %s, sink: %s, source: %s.", new Object[]{this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections});
+                IC2.log.debug(
+                        LogCategory.Component,
+                        "Energy setDirections load for %s at %s, sink: %s, source: %s.",
+                        this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections
+                );
             }
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate,this.world));
+            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this.delegate, this.world));
         } else if (debugLoad) {
-            IC2.log.debug(LogCategory.Component, "Skipping Energy setDirections load for %s at %s, sink: %s, source: %s, loaded: %b.", new Object[]{this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections, this.loaded});
+            IC2.log.debug(
+                    LogCategory.Component,
+                    "Skipping Energy setDirections load for %s at %s, sink: %s, source: %s, loaded: %b.",
+                    this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections, this.loaded
+            );
         }
 
 
@@ -334,10 +372,21 @@ public class CoolComponent extends TileEntityComponent {
     }
 
     private int getPacketCount() {
-        return this.fullEnergy ? Math.min(this.sourcePackets, (int)Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))) : this.sourcePackets;
+        return this.fullEnergy ? Math.min(
+                this.sourcePackets,
+                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
+        ) : this.sourcePackets;
+    }
+
+    private abstract static class EnergyNetDelegate extends TileEntity implements ICoolTile {
+
+        private EnergyNetDelegate() {
+        }
+
     }
 
     private class EnergyNetDelegateDual extends CoolComponent.EnergyNetDelegate implements ICoolSink, ICoolSource {
+
         private EnergyNetDelegateDual() {
             super();
         }
@@ -351,35 +400,34 @@ public class CoolComponent extends TileEntityComponent {
         }
 
 
-
         public double getOfferedCool() {
-            return !CoolComponent.this.sendingSidabled && !CoolComponent.this.sourceDirections.isEmpty() ? CoolComponent.this.getSourceEnergy() : 0.0D;
+            return !CoolComponent.this.sendingSidabled && !CoolComponent.this.sourceDirections.isEmpty()
+                    ? CoolComponent.this.getSourceEnergy()
+                    : 0.0D;
         }
 
-        public int getSinkTier() {
-            return CoolComponent.this.sinkTier;
-        }
 
         public int getSourceTier() {
             return CoolComponent.this.sourceTier;
         }
+
         @Override
         public double getDemandedCool() {
-            return !CoolComponent.this.receivingDisabled && !CoolComponent.this.sinkDirections.isEmpty() && CoolComponent.this.storage < CoolComponent.this.capacity ? CoolComponent.this.capacity - CoolComponent.this.storage : 0.0D;
+            return !CoolComponent.this.receivingDisabled && !CoolComponent.this.sinkDirections.isEmpty() && CoolComponent.this.storage < CoolComponent.this.capacity
+                    ? CoolComponent.this.capacity - CoolComponent.this.storage
+                    : 0.0D;
 
         }
 
         @Override
         public double injectCool(final EnumFacing var1, final double var2, final double var4) {
-            CoolComponent.this.storage = CoolComponent.this.storage + var2;
+
+            CoolComponent.this.storage = var2;
             return 0.0D;
         }
 
 
         public void drawCool(double amount) {
-            assert amount <= CoolComponent.this.storage;
-
-            CoolComponent.this.storage = CoolComponent.this.storage - amount;
         }
 
         public boolean sendMultipleEnergyPackets() {
@@ -391,10 +439,10 @@ public class CoolComponent extends TileEntityComponent {
         }
 
 
-
     }
 
     private class EnergyNetDelegateSink extends CoolComponent.EnergyNetDelegate implements ICoolSink {
+
         private EnergyNetDelegateSink() {
             super();
         }
@@ -408,18 +456,23 @@ public class CoolComponent extends TileEntityComponent {
         }
 
         public double getDemandedCool() {
-            assert !CoolComponent.this.sinkDirections.isEmpty();
 
-            return !CoolComponent.this.receivingDisabled && CoolComponent.this.storage < CoolComponent.this.capacity ? CoolComponent.this.capacity - CoolComponent.this.storage : 0.0D;
+            return 64;
         }
 
         public double injectCool(EnumFacing directionFrom, double amount, double voltage) {
-            CoolComponent.this.storage = CoolComponent.this.storage + amount;
+            if (amount > 0) {
+                CoolComponent.this.useEnergy(0.05 * amount / 4, false);
+
+            }
+
             return 0.0D;
         }
+
     }
 
     private class EnergyNetDelegateSource extends CoolComponent.EnergyNetDelegate implements ICoolSource {
+
         private EnergyNetDelegateSource() {
             super();
         }
@@ -439,16 +492,9 @@ public class CoolComponent extends TileEntityComponent {
         }
 
         public void drawCool(double amount) {
-            assert amount <= CoolComponent.this.storage;
-
-            CoolComponent.this.storage = CoolComponent.this.storage - amount;
         }
 
 
     }
 
-    private abstract class EnergyNetDelegate extends TileEntity implements ICoolTile {
-        private EnergyNetDelegate() {
-        }
-    }
 }

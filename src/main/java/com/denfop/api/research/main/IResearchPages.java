@@ -1,20 +1,23 @@
 package com.denfop.api.research.main;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
 public interface IResearchPages {
 
-      String getName();
+    String getName();
 
-      List<IResearch> getResearch();
+    List<IResearch> getResearch();
 
-      ItemStack getIcon();
+    ItemStack getIcon();
 
-      int getMinLevel();
+    int getMinLevel();
 
-      boolean hasMinLevel();
+    boolean hasMinLevel();
+
+    ResourceLocation getBackground();
 
 
 }

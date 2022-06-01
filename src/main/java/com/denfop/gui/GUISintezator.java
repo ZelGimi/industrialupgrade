@@ -8,17 +8,17 @@ import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GUISintezator extends GuiIC2<ContainerSinSolarPanel> {
+public class GuiSintezator extends GuiIC2<ContainerSinSolarPanel> {
 
     private static ResourceLocation tex;
 
     static {
-        GUISintezator.tex = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUI_Sintezator_Slots.png");
+        GuiSintezator.tex = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUI_Sintezator_Slots.png");
     }
 
     private final ContainerSinSolarPanel container;
 
-    public GUISintezator(ContainerSinSolarPanel container) {
+    public GuiSintezator(ContainerSinSolarPanel container) {
         super(container);
         this.container = container;
         this.allowUserInput = false;
@@ -68,7 +68,7 @@ public class GUISintezator extends GuiIC2<ContainerSinSolarPanel> {
     protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.mc.renderEngine.bindTexture(GUISintezator.tex);
+        this.mc.renderEngine.bindTexture(GuiSintezator.tex);
         final int h = (this.width - this.xSize) / 2;
         final int k = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);

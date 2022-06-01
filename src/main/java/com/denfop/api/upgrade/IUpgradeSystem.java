@@ -1,12 +1,20 @@
 package com.denfop.api.upgrade;
 
-import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.items.EnumInfoUpgradeModules;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 import java.util.List;
 
 public interface IUpgradeSystem {
+
+    void addModification();
+
+    void addModificate(ItemStack container, String name);
+
+    boolean needModificate(ItemStack container, ItemStack fill);
 
     boolean getModifications(ItemStack item);
 
@@ -33,5 +41,13 @@ public interface IUpgradeSystem {
     void write(IUpgradeItem item, List<EnumInfoUpgradeModules> lst, ItemStack stack);
 
     void updateBlackListFromNBT(IUpgradeWithBlackList item, ItemStack stack, NBTTagCompound nbt);
+
+    void removeUpdate(ItemStack stack, World world, int index);
+
+    List<ItemStack> getListStack(ItemStack stack);
+
+    void addRecipe(Item stack, List<EnumInfoUpgradeModules> lst);
+
+    boolean shouldUpdate(EnumInfoUpgradeModules type, ItemStack stack1);
 
 }

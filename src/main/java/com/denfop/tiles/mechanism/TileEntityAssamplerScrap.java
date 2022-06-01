@@ -2,7 +2,9 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.invslot.InvSlotProcessableMultiGeneric;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.api.recipe.IRecipeInputFactory;
@@ -17,10 +19,8 @@ public class TileEntityAssamplerScrap extends TileEntityMultiMachine {
         super(
                 EnumMultiMachine.AssamplerScrap.usagePerTick,
                 EnumMultiMachine.AssamplerScrap.lenghtOperation,
-                Recipes.createscrap,
                 3
         );
-        this.inputSlots = new InvSlotProcessableMultiGeneric(this, "input", sizeWorkingSlot, Recipes.createscrap);
     }
 
     public static void init() {
@@ -36,8 +36,15 @@ public class TileEntityAssamplerScrap extends TileEntityMultiMachine {
 
     public static void addrecipe(ItemStack input, ItemStack output) {
         final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
-
-        Recipes.createscrap.addRecipe(input1.forStack(input), null, false, output);
+        Recipes.recipes.addRecipe(
+                "scrap",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.forStack(input)
+                        ),
+                        new RecipeOutput(null, output)
+                )
+        );
     }
 
     @Override

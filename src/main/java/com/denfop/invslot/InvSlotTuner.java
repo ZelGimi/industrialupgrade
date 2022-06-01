@@ -1,6 +1,6 @@
 package com.denfop.invslot;
 
-import com.denfop.items.modules.AdditionModule;
+import com.denfop.items.modules.ItemAdditionModule;
 import ic2.core.block.TileEntityInventory;
 import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ public class InvSlotTuner extends InvSlot {
 
     public boolean accepts(ItemStack itemStack) {
 
-        return itemStack.getItem() instanceof AdditionModule && itemStack.getItemDamage() == 10;
+        return itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10;
 
     }
 

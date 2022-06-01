@@ -1,10 +1,10 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerMagnetGenerator;
-import com.denfop.gui.GUIMagnetGenerator;
+import com.denfop.gui.GuiMagnetGenerator;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.core.ContainerBase;
-import ic2.core.block.comp.Energy;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,9 +22,9 @@ public class TileEntityMagnetGenerator extends TileEntityElectricMachine {
     private boolean work;
 
     public TileEntityMagnetGenerator() {
-        super("", 0, 14, 1);
+        super(0, 14, 1);
         this.timer = 86400;
-        this.energy = this.addComponent(Energy.asBasicSource(
+        this.energy = this.addComponent(AdvEnergy.asBasicSource(
                 this,
                 3456000,
                 14
@@ -103,7 +103,7 @@ public class TileEntityMagnetGenerator extends TileEntityElectricMachine {
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
-        return new GUIMagnetGenerator(new ContainerMagnetGenerator(entityPlayer, this));
+        return new GuiMagnetGenerator(new ContainerMagnetGenerator(entityPlayer, this));
     }
 
 }

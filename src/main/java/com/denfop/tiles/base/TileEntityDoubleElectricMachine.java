@@ -1,13 +1,15 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.invslot.InvSlotDoubleMachineRecipe;
 import com.denfop.tiles.mechanism.TileEntityAlloySmelter;
 import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.api.recipe.RecipeOutput;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.api.upgrade.UpgradableProperty;
@@ -15,7 +17,6 @@ import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.block.invslot.InvSlotOutput;
@@ -29,15 +30,15 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class TileEntityDoubleElectricMachine extends TileEntityInventory implements IHasGui,
-        INetworkTileEntityEventListener, IUpgradableBlock {
+        INetworkTileEntityEventListener, IUpgradableBlock, IUpdateTick {
 
-    public final Energy energy;
+    public final AdvEnergy energy;
     public final InvSlotDischarge dischargeSlot;
     public final int defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
     public final int defaultEnergyStorage;
-    public final InvSlotDoubleMachineRecipe inputSlotA;
+    public final InvSlotRecipes inputSlotA;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     protected final String name;
@@ -46,9 +47,10 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
+    public short temperature;
+    public MachineRecipe output;
     protected short progress;
     protected double guiProgress;
-    public short temperature;
 
     public TileEntityDoubleElectricMachine(
             int energyPerTick,
@@ -78,11 +80,23 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
         this.name = name;
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.NONE, aDefaultTier, false, InvSlot.InvSide.ANY);
-        this.energy = this.addComponent(Energy
+        this.energy = this.addComponent(AdvEnergy
                 .asBasicSink(this, (double) energyPerTick * length, aDefaultTier)
                 .addManagedSlot(this.dischargeSlot));
-        this.inputSlotA = new InvSlotDoubleMachineRecipe(this, "inputA", 2, type.recipe);
+        this.inputSlotA = new InvSlotRecipes(this, type.recipe_name, this);
         this.type = type;
+        this.output = null;
+    }
+
+    public MachineRecipe getRecipeOutput() {
+        return this.output;
+    }
+
+    public void setRecipeOutput(MachineRecipe output) {
+        this.output = output;
+    }
+
+    public void onUpdate() {
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -106,7 +120,10 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
             this.setOverclockRates();
+            inputSlotA.load();
+            this.getOutput();
         }
+
 
     }
 
@@ -132,11 +149,13 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         boolean needsInvUpdate = false;
 
 
-        RecipeOutput output = getOutput();
-        if (output != null && this.energy.getEnergy() >= this.energyConsume) {
-            if(this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER))
-            if (output.metadata.getShort("temperature") == 0 || output.metadata.getInteger("temperature") > ((TileEntityAlloySmelter)this).temperature) {
-                return;
+        MachineRecipe output = this.output;
+        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
+            if (this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER)) {
+                if (output.getRecipe().output.metadata.getShort("temperature") == 0 || output.getRecipe().output.metadata.getInteger(
+                        "temperature") > ((TileEntityAlloySmelter) this).temperature) {
+                    return;
+                }
             }
             setActive(true);
             if (this.progress == 0) {
@@ -193,42 +212,25 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         dischargeSlot.setTier(tier);
     }
 
-    public void operate(RecipeOutput output) {
+    public void operate(MachineRecipe output) {
         for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.items;
-            for (int j = 0; j < this.upgradeSlot.size(); j++) {
-                ItemStack stack = this.upgradeSlot.get(j);
-                if (stack != null && stack.getItem() instanceof IUpgradeItem) {
-                    ((IUpgradeItem) stack.getItem()).onProcessEnd(stack, this, processResult);
-                }
-            }
+            List<ItemStack> processResult = output.getRecipe().output.items;
             operateOnce(output, processResult);
-
-            output = getOutput();
-            if (output == null) {
+            if (!this.inputSlotA.continue_process(this.output)) {
+                getOutput();
+            }
+            if (this.output == null) {
                 break;
             }
         }
     }
 
-    public abstract void operateOnce(RecipeOutput output, List<ItemStack> processResult);
+    public abstract void operateOnce(MachineRecipe output, List<ItemStack> processResult);
 
 
-    public RecipeOutput getOutput() {
-        if (this.inputSlotA.isEmpty()) {
-            return null;
-        }
-
-        RecipeOutput output = this.inputSlotA.process(0);
-
-        if (output == null) {
-            return null;
-        }
-        if (this.outputSlot.canAdd(output.items)) {
-            return output;
-        }
-
-        return null;
+    public MachineRecipe getOutput() {
+        this.output = this.inputSlotA.process();
+        return this.output;
     }
 
     public ContainerBase<? extends TileEntityDoubleElectricMachine> getGuiContainer(EntityPlayer entityPlayer) {

@@ -2,7 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerElectrolyzer;
-import ic2.api.upgrade.IUpgradableBlock;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import ic2.core.gui.TankGauge;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
+public class GuiElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
 
     private static final ResourceLocation background;
 
@@ -21,7 +21,7 @@ public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
 
     public ContainerElectrolyzer container;
 
-    public GUIElectrolyzer(ContainerElectrolyzer container1) {
+    public GuiElectrolyzer(ContainerElectrolyzer container1) {
         super(container1);
         this.container = container1;
 
@@ -32,7 +32,15 @@ public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
         TankGauge.createNormal(this, 12, 6, container.base.fluidTank[0]).drawForeground(par1, par2);
         TankGauge.createNormal(this, 74, 6, container.base.fluidTank[1]).drawForeground(par1, par2);
         TankGauge.createNormal(this, 106, 6, container.base.fluidTank[2]).drawForeground(par1, par2);
-
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 38, 68, 68, 78)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
 
     }
 
@@ -61,4 +69,5 @@ public class GUIElectrolyzer extends GuiIC2<ContainerElectrolyzer> {
 
 
     }
+
 }

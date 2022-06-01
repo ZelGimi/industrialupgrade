@@ -4,7 +4,7 @@ import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerHydrogenGenerator;
-import com.denfop.gui.GUIHydrogenGenerator;
+import com.denfop.gui.GuiHydrogenGenerator;
 import ic2.api.item.ElectricItem;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ContainerBase;
@@ -191,7 +191,7 @@ public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory i
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIHydrogenGenerator(new ContainerHydrogenGenerator(entityPlayer, this));
+        return new GuiHydrogenGenerator(new ContainerHydrogenGenerator(entityPlayer, this));
     }
 
 

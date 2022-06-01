@@ -1,6 +1,6 @@
 package com.denfop.api.upgrade;
 
-import com.denfop.utils.EnumInfoUpgradeModules;
+import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import net.minecraft.util.text.TextFormatting;
@@ -13,6 +13,7 @@ public class UpgradeItemInform {
     public UpgradeItemInform(EnumInfoUpgradeModules modules, int number) {
         this.upgrade = modules;
         this.number = number;
+
     }
 
     public boolean matched(EnumInfoUpgradeModules modules) {

@@ -12,11 +12,6 @@ public class InvSlotConsumableLiquidByListRemake extends InvSlotConsumableLiquid
 
     private final Set<Fluid> acceptedFluids;
 
-    public InvSlotConsumableLiquidByListRemake(IInventorySlotHolder<?> base1, String name1, int count, Fluid... fluidlist) {
-        super(base1, name1, count);
-        this.acceptedFluids = new HashSet(Arrays.asList(fluidlist));
-    }
-
     public InvSlotConsumableLiquidByListRemake(
             IInventorySlotHolder<?> base1,
             String name1,
@@ -27,7 +22,7 @@ public class InvSlotConsumableLiquidByListRemake extends InvSlotConsumableLiquid
             Fluid... fluidlist
     ) {
         super(base1, name1, access1, count, preferredSide1, opType);
-        this.acceptedFluids = new HashSet(Arrays.asList(fluidlist));
+        this.acceptedFluids = new HashSet<>(Arrays.asList(fluidlist));
     }
 
     public boolean acceptsLiquid(Fluid fluid) {

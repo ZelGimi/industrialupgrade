@@ -5,6 +5,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ItemBlockCore extends ItemBlock {
 
     protected BlockCore blockCore;
@@ -18,15 +20,18 @@ public class ItemBlockCore extends ItemBlock {
         this.blockCore = block;
     }
 
-    public String getUnlocalizedName(ItemStack stack) {
+    @Nonnull
+    public String getUnlocalizedName(@Nonnull ItemStack stack) {
         return this.blockCore.getUnlocalizedName(stack);
     }
 
-    public EnumRarity getRarity(ItemStack stack) {
+    @Nonnull
+    public EnumRarity getRarity(@Nonnull ItemStack stack) {
         return this.blockCore.getRarity(stack);
     }
 
-    public String getItemStackDisplayName(ItemStack stack) {
+    @Nonnull
+    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
         return Localization.translate(this.getUnlocalizedName(stack));
     }
 
@@ -39,7 +44,7 @@ public class ItemBlockCore extends ItemBlock {
         return stack.isItemEnchanted();
     }
 
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean isEnchantable(@Nonnull ItemStack stack) {
         return false;
     }
 

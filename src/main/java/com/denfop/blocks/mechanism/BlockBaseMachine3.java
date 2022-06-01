@@ -2,12 +2,31 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.tiles.base.TileEntityAirCollector;
 import com.denfop.tiles.base.TileEntityAntiMagnet;
+import com.denfop.tiles.base.TileEntityAntiUpgradeBlock;
 import com.denfop.tiles.base.TileEntityAutoSpawner;
+import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
+import com.denfop.tiles.base.TileEntityCooling;
 import com.denfop.tiles.base.TileEntityRadiationPurifier;
+import com.denfop.tiles.base.TileEntityWaterGenerator;
+import com.denfop.tiles.mechanism.TileEntityCreatorSchedules;
 import com.denfop.tiles.mechanism.TileEntityElectricHeat;
+import com.denfop.tiles.mechanism.TileEntityEnderAssembler;
 import com.denfop.tiles.mechanism.TileEntityFluidHeat;
+import com.denfop.tiles.mechanism.TileEntityGasCombiner;
+import com.denfop.tiles.mechanism.TileEntityKineticGeneratorAssembler;
 import com.denfop.tiles.mechanism.TileEntityPrivatizer;
+import com.denfop.tiles.mechanism.TileEntityProbeAssembler;
+import com.denfop.tiles.mechanism.TileEntityResearchTable;
+import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
+import com.denfop.tiles.mechanism.TileEntityRocketAssembler;
+import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
+import com.denfop.tiles.mechanism.TileEntityRodManufacturer;
+import com.denfop.tiles.mechanism.TileEntityRotorAssembler;
+import com.denfop.tiles.mechanism.TileEntityRotorMofifier;
+import com.denfop.tiles.mechanism.TileEntitySatelliteAssembler;
+import com.denfop.tiles.mechanism.TileEntitySoilAnalyzer;
 import com.denfop.tiles.mechanism.TileEntityTunerWireless;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
@@ -33,8 +52,26 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
     spawner(TileEntityAutoSpawner.class, 4),
     elec_heat(TileEntityElectricHeat.class, 5),
     fluid_heat(TileEntityFluidHeat.class, 6),
-    antimagnet(TileEntityAntiMagnet.class,7),
-
+    antimagnet(TileEntityAntiMagnet.class, 7),
+    antiupgradeblock(TileEntityAntiUpgradeBlock.class, 8),
+    watergenerator(TileEntityWaterGenerator.class, 9),
+    cooling(TileEntityCooling.class, 10),
+    aircollector(TileEntityAirCollector.class, 11),
+    combiner_se_generators(TileEntityCombinerSEGenerators.class, 12),
+    probe_assembler(TileEntityProbeAssembler.class, 13),
+    research_table_space(TileEntityResearchTableSpace.class, 14),
+    rocket_assembler(TileEntityRocketAssembler.class, 15),
+    rocket_launch_pad(TileEntityRocketLaunchPad.class, 16),
+    rotor_assembler(TileEntityRotorAssembler.class, 17),
+    rotor_modifier(TileEntityRotorMofifier.class, 18),
+    satellite_assembler(TileEntitySatelliteAssembler.class, 19),
+    soil_analyzer(TileEntitySoilAnalyzer.class, 20),
+    rods_manufacturer(TileEntityRodManufacturer.class, 21),
+    kinetic_generator_assembler(TileEntityKineticGeneratorAssembler.class, 22),
+    ender_assembler(TileEntityEnderAssembler.class, 23),
+    research_table(TileEntityResearchTable.class, 24),
+    creator_schedules(TileEntityCreatorSchedules.class, 25),
+    gas_combiner(TileEntityGasCombiner.class, 26),
     ;
 
 

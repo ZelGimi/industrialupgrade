@@ -1,8 +1,9 @@
 package com.denfop.tiles.base;
 
 
+import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerCombinerMatter;
-import com.denfop.gui.GUICombinerMatter;
+import com.denfop.gui.GuiCombinerMatter;
 import com.denfop.invslot.InvSlotMatter;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipeResult;
@@ -15,7 +16,6 @@ import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.audio.AudioSource;
 import ic2.core.audio.PositionSpec;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.comp.Redstone;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.block.invslot.InvSlotConsumableLiquid;
@@ -50,13 +50,13 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
     public final InvSlotConsumableLiquid containerslot;
     protected final Redstone redstone;
     public int scrap;
-    private double energycost;
+    public double energycost;
     private int state, prevState;
     private AudioSource audioSource, audioSourceScrap;
     private double lastEnergy;
 
     public TileEntityCombinerMatter() {
-        super("", 0, 14, 12);
+        super(0, 14, 12);
         this.energycost = 0;
         this.amplifierSlot = new InvSlotProcessable<IRecipeInput, Integer, ItemStack>(this, "scrap", 1, Recipes.matterAmplifier) {
             protected ItemStack getInput(ItemStack stack) {
@@ -84,7 +84,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                 return this.scrap > 0 ? 1 : 0;
             }
         });
-        energy = this.addComponent(Energy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
+        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
 
     }
 
@@ -110,9 +110,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
     public void updateEntityServer() {
         super.updateEntityServer();
         boolean needsInvUpdate = onUpdateUpgrade();
-        this.energy.setCapacity(this.inputSlot.getMaxEnergy(this.inputSlot));
-        this.fluidTank.setCapacity(this.inputSlot.getFluidTank(this.inputSlot));
-        this.energycost = this.inputSlot.getcostEnergy(this.inputSlot);
+
         if (this.redstone.hasRedstoneInput() || this.energy.getEnergy() <= 0.0D) {
             setState(0);
             setActive(false);
@@ -202,7 +200,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUICombinerMatter(new ContainerCombinerMatter(entityPlayer, this));
+        return new GuiCombinerMatter(new ContainerCombinerMatter(entityPlayer, this));
     }
 
     @Override
@@ -307,6 +305,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
             setUpgradestat();
+            this.inputSlot.update();
         }
     }
 

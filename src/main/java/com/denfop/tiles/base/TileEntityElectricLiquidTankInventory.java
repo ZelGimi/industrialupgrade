@@ -16,21 +16,28 @@ public abstract class TileEntityElectricLiquidTankInventory extends TileEntityEl
     public Fluids fluids;
     public FluidTank fluidTank;
 
-    public TileEntityElectricLiquidTankInventory(final String name, final double MaxEnergy, final int tier, final int tanksize,
-                                                 Predicate<Fluid> fluids_list) {
-        super(name, MaxEnergy, tier, 1);
+    public TileEntityElectricLiquidTankInventory(
+            final double MaxEnergy, final int tier, final int tanksize,
+            Predicate<Fluid> fluids_list
+    ) {
+        super(MaxEnergy, tier, 1);
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000,fluids_list);
+        this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000, fluids_list);
 
     }
-    public TileEntityElectricLiquidTankInventory(final String name, final double MaxEnergy, final int tier, final int tanksize) {
-        super(name, MaxEnergy, tier, 1);
+
+    public TileEntityElectricLiquidTankInventory(
+            final double MaxEnergy, final int tier, final int tanksize
+    ) {
+        super(MaxEnergy, tier, 1);
 
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
 
     }
+
+
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
     }
@@ -56,26 +63,11 @@ public abstract class TileEntityElectricLiquidTankInventory extends TileEntityEl
         return this.fluidTank;
     }
 
-    public FluidStack getFluidStackfromTank() {
-        return this.getFluidTank().getFluid();
-    }
-
-    public Fluid getFluidfromTank() {
-        return this.getFluidStackfromTank().getFluid();
-    }
-
-    public int getTankAmount() {
-        return this.getFluidTank().getFluidAmount();
-    }
 
     public int gaugeLiquidScaled(int i) {
         return this.getFluidTank().getFluidAmount() <= 0
                 ? 0
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
-    }
-
-    public boolean needsFluid() {
-        return this.getFluidTank().getFluidAmount() <= this.getFluidTank().getCapacity();
     }
 
 

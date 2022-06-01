@@ -1,23 +1,5 @@
 package com.simplequarries;
 
-import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.TileEntityDoubleCompressor;
-import com.denfop.tiles.mechanism.TileEntityDoubleElectricFurnace;
-import com.denfop.tiles.mechanism.TileEntityDoubleExtractor;
-import com.denfop.tiles.mechanism.TileEntityDoubleMacerator;
-import com.denfop.tiles.mechanism.TileEntityDoubleMetalFormer;
-import com.denfop.tiles.mechanism.TileEntityQuadCompressor;
-import com.denfop.tiles.mechanism.TileEntityQuadElectricFurnace;
-import com.denfop.tiles.mechanism.TileEntityQuadExtractor;
-import com.denfop.tiles.mechanism.TileEntityQuadMacerator;
-import com.denfop.tiles.mechanism.TileEntityQuadMetalFormer;
-import com.denfop.tiles.mechanism.TileEntityTripleCompressor;
-import com.denfop.tiles.mechanism.TileEntityTripleElectricFurnace;
-import com.denfop.tiles.mechanism.TileEntityTripleExtractor;
-import com.denfop.tiles.mechanism.TileEntityTripleMacerator;
-import com.denfop.tiles.mechanism.TileEntityTripleMetalFormer;
-import com.simplequarries.SimplyQuarries;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.TeBlock;
@@ -64,17 +46,6 @@ public enum BlockQuarry implements ITeBlock {
 
     }
 
-
-    @Override
-    public String getName() {
-        return this.name();
-    }
-
-    @Override
-    public int getId() {
-        return this.itemMeta;
-    }
-
     public static void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !SQConstants.MOD_ID.equals(mc.getModId())) {
@@ -91,6 +62,16 @@ public enum BlockQuarry implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
+
+    @Override
+    public int getId() {
+        return this.itemMeta;
     }
 
     @Override
@@ -142,6 +123,7 @@ public enum BlockQuarry implements ITeBlock {
     public TeBlock.DefaultDrop getDefaultDrop() {
         return TeBlock.DefaultDrop.Machine;
     }
+
     @Override
     @Nonnull
     public EnumRarity getRarity() {

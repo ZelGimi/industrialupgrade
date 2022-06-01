@@ -3,7 +3,7 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUCore;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerMagnet;
-import com.denfop.gui.GUIMagnet;
+import com.denfop.gui.GuiMagnet;
 import com.denfop.tiles.base.TileEntityAntiMagnet;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -34,54 +34,55 @@ public class TileEntityMagnet extends TileEntityElectricMachine
     public AudioSource audioSource;
 
     public TileEntityMagnet() {
-        super("", 100000, 14, 24);
+        super(100000, 14, 24);
         this.energyconsume = 1000;
         this.player = "";
-        this.work=true;
+        this.work = true;
 
     }
 
     @Override
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
-        if(placer instanceof EntityPlayer){
-            EntityPlayer  player = (EntityPlayer) placer;
+        if (placer instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) placer;
             this.player = player.getName();
 
 
-
-                for (int x = this.pos.getX() - 10; x <= this.pos.getX() + 10; x++) {
-                    for (int y = this.pos.getY() - 10; y <= this.pos.getY() + 10; y++) {
-                        for (int z = this.pos.getZ() - 10; z <= this.pos.getZ() + 10; z++) {
-                            if (getWorld().getTileEntity(new BlockPos(x, y, z)) != null && !(new BlockPos(
-                                    x,
-                                    y,
-                                    z
-                            ).equals(this.pos))) {
-                                if (getWorld().getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityMagnet) {
-                                    TileEntityMagnet tile = (TileEntityMagnet) getWorld().getTileEntity(new BlockPos(x, y, z));
-                                     if(tile.work)
-                                    this.work=false;
-                                }
-                               else if (getWorld().getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityAntiMagnet) {
-                                    TileEntityAntiMagnet tile = (TileEntityAntiMagnet) getWorld().getTileEntity(new BlockPos(x, y, z));
-                                    if(!tile.player.equals(this.player)){
-                                        this.work= false;
-                                    }
+            for (int x = this.pos.getX() - 10; x <= this.pos.getX() + 10; x++) {
+                for (int y = this.pos.getY() - 10; y <= this.pos.getY() + 10; y++) {
+                    for (int z = this.pos.getZ() - 10; z <= this.pos.getZ() + 10; z++) {
+                        if (getWorld().getTileEntity(new BlockPos(x, y, z)) != null && !(new BlockPos(
+                                x,
+                                y,
+                                z
+                        ).equals(this.pos))) {
+                            if (getWorld().getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityAntiMagnet) {
+                                TileEntityAntiMagnet tile = (TileEntityAntiMagnet) getWorld().getTileEntity(new BlockPos(
+                                        x,
+                                        y,
+                                        z
+                                ));
+                                assert tile != null;
+                                if (!tile.player.equals(this.player)) {
+                                    this.work = false;
                                 }
                             }
                         }
                     }
                 }
+            }
 
 
-        }else{
+        } else {
             final ExplosionIC2 explosion = new ExplosionIC2(this.world, null, pos.getX(), pos.getY(), pos.getZ(),
                     1,
-                    1f);
+                    1f
+            );
             explosion.doExplosion();
         }
     }
+
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.player = nbttagcompound.getString("player");
@@ -94,42 +95,46 @@ public class TileEntityMagnet extends TileEntityElectricMachine
         nbttagcompound.setBoolean("work", this.work);
         return nbttagcompound;
     }
+
     public void updateEntityServer() {
 
         super.updateEntityServer();
-        if(!this.work)
+        if (!this.work) {
             return;
-        int radius = 10;
-        AxisAlignedBB axisalignedbb = new AxisAlignedBB(
-                this.pos.getX() - radius,
-                this.pos.getY() - radius,
-                this.pos.getZ() - radius,
-                this.pos.getX() + radius,
-                this.pos.getY() + radius,
-                this.pos.getZ() + radius
-        );
-        List<EntityItem> list = this.getWorld().getEntitiesWithinAABB(EntityItem.class, axisalignedbb);
-
-
-
+        }
         boolean ret = false;
-        if (getWorld().provider.getWorldTime() % 10 == 0) {
-            for (EntityItem item : list) {
+        if (this.world.provider.getWorldTime() % 4 == 0) {
+            int radius = 10;
+            AxisAlignedBB axisalignedbb = new AxisAlignedBB(
+                    this.pos.getX() - radius,
+                    this.pos.getY() - radius,
+                    this.pos.getZ() - radius,
+                    this.pos.getX() + radius,
+                    this.pos.getY() + radius,
+                    this.pos.getZ() + radius
+            );
+            List<EntityItem> list = this.getWorld().getEntitiesWithinAABB(EntityItem.class, axisalignedbb);
 
 
-                if (this.energy.canUseEnergy(energyconsume)) {
-                    ItemStack stack = item.getItem();
+            if (getWorld().provider.getWorldTime() % 10 == 0) {
+                for (EntityItem item : list) {
 
-                    if (this.outputSlot.canAdd(stack)) {
-                        item.setDead();
-                        initiate(0);
-                        setActive(true);
-                        this.energy.useEnergy(energyconsume);
-                        this.outputSlot.add(stack);
-                        ret = true;
+                    if (!item.isDead) {
+                        if (this.energy.canUseEnergy(energyconsume)) {
+                            ItemStack stack = item.getItem();
+
+                            if (this.outputSlot.canAdd(stack)) {
+                                item.setDead();
+                                initiate(0);
+                                setActive(true);
+                                this.energy.useEnergy(energyconsume);
+                                this.outputSlot.add(stack);
+                                ret = true;
+                            }
+
+
+                        }
                     }
-
-
                 }
             }
         }
@@ -139,9 +144,6 @@ public class TileEntityMagnet extends TileEntityElectricMachine
 
 
     }
-
-
-
 
 
     public int getSizeInventory() {
@@ -155,7 +157,7 @@ public class TileEntityMagnet extends TileEntityElectricMachine
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIMagnet(new ContainerMagnet(entityPlayer, this));
+        return new GuiMagnet(new ContainerMagnet(entityPlayer, this));
     }
 
     public ContainerBase<? extends TileEntityMagnet> getGuiContainer(EntityPlayer entityPlayer) {

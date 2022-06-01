@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.container.ContainerPetrolGenerator;
+import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
@@ -13,15 +14,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GUIPetrolGenerator extends GuiIC2<ContainerPetrolGenerator> {
+public class GuiPetrolGenerator extends GuiIC2<ContainerPetrolGenerator> {
 
     public ContainerPetrolGenerator container;
     public String name;
 
-    public GUIPetrolGenerator(ContainerPetrolGenerator container1) {
+    public GuiPetrolGenerator(ContainerPetrolGenerator container1) {
         super(container1);
         this.container = container1;
-        this.name = Localization.translate((container.base).name);
+        this.name = Localization.translate((container.base).getName());
         this.addElement(TankGauge.createNormal(this, 70, 20, (container.base).fluidTank));
 
     }
@@ -29,7 +30,15 @@ public class GUIPetrolGenerator extends GuiIC2<ContainerPetrolGenerator> {
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 4210752);
-
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 111, 28, 136, 38)
+                .withTooltip(tooltip2)
+                .drawForeground(par1, par2);
     }
 
     @Override
@@ -55,9 +64,8 @@ public class GUIPetrolGenerator extends GuiIC2<ContainerPetrolGenerator> {
         x -= this.guiLeft;
         y -= this.guiTop;
         for (final GuiElement<?> guiElement : this.elements) {
-            GuiElement<?> element = guiElement;
-            if (element.isEnabled()) {
-                element.drawBackground(x, y);
+            if (guiElement.isEnabled()) {
+                guiElement.drawBackground(x, y);
             }
         }
 

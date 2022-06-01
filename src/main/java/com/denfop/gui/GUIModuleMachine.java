@@ -17,17 +17,17 @@ import java.util.List;
 
 
 @SideOnly(Side.CLIENT)
-public class GUIModuleMachine extends GuiIC2<ContainerModuleMachine> {
+public class GuiModuleMachine extends GuiIC2<ContainerModuleMachine> {
 
     public final ContainerModuleMachine container;
 
-    public GUIModuleMachine(ContainerModuleMachine container1) {
+    public GuiModuleMachine(ContainerModuleMachine container1) {
         super(container1);
         this.container = container1;
     }
 
     private static List<String> getInformation() {
-        List<String> ret = new ArrayList();
+        List<String> ret = new ArrayList<>();
         ret.add(Localization.translate("iu.moduleinformation1"));
         ret.add(Localization.translate("iu.moduleinformation2"));
         ret.add(Localization.translate("iu.moduleinformation3"));
@@ -92,7 +92,7 @@ public class GUIModuleMachine extends GuiIC2<ContainerModuleMachine> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIModuleMachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiModuleMachine.png");
     }
 
 }

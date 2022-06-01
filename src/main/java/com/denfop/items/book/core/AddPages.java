@@ -8,56 +8,56 @@ import java.util.Map;
 
 public class AddPages {
 
-    public final String mainparent;
-    public final String textbefore;
+    public final String mainParent;
+    public final String textBefore;
     public final ResourceLocation resource;
     public final int x;
     public final int x1;
     public final int y;
     public final int y1;
-    public final String textafter;
+    public final String textAfter;
     public final String description;
-    public final boolean rendercenter;
-    public final String centerdescription;
+    public final boolean renderCenter;
+    public final String centerDescription;
     public final String name;
     public final int index;
     public final String text;
     List<AddPages> lst = new ArrayList<>();
 
     public AddPages(
-            String name, String mainparent, int index, String text,
+            String name, String mainParent, int index, String text,
             String description
     ) {
-        this(name, mainparent, index, text, "", null, 0, 0, 0, 0, "", description, false, "");
+        this(name, mainParent, index, text, "", null, 0, 0, 0, 0, "", description, false, "");
     }
 
     public AddPages(
-            String name, String mainparent, int index, String text,
-            String textbefore, ResourceLocation resource, int x, int y, int x1,
+            String name, String mainParent, int index, String text,
+            String textBefore, ResourceLocation resource, int x, int y, int x1,
             int y1,
-            String textafter, String description, boolean rendercenter, String centerdescription
+            String textAfter, String description, boolean renderCenter, String centerDescription
     ) {
         this.name = name;
         this.index = index;
         this.text = text;
-        this.mainparent = mainparent;
-        this.textbefore = textbefore;
+        this.mainParent = mainParent;
+        this.textBefore = textBefore;
         this.resource = resource;
         this.x = x;
         this.x1 = x1;
         this.y = y;
         this.y1 = y1;
-        this.textafter = textafter;
+        this.textAfter = textAfter;
         this.description = description;
-        this.rendercenter = rendercenter;
-        this.centerdescription = centerdescription;
+        this.renderCenter = renderCenter;
+        this.centerDescription = centerDescription;
         lst.add(this);
         addToMainPage(this);
     }
 
     public void addToMainPage(final AddPages pages) {
         for (Map.Entry<Pages, List<AddPages>> page : Pages.pages.entrySet()) {
-            if (page.getKey().name.equals(pages.mainparent)) {
+            if (page.getKey().name.equals(pages.mainParent)) {
                 if (!page.getValue().contains(pages)) {
                     page.getValue().add(pages);
                 }

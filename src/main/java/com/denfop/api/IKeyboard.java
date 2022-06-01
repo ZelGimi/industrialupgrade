@@ -10,8 +10,6 @@ public interface IKeyboard {
 
     boolean isChangeKeyDown(final EntityPlayer p0);
 
-    boolean isStreakKeyDown(final EntityPlayer p0);
-
     boolean isVerticalMode(final EntityPlayer p0);
 
     boolean isFlyModeKeyDown(final EntityPlayer p0);

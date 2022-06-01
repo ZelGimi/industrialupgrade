@@ -15,6 +15,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 
 public class BaseArmor extends ItemArmor implements IModelRegister {
 
@@ -36,15 +38,19 @@ public class BaseArmor extends ItemArmor implements IModelRegister {
 
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
-        loc.append("armour").append("/").append(name);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "armour" + "/" + name;
 
-        return new ModelResourceLocation(loc.toString(), null);
+        return new ModelResourceLocation(loc, null);
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(
+            @Nonnull ItemStack stack,
+            @Nonnull Entity entity,
+            @Nonnull EntityEquipmentSlot slot,
+            @Nonnull String type
+    ) {
 
         if (this.render != 2) {
             return Constants.TEXTURES + ":" + "textures/armor/" + armor_type + "_layer_1.png";

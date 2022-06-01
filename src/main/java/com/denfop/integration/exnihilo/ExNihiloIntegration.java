@@ -126,7 +126,6 @@ public class ExNihiloIntegration implements IExNihiloCreatioModule, IRecipeDefau
 
     @Override
     public String getMODID() {
-        this.getClass();
         return Constants.MOD_ID;
     }
 

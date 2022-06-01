@@ -2,6 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerGenStone;
+import com.denfop.utils.ModUtils;
 import ic2.core.GuiIC2;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -15,13 +16,32 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GUIGenStone extends GuiIC2<ContainerGenStone> {
+public class GuiGenStone extends GuiIC2<ContainerGenStone> {
 
     public final ContainerGenStone container;
 
-    public GUIGenStone(ContainerGenStone container1) {
+    public GuiGenStone(ContainerGenStone container1) {
         super(container1);
         this.container = container1;
+    }
+
+    @Override
+    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 10, 35, 21, 50)
+                .withTooltip(tooltip2)
+                .drawForeground(mouseX, mouseY);
+    }
+
+    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -84,7 +104,7 @@ public class GUIGenStone extends GuiIC2<ContainerGenStone> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIGenStone.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiGenStone.png");
     }
 
 }

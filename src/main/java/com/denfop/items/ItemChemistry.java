@@ -19,6 +19,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ItemChemistry extends ItemIC2 implements ICustomDamageItem, IModelRegister {
 
     private final String name;
@@ -77,7 +79,7 @@ public class ItemChemistry extends ItemIC2 implements ICustomDamageItem, IModelR
         }
     }
 
-    public boolean isDamaged(ItemStack stack) {
+    public boolean isDamaged(@Nonnull ItemStack stack) {
         return (getDamage(stack) > 1);
     }
 
@@ -86,7 +88,7 @@ public class ItemChemistry extends ItemIC2 implements ICustomDamageItem, IModelR
         return EnumRarity.values()[0];
     }
 
-    public boolean showDurabilityBar(ItemStack stack) {
+    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
         return true;
     }
 

@@ -1,16 +1,12 @@
 package com.denfop.integration.jei.doublemolecular;
 
 
-import com.denfop.api.IDoubleMolecularRecipeManager;
 import com.denfop.api.Recipes;
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DoubleMolecularTransformerHandler {
 
@@ -59,23 +55,18 @@ public class DoubleMolecularTransformerHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<IDoubleMolecularRecipeManager.Input, RecipeOutput> container :
-                Recipes.doublemolecular.getRecipes().entrySet()) {
-            addRecipe(container.getKey().container.getInputs().get(0), container.getKey().fill.getInputs().get(0),
-                    container.getValue().items.get(0),
-                    container.getValue().metadata.getDouble("energy")
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("doublemolecular")) {
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                    container.getOutput().items.get(0),
+                    container.getOutput().metadata.getDouble("energy")
             );
+
 
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

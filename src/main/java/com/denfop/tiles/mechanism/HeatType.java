@@ -6,21 +6,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum HeatType implements IIdProvider {
-    pipes(0, 0, 0.25F, 0.02D, 4),
-    pipes1(0, 0, 0.25F, 0.02D, 8),
-    pipes2(0, 0, 0.25F, 0.2D, 16),
-    pipes3(0, 0, 0.25F, 0.2D, 32),
-    pipes4(0, 0, 0.25F, 0.2D, 64),
+    pipes(0, 0, 0.25F, 0.02D, 1000),
+    pipes1(0, 0, 0.25F, 0.02D, 2000),
+    pipes2(0, 0, 0.25F, 0.2D, 4000),
+    pipes3(0, 0, 0.25F, 0.2D, 8000),
+    pipes4(0, 0, 0.25F, 0.2D, 16000),
 
     ;
 
     public static final HeatType[] values = values();
-    private static final Map<String, HeatType> nameMap = new HashMap();
+    private static final Map<String, HeatType> nameMap = new HashMap<>();
 
     static {
-        HeatType[] var0 = values;
 
-        for (HeatType type : var0) {
+        for (HeatType type : values) {
             nameMap.put(type.getName(), type);
         }
 
@@ -44,13 +43,10 @@ public enum HeatType implements IIdProvider {
         return nameMap.get(name);
     }
 
-    public String getName(int insulation) {
-        return this.getName() + "_pipes";
+    public String getName() {
+        return this.name() + "_pipes";
     }
 
-    public String getName() {
-        return this.name();
-    }
 
     public int getId() {
         return this.ordinal();

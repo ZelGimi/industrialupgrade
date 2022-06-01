@@ -1,6 +1,6 @@
 package com.denfop.recipes;
 
-import com.denfop.register.RegisterOreDict;
+import com.denfop.register.RegisterOreDictionary;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
 import net.minecraft.item.ItemStack;
@@ -16,11 +16,11 @@ public class MaceratorRecipe {
     public static void recipe() {
         if (!Loader.isModLoaded("aobd")) {
             for (int j = 0; j < recipe.length; j++) {
-                for (int i = 0; i < RegisterOreDict.itemNames().size(); i++) {
+                for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
                     if (i != 4 && i != 5 && i != 13) {
                         addmacerator(
-                                recipe[j] + RegisterOreDict.itemNames().get(i),
-                                recipe1[j] + RegisterOreDict.itemNames().get(i),
+                                recipe[j] + RegisterOreDictionary.itemNames().get(i),
+                                recipe1[j] + RegisterOreDictionary.itemNames().get(i),
                                 number[j]
                         );
                     }
@@ -28,10 +28,10 @@ public class MaceratorRecipe {
                 }
             }
             for (int j = 1; j < recipe.length; j++) {
-                for (int i = 0; i < RegisterOreDict.itemNames1().size(); i++) {
+                for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
                     addmacerator(
-                            recipe[j] + RegisterOreDict.itemNames1().get(i),
-                            recipe1[j] + RegisterOreDict.itemNames1().get(i),
+                            recipe[j] + RegisterOreDictionary.itemNames1().get(i),
+                            recipe1[j] + RegisterOreDictionary.itemNames1().get(i),
                             number[j]
                     );
 

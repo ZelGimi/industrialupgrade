@@ -15,9 +15,6 @@ public class AudioManager {
         return null;
     }
 
-    public void chainSource(String source, FutureSound onFinish) {
-    }
-
     public void removeSource(String source) {
     }
 

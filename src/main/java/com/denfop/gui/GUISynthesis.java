@@ -1,9 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.RecipeOutput;
 import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
@@ -12,15 +12,28 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GUISynthesis extends GuiIC2<ContainerDoubleElectricMachine> {
+public class GuiSynthesis extends GuiIC2<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
-    public GUISynthesis(ContainerDoubleElectricMachine container1) {
+    public GuiSynthesis(ContainerDoubleElectricMachine container1) {
         super(container1);
         this.container = container1;
     }
 
+    @Override
+    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        String tooltip2 =
+                ModUtils.getString(Math.min(
+                        this.container.base.energy.getEnergy(),
+                        this.container.base.energy.getCapacity()
+                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
+                        "EU";
+        new AdvArea(this, 25, 55, 36, 70)
+                .withTooltip(tooltip2)
+                .drawForeground(mouseX, mouseY);
+    }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
@@ -43,12 +56,10 @@ public class GUISynthesis extends GuiIC2<ContainerDoubleElectricMachine> {
             drawTexturedModalRect(xoffset + 82, yoffset + 30, 177, 52, progress1 + 1, 23);
         }
 
-        //      RecipeOutput output = Recipes.synthesis.getOutputFor(this.container.base.inputSlotA.get(0),
-        //            this.container.base.inputSlotA.get(1), false, false);
-        final RecipeOutput output = this.container.base.getOutput();
+        final MachineRecipe output = this.container.base.output;
         if (output != null) {
             this.fontRenderer.drawString(
-                    TextFormatting.GREEN + Localization.translate("chance") + output.metadata.getInteger(
+                    TextFormatting.GREEN + Localization.translate("chance") + output.getRecipe().output.metadata.getInteger(
                             "percent") + "%", xoffset + 69,
                     yoffset + 67, ModUtils.convertRGBcolorToInt(217, 217, 217)
             );
@@ -60,7 +71,7 @@ public class GUISynthesis extends GuiIC2<ContainerDoubleElectricMachine> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUISynthesis.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiSynthesis.png");
     }
 
 }

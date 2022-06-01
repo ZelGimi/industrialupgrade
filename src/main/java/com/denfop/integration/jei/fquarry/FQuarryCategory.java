@@ -16,10 +16,11 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class FQuarryCategory extends Gui implements IRecipeCategory<FQuarryWrapper> {
 
     private final IDrawableStatic bg;
-    private final int progress = 0;
     private int energy = 0;
 
     public FQuarryCategory(
@@ -30,21 +31,25 @@ public class FQuarryCategory extends Gui implements IRecipeCategory<FQuarryWrapp
         );
     }
 
+    @Nonnull
     @Override
     public String getUid() {
         return BlockBaseMachine.quantum_quarry.getName() + "1";
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         return Localization.translate(new ItemStack(IUItem.machines, 1, 8).getUnlocalizedName());
     }
 
+    @Nonnull
     @Override
     public String getModName() {
         return Constants.MOD_NAME;
     }
 
+    @Nonnull
     @Override
     public IDrawable getBackground() {
         return bg;
@@ -59,7 +64,8 @@ public class FQuarryCategory extends Gui implements IRecipeCategory<FQuarryWrapp
 
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+140 + 1 + 2, +25 + 48 - energylevel, 176,
+        drawTexturedModalRect(
+                140 + 1 + 2, 25 + 48 - energylevel, 176,
                 48 - energylevel, 48, energylevel
         );
 
@@ -69,7 +75,7 @@ public class FQuarryCategory extends Gui implements IRecipeCategory<FQuarryWrapp
     public void setRecipe(
             final IRecipeLayout layout,
             final FQuarryWrapper recipes,
-            final IIngredients ingredients
+            @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks(); // Группа ItemStack, которая нужна для рендера.
         isg.init(0, true, 4, 11); // Инициализируем слот 0. true/false - это обозначение того, является ли слот *ВХОДНЫМ*, true

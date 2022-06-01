@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Queue;
@@ -20,10 +21,6 @@ import java.util.Queue;
 public class ItemReactor extends AbstractDamageableReactorComponent {
 
     public final int numberOfCells;
-
-    public ItemReactor(String name, int cells) {
-        this(name, cells, 20000);
-    }
 
     protected ItemReactor(String name, int cells, int duration) {
         super(name, duration);
@@ -59,7 +56,7 @@ public class ItemReactor extends AbstractDamageableReactorComponent {
         this.registerModel(1, name, "reactors");
     }
 
-    public int getMetadata(ItemStack stack) {
+    public int getMetadata(@Nonnull ItemStack stack) {
         return this.getCustomDamage(stack) > 0 ? 1 : 0;
     }
 
@@ -72,47 +69,47 @@ public class ItemReactor extends AbstractDamageableReactorComponent {
                 int heat;
                 if (!heatRun) {
                     for (heat = 0; heat < pulses; ++heat) {
-                        this.acceptUraniumPulse(stack, reactor, stack, x, y, x, y, heatRun);
+                        this.acceptUraniumPulse(stack, reactor, stack, x, y, x, y, false);
                     }
 
-                    int var10000 = pulses + checkPulseable(reactor, x - 1, y, stack, x, y, heatRun) + checkPulseable(
+                    int var10000 = pulses + checkPulseable(reactor, x - 1, y, stack, x, y, false) + checkPulseable(
                             reactor,
                             x + 1,
                             y,
                             stack,
                             x,
                             y,
-                            heatRun
-                    ) + checkPulseable(reactor, x, y - 1, stack, x, y, heatRun) + checkPulseable(
+                            false
+                    ) + checkPulseable(reactor, x, y - 1, stack, x, y, false) + checkPulseable(
                             reactor,
                             x,
                             y + 1,
                             stack,
                             x,
                             y,
-                            heatRun
+                            false
                     );
                 } else {
-                    pulses = basePulses + checkPulseable(reactor, x - 1, y, stack, x, y, heatRun) + checkPulseable(
+                    pulses = basePulses + checkPulseable(reactor, x - 1, y, stack, x, y, true) + checkPulseable(
                             reactor,
                             x + 1,
                             y,
                             stack,
                             x,
                             y,
-                            heatRun
-                    ) + checkPulseable(reactor, x, y - 1, stack, x, y, heatRun) + checkPulseable(
+                            true
+                    ) + checkPulseable(reactor, x, y - 1, stack, x, y, true) + checkPulseable(
                             reactor,
                             x,
                             y + 1,
                             stack,
                             x,
                             y,
-                            heatRun
+                            true
                     );
                     heat = triangularNumber(pulses) * 4;
                     heat = this.getFinalHeat(stack, reactor, x, y, heat);
-                    Queue<ItemReactor.ItemStackCoord> heatAcceptors = new ArrayDeque();
+                    Queue<ItemReactor.ItemStackCoord> heatAcceptors = new ArrayDeque<>();
                     this.checkHeatAcceptor(reactor, x - 1, y, heatAcceptors);
                     this.checkHeatAcceptor(reactor, x + 1, y, heatAcceptors);
                     this.checkHeatAcceptor(reactor, x, y - 1, heatAcceptors);
@@ -199,7 +196,13 @@ public class ItemReactor extends AbstractDamageableReactorComponent {
         return (float) (2 * this.numberOfCells);
     }
 
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
+    public void onUpdate(
+            @Nonnull ItemStack stack,
+            @Nonnull World world,
+            @Nonnull Entity entity,
+            int slotIndex,
+            boolean isCurrentItem
+    ) {
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase entityLiving = (EntityLivingBase) entity;
             if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving)) {

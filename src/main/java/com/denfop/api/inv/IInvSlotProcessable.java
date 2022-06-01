@@ -1,7 +1,7 @@
 package com.denfop.api.inv;
 
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.item.ItemStack;
+
+import com.denfop.api.recipe.RecipeOutput;
 
 public interface IInvSlotProcessable {
 
@@ -10,8 +10,6 @@ public interface IInvSlotProcessable {
     void consume();
 
     boolean isEmpty();
-
-    ItemStack get1(int i);
 
 
 }

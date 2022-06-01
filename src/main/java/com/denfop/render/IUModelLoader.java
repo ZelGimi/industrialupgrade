@@ -8,13 +8,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IUModelLoader implements ICustomModelLoader {
 
-    private static final Map<ResourceLocation, IReloadableModel> models = new HashMap();
+    private static final Map<ResourceLocation, IReloadableModel> models = new HashMap<>();
 
     public IUModelLoader() {
     }
@@ -27,7 +28,7 @@ public class IUModelLoader implements ICustomModelLoader {
         models.put(location, model);
     }
 
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
 
         for (final IReloadableModel model : models.values()) {
             model.onReload();
@@ -36,11 +37,12 @@ public class IUModelLoader implements ICustomModelLoader {
         ModelComparator.onReload();
     }
 
-    public boolean accepts(ResourceLocation modelLocation) {
+    public boolean accepts(@Nonnull ResourceLocation modelLocation) {
         return models.containsKey(modelLocation);
     }
 
-    public IModel loadModel(ResourceLocation modelLocation) throws IOException {
+    @Nonnull
+    public IModel loadModel(@Nonnull ResourceLocation modelLocation) throws IOException {
         return models.get(modelLocation);
     }
 

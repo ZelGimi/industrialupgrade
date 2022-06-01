@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.container.ContainerPump;
-import com.denfop.gui.GUIPump;
+import com.denfop.gui.GuiPump;
 import com.denfop.tiles.base.TileEntityElectricLiquidTankInventory;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
@@ -56,7 +56,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     private AudioSource audioSource;
 
     public TileEntityPump(String name, int size, int operationLength) {
-        super("", operationLength, 1, size);
+        super(20, operationLength, size);
         this.containerSlot = new InvSlotConsumableLiquid(this, "containerSlot", Access.I, 1, InvSide.TOP, OpType.Fill);
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
@@ -65,6 +65,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
         this.defaultTier = 1;
         this.name = name;
         this.defaultEnergyStorage = this.operationLength;
+
     }
 
     private static int applyModifier(int base, int extra, double multiplier) {
@@ -97,7 +98,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
             }
         }
 
-        MutableObject<ItemStack> output = new MutableObject();
+        MutableObject<ItemStack> output = new MutableObject<>();
         if (this.containerSlot.transferFromTank(
                 this.fluidTank,
                 output,
@@ -196,7 +197,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
                     ret = new FluidStack(FluidRegistry.getFluid(block.getBlock().getUnlocalizedName().substring(5)), 1000);
 
 
-                    if (!sim && ret != null) {
+                    if (!sim) {
                         this.getWorld().setBlockToAir(pos);
                     }
                 }
@@ -274,7 +275,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIPump(new ContainerPump(entityPlayer, this));
+        return new GuiPump(new ContainerPump(entityPlayer, this));
     }
 
     public void onGuiClosed(EntityPlayer entityPlayer) {

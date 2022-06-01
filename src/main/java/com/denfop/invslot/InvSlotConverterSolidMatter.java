@@ -23,15 +23,22 @@ public class InvSlotConverterSolidMatter extends InvSlot {
         return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
+    @Override
+    public void put(final int index, final ItemStack content) {
+        super.put(index, content);
+        this.getmatter();
+    }
+
     public void getmatter() {
 
         for (int i = 0; i < this.size(); i++) {
             if (!get(i).isEmpty()) {
                 TileEntityConverterSolidMatter tile = (TileEntityConverterSolidMatter) base;
                 int meta = get(i).getItemDamage();
-                if (tile.quantitysolid[meta] <= 4800) {
-                    tile.quantitysolid[meta] += 200;
+                while (!this.get(i).isEmpty() && tile.quantitysolid[meta % tile.quantitysolid.length] <= 4800) {
+                    tile.quantitysolid[meta % tile.quantitysolid.length] += 200;
                     this.consume(i, 1);
+
                 }
 
             }
@@ -49,29 +56,28 @@ public class InvSlotConverterSolidMatter extends InvSlot {
     }
 
     public void consume(int content, int amount, boolean simulate, boolean consumeContainers) {
-        ItemStack ret = null;
+        ItemStack ret = ItemStack.EMPTY;
 
         ItemStack stack = get(content);
         if (!stack.isEmpty() && stack.getCount() >= 1 &&
 
-                accepts(stack) && (ret == null ||
+                accepts(stack) && (ret.isEmpty() ||
                 isStackEqualStrict(stack, ret)) && (stack.getCount() == 1 || consumeContainers ||
                 !stack.getItem().hasContainerItem(stack))) {
             int currentAmount = Math.min(amount, stack.getCount());
-            amount -= currentAmount;
             if (!simulate) {
                 if (stack.getCount() == currentAmount) {
                     if (!consumeContainers && stack.getItem().hasContainerItem(stack)) {
                         put(content, stack.getItem().getContainerItem(stack));
                     } else {
-                        put(content, null);
+                        put(content, ItemStack.EMPTY);
                     }
                 } else {
                     stack.setCount(stack.getCount() - currentAmount);
                 }
             }
-            if (ret == null) {
-                ret = StackUtil.copyWithSize(stack, currentAmount);
+            if (ret.isEmpty()) {
+                StackUtil.copyWithSize(stack, currentAmount);
             } else {
                 ret.setCount(ret.getCount() + currentAmount);
             }

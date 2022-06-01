@@ -21,6 +21,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,18 +49,17 @@ public abstract class BaseElectricItem extends Item implements IPseudoDamageItem
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModel(Item item, int meta, String name, String extraName) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name, extraName));
+    public static void registerModel(Item item, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
     @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name, String extraName) {
-        StringBuilder loc = new StringBuilder();
-        loc.append(Constants.MOD_ID);
-        loc.append(':');
+    public static ModelResourceLocation getModelLocation(String name) {
 
-        loc.append("energy").append("/").append(name);
-        return new ModelResourceLocation(loc.toString(), null);
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "energy" + "/" + name;
+        return new ModelResourceLocation(loc, null);
     }
 
     @SideOnly(Side.CLIENT)
@@ -69,12 +69,12 @@ public abstract class BaseElectricItem extends Item implements IPseudoDamageItem
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name, null);
+        registerModel(this, meta, name);
     }
 
     @SideOnly(Side.CLIENT)
     protected void registerModel(int meta, String name, String extraName) {
-        registerModel(this, meta, name, extraName);
+        registerModel(this, meta, name);
     }
 
     public boolean canProvideEnergy(ItemStack stack) {
@@ -99,13 +99,13 @@ public abstract class BaseElectricItem extends Item implements IPseudoDamageItem
         return info;
     }
 
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
             ElectricItemManager.addChargeVariants(this, subItems);
         }
     }
 
-    public void setDamage(ItemStack stack, int damage) {
+    public void setDamage(@Nonnull ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
         if (damage != prev && logIncorrectItemDamaging) {
             IC2.log.warn(

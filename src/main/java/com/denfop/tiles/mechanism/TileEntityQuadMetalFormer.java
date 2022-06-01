@@ -1,13 +1,12 @@
 package com.denfop.tiles.mechanism;
 
 
+import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.container.ContainerMultiMetalFormer;
-import com.denfop.gui.GUIMultiMetalFormer;
-import com.denfop.invslot.InvSlotProcessableMultiGeneric;
+import com.denfop.gui.GuiMultiMetalFormer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.api.recipe.Recipes;
 import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,11 +22,9 @@ public class TileEntityQuadMetalFormer extends TileEntityMultiMachine
 
     public TileEntityQuadMetalFormer() {
         super(EnumMultiMachine.QUAD_METAL_FORMER.usagePerTick, EnumMultiMachine.QUAD_METAL_FORMER.lenghtOperation,
-                Recipes.metalformerExtruding, 0
+                0
         );
-        this.inputSlots = new InvSlotProcessableMultiGeneric(this, "input", EnumMultiMachine.QUAD_METAL_FORMER.sizeWorkingSlot,
-                Recipes.metalformerExtruding
-        );
+
     }
 
     public String getStartSoundFile() {
@@ -45,7 +42,7 @@ public class TileEntityQuadMetalFormer extends TileEntityMultiMachine
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GUIMultiMetalFormer(new ContainerMultiMetalFormer(entityPlayer, this, sizeWorkingSlot));
+        return new GuiMultiMetalFormer(new ContainerMultiMetalFormer(entityPlayer, this, sizeWorkingSlot));
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -82,19 +79,16 @@ public class TileEntityQuadMetalFormer extends TileEntityMultiMachine
     }
 
     public void setMode(int mode1) {
-        InvSlotProcessableMultiGeneric slot = this.inputSlots;
+        final InvSlotMultiRecipes slot = this.inputSlots;
         switch (mode1) {
             case 0:
-                slot.setRecipeManager(Recipes.metalformerExtruding);
-                this.recipe = Recipes.metalformerExtruding;
+                slot.setNameRecipe("extruding");
                 break;
             case 1:
-                slot.setRecipeManager(Recipes.metalformerRolling);
-                this.recipe = Recipes.metalformerRolling;
+                slot.setNameRecipe("rolling");
                 break;
             case 2:
-                slot.setRecipeManager(Recipes.metalformerCutting);
-                this.recipe = Recipes.metalformerCutting;
+                slot.setNameRecipe("cutting");
                 break;
             default:
                 throw new RuntimeException("invalid mode: " + mode1);

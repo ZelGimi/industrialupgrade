@@ -3,9 +3,7 @@ package com.denfop.integration.jei.genobs;
 
 import com.denfop.api.IObsidianGenerator;
 import com.denfop.api.Recipes;
-import ic2.api.recipe.RecipeOutput;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.RecipeOutput;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -65,13 +63,6 @@ public class GenObsHandler {
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public FluidStack getInput() { // Получатель входного предмета рецепта.
         return input;

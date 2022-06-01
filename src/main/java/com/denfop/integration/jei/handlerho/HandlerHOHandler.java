@@ -2,15 +2,11 @@ package com.denfop.integration.jei.handlerho;
 
 
 import com.denfop.api.Recipes;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipe;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class HandlerHOHandler {
@@ -35,7 +31,7 @@ public class HandlerHOHandler {
 
     public static HandlerHOHandler addRecipe(
             ItemStack input,
-            ArrayList<ItemStack> output,
+            List<ItemStack> output,
             final NBTTagCompound metaData
     ) {
         HandlerHOHandler recipe = new HandlerHOHandler(input, output, metaData);
@@ -59,19 +55,16 @@ public class HandlerHOHandler {
     }
 
     public static void initRecipes() {
-        for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.handlerore.getRecipes()) {
-            addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()), container.getMetaData());
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("handlerho")) {
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.getOutput().items, container.getOutput().metadata
+            );
+
 
         }
     }
 
-    private static ItemStack is(Item item) { // Побочный метод.
-        return new ItemStack(item);
-    }
-
-    private static ItemStack is(Block block) { // Побочный метод.
-        return new ItemStack(block);
-    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

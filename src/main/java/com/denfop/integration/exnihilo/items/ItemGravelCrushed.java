@@ -16,6 +16,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implements IModelRegister {
@@ -24,7 +25,7 @@ public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implem
 
     public ItemGravelCrushed() {
         super(null, Types.class);
-        this.setCreativeTab(IUCore.ItemTab);
+        this.setCreativeTab(IUCore.RecourseTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
@@ -42,7 +43,7 @@ public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implem
         return Types.values()[meta].getName() + "_gravelcrushed" + ".name";
     }
 
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
             for (final ItemGravelCrushed.Types type : this.typeProperty.getShownValues()) {

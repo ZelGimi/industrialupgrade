@@ -11,20 +11,20 @@ public class Pages {
 
     public static List<Pages> lst = new ArrayList<>();
     public static Map<Pages, List<AddPages>> pages = new HashMap<>();
-    public final String mainparent;
+    public final String mainParent;
     public final String name;
     public final int index;
     public final String text;
     public final ItemStack stack;
 
     public Pages(
-            String name, String mainparent, int index, String text,
+            String name, String mainParent, int index, String text,
             ItemStack stack
     ) {
         this.name = name;
         this.index = index;
         this.text = text;
-        this.mainparent = mainparent;
+        this.mainParent = mainParent;
         this.stack = stack;
         lst.add(this);
         addToMainPage(this);
@@ -33,7 +33,7 @@ public class Pages {
 
     public void addToMainPage(final Pages pages) {
         for (Map.Entry<MainPage, List<Pages>> page : MainPage.mainpages.entrySet()) {
-            if (page.getKey().name.equals(pages.mainparent)) {
+            if (page.getKey().name.equals(pages.mainParent)) {
                 if (!page.getValue().contains(pages)) {
                     page.getValue().add(pages);
                 }

@@ -1,7 +1,7 @@
 package com.denfop.items.bags;
 
 import com.denfop.container.ContainerBags;
-import com.denfop.gui.GUIBags;
+import com.denfop.gui.GuiBags;
 import ic2.api.item.ElectricItem;
 import ic2.core.ContainerBase;
 import ic2.core.item.tool.HandHeldInventory;
@@ -11,17 +11,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class HandHeldBags extends HandHeldInventory {
 
     public final int inventorySize;
     public final ItemStack itemStack1;
-    private final ItemEnergyBags itemEnergyBags;
 
-    public HandHeldBags(EntityPlayer player, ItemStack stack, int inventorySize, ItemEnergyBags itemEnergyBags) {
+    public HandHeldBags(EntityPlayer player, ItemStack stack, int inventorySize) {
         super(player, stack, inventorySize);
         this.inventorySize = inventorySize;
         this.itemStack1 = stack;
-        this.itemEnergyBags = itemEnergyBags;
     }
 
     public ContainerBase<HandHeldBags> getGuiContainer(EntityPlayer player) {
@@ -30,9 +30,10 @@ public class HandHeldBags extends HandHeldInventory {
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GUIBags(new ContainerBags(player, this), itemStack1);
+        return new GuiBags(new ContainerBags(player, this), itemStack1);
     }
 
+    @Nonnull
     public String getName() {
         return "toolbox";
     }
