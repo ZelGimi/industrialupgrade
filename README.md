@@ -8,21 +8,22 @@
 
 
 <p style="text-align: center;">***The mod not only extends its uniqueness to the main mod, but adds integrations to different mods, the list may differ in different MC versions!*** </p>
-<p style="text-align: center;"> <font size="3"> **Integration** </font> </p> - [Avaritia](https://www.curseforge.com/minecraft/mc-mods/avaritia-1-10)
-- [Botania](https://www.curseforge.com/minecraft/mc-mods/botania)
-- [CompactSolars](https://www.curseforge.com/minecraft/mc-mods/compact-solars)
-- [CraftTweaker](https://www.curseforge.com/minecraft/mc-mods/crafttweaker)
-- [Draconic Evolution](https://www.curseforge.com/minecraft/mc-mods/draconic-evolution)
-- [ExNihilo](https://www.curseforge.com/minecraft/mc-mods/ex-nihilo-creatio)
-- [ElectroMagicTools](https://www.curseforge.com/minecraft/mc-mods/electro-magic-tools)
-- [Forestry](https://www.curseforge.com/minecraft/mc-mods/forestry)
-- [MineFactoryReloaded](https://www.curseforge.com/minecraft/mc-mods/minefactory-reloaded)
-- [NEI ](https://www.curseforge.com/minecraft/mc-mods/notenoughitems)/[JEI](https://www.curseforge.com/minecraft/mc-mods/jei)
-- [Pams](https://www.curseforge.com/minecraft/mc-mods/pams-harvestcraft)
-- [Thaumcraft](https://www.curseforge.com/minecraft/mc-mods/thaumcraft)
-- [ThaumTinker](https://www.curseforge.com/minecraft/mc-mods/thaumic-tinkerer)
-- [Waila ](https://www.curseforge.com/minecraft/mc-mods/twaila)
-- [Wireless Industry](https://www.curseforge.com/minecraft/mc-mods/wireless-industry)
+###Integration:
+* [Avaritia](https://www.curseforge.com/minecraft/mc-mods/avaritia-1-10)
+* [Botania](https://www.curseforge.com/minecraft/mc-mods/botania)
+* [CompactSolars](https://www.curseforge.com/minecraft/mc-mods/compact-solars)
+* [CraftTweaker](https://www.curseforge.com/minecraft/mc-mods/crafttweaker)
+* [Draconic Evolution](https://www.curseforge.com/minecraft/mc-mods/draconic-evolution)
+* [ExNihilo](https://www.curseforge.com/minecraft/mc-mods/ex-nihilo-creatio)
+* [ElectroMagicTools](https://www.curseforge.com/minecraft/mc-mods/electro-magic-tools)
+* [Forestry](https://www.curseforge.com/minecraft/mc-mods/forestry)
+* [MineFactoryReloaded](https://www.curseforge.com/minecraft/mc-mods/minefactory-reloaded)
+* [NEI ](https://www.curseforge.com/minecraft/mc-mods/notenoughitems)/ [JEI](https://www.curseforge.com/minecraft/mc-mods/jei)
+* [Pams](https://www.curseforge.com/minecraft/mc-mods/pams-harvestcraft)
+* [Thaumcraft](https://www.curseforge.com/minecraft/mc-mods/thaumcraft)
+* [ThaumTinker](https://www.curseforge.com/minecraft/mc-mods/thaumic-tinkerer)
+* [Waila ](https://www.curseforge.com/minecraft/mc-mods/twaila)
+* [Wireless Industry](https://www.curseforge.com/minecraft/mc-mods/wireless-industry)
 
 
 <p style="text-align: center;">  **Addons **</p>
