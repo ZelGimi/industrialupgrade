@@ -1,6 +1,14 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.4RC4:
+1. Fixed a lot of bugs of the old version
+2. Optimization of many things
+3. Added new blocks, mechanisms and items
+4. Reworked crafts
+5. Removed unnecessary crafts
+6. Added a lot of jei support
+7. Added a lot of hints in the mod so that players can normal play
 Version:2.2:
 1.RF storage is expandable with modules in panels
 2.fixed module "stack"
