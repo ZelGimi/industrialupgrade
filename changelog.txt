@@ -1,6 +1,33 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.4RC6:
+1. Added Energy Controller
+2. Added Cable Management Device
+3. Added Air Transformer
+4. Added Water Transformer
+5. Added Earth Transformer
+6. Added Nether Transformer
+7. Added Excavator
+8. Added Crystallizer
+9. Added End Transformer
+10. Fixed bugs
+11. Rework network energy (energy is transferred from level 1 to the last)
+12. Fixed drops in blast furnace
+13. Fixed textures armor in spectral boots
+14. Change streak in spectral chestplate
+15. Added changing color streak in spectral chestplate
+16. Fixed oredict in Stick
+17. Fixed oredict in Vanadium
+18. Added new information
+19. Changed gui in heater and refrigerator
+20. Added script for converter solid matter, which processes all the recipes in the workbench and creates recipes based on them
+21. Added new modules for rotors (9 items)
+22. Added to molecular transformer`s shine, when it starts to work (color depends on the interface)
+Version:2.4RCS5:
+1. Fixed all existing bugs
+2. Added more information about the mod
+3. Added crafttweaker support for other mechanisms
 Version:2.4RC4:
 1. Fixed a lot of bugs of the old version
 2. Optimization of many things
