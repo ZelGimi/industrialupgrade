@@ -1,3 +1,3 @@
-Version:2.4RC6
+Version:2.4
 CurseForge:https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade/
 Changelog:changelog.txt
