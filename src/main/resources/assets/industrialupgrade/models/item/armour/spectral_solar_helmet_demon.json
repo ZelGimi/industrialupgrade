@@ -1,6 +1,0 @@
-{
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/spectral_solar_helmet_demon"
-	}
-}
