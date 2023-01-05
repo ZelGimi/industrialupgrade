@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/quantum_storage_bottom",
+		"down": "industrialupgrade:blocks/quantum_storage_bottom",
+		"up": "industrialupgrade:blocks/quantum_storage_bottom",
+		"north": "industrialupgrade:blocks/quantum_storage_front",
+		"east": "industrialupgrade:blocks/quantum_storage_bottom",
+		"south": "industrialupgrade:blocks/quantum_storage_bottom",
+		"west": "industrialupgrade:blocks/quantum_storage_bottom"
+	}
+}

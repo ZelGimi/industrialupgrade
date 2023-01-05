@@ -1,0 +1,19 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"thorium_ore": {
+				"textures": {
+					"all": "industrialupgrade:blocks/thorium_ore"
+				}
+			}
+		},
+		"inventory": [
+      {}
+    ]
+	}
+}

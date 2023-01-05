@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:heavyore"
+    },
+    "title": {
+      "translate": "achievement.minerals"
+    },
+    "description": {
+      "translate": "achievement.minerals.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/root",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["industrialupgrade:heavyore"]
+          }
+        ]
+      }
+    }
+  }
+}

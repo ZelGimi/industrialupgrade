@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/rods_manufacturer_active_side",
+    "down": "industrialupgrade:blocks/blockalloy_bottom",
+    "up": "industrialupgrade:blocks/rods_manufacturer_active_side",
+    "north": "industrialupgrade:blocks/rods_manufacturer_active_main",
+    "east": "industrialupgrade:blocks/rods_manufacturer_active_side",
+    "south": "industrialupgrade:blocks/rods_manufacturer_active_side",
+    "west": "industrialupgrade:blocks/rods_manufacturer_active_side"
+  }
+}

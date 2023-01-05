@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/adv_gearing_side",
+		"down": "industrialupgrade:blocks/adv_gearing_back",
+		"up": "industrialupgrade:blocks/adv_gearing_top_active",
+		"north": "industrialupgrade:blocks/adv_gearing_main_active",
+		"east": "industrialupgrade:blocks/adv_gearing_side_active",
+		"south": "industrialupgrade:blocks/adv_gearing_back",
+		"west": "industrialupgrade:blocks/adv_gearing_side_active"
+	}
+}

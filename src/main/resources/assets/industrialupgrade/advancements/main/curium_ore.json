@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:blockradiationore",
+      "data": 2
+    },
+    "title": {
+      "translate": "achievement.curiumore"
+    },
+    "description": {
+      "translate": "achievement.curiumore.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/root",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:radiationresources",
+            "data": 2
+          }
+        ]
+      }
+    }
+  }
+}

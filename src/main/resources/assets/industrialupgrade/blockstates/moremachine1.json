@@ -1,0 +1,92 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+      "double_recycler": {
+        "model": "industrialupgrade:moremachine1/double_recycler"
+      },
+	  
+	  "double_recycler_active": {
+        "model": "industrialupgrade:moremachine1/double_recycler_active"
+      },
+      "triple_recycler": {
+        "model": "industrialupgrade:moremachine1/triple_recycler"
+      },
+      "triple_recycler_active": {
+        "model": "industrialupgrade:moremachine1/triple_recycler_active"
+      },
+      "quad_recycler": {
+        "model": "industrialupgrade:moremachine1/quad_recycler"
+      },
+	  
+      "quad_recycler_active": {
+        "model": "industrialupgrade:moremachine1/quad_recycler_active"
+      },
+      "double_comb_recycler": {
+        "model": "industrialupgrade:moremachine1/double_comb_recycler"
+      },
+      "double_comb_recycler_active": {
+        "model": "industrialupgrade:moremachine1/double_comb_recycler_active"
+      },
+      "triple_comb_recycler": {
+        "model": "industrialupgrade:moremachine1/triple_comb_recycler"
+      },
+      "triple_comb_recycler_active": {
+        "model": "industrialupgrade:moremachine1/triple_comb_recycler_active"
+      },
+      "quad_comb_recycler": {
+        "model": "industrialupgrade:moremachine1/quad_comb_recycler"
+      },
+      "quad_comb_recycler_active": {
+        "model": "industrialupgrade:moremachine1/quad_comb_recycler_active"
+      },
+      "comb_macerator": {
+        "model": "industrialupgrade:moremachine1/comb_macerator"
+      },
+      "comb_macerator_active": {
+        "model": "industrialupgrade:moremachine1/comb_macerator_active"
+      },
+      "double_comb_macerator": {
+        "model": "industrialupgrade:moremachine1/double_comb_macerator"
+      },
+      "double_comb_macerator_active": {
+        "model": "industrialupgrade:moremachine1/double_comb_macerator_active"
+      },
+      "triple_comb_macerator": {
+        "model": "industrialupgrade:moremachine1/triple_comb_macerator"
+      },
+      "triple_comb_macerator_active": {
+        "model": "industrialupgrade:moremachine1/triple_comb_macerator_active"
+      },
+      "quad_comb_macerator": {
+        "model": "industrialupgrade:moremachine1/quad_comb_macerator"
+      },
+      "quad_comb_macerator_active": {
+        "model": "industrialupgrade:moremachine1/quad_comb_macerator_active"
+      }
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {
+        "transform": "forge:default-block"
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}

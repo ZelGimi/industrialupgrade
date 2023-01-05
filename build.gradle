@@ -7,6 +7,7 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
+		
         jcenter()
         mavenCentral()
     }
@@ -28,7 +29,10 @@ group = modGroup
 archivesBaseName = modBaseName
 //noinspection GroovyAssignabilityCheck
 project.ic2_range= "[${project.ic2_min_ver},${project.ic2_max_ver}]"
-
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
 blossom {
     replaceToken '%VERSION%', modVersion
     replaceToken "%IC2_RANGE%", ic2_range
@@ -87,6 +91,9 @@ repositories {
             includeGroup 'net.industrial-craft'
         }
     }
+	  maven {
+        url "http://maven.cil.li"
+    }
     maven {
         name 'progwml6'
         url 'https://dvs1.progwml6.com/files/maven'
@@ -100,10 +107,7 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-	 maven {
-        name 'CB Maven FS'
-        url "http://chickenbones.net/maven/"
-    }
+
 }
 
 dependencies {
@@ -112,42 +116,59 @@ dependencies {
             name   : "forge",
             version: "${minecraft_version}-${forge_version}"
     ])
-
+	  compileOnly "li.cil.oc:OpenComputers:MC1.12.2-1.7.2.67:api"
     runtimeOnly "curse.maven:thaumcraft-223628:2629023"
-    runtimeOnly "curse.maven:wireless-industry-377164:3538850"
+    runtimeOnly "curse.maven:wireless-industry-377164:3864415"
     runtimeOnly "curse.maven:botania-225643:2846950"
 	runtimeOnly "curse.maven:baubles-227083:2518667"
 	compileOnly "mezz.jei:jei_1.12.2:4.15.0.272:api"
 	runtimeOnly "mezz.jei:jei_1.12.2:4.15.0.272"
 	compileOnly "curse.maven:thaumcraft-223628:2629023"
-    compileOnly "curse.maven:wireless-industry-377164:3538850"
+    compileOnly "curse.maven:wireless-industry-377164:3864415"
     compileOnly "curse.maven:botania-225643:2846950"
 	compileOnly "curse.maven:baubles-227083:2518667"
     runtimeOnly "net.industrial-craft:industrialcraft-2:${project.ic2_max_ver}"
-    compileOnly "net.industrial-craft:industrialcraft-2:2.8.193-ex112:dev"
-
+    compileOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
+    compileOnly "curse.maven:projecte-226410:2702991"
+    runtimeOnly "curse.maven:projecte-226410:2702991"
+    compileOnly "curse.maven:more-electric-tools-366298:3491973"
+    runtimeOnly "curse.maven:more-electric-tools-366298:3491973"
     compileOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
     runtimeOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
     compileOnly "curse.maven:forestry-59751:2684780"
     runtimeOnly "curse.maven:forestry-59751:2684780"
-    compileOnly "curse.maven:compact-solars-228759:2633646"
-    runtimeOnly "curse.maven:compact-solars-228759:2633646"
     compileOnly "curse.maven:avaritia-1-10-261348:3143349"
     runtimeOnly "curse.maven:avaritia-1-10-261348:3143349"
-    compileOnly "curse.maven:pams-harvestcraft-221857:2904825"
-    runtimeOnly "curse.maven:pams-harvestcraft-221857:2904825"
-
 	runtimeOnly "curse.maven:cofh-core-69162:2920433"
 	compileOnly "curse.maven:cofh-core-69162:2920433"
 	runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
 	compileOnly "curse.maven:thermal-expansion-69163:2926431"
-
-
+    runtimeOnly "curse.maven:journeymap-32274:2916002"
+    compileOnly "curse.maven:journeymap-32274:2916002"
+	runtimeOnly "curse.maven:wrapup-275153:2486198"
+    compileOnly "curse.maven:wrapup-266936:3294077"
+    runtimeOnly "curse.maven:shadowfacts-forgelin-248453:2785465"
+    compileOnly "curse.maven:shadowfacts-forgelin-248453:2785465"
+    runtimeOnly "curse.maven:crafttweaker-239197:3587830"
+    compileOnly "curse.maven:crafttweaker-239197:3587830"
+    runtimeOnly "curse.maven:tesla-core-lib-254602:3438487"
+    compileOnly "curse.maven:tesla-core-lib-254602:3438487"
+    runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
+    compileOnly "curse.maven:thermal-expansion-69163:2926431"
+    runtimeOnly "curse.maven:thermal-dynamics-227443:2920505"
+    compileOnly "curse.maven:thermal-dynamics-227443:2920505"
+    runtimeOnly "curse.maven:thermal-foundation-222880:2926428"
+    compileOnly "curse.maven:thermal-foundation-222880:2926428"
+    runtimeOnly "curse.maven:modtweaker-220954:3488553"
+    compileOnly "curse.maven:modtweaker-220954:3488553"
+    runtimeOnly "curse.maven:just-enough-resources-jer-240630:2728585"
+    compileOnly "curse.maven:just-enough-resources-jer-240630:2728585"
+    runtimeOnly "curse.maven:jei-integration-265917:2951731"
+    compileOnly "curse.maven:jei-integration-265917:2951731"
+    runtimeOnly "curse.maven:mtlib-253211:3308160"
+    compileOnly "curse.maven:mtlib-253211:3308160"
     runtimeOnly "curse.maven:external-tweaker-270558:2452858"
     compileOnly "curse.maven:external-tweaker-270558:2452858"
-//	runtimeOnly "curse.maven:codechicken-lib-1-8-242818:2779848"
- // compileOnly "curse.maven:codechicken-lib-1-8-242818:2779848"
-  
 	runtimeOnly "curse.maven:redstone-arsenal-70631:2939416"
 	compileOnly "curse.maven:redstone-arsenal-70631:2939416"
 	runtimeOnly "curse.maven:redstone-flux-270789:2920436"
@@ -156,15 +177,17 @@ dependencies {
 	compileOnly "curse.maven:thermal-dynamics-227443:2920505"
 	runtimeOnly "curse.maven:thermal-foundation-222880:2926428"
 	compileOnly "curse.maven:thermal-foundation-222880:2926428"
-	
 	runtimeOnly "curse.maven:draconic-evolution-223565:3431261"
 	compileOnly "curse.maven:draconic-evolution-223565:3431261"
 	runtimeOnly "curse.maven:brandons-core-231382:3408276"
 	compileOnly "curse.maven:brandons-core-231382:3408276"
-   runtimeOnly "curse.maven:cofh-world-271384:2920434"
+    runtimeOnly "curse.maven:cofh-world-271384:2920434"
 	compileOnly "curse.maven:cofh-world-271384:2920434"
-	runtimeOnly fileTree('lib')
+    runtimeOnly "curse.maven:cucumber-272335:2645867"
+    compileOnly "curse.maven:cucumber-272335:2645867"
+    runtimeOnly fileTree('lib')
 	compileOnly fileTree('lib')
+	compileOnly fileTree('libs')
 }
 
 processResources {
@@ -205,8 +228,7 @@ jar {
     from sourceSets.main.output.classesDirs
     from sourceSets.main.output.resourcesDir
 }
-apply from: 'https://gist.github.com/ijo42/6b215e76269a72f37194b924ddda038e/raw/d782226840813ae6703044c51e98b61eb4675875/signjar.groovy'
-build.dependsOn signJar
+
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"

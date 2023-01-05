@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/Hybrid Solar Side",
+    "down": "industrialupgrade:blocks/Hybrid Solar Bottom",
+    "up": "industrialupgrade:blocks/Hybrid Solar Top",
+    "north": "industrialupgrade:blocks/Hybrid Solar Side",
+    "east": "industrialupgrade:blocks/Hybrid Solar Side",
+    "south": "industrialupgrade:blocks/Hybrid Solar Side",
+    "west": "industrialupgrade:blocks/Hybrid Solar Side"
+  }
+}

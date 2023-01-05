@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:itemcore",
+      "data": 6
+    },
+    "title": {
+      "translate": "achievement.sin_core"
+    },
+    "description": {
+      "translate": "achievement.sin_core.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/pro_core",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:itemcore",
+            "data": 6
+          }
+        ]
+      }
+    }
+  }
+}

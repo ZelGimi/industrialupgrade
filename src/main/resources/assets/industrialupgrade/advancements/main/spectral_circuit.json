@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:circuit",
+	  "data": 11
+    },
+    "title": {
+      "translate": "achievement.spectral_circuit"
+    },
+    "description": {
+      "translate": "achievement.spectral_circuit.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/quantum_circuit",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:circuit",
+			"data": 11
+          }
+        ]
+      }
+    }
+  }
+}

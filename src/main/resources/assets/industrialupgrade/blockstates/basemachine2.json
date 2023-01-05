@@ -1,0 +1,173 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+	  "combiner_matter": {
+        "model": "industrialupgrade:basemachine/combiner_matter"
+      },
+	  "combiner_matter_active": {
+        "model": "industrialupgrade:basemachine/combiner_matter_active"
+      },
+	  "fisher": {
+        "model": "industrialupgrade:basemachine/fisher"
+      },
+	  "fisher_active": {
+        "model": "industrialupgrade:basemachine/fisher_active"
+      },
+	  "analyzer": {
+        "model": "industrialupgrade:basemachine/analyzer"
+      },
+	  "analyzer_active": {
+        "model": "industrialupgrade:basemachine/analyzer_active"
+      },
+	   "painter": {
+        "model": "industrialupgrade:basemachine/painter"
+      },
+	  "painter_active": {
+        "model": "industrialupgrade:basemachine/painter_active"
+      },
+	   "gen_disel": {
+        "model": "industrialupgrade:basemachine/gen_disel"
+      },
+	  "gen_disel_active": {
+        "model": "industrialupgrade:basemachine/gen_disel_active"
+      },
+	  "gen_pet": {
+        "model": "industrialupgrade:basemachine/gen_pet"
+      },
+	  "gen_pet_active": {
+        "model": "industrialupgrade:basemachine/gen_pet_active"
+      },
+	  "adv_pump": {
+        "model": "industrialupgrade:basemachine/adv_pump"
+      },
+	  "adv_pump_active": {
+        "model": "industrialupgrade:basemachine/adv_pump_active"
+      },
+	   "imp_pump": {
+        "model": "industrialupgrade:basemachine/imp_pump"
+      },
+	  "imp_pump_active": {
+        "model": "industrialupgrade:basemachine/imp_pump_active"
+      },
+	  "expierence_block": {
+        "model": "industrialupgrade:basemachine/expierence_block"
+      },
+	  "expierence_block_active": {
+        "model": "industrialupgrade:basemachine/expierence_block"
+      },
+	  "gen_hyd": {
+        "model": "industrialupgrade:basemachine/gen_hyd"
+      },
+	  "gen_hyd_active": {
+        "model": "industrialupgrade:basemachine/gen_hyd_active"
+      },
+	  "gen_obsidian": {
+        "model": "industrialupgrade:basemachine/gen_obsidian"
+      },
+	  "gen_obsidian_active": {
+        "model": "industrialupgrade:basemachine/gen_obsidian_active"
+      },
+	  "plastic_creator": {
+        "model": "industrialupgrade:basemachine/plastic_creator"
+      },
+	  "plastic_creator_active": {
+        "model": "industrialupgrade:basemachine/plastic_creator_active"
+      },
+	  "lava_gen": {
+        "model": "industrialupgrade:basemachine/lava_gen"
+      },
+	  "lava_gen_active": {
+        "model": "industrialupgrade:basemachine/lava_gen_active"
+      },
+	  "plastic_plate_creator": {
+        "model": "industrialupgrade:basemachine/plastic_plate_creator"
+      },
+	  "plastic_plate_creator_active": {
+        "model": "industrialupgrade:basemachine/plastic_plate_creator_active"
+      },
+	  "helium_generator": {
+        "model": "industrialupgrade:basemachine/helium_generator"
+      },
+	  "helium_generator_active": {
+        "model": "industrialupgrade:basemachine/helium_generator_active"
+      },
+	  "electrolyzer_iu": {
+        "model": "industrialupgrade:basemachine/electrolyzer_iu"
+      },
+	  "electrolyzer_iu_active": {
+        "model": "industrialupgrade:basemachine/electrolyzer_iu_active"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  
+	  
+      "quantum_solar_panelrain": {
+        "model": "industrialupgrade:quantum_solar_panelrain"
+      }
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {
+        "transform": "forge:default-block"
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}
