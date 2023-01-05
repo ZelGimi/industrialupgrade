@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:additionmodule",
+	  "data": 4
+    },
+    "title": {
+      "translate": "achievement.module_rf_energy"
+    },
+    "description": {
+      "translate": "achievement.module_rf_energy.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/nano_circuit",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:additionmodule",
+			"data": 4
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "macerator_iu": {
+        "model": "ic2:machine/processing/basic/macerator"
+      },
+	  "macerator_iu_active": {
+        "model": "ic2:machine/processing/basic/macerator_active"
+      },
+	  "compressor_iu": {
+        "model": "ic2:machine/processing/basic/compressor"
+      },
+	  "compressor_iu_active": {
+        "model":  "ic2:machine/processing/basic/compressor_active"
+      },
+	  "furnace_iu": {
+        "model":  "ic2:machine/processing/basic/electric_furnace"
+      },
+	   "furnace_iu_active": {
+        "model":"ic2:machine/processing/basic/electric_furnace_active"
+      },
+	  "extractor_iu": {
+        "model":"ic2:machine/processing/basic/extractor"
+      },
+	   "sintezator": {
+        "model": "industrialupgrade:basemachine/sintezator"
+      },
+	  "extractor_iu_active": {
+        "model": "ic2:machine/processing/basic/extractor_active"
+      },
+	  "metalformer_iu": {
+        "model": "ic2:machine/processing/advanced/metal_former"
+      },
+	  "metalformer_iu_active": {
+        "model": "ic2:machine/processing/advanced/metal_former_active"
+      },
+	  "recycler_iu": {
+        "model": "ic2:machine/processing/basic/recycler"
+      },
+	  "recycler_iu_active": {
+        "model": "ic2:machine/processing/basic/recycler_active"
+      },
+      "generator_matter": {
+        "model": "ic2:machine/uu/matter_generator"
+      },
+      "generator_matter_active": {
+        "model": "ic2:machine/uu/matter_generator_active"
+      },
+	  "modulator": {
+        "model": "industrialupgrade:basemachine/modulator"
+      },
+	  "modulator_active": {
+        "model": "industrialupgrade:basemachine/modulator_active"
+      },
+	  "per_matter": {
+        "model": "industrialupgrade:basemachine/per_matter"
+      },
+	  "per_matter_active": {
+        "model": "industrialupgrade:basemachine/per_matter_active"
+      },
+	  "per_quantum_quarry": {
+        "model": "industrialupgrade:basemachine/per_quantum_quarry"
+      },
+	  "per_quantum_quarry_active": {
+        "model": "industrialupgrade:basemachine/per_quantum_quarry_active"
+      },
+	  "quantum_quarry": {
+        "model": "industrialupgrade:basemachine/quantum_quarry"
+      },
+	  "quantum_quarry_active": {
+        "model": "industrialupgrade:basemachine/quantum_quarry_active"
+      },
+	  "neutron_generator": {
+        "model": "industrialupgrade:basemachine/neutron_generator"
+      },
+	  "neutron_generator_active": {
+        "model": "industrialupgrade:basemachine/neutron_generator_active"
+      },
+	  "generator_microchip": {
+        "model": "industrialupgrade:basemachine/generator_microchip"
+      },
+	  "generator_microchip_active": {
+        "model": "industrialupgrade:basemachine/generator_microchip_active"
+      },
+	  "adv_gen": {
+        "model": "industrialupgrade:basemachine/adv_gen"
+      },
+	  "adv_gen_active": {
+        "model": "industrialupgrade:basemachine/adv_gen_active"
+      },
+	  "imp_gen": {
+        "model": "industrialupgrade:basemachine/imp_gen"
+      },
+	  "imp_gen_active": {
+        "model": "industrialupgrade:basemachine/imp_gen_active"
+      },
+	  "per_gen": {
+        "model": "industrialupgrade:basemachine/per_gen"
+      },
+	  "per_gen_active": {
+        "model": "industrialupgrade:basemachine/per_gen_active"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  "se_advgen": {
+        "model": "industrialupgrade:basemachine/se_advgen"
+      },
+	  
+	  
+      "quantum_solar_panelrain": {
+        "model": "industrialupgrade:quantum_solar_panelrain"
+      }
+    },
+    "facing": {
+      "down": {
+        "x": 90
+      },
+      "up": {
+        "x": 270
+      },
+      "north": {
+        "transform": "forge:default-block"
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/blockhandlerho_bottom",
+    "down": "industrialupgrade:blocks/blockhandlerho_bottom",
+    "up": "industrialupgrade:blocks/blockhandlerho_bottom",
+    "north": "industrialupgrade:blocks/blockhandlerho_main_active",
+    "east": "industrialupgrade:blocks/blockhandlerho_side_active",
+    "south": "industrialupgrade:blocks/blockhandlerho_side2",
+    "west": "industrialupgrade:blocks/blockhandlerho_side_active"
+  }
+}

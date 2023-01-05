@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:itemcell",
+      "data": 8
+    },
+    "title": {
+      "translate": "achievement.oxygen"
+    },
+    "description": {
+      "translate": "achievement.oxygen.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/elecrolyzer",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:itemcell",
+            "data": 8
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "title": {
+      "translate": "achievement.plastic_plate"
+    },
+    "description": {
+      "translate": "achievement.plastic_plate.desc"
+    }
+  },
+  "parent": "industrialupgrade:main/plastic_plate_creator",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:plastic_plate"
+          }
+        ]
+      }
+    }
+  }
+}

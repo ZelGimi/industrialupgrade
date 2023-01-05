@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "industrialupgrade:itemcore",
+      "data": 12
+    },
+    "title": {
+      "translate": "achievement.gra_core"
+    },
+    "description": {
+      "translate": "achievement.gra_core.desc"
+    },
+    "frame": "challenge"
+  },
+  "parent": "industrialupgrade:main/had_core",
+  "criteria": {
+    "mine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "industrialupgrade:itemcore",
+            "data": 12
+          }
+        ]
+      }
+    }
+  }
+}

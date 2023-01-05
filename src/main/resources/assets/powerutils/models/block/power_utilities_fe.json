@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "powerutils:blocks/pc1_side",
+    "down": "powerutils:blocks/pc1_side",
+    "up": "powerutils:blocks/pc1_side",
+    "north": "powerutils:blocks/pc1_side",
+    "east": "powerutils:blocks/pc1_side",
+    "south": "powerutils:blocks/pc1_side",
+    "west": "powerutils:blocks/pc1_side"
+  }
+}

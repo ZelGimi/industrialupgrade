@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "industrialupgrade:blocks/blockgenmatter_side",
+    "down": "industrialupgrade:blocks/blockgenmatter_side",
+    "up": "industrialupgrade:blocks/blockgenmatter_side",
+    "north": "industrialupgrade:blocks/blockgenmatter_main_active",
+    "east": "industrialupgrade:blocks/blockgenmatter_side",
+    "south": "industrialupgrade:blocks/blockgenmatter_side",
+    "west": "industrialupgrade:blocks/blockgenmatter_side"
+  }
+}
