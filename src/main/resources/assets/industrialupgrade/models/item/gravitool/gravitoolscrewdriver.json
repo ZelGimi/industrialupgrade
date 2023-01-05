@@ -1,6 +1,0 @@
-{
-	"parent": "ic2:item/tool/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/gravitoolscrewdriver"
-	}
-}
