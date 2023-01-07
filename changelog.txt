@@ -1,6 +1,107 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.4:
+1. Adding your api for sounds, which facilitates the work of the client and server
+2. Adding a cooling system
+3. Adding a unified energy system (now wires and mechs receive / transmit EU / RF / TE / FE)
+4. Energy grid optimization
+5. Create an experience system
+6. Create your own GUI render system
+7. Adding battery life for heaters
+8. Adding a unified crafting system, which is much optimized from the standard system (it was received by all mechanisms except the obsidian generator)
+9. Optimization of multi-mechanisms
+10. Optimization of exit slots
+11. Optimizing the rendering of wires and pipes
+12. Create your own system of transport pipes (both objects and liquids)
+13. Optimization of the module system for items
+14. Adding 7 modules to items
+15. Adding a core system (which is much lighter and optimized core blocks)
+16. Adding wind and water power system modules system
+17. Adding a wind system
+18. Optimization of the system of improvements in mechanisms
+19. Optimization of the ejection system in mechanisms
+20. Adding about 42 mechanisms (later about them)
+21. Adding own blast furnace and system for it
+22. Adding experimental pipes
+23. Adding universal heat pipes (which conduct cold and heat)
+24. Adding transport pipes
+25. Adding Standard Transformers to the Mod
+26. Fix drop transformers
+27. Adding universal wires that conduct everything
+28. Addition of quantum and solarite systems
+29. Sannarium renamed to solarite
+30. Analyzer chest added
+31. Added own wind generators
+32. Energy controller added
+33. Added cable management device
+34. Air/Water/Earth/Hell/Ender converters
+35. Added crystallizer
+36. Added excavator
+37. Added new types of separators
+38. Added wind and water modification stations and rotor assemblers
+39. Added blade collectors
+40. Blades and cores for water and wind rotors
+41. Added new types of scanners
+42. Added new types of replicators
+43. Added new storage types for quantum and solarite energy
+44. Added combiner of solar energy generators
+45. Added refrigerator
+46. Added air separation unit
+47. Added water generator
+48. Added module removal station
+49. Added anti-magnetic machine
+50. Updated models in molecular transducers
+51. Molecular transducer optimization
+52. Optimizing the operation of nuclear reactors
+53. Adding your own types of watermakers
+54. Each type of mechanism has its own interface colors
+55. Wither manufacturer accepts 1 item each
+56. Added the ability to turn off the sound in mechanisms
+57. Adding spawn of a large pile of minerals at one point
+58. Increased the capacity of oil in the vein by 100%
+59. Updated in many mechs their models
+60. Changed the work of an autonomous farm
+61. Added ore washing and thermal centrifuges
+62. Added mechanical stamps
+63. Increased tank capacity
+64. Bellows that have liquid in them, then liquid is not lost during destruction
+65. Module: Manufacturer
+66. Module: Autonomous heater
+67. Optimization of some graphical interfaces
+68. Added a bunch of support for crafttweaker
+69 Added a lot of jei support
+70. Added a lot of descriptions for various items
+71. Addition of chip system for advanced and conventional wiring
+72. Adding new types of skins for tools and armor
+73. Adding a lead box
+74. Fixed crashes, bugs in bags
+75. Added katana
+76. Fixed bugs in sabers
+77. Fixed bugs in bows
+78. Completely rewritten tool system (shovel, pick, drill, ax)
+79. Solarite plate manufacturer and solarite converter require solarite energy
+80. Solar Power Manufacturers Have Module Slots
+81. Autonomous hunter optimization
+82. Autonomous operation of an advanced converter when items that have crafts for the same items are placed in the slot
+83. Increased the number of blocks in the white and black list
+84. Added the ability to view the black list
+85. Optimized quantum careers
+86. Added a lot of sensors and crafting items
+87. Energy wireless system optimization
+88. Added many sounds for different mechanisms
+89. Jetpacks added to the system of pumping modules
+90. Lappaks added to the system of pumping modules
+91. Bags have a description of the items stored there
+92. Adding Your Own Batch System
+93. Plasma renderer added for molecular transducers
+94. Removed information about item modules at the top left
+95. Metalforming mechanism removed
+96. Added the ability to edit the lane for the players
+97. Adding Cooling Modules
+98. Improving performance in mechanisms
+99. Increased generation of ores
+100. Optimizing solar panels
 Version:2.4RC6:
 1. Added Energy Controller
 2. Added Cable Management Device
