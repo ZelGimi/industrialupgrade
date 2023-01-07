@@ -10,7 +10,7 @@ import java.util.List;
 public class InvSlotOutput extends InvSlot {
 
     public InvSlotOutput(IInventorySlotHolder<?> base1, String name1, int count) {
-        this(base1, name1, count, InvSide.BOTTOM);
+        this(base1, name1, count, InvSide.ANY);
     }
 
     public InvSlotOutput(IInventorySlotHolder<?> base1, String name1, int count, InvSide side) {

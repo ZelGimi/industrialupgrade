@@ -50,7 +50,7 @@ public class ContainerGenStone extends ContainerFullInv<TileEntityBaseGenStone> 
         ret.add("guiProgress");
         ret.add("energy");
         ret.add("mode");
-
+        ret.add("sound");
         return ret;
     }
 

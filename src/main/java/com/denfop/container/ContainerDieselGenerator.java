@@ -20,6 +20,7 @@ public class ContainerDieselGenerator extends ContainerFullInv<TileEntityDieselG
         List<String> ret = super.getNetworkedFields();
         ret.add("energy");
         ret.add("fluidTank");
+        ret.add("sound");
         return ret;
     }
 

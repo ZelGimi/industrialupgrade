@@ -15,6 +15,7 @@ import ic2.core.network.IPlayerItemDataListener;
 import ic2.core.util.LogCategory;
 import ic2.core.util.ReflectionUtil;
 import ic2.core.util.StackUtil;
+import ic2.core.util.Util;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -37,7 +38,9 @@ import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 
@@ -270,11 +273,86 @@ public class NetworkManager implements INetworkManager {
     public final void initiateTileEntityEvent(TileEntity te, int event, boolean limitRange) {
         assert !this.isClient();
 
+        if (!te.getWorld().playerEntities.isEmpty()) {
+            GrowingBuffer buffer = new GrowingBuffer(32);
+
+            try {
+               SubPacketType.TileEntityEvent.writeTo(buffer);
+               DataEncoder.encode(buffer, te, false);
+                buffer.writeInt(event);
+            } catch (IOException var9) {
+                throw new RuntimeException(var9);
+            }
+
+            buffer.flip();
+            Iterator<Collection<EntityPlayerMP>> var5 = getPlayersInRange(te.getWorld(), te.getPos(), new ArrayList()).iterator();
+
+            while(true) {
+                EntityPlayerMP target;
+                int dX;
+                int dZ;
+                do {
+                    if (!var5.hasNext()) {
+                        return;
+                    }
+
+                    target = (EntityPlayerMP)var5.next();
+                    if (!limitRange) {
+                        break;
+                    }
+
+                    dX = (int)((double)te.getPos().getX() + 0.5D - target.posX);
+                    dZ = (int)((double)te.getPos().getZ() + 0.5D - target.posZ);
+                } while(dX * dX + dZ * dZ > 400);
+
+                this.sendPacket(buffer, false, target);
+            }
+        }
+
 
     }
 
     public final void initiateItemEvent(EntityPlayer player, ItemStack stack, int event, boolean limitRange) {
+        if (StackUtil.isEmpty(stack)) {
+            throw new NullPointerException("invalid stack: " + StackUtil.toStringSafe(stack));
+        } else {
+            assert !this.isClient();
 
+            GrowingBuffer buffer = new GrowingBuffer(256);
+
+            try {
+                SubPacketType.ItemEvent.writeTo(buffer);
+                DataEncoder.encode(buffer, player.getGameProfile(), false);
+                DataEncoder.encode(buffer, stack, false);
+                buffer.writeInt(event);
+            } catch (Exception var10) {
+                throw new RuntimeException(var10);
+            }
+
+            buffer.flip();
+            Iterator<Collection<EntityPlayerMP>> var6 = getPlayersInRange(player.getEntityWorld(), player.getPosition(), new ArrayList()).iterator();
+
+            while(true) {
+                EntityPlayerMP target;
+                int dX;
+                int dZ;
+                do {
+                    if (!var6.hasNext()) {
+                        return;
+                    }
+
+                    target = (EntityPlayerMP)var6.next();
+                    if (!limitRange) {
+                        break;
+                    }
+
+                    dX = (int)(player.posX - target.posX);
+                    dZ = (int)(player.posZ - target.posZ);
+                } while(dX * dX + dZ * dZ > 400);
+
+                this.sendPacket(buffer, false, target);
+            }
+        }
     }
 
     public void initiateClientItemEvent(ItemStack stack, int event) {
@@ -286,10 +364,32 @@ public class NetworkManager implements INetworkManager {
         assert false;
 
     }
-
-    public final void sendInitialData(TileEntity te) {
+    public final void sendInitialData(TileEntity te, EntityPlayerMP player) {
         assert !this.isClient();
 
+        if (te instanceof INetworkDataProvider) {
+           TeUpdateDataServer updateData = getTeUpdateData(te);
+
+            for (final String field : ((INetworkDataProvider) te).getNetworkFields()) {
+                updateData.addPlayerField(field, player);
+            }
+        }
+
+    }
+    public final void sendInitialData(TileEntity te) {
+        assert !this.isClient();
+        if (te instanceof INetworkDataProvider) {
+            TeUpdateDataServer updateData = getTeUpdateData(te);
+            List<String> fields = ((INetworkDataProvider)te).getNetworkFields();
+
+            for (final String field : fields) {
+                updateData.addGlobalField(field);
+            }
+
+            if (TeUpdate.debug) {
+                IC2.log.info(LogCategory.Network, "Sending initial TE data for %s (%s).", new Object[]{Util.formatPosition(te), fields});
+            }
+        }
 
     }
 

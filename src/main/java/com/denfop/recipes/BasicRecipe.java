@@ -3,11 +3,15 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockMoreMachine;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
 import ic2.api.recipe.Recipes;
+import ic2.core.block.ITeBlock;
+import ic2.core.block.TeBlockRegistry;
 import ic2.core.ref.BlockName;
 import ic2.core.ref.TeBlock;
 import net.minecraft.init.Blocks;
@@ -7382,9 +7386,9 @@ public class BasicRecipe {
                 'E',
                 new ItemStack(IUItem.crafting_elements, 1, 75),
                 'A',
-                Ic2Items.replicator,
+                getBlockStack(BlockBaseMachine3.replicator_iu),
                 'C',
-                Ic2Items.scanner,
+                getBlockStack(BlockBaseMachine3.scanner_iu),
                 'D',
                 IUItem.combinersolidmatter,
                 'B',
@@ -7464,6 +7468,9 @@ public class BasicRecipe {
         );
     }
 
+    public static ItemStack getBlockStack(ITeBlock block) {
+        return TeBlockRegistry.get(block.getIdentifier()).getItemStack(block);
+    }
 
 }
 

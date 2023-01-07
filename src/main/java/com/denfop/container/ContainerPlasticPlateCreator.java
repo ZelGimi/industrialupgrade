@@ -48,6 +48,7 @@ public class ContainerPlasticPlateCreator extends ContainerFullInv<TileEntityPla
         ret.add("guiProgress");
         ret.add("fluidTank");
         ret.add("energy");
+        ret.add("sound");
         return ret;
     }
 

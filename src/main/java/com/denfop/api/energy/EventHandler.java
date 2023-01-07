@@ -13,6 +13,8 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2.core.block.TileEntityBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -44,12 +46,16 @@ public class EventHandler {
         }
         BlockPos pos = event.getPos();
         Block block = event.getPlacedBlock().getBlock();
+        if(event.getPlacedBlock().getMaterial() != Material.AIR && event.getState() != null)
         if (block.hasTileEntity(event.getPlacedBlock())) {
             TileEntity tile = event.getWorld().getTileEntity(pos);
+            if(tile == null)
+                return;
+            if (tile instanceof TileEntityBlock) {
+                return;
+            }
             if (tile instanceof IEnergyHandler) {
-                if (tile instanceof TileEntityBlock) {
-                    return;
-                }
+
 
                 if (tile instanceof IEnergyProvider && tile instanceof IEnergyReceiver) {
                     MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
@@ -73,11 +79,12 @@ public class EventHandler {
 
                 }
 
-            } else if (tile.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                if (tile instanceof TileEntityBlock) {
-                    return;
-                }
-                IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, null);
+            }
+
+            for(EnumFacing facing : EnumFacing.values())
+             if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
+
+                IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, facing);
                 if (energy_storage == null) {
                     return;
                 }
@@ -110,33 +117,30 @@ public class EventHandler {
         if (event.getWorld().isRemote) {
             return;
         }
-        if (event.getPlayer() == null) {
-            return;
-        }
+
 
         BlockPos pos = event.getPos();
         Block block = event.getState().getBlock();
+        if(block != Blocks.AIR && event.getState() != null)
         if (block.hasTileEntity(event.getState())) {
             TileEntity tile = event.getWorld().getTileEntity(pos);
             if (tile == null) {
                 return;
             }
+            if (tile instanceof TileEntityBlock) {
+                return;
+            }
             if (tile instanceof IEnergyHandler) {
-                if (tile instanceof TileEntityBlock) {
-                    return;
-                }
+
                 IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
 
 
-            } else if (tile.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                if (tile instanceof TileEntityBlock) {
-                    return;
-                }
-                IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, null);
-                if (energy_storage == null) {
-                    return;
-                }
+            }
+
+            for(EnumFacing facing : EnumFacing.values())
+            if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
+
                 IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
 
@@ -156,11 +160,11 @@ public class EventHandler {
         final Map<BlockPos, TileEntity> map = event.getChunk().tileEntities;
         for (Map.Entry<BlockPos, TileEntity> entry : map.entrySet()) {
             TileEntity tile = entry.getValue();
+            if (tile instanceof TileEntityBlock) {
+                continue;
+            }
             if (tile instanceof IEnergyHandler) {
 
-                if (tile instanceof TileEntityBlock) {
-                    continue;
-                }
                 if (tile instanceof IEnergyProvider && tile instanceof IEnergyReceiver) {
                     MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
                             event.getWorld(),
@@ -182,12 +186,13 @@ public class EventHandler {
                     ));
 
                 }
-            } else if (tile.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                if (tile instanceof TileEntityBlock) {
-                    continue;
-                }
+                continue;
+            }
+            for(EnumFacing facing : EnumFacing.values())
+                if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
 
-                IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, EnumFacing.UP);
+
+                IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, facing);
                 if (energy_storage == null) {
                     continue;
                 }
@@ -210,6 +215,7 @@ public class EventHandler {
                     ));
 
                 }
+                break;
             }
         }
     }
@@ -243,16 +249,16 @@ public class EventHandler {
                     MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
 
                 }
-            } else if (tile.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                if (tile instanceof TileEntityBlock) {
-                    continue;
-                }
-                IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, null);
-                if (energy_storage == null) {
-                    continue;
-                }
+            }
+            if (tile instanceof TileEntityBlock) {
+                continue;
+            }
+            for(EnumFacing facing : EnumFacing.values())
+             if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
+
                 IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
+                 break;
             }
         }
 

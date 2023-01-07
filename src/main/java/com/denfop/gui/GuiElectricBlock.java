@@ -83,7 +83,7 @@ public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
         );
 
         String tooltip3 = Localization.translate("inforamtionelectricstorage");
-        new Area(this, 110, 34, 132 - 110, 51 - 34).withTooltip(tooltip3).drawForeground(xOffset, yOffset);
+        new Area(this, 110, 34, 132 - 110, 51 - 34).withTooltip(tooltip3).drawForeground(par1, par2);
 
 
         handleUpgradeTooltip(par1, par2);

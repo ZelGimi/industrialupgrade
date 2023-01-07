@@ -20,6 +20,7 @@ public class ContainerMagnetGenerator extends ContainerFullInv<TileEntityMagnetG
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
         ret.add("timer");
+        ret.add("sound");
         return ret;
     }
 

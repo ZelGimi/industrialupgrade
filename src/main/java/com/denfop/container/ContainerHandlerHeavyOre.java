@@ -47,6 +47,7 @@ public class ContainerHandlerHeavyOre extends ContainerFullInv<TileEntityBaseHan
         ret.add("guiProgress");
         ret.add("heat");
         ret.add("energy");
+        ret.add("sound");
         return ret;
     }
 

@@ -82,6 +82,7 @@ import com.denfop.integration.mets.METSIntegration;
 import com.denfop.integration.projecte.ProjectEIntegration;
 import com.denfop.integration.thaumcraft.BlockThaumSolarPanel;
 import com.denfop.integration.thaumcraft.ThaumcraftIntegration;
+import com.denfop.integration.thermal.ThermalExpansionIntegration;
 import com.denfop.items.CellType;
 import com.denfop.items.book.core.CoreBook;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
@@ -507,6 +508,9 @@ public class CommonProxy implements IGuiHandler {
         }
         if (Loader.isModLoaded("appliedenergistics2")) {
             AEIntegration.init();
+        }
+        if (Loader.isModLoaded("thermalexpansion")) {
+            ThermalExpansionIntegration.init();
         }
         CompressorRecipe.recipe();
         CannerRecipe.recipe();

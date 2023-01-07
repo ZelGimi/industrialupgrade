@@ -26,6 +26,8 @@ public class ContainerAntiUpgrade extends ContainerFullInv<TileEntityAntiUpgrade
         ret.add("progress");
         ret.add("energy");
         ret.add("index");
+
+        ret.add("sound");
         return ret;
     }
 

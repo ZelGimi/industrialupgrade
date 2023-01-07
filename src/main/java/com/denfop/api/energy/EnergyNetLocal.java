@@ -6,14 +6,7 @@ import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.NodeStats;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyConductor;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
-import ic2.api.energy.tile.IMetaDelegate;
+import ic2.api.energy.tile.*;
 import ic2.api.info.ILocatable;
 import ic2.core.ExplosionIC2;
 import ic2.core.IC2;
@@ -25,17 +18,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class EnergyNetLocal {
 
@@ -93,7 +78,8 @@ public class EnergyNetLocal {
                         world,
                         iEnergyTile
                 ));
-            }     this.world.setBlockToAir(pos);
+            }
+            this.world.setBlockToAir(pos);
             float power = 1.0F;
             ExplosionIC2 explosion = new ExplosionIC2(
                     this.world,
@@ -316,11 +302,11 @@ public class EnergyNetLocal {
 
                 double adding;
 
-                if(this.hasrestrictions && !this.explosing)
-                adding = Math.min(energyProvided,Math.min ( demandedEnergy,energyPath.min) + energyPath.loss);
-                else if(this.hasrestrictions && this.explosing){
-                    adding = Math.min(energyProvided,demandedEnergy + energyPath.loss);
-                }else{
+                if (this.hasrestrictions && !this.explosing) {
+                    adding = Math.min(energyProvided, Math.min(demandedEnergy, energyPath.min) + energyPath.loss);
+                } else if (this.hasrestrictions && this.explosing) {
+                    adding = Math.min(energyProvided, demandedEnergy + energyPath.loss);
+                } else {
                     adding = Math.min(energyProvided, demandedEnergy + energyPath.loss);
                 }
                 adding -= energyPath.loss;
@@ -348,6 +334,7 @@ public class EnergyNetLocal {
                 tick.addEnergy(adding);
                 energyPath.tick(this.tick, adding);
                 amount -= adding;
+                amount -= energyPath.loss;
                 amount = Math.max(0, amount);
                 if (this.hasrestrictions && this.explosing) {
                     if (adding > energyPath.min) {
@@ -698,10 +685,8 @@ public class EnergyNetLocal {
                         );
                         if (offer > 0) {
 
-                                final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
-                                entry.drawEnergy(removed);
-
-
+                            final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
+                            entry.drawEnergy(removed);
 
 
                         } else {

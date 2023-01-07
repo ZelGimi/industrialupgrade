@@ -53,6 +53,7 @@ public class ContainerBaseGenerationChipMachine
         ret.add("tier");
         ret.add("heat");
         ret.add("energy");
+        ret.add("sound");
         return ret;
     }
 
