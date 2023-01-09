@@ -171,7 +171,7 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister, IUpg
                                 ((EntityPlayerMP) player).connection.sendPacket(new SPacketEntityTeleport(item));
                             }
                             item.setPickupDelay(0);
-                            ElectricItem.manager.use(itemStack, 200 * energy, null);
+                            ElectricItem.manager.use(itemStack, 200 * energy, player);
                         } else if (mode == 2) {
                             boolean xcoord = item.posX + 2 >= p_77663_3_.posX && item.posX - 2 <= p_77663_3_.posX;
                             boolean zcoord = item.posZ + 2 >= p_77663_3_.posZ && item.posZ - 2 <= p_77663_3_.posZ;

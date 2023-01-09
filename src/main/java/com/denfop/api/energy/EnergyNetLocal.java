@@ -123,7 +123,7 @@ public class EnergyNetLocal {
             try {
                 this.addTileEntity(getTileFromIEnergy(tile1).getPos(), tile1);
             } catch (Exception e) {
-            }
+             }
         }
 
 
@@ -259,7 +259,7 @@ public class EnergyNetLocal {
 
         if (energyPaths == null) {
             energyPaths = this.discover(energySource);
-            for (EnergyPath path : energyPaths) {
+             for (EnergyPath path : energyPaths) {
 
                 boolean isSorted = false;
                 IEnergyConductor buf;
@@ -301,7 +301,6 @@ public class EnergyNetLocal {
                 double energyProvided = amount;
 
                 double adding;
-
                 if (this.hasrestrictions && !this.explosing) {
                     adding = Math.min(energyProvided, Math.min(demandedEnergy, energyPath.min) + energyPath.loss);
                 } else if (this.hasrestrictions && this.explosing) {
@@ -331,6 +330,7 @@ public class EnergyNetLocal {
                 }
                 adding -= energySink.injectEnergy(energyPath.targetDirection, adding, 0);
                 energyPath.totalEnergyConducted = (long) adding;
+
                 tick.addEnergy(adding);
                 energyPath.tick(this.tick, adding);
                 amount -= adding;
@@ -524,11 +524,12 @@ public class EnergyNetLocal {
         if (tile == null) {
             return null;
         }
-        final TileEntity tile1 = this.energyTileTileEntityMap.get(tile);
+        final BlockPos tile1 = this.chunkCoordinatesMap.get(tile);
         if (tile1 == null) {
             return null;
         }
-        return this.getTileEntity(tile1.getPos().offset(dir));
+
+        return this.getTileEntity(tile1.offset(dir));
     }
 
     public IEnergyTile getNeighbor(final IEnergyTile tile, final EnumFacing dir, List<IEnergyTile> tiles) {
@@ -658,7 +659,7 @@ public class EnergyNetLocal {
 
     public void onTickEnd() {
         this.suncoef.calculate();
-        if (this.world.provider.getWorldTime() % Config.tickupdateenergysystem == 0) {
+
             if (this.waitingList.hasWork()) {
                 final List<IEnergyTile> tiles = this.waitingList.getPathTiles();
                 for (final IEnergyTile tile : tiles) {
@@ -670,19 +671,15 @@ public class EnergyNetLocal {
                 this.waitingList.clear();
 
             }
-        }
+
         if (this.world.provider.getWorldTime() % Config.ticktransferenergy == 0) {
             try {
                 for (EnergyTick tick : this.energySourceToEnergyPathMap.senderPath) {
                     final IEnergySource entry = tick.getSource();
 
                     if (entry != null) {
-                        double offered = entry.getOfferedEnergy();
 
-                        double offer = Math.min(
-                                offered,
-                                EnergyNet.instance.getPowerFromTier(entry.getSourceTier())
-                        );
+                        double offer = entry.getOfferedEnergy();
                         if (offer > 0) {
 
                             final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
@@ -716,8 +713,7 @@ public class EnergyNetLocal {
     }
 
     public IEnergyTile getTileEntity(BlockPos pos) {
-
-        return this.chunkCoordinatesIEnergyTileMap.get(pos);
+       return this.chunkCoordinatesIEnergyTileMap.get(pos);
     }
 
     public NodeStats getNodeStats(final IEnergyTile tile) {
@@ -1000,15 +996,6 @@ public class EnergyNetLocal {
 
 
         public void clear() {
-            for (EnergyTick entry : this.senderPath) {
-                List<EnergyPath> list = entry.getList();
-                if (list != null) {
-                    for (EnergyPath energyPath : list) {
-                        energyPath.conductors.clear();
-                    }
-                }
-
-            }
             this.senderPath.clear();
         }
 
@@ -1067,8 +1054,10 @@ public class EnergyNetLocal {
         }
 
         public void onTileEntityAdded(final List<EnergyTarget> around, final IEnergyAcceptor tile) {
+
             if (around.isEmpty() || this.paths.isEmpty()) {
                 this.createNewPath(tile);
+
                 return;
             }
             boolean found = false;
@@ -1106,8 +1095,9 @@ public class EnergyNetLocal {
                 this.paths.add(newLogic);
             }
             if (!found) {
+
                 this.createNewPath(tile);
-            }
+             }
         }
 
         public void onTileEntityRemoved(final IEnergyAcceptor par1) {
