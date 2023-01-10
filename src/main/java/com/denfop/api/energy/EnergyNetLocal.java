@@ -5,6 +5,7 @@ import com.denfop.api.transport.ITransportTile;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
 import ic2.api.energy.EnergyNet;
+import ic2.api.energy.IEnergyNet;
 import ic2.api.energy.NodeStats;
 import ic2.api.energy.tile.*;
 import ic2.api.info.ILocatable;
@@ -122,7 +123,7 @@ public class EnergyNetLocal {
         } else {
             try {
                 this.addTileEntity(getTileFromIEnergy(tile1).getPos(), tile1);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
              }
         }
 
@@ -281,7 +282,6 @@ public class EnergyNetLocal {
 
             tick.setList(energyPaths);
 
-
             tick.rework();
             if (!this.controllerList.isEmpty()) {
                 this.controllerList.forEach(IEnergyController::work);
@@ -303,7 +303,7 @@ public class EnergyNetLocal {
                 double adding;
                 if (this.hasrestrictions && !this.explosing) {
                     adding = Math.min(energyProvided, Math.min(demandedEnergy, energyPath.min) + energyPath.loss);
-                } else if (this.hasrestrictions && this.explosing) {
+                } else if (this.hasrestrictions) {
                     adding = Math.min(energyProvided, demandedEnergy + energyPath.loss);
                 } else {
                     adding = Math.min(energyProvided, demandedEnergy + energyPath.loss);
@@ -662,9 +662,10 @@ public class EnergyNetLocal {
 
             if (this.waitingList.hasWork()) {
                 final List<IEnergyTile> tiles = this.waitingList.getPathTiles();
+
                 for (final IEnergyTile tile : tiles) {
                     final List<IEnergySource> sources = this.discoverFirstPathOrSources(tile);
-                    if (sources.size() > 0) {
+                     if (sources.size() > 0) {
                         this.energySourceToEnergyPathMap.removeAllSource1(sources);
                     }
                 }
@@ -672,14 +673,14 @@ public class EnergyNetLocal {
 
             }
 
-        if (this.world.provider.getWorldTime() % Config.ticktransferenergy == 0) {
             try {
                 for (EnergyTick tick : this.energySourceToEnergyPathMap.senderPath) {
                     final IEnergySource entry = tick.getSource();
 
                     if (entry != null) {
 
-                        double offer = entry.getOfferedEnergy();
+                        double offer = Math.min( entry.getOfferedEnergy(),
+                                EnergyNet.instance.getPowerFromTier(entry.getSourceTier()));
                         if (offer > 0) {
 
                             final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
@@ -690,7 +691,7 @@ public class EnergyNetLocal {
 
                             if (tick.isAdv()) {
                                 if (tick.getAdvSource().isSource()) {
-                                    tick.getAdvSource().setPastEnergy(tick.getAdvSource().getPerEnergy());
+                                  tick.getAdvSource().setPastEnergy(tick.getAdvSource().getPerEnergy());
                                 }
                             }
                         }
@@ -699,17 +700,9 @@ public class EnergyNetLocal {
                 }
             } catch (Exception ignored) {
             }
-        }
+
 
         this.tick++;
-    }
-
-    private double getPacketAmount(IEnergySource source) {
-        if (source instanceof ITransformer) {
-            return ((ITransformer) source).isStepUp() ? 1.0D : 4.0D;
-        }
-
-        return 1.0D;
     }
 
     public IEnergyTile getTileEntity(BlockPos pos) {
@@ -1054,10 +1047,8 @@ public class EnergyNetLocal {
         }
 
         public void onTileEntityAdded(final List<EnergyTarget> around, final IEnergyAcceptor tile) {
-
-            if (around.isEmpty() || this.paths.isEmpty()) {
+             if (around.isEmpty() || this.paths.isEmpty()) {
                 this.createNewPath(tile);
-
                 return;
             }
             boolean found = false;
@@ -1094,9 +1085,11 @@ public class EnergyNetLocal {
                 }
                 this.paths.add(newLogic);
             }
+
             if (!found) {
 
                 this.createNewPath(tile);
+
              }
         }
 
