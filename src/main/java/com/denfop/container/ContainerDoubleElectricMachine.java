@@ -1,5 +1,6 @@
 package com.denfop.container;
 
+import com.denfop.api.audio.IAudioFixer;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
 import com.denfop.tiles.mechanism.TileEntitySunnariumPanelMaker;
@@ -84,6 +85,9 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
         if (this.base instanceof TileEntityAlloySmelter) {
             ret.add("heat");
         }
+
+        ret.add("sound");
+
         ret.add("energy");
         return ret;
     }

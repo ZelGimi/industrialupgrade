@@ -48,6 +48,7 @@ public class ContainerMagnet extends ContainerFullInv<TileEntityMagnet> {
         List<String> ret = super.getNetworkedFields();
         ret.add("energyconsume");
         ret.add("energy");
+        ret.add("sound");
         return ret;
     }
 

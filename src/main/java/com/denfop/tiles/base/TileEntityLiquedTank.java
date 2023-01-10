@@ -28,6 +28,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -36,6 +37,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -138,8 +141,8 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
         if (wrench || this.teBlock.getDefaultDrop() == TeBlock.DefaultDrop.Self) {
-            NBTTagCompound nbt = StackUtil.getOrCreateNbtData(drop);
             if (this.fluidTank.getFluidAmount() > 0) {
+                NBTTagCompound nbt = StackUtil.getOrCreateNbtData(drop);
                 nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
             }
         }

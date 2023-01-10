@@ -63,6 +63,7 @@ public class ContainerSunnariumMaker extends ContainerFullInv<TileEntityBaseSunn
         ret.add("tier");
         ret.add("sunenergy");
         ret.add("energy");
+        ret.add("sound");
         return ret;
     }
 

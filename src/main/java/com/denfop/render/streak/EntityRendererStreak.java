@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EntityRendererStreak extends Render<EntityStreak> {
 
@@ -44,7 +45,7 @@ public class EntityRendererStreak extends Render<EntityStreak> {
 
     private void renderStreak(EntityStreak entity, final float par6) {
         if (entity.parent instanceof AbstractClientPlayer && !entity.isInvisible()) {
-            this.bindTexture(this.getEntityTexture(entity));
+            this.bindTexture(Objects.requireNonNull(this.getEntityTexture(entity)));
             AbstractClientPlayer player = (AbstractClientPlayer) entity.parent;
             Minecraft mc = Minecraft.getMinecraft();
             if (!entity.isInvisible() && (player != mc.player || mc.gameSettings.thirdPersonView != 0)) {

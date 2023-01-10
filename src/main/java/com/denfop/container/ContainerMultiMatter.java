@@ -26,7 +26,7 @@ public class ContainerMultiMatter extends ContainerFullInv<TileEntityMultiMatter
         ret.add("scrap");
         ret.add("fluidTank");
         ret.add("work");
-
+        ret.add("sound");
         return ret;
     }
 

@@ -54,7 +54,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
 
         GL11.glTranslated(x, y, z);
         GL11.glTranslatef(0.5F, 0F, 0.5F);
-        GL11.glEnable(GL11.GL_BLEND);
+
 
         GL11.glRotatef(0F, 0.0F, 0F, 0F);
         switch (tile.level) {
@@ -74,14 +74,12 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
 
 
         model.renderAll();
-        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
         if (tile.vein != null && tile.vein.get()) {
             if (tile.vein.getType() != Type.EMPTY) {
                 GL11.glPushMatrix();
                 GL11.glTranslated(x, y, z);
                 GL11.glTranslatef(0.45F, 0, 0.5F);
-                GL11.glEnable(GL11.GL_BLEND);
                 GL11.glRotatef(rotation, 0F, 1F, 0F);
                 BlockRendererDispatcher ren = Minecraft.getMinecraft().getBlockRendererDispatcher();
                 IBlockState state;
@@ -103,7 +101,6 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
                 final ResourceLocation resorce = new ResourceLocation(dom, path);
                 bindTexture(resorce);
                 ore.renderAll();
-                GL11.glDisable(GL11.GL_BLEND);
                 GL11.glPopMatrix();
                 rotation = prevRotation + (rotation - prevRotation) * partialTicks;
                 prevRotation = rotation;

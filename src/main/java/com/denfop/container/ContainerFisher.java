@@ -29,7 +29,7 @@ public class ContainerFisher extends ContainerFullInv<TileEntityFisher> {
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-
+        ret.add("sound");
         ret.add("energy");
         ret.add("progress");
         return ret;

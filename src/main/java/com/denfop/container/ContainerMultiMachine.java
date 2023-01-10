@@ -57,7 +57,7 @@ public class ContainerMultiMachine extends ContainerFullInv<TileEntityMultiMachi
         if (this.base.heat != null) {
             ret.add("heat");
         }
-
+        ret.add("sound");
         return ret;
     }
 

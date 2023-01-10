@@ -29,6 +29,7 @@ public class ContainerElectrolyzer extends ContainerFullInv<TileEntityElectrolyz
         List<String> ret = super.getNetworkedFields();
         ret.add("energy");
         ret.add("fluidTank");
+        ret.add("sound");
         return ret;
     }
 

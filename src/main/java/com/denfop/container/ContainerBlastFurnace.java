@@ -56,7 +56,9 @@ public class ContainerBlastFurnace extends ContainerFullInv<TileEntityBlastFurna
         }
         ret.add("progress");
         ret.add("bar");
+        ret.add("sound");
         return ret;
+
     }
 
 }

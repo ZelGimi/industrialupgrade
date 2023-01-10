@@ -15,12 +15,14 @@ import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
+import ic2.core.network.NetworkManager;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -29,10 +31,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TileEntityQuarryVein extends TileEntityElectricMachine implements INetworkUpdateListener, INetworkDataProvider,
-        INetworkClientTileEntityEventListener, IType {
+        INetworkClientTileEntityEventListener, IType, com.denfop.network.INetworkDataProvider {
 
 
     public int level;
@@ -136,17 +139,31 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             IUCore.network.get(true).updateTileEntityField(this, "vein");
 
         }
-
+        if (!world.isRemote) {
+            IUCore.network.get(true).sendInitialData(this);
+        }
 
     }
 
     @Override
-    public List<String> getNetworkedFields() {
-        final List<String> list = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        final List<String> list = new ArrayList<>();
         list.add("level");
+        if(this.vein != null)
+        list.add("vein");
         return list;
     }
+    public NBTTagCompound getUpdateTag() {
+        super.getUpdateTag();
+        IUCore.network.get(true).sendInitialData(this);
+        return  new NBTTagCompound();
+    }
 
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        super.getUpdatePacket();
+        IUCore.network.get(true).sendInitialData(this);
+        return null;
+    }
 
     @Override
     protected void onLoaded() {
@@ -166,6 +183,8 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             }
         }
         updateTileEntityField();
+        if(!this.getWorld().isRemote)
+            IUCore.network.get(true).sendInitialData(this);
     }
 
     private void updateTileEntityField() {

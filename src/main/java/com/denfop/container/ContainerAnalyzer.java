@@ -47,6 +47,7 @@ public class ContainerAnalyzer extends ContainerFullInv<TileEntityAnalyzer> {
         ret.add("middleheightores");
         ret.add("consume");
 
+        ret.add("sound");
         ret.add("xcoord");
         ret.add("xendcoord");
         ret.add("zcoord");

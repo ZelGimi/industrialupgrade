@@ -101,6 +101,7 @@ public class EnergyTick {
                 });
             } else {
                 energyPaths1.addAll(energyPaths);
+                energyPaths.clear();
                 break;
             }
             i++;
