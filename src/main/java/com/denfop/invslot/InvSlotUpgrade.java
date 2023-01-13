@@ -463,6 +463,7 @@ public class InvSlotUpgrade extends InvSlot {
                 if (handler == null) {
                     continue;
                 }
+
                 int slots = 0;
                 try {
                     slots = this.slotHandler.get(handler.getHandler());
@@ -556,6 +557,7 @@ public class InvSlotUpgrade extends InvSlot {
 
         for (int i = 0; i < slot; i++) {
             stack = this.insertItem2(dest, i, stack, simulate);
+
             if (stack.isEmpty()) {
                 return ItemStack.EMPTY;
             }
@@ -577,13 +579,16 @@ public class InvSlotUpgrade extends InvSlot {
 
         int m;
         if (!stackInSlot.isEmpty()) {
+
             int max = stackInSlot.getMaxStackSize();
             int limit = dest.getSlotLimit(slot);
             if (stackInSlot.getCount() >= Math.min(max, limit)) {
                 return stack;
             }
             if (simulate) {
-                if (!inventory.isItemValidForSlot(slot, stackInSlot)) {
+
+
+                if (!inventory.isItemValidForSlot(slot, stack)) {
                     return stack;
                 }
             }
@@ -615,10 +620,10 @@ public class InvSlotUpgrade extends InvSlot {
             }
             return stack;
         } else {
-            if (simulate) {
-                if (!inventory.isItemValidForSlot(slot, stackInSlot)) {
-                    return stack;
-                }
+
+
+            if (!inventory.isItemValidForSlot(slot, stack)) {
+                return stack;
             }
             m = Math.min(stack.getMaxStackSize(), dest.getSlotLimit(slot));
             if (m < stack.getCount()) {

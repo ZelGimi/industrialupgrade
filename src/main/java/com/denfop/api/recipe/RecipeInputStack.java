@@ -51,8 +51,7 @@ public class RecipeInputStack implements IRecipeInputStack {
         RecipeInputStack that = (RecipeInputStack) o;
         for (ItemStack input : getItemStack()) {
             for (ItemStack input1 : that.getItemStack()) {
-
-                if (input.getItem() == input1.getItem() && (input1.getItemDamage() == OreDictionary.WILDCARD_VALUE || input1.getItemDamage() == input1.getItemDamage())) {
+                if (input.getItem() == input1.getItem() && (input1.getItemDamage() == OreDictionary.WILDCARD_VALUE || input.getItemDamage() == input1.getItemDamage())) {
                     if (input.getTagCompound() == null) {
                         return true;
                     } else {

@@ -293,6 +293,33 @@
       "adv_solarium_storage": {
         "model": "industrialupgrade:basemachine/adv_solarium_storage"
       },
+      "limiter": {
+        "model": "industrialupgrade:basemachine/limiter"
+      },
+      "redstone_generator": {
+        "model": "industrialupgrade:basemachine/redstone_generator"
+      },
+      "redstone_generator_active": {
+        "model": "industrialupgrade:basemachine/redstone_generator_active"
+      },
+      "adv_redstone_generator": {
+        "model": "industrialupgrade:basemachine/adv_redstone_generator"
+      },
+      "adv_redstone_generator_active": {
+        "model": "industrialupgrade:basemachine/adv_redstone_generator_active"
+      },
+      "imp_redstone_generator": {
+        "model": "industrialupgrade:basemachine/imp_redstone_generator"
+      },
+	  "imp_redstone_generator_active": {
+        "model": "industrialupgrade:basemachine/imp_redstone_generator_active"
+      },
+	  "per_redstone_generator": {
+        "model": "industrialupgrade:basemachine/per_redstone_generator"
+      },
+      "per_redstone_generator_active": {
+        "model": "industrialupgrade:basemachine/per_redstone_generator_active"
+      },
       "imp_solarium_storage": {
         "model": "industrialupgrade:basemachine/imp_solarium_storage"
       },
@@ -311,10 +338,10 @@
       "per_quantum_storage": {
         "model": "industrialupgrade:basemachine/per_quantum_storage"
       },
-	  "quad_handlerho": {
+      "quad_handlerho": {
         "model": "industrialupgrade:basemachine/quad_handlerho"
       },
-	  "quad_handlerho_active": {
+      "quad_handlerho_active": {
         "model": "industrialupgrade:basemachine/quad_handlerho_active"
       },
 

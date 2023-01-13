@@ -3,12 +3,16 @@ package com.denfop.api.energy;
 
 import com.denfop.Config;
 import com.denfop.api.IAdvEnergyNet;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.integration.gc.GCIntegration;
+import com.denfop.proxy.CommonProxy;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.IEnergyNetEventReceiver;
 import ic2.api.energy.NodeStats;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.info.ILocatable;
+import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalElectrical;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -102,10 +106,22 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
                 for(BlockPos pos : blockPos){
                     TileEntity tile = world1.getTileEntity(pos);
                     IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(world1, pos);
+                    if(CommonProxy.gc) {
+                        boolean need = GCIntegration.check(tile);
+                        if(need) {
+                            IEnergyTile iEnergyTile1 = EnergyNet.instance.getSubTile(world1, pos);
+                            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(world1, iEnergyTile1));
+                            if(tile instanceof IEnergySink){
+                                MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world1, tile, new EnergyGJSink((TileBaseUniversalElectrical) tile)));
+                            }
+                            continue;
+                        }
+                    }
                     if(iEnergyTile != null || tile == null) {
                         deletePos.add(pos);
                         continue;
                     }
+
                     if (tile instanceof cofh.redstoneflux.api.IEnergyHandler) {
                         if (tile instanceof cofh.redstoneflux.api.IEnergyProvider && tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
                             MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world1, tile, new EnergyRFSinkSource(tile)));

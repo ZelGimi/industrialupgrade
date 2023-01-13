@@ -70,6 +70,7 @@ import com.denfop.items.ItemPhotoniumGlass;
 import com.denfop.items.ItemRotorsUpgrade;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.items.ItemToolLimiter;
+import com.denfop.items.ItemVeinSensor;
 import com.denfop.items.ItemWaterRod;
 import com.denfop.items.ItemWaterRotorsUpgrade;
 import com.denfop.items.ItemWindRod;
@@ -188,6 +189,7 @@ public class Register {
         IUItem.crafting_elements = new ItemCraftingElements();
         IUItem.item_pipes = new ItemItemPipes();
         IUItem.gear = new ItemGear();
+        IUItem.veinsencor = new ItemVeinSensor();
         IUItem.alloygear = new ItemAlloysGear();
         IUItem.corewater = new ItemCoreWater();
         IUItem.heatcold_pipes = new ItemHeatColdPipes();

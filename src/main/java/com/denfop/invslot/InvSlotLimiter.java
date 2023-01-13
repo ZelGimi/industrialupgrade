@@ -25,6 +25,10 @@ public class InvSlotLimiter extends InvSlot {
     @Override
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
+        if(content.isEmpty())
+            this.limiter.setTier(0);
+        else
+            this.limiter.setTier(content.getItemDamage() - 205);
     }
 
 }

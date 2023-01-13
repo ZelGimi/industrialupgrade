@@ -18,7 +18,7 @@ import java.util.Objects;
 public class CTUURecipe {
 
     @ZenMethod
-    public static void addRecipe(IItemStack output, int col) {
+    public static void addRecipe(IItemStack output, double col) {
 
 
         CraftTweakerAPI.apply(new AddMolecularAction(output, col));
@@ -42,10 +42,10 @@ public class CTUURecipe {
     private static class AddMolecularAction extends BaseAction {
 
         private final IItemStack output;
-        private final int number;
+        private final double number;
 
 
-        public AddMolecularAction(IItemStack output, final int col) {
+        public AddMolecularAction(IItemStack output, final double col) {
             super("uu");
             this.output = output;
             this.number = col;

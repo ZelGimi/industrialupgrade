@@ -24,6 +24,7 @@ import com.denfop.network.WorldData;
 import com.denfop.utils.CapturedMobUtils;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
+import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.IWorldTickCallback;
 import ic2.core.init.Localization;
@@ -324,7 +325,12 @@ public class IUEventHandler {
             event.getToolTip().add(Localization.translate("iu.info.module.stack"));
         }
         if (item.equals(IUItem.module_storage)) {
-            event.getToolTip().add(Localization.translate("iu.info.module.sorting "));
+            event.getToolTip().add(Localization.translate("iu.info.module.sorting"));
+        }
+        if (item.equals(IUItem.crafting_elements) && stack.getItemDamage() >= 206 && stack.getItemDamage() <= 216) {
+            int meta = stack.getItemDamage() - 205;
+            event.getToolTip().add(Localization.translate("iu.limiter.info9") + EnergyNet.instance.getPowerFromTier(meta) + " " +
+                    "EU");
         }
         if (item.equals(IUItem.upgrade_speed_creation) || item.equals(IUItem.autoheater) || item.equals(IUItem.coolupgrade) || item.equals(
                 IUItem.module_quickly) || item.equals(

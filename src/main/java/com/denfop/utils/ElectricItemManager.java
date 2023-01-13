@@ -135,7 +135,7 @@ public class ElectricItemManager implements IElectricItemManager {
     }
 
     public double getCharge(ItemStack stack) {
-        return StackUtil.getOrCreateNbtData(stack).getDouble("charge");
+        return StackUtil.getOrCreateNbtData(stack).getDouble("charge") ;
     }
 
     public double getMaxCharge(ItemStack stack) {

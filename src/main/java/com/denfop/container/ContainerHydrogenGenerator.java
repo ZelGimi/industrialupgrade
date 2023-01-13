@@ -1,6 +1,6 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.generator.energy.TileEntityHydrogenGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityHydrogenGenerator;
 import ic2.core.ContainerFullInv;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;

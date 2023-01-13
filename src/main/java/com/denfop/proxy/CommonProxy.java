@@ -143,6 +143,9 @@ import java.util.Map;
 public class CommonProxy implements IGuiHandler {
 
 
+    public static boolean ae2;
+    public static boolean gc;
+
     public static void sendPlayerMessage(EntityPlayer player, String text) {
         if (IC2.platform.isSimulating()) {
             IC2.platform.messagePlayer(
@@ -202,6 +205,9 @@ public class CommonProxy implements IGuiHandler {
         BlockQuarryVein.buildDummies();
         BlockHeatColdPipes.buildDummies();
         BlockUniversalCable.buildDummies();
+        this.ae2 = Loader.isModLoaded("appliedenergistics2");
+        this.gc = Loader.isModLoaded("galacticraftcore");
+
         if (Config.AvaritiaLoaded) {
             BlockAvaritiaSolarPanel.buildDummies();
         }

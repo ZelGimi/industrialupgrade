@@ -18,4 +18,6 @@ public interface IVeinSystem {
 
     void unload();
 
+    List<ChunkPos> getChunkPos();
+
 }

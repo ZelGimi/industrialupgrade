@@ -176,7 +176,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
                     }
                 }
                 this.tempprogress = (int) (this.maxprogress[i] - this.speed);
-
+                this.tempprogress =  Math.max(1, this.tempprogress);
                 if (this.progress[i] >= this.tempprogress) {
                     this.progress[i] = 0;
                     if (this.mobUtils[i] == null) {

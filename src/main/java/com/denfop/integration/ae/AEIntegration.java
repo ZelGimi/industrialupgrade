@@ -1,11 +1,13 @@
 package com.denfop.integration.ae;
 
 import appeng.core.Api;
+import appeng.tile.powersink.AEBasePoweredTile;
 import com.denfop.IUCore;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 
 public class AEIntegration {
 
@@ -38,6 +40,10 @@ public class AEIntegration {
         );
 
 
+    }
+
+    public static boolean check(TileEntity tile) {
+        return tile instanceof AEBasePoweredTile;
     }
 
 }

@@ -180,15 +180,11 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, tooltip, advanced);
-        tooltip.add(String.format(
-                "%s %.0f %s %s %.0f %s",
-                Localization.translate("ic2.item.tooltip.Low"),
-                EnergyNet.instance.getPowerFromTier(this.energy.getSinkTier()),
-                Localization.translate("ic2.generic.text.EUt"),
-                Localization.translate("ic2.item.tooltip.High"),
-                EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() + 1),
-                Localization.translate("ic2.generic.text.EUt")
-        ));
+        tooltip.add(Localization.translate("ic2.item.tooltip.Low") + (int)EnergyNet.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
+        + Localization.translate("ic2.generic.text.EUt")+ " " +Localization.translate("ic2.item.tooltip.High")
+        +  (int)EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() + 1) + " "+     Localization.translate("ic2" +
+                ".generic.text.EUt"));
+
     }
 
     public ContainerBase<TileEntityTransformer> getGuiContainer(EntityPlayer player) {

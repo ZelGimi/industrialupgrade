@@ -50,7 +50,7 @@ public class AdvEnergy extends TileEntityComponent {
     protected double pastEnergy1;
     protected double perenergy1;
     public boolean limit;
-    public double limit_amount;
+    public double limit_amount = 0;
 
     public AdvEnergy(TileEntityBlock parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -157,11 +157,14 @@ public class AdvEnergy extends TileEntityComponent {
 
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
+        this.limit_amount = nbt.getDouble("limit_amount");
     }
 
     public NBTTagCompound writeToNbt() {
         NBTTagCompound ret = new NBTTagCompound();
         ret.setDouble("storage", this.storage);
+        ret.setDouble("limit_amount", this.limit_amount);
+
         return ret;
     }
 
@@ -234,6 +237,8 @@ public class AdvEnergy extends TileEntityComponent {
         GrowingBuffer buffer = new GrowingBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
+        buffer.writeDouble(this.limit_amount);
+
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -241,6 +246,7 @@ public class AdvEnergy extends TileEntityComponent {
     public void onNetworkUpdate(DataInput is) throws IOException {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
+        limit_amount = is.readDouble();
     }
 
     public boolean enableWorldTick() {
@@ -409,6 +415,7 @@ public class AdvEnergy extends TileEntityComponent {
         if (!limit) {
             return Math.min(this.storage, EnergyNet.instance.getPowerFromTier(this.sourceTier));
         } else {
+
             return Math.min(this.storage, this.limit_amount);
         }
     }
@@ -450,6 +457,7 @@ public class AdvEnergy extends TileEntityComponent {
         }
 
         public double getOfferedEnergy() {
+
             return !AdvEnergy.this.sendingSidabled
                     ? AdvEnergy.this.getSourceEnergy()
                     : 0.0D;

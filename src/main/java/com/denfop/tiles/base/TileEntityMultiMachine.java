@@ -115,7 +115,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
             this.exp = this.addComponent(EXPComponent.asBasicSource(this, 5000, 14));
         }
         if (this.getMachine().type == EnumTypeMachines.Centrifuge) {
-            this.heat = this.addComponent(HeatComponent.asBasicSink(this, 10000));
+            this.heat = this.addComponent(HeatComponent.asBasicSink(this, 5000));
         }
         this.multi_process = this.addComponent(new ProcessMultiComponent(this, getMachine()));
     }

@@ -4,10 +4,15 @@ package com.denfop.api.energy;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.integration.ae.AEIntegration;
+import com.denfop.integration.gc.GCIntegration;
+import com.denfop.proxy.CommonProxy;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
+import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalElectrical;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -45,8 +50,28 @@ public class EventHandler {
 
             if (tile == null)
                 return;
+            if(CommonProxy.gc) {
+                boolean need = GCIntegration.check(tile);
+                if(need) {
+                    IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
+                    if(tile instanceof IEnergySink){
+                        MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(event
+                                .getWorld(), tile, new EnergyGJSink((TileBaseUniversalElectrical) tile)));
+                        EnergyNetGlobal.addEnergyTile(event.getWorld(),tile.getPos());
+                    }
+
+                    return;
+                }
+            }
             if (tile instanceof ic2.core.block.TileEntityBlock || tile instanceof IEnergyTile)
                 return;
+            if(CommonProxy.ae2) {
+                boolean need = AEIntegration.check(tile);
+                        if(need)
+                            return;
+            }
+
             IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), tile.getPos());
             if(iEnergyTile != null)
                 return;
@@ -100,17 +125,29 @@ public class EventHandler {
             TileEntity tile = event.getWorld().getTileEntity(pos);
             if (tile == null)
                 return;
+            if(CommonProxy.gc) {
+                boolean need = GCIntegration.check(tile);
+                if(need) {
+                    IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
+                    EnergyNetGlobal.removeEnergyTile(event.getWorld().provider.getDimension(),pos);
+                    return;
+                }
+            }
             if (tile instanceof ic2.core.block.TileEntityBlock || tile instanceof IEnergyTile)
                 return;
-            EnergyNetGlobal.removeEnergyTile(event.getWorld().provider.getDimension(),pos);
             if (tile instanceof cofh.redstoneflux.api.IEnergyHandler) {
                 IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
+                EnergyNetGlobal.removeEnergyTile(event.getWorld().provider.getDimension(),pos);
+
             }
             for (EnumFacing facing : EnumFacing.values()) {
                 if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
                     IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
                     MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
+                    EnergyNetGlobal.removeEnergyTile(event.getWorld().provider.getDimension(),pos);
+                    return;
                 }
             }
 

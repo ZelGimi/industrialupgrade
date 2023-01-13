@@ -33,19 +33,10 @@ public class VeinSystem implements IVeinSystem {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent
-    public void load(ChunkEvent.Load event) {
-        if (event.getChunk().getWorld().provider.getDimension() == 0) {
-            if (event.getWorld().isRemote) {
-                return;
-            }
-            ChunkPos pos1 = event.getChunk().getPos();
-            if (!this.chunkPos.contains(pos1)) {
-                this.addVein(event.getChunk());
-            }
 
-        }
 
+    public List<ChunkPos> getChunkPos() {
+        return chunkPos;
     }
 
     @Override
@@ -100,8 +91,8 @@ public class VeinSystem implements IVeinSystem {
         int number;
         if (Biome.getIdForBiome(biome) == 2) {
             int random = rand.nextInt(100);
-            if (random > 45) {
-                number = rand.nextInt(150000) + 40000;
+            if (random > 80) {
+                number = rand.nextInt(500000) + 40000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -113,8 +104,8 @@ public class VeinSystem implements IVeinSystem {
         } else if (Biome.getIdForBiome(biome) == 0) {
             int random;
             random = rand.nextInt(100);
-            if (random > 70) {
-                number = rand.nextInt(150000) + 40000;
+            if (random > 79) {
+                number = rand.nextInt(500000) + 40000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -126,8 +117,8 @@ public class VeinSystem implements IVeinSystem {
         } else if (Biome.getIdForBiome(biome) == 24) {
             int random;
             random = rand.nextInt(100);
-            if (random > 65) {
-                number = rand.nextInt(120000);
+            if (random > 79) {
+                number = rand.nextInt(300000);
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -139,8 +130,8 @@ public class VeinSystem implements IVeinSystem {
         } else if (Biome.getIdForBiome(biome) == 10) {
             int random;
             random = rand.nextInt(100);
-            if (random > 70) {
-                number = rand.nextInt(120000);
+            if (random > 79) {
+                number = rand.nextInt(300000);
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -152,8 +143,8 @@ public class VeinSystem implements IVeinSystem {
         } else if (Biome.getIdForBiome(biome) == 17) {
             int random;
             random = rand.nextInt(100);
-            if (random > 65) {
-                number = rand.nextInt(100000) + 20000;
+            if (random > 81) {
+                number = rand.nextInt(300000) + 20000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -165,8 +156,8 @@ public class VeinSystem implements IVeinSystem {
         } else if (Biome.getIdForBiome(biome) == 7) {
             int random;
             random = rand.nextInt(100);
-            if (random > 60) {
-                number = rand.nextInt(60000);
+            if (random > 81) {
+                number = rand.nextInt(200000);
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -178,8 +169,8 @@ public class VeinSystem implements IVeinSystem {
         } else if (Biome.getIdForBiome(biome) == 35) {
             int random;
             random = rand.nextInt(100);
-            if (random > 60) {
-                number = rand.nextInt(80000);
+            if (random > 84) {
+                number = rand.nextInt(200000);
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -191,8 +182,8 @@ public class VeinSystem implements IVeinSystem {
         } else {
             int random;
             random = rand.nextInt(100);
-            if (random > 30) {
-                number = rand.nextInt(60000);
+            if (random > 89) {
+                number = rand.nextInt(200000);
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);

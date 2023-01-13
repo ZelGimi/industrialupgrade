@@ -7,6 +7,7 @@ import com.denfop.tiles.base.TileEntityAntiUpgradeBlock;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import com.denfop.tiles.base.TileEntityAutoSpawner;
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
+import com.denfop.tiles.base.TileEntityLimiter;
 import com.denfop.tiles.base.TileEntityRadiationPurifier;
 import com.denfop.tiles.mechanism.TileEntityAdvHandlerHeavyOre;
 import com.denfop.tiles.mechanism.TileEntityAdvScanner;
@@ -36,6 +37,10 @@ import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import com.denfop.tiles.mechanism.cooling.TileEntityCooling;
 import com.denfop.tiles.mechanism.energy.TileEntityEnergyController;
 import com.denfop.tiles.mechanism.energy.TileEntityEnergySubstitute;
+import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityAdvRedstoneGenerator;
+import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityImpRedstoneGenerator;
+import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityPerRedstoneGenerator;
+import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityRedstoneGenerator;
 import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityAirCollector;
 import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityWaterGenerator;
 import com.denfop.tiles.mechanism.heat.TileEntityElectricHeat;
@@ -158,6 +163,11 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
     adv_solar_destiller(TileEntityAdvSolarDestiller.class, 66),
     imp_solar_destiller(TileEntityImpSolarDestiller.class, 67),
     per_solar_destiller(TileEntityPerSolarDestiller.class, 68),
+    limiter(TileEntityLimiter.class,69),
+    redstone_generator(TileEntityRedstoneGenerator.class,70),
+    adv_redstone_generator(TileEntityAdvRedstoneGenerator.class,71),
+    imp_redstone_generator(TileEntityImpRedstoneGenerator.class,72),
+    per_redstone_generator(TileEntityPerRedstoneGenerator.class,73),
     ;
 
 

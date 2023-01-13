@@ -6,20 +6,7 @@ import com.denfop.blocks.BlockOre;
 import com.denfop.blocks.BlockPreciousOre;
 import com.denfop.blocks.BlockThoriumOre;
 import com.denfop.blocks.BlocksRadiationOre;
-import com.denfop.items.IUItemBase;
-import com.denfop.items.ItemAdvancedWaterRotor;
-import com.denfop.items.ItemAdvancedWindRotor;
-import com.denfop.items.ItemBlueprint;
-import com.denfop.items.ItemCell;
-import com.denfop.items.ItemCoreWater;
-import com.denfop.items.ItemCoreWind;
-import com.denfop.items.ItemExcitedNucleus;
-import com.denfop.items.ItemRotorsUpgrade;
-import com.denfop.items.ItemToolLimiter;
-import com.denfop.items.ItemWaterRod;
-import com.denfop.items.ItemWaterRotorsUpgrade;
-import com.denfop.items.ItemWindRod;
-import com.denfop.items.ItemsTemplates;
+import com.denfop.items.*;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.book.ItemBook;
 import com.denfop.items.energy.ItemKatana;
@@ -425,6 +412,7 @@ public class IUItem {
     public static ItemHeatColdPipes heatcold_pipes;
     public static ItemUniversalCable universal_cable;
     public static ItemToolLimiter limiter;
+    public static ItemVeinSensor veinsencor;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

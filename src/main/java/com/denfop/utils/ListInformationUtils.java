@@ -24,6 +24,7 @@ public class ListInformationUtils {
     public static final List<String> mechanism_info = new ArrayList<>();
     public static final List<String> mechanism_info1 = new ArrayList<>();
     public static final List<String> mechanism_info2 = new ArrayList<>();
+    public static final List<String> limiter_info = new ArrayList<>();
     public static final List<String> cooling = new ArrayList<>();
     public static final List<String> heating = new ArrayList<>();
     public static final List<String> wind_generator = new ArrayList<>();
@@ -118,6 +119,15 @@ public class ListInformationUtils {
         wind_generator.add(Localization.translate("iu.wind_generator.info5"));
         wind_generator.add(Localization.translate("iu.wind_generator.info6"));
         wind_generator.add(Localization.translate("iu.wind_generator.info7"));
+
+        limiter_info.add(Localization.translate("iu.limiter.info1"));
+        limiter_info.add(Localization.translate("iu.limiter.info2"));
+        limiter_info.add(Localization.translate("iu.limiter.info3"));
+        limiter_info.add(Localization.translate("iu.limiter.info4"));
+        limiter_info.add(Localization.translate("iu.limiter.info5"));
+        limiter_info.add(Localization.translate("iu.limiter.info6"));
+        limiter_info.add(Localization.translate("iu.limiter.info7"));
+        limiter_info.add(Localization.translate("iu.limiter.info8"));
 
         water_generator.add(Localization.translate("iu.water_generator.info1"));
         water_generator.add(Localization.translate("iu.water_generator.info2"));
