@@ -7,6 +7,7 @@ import com.denfop.container.ContainerDigger;
 import com.denfop.gui.GuiDigger;
 import com.denfop.invslot.InvSlotDigger;
 import com.denfop.invslot.InvSlotInput;
+import com.denfop.utils.ModUtils;
 import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
@@ -79,6 +80,9 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
                     }
                 }
             }
+        }
+        if (this.world.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
+            ModUtils.tick(this.outputSlot, this);
         }
     }
 

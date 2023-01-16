@@ -54,6 +54,9 @@ public class RotorUpgradeItemInform {
             case REPAIR_III:
                 return TextFormatting.DARK_PURPLE + Localization.translate("wind.rotor_repair_info") + TextFormatting.GREEN + (int) this.upgrade.getCoef() + " " + Localization.translate(
                         "iu.seconds");
+            case OCEAN:
+                return TextFormatting.LIGHT_PURPLE + Localization.translate("water.ocean_info");
+
 
         }
         return "";

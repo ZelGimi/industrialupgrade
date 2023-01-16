@@ -10,6 +10,8 @@ import ic2.core.IHasGui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -107,6 +109,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
         return new GuiBlockLimiter(getGuiContainer(entityPlayer));
     }

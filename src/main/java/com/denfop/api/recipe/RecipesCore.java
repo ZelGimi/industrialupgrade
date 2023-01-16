@@ -57,7 +57,7 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("handlerho", 1, true, true);
         this.addRecipeManager("matter", 1, false, false);
         this.addRecipeManager("rotor_assembler", 5, true, true);
-        this.addRecipeManager("rod_assembler", 6, true, true);
+        this.addRecipeManager("rod_assembler", 6, true, false);
         this.addRecipeManager("rotor_upgrade", 2, false, true);
 
         this.addRecipeManager("endcollector", 1, true, true);

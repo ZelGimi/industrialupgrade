@@ -1,5 +1,6 @@
 package com.denfop.api.recipe;
 
+import com.denfop.api.Recipes;
 import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -29,7 +30,7 @@ public class RecipeInputStack implements IRecipeInputStack {
     @Override
     public boolean matched(final ItemStack stack) {
         for (ItemStack input : getItemStack()) {
-            if (input.getItem() == stack.getItem() && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == stack.getItemDamage())) {
+            if (input.getItem() == stack.getItem() && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == input.getItemDamage())) {
                 if (stack.getTagCompound() == null) {
                     return true;
                 } else {
@@ -49,6 +50,7 @@ public class RecipeInputStack implements IRecipeInputStack {
             return false;
         }
         RecipeInputStack that = (RecipeInputStack) o;
+        System.out.println( Recipes.recipes.getRecipeList("scrap"));
         for (ItemStack input : getItemStack()) {
             for (ItemStack input1 : that.getItemStack()) {
                 if (input.getItem() == input1.getItem() && (input1.getItemDamage() == OreDictionary.WILDCARD_VALUE || input.getItemDamage() == input1.getItemDamage())) {

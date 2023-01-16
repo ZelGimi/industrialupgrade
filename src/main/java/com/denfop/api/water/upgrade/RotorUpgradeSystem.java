@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RotorUpgradeSystem implements IRotorUpgradeSystem {
+public class  RotorUpgradeSystem implements IRotorUpgradeSystem {
 
     public static IRotorUpgradeSystem instance;
 
