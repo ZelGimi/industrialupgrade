@@ -350,27 +350,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         this.hasrestrictions = !Config.cableEasyMode;
     }
 
-    @Override
-    public LimitInfo getLimitInfo(final World world, final BlockPos pos) {
-        final EnergyNetLocal local = getForWorld(world);
-        IEnergyTile energyTile = local.getChunkCoordinatesIEnergyTileMap().get(pos);
 
-        if (energyTile instanceof IEnergySink) {
-            final EnergyNetLocal.EnergyPath energyPath = local.getPathFromSink((IEnergySink) energyTile);
-            return new LimitInfo((IEnergySink) energyTile, world, energyPath.isLimit, energyPath.limit_amount);
-        }
-        return null;
-    }
-
-    public void deleteLimit(final World world, final IEnergySink energySink) {
-        final EnergyNetLocal local = getForWorld(world);
-        local.deleteLimit(energySink);
-    }
-
-    public void setLimit(final World world, final IEnergySink energySink, double amount) {
-        final EnergyNetLocal local = getForWorld(world);
-        local.setLimit(energySink, amount);
-    }
 
     public synchronized void registerEventReceiver(IEnergyNetEventReceiver receiver) {
 

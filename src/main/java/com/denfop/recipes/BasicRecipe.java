@@ -4085,8 +4085,8 @@ public class BasicRecipe {
                 new ItemStack(IUItem.crafting_elements, 1, 92)
         );
         Recipes.advRecipes.addRecipe(
-                Ic2Items.elemotor, " A ", "BCB", "   ", 'A', Ic2Items.casingtin, 'B', Ic2Items.coil, 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 60)
+                Ic2Items.elemotor, " A ", "BCB", " D ", 'A', Ic2Items.casingtin, 'B', Ic2Items.coil, 'C',
+                new ItemStack(IUItem.crafting_elements, 1, 60),'D', Ic2Items.electronicCircuit
 
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 25),
@@ -4111,7 +4111,7 @@ public class BasicRecipe {
                 "CBC",
                 "   ",
                 'B',
-                Ic2Items.electronicCircuit,
+                new ItemStack(IUItem.cirsuitQuantum.getItem(), 1, 17),
                 'C',
                 Items.REDSTONE,
                 'A',

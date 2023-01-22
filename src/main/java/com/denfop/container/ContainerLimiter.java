@@ -31,20 +31,11 @@ public class ContainerLimiter extends ContainerFullInv<HandHeldLimiter> {
 
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        if (this.uut != null) {
-            IC2.network.get(true).sendContainerFields(this, "amount", "limit", "world");
-            if (update) {
-                ((IAdvEnergyNet) EnergyNet.instance).setLimit(world, (IEnergySink) uut, amount);
-                this.update = false;
-                IC2.network.get(true).sendContainerFields(this, "amount", "limit", "world");
 
-            }
-        }
     }
 
 
     public void deleteLimit() {
-        ((IAdvEnergyNet) EnergyNet.instance).deleteLimit(world, (IEnergySink) uut);
 
         IC2.network.get(false).sendContainerFields(this, "amount", "limit", "world");
 

@@ -50,7 +50,6 @@ public class RecipeInputStack implements IRecipeInputStack {
             return false;
         }
         RecipeInputStack that = (RecipeInputStack) o;
-        System.out.println( Recipes.recipes.getRecipeList("scrap"));
         for (ItemStack input : getItemStack()) {
             for (ItemStack input1 : that.getItemStack()) {
                 if (input.getItem() == input1.getItem() && (input1.getItemDamage() == OreDictionary.WILDCARD_VALUE || input.getItemDamage() == input1.getItemDamage())) {

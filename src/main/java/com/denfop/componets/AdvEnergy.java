@@ -573,7 +573,6 @@ public class AdvEnergy extends TileEntityComponent {
         }
 
         public double getDemandedEnergy() {
-
             return !AdvEnergy.this.receivingDisabled
                     ? AdvEnergy.this.capacity - AdvEnergy.this.storage
                     : 0.0D;

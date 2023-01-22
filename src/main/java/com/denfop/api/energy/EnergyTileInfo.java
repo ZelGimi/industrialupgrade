@@ -35,16 +35,17 @@ public class EnergyTileInfo {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
         EnergyTileInfo that = (EnergyTileInfo) o;
-        if (that.energyTile == null) {
-            if (that.pos != null) {
-                return that.pos.equals(this.pos);
+        if (this.energyTile == null) {
+
+            if (this.pos != null) {
+                     return that.pos.getX() == this.getPos().getX()
+                        && that.pos.getY() == this.getPos().getY() &&
+                        that.pos.getZ() == this.getPos().getZ();
             } else {
                 return false;
             }
@@ -56,7 +57,7 @@ public class EnergyTileInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(pos, energyTile, tile);
+        return Objects.hash(pos, energyTile);
     }
 
 }

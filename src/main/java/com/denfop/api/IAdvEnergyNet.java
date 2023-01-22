@@ -40,10 +40,5 @@ public interface IAdvEnergyNet extends IEnergyNet {
 
     void update();
 
-    LimitInfo getLimitInfo(World world, BlockPos pos);
-
-    void deleteLimit(final World world, final IEnergySink energySink);
-
-    void setLimit(final World world, final IEnergySink energySink, double amount);
 
 }

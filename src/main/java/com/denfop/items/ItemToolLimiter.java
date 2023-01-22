@@ -78,14 +78,7 @@ public class ItemToolLimiter extends Item implements IBoxable, IHandHeldInventor
         if (world.isRemote) {
             return EnumActionResult.PASS;
         } else {
-            final LimitInfo info = ((IAdvEnergyNet) EnergyNet.instance).getLimitInfo(world, pos);
-            if (info == null) {
-                IC2.platform.messagePlayer(player, "It isn`t energy sink");
-            } else if (IC2.platform.launchGui(player, this.getInventory(player, StackUtil.get(player, hand)))) {
-                ContainerLimiter container = (ContainerLimiter) player.openContainer;
-                container.setUut(info.getSink(), info.getAmount(), info.isLimit());
-                return EnumActionResult.SUCCESS;
-            }
+
 
             return EnumActionResult.SUCCESS;
         }
