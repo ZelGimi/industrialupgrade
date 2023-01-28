@@ -299,6 +299,7 @@ public class EnergyNetLocal {
             }
         }
         tick.tick();
+
         if (amount > 0) {
             for (final EnergyPath energyPath : energyPaths) {
                 if (amount <= 0) {

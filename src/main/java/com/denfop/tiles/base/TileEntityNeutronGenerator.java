@@ -37,7 +37,6 @@ import java.util.Set;
 public class TileEntityNeutronGenerator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock,
         INetworkClientTileEntityEventListener {
 
-    private static final int DEFAULT_TIER = ConfigUtil.getInt(MainConfig.get(), "balance/matterFabricatorTier");
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
@@ -71,7 +70,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
     }
 
     private static int applyModifier(int extra) {
-        double ret = (double) Math.round(((double) DEFAULT_TIER + (double) extra));
+        double ret = (double) Math.round(((double) 14 + (double) extra));
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 

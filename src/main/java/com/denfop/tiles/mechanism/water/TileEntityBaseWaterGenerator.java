@@ -170,9 +170,9 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
 
     public void update_generator() {
         this.work = true;
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
+        for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
+            for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
+                for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
 
                     if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
                         continue;
@@ -194,9 +194,9 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
 
     public void update_generator(BlockPos pos) {
         this.work = true;
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
+        for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
+            for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
+                for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
                     if (this.pos.getX() == i && this.pos.getY() == j && this.pos.getZ() == k) {
                         continue;
                     }
@@ -330,6 +330,10 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
                     (IRotorUpgradeItem) this.slot.get().getItem(), this.slot.get()
             ));
         }
+        this.biome =
+                (this.getWorld().getBiome(this.pos) instanceof BiomeOcean || this
+                        .getWorld()
+                        .getBiome(this.pos) instanceof BiomeRiver) ? 1 : 0.5;
         this.change();
         this.setRotorSide(WindSystem.windSystem.getRotorSide(this.getFacing()));
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), true));
@@ -346,18 +350,14 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
         this.timers = WindSystem.windSystem.getTime();
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
-        this.biome =
-                (this.getWorld().getBiome(this.pos) instanceof BiomeOcean || this
-                        .getWorld()
-                        .getBiome(this.pos) instanceof BiomeRiver) ? 1 : 0.5;
     }
 
     @Override
     protected void onUnloaded() {
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
+        for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
+            for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
+                for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
                     final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
                     if (tile instanceof TileEntityBaseWaterGenerator) {
                         ((TileEntityBaseWaterGenerator) tile).update_generator(this.pos);
@@ -472,8 +472,11 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
                         i), list);
                 this.mind_wind = modules == null ? 0 : (int) modules.upgrade.getCoef();
             }
-
+            final RotorUpgradeItemInform modules = RotorUpgradeSystem.instance.getModules(EnumInfoRotorUpgradeModules.getFromID(
+                    16), list);
+            this.biome = modules == null ? 0.5 : 1;
         }
+
         IC2.network.get(true).updateTileEntityField(this, "change_facing");
         IC2.network.get(true).updateTileEntityField(this, "min_level");
         IC2.network.get(true).updateTileEntityField(this, "mind_wind");

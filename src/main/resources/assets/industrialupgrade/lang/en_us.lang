@@ -2937,6 +2937,8 @@ iu.water_rotors_upgrade.water_rotorupgrade13=Water Rotor Module: Auto Repair I
 iu.water_rotors_upgrade.water_rotorupgrade14=Water Rotor Module: Auto Repair II
 iu.water_rotors_upgrade.water_rotorupgrade15=Water Rotor Module: Auto Repair III
 
+iu.water_rotors_upgrade.water_rotorupgrade15=Water Rotor Module: Ocean
+
 iu.itempipes_transport=Output Item Tube
 iu.itempipes1_transport=Input Item Tube
 
@@ -3027,3 +3029,5 @@ iu.limiter.info6=Simplifies transformer systems and is a more compact solution
 iu.limiter.info7=Instead of 3+ transformers, you can put this machine and a sensor to it
 iu.limiter.info8=And indicate the number that you need to transmit over the cable
 iu.limiter.info9=Maximum power transfer number: 
+
+water.ocean_info=Removes dependence on ocean and river biome

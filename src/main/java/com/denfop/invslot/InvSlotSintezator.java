@@ -157,6 +157,8 @@ public class InvSlotSintezator extends InvSlot {
             return itemStack.getItem() instanceof ItemBaseModules
                     || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 4)
                     || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 1)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 2)
                     || (itemStack.getItem() instanceof ItemModuleType)
                     ;
         }
@@ -193,12 +195,13 @@ public class InvSlotSintezator extends InvSlot {
 
     public void checkmodule() {
         TileEntitySintezator tile = (TileEntitySintezator) base;
+        tile.machineTire1 = tile.machineTire;
         double temp_day = tile.genDay;
         double temp_night = tile.genNight;
         double temp_storage = tile.maxStorage;
         double temp_producing = tile.production;
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null) {
+            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null && this.get(i).getItem() instanceof ItemBaseModules ) {
                 EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
                 EnumBaseType type = module.type;
                 double percent = module.percent;
@@ -215,6 +218,17 @@ public class InvSlotSintezator extends InvSlot {
                     case OUTPUT:
                         temp_producing += tile.production * percent;
                         break;
+                }
+            }
+        }
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule) {
+                int damage = this.get(i).getItemDamage();
+                if(damage == 1){
+                    tile.machineTire1++;
+                }
+                if(damage == 2){
+                    tile.machineTire1--;
                 }
             }
         }

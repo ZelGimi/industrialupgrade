@@ -21,16 +21,24 @@ import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.network.WorldData;
+import com.denfop.tiles.transport.tiles.TileEntityCoolPipes;
+import com.denfop.tiles.transport.tiles.TileEntityExpPipes;
+import com.denfop.tiles.transport.tiles.TileEntityHeatColdPipes;
+import com.denfop.tiles.transport.tiles.TileEntityHeatPipes;
+import com.denfop.tiles.transport.tiles.TileEntityQCable;
+import com.denfop.tiles.transport.tiles.TileEntityUniversalCable;
 import com.denfop.utils.CapturedMobUtils;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.IWorldTickCallback;
+import ic2.core.block.wiring.TileEntityCable;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemNuclearResource;
 import ic2.core.item.reactor.ItemReactorUranium;
 import ic2.core.item.type.IRadioactiveItemType;
+import ic2.core.util.StackUtil;
 import ic2.core.util.Util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,12 +46,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -108,7 +118,73 @@ public class IUEventHandler {
         }
         RadiationSystem.rad_system.update(event.player);
     }
+    @SubscribeEvent
+    public void workCutters(PlayerInteractEvent.RightClickBlock event){
+        if(event.getWorld().isRemote)
+            return;
+        ItemStack stack = event.getItemStack();
+        if(stack.getItem() == Ic2Items.cutter.getItem()){
 
+            final TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+            if(tile instanceof TileEntityCable){
+                TileEntityCable cable = (TileEntityCable) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof com.denfop.tiles.transport.tiles.TileEntityCable){
+                com.denfop.tiles.transport.tiles.TileEntityCable cable = (com.denfop.tiles.transport.tiles.TileEntityCable) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof TileEntityHeatColdPipes){
+                TileEntityHeatColdPipes cable = (TileEntityHeatColdPipes) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof TileEntityHeatPipes){
+                TileEntityHeatPipes cable = (TileEntityHeatPipes) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof TileEntityCoolPipes){
+                TileEntityCoolPipes cable = (TileEntityCoolPipes) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof TileEntityUniversalCable){
+                TileEntityUniversalCable cable = (TileEntityUniversalCable) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof TileEntityExpPipes){
+                TileEntityExpPipes cable = (TileEntityExpPipes) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }else if(tile instanceof TileEntityQCable){
+                TileEntityQCable cable = (TileEntityQCable) tile;
+                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100);
+                if(!drops.isEmpty())
+                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                cable.removeConductor();
+            }
+        }
+    }
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         WorldData.onWorldUnload(event.getWorld());
@@ -124,12 +200,11 @@ public class IUEventHandler {
                 processUpdates(world, worldData);
 
 
-                IC2.platform.profilerEndSection();
             } else {
                 IC2.platform.profilerStartSection("Networking");
                 IUCore.network.get(!world.isRemote).onTickEnd(worldData);
-                IC2.platform.profilerEndSection();
             }
+            IC2.platform.profilerEndSection();
 
         }
     }

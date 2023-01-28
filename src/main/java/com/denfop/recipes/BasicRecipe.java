@@ -7580,7 +7580,11 @@ public class BasicRecipe {
         }
         Recipes.advRecipes.addShapelessRecipe(
                 new ItemStack(IUItem.tranformer, 1, 7), Ic2Items.machine, new ItemStack(IUItem.crafting_elements, 1, 206));
-
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(IUItem.water_rotors_upgrade, 1, 16),
+                "ADA", "CBC", "ADA", 'A', new ItemStack(IUItem.core, 1, 5)
+                , 'B', new ItemStack(IUItem.module_schedule), 'C', IUItem.compressIridiumplate, 'D', "doubleplateInvar"
+        );
     }
 
     public static ItemStack getBlockStack(ITeBlock block) {

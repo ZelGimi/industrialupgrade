@@ -37,6 +37,7 @@ public class ContainerSinSolarPanel extends ContainerFullInv<TileEntitySintezato
         ret.add("production");
         ret.add("rain");
         ret.add("machineTire");
+        ret.add("machineTire1");
         ret.add("progress");
         ret.add("getmodulerf");
         ret.add("storage2");

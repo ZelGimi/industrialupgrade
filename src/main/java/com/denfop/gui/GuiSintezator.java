@@ -38,7 +38,7 @@ public class GuiSintezator extends GuiIC2<ContainerSinSolarPanel> {
         String tooltip;
         String output = ModUtils.getString(this.container.tileentity.production);
         this.fontRenderer.drawString(maxOutputString + output + (" " + energyPerTickString), 50, 32 - 10, 13487565);
-        this.fontRenderer.drawString(tierString + this.container.tileentity.machineTire, 50, 32, 13487565);
+        this.fontRenderer.drawString(tierString + this.container.tileentity.machineTire1, 50, 32, 13487565);
         if (!this.container.tileentity.getmodulerf) {
             String generation = ModUtils.getString(this.container.tileentity.generating);
             String tooltip2 = generatingString + generation + " " + energyPerTickString;

@@ -43,6 +43,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
 
     public final InvSlotSintezator inputslot;
     public final InvSlotSintezator inputslotA;
+    public int machineTire1;
     public int solartype;
     public double generating;
     public double genDay;
@@ -80,6 +81,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
         this.maxStorage = 0;
         this.maxStorage2 = 0;
         this.machineTire = 0;
+        this.machineTire1 = 0;
         this.inputslot = new InvSlotSintezator(this, "input", 0, 9);
         this.inputslotA = new InvSlotSintezator(this, "input1", 1, 4);
         this.solartype = 0;
@@ -249,6 +251,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     }
 
     public double getOfferedEnergy() {
+
         return Math.min(this.storage, this.production);
     }
 
@@ -257,7 +260,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     }
 
     public int getSourceTier() {
-        return this.machineTire;
+        return this.machineTire1;
     }
 
     public double gaugeEnergyScaled1(int i) {
