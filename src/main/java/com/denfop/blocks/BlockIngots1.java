@@ -41,8 +41,8 @@ public class BlockIngots1 extends BlockCore implements IModelRegister {
         setSoundType(SoundType.METAL);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.manganese));
         setHarvestLevel("pickaxe", 1);
-    }
 
+    }
 
     @Nonnull
     protected BlockStateContainer createBlockState() {

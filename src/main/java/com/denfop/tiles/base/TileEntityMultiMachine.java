@@ -16,7 +16,6 @@ import com.denfop.componets.CoolComponent;
 import com.denfop.componets.EXPComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.ProcessMultiComponent;
-import com.denfop.componets.QEComponent;
 import com.denfop.componets.RFComponent;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.gui.GuiMultiMachine;
@@ -151,8 +150,9 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         }
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    energy.getCapacity())
                     + " EU");
         }
     }
@@ -200,42 +200,45 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
         final double energy3 = nbt.getDouble("energy1");
-        if(energy1 != 0){
-            if(this.exp != null)
-            this.exp.addEnergy(energy3);
+        if (energy1 != 0) {
+            if (this.exp != null) {
+                this.exp.addEnergy(energy3);
+            }
         }
         final double energy4 = nbt.getDouble("energy2");
-        if(energy1 != 0){
-            if(this.cold != null)
-            this.cold.addEnergy(energy4);
+        if (energy1 != 0) {
+            if (this.cold != null) {
+                this.cold.addEnergy(energy4);
+            }
         }
     }
+
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
                     final AdvEnergy component = this.energy;
-                    if(component != null){
-                        if(component.getEnergy() != 0) {
+                    if (component != null) {
+                        if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component.getEnergy());
                         }
                     }
                     final EXPComponent component2 = this.exp;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy1", component2.getEnergy());
                         }
                     }
                     final CoolComponent component3 = this.cold;
-                    if(component3 != null){
-                        if(component3.getEnergy() != 0) {
+                    if (component3 != null) {
+                        if (component3.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy2", component3.getEnergy());
                         }
@@ -252,28 +255,29 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
             }
         }
         final AdvEnergy component = this.getComponent(AdvEnergy.class);
-        if(component != null){
-            if(component.getEnergy() != 0) {
+        if (component != null) {
+            if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component.getEnergy());
             }
         }
         final EXPComponent component2 = this.exp;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy1", component2.getEnergy());
             }
         }
         final CoolComponent component3 = this.cold;
-        if(component3 != null){
-            if(component3.getEnergy() != 0) {
+        if (component3 != null) {
+            if (component3.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy2", component3.getEnergy());
             }
         }
         return drop;
     }
+
     public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
         ItemStack stack_rf = ItemStack.EMPTY;
@@ -538,17 +542,18 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                 }
             }
         }
-        if (!getActive()) {
-            this.tick++;
-
-            if (this.tick % 120 == 0) {
+        this.tick++;
+        if (!this.getActive()) {
+            if (this.tick - 120 >= 0) {
                 this.cold.useEnergy(0.35);
                 this.tick = 0;
             }
         } else {
-            tick = 0;
+            if (this.tick - 240 >= 0) {
+                this.cold.useEnergy(0.35);
+                this.tick = 0;
+            }
         }
-
     }
 
 

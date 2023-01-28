@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityAdvGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityBaseRedstoneGenerator;
 import ic2.core.ContainerFullInv;
 import ic2.core.slot.SlotInvSlot;

@@ -80,12 +80,12 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
 
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        this.updateReactor();
-        if (this.reactor == null) {
-            this.destoryChamber(true);
-        } else {
-            this.reactor.change = true;
-        }
+            this.updateReactor();
+            if (this.reactor == null) {
+                this.destoryChamber(true);
+            } else {
+                this.reactor.change = true;
+            }
     }
 
     @Override
@@ -206,6 +206,15 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
 
     }
 
+    @Override
+    protected void onBlockBreak() {
+        super.onBlockBreak();
+        if(this.reactor != null) {
+            this.reactor.change = true;
+            this.reactor.getReactorSize();
+        }
+    }
+
     public int getFieldCount() {
         TileEntityImpNuclearReactor reactor = this.getReactor();
         return reactor != null ? reactor.getFieldCount() : 0;
@@ -263,6 +272,7 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
             TileEntity te = world.getTileEntity(this.pos.offset(facing));
             if (te instanceof TileEntityImpNuclearReactor) {
                 this.reactor = (TileEntityImpNuclearReactor) te;
+                this.reactor.getReactorSize();
                 break;
             }
         }

@@ -30,7 +30,7 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
     protected final Fluids fluids = this.addComponent(new Fluids(this));
     private TileEntityAdvNuclearReactorElectric reactor;
     private long lastReactorUpdate;
-    private boolean destroy = true;
+
 
     public TileEntityAdvReactorChamberElectric() {
 
@@ -80,13 +80,11 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
 
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if (this.destroy) {
-            this.updateReactor();
-            if (this.reactor == null) {
-                this.destoryChamber(true);
-            } else {
-                this.reactor.change = true;
-            }
+        this.updateReactor();
+        if (this.reactor == null) {
+            this.destoryChamber(true);
+        } else {
+            this.reactor.change = true;
         }
     }
 
@@ -108,7 +106,6 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         for (final ItemStack drop : this.getSelfDrops(0, wrench)) {
             StackUtil.dropAsEntity(world, this.pos, drop);
         }
-        this.destroy = false;
     }
 
     @Nonnull
@@ -256,7 +253,14 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
 
         return this.reactor;
     }
-
+    @Override
+    protected void onBlockBreak() {
+        super.onBlockBreak();
+        if(this.reactor != null) {
+            this.reactor.change = true;
+            this.reactor.getReactorSize();
+        }
+    }
     private void updateReactor() {
         World world = this.getWorld();
         this.reactor = null;
@@ -269,6 +273,7 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
             if (te instanceof TileEntityAdvNuclearReactorElectric) {
 
                 this.reactor = (TileEntityAdvNuclearReactorElectric) te;
+                this.reactor.getReactorSize();
                 break;
             }
         }

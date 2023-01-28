@@ -166,13 +166,17 @@ public class CoolNetLocal {
 
             }
         }
-        if(!transmit && CoolSource.isAllowed())
+        if (!transmit && CoolSource.isAllowed()) {
             CoolSource.setAllowed(false);
+        }
 
         return amount;
     }
-    public double emitCoolFromNotAllowed(final ICoolSource CoolSource, double amount,
-                                       final SystemTick<ICoolSource, CoolPath> tick) {
+
+    public double emitCoolFromNotAllowed(
+            final ICoolSource CoolSource, double amount,
+            final SystemTick<ICoolSource, CoolPath> tick
+    ) {
         List<CoolPath> CoolPaths = tick.getList();
 
         if (CoolPaths == null) {
@@ -180,40 +184,41 @@ public class CoolNetLocal {
             tick.setList(CoolPaths);
         }
 
-            for (final CoolPath CoolPath : CoolPaths) {
-                final ICoolSink CoolSink = CoolPath.target;
-                double demandedCool = CoolSink.getDemandedCool();
-                if (demandedCool <= 0.0) {
-                    continue;
-                }
-                if(CoolSink.needCooling())
+        for (final CoolPath CoolPath : CoolPaths) {
+            final ICoolSink CoolSink = CoolPath.target;
+            double demandedCool = CoolSink.getDemandedCool();
+            if (demandedCool <= 0.0) {
+                continue;
+            }
+            if (CoolSink.needCooling()) {
                 CoolSource.setAllowed(true);
-                double CoolProvided = amount;
-                double adding;
+            }
+            double CoolProvided = amount;
+            double adding;
 
 
-                adding = Math.min(CoolProvided, demandedCool);
-                if (adding <= 0.0D) {
-                    continue;
-                }
+            adding = Math.min(CoolProvided, demandedCool);
+            if (adding <= 0.0D) {
+                continue;
+            }
 
 
-                adding -= CoolSink.injectCool(CoolPath.targetDirection, adding, 0);
-                CoolPath.totalCoolConducted = (long) adding;
+            adding -= CoolSink.injectCool(CoolPath.targetDirection, adding, 0);
+            CoolPath.totalCoolConducted = (long) adding;
 
 
-                if (adding > CoolPath.min) {
-                    for (ICoolConductor CoolConductor : CoolPath.conductors) {
-                        if (CoolConductor.getConductorBreakdownCold() < adding) {
-                            CoolConductor.removeConductor();
-                        } else {
-                            break;
-                        }
+            if (adding > CoolPath.min) {
+                for (ICoolConductor CoolConductor : CoolPath.conductors) {
+                    if (CoolConductor.getConductorBreakdownCold() < adding) {
+                        CoolConductor.removeConductor();
+                    } else {
+                        break;
                     }
                 }
-
-
             }
+
+
+        }
 
 
         return amount;
@@ -402,7 +407,7 @@ public class CoolNetLocal {
                                 break;
                             }
                         }
-                    }else if(! entry.isAllowed()){
+                    } else if (!entry.isAllowed()) {
                         for (double i = 0; i < getPacketAmount(); ++i) {
                             final double removed = offered - this.emitCoolFromNotAllowed(entry, offered, tick);
                             if (removed <= 0) {

@@ -49,18 +49,20 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         this.addComponent(new GuiComponent(this, 17, 48, EnumTypeComponent.ENERGY_RF_CLASSIC,
                 new Component<>(this.container.base.energy2)
         ));
-        if(this.container.base.getMachine() != EnumMultiMachine.Centrifuge)
-        this.addComponent(new GuiComponent(this, 27, 47, EnumTypeComponent.COLD,
-                new Component<>(this.container.base.cold)
-        ));
+        if (this.container.base.getMachine().type != EnumTypeMachines.Centrifuge) {
+            this.addComponent(new GuiComponent(this, 27, 47, EnumTypeComponent.COLD,
+                    new Component<>(this.container.base.cold)
+            ));
+        }
 
         this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.WATER,
                 new Component<>(this.container.base.tank)
         ));
-        if(this.container.base.getMachine() == EnumMultiMachine.Centrifuge)
-        this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.COLD,
-                new Component<>(this.container.base.heat)
-        ));
+        if (this.container.base.getMachine().type == EnumTypeMachines.Centrifuge) {
+            this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.COLD,
+                    new Component<>(this.container.base.heat)
+            ));
+        }
         this.addComponent(new GuiComponent(this, 34, 47, EnumTypeComponent.EXP,
                 new Component<>(this.container.base.exp)
         ));

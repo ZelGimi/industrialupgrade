@@ -8,7 +8,6 @@ import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,6 +34,23 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
+        final String loc;
+        if (!extraName.isEmpty()) {
+            loc = Constants.MOD_ID +
+                    ':' +
+                    "sensor" + "/" + name + "_" + extraName;
+
+        } else {
+            loc = Constants.MOD_ID +
+                    ':' +
+                    "sensor" + "/" + name;
+
+        }
+        return new ModelResourceLocation(loc, null);
+    }
+
     @Override
     public void registerModels() {
         registerModels("sensor");
@@ -42,22 +58,6 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
 
     public String getUnlocalizedName() {
         return "iu." + super.getUnlocalizedName().substring(4);
-    }
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation1(String name, String extraName) {
-        final String loc;
-        if(!extraName.isEmpty()) {
-            loc = Constants.MOD_ID +
-                    ':' +
-                    "sensor" + "/" + name + "_" + extraName;
-
-        }else{
-            loc = Constants.MOD_ID +
-                    ':' +
-                    "sensor" + "/" + name;
-
-        }
-        return new ModelResourceLocation(loc, null);
     }
 
     @Override
@@ -70,17 +70,18 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
     ) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
-        tooltip.add( Localization.translate("iu.sensor.info"));
+        tooltip.add(Localization.translate("iu.sensor.info"));
 
         if (!nbt.getString("type").equals("")) {
-          String s =  nbt.getString("type");
-          if(!s.equals("oil"))
-            tooltip.add( Localization.translate("iu.vein_info")+ Localization.translate("iu."+s+".name"));
-          else
-              tooltip.add( Localization.translate("iu.vein_info")+ Localization.translate("iu.oil_vein"));
-           int x = nbt.getInteger("x");
-           int z = nbt.getInteger("z");
-           tooltip.add( Localization.translate("iu.modulewirelles1")+ "x: " + x +" z: " + z);
+            String s = nbt.getString("type");
+            if (!s.equals("oil")) {
+                tooltip.add(Localization.translate("iu.vein_info") + Localization.translate("iu." + s + ".name"));
+            } else {
+                tooltip.add(Localization.translate("iu.vein_info") + Localization.translate("iu.oil_vein"));
+            }
+            int x = nbt.getInteger("x");
+            int z = nbt.getInteger("z");
+            tooltip.add(Localization.translate("iu.modulewirelles1") + "x: " + x + " z: " + z);
         }
     }
 
@@ -96,7 +97,7 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
 
         });
         String[] mode = {"", "magnetite", "calaverite", "galena", "nickelite", "pyrite", "quartzite", "uranite", "azurite",
-                "rhodonite", "alfildit", "euxenite"    , "smithsonite", "ilmenite", "todorokite", "ferroaugite", "sheelite",
+                "rhodonite", "alfildit", "euxenite", "smithsonite", "ilmenite", "todorokite", "ferroaugite", "sheelite",
                 "oil"};
         for (final String s : mode) {
             if (s.equals("")) {
@@ -110,8 +111,7 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
 
 
     public enum Types implements IIdProvider {
-        sensor(0)
-        ;
+        sensor(0);
 
         private final String name;
         private final int ID;

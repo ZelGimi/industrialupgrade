@@ -8,7 +8,6 @@ import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
-import ic2.core.util.LogCategory;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -18,11 +17,9 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -36,16 +33,17 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     public final ContainerQuarryVein container;
     public int[][] colors = new int[39][66];
+
     public GuiQuarryVein(ContainerQuarryVein container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-        for(int x1 = 74; x1 <= 112;x1++){
-            for(int y1 = 14; y1 <= 79;y1++) {
+        for (int x1 = 74; x1 <= 112; x1++) {
+            for (int y1 = 14; y1 <= 79; y1++) {
                 int y2 = getCoord(y1, this.container.base.getPos().getY());
-                int x2 = getCoordX(x1, this.container.base.getPos().getX(),88);
+                int x2 = getCoordX(x1, this.container.base.getPos().getX(), 88);
                 final BlockPos pos = new BlockPos(x2, y2, this.container.base.getPos().getZ());
                 IBlockState state = this.container.base.getWorld().getBlockState(pos);
-                colors[x1-74][y1-14] = this.getColor(state, this.container.base.getWorld(), pos);
+                colors[x1 - 74][y1 - 14] = this.getColor(state, this.container.base.getWorld(), pos);
             }
         }
     }
@@ -116,16 +114,18 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         m *= m1;
         return (int) Math.min(Math.max(y - m, 0D), 256);
     }
+
     private int getCoordX(final int mouseX, int x, int center) {
         // center = x
         int x1 = x;
-        if(mouseX <center){
+        if (mouseX < center) {
             x1 -= (center - mouseX) * 2;
-        }else{
+        } else {
             x1 += (center - mouseX) * 2;
         }
         return x1;
     }
+
     private void handleUpgradeTooltip1(int mouseX, int mouseY) {
         if (mouseX >= 122 && mouseX <= 166 && mouseY >= 23 && mouseY <= 39) {
             List<String> text = new ArrayList<>();
@@ -249,12 +249,15 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
     }
+
     private int getColor(IBlockState state, World world, BlockPos pos) {
-        if(state.getMaterial() == Material.AIR)
+        if (state.getMaterial() == Material.AIR) {
             return (int) this.container.base.getWorld().provider.getCloudColor(0).x;
+        }
         MapColor color = state.getMapColor(world, pos);
         return color.colorValue | -16777216;
     }
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         int h = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
@@ -265,10 +268,10 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         int m = this.container.base.progress * 34 / 1200;
 
 
-        for(int x1 = 74; x1 <= 112;x1++){
-            for(int y1 = 14; y1 <= 79;y1++) {
-              
-                this.drawColoredRect( x1,  y1, 1, 1,  colors[x1-74][y1-14] );
+        for (int x1 = 74; x1 <= 112; x1++) {
+            for (int y1 = 14; y1 <= 79; y1++) {
+
+                this.drawColoredRect(x1, y1, 1, 1, colors[x1 - 74][y1 - 14]);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             }

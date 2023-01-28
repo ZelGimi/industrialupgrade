@@ -1,6 +1,5 @@
 package com.denfop.api.recipe;
 
-import com.denfop.api.Recipes;
 import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;

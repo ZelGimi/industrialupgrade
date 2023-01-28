@@ -4,14 +4,21 @@ package com.denfop.items.reactors;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.items.armour.ItemArmorAdvHazmat;
+import com.denfop.items.armour.ItemArmorImprovemedQuantum;
 import ic2.api.reactor.IReactor;
 import ic2.api.reactor.IReactorComponent;
+import ic2.core.IC2Potion;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemIC2;
+import ic2.core.item.armor.ItemArmorHazmat;
 import ic2.core.item.type.IRadioactiveItemType;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -120,6 +127,18 @@ public class ItemDepletedRod extends ItemIC2 implements IReactorComponent, IMode
     @Override
     public int alterHeat(final ItemStack itemStack, final IReactor iReactor, final int i, final int i1, final int i2) {
         return 0;
+    }
+
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
+
+        if (entity instanceof EntityLivingBase) {
+            EntityLivingBase entityLiving = (EntityLivingBase) entity;
+            if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
+                    entityLiving)) {
+                IC2Potion.radiation.applyTo(entityLiving, this.getRadiationDuration(), this.getRadiationAmplifier());
+            }
+        }
+
     }
 
     @Override

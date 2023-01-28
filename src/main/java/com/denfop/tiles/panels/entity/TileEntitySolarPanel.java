@@ -571,7 +571,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     }
 
     public void drawEnergy(double amount) {
-        this.storage =  (this.storage - amount);
+        this.storage = (this.storage - amount);
     }
 
     public int getSourceTier() {

@@ -18,8 +18,8 @@ import java.util.List;
 
 public class TileEntityLimiter extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener {
 
-    private final AdvEnergy energy;
     public final InvSlotLimiter slot;
+    private final AdvEnergy energy;
     private double max_value;
 
     public TileEntityLimiter() {
@@ -48,11 +48,12 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
     @Override
     protected void onLoaded() {
         super.onLoaded();
-        if(this.slot.isEmpty())
-        setTier(0);
-        else
+        if (this.slot.isEmpty()) {
+            setTier(0);
+        } else {
             setTier(this.slot.get().getItemDamage() - 205);
-        this.energy.setDirections( EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
+        }
+        this.energy.setDirections(EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
 
     }
 
@@ -99,7 +100,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
 
         this.energy.limit_amount = Math.min(i, this.max_value);
-         this.energy.setDirections( EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
+        this.energy.setDirections(EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
 
     }
 

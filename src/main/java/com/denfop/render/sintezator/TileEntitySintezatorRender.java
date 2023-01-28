@@ -58,7 +58,7 @@ public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileEn
         bindTexture(texture);
         model.renderAll();
         for (int i = 0; i < 9; i++) {
-            if (!tile.inputslot.get(i) .isEmpty()) {
+            if (!tile.inputslot.get(i).isEmpty()) {
                 if (IUItem.map3.get(tile.inputslot.get(i).getUnlocalizedName()) != null) {
                     EnumSolarPanels solar = IUItem.map3.get(tile.inputslot.get(i).getUnlocalizedName());
                     ResourceLocation texture1;

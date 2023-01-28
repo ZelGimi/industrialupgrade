@@ -437,10 +437,11 @@ public class CoolComponent extends TileEntityComponent {
         }
 
         public double getDemandedCool() {
-            if(CoolComponent.this.storage != 0)
-            return 64;
-            else
+            if (CoolComponent.this.storage != 0) {
+                return 64;
+            } else {
                 return 0;
+            }
         }
 
         public double injectCool(EnumFacing directionFrom, double amount, double voltage) {

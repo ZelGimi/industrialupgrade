@@ -18,7 +18,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class TileEntityCrystallize extends TileEntityBaseWorldCollector implements IIsMolecular {
+
     protected ItemStack output_stack;
+
     public TileEntityCrystallize() {
         super(EnumTypeCollector.DEFAULT);
     }
@@ -44,32 +46,38 @@ public class TileEntityCrystallize extends TileEntityBaseWorldCollector implemen
         addRecipe(Ic2Items.latex, 10, new ItemStack(Items.SLIME_BALL));
 
     }
+
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.machineRecipe = output;
-        if(this.machineRecipe != null){
+        if (this.machineRecipe != null) {
             output_stack = this.machineRecipe.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         this.setOverclockRates();
 
     }
+
     public MachineRecipe getOutput() {
 
         this.machineRecipe = this.inputSlot.process();
-        if(this.machineRecipe != null){
+        if (this.machineRecipe != null) {
             output_stack = this.machineRecipe.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         return this.machineRecipe;
     }
+
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
         ret.add("output_stack");
         return ret;
     }
+
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;

@@ -3,7 +3,6 @@ package com.denfop.render.base;
 
 import com.denfop.Constants;
 import com.denfop.tiles.base.IIsMolecular;
-import com.denfop.tiles.base.TileEntityMolecularTransformer;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityCrystallize;
 import ic2.core.block.TileEntityBlock;
 import net.minecraft.client.Minecraft;
@@ -17,8 +16,6 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,7 +24,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -52,9 +48,9 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
 
 
     public int ticker;
-    private Random random = new Random();
     float rotation;
     float prevRotation;
+    private final Random random = new Random();
 
     public static int getTextureSize(String s, int dv) {
         Integer textureSize = textureSizeCache.get(Arrays.asList(s, dv));
@@ -204,7 +200,7 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         GL11.glPopMatrix();
         GL11.glPopMatrix();
         if (te.getActive()) {
-            if(te instanceof IIsMolecular) {
+            if (te instanceof IIsMolecular) {
                 GL11.glPushMatrix();
                 renderItem((IIsMolecular) te, x, y, z, partialTicks);
                 GL11.glPopMatrix();
@@ -215,34 +211,35 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
 
         }
     }
-    public boolean shouldSpreadItems()
-    {
+
+    public boolean shouldSpreadItems() {
         return true;
     }
 
-    private int transformModelCount(IIsMolecular itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_,
-                                    float p_177077_8_,
-                                    IBakedModel p_177077_9_)
-    {
+    private int transformModelCount(
+            IIsMolecular itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_,
+            float p_177077_8_,
+            IBakedModel p_177077_9_
+    ) {
         ItemStack itemstack = itemIn.getItemStack();
         Item item = itemstack.getItem();
 
-        if (item == Items.AIR)
-        {
+        if (item == Items.AIR) {
             return 0;
-        }
-        else
-        {
+        } else {
             int i = this.getModelCount(itemstack);
             float f2 = p_177077_9_.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
 
-            if(!(itemIn instanceof TileEntityCrystallize))
-            GlStateManager.translate((float)p_177077_2_ + 0.5, (float)p_177077_4_  + 0.25F * f2 + 0.2,
-                    (float)p_177077_6_ + 0.5);
-            else
-                GlStateManager.translate((float)p_177077_2_ + 0.5, (float)p_177077_4_  + 0.25F * f2 + 0.37,
-                        (float)p_177077_6_ + 0.5);
-            GlStateManager.scale(0.5F,0.5f,0.5f);
+            if (!(itemIn instanceof TileEntityCrystallize)) {
+                GlStateManager.translate((float) p_177077_2_ + 0.5, (float) p_177077_4_ + 0.25F * f2 + 0.2,
+                        (float) p_177077_6_ + 0.5
+                );
+            } else {
+                GlStateManager.translate((float) p_177077_2_ + 0.5, (float) p_177077_4_ + 0.25F * f2 + 0.37,
+                        (float) p_177077_6_ + 0.5
+                );
+            }
+            GlStateManager.scale(0.5F, 0.5f, 0.5f);
             GL11.glRotatef(rotation, 0F, 1F, 0F);
             rotation = prevRotation + (rotation - prevRotation) * p_177077_8_;
             prevRotation = rotation;
@@ -252,92 +249,94 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         }
     }
 
-    protected int getModelCount(ItemStack stack)
-    {
+    protected int getModelCount(ItemStack stack) {
         int i = 1;
 
-        if (stack.getCount() > 48)
-        {
+        if (stack.getCount() > 48) {
             i = 5;
-        }
-        else if (stack.getCount() > 32)
-        {
+        } else if (stack.getCount() > 32) {
             i = 4;
-        }
-        else if (stack.getCount() > 16)
-        {
+        } else if (stack.getCount() > 16) {
             i = 3;
-        }
-        else if (stack.getCount() > 1)
-        {
+        } else if (stack.getCount() > 1) {
             i = 2;
         }
 
         return i;
     }
+
     private void renderItem(IIsMolecular te, double x, double y, double z, float partialTicks) {
         ItemStack itemstack = te.getItemStack();
         int i = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getMetadata();
         this.random.setSeed(i);
         boolean flag = false;
 
-        if (this.bindEntityTexture(te.getEntityBlock()))
-        {
-            Minecraft.getMinecraft().getRenderManager().renderEngine.getTexture(this.getEntityTexture(te.getEntityBlock())).setBlurMipmap(false
-                    , false);
+        if (this.bindEntityTexture(te.getEntityBlock())) {
+            Minecraft
+                    .getMinecraft()
+                    .getRenderManager().renderEngine
+                    .getTexture(this.getEntityTexture(te.getEntityBlock()))
+                    .setBlurMipmap(false
+                            , false);
             flag = true;
         }
         GlStateManager.enableRescaleNormal();
         GlStateManager.alphaFunc(516, 0.1F);
         GlStateManager.enableBlend();
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.tryBlendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA,
+                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                GlStateManager.SourceFactor.ONE,
+                GlStateManager.DestFactor.ZERO
+        );
         GlStateManager.pushMatrix();
-        IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(itemstack, te.getEntityBlock().getWorld(),
+        IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(itemstack,
+                te.getEntityBlock().getWorld(),
                 null
         );
         int j = this.transformModelCount(te, x, y, z, partialTicks, ibakedmodel);
         boolean flag1 = ibakedmodel.isGui3d();
 
-        if (!flag1)
-        {
-            float f3 = -0.0F * (float)(j - 1) * 0.5F;
-            float f4 = -0.0F * (float)(j - 1) * 0.5F;
-            float f5 = -0.09375F * (float)(j - 1) * 0.5F;
+        if (!flag1) {
+            float f3 = -0.0F * (float) (j - 1) * 0.5F;
+            float f4 = -0.0F * (float) (j - 1) * 0.5F;
+            float f5 = -0.09375F * (float) (j - 1) * 0.5F;
             GlStateManager.translate(f3, f4, f5);
         }
 
 
-
-        for (int k = 0; k < j; ++k)
-        {
+        for (int k = 0; k < j; ++k) {
             GlStateManager.pushMatrix();
-            if (flag1)
-            {
+            if (flag1) {
 
-                if (k > 0)
-                {
+                if (k > 0) {
                     float f7 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
                     float f9 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
                     float f6 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
                     GlStateManager.translate(shouldSpreadItems() ? f7 : 0, shouldSpreadItems() ? f9 : 0, f6);
                 }
 
-                IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ibakedmodel, ItemCameraTransforms.TransformType.GROUND, false);
+                IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                        ibakedmodel,
+                        ItemCameraTransforms.TransformType.GROUND,
+                        false
+                );
                 Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
                 GlStateManager.popMatrix();
-            }
-            else
-            {
+            } else {
 
-                if (k > 0)
-                {
+                if (k > 0) {
                     float f8 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
                     float f10 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
                     GlStateManager.translate(f8, f10, 0.0F);
                 }
 
-                IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(ibakedmodel, ItemCameraTransforms.TransformType.GROUND, false);
+                IBakedModel transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                        ibakedmodel,
+                        ItemCameraTransforms.TransformType.GROUND,
+                        false
+                );
                 Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
                 GlStateManager.popMatrix();
                 GlStateManager.translate(0.0F, 0.0F, 0.09375F);
@@ -345,34 +344,33 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
         }
 
 
-
         GlStateManager.popMatrix();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
         this.bindEntityTexture(te.getEntityBlock());
 
-        if (flag)
-        {
-            Minecraft.getMinecraft().getRenderManager().renderEngine.getTexture(this.getEntityTexture(te.getEntityBlock())).restoreLastBlurMipmap();
+        if (flag) {
+            Minecraft
+                    .getMinecraft()
+                    .getRenderManager().renderEngine
+                    .getTexture(this.getEntityTexture(te.getEntityBlock()))
+                    .restoreLastBlurMipmap();
         }
     }
 
-    protected boolean bindEntityTexture(TileEntityBlock entity)
-    {
+    protected boolean bindEntityTexture(TileEntityBlock entity) {
         ResourceLocation resourcelocation = this.getEntityTexture(entity);
 
-        if (resourcelocation == null)
-        {
+        if (resourcelocation == null) {
             return false;
-        }
-        else
-        {
+        } else {
             this.bindTexture(resourcelocation);
             return true;
         }
     }
-    protected ResourceLocation getEntityTexture(TileEntityBlock entity)
-    {
+
+    protected ResourceLocation getEntityTexture(TileEntityBlock entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
+
 }

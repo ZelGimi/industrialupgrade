@@ -95,7 +95,8 @@ public class EventHandler {
                         }
                     }
                     if (!(!isSink && !isSinkFluid && !isSource && !isSourceFluid)) {
-                        final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(pos,
+                        final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                pos,
                                 item_storage,
                                 fluid_storage,
                                 isSink,
@@ -107,7 +108,7 @@ public class EventHandler {
                         transport.setFacingListSink(facingListSink);
                         transport.setFacingListSource(facingListSource);
                         MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                                event.getWorld(),transport
+                                event.getWorld(), transport
 
                         ));
                     }
@@ -153,7 +154,7 @@ public class EventHandler {
                         transport.setFacingListSink(facingListSink);
                         transport.setFacingListSource(facingListSource);
                         MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                                event.getWorld(),transport
+                                event.getWorld(), transport
 
 
                         ));
@@ -177,10 +178,10 @@ public class EventHandler {
                                         facing.getOpposite()
                                 );
                                 if (transport.isOutput()) {
-                                    facingListSource.add( facing.getOpposite());
+                                    facingListSource.add(facing.getOpposite());
                                     isSource = true;
                                 } else {
-                                    facingListSink.add( facing.getOpposite());
+                                    facingListSink.add(facing.getOpposite());
                                     isSink = true;
                                 }
                                 break;
@@ -195,7 +196,7 @@ public class EventHandler {
                         transport.setFacingListSink(facingListSink);
                         transport.setFacingListSource(facingListSource);
                         MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                                event.getWorld(),transport
+                                event.getWorld(), transport
 
                         ));
                     }

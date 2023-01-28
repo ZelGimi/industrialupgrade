@@ -54,7 +54,7 @@ public class TileEntityWaterGenerator extends TileEntityElectricMachine implemen
                 "container",
                 Access.I,
                 1,
-                InvSide.TOP,
+                InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidRegistry.WATER
         );

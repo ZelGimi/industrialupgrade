@@ -14,7 +14,6 @@ import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.QEComponent;
-import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerQuantumQuarry;
 import com.denfop.gui.GuiQuantumQuarry;
 import com.denfop.invslot.InvSlotQuantumQuarry;
@@ -113,8 +112,9 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         }
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    energy.getCapacity())
                     + " QE");
         }
         super.addInformation(stack, tooltip, advanced);
@@ -123,12 +123,12 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
                     final QEComponent component2 = this.energy;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component2.getEnergy());
                         }
@@ -146,8 +146,8 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         }
 
         final QEComponent component2 = this.energy;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component2.getEnergy());
             }
@@ -247,7 +247,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
@@ -326,7 +326,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
                     } else {
 
-                        this.outputSlot.add(main_list.get(chance1).getStack());
+                        this.outputSlot.add(stack.getStack());
 
                     }
 

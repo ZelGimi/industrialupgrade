@@ -422,7 +422,7 @@ public enum EnumMultiMachine {
     ),
 
 
-    RECYCLER("Recycler", 1, 45, 1, IUItem.machines_base1, 0, 0, 5, EnumTypeMachines.RECYCLER, IUItem.simplemachine),
+    RECYCLER("Recycler", 1, 45, 1, IUItem.machines_base1, 0, 0, 5, EnumTypeMachines.RECYCLER, IUItem.simplemachine, 1, 8),
 
     OreWashing(
             "OreWashing",

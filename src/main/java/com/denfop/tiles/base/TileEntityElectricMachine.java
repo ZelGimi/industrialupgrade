@@ -65,12 +65,12 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
                     final AdvEnergy component = this.getComponent(AdvEnergy.class);
-                    if(component != null){
-                        if(component.getEnergy() != 0) {
+                    if (component != null) {
+                        if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component.getEnergy());
                         }
@@ -87,8 +87,8 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
             }
         }
         final AdvEnergy component = this.getComponent(AdvEnergy.class);
-        if(component != null){
-            if(component.getEnergy() != 0) {
+        if (component != null) {
+            if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component.getEnergy());
             }
@@ -125,7 +125,7 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
     }
@@ -141,8 +141,9 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
             }
             final NBTTagCompound nbt = ModUtils.nbt(stack);
             final double energy1 = nbt.getDouble("energy");
-            if(energy1 != 0){
-                tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+            if (energy1 != 0) {
+                tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                        energy.getCapacity())
                         + " EU ");
             }
         }

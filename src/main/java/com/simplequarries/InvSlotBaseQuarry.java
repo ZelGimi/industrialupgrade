@@ -80,6 +80,14 @@ public class InvSlotBaseQuarry extends InvSlot {
                 }
             }
         }
+        tile.chunkx1 = tile.chunkx;
+        tile.chunkz1 = tile.chunkz;
+        tile.chunkx2 = tile.chunkx + 15;
+        tile.chunkz2 = tile.chunkz + 15;
+        if (tile.col != 1) {
+            tile.chunkx1 = tile.chunkx - 16 * (tile.col - 1);
+            tile.chunkz1 = tile.chunkz - 16 * (tile.col - 1);
+        }
     }
 
     public void update() {
@@ -106,6 +114,7 @@ public class InvSlotBaseQuarry extends InvSlot {
                         if (tile.col == 1) {
                             tile.col = module.efficiency;
                             tile.energyconsume += tile.consume * (module.cost);
+
                         }
                         break;
                     case LUCKY:
@@ -140,6 +149,14 @@ public class InvSlotBaseQuarry extends InvSlot {
 
                 }
             }
+        }
+        tile.chunkx1 = tile.chunkx;
+        tile.chunkz1 = tile.chunkz;
+        tile.chunkx2 = tile.chunkx + 15;
+        tile.chunkz2 = tile.chunkz + 15;
+        if (tile.col != 1) {
+            tile.chunkx1 = tile.chunkx - 16 * (tile.col - 1);
+            tile.chunkz1 = tile.chunkz - 16 * (tile.col - 1);
         }
     }
 

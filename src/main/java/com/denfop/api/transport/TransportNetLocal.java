@@ -91,19 +91,23 @@ public class TransportNetLocal {
             List<TransportPath> TransportPaths,
             SystemTick tick
     ) {
+
         if (TransportPaths == null) {
             TransportPaths = discover(TransportSource);
             tick.setList(TransportPaths);
         }
         List<ItemStack> list = amount.getList();
         List<Integer> list1 = amount.getList1();
+
         if (!list.isEmpty()) {
             for (TransportPath TransportPath : TransportPaths) {
+
                 if (list.isEmpty()) {
                     break;
                 }
                 ITransportSink<ItemStack, IItemHandler> TransportSink = TransportPath.target;
                 List<Integer> demandedTransport = TransportSink.getDemanded();
+
                 if (demandedTransport.isEmpty() || !TransportSink.canAccept(TransportPath.targetDirection.getOpposite())) {
                     continue;
                 }
@@ -287,8 +291,11 @@ public class TransportNetLocal {
                 for (SystemTick<ITransportSource, TransportPath> tick : this.TransportSourceToTransportPathMap.senderPath) {
                     if (tick.getSource().isItem()) {
                         ITransportSource<ItemStack, IItemHandler> entry = (ITransportSource<ItemStack, IItemHandler>) tick.getSource();
+
+
                         if (entry != null) {
                             TransportItem<ItemStack> offered = entry.getOffered(0);
+
                             if (!offered.getList().isEmpty()) {
                                 emitTransportFrom(entry, offered, tick.getList(), tick);
                             }
@@ -322,14 +329,15 @@ public class TransportNetLocal {
         List<FluidStack> list = transportItem.getList();
         if (!list.isEmpty()) {
             for (TransportPath TransportPath : TransportPaths) {
-                if (list.isEmpty() ) {
+                if (list.isEmpty()) {
                     break;
                 }
-                if(!TransportPath.target.canAccept(TransportPath.targetDirection.getOpposite()))
+                if (!TransportPath.target.canAccept(TransportPath.targetDirection.getOpposite())) {
                     continue;
+                }
                 IFluidHandler handler = TransportPath.getHandler();
                 for (FluidStack fluidStack : list) {
-                    if (fluidStack.amount <= 0 ) {
+                    if (fluidStack.amount <= 0) {
                         continue;
                     }
                     int amount = handler.fill(fluidStack, false);

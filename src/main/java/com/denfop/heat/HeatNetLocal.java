@@ -166,8 +166,9 @@ public class HeatNetLocal {
             }
         }
 
-        if(!allow)
+        if (!allow) {
             HeatSource.setAllowed(false);
+        }
         return amount;
     }
 
@@ -350,10 +351,10 @@ public class HeatNetLocal {
 
                     if (entry.isAllowed()) {
 
-                       this.emitHeatFrom(entry, offered, tick);
+                        this.emitHeatFrom(entry, offered, tick);
 
 
-                    }else {
+                    } else {
                         this.emitHeatFromNotAllowed(entry, offered, tick);
 
                     }
@@ -366,7 +367,11 @@ public class HeatNetLocal {
 
     }
 
-    public double emitHeatFromNotAllowed(final IHeatSource HeatSource, double amount, final SystemTick<IHeatSource, HeatPath> tick) {
+    public double emitHeatFromNotAllowed(
+            final IHeatSource HeatSource,
+            double amount,
+            final SystemTick<IHeatSource, HeatPath> tick
+    ) {
         List<HeatPath> HeatPaths = tick.getList();
 
         if (HeatPaths == null) {
@@ -374,47 +379,46 @@ public class HeatNetLocal {
             tick.setList(HeatPaths);
         }
 
-            for (final HeatPath HeatPath : HeatPaths) {
-                final IHeatSink HeatSink = HeatPath.target;
-                double demandedHeat = HeatSink.getDemandedHeat();
-                if(HeatSink.needTemperature())
-                    HeatSource.setAllowed(true);
-                if (demandedHeat <= 0.0) {
-                    continue;
-                }
+        for (final HeatPath HeatPath : HeatPaths) {
+            final IHeatSink HeatSink = HeatPath.target;
+            double demandedHeat = HeatSink.getDemandedHeat();
+            if (HeatSink.needTemperature()) {
+                HeatSource.setAllowed(true);
+            }
+            if (demandedHeat <= 0.0) {
+                continue;
+            }
 
-                double HeatProvided = amount;
-                double adding;
-
-
-                adding = Math.min(HeatProvided, demandedHeat);
-                if (adding <= 0.0D) {
-                    continue;
-                }
+            double HeatProvided = amount;
+            double adding;
 
 
-                adding -= HeatSink.injectHeat(HeatPath.targetDirection, adding, 0);
-                HeatPath.totalHeatConducted = (long) adding;
+            adding = Math.min(HeatProvided, demandedHeat);
+            if (adding <= 0.0D) {
+                continue;
+            }
 
 
-                if (adding > HeatPath.min) {
-                    for (IHeatConductor HeatConductor : HeatPath.conductors) {
-                        if (HeatConductor.getConductorBreakdownHeat() < adding) {
-                            HeatConductor.removeConductor();
-                        } else {
-                            break;
-                        }
+            adding -= HeatSink.injectHeat(HeatPath.targetDirection, adding, 0);
+            HeatPath.totalHeatConducted = (long) adding;
+
+
+            if (adding > HeatPath.min) {
+                for (IHeatConductor HeatConductor : HeatPath.conductors) {
+                    if (HeatConductor.getConductorBreakdownHeat() < adding) {
+                        HeatConductor.removeConductor();
+                    } else {
+                        break;
                     }
                 }
-
-
             }
+
+
+        }
 
 
         return amount;
     }
-
-
 
 
     private double getPacketAmount() {

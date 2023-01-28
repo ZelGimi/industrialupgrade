@@ -10,8 +10,6 @@ import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.core.init.Localization;
-import ic2.core.item.type.CraftingItemType;
-import ic2.core.ref.ItemName;
 import net.minecraft.item.ItemStack;
 
 public class TileEntityAssamplerScrap extends TileEntityMultiMachine {

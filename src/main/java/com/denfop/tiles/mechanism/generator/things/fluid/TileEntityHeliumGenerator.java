@@ -53,7 +53,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
                 "container",
                 Access.I,
                 1,
-                InvSide.TOP,
+                InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidHelium.getInstance()
         );

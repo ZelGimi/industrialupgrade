@@ -434,7 +434,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     @Override
     public double getConductorBreakdownEnergy() {
-        return  this.cableType.capacity + 1;
+        return this.cableType.capacity + 1;
     }
 
     @Override

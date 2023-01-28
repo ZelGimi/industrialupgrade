@@ -42,7 +42,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -54,7 +53,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -104,6 +103,12 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     public boolean vein_need = false;
     public BlockPos default_pos;
+    public int chunkx1;
+    public int chunkz1;
+    public int chunkx2;
+    public int chunkz2;
+    public int chunkx;
+    public int chunkz;
     private boolean sound = true;
 
     public TileEntityBaseQuarry(String name, double coef, int index) {
@@ -128,6 +133,51 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         this.consume = this.energyconsume;
         this.exp = this.addComponent(EXPComponent.asBasicSource(this, 5000, 14));
 
+    }
+
+    public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos) {
+        // Logic from tryHarvestBlock for pre-canceling the event
+        boolean preCancelEvent = false;
+        ItemStack itemstack = entityPlayer.getHeldItemMainhand();
+        if (gameType.isCreative() && !itemstack.isEmpty()
+                && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer)) {
+            preCancelEvent = true;
+        }
+
+        if (gameType.hasLimitedInteractions()) {
+            if (gameType == GameType.SPECTATOR) {
+                preCancelEvent = true;
+            }
+
+            if (!entityPlayer.isAllowEdit()) {
+                if (itemstack.isEmpty() || !itemstack.canDestroy(world.getBlockState(pos).getBlock())) {
+                    preCancelEvent = true;
+                }
+            }
+        }
+
+
+        // Post the block break event
+        IBlockState state = world.getBlockState(pos);
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
+        event.setCanceled(preCancelEvent);
+        MinecraftForge.EVENT_BUS.post(event);
+
+        // Handle if the event is canceled
+        if (event.isCanceled()) {
+            // Let the client know the block still exists
+            entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
+
+            // Update any tile entity data for this block
+            TileEntity tileentity = world.getTileEntity(pos);
+            if (tileentity != null) {
+                Packet<?> pkt = tileentity.getUpdatePacket();
+                if (pkt != null) {
+                    entityPlayer.connection.sendPacket(pkt);
+                }
+            }
+        }
+        return event.isCanceled() ? -1 : event.getExpToDrop();
     }
 
     public void changeSound() {
@@ -166,50 +216,54 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         }
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    energy.getCapacity())
                     + " EU");
         }
         final double energy2 = nbt.getDouble("energy1");
-        if(energy2 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy2) + "/" + ModUtils.getString(this.energy1.getCapacity())
+        if (energy2 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy2) + "/" + ModUtils.getString(
+                    this.energy1.getCapacity())
                     + " QE");
         }
         final double energy3 = nbt.getDouble("energy2");
-        if(energy3 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy3) + "/" + ModUtils.getString(exp.getCapacity())
+        if (energy3 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy3) + "/" + ModUtils.getString(
+                    exp.getCapacity())
                     + " EXP");
         }
     }
+
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
                     final AdvEnergy component = this.energy;
-                    if(component != null){
-                        if(component.getEnergy() != 0) {
+                    if (component != null) {
+                        if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component.getEnergy());
                         }
                     }
                     final QEComponent component1 = this.energy1;
-                    if(component1 != null){
-                        if(component1.getEnergy() != 0) {
+                    if (component1 != null) {
+                        if (component1.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy1", component1.getEnergy());
                         }
                     }
                     final EXPComponent component2 = this.exp;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy2", component2.getEnergy());
                         }
                     }
                     final CoolComponent component3 = this.cold;
-                    if(component3 != null){
-                        if(component3.getEnergy() != 0) {
+                    if (component3 != null) {
+                        if (component3.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy3", component3.getEnergy());
                         }
@@ -226,35 +280,36 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
             }
         }
         final AdvEnergy component = this.getComponent(AdvEnergy.class);
-        if(component != null){
-            if(component.getEnergy() != 0) {
+        if (component != null) {
+            if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component.getEnergy());
             }
         }
         final QEComponent component1 = this.energy1;
-        if(component1 != null){
-            if(component1.getEnergy() != 0) {
+        if (component1 != null) {
+            if (component1.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy1", component1.getEnergy());
             }
         }
         final EXPComponent component2 = this.exp;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy2", component2.getEnergy());
             }
         }
         final CoolComponent component3 = this.cold;
-        if(component3 != null){
-            if(component3.getEnergy() != 0) {
+        if (component3 != null) {
+            if (component3.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy3", component3.getEnergy());
             }
         }
         return drop;
     }
+
     public EnumTypeAudio getType() {
         return typeAudio;
     }
@@ -311,7 +366,6 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         return nbttagcompound;
     }
 
-
     @Override
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
@@ -326,19 +380,19 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         }
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
         final double energy2 = nbt.getDouble("energy1");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy1.addEnergy(energy2);
         }
         final double energy3 = nbt.getDouble("energy2");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.exp.addEnergy(energy3);
         }
         final double energy4 = nbt.getDouble("energy3");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.cold.addEnergy(energy4);
         }
     }
@@ -346,10 +400,20 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
     protected void onLoaded() {
         super.onLoaded();
         this.input.update();
-        int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-        int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
+        final Chunk chunk = this.getWorld().getChunkFromBlockCoords(this.pos);
+        this.chunkx = chunk.x * 16;
+        this.chunkz = chunk.z * 16;
         this.default_pos = new BlockPos(chunkx, this.min_y, chunkz);
-        this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+        this.chunkx1 = this.chunkx;
+        this.chunkz1 = this.chunkz;
+        this.chunkx2 = this.chunkx + 15;
+        this.chunkz2 = this.chunkz + 15;
+        if (col != 1) {
+            this.chunkx1 = chunkx - 16 * (col - 1);
+            this.chunkz1 = chunkz - 16 * (col - 1);
+        }
+
+        this.vein = VeinSystem.system.getVein(chunk.getPos());
         if (this.vein != null) {
             if (this.vein.getType() != Type.VEIN) {
                 this.vein = null;
@@ -402,7 +466,6 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
     }
 
-
     protected void updateEntityServer() {
         super.updateEntityServer();
         if (!this.work || !this.need_work) {
@@ -417,10 +480,9 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
 
         if (this.blockpos == null) {
-            int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-            int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
             this.blockpos = new BlockPos(chunkx, this.min_y, chunkz);
         }
+
         if (vein_need) {
             if (vein != null) {
                 if (vein.get()) {
@@ -458,6 +520,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                     setActive(true);
 
                 }
+
                 final IBlockState state = this
                         .getWorld()
                         .getBlockState(this.blockpos);
@@ -476,25 +539,14 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                             if (name.startsWith("ore")) {
 
                                 if (list(this.list_modules, stack)) {
-                                    int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16 * col;
-                                    int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16 * col;
-                                    if (this.blockpos.getX() < chunkx + 16 * this.col) {
-                                        this.blockpos = this.blockpos.add(1, 0, 0);
+                                    if (this.blockpos.getX() < this.chunkx2) {
+                                        this.blockpos = blockpos.add(1, 0, 0);
+                                    } else if (this.blockpos.getZ() < chunkz2) {
+                                        this.blockpos = new BlockPos(chunkx1, this.blockpos.getY(), this.blockpos.getZ() + 1);
+                                    } else if (this.blockpos.getY() < this.max_y) {
+                                        this.blockpos = new BlockPos(chunkx1, this.blockpos.getY() + 1, chunkz1);
                                     } else {
-                                        if (this.blockpos.getZ() < chunkz + 16 * this.col) {
-                                            this.blockpos = this.blockpos.add(-16 * this.col, 0, 1);
-                                        } else {
-                                            if (this.blockpos.getY() < this.max_y) {
-                                                this.blockpos = this.blockpos.add(0, 1, -16 * col);
-                                            } else {
-                                                this.work = false;
-                                            }
-                                        }
-                                    }
-                                    if (this.col == 1) {
-                                        if (this.blockpos.getX() > chunkx + 16 || this.blockpos.getZ() > chunkz + 16) {
-                                            this.blockpos = null;
-                                        }
+                                        this.work = false;
                                     }
                                     return;
                                 }
@@ -634,33 +686,22 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                         }
                     }
                 }
-                int chunkx = this.getWorld().getChunkFromBlockCoords(this.pos).x * 16;
-                int chunkz = this.getWorld().getChunkFromBlockCoords(this.pos).z * 16;
-                if (this.blockpos.getX() < chunkx + 16 * col) {
+                if (this.blockpos.getX() < this.chunkx2) {
                     this.blockpos = blockpos.add(1, 0, 0);
+                } else if (this.blockpos.getZ() < chunkz2) {
+                    this.blockpos = new BlockPos(chunkx1, this.blockpos.getY(), this.blockpos.getZ() + 1);
+                } else if (this.blockpos.getY() < this.max_y) {
+                    this.blockpos = new BlockPos(chunkx1, this.blockpos.getY() + 1, chunkz1);
                 } else {
-                    if (this.blockpos.getZ() < chunkz + 16 * col) {
-                        this.blockpos = this.blockpos.add(-16 * col, 0, 1);
-                    } else {
-                        if (this.blockpos.getY() < this.max_y) {
-                            this.blockpos = this.blockpos.add(0, 1, -16 * col);
-                        } else {
-                            this.work = false;
-                        }
-                    }
+                    this.work = false;
                 }
-                if (col == 1) {
-                    if (this.blockpos.getX() > chunkx + 16 || this.blockpos.getZ() > chunkz + 16) {
-                        this.blockpos = new BlockPos(chunkx, this.min_y, chunkz);
-                    }
-                }
-
             } else {
                 if (this.getActive()) {
                     initiate(2);
                     setActive(false);
                 }
             }
+
         }
 
 
@@ -669,53 +710,11 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         }
     }
 
-
     public ContainerBase<? extends TileEntityBaseQuarry> getGuiContainer(EntityPlayer player) {
         return new ContainerBaseQuarry(player, this);
 
     }
-    public static int onBlockBreakEvent(World world, GameType gameType, EntityPlayerMP entityPlayer, BlockPos pos) {
-        // Logic from tryHarvestBlock for pre-canceling the event
-        boolean preCancelEvent = false;
-        ItemStack itemstack = entityPlayer.getHeldItemMainhand();
-        if (gameType.isCreative() && !itemstack.isEmpty()
-                && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer))
-            preCancelEvent = true;
 
-        if (gameType.hasLimitedInteractions()) {
-            if (gameType == GameType.SPECTATOR)
-                preCancelEvent = true;
-
-            if (!entityPlayer.isAllowEdit()) {
-                if (itemstack.isEmpty() || !itemstack.canDestroy(world.getBlockState(pos).getBlock()))
-                    preCancelEvent = true;
-            }
-        }
-
-
-
-        // Post the block break event
-        IBlockState state = world.getBlockState(pos);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
-        event.setCanceled(preCancelEvent);
-        MinecraftForge.EVENT_BUS.post(event);
-
-        // Handle if the event is canceled
-        if (event.isCanceled()) {
-            // Let the client know the block still exists
-            entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-
-            // Update any tile entity data for this block
-            TileEntity tileentity = world.getTileEntity(pos);
-            if (tileentity != null) {
-                Packet<?> pkt = tileentity.getUpdatePacket();
-                if (pkt != null) {
-                    entityPlayer.connection.sendPacket(pkt);
-                }
-            }
-        }
-        return event.isCanceled() ? -1 : event.getExpToDrop();
-    }
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
 
@@ -792,10 +791,14 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
     }
 
     @Override
-    public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
+    public void onNetworkEvent(final EntityPlayer entityPlayer, final int i1) {
+        int i = i1 / 10;
+        int k = ((i1 & 1) == 1) ? 10 : 1;
         switch (i) {
             case 0:
-                this.min_y = Math.min(this.max_y, this.min_y + 1);
+
+
+                this.min_y = Math.min(this.max_y, this.min_y + Math.min(k, this.max_y - this.min_y));
 
                 if (this.blockpos.getY() < this.min_y) {
                     int temp = this.min_y - this.blockpos.getY();
@@ -804,7 +807,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
                 break;
             case 1:
-                this.min_y = Math.max(0, this.min_y - 1);
+                this.min_y = Math.max(0, this.min_y - Math.min(k, this.min_y));
 
                 if (this.blockpos.getY() < this.min_y) {
                     int temp = this.min_y - this.blockpos.getY();
@@ -813,24 +816,27 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
                 break;
             case 2:
-                this.max_y = Math.min(this.getWorld().provider.getHeight(), this.max_y + 1);
+                this.max_y = Math.min(this.getWorld().provider.getHeight(), Math.min(
+                        k,
+                        this.getWorld().provider.getHeight() - this.max_y
+                ));
                 if (this.min_y > this.max_y) {
                     this.min_y = this.max_y;
                 }
 
-                if (this.blockpos.getY() < this.min_y) {
-                    int temp = this.min_y - this.blockpos.getY();
+                if (this.blockpos.getY() > this.max_y) {
+                    int temp = this.max_y - this.blockpos.getY();
                     this.blockpos = this.blockpos.add(0, temp, 0);
                 }
 
                 break;
             case 3:
-                this.max_y = Math.max(0, this.max_y - 1);
+                this.max_y = Math.max(0, this.max_y - Math.min(k, this.max_y));
                 if (this.min_y > this.max_y) {
                     this.min_y = this.max_y;
                 }
-                if (this.blockpos.getY() < this.min_y) {
-                    int temp = this.min_y - this.blockpos.getY();
+                if (this.blockpos.getY() > this.max_y) {
+                    int temp = this.max_y - this.blockpos.getY();
                     this.blockpos = this.blockpos.add(0, temp, 0);
                 }
                 break;

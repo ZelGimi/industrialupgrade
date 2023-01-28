@@ -29,7 +29,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -68,6 +67,7 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
         int insulation = nbt.getByte("insulation") & 255;
         return Math.min(insulation, type.maxInsulation);
     }
+
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
         tooltip.add(Localization.translate("iu.controller_cables.info"));
@@ -158,8 +158,9 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
     @Override
     protected void updateEntityServer() {
         super.updateEntityServer();
-        if(this.work) {
+        if (this.work) {
             if (main_cableItem != null) {
+                List<ItemStack> itemStackList = new ArrayList<>();
                 for (IEnergyConductor conductor : this.conductorList) {
                     if (conductor.getConductorBreakdownEnergy() - 1 < this.max_value) {
 
@@ -172,8 +173,12 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                     ), getInsulation(main_cableItem.getStack()));
                                     TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
                                             conductor);
+                                    final List<ItemStack> drops = tile.getBlockType().getDrops(world, tile.getPos(), tile.getBlockState(),
+                                           100);
+                                    if(!drops.isEmpty())
+                                    itemStackList.add(drops.get(0));
                                     conductor.removeConductor();
-                                    EnumFacing facing =  tile.getFacing().getOpposite();
+                                    EnumFacing facing = tile.getFacing().getOpposite();
                                     BlockPos pos = tile.getPos();
                                     if (ItemBlockTileEntity.placeTeBlock(main_cableItem.getStack(),
                                             fakePlayer,
@@ -188,7 +193,8 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                         EnergyNetGlobal.getForWorld(this.getWorld()).update(pos);
                                         TileEntityCable cable =
                                                 (TileEntityCable) this.getWorld().getTileEntity(pos);
-                                        cable.onNeighborChange(null,pos);
+                                        if(cable != null)
+                                        cable.onNeighborChange(null, pos);
                                         break;
                                     }
                                 } else if (main_cableItem.getStack().getItem() instanceof com.denfop.items.transport.ItemCable) {
@@ -198,7 +204,11 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                             ), getInsulation(main_cableItem.getStack()));
                                     TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
                                             conductor);
-                                    EnumFacing facing =  tile.getFacing().getOpposite();
+                                    EnumFacing facing = tile.getFacing().getOpposite();
+                                    final List<ItemStack> drops = tile.getBlockType().getDrops(world, tile.getPos(), tile.getBlockState(),
+                                            100);
+                                    if(!drops.isEmpty())
+                                        itemStackList.add(drops.get(0));
                                     conductor.removeConductor();
                                     BlockPos pos = tile.getPos();
 
@@ -214,7 +224,9 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                         main_cableItem.shrink(1);
                                         EnergyNetGlobal.getForWorld(this.getWorld()).update(pos);
                                         com.denfop.tiles.transport.tiles.TileEntityCable cable =
-                                                (com.denfop.tiles.transport.tiles.TileEntityCable) this.getWorld().getTileEntity(pos);
+                                                (com.denfop.tiles.transport.tiles.TileEntityCable) this.getWorld().getTileEntity(
+                                                        pos);
+                                        if(cable != null)
                                         cable.update_render();
                                         break;
                                     }
@@ -230,6 +242,8 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                     }
 
                 }
+                for (ItemStack stack:itemStackList)
+                    this.slot.add(stack);
             }
             energyPathList.clear();
             conductorList.clear();
@@ -282,7 +296,6 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
             this.slot.onChanged();
         } else if (i == 1) {
             this.work = true;
-
 
 
         }

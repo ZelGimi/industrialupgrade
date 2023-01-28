@@ -163,11 +163,11 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
     adv_solar_destiller(TileEntityAdvSolarDestiller.class, 66),
     imp_solar_destiller(TileEntityImpSolarDestiller.class, 67),
     per_solar_destiller(TileEntityPerSolarDestiller.class, 68),
-    limiter(TileEntityLimiter.class,69),
-    redstone_generator(TileEntityRedstoneGenerator.class,70),
-    adv_redstone_generator(TileEntityAdvRedstoneGenerator.class,71),
-    imp_redstone_generator(TileEntityImpRedstoneGenerator.class,72),
-    per_redstone_generator(TileEntityPerRedstoneGenerator.class,73),
+    limiter(TileEntityLimiter.class, 69),
+    redstone_generator(TileEntityRedstoneGenerator.class, 70),
+    adv_redstone_generator(TileEntityAdvRedstoneGenerator.class, 71),
+    imp_redstone_generator(TileEntityImpRedstoneGenerator.class, 72),
+    per_redstone_generator(TileEntityPerRedstoneGenerator.class, 73),
     ;
 
 

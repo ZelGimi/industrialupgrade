@@ -6,7 +6,12 @@ import com.denfop.api.energy.IAdvEnergySource;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.*;
+import ic2.api.energy.tile.IChargingSlot;
+import ic2.api.energy.tile.IDischargingSlot;
+import ic2.api.energy.tile.IEnergyAcceptor;
+import ic2.api.energy.tile.IEnergyEmitter;
+import ic2.api.energy.tile.IEnergyTile;
+import ic2.api.energy.tile.IMetaDelegate;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.block.invslot.InvSlot;
@@ -45,12 +50,12 @@ public class AdvEnergy extends TileEntityComponent {
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public double tick1;
+    public boolean limit;
+    public double limit_amount = 0;
     protected double pastEnergy;
     protected double perenergy;
     protected double pastEnergy1;
     protected double perenergy1;
-    public boolean limit;
-    public double limit_amount = 0;
 
     public AdvEnergy(TileEntityBlock parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);

@@ -2,14 +2,10 @@ package com.denfop.items;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.IModelRegister;
-import com.denfop.api.energy.LimitInfo;
 import com.denfop.container.ContainerLimiter;
 import com.denfop.gui.HandHeldLimiter;
-import ic2.api.energy.EnergyNet;
 import ic2.api.item.IBoxable;
-import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.IHandHeldInventory;

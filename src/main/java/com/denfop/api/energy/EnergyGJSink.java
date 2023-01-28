@@ -20,11 +20,11 @@ public class EnergyGJSink extends BasicSink {
     }
 
     public double getDemandedEnergy() {
-        return this.parent.storage.receiveEnergyGC(Integer.MAX_VALUE,true) / 6.557D;
+        return this.parent.storage.receiveEnergyGC(Integer.MAX_VALUE, true) / 6.557D;
     }
 
     public double injectEnergy(EnumFacing directionFrom, double amt, double voltage) {
-        this.parent.storage.receiveEnergyGC((float) (amt * 6.557),false);
+        this.parent.storage.receiveEnergyGC((float) (amt * 6.557), false);
         return 0;
     }
 
@@ -51,7 +51,7 @@ public class EnergyGJSink extends BasicSink {
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing side) {
-        return parent.acceptsEnergyFrom(iEnergyEmitter,side);
+        return parent.acceptsEnergyFrom(iEnergyEmitter, side);
     }
 
 }

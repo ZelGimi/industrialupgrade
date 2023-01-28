@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -77,13 +78,25 @@ public class GUIBook extends GuiIC2<ContainerBook> {
     }
 
     public static List<String> splitEqually(String text, int size) {
+        List<String> ret = Arrays.asList(text.split("\\s"));
+        List<String> ret1 = new ArrayList<>();
+        StringBuilder k = new StringBuilder();
+        for(String res : ret) {
+          if((k.length() + res.length() + 1)< size){
+              k.append(" ").append(res);
 
-        List<String> ret = new ArrayList<>((text.length() + size - 1) / size);
+          }else{
+              ret1.add(k.toString());
+              k = new StringBuilder();
+              k.append(res);
+          }
+        }
+     /*   List<String> ret = new ArrayList<>((text.length() + size - 1) / size);
 
         for (int start = 0; start < text.length(); start += size) {
             ret.add(text.substring(start, Math.min(text.length(), start + size)));
-        }
-        return ret;
+        }*/
+        return ret1;
     }
 
     protected void mouseClicked(int i, int j, int k) throws IOException {
@@ -299,8 +312,8 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                 if (indexpage < lst1.size()) {
                     AddPages addpag = lst1.get(indexpage);
                     if (addpag.resource == null) {
-                        List<String> list = splitEqually(Localization.translate(addpag.description), 30);
-                        int x0 = 16;
+                        List<String> list = splitEqually(Localization.translate(addpag.description), 32);
+                        int x0 = 12;
                         int y = 20;
                         if (indexpage > 0) {
                             y -= 6;
@@ -308,7 +321,6 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                         if (indexpage == 0) {
                             String name = Localization.translate(page1.text);
                             int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
-
                             this.fontRenderer.drawString(name, nmPos, 12, ModUtils.convertRGBcolorToInt(13, 229, 34));
                         }
                         for (String str : list) {
@@ -334,6 +346,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                             this.fontRenderer.drawString(name, nmPos, 12, ModUtils.convertRGBcolorToInt(13, 229, 34));
                         }
                         for (String str : list) {
+
                             this.fontRenderer.drawString(str, x0, y,
                                     ModUtils.convertRGBcolorToInt(13, 229, 34)
                             );

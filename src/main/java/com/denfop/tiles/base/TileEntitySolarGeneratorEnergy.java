@@ -1,6 +1,8 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.IAdvEnergyNet;
+import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.EnumTypeStyle;
@@ -8,6 +10,7 @@ import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
 import com.denfop.invslot.InvSlotGenSunarrium;
+import ic2.api.energy.EnergyNet;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.core.ContainerBase;
 import ic2.core.IHasGui;
@@ -44,7 +47,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     private boolean noSunWorld;
     private boolean skyIsVisible;
     private boolean sunIsUp;
-
+    private SunCoef sunCoef;
     public TileEntitySolarGeneratorEnergy(double cof) {
 
         this.maxSunEnergy = 4500;
@@ -123,6 +126,8 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.coef_day = this.lst.get(0);
         this.coef_night = this.lst.get(1);
         this.update_night = this.lst.get(2);
+        IAdvEnergyNet advEnergyNet = (IAdvEnergyNet) EnergyNet.instance;
+        this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
         updateVisibility();
 
     }
@@ -140,10 +145,9 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         if (this.world.provider.getWorldTime() % 80 == 0) {
             updateVisibility();
         }
-        long tick = this.getWorld().provider.getWorldTime() % 24000L;
         this.generation = 0;
         if (this.skyIsVisible) {
-            energy(tick);
+            energy();
             if (this.sunenergy.getEnergy() >= 4500) {
                 if (this.outputSlot.get().getCount() < 64 || this.outputSlot.isEmpty()) {
                     if (this.outputSlot.add(itemstack)) {
@@ -156,45 +160,15 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
 
     }
 
-    public void energy(long tick) {
-        double k = 0;
+    public void energy() {
+
 
         if (this.sunIsUp) {
-            if (tick <= 1000L) {
-                k = 5;
-            }
-            if (tick > 1000L && tick <= 4000L) {
-                k = 10;
-            }
-            if (tick > 4000L && tick <= 8000L) {
-                k = 30;
-            }
-            if (tick > 8000L && tick <= 11000L) {
-                k = 10;
-            }
-            if (tick > 11000L) {
-                k = 5;
-            }
-            this.generation = k * this.cof * (1 + coef_day);
+            this.generation = this.sunCoef.getCoef() * 30 * this.cof * (1 + coef_day);
             this.sunenergy.addEnergy(this.generation);
         } else if (this.update_night > 0) {
-            double tick1 = tick - 12000;
-            if (tick1 <= 1000L) {
-                k = 5;
-            }
-            if (tick1 > 1000L && tick1 <= 4000L) {
-                k = 10;
-            }
-            if (tick1 > 4000L && tick1 <= 8000L) {
-                k = 30;
-            }
-            if (tick1 > 8000L && tick1 <= 11000L) {
-                k = 10;
-            }
-            if (tick1 > 11000L) {
-                k = 5;
-            }
-            this.generation = k * this.cof * (this.update_night - 1) * (1 + this.coef_night);
+
+            this.generation = this.sunCoef.getCoef() * 30 * this.cof * (this.update_night - 1) * (1 + this.coef_night);
             this.sunenergy.addEnergy(this.generation);
 
         }

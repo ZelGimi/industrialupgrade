@@ -1,7 +1,6 @@
 package com.denfop.tiles.mechanism.quantum_storage;
 
 import com.denfop.api.gui.IType;
-import com.denfop.componets.EXPComponent;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.QEComponent;
 import com.denfop.container.ContainerQuantumStorage;
@@ -43,24 +42,30 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
         )));
         this.enumTypeStyle = enumTypeStyle;
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(qe.getCapacity())
+        tooltip.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.qe.getCapacity()) + " " +
+                "QE");
+
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    qe.getCapacity())
                     + " QE");
         }
     }
+
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
                     final QEComponent component2 = this.qe;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component2.getEnergy());
                         }
@@ -78,8 +83,8 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
         }
 
         final QEComponent component2 = this.qe;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component2.getEnergy());
             }
@@ -87,14 +92,16 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
 
         return drop;
     }
+
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.qe.addEnergy(energy1);
         }
     }
+
     @Override
     public ContainerQuantumStorage getGuiContainer(final EntityPlayer entityPlayer) {
         return new ContainerQuantumStorage(entityPlayer, this);

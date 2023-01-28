@@ -7,8 +7,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +30,6 @@ public class VeinSystem implements IVeinSystem {
         this.rand = new Random();
         MinecraftForge.EVENT_BUS.register(this);
     }
-
 
 
     public List<ChunkPos> getChunkPos() {

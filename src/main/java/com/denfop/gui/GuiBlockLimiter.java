@@ -6,7 +6,6 @@ import com.denfop.utils.ListInformationUtils;
 import ic2.core.IC2;
 import ic2.core.gui.TextBox;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -25,6 +24,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         this.addElement(textBox);
 
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
@@ -40,6 +40,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
+
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -47,10 +48,12 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 12 && x <= 46 && y >= 36 && y <= 48)
+        if (x >= 12 && x <= 46 && y >= 36 && y <= 48) {
             try {
                 IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, Integer.parseInt(textBox.getText()));
-            }catch (Exception ignored){};
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     @Override
@@ -60,6 +63,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         handleUpgradeTooltip(par1, par2);
 
     }
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int xoffset = (this.width - this.xSize) / 2;
@@ -70,6 +74,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
 
         this.mc.getTextureManager().bindTexture(getTexture());
     }
+
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guilimiter.png");

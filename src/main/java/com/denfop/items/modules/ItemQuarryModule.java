@@ -105,11 +105,12 @@ public class ItemQuarryModule extends ItemMulti<ItemQuarryModule.CraftingTypes> 
                 break;
         }
         EnumQuarryModules enumQuarryModules = EnumQuarryModules.values()[meta];
-        if(enumQuarryModules.cost < 0){
-            info.add(TextFormatting.GREEN + Localization.translate("iu.quarry_energy1") +(int)(Math.abs( enumQuarryModules.cost)*100) +
+        if (enumQuarryModules.cost < 0) {
+            info.add(TextFormatting.GREEN + Localization.translate("iu.quarry_energy1") + (int) (Math.abs(enumQuarryModules.cost) * 100) +
                     "%");
-        }else if(enumQuarryModules.cost > 0)
-            info.add(TextFormatting.RED + Localization.translate("iu.quarry_energy") + (int)(enumQuarryModules.cost*100) + "%");
+        } else if (enumQuarryModules.cost > 0) {
+            info.add(TextFormatting.RED + Localization.translate("iu.quarry_energy") + (int) (enumQuarryModules.cost * 100) + "%");
+        }
 
     }
 

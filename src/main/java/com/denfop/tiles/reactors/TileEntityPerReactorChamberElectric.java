@@ -80,15 +80,23 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
             return false;
         }
     }
+    @Override
+    protected void onBlockBreak() {
+        super.onBlockBreak();
 
+        if(this.reactor != null) {
+            this.reactor.change = true;
+            this.reactor.getReactorSize();
+        }
+    }
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        this.updateReactor();
-        if (this.reactor == null) {
-            this.destoryChamber(true);
-        } else {
-            this.reactor.change = true;
-        }
+            this.updateReactor();
+            if (this.reactor == null) {
+                this.destoryChamber(true);
+            } else {
+                this.reactor.change = true;
+            }
     }
 
     public void destoryChamber(boolean wrench) {

@@ -277,8 +277,8 @@ public class NetworkManager implements INetworkManager {
             GrowingBuffer buffer = new GrowingBuffer(32);
 
             try {
-               SubPacketType.TileEntityEvent.writeTo(buffer);
-               DataEncoder.encode(buffer, te, false);
+                SubPacketType.TileEntityEvent.writeTo(buffer);
+                DataEncoder.encode(buffer, te, false);
                 buffer.writeInt(event);
             } catch (IOException var9) {
                 throw new RuntimeException(var9);
@@ -287,7 +287,7 @@ public class NetworkManager implements INetworkManager {
             buffer.flip();
             Iterator<Collection<EntityPlayerMP>> var5 = getPlayersInRange(te.getWorld(), te.getPos(), new ArrayList()).iterator();
 
-            while(true) {
+            while (true) {
                 EntityPlayerMP target;
                 int dX;
                 int dZ;
@@ -296,14 +296,14 @@ public class NetworkManager implements INetworkManager {
                         return;
                     }
 
-                    target = (EntityPlayerMP)var5.next();
+                    target = (EntityPlayerMP) var5.next();
                     if (!limitRange) {
                         break;
                     }
 
-                    dX = (int)((double)te.getPos().getX() + 0.5D - target.posX);
-                    dZ = (int)((double)te.getPos().getZ() + 0.5D - target.posZ);
-                } while(dX * dX + dZ * dZ > 400);
+                    dX = (int) ((double) te.getPos().getX() + 0.5D - target.posX);
+                    dZ = (int) ((double) te.getPos().getZ() + 0.5D - target.posZ);
+                } while (dX * dX + dZ * dZ > 400);
 
                 this.sendPacket(buffer, false, target);
             }
@@ -330,9 +330,13 @@ public class NetworkManager implements INetworkManager {
             }
 
             buffer.flip();
-            Iterator<Collection<EntityPlayerMP>> var6 = getPlayersInRange(player.getEntityWorld(), player.getPosition(), new ArrayList()).iterator();
+            Iterator<Collection<EntityPlayerMP>> var6 = getPlayersInRange(
+                    player.getEntityWorld(),
+                    player.getPosition(),
+                    new ArrayList()
+            ).iterator();
 
-            while(true) {
+            while (true) {
                 EntityPlayerMP target;
                 int dX;
                 int dZ;
@@ -341,14 +345,14 @@ public class NetworkManager implements INetworkManager {
                         return;
                     }
 
-                    target = (EntityPlayerMP)var6.next();
+                    target = (EntityPlayerMP) var6.next();
                     if (!limitRange) {
                         break;
                     }
 
-                    dX = (int)(player.posX - target.posX);
-                    dZ = (int)(player.posZ - target.posZ);
-                } while(dX * dX + dZ * dZ > 400);
+                    dX = (int) (player.posX - target.posX);
+                    dZ = (int) (player.posZ - target.posZ);
+                } while (dX * dX + dZ * dZ > 400);
 
                 this.sendPacket(buffer, false, target);
             }
@@ -364,11 +368,12 @@ public class NetworkManager implements INetworkManager {
         assert false;
 
     }
+
     public final void sendInitialData(TileEntity te, EntityPlayerMP player) {
         assert !this.isClient();
 
         if (te instanceof INetworkDataProvider) {
-           TeUpdateDataServer updateData = getTeUpdateData(te);
+            TeUpdateDataServer updateData = getTeUpdateData(te);
 
             for (final String field : ((INetworkDataProvider) te).getNetworkFields()) {
                 updateData.addPlayerField(field, player);
@@ -376,18 +381,23 @@ public class NetworkManager implements INetworkManager {
         }
 
     }
+
     public final void sendInitialData(TileEntity te) {
         assert !this.isClient();
         if (te instanceof INetworkDataProvider) {
             TeUpdateDataServer updateData = getTeUpdateData(te);
-            List<String> fields = ((INetworkDataProvider)te).getNetworkFields();
+            List<String> fields = ((INetworkDataProvider) te).getNetworkFields();
 
             for (final String field : fields) {
                 updateData.addGlobalField(field);
             }
 
             if (TeUpdate.debug) {
-                IC2.log.info(LogCategory.Network, "Sending initial TE data for %s (%s).", new Object[]{Util.formatPosition(te), fields});
+                IC2.log.info(
+                        LogCategory.Network,
+                        "Sending initial TE data for %s (%s).",
+                        Util.formatPosition(te), fields
+                );
             }
         }
 

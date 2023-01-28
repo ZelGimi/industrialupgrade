@@ -1,6 +1,5 @@
 package com.denfop.container;
 
-import com.denfop.api.audio.IAudioFixer;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
 import com.denfop.tiles.mechanism.TileEntitySunnariumPanelMaker;

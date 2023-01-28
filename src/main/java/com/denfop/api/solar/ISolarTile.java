@@ -21,4 +21,5 @@ public interface ISolarTile {
     void setBonus(EnumTypeParts typeBonus, double bonus);
 
     void setLoad(double load);
+
 }

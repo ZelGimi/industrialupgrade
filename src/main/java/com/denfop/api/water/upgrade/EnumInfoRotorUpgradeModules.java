@@ -24,7 +24,7 @@ public enum EnumInfoRotorUpgradeModules {
     REPAIR_I(1, 1, 10, true, 14, 15),//13
     REPAIR_II(2, 1, 8, true, 13, 15),//14
     REPAIR_III(3, 1, 6, true, 14, 13),//15
-    OCEAN(1,1,1)//16
+    OCEAN(1, 1, 1)//16
     ;
 
     public final String name;

@@ -69,6 +69,7 @@ import com.denfop.componets.RFComponent;
 import com.denfop.componets.SEComponent;
 import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
+import com.denfop.events.Ic2IntegrationHandler;
 import com.denfop.integration.ae.AEIntegration;
 import com.denfop.integration.avaritia.AvaritiaIntegration;
 import com.denfop.integration.avaritia.BlockAvaritiaSolarPanel;
@@ -205,8 +206,8 @@ public class CommonProxy implements IGuiHandler {
         BlockQuarryVein.buildDummies();
         BlockHeatColdPipes.buildDummies();
         BlockUniversalCable.buildDummies();
-        this.ae2 = Loader.isModLoaded("appliedenergistics2");
-        this.gc = Loader.isModLoaded("galacticraftcore");
+        ae2 = Loader.isModLoaded("appliedenergistics2");
+        gc = Loader.isModLoaded("galacticraftcore");
 
         if (Config.AvaritiaLoaded) {
             BlockAvaritiaSolarPanel.buildDummies();
@@ -262,6 +263,10 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
+        BlockAdvChamber.adv_chamber.setPlaceHandler(Ic2IntegrationHandler.advReactorChamberPlace);
+        BlockImpChamber.imp_chamber.setPlaceHandler(Ic2IntegrationHandler.impReactorChamberPlace);
+        BlockPerChamber.per_chamber.setPlaceHandler(Ic2IntegrationHandler.perReactorChamberPlace);
+
         IUEventHandler sspEventHandler = new IUEventHandler();
         MinecraftForge.EVENT_BUS.register(sspEventHandler);
         Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();

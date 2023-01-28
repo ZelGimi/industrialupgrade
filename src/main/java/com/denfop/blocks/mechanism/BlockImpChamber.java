@@ -13,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -29,6 +30,7 @@ public enum BlockImpChamber implements ITeBlock {
     private final int itemMeta;
     private final EnumRarity rarity;
     private TileEntityBlock dummyTe;
+    private TeBlock.ITePlaceHandler placeHandler;
 
 
     BlockImpChamber(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
@@ -64,6 +66,19 @@ public enum BlockImpChamber implements ITeBlock {
         }
     }
 
+    @Nullable
+    @Override
+    public TeBlock.ITePlaceHandler getPlaceHandler() {
+        return placeHandler;
+    }
+
+    public void setPlaceHandler(TeBlock.ITePlaceHandler handler) {
+        if (this.placeHandler != null) {
+            throw new RuntimeException("duplicate place handler");
+        } else {
+            this.placeHandler = handler;
+        }
+    }
 
     @Override
     public String getName() {

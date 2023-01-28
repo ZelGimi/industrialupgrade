@@ -53,7 +53,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
                 "container",
                 Access.I,
                 1,
-                InvSide.TOP,
+                InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidRegistry.LAVA
         );

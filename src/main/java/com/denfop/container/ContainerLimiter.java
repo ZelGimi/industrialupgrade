@@ -1,9 +1,6 @@
 package com.denfop.container;
 
-import com.denfop.api.IAdvEnergyNet;
 import com.denfop.gui.HandHeldLimiter;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.network.ClientModifiable;
 import ic2.core.ContainerFullInv;

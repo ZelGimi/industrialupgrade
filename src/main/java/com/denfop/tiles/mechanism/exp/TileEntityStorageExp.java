@@ -5,8 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.audio.AudioSource;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.CoolComponent;
 import com.denfop.componets.EXPComponent;
 import com.denfop.container.ContainerStorageExp;
 import com.denfop.gui.GuiStorageExp;
@@ -104,19 +102,21 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
     public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    energy.getCapacity())
                     + " EXP");
         }
     }
+
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
                     final EXPComponent component2 = this.energy;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component2.getEnergy());
                         }
@@ -134,8 +134,8 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         }
 
         final EXPComponent component2 = this.energy;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component2.getEnergy());
             }
@@ -143,14 +143,16 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
 
         return drop;
     }
+
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
     }
+
     @Override
     public boolean getEnable() {
         return this.sound;

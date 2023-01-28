@@ -4,7 +4,6 @@ package com.denfop.recipes;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockMoreMachine;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.register.RegisterOreDictionary;
@@ -2175,9 +2174,6 @@ public class BasicRecipe {
         );
 
 
-
-
-
         int[] meta2 = {2, 5, 3, 4, 0, 1, 6, 7, 8, 9, 10};
         int[] meta3 = {2, 3, 4, 5, 0, 1, 6, 7, 8, 9, 10};
         ItemStack[] stacks3 = {Ic2Items.electronicCircuit, Ic2Items.electronicCircuit, Ic2Items.advancedCircuit, Ic2Items.advancedCircuit, IUItem.circuitNano, IUItem.circuitNano, IUItem.cirsuitQuantum, IUItem.cirsuitQuantum, IUItem.circuitSpectral, IUItem.circuitSpectral, IUItem.circuitSpectral};
@@ -2540,9 +2536,11 @@ public class BasicRecipe {
         );
 
         //
-        ItemStack[] circuit = {new ItemStack(IUItem.crafting_elements,
+        ItemStack[] circuit = {new ItemStack(
+                IUItem.crafting_elements,
                 1,
-                30), Ic2Items.electronicCircuit, Ic2Items.advancedCircuit,
+                30
+        ), Ic2Items.electronicCircuit, Ic2Items.advancedCircuit,
                 Ic2Items.advancedCircuit,
                 (IUItem.circuitNano), (IUItem.circuitNano), (IUItem.cirsuitQuantum), (IUItem.cirsuitQuantum), (IUItem.circuitSpectral), (IUItem.circuitSpectral), new ItemStack(
                 IUItem.core,
@@ -2751,7 +2749,7 @@ public class BasicRecipe {
                 'B',
                 (IUItem.cirsuitQuantum),
                 'A',
-                new ItemStack(IUItem.crafting_elements,1,158)
+                new ItemStack(IUItem.crafting_elements, 1, 158)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.analyzermodule),
@@ -3015,9 +3013,6 @@ public class BasicRecipe {
                 'B',
                 OreDictionary.getOres("plateMuntsa")
         );
-
-
-     
 
 
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.expmodule), "   ", "ABA", "   ", 'A',
@@ -3373,7 +3368,6 @@ public class BasicRecipe {
                 'B',
                 new ItemStack(IUItem.alloysblock, 1, 6)
         );
-
 
 
         Recipes.advRecipes.addRecipe(
@@ -4086,7 +4080,7 @@ public class BasicRecipe {
         );
         Recipes.advRecipes.addRecipe(
                 Ic2Items.elemotor, " A ", "BCB", " D ", 'A', Ic2Items.casingtin, 'B', Ic2Items.coil, 'C',
-                new ItemStack(IUItem.crafting_elements, 1, 60),'D', Ic2Items.electronicCircuit
+                new ItemStack(IUItem.crafting_elements, 1, 60), 'D', Ic2Items.electronicCircuit
 
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 25),
@@ -5963,9 +5957,9 @@ public class BasicRecipe {
                 'A', new ItemStack(IUItem.crafting_elements, 1, 139),
                 'C', new ItemStack(IUItem.crafting_elements, 1, 96),
                 'D', new ItemStack(IUItem.crafting_elements, 1, 49),
-                'E', new ItemStack(IUItem.crafting_elements, 1, 96), // ниже менять
+                'E', new ItemStack(IUItem.crafting_elements, 1, 95), // ниже менять
                 'B', new ItemStack(IUItem.machines_base3, 1, 1),
-                'G', new ItemStack(IUItem.crafting_elements, 1, 119)
+                'G', new ItemStack(IUItem.crafting_elements, 1, 94)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.machines_base3, 1, 3), "AGA", "DBE", "ACA",
@@ -6758,10 +6752,10 @@ public class BasicRecipe {
                 'D',
                 new ItemStack(IUItem.module_stack),
                 'A',
-                new ItemStack(IUItem.simplemachine,1,6),
+                new ItemStack(IUItem.simplemachine, 1, 6),
                 'B',
                 new ItemStack(IUItem.core, 1, 5),
-                'E', new ItemStack(IUItem.crafting_elements, 1, 240),'C', new ItemStack(IUItem.crafting_elements, 1, 56)
+                'E', new ItemStack(IUItem.crafting_elements, 1, 240), 'C', new ItemStack(IUItem.crafting_elements, 1, 56)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.basemachine2, 1, 11),
@@ -7219,15 +7213,15 @@ public class BasicRecipe {
                 " A ",
                 "   ",
                 'B',
-                new ItemStack(IUItem.crafting_elements,1,79),
+                new ItemStack(IUItem.crafting_elements, 1, 79),
                 'A',
                 Ic2Items.solarPanel
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.adv_se_generator),
                 "   ", "CAC", " B ",
                 'B',
-                new ItemStack(IUItem.crafting_elements,1,234),
-                'A', new ItemStack(IUItem.crafting_elements,1,176),
+                new ItemStack(IUItem.crafting_elements, 1, 234),
+                'A', new ItemStack(IUItem.crafting_elements, 1, 176),
                 'C', new ItemStack(IUItem.blockSE)
         );
         Recipes.advRecipes.addRecipe(
@@ -7236,9 +7230,9 @@ public class BasicRecipe {
                 " D ",
                 " B ",
                 'A',
-                new ItemStack(IUItem.crafting_elements,1,56),
+                new ItemStack(IUItem.crafting_elements, 1, 56),
                 'B',
-                new ItemStack(IUItem.crafting_elements,1,175),
+                new ItemStack(IUItem.crafting_elements, 1, 175),
                 'C',
                 OreDictionary.getOres("doubleplateDuralumin"),
                 'E',
@@ -7273,59 +7267,59 @@ public class BasicRecipe {
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.imp_se_generator),
                 "   ", "CAC", " B ",
                 'B',
-                new ItemStack(IUItem.crafting_elements,1,232),
-                'A', new ItemStack(IUItem.crafting_elements,1,174),
+                new ItemStack(IUItem.crafting_elements, 1, 232),
+                'A', new ItemStack(IUItem.crafting_elements, 1, 174),
                 'C', new ItemStack(IUItem.adv_se_generator)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 145),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 2)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 2)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 147),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 7)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 7)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 148),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 1)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 1)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 149),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 4)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 4)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 150),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 3)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 3)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 151),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 0)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 0)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 152),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 6)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 6)
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 153),
-                " B ","BAB"," B ",'A',DEFAULT_SENSOR,
-                'B',   new ItemStack(IUItem.matter, 1, 5)
+                " B ", "BAB", " B ", 'A', DEFAULT_SENSOR,
+                'B', new ItemStack(IUItem.matter, 1, 5)
         );
 
         Recipes.advRecipes.addRecipe(
-                Ic2Items.reactorVent,"CBC","BAB","CBC",'A',Ic2Items.electronicCircuit,
-                'B',"plateIron",'C',Blocks.IRON_BARS
+                Ic2Items.reactorVent, "CBC", "BAB", "CBC", 'A', Ic2Items.electronicCircuit,
+                'B', "plateIron", 'C', Blocks.IRON_BARS
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 251),
-                "BCB","BAB","BCB",'A',DEFAULT_SENSOR,
-                'B',   ModUtils.getCellFromFluid("iufluidneft"),'C',Ic2Items.advancedCircuit
+                "BCB", "BAB", "BCB", 'A', DEFAULT_SENSOR,
+                'B', ModUtils.getCellFromFluid("iufluidneft"), 'C', Ic2Items.advancedCircuit
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.oilgetter),
@@ -7431,31 +7425,47 @@ public class BasicRecipe {
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.veinsencor, 1),
-                " BC","BDB","BAB",'A',Ic2Items.electronicCircuit,
-                'B',"plateIron",'C',Items.REDSTONE,'D',"plateChromium"
+                " BC", "BDB", "BAB", 'A', Ic2Items.electronicCircuit,
+                'B', "plateIron", 'C', Items.REDSTONE, 'D', "plateChromium"
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 169),
-                "CED","ABA","CFD",'A',IUItem.circuitNano,'B',"plateIron",'C',Items.REDSTONE,'D',new ItemStack(Items.DYE,1,4)
-                ,'E',IUItem.advnanobox,'F', getBlockStack(BlockBaseMachine3.energy_controller)
+                "CED",
+                "ABA",
+                "CFD",
+                'A',
+                IUItem.circuitNano,
+                'B',
+                "plateIron",
+                'C',
+                Items.REDSTONE,
+                'D',
+                new ItemStack(Items.DYE, 1, 4)
+                ,
+                'E',
+                IUItem.advnanobox,
+                'F',
+                getBlockStack(BlockBaseMachine3.energy_controller)
         );
         Recipes.advRecipes.addShapelessRecipe(
-                getBlockStack(BlockBaseMachine3.limiter), new ItemStack(IUItem.crafting_elements, 1, 169),Ic2Items.advancedMachine
+                getBlockStack(BlockBaseMachine3.limiter),
+                new ItemStack(IUItem.crafting_elements, 1, 169),
+                Ic2Items.advancedMachine
 
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 261), " C ", "BAB", " D ", 'A', ADV_SENSOR, 'B', "plateIron", 'C',
-                new ItemStack(Ic2Items.energyCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE),'D',Blocks.REDSTONE_BLOCK
+                new ItemStack(Ic2Items.energyCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE), 'D', Blocks.REDSTONE_BLOCK
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 259), " C ", "BAB", " D ", 'A', IMP_SENSOR, 'B', "plateIron", 'C',
-                new ItemStack(Ic2Items.lapotronCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE),'D',Blocks.REDSTONE_BLOCK
+                new ItemStack(Ic2Items.lapotronCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE), 'D', Blocks.REDSTONE_BLOCK
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 260), " C ", "BAB", " D ", 'A', PER_SENSOR, 'B', "plateIron", 'C',
-                new ItemStack(IUItem.lapotronCrystal, 1, OreDictionary.WILDCARD_VALUE),'D',Blocks.REDSTONE_BLOCK
+                new ItemStack(IUItem.lapotronCrystal, 1, OreDictionary.WILDCARD_VALUE), 'D', Blocks.REDSTONE_BLOCK
         );
-        Recipes.advRecipes.addRecipe( new ItemStack(IUItem.crafting_elements, 1, 258),
+        Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 258),
                 " C ",
                 "BAB",
                 " D ",
@@ -7466,7 +7476,7 @@ public class BasicRecipe {
                 'B',
                 "plateIron",
                 'C',
-                new ItemStack(Ic2Items.reBattery.getItem(), 1, OreDictionary.WILDCARD_VALUE),'D',Blocks.REDSTONE_BLOCK
+                new ItemStack(Ic2Items.reBattery.getItem(), 1, OreDictionary.WILDCARD_VALUE), 'D', Blocks.REDSTONE_BLOCK
         );
 
         Recipes.advRecipes.addRecipe(
@@ -7507,7 +7517,7 @@ public class BasicRecipe {
         );
         Recipes.advRecipes.addShapelessRecipe(
                 getBlockStack(BlockBaseMachine3.redstone_generator),
-                new ItemStack(IUItem.crafting_elements, 1, 258),Ic2Items.machine
+                new ItemStack(IUItem.crafting_elements, 1, 258), Ic2Items.machine
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 206),
@@ -7519,7 +7529,7 @@ public class BasicRecipe {
                 'A',
                 OreDictionary.getOres("plankWood"),
                 'C',
-               DEFAULT_SENSOR
+                DEFAULT_SENSOR
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 207),
@@ -7537,7 +7547,7 @@ public class BasicRecipe {
                 "DBC",
                 " A ",
                 'B',
-               DEFAULT_SENSOR,
+                DEFAULT_SENSOR,
                 'A',
                 Ic2Items.insulatedGoldCableItem,
                 'D',
@@ -7561,14 +7571,15 @@ public class BasicRecipe {
                 new ItemStack(Ic2Items.lapotronCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE)
 
         );
-        for(int i = 0; i < 3;i++)
+        for (int i = 0; i < 3; i++) {
+            Recipes.advRecipes.addShapelessRecipe(
+                    new ItemStack(IUItem.tranformer, 1, i + 8),
+                    new ItemStack(IUItem.tranformer, 1, i + 7),
+                    new ItemStack(IUItem.crafting_elements, 1, 207 + i)
+            );
+        }
         Recipes.advRecipes.addShapelessRecipe(
-                new ItemStack(IUItem.tranformer, 1, i + 8),
-                new ItemStack(IUItem.tranformer, 1, i + 7),
-                new ItemStack(IUItem.crafting_elements, 1, 207 + i)
-        );
-        Recipes.advRecipes.addShapelessRecipe(
-                new ItemStack(IUItem.tranformer, 1, 7),Ic2Items.machine,new ItemStack(IUItem.crafting_elements, 1, 206));
+                new ItemStack(IUItem.tranformer, 1, 7), Ic2Items.machine, new ItemStack(IUItem.crafting_elements, 1, 206));
 
     }
 

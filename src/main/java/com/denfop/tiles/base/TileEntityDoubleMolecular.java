@@ -130,15 +130,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         this.need = false;
         Recipes.recipes.addInitRecipes(this);
     }
-    @Override
-    public ItemStack getItemStack() {
-        return this.output_stack;
-    }
 
-    @Override
-    public TileEntityBlock getEntityBlock() {
-        return this;
-    }
     public static void addrecipe(ItemStack stack, ItemStack stack2, ItemStack stack1, double energy) {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setDouble("energy", energy);
@@ -157,6 +149,16 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 new Input(input.forStack(stack), input.forOreDict(stack2)),
                 new RecipeOutput(nbt, stack1)
         ));
+    }
+
+    @Override
+    public ItemStack getItemStack() {
+        return this.output_stack;
+    }
+
+    @Override
+    public TileEntityBlock getEntityBlock() {
+        return this;
     }
 
     public void init() {
@@ -928,10 +930,11 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
     public MachineRecipe getOutput() {
 
         this.output = this.inputSlot.process();
-        if(this.output != null){
+        if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         return this.output;
     }
@@ -1003,10 +1006,11 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.output = output;
-        if(this.output != null){
+        if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         this.setOverclockRates();
 

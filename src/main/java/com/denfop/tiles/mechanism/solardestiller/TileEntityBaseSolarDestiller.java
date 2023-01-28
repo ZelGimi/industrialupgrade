@@ -26,7 +26,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -61,7 +60,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                 "waterInput",
                 Access.I,
                 1,
-                InvSide.TOP,
+                InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Drain,
                 FluidRegistry.WATER
         );

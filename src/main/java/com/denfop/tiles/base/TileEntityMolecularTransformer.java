@@ -60,8 +60,8 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     protected double progress;
     protected double guiProgress;
     protected double size_recipe = 0;
+    protected ItemStack output_stack = new ItemStack(Items.AIR);
     private boolean need = false;
-    protected ItemStack output_stack = new ItemStack( Items.AIR);
 
     public TileEntityMolecularTransformer() {
         super(0, 14, 1);
@@ -72,10 +72,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         this.inputSlot = new InvSlotRecipes(this, "molecular", this);
         this.output = null;
         Recipes.recipes.addInitRecipes(this);
-    }
-
-    public ItemStack getOutput_stack() {
-        return output_stack;
     }
 
     public static void addrecipe(ItemStack stack, ItemStack stack1, double energy) {
@@ -97,6 +93,10 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 new BaseMachineRecipe(new Input(input.forOreDict(stack)), new RecipeOutput(nbt, stack1))
         );
 
+    }
+
+    public ItemStack getOutput_stack() {
+        return output_stack;
     }
 
     public void init() {
@@ -505,10 +505,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     public MachineRecipe getOutput() {
 
         this.output = this.inputSlot.process();
-        if(this.output != null){
+        if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         return this.output;
     }
@@ -580,10 +581,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.output = output;
-        if(this.output != null){
+        if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
-         }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
 
         this.setOverclockRates();

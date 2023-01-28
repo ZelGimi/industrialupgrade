@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityLimiter;
-import ic2.core.ContainerBase;
 import ic2.core.ContainerFullInv;
 import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,9 +15,11 @@ public class ContainerBlockLimiter extends ContainerFullInv<TileEntityLimiter> {
 
 
     }
+
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
         ret.add("max_value");
         return ret;
     }
+
 }

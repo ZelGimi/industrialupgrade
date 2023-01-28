@@ -1,10 +1,8 @@
 package com.denfop.api;
 
 import com.denfop.api.energy.EnergyNetLocal;
-import com.denfop.api.energy.LimitInfo;
 import com.denfop.api.energy.SunCoef;
 import ic2.api.energy.IEnergyNet;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

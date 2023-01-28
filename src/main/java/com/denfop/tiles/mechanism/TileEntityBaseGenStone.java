@@ -180,7 +180,6 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
     protected void updateEntityServer() {
         super.updateEntityServer();
 
-
         MachineRecipe output = this.output;
         if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
             if (!this.getActive()) {
@@ -243,13 +242,13 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
         switch (this.getMode()) {
             default:
                 this.outputSlot.add(processResult);
-                return;
+                break;
             case SAND:
                 this.outputSlot.add(this.sand);
-                return;
+                break;
             case GRAVEL:
                 this.outputSlot.add(this.gravel);
-                return;
+                break;
         }
     }
 
@@ -267,10 +266,6 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
         return new ContainerGenStone(entityPlayer, this);
     }
 
-    @Override
-    public int getSizeInventory() {
-        return 1;
-    }
 
     public double getEnergy() {
         return this.energy.getEnergy();

@@ -953,7 +953,6 @@ public class Register {
         }
         IUItem.book = new ItemBook("book_iu");
 
-
     }
 
 }

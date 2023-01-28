@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.tiles.base.TileEntityLimiter;
-import ic2.core.block.IInventorySlotHolder;
 import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
@@ -25,10 +24,11 @@ public class InvSlotLimiter extends InvSlot {
     @Override
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
-        if(content.isEmpty())
+        if (content.isEmpty()) {
             this.limiter.setTier(0);
-        else
+        } else {
             this.limiter.setTier(content.getItemDamage() - 205);
+        }
     }
 
 }
