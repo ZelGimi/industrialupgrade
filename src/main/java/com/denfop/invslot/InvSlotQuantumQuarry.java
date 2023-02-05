@@ -21,7 +21,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
     public int stackSizeLimit;
 
     public InvSlotQuantumQuarry(TileEntityBaseQuantumQuarry base1, int oldStartIndex1, String name, int type) {
-        super(base1, name, Access.I, oldStartIndex1, InvSlot.InvSide.TOP);
+        super(base1, name, Access.I, oldStartIndex1, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 1;
         this.type = type;

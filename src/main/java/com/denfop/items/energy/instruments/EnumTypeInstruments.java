@@ -213,6 +213,7 @@ public enum EnumTypeInstruments {
         this.enumInfoUpgradeModules = EnumUpgrades.INSTRUMENTS.list;
     }
 
+
     public List<EnumInfoUpgradeModules> getEnumInfoUpgradeModules() {
         return enumInfoUpgradeModules;
     }

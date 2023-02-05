@@ -83,41 +83,13 @@ public class MetalFormerRecipe {
                 new ItemStack(IUItem.coal_chunk1)
         );
 
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateAluminium"), null, false,
-                new ItemStack(IUItem.pipes, 1, 0)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("doubleplateAluminium"), null, false,
-                new ItemStack(IUItem.pipes, 1, 1)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateDuralumin"), null, false,
-                new ItemStack(IUItem.pipes, 1, 2)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("doubleplateDuralumin"), null, false,
-                new ItemStack(IUItem.pipes, 1, 3)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("doubleplateAlcled"), null, false,
-                new ItemStack(IUItem.pipes, 1, 4)
-        );
+
         Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateMuntsa", 4), null, false,
                 new ItemStack(IUItem.expcable)
         );
         //
 
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateLead"), null, false,
-                new ItemStack(IUItem.coolpipes, 1, 0)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateDenseIron"), null, false,
-                new ItemStack(IUItem.coolpipes, 1, 1)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateSteel"), null, false,
-                new ItemStack(IUItem.coolpipes, 1, 2)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("plateDenseSteel"), null, false,
-                new ItemStack(IUItem.coolpipes, 1, 3)
-        );
-        Recipes.metalformerCutting.addRecipe(input1.forOreDict("doubleplateRedbrass"), null, false,
-                new ItemStack(IUItem.coolpipes, 1, 4)
-        );
+
     }
 
     public static void addmolot(String input, String output, int n) {

@@ -3031,3 +3031,13 @@ iu.limiter.info8=And indicate the number that you need to transmit over the cabl
 iu.limiter.info9=Maximum power transfer number: 
 
 water.ocean_info=Removes dependence on ocean and river biome
+button.update_info=Update
+button.delete_info=Delete
+industrialupgrade.basemachine3.welding=Welding Machine
+industrialupgrade.basemachine3.heat_limiter=Reactor temperature controller
+iu.heat_limiter.main_info=Reactor Temperature Controller Information
+iu.heat_limiter.info=Place close to reactor chamber or nuclear reactor
+iu.heat_limiter.info1=Click "Refresh" to get data for the reactor
+iu.heat_limiter.info2=Enter temperature up to 10000(100%)
+iu.heat_limiter.info3=Click "Write" to write data to the reactor
+iu.heat_limiter.info4=Click "Delete" to delete reactor data

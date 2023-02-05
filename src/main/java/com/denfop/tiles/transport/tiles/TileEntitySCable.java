@@ -31,6 +31,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -81,7 +82,10 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
                 () -> IC2.network.get(true).updateTileEntityField(TileEntitySCable.this, "obscuration")
         ));
     }
-
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
+    }
     public static TileEntitySCable delegate(SEType cableType, int insulation) {
         return new TileEntitySCable(cableType, insulation);
     }
@@ -495,6 +499,11 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
                 this.connectivity,
                 this.getActive()
         );
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

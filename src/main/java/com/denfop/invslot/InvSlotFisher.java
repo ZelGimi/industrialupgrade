@@ -10,7 +10,7 @@ public class InvSlotFisher extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotFisher(TileEntityInventory base1) {
-        super(base1, "input2", InvSlot.Access.I, 1, InvSlot.InvSide.TOP);
+        super(base1, "input2", InvSlot.Access.I, 1, InvSlot.InvSide.ANY);
         this.stackSizeLimit = 1;
     }
 

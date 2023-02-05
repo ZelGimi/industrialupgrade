@@ -762,6 +762,11 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         return true;
     }
 
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
 
     public enum GenerationState {
         DAY,

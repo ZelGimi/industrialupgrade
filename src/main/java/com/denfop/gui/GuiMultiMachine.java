@@ -9,7 +9,6 @@ import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMachine;
-import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.utils.ModUtils;
 import ic2.core.gui.Area;

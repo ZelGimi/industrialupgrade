@@ -7,7 +7,6 @@ import com.denfop.api.cool.ICoolSource;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
-import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.TileEntityComponent;
@@ -19,8 +18,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -237,16 +238,8 @@ public class CoolComponent extends TileEntityComponent {
         return this.storage;
     }
 
-    public double getFreeEnergy() {
-        return Math.max(0.0D, this.capacity - this.storage);
-    }
-
     public double getFillRatio() {
         return this.storage / this.capacity;
-    }
-
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
     }
 
     public double addEnergy(double amount) {
@@ -259,10 +252,6 @@ public class CoolComponent extends TileEntityComponent {
         }
 
         return amount;
-    }
-
-    public void forceAddEnergy(double amount) {
-        this.storage += amount;
     }
 
     public boolean canUseEnergy(double amount) {
@@ -325,21 +314,6 @@ public class CoolComponent extends TileEntityComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public boolean isMultiSource() {
-        return this.multiSource;
-    }
-
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
-    public void setPacketOutput(int number) {
-        if (this.multiSource) {
-            this.sourcePackets = number;
-        }
-
-    }
-
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
         if (this.delegate != null) {
@@ -400,19 +374,9 @@ public class CoolComponent extends TileEntityComponent {
     }
 
     private double getSourceEnergy() {
-        if (this.fullEnergy) {
-            return this.storage >= EnergyNet.instance.getPowerFromTier(this.sourceTier) ? this.storage : 0.0D;
-        } else {
-            return this.storage;
-        }
+        return this.storage;
     }
 
-    private int getPacketCount() {
-        return this.fullEnergy ? Math.min(
-                this.sourcePackets,
-                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
-        ) : this.sourcePackets;
-    }
 
     private abstract static class EnergyNetDelegate extends TileEntity implements ICoolTile {
 
@@ -434,6 +398,11 @@ public class CoolComponent extends TileEntityComponent {
 
         public boolean acceptsCoolFrom(ICoolEmitter emitter, EnumFacing dir) {
             return CoolComponent.this.sinkDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return CoolComponent.this.parent.getPos();
         }
 
         public double getDemandedCool() {
@@ -458,6 +427,11 @@ public class CoolComponent extends TileEntityComponent {
             return CoolComponent.this.storage > 0;
         }
 
+        @Override
+        public TileEntity getTile() {
+            return CoolComponent.this.parent;
+        }
+
     }
 
     private class EnergyNetDelegateSource extends CoolComponent.EnergyNetDelegate implements ICoolSource {
@@ -472,6 +446,11 @@ public class CoolComponent extends TileEntityComponent {
 
         public boolean emitsCoolTo(ICoolAcceptor receiver, EnumFacing dir) {
             return CoolComponent.this.sourceDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return CoolComponent.this.parent.getPos();
         }
 
         public double getOfferedCool() {
@@ -493,6 +472,10 @@ public class CoolComponent extends TileEntityComponent {
             CoolComponent.this.allow = allowed;
         }
 
+        @Override
+        public TileEntity getTile() {
+            return CoolComponent.this.parent;
+        }
 
     }
 

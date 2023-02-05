@@ -20,7 +20,7 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
     private InvSlotConsumableLiquid.OpType opType;
 
     public InvSlotConsumableLiquid(IInventorySlotHolder<?> base1, String name1, int count) {
-        this(base1, name1, Access.I, count, InvSide.TOP, InvSlotConsumableLiquid.OpType.Drain);
+        this(base1, name1, Access.I, count, InvSide.ANY, InvSlotConsumableLiquid.OpType.Drain);
     }
 
     public InvSlotConsumableLiquid(

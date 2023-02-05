@@ -45,6 +45,7 @@ import com.denfop.gui.GuiSunnariumMaker;
 import com.denfop.gui.GuiSunnariumPanelMaker;
 import com.denfop.gui.GuiSynthesis;
 import com.denfop.gui.GuiUpgradeBlock;
+import com.denfop.gui.GuiWelding;
 import com.denfop.gui.GuiWitherMaker;
 import com.denfop.integration.jei.advalloysmelter.AdvAlloySmelterCategory;
 import com.denfop.integration.jei.advalloysmelter.AdvAlloySmelterHandler;
@@ -216,6 +217,9 @@ import com.denfop.integration.jei.waterrotorrods.WaterRotorsWrapper;
 import com.denfop.integration.jei.waterrotorsupgrade.WaterRotorUpgradeCategory;
 import com.denfop.integration.jei.waterrotorsupgrade.WaterRotorUpgradeHandler;
 import com.denfop.integration.jei.waterrotorsupgrade.WaterRotorUpgradeWrapper;
+import com.denfop.integration.jei.welding.WeldingCategory;
+import com.denfop.integration.jei.welding.WeldingHandler;
+import com.denfop.integration.jei.welding.WeldingRecipeWrapper;
 import com.denfop.integration.jei.worldcollector.aer.AerCategory;
 import com.denfop.integration.jei.worldcollector.aer.AerHandler;
 import com.denfop.integration.jei.worldcollector.aer.AerWrapper;
@@ -291,7 +295,7 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new OilPumpCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new RotorUpgradeCategory(registry.getJeiHelpers().getGuiHelper()));
 
-
+        registry.addRecipeCategories(new WeldingCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GenStarCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new HandlerHOCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new ElectrolyzerCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -1496,6 +1500,23 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCatalyst(
                 new ItemStack(IUItem.basemachine2, 1, 23),
                 new EndCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipeClickArea(
+                GuiWelding.class, 80, 35, 22, 14,
+                BlockBaseMachine3.welding.getName()
+        );
+        registry.addRecipes(
+                WeldingHandler.getRecipes(),
+                new WeldingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(WeldingHandler.class, WeldingRecipeWrapper::new,
+                BlockBaseMachine3.welding.getName()
+        );
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.welding),
+                new WeldingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
     }
 

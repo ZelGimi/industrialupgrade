@@ -118,73 +118,92 @@ public class IUEventHandler {
         }
         RadiationSystem.rad_system.update(event.player);
     }
+
     @SubscribeEvent
-    public void workCutters(PlayerInteractEvent.RightClickBlock event){
-        if(event.getWorld().isRemote)
+    public void workCutters(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getWorld().isRemote) {
             return;
+        }
         ItemStack stack = event.getItemStack();
-        if(stack.getItem() == Ic2Items.cutter.getItem()){
+        if (stack.getItem() == Ic2Items.cutter.getItem()) {
 
             final TileEntity tile = event.getWorld().getTileEntity(event.getPos());
-            if(tile instanceof TileEntityCable){
+            if (tile instanceof TileEntityCable) {
                 TileEntityCable cable = (TileEntityCable) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof com.denfop.tiles.transport.tiles.TileEntityCable){
+            } else if (tile instanceof com.denfop.tiles.transport.tiles.TileEntityCable) {
                 com.denfop.tiles.transport.tiles.TileEntityCable cable = (com.denfop.tiles.transport.tiles.TileEntityCable) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof TileEntityHeatColdPipes){
+            } else if (tile instanceof TileEntityHeatColdPipes) {
                 TileEntityHeatColdPipes cable = (TileEntityHeatColdPipes) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof TileEntityHeatPipes){
+            } else if (tile instanceof TileEntityHeatPipes) {
                 TileEntityHeatPipes cable = (TileEntityHeatPipes) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof TileEntityCoolPipes){
+            } else if (tile instanceof TileEntityCoolPipes) {
                 TileEntityCoolPipes cable = (TileEntityCoolPipes) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof TileEntityUniversalCable){
+            } else if (tile instanceof TileEntityUniversalCable) {
                 TileEntityUniversalCable cable = (TileEntityUniversalCable) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof TileEntityExpPipes){
+            } else if (tile instanceof TileEntityExpPipes) {
                 TileEntityExpPipes cable = (TileEntityExpPipes) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
-            }else if(tile instanceof TileEntityQCable){
+            } else if (tile instanceof TileEntityQCable) {
                 TileEntityQCable cable = (TileEntityQCable) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops( event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100);
-                if(!drops.isEmpty())
-                    StackUtil.dropAsEntity(event.getWorld(),event.getPos(),drops.get(0));
+                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
+                        100
+                );
+                if (!drops.isEmpty()) {
+                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                }
                 cable.removeConductor();
             }
         }
     }
+
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         WorldData.onWorldUnload(event.getWorld());

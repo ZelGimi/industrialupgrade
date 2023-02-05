@@ -60,7 +60,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
     public TileEntityPump(String name, int size, int operationLength) {
         super(20, 1, size);
-        this.containerSlot = new InvSlotConsumableLiquid(this, "containerSlot", Access.I, 1, InvSide.TOP, OpType.Fill);
+        this.containerSlot = new InvSlotConsumableLiquid(this, "containerSlot", Access.I, 1, InvSide.ANY, OpType.Fill);
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.defaultEnergyConsume = this.energyConsume = 1;

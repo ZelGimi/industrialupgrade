@@ -32,7 +32,7 @@ public class ItemAlloysDoublePlate extends ItemMulti<ItemAlloysDoublePlate.Types
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloysdoubleplate" + super.getUnlocalizedName().substring(20);
     }
 
     @SideOnly(Side.CLIENT)

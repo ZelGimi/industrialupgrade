@@ -10,9 +10,9 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.tiles.mechanism.dual.heat.TileEntityAlloySmelter;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
@@ -46,6 +46,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     public final InvSlotRecipes inputSlotA;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
+    public final HeatComponent heat;
     protected final EnumDoubleElectricMachine type;
     public int energyConsume;
     public int operationLength;
@@ -88,6 +89,12 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         this.inputSlotA = new InvSlotRecipes(this, type.recipe_name, this);
         this.type = type;
         this.output = null;
+        if (type.heat) {
+            this.heat = this.addComponent(HeatComponent
+                    .asBasicSink(this, 5000));
+        } else {
+            this.heat = null;
+        }
     }
 
     public void onNetworkEvent(EntityPlayer var1, int var2) {
@@ -220,7 +227,9 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
             this.getOutput();
             if (this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER)) {
                 if (output == null) {
-                    ((TileEntityAlloySmelter) this).heat.need = false;
+                    if (this.heat != null) {
+                        this.heat.need = false;
+                    }
                 }
             }
         }
@@ -251,18 +260,17 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
         MachineRecipe output = this.output;
         if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
-            if (this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER)) {
-
+            if (this.type.heat) {
                 if (output.getRecipe().output.metadata.getShort("temperature") == 0 || output.getRecipe().output.metadata.getInteger(
-                        "temperature") > ((TileEntityAlloySmelter) this).heat.getEnergy()) {
-                    if (!((TileEntityAlloySmelter) this).heat.need) {
-                        ((TileEntityAlloySmelter) this).heat.need = true;
+                        "temperature") > this.heat.getEnergy()) {
+                    if (!this.heat.need) {
+                        this.heat.need = true;
                     }
                     return;
-                } else if (((TileEntityAlloySmelter) this).heat.need) {
-                    ((TileEntityAlloySmelter) this).heat.need = false;
+                } else if (this.heat.need) {
+                    this.heat.need = false;
                 }
-                ((TileEntityAlloySmelter) this).heat.storage--;
+                this.heat.storage--;
             }
             if (!this.getActive()) {
                 setActive(true);
@@ -298,9 +306,9 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
                 setActive(false);
             }
         }
-        if (this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER)) {
+        if (this.type.heat) {
             if (output == null) {
-                ((TileEntityAlloySmelter) this).heat.useEnergy(1);
+                this.heat.useEnergy(1);
             }
         }
 

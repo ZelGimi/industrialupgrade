@@ -303,7 +303,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                         return;
                     }
                     int chance1 = rand.nextInt(num);
-                    if (main_list.size() != IUCore.list.size()) {
+                    if (num != IUCore.list.size()) {
                         int chance3 = rand.nextInt(IUCore.list.size());
                         if (!(chance3 <= chance1)) {
                             continue;

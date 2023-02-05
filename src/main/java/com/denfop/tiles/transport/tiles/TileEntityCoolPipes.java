@@ -30,6 +30,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -85,7 +86,10 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
     public static TileEntityCoolPipes delegate(CoolType cableType, int insulation) {
         return new TileEntityCoolPipes(cableType, insulation);
     }
-
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
+    }
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.cableType = CoolType.values[nbt.getByte("cableType") & 255];
@@ -492,6 +496,11 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
                 this.connectivity,
                 this.getActive()
         );
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

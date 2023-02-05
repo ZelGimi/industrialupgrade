@@ -26,6 +26,7 @@ public class InvSlotSubstitute extends InvSlot {
         int type = nbt.getByte("type") & 255;
         return type < CableType.values.length ? CableType.values[type] : CableType.copper;
     }
+
     public boolean add(List<ItemStack> stacks) {
         return this.add(stacks, false);
     }
@@ -92,6 +93,7 @@ public class InvSlotSubstitute extends InvSlot {
         }
         return true;
     }
+
     @Override
     public boolean accepts(final ItemStack stack) {
         return stack.getItem() instanceof ItemCable || stack.getItem() instanceof com.denfop.items.transport.ItemCable;

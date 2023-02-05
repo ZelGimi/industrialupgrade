@@ -1,6 +1,5 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.prefab.BasicSink;
 import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

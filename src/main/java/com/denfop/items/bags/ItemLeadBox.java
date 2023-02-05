@@ -121,7 +121,7 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
                 for (int i = 0; i < 36; i++) {
                     final ItemStack stack1 = player.inventory.getStackInSlot(i);
                     if (stack1.getItem() instanceof IRadioactiveItemType) {
-                        if (rod) {
+                        if (!rod) {
                             if (stack1.getItem() instanceof ItemReactorUranium || stack1.getItem() instanceof ItemBaseRod) {
                                 continue;
                             }

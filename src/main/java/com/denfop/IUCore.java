@@ -572,20 +572,28 @@ public final class IUCore {
         });
 
         IUCore.get_crushed.forEach(stack -> {
-            this.
-                    get_crushed_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        get_crushed_quarry.add(new QuarryItem(stack));
+            }
         });
         IUCore.list.forEach(stack -> {
-            this.
-                    list_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        list_quarry.add(new QuarryItem(stack));
+            }
         });
         IUCore.get_ingot.forEach(stack -> {
-            this.
-                    get_ingot_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        get_ingot_quarry.add(new QuarryItem(stack));
+            }
         });
         IUCore.get_comb_crushed.forEach(stack -> {
-            this.
-                    get_comb_crushed_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        get_comb_crushed_quarry.add(new QuarryItem(stack));
+            }
         });
         fish_rodding.add(new ItemStack(Items.FISH));
         fish_rodding.add(new ItemStack(Items.FISH, 1, 1));
@@ -628,11 +636,7 @@ public final class IUCore {
                 .getEntityLiving()
                 .getEntityWorld().rand.nextFloat() < 0.1F) {
             EntityLiving entity = (EntityLiving) event.getEntityLiving();
-            EntityEquipmentSlot[] var3 = EntityEquipmentSlot.values();
-            int var4 = var3.length;
-
-            for (int var5 = 0; var5 < var4; ++var5) {
-                EntityEquipmentSlot slot = var3[var5];
+            for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
                 entity.setDropChance(slot, (float) (-1.0F / 0.0));
             }
 

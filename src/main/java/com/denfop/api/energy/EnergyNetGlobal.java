@@ -130,39 +130,13 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
                         deletePos.add(pos);
                         continue;
                     }
-
-                    if (tile instanceof cofh.redstoneflux.api.IEnergyHandler) {
-                        if (tile instanceof cofh.redstoneflux.api.IEnergyProvider && tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
-                            MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                    world1,
-                                    tile,
-                                    new EnergyRFSinkSource(tile)
-                            ));
-
-                        }
-                        if (tile instanceof cofh.redstoneflux.api.IEnergyProvider) {
-                            MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                    world1,
-                                    tile,
-                                    new EnergyRFSource(tile)
-                            ));
-
-                        }
-                        if (tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
-                            MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                    world1,
-                                    tile,
-                                    new EnergyRFSink(tile)
-                            ));
-                        }
-                        continue;
-                    }
                     for (EnumFacing facing : EnumFacing.values()) {
                         if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
                             IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, facing);
                             if (energy_storage != null) {
                                 if (energy_storage.canExtract() && energy_storage.canReceive()) {
-                                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world1,
+                                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
+                                            world1,
                                             tile,
                                             new EnergyFESinkSource(energy_storage, tile)
                                     ));

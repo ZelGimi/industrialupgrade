@@ -4,7 +4,7 @@
     "particle": "industrialupgrade:blocks/blockadvgenerator_side",
     "down": "industrialupgrade:blocks/blockadvgenerator_side",
     "up": "industrialupgrade:blocks/blockadvgenerator_side",
-    "north": "industrialupgrade:blocks/blockadvgenerator_main",
+    "north": "industrialupgrade:blocks/blockadvgenerator_main_active",
     "east": "industrialupgrade:blocks/blockadvgenerator_side",
     "south": "industrialupgrade:blocks/blockadvgenerator_side",
     "west": "industrialupgrade:blocks/blockadvgenerator_side"

@@ -32,7 +32,7 @@ public class ItemAlloysGear extends ItemMulti<ItemAlloysGear.Types> implements I
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloysgear" + super.getUnlocalizedName().substring(13);
     }
 
     @SideOnly(Side.CLIENT)

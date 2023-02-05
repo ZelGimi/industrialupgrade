@@ -48,9 +48,10 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     private boolean skyIsVisible;
     private boolean sunIsUp;
     private SunCoef sunCoef;
+
     public TileEntitySolarGeneratorEnergy(double cof) {
 
-        this.maxSunEnergy = 4500;
+        this.maxSunEnergy = 6500;
         this.cof = cof;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.input = new InvSlotGenSunarrium(this);
@@ -148,10 +149,10 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.generation = 0;
         if (this.skyIsVisible) {
             energy();
-            if (this.sunenergy.getEnergy() >= 4500) {
+            if (this.sunenergy.getEnergy() >= 6500) {
                 if (this.outputSlot.get().getCount() < 64 || this.outputSlot.isEmpty()) {
                     if (this.outputSlot.add(itemstack)) {
-                        this.sunenergy.addEnergy(-4500);
+                        this.sunenergy.addEnergy(-6500);
                     }
                 }
             }

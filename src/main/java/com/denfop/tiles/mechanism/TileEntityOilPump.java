@@ -61,7 +61,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
     public TileEntityOilPump() {
         super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance()));
         this.containerslot = new InvSlotConsumableLiquidByList(this,
-                "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill,
+                "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidneft.getInstance()
         );
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);

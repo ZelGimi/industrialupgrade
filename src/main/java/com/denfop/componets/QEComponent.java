@@ -1,13 +1,13 @@
 package com.denfop.componets;
 
 import com.denfop.api.qe.IQEAcceptor;
+import com.denfop.api.qe.IQEDual;
 import com.denfop.api.qe.IQEEmitter;
 import com.denfop.api.qe.IQESink;
 import com.denfop.api.qe.IQESource;
 import com.denfop.api.qe.IQETile;
 import com.denfop.api.qe.event.QETileLoadEvent;
 import com.denfop.api.qe.event.QETileUnloadEvent;
-import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.TileEntityComponent;
@@ -19,8 +19,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -49,6 +51,9 @@ public class QEComponent extends TileEntityComponent {
     public double tick;
     protected double pastEnergy;
     protected double perenergy;
+    private double perenergy1;
+    private double pastEnergy1;
+    private double tick1;
 
     public QEComponent(TileEntityBlock parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -224,9 +229,6 @@ public class QEComponent extends TileEntityComponent {
         return this.storage / this.capacity;
     }
 
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
-    }
 
     public double addEnergy(double amount) {
         amount = Math.min(this.capacity - this.storage, amount);
@@ -234,9 +236,6 @@ public class QEComponent extends TileEntityComponent {
         return amount;
     }
 
-    public void forceAddEnergy(double amount) {
-        this.storage += amount;
-    }
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -287,20 +286,6 @@ public class QEComponent extends TileEntityComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public boolean isMultiSource() {
-        return this.multiSource;
-    }
-
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
-    public void setPacketOutput(int number) {
-        if (this.multiSource) {
-            this.sourcePackets = number;
-        }
-
-    }
 
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
@@ -366,14 +351,14 @@ public class QEComponent extends TileEntityComponent {
         return this.storage;
     }
 
-    private int getPacketCount() {
-        return this.fullEnergy ? Math.min(
-                this.sourcePackets,
-                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
-        ) : this.sourcePackets;
+    private abstract static class EnergyNetDelegate extends TileEntity implements IQETile {
+
+        private EnergyNetDelegate() {
+        }
+
     }
 
-    private class EnergyNetDelegateDual extends QEComponent.EnergyNetDelegate implements IQESink, IQESource {
+    private class EnergyNetDelegateDual extends QEComponent.EnergyNetDelegate implements IQEDual {
 
         private EnergyNetDelegateDual() {
             super();
@@ -387,6 +372,10 @@ public class QEComponent extends TileEntityComponent {
             return QEComponent.this.sourceDirections.contains(dir);
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return QEComponent.this.parent.getPos();
+        }
 
         public double getOfferedQE() {
             return !QEComponent.this.sendingSidabled && !QEComponent.this.sourceDirections.isEmpty()
@@ -416,19 +405,41 @@ public class QEComponent extends TileEntityComponent {
             return 0.0D;
         }
 
+        @Override
+        public double getPerEnergy1() {
+            return QEComponent.this.perenergy1;
+        }
+
+        @Override
+        public double getPastEnergy1() {
+            return QEComponent.this.pastEnergy1;
+        }
+
+        @Override
+        public void setPastEnergy1(final double pastEnergy) {
+            QEComponent.this.pastEnergy1 = pastEnergy;
+        }
+
+        @Override
+        public void addPerEnergy1(final double setEnergy) {
+            QEComponent.this.perenergy1 += setEnergy;
+        }
+
+
+        @Override
+        public void addTick1(final double tick) {
+            QEComponent.this.tick1 = tick;
+        }
+
+        @Override
+        public double getTick1() {
+            return QEComponent.this.tick1;
+        }
 
         public void drawQE(double amount) {
             assert amount <= QEComponent.this.storage;
 
             QEComponent.this.storage = QEComponent.this.storage - amount;
-        }
-
-        public boolean sendMultipleEnergyPackets() {
-            return QEComponent.this.multiSource;
-        }
-
-        public int getMultipleEnergyPacketAmount() {
-            return QEComponent.this.getPacketCount();
         }
 
 
@@ -472,6 +483,11 @@ public class QEComponent extends TileEntityComponent {
             return QEComponent.this.sendingSidabled;
         }
 
+        @Override
+        public TileEntity getTile() {
+            return QEComponent.this.parent;
+        }
+
     }
 
     private class EnergyNetDelegateSink extends QEComponent.EnergyNetDelegate implements IQESink {
@@ -488,12 +504,22 @@ public class QEComponent extends TileEntityComponent {
             return QEComponent.this.sinkDirections.contains(dir);
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return QEComponent.this.parent.getPos();
+        }
+
         public double getDemandedQE() {
             assert !QEComponent.this.sinkDirections.isEmpty();
 
             return !QEComponent.this.receivingDisabled && QEComponent.this.storage < QEComponent.this.capacity
                     ? QEComponent.this.capacity - QEComponent.this.storage
                     : 0.0D;
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return QEComponent.this.parent;
         }
 
         public double injectQE(EnumFacing directionFrom, double amount, double voltage) {
@@ -552,10 +578,20 @@ public class QEComponent extends TileEntityComponent {
             return QEComponent.this.sourceDirections.contains(dir);
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return QEComponent.this.parent.getPos();
+        }
+
         public double getOfferedQE() {
             assert !QEComponent.this.sourceDirections.isEmpty();
 
             return !QEComponent.this.sendingSidabled ? QEComponent.this.getSourceEnergy() : 0.0D;
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return QEComponent.this.parent;
         }
 
         public void drawQE(double amount) {
@@ -589,13 +625,6 @@ public class QEComponent extends TileEntityComponent {
             return true;
         }
 
-
-    }
-
-    private abstract class EnergyNetDelegate extends TileEntity implements IQETile {
-
-        private EnergyNetDelegate() {
-        }
 
     }
 

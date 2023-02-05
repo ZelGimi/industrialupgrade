@@ -36,6 +36,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -91,7 +92,10 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
     public static TileEntityHeatColdPipes delegate(HeatColdType cableType, int insulation) {
         return new TileEntityHeatColdPipes(cableType, insulation);
     }
-
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
+    }
     public static TileEntityHeatColdPipes delegate() {
         return new TileEntityHeatColdPipes();
     }
@@ -537,6 +541,11 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
     @Override
     public boolean emitsHeatTo(final IHeatAcceptor var1, final EnumFacing var2) {
         return true;
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

@@ -87,7 +87,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         this.containerslot = new InvSlotConsumableLiquidByListRemake[fluid.length];
         for (int i = 0; i < fluid.length; i++) {
             this.containerslot[i] = new InvSlotConsumableLiquidByListRemake(this, "container" + i, InvSlot.Access.I, 1,
-                    InvSlot.InvSide.TOP,
+                    InvSlot.InvSide.ANY,
                     InvSlotConsumableLiquid.OpType.Fill, fluid[i]
             );
         }

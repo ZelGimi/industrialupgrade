@@ -8,7 +8,6 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiAlloySmelter;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
@@ -32,13 +31,10 @@ import java.util.List;
 public class TileEntityAlloySmelter extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
 
-    public final HeatComponent heat;
     private boolean auto;
 
     public TileEntityAlloySmelter() {
         super(1, 300, 1, EnumDoubleElectricMachine.ALLOY_SMELTER);
-        this.heat = this.addComponent(HeatComponent
-                .asBasicSink(this, 5000));
         Recipes.recipes.addInitRecipes(this);
     }
 

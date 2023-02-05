@@ -12,7 +12,7 @@ public class InvSlotMatter extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotMatter(TileEntityCombinerMatter base1) {
-        super(base1, "input2", InvSlot.Access.I, 9, InvSlot.InvSide.TOP);
+        super(base1, "input2", InvSlot.Access.I, 9, InvSide.ANY);
         this.stackSizeLimit = 4;
         this.tile = base1;
     }

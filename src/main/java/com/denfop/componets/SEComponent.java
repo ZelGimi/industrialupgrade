@@ -19,8 +19,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -213,17 +215,11 @@ public class SEComponent extends TileEntityComponent {
         return this.storage;
     }
 
-    public double getFreeEnergy() {
-        return Math.max(0.0D, this.capacity - this.storage);
-    }
 
     public double getFillRatio() {
         return this.storage / this.capacity;
     }
 
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
-    }
 
     public double addEnergy(double amount) {
         amount = Math.min(this.capacity - this.storage, amount);
@@ -231,9 +227,6 @@ public class SEComponent extends TileEntityComponent {
         return amount;
     }
 
-    public void forceAddEnergy(double amount) {
-        this.storage += amount;
-    }
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -284,20 +277,6 @@ public class SEComponent extends TileEntityComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public boolean isMultiSource() {
-        return this.multiSource;
-    }
-
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
-    public void setPacketOutput(int number) {
-        if (this.multiSource) {
-            this.sourcePackets = number;
-        }
-
-    }
 
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
@@ -366,11 +345,11 @@ public class SEComponent extends TileEntityComponent {
         }
     }
 
-    private int getPacketCount() {
-        return this.fullEnergy ? Math.min(
-                this.sourcePackets,
-                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
-        ) : this.sourcePackets;
+    private abstract static class EnergyNetDelegate extends TileEntity implements ISETile {
+
+        private EnergyNetDelegate() {
+        }
+
     }
 
     private class EnergyNetDelegateDual extends SEComponent.EnergyNetDelegate implements ISESink, ISESource {
@@ -387,11 +366,20 @@ public class SEComponent extends TileEntityComponent {
             return SEComponent.this.sourceDirections.contains(dir);
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return SEComponent.this.parent.getPos();
+        }
 
         public double getOfferedSE() {
             return !SEComponent.this.sendingSidabled && !SEComponent.this.sourceDirections.isEmpty()
                     ? SEComponent.this.getSourceEnergy()
                     : 0.0D;
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return SEComponent.this.parent;
         }
 
         public int getSinkTier() {
@@ -423,14 +411,6 @@ public class SEComponent extends TileEntityComponent {
             SEComponent.this.storage = SEComponent.this.storage - amount;
         }
 
-        public boolean sendMultipleEnergyPackets() {
-            return SEComponent.this.multiSource;
-        }
-
-        public int getMultipleEnergyPacketAmount() {
-            return SEComponent.this.getPacketCount();
-        }
-
 
     }
 
@@ -448,6 +428,11 @@ public class SEComponent extends TileEntityComponent {
             return SEComponent.this.sinkDirections.contains(dir);
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return SEComponent.this.parent.getPos();
+        }
+
         public double getDemandedSE() {
             assert !SEComponent.this.sinkDirections.isEmpty();
 
@@ -459,6 +444,11 @@ public class SEComponent extends TileEntityComponent {
         public double injectSE(EnumFacing directionFrom, double amount, double voltage) {
             SEComponent.this.storage = SEComponent.this.storage + amount;
             return 0.0D;
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return SEComponent.this.parent;
         }
 
     }
@@ -477,6 +467,11 @@ public class SEComponent extends TileEntityComponent {
             return SEComponent.this.sourceDirections.contains(dir);
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return SEComponent.this.parent.getPos();
+        }
+
         public double getOfferedSE() {
             assert !SEComponent.this.sourceDirections.isEmpty();
 
@@ -489,12 +484,9 @@ public class SEComponent extends TileEntityComponent {
             SEComponent.this.storage = SEComponent.this.storage - amount;
         }
 
-
-    }
-
-    private abstract class EnergyNetDelegate extends TileEntity implements ISETile {
-
-        private EnergyNetDelegate() {
+        @Override
+        public TileEntity getTile() {
+            return SEComponent.this.parent;
         }
 
     }

@@ -1,8 +1,10 @@
 package com.denfop.qe;
 
 
+import com.denfop.api.energy.SystemTick;
 import com.denfop.api.qe.IQEAcceptor;
 import com.denfop.api.qe.IQEConductor;
+import com.denfop.api.qe.IQEDual;
 import com.denfop.api.qe.IQEEmitter;
 import com.denfop.api.qe.IQESink;
 import com.denfop.api.qe.IQESource;
@@ -10,7 +12,6 @@ import com.denfop.api.qe.IQETile;
 import com.denfop.api.qe.NodeQEStats;
 import ic2.api.info.ILocatable;
 import ic2.core.IC2;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -34,21 +35,15 @@ public class QENetLocal {
 
     private final World world;
     private final QEPathMap QESourceToQEPathMap;
-    private final Map<IQETile, BlockPos> chunkCoordinatesMap;
-    private final Map<IQETile, TileEntity> QETileTileEntityMap;
     private final Map<BlockPos, IQETile> chunkCoordinatesIQETileMap;
-    private final List<IQESource> sources;
     private final WaitingList waitingList;
     private int tick;
 
     public QENetLocal(final World world) {
         this.QESourceToQEPathMap = new QEPathMap();
-        this.sources = new ArrayList<>();
         this.waitingList = new WaitingList();
         this.world = world;
         this.chunkCoordinatesIQETileMap = new HashMap<>();
-        this.chunkCoordinatesMap = new HashMap<>();
-        this.QETileTileEntityMap = new HashMap<>();
         this.tick = 0;
     }
 
@@ -63,17 +58,14 @@ public class QENetLocal {
         if (this.chunkCoordinatesIQETileMap.containsKey(coords)) {
             return;
         }
-
-        TileEntity te = getTileFromIQE(tile);
-        this.QETileTileEntityMap.put(tile, te);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesIQETileMap.put(coords, tile);
         this.update(coords.getX(), coords.getY(), coords.getZ());
         if (tile instanceof IQEAcceptor) {
             this.waitingList.onTileEntityAdded(this.getValidReceivers(tile, true), tile);
         }
         if (tile instanceof IQESource) {
-            this.sources.add((IQESource) tile);
+            QESourceToQEPathMap.senderPath.add(new SystemTick<>((IQESource) tile, null));
+
         }
     }
 
@@ -85,15 +77,10 @@ public class QENetLocal {
     }
 
     public void removeTileEntity(IQETile tile) {
-        if (!this.QETileTileEntityMap.containsKey(tile)) {
+        if (!this.chunkCoordinatesIQETileMap.containsKey(tile.getBlockPos())) {
             return;
         }
-        final BlockPos coord = this.chunkCoordinatesMap.get(tile);
-        if (coord == null) {
-            return;
-        }
-        this.chunkCoordinatesMap.remove(tile);
-        this.QETileTileEntityMap.remove(tile, this.QETileTileEntityMap.get(tile));
+        final BlockPos coord = tile.getBlockPos();
         this.chunkCoordinatesIQETileMap.remove(coord, tile);
         this.update(coord.getX(), coord.getY(), coord.getZ());
         if (tile instanceof IQEAcceptor) {
@@ -101,67 +88,24 @@ public class QENetLocal {
             this.waitingList.onTileEntityRemoved(tile);
         }
         if (tile instanceof IQESource) {
-            this.sources.remove((IQESource) tile);
             this.QESourceToQEPathMap.remove((IQESource) tile);
+
         }
-    }
-
-    public TileEntity getTileFromMap(IQETile tile) {
-        return this.QETileTileEntityMap.get(tile);
-    }
-
-    public double emitQEFrom(final IQESource QESource, double amount) {
-        List<QEPath> QEPaths = this.QESourceToQEPathMap.get(QESource);
-        if (QEPaths == null) {
-            this.QESourceToQEPathMap.put(QESource, this.discover(QESource));
-            QEPaths = this.QESourceToQEPathMap.get(QESource);
-        }
-        if (amount > 0) {
-            for (final QEPath QEPath : QEPaths) {
-                if (amount <= 0) {
-                    break;
-                }
-                final IQESink QESink = QEPath.target;
-                if (QESink.getDemandedQE() <= 0.0) {
-                    continue;
-                }
-                double QEConsumed = 0;
-                double QEProvided = Math.floor(Math.round(amount));
-                double adding = Math.min(QEProvided, QESink.getDemandedQE());
-                if (adding <= 0.0D) {
-                    continue;
-                }
-                double QEReturned = QESink.injectQE(QEPath.targetDirection, adding, 0);
-                if (QEReturned >= QEProvided) {
-                    QEReturned = QEProvided;
-                }
-                QEConsumed += adding;
-                QEConsumed -= QEReturned;
-
-                double QEInjected = adding - QEReturned;
-                QEPath.totalQEConducted = (long) QEInjected;
-                amount -= QEConsumed;
-                amount = Math.max(0, amount);
-
-            }
-        }
-
-        return amount;
     }
 
     public double getTotalQEEmitted(final IQETile tileEntity) {
         double ret = 0.0;
-        if (tileEntity instanceof IQEConductor) {
-            for (final QEPath QEPath : this.QESourceToQEPathMap.getPaths((IQEAcceptor) tileEntity)) {
-                if (QEPath.conductors.contains(tileEntity)) {
-                    ret += QEPath.totalQEConducted;
-                }
-            }
-        }
+
         if (tileEntity instanceof IQESource) {
-            IQESource advEnergySink = (IQESource) tileEntity;
-            if (advEnergySink.isSource()) {
-                ret = advEnergySink.getPerEnergy() - advEnergySink.getPastEnergy();
+            IQESource advEnergySource = (IQESource) tileEntity;
+            if (!(advEnergySource instanceof IQEDual) && advEnergySource.isSource()) {
+                ret = Math.max(0, advEnergySource.getPerEnergy() - advEnergySource.getPastEnergy());
+
+            } else if ((advEnergySource instanceof IQEDual) && advEnergySource.isSource()) {
+                IQEDual dual = (IQEDual) advEnergySource;
+
+                ret = Math.max(0, dual.getPerEnergy1() - dual.getPastEnergy1());
+
             }
         }
         return ret;
@@ -169,18 +113,16 @@ public class QENetLocal {
 
     public double getTotalQESunken(final IQETile tileEntity) {
         double ret = 0.0;
-        if (tileEntity instanceof IQEConductor) {
-            for (final QEPath QEPath : this.QESourceToQEPathMap.getPaths((IQEAcceptor) tileEntity)) {
-                if (QEPath.conductors.contains(
-                        tileEntity)) {
-                    ret += QEPath.totalQEConducted;
-                }
-            }
-        }
         if (tileEntity instanceof IQESink) {
             IQESink advEnergySink = (IQESink) tileEntity;
             if (advEnergySink.isSink()) {
-                ret = advEnergySink.getPerEnergy() - advEnergySink.getPastEnergy();
+                if (this.tick - 1 == advEnergySink.getTick()
+                        || this.tick == advEnergySink.getTick()
+                        || this.tick + 1 == advEnergySink.getTick()
+                ) {
+                    ret = Math.max(0, advEnergySink.getPerEnergy() - advEnergySink.getPastEnergy());
+                }
+
             }
         }
         return ret;
@@ -197,73 +139,65 @@ public class QENetLocal {
         return null;
     }
 
-    private List<QEPath> discover(final IQESource emitter) {
-        final Map<IQETile, QEBlockLink> reachedTileEntities = new HashMap<>();
-        final LinkedList<IQETile> tileEntitiesToCheck = new LinkedList<>();
+    public List<QEPath> discover(final IQESource emitter) {
+        final Map<IQEConductor, EnumFacing> reachedTileEntities = new HashMap<>();
+        final List<IQETile> tileEntitiesToCheck = new ArrayList<>();
+        final List<QEPath> QEPaths = new ArrayList<>();
 
         tileEntitiesToCheck.add(emitter);
 
-
         while (!tileEntitiesToCheck.isEmpty()) {
-            final IQETile currentTileEntity = tileEntitiesToCheck.remove();
+            final IQETile currentTileEntity = tileEntitiesToCheck.remove(0);
             final List<QETarget> validReceivers = this.getValidReceivers(currentTileEntity, false);
             for (final QETarget validReceiver : validReceivers) {
                 if (validReceiver.tileEntity != emitter) {
+                    if (validReceiver.tileEntity instanceof IQESink) {
+                        QEPaths.add(new QEPath((IQESink) validReceiver.tileEntity, validReceiver.direction));
+                        continue;
+                    }
+                    if (reachedTileEntities.containsKey((IQEConductor) validReceiver.tileEntity)) {
+                        continue;
+                    }
 
-                    if (reachedTileEntities.containsKey(validReceiver.tileEntity)) {
-                        continue;
-                    }
-                    reachedTileEntities.put(validReceiver.tileEntity, new QEBlockLink(validReceiver.direction));
-                    if (!(validReceiver.tileEntity instanceof IQEConductor)) {
-                        continue;
-                    }
-                    tileEntitiesToCheck.remove(validReceiver.tileEntity);
+                    reachedTileEntities.put((IQEConductor) validReceiver.tileEntity, validReceiver.direction);
                     tileEntitiesToCheck.add(validReceiver.tileEntity);
                 }
             }
 
 
         }
-        final List<QEPath> QEPaths = new LinkedList<>();
-        for (final Map.Entry<IQETile, QEBlockLink> entry : reachedTileEntities.entrySet()) {
-            IQETile tileEntity = entry.getKey();
-            if ((tileEntity instanceof IQESink)) {
-                QEBlockLink QEBlockLink = entry.getValue();
-                final QEPath QEPath = new QEPath((IQESink) tileEntity, QEBlockLink.direction);
-                if (emitter != null) {
-                    while (true) {
-                        BlockPos te = this.chunkCoordinatesMap.get(tileEntity);
-                        if (QEBlockLink != null) {
-                            tileEntity = this.getTileEntity(te.offset(QEBlockLink.direction));
-                        }
-                        if (tileEntity == emitter) {
-                            break;
-                        }
-                        if (!(tileEntity instanceof IQEConductor)) {
-                            break;
-                        }
-                        final IQEConductor QEConductor = (IQEConductor) tileEntity;
-                        QEPath.conductors.add(QEConductor);
-                        QEBlockLink = reachedTileEntities.get(tileEntity);
-                        if (QEBlockLink != null) {
-                            continue;
-                        }
-                        IC2.platform.displayError("An QE network pathfinding entry is corrupted.\nThis could happen due to " +
-                                "incorrect Minecraft behavior or a bug.\n\n(Technical information: QEBlockLink, tile " +
-                                "entities below)\nE: " + emitter + " (" + te.getX() + "," + te.getY() + "," + te
-
-                                .getZ() + ")\n" + "C: " + tileEntity + " (" + te.getX() + "," + te
-
-                                .getY() + "," + te
-
-                                .getZ() + ")\n" + "R: " + QEPath.target + " (" + this.QETileTileEntityMap
-                                .get(QEPath.target)
-                                .getPos()
-                                .getX() + "," + getTileFromMap(QEPath.target).getPos().getY() + "," + getTileFromIQE(
-                                QEPath.target).getPos().getZ() + ")");
+        for (QEPath QEPath : QEPaths) {
+            IQETile tileEntity = QEPath.target;
+            EnumFacing QEBlockLink = QEPath.targetDirection;
+            BlockPos te = QEPath.target.getBlockPos();
+            if (emitter != null) {
+                while (tileEntity != emitter) {
+                    if (QEBlockLink != null && te != null) {
+                        tileEntity = this.getTileEntity(te.offset(QEBlockLink));
+                        te = te.offset(QEBlockLink);
                     }
+                    if (!(tileEntity instanceof IQEConductor)) {
+                        break;
+                    }
+                    final IQEConductor QEConductor = (IQEConductor) tileEntity;
+                    QEPath.conductors.add(QEConductor);
+                    QEBlockLink = reachedTileEntities.get(tileEntity);
+                    if (QEBlockLink != null) {
+                        continue;
+                    }
+                    assert te != null;
+                    IC2.platform.displayError("An QE network pathfinding entry is corrupted.\nThis could happen due to " +
+                            "incorrect Minecraft behavior or a bug.\n\n(Technical information: QEBlockLink, tile " +
+                            "entities below)\nE: " + emitter + " (" + te.getX() + "," + te.getY() + "," + te
+
+                            .getZ() + ")\n" + "C: " + tileEntity + " (" + te.getX() + "," + te
+
+                            .getY() + "," + te
+
+                            .getZ() + ")\n" + "R: " + QEPath.target + " (" + QEPath.target
+                            .getBlockPos()
+                            .getX() + "," + QEPath.target.getBlockPos().getY() + "," + QEPath.target.getBlockPos().getZ() + ")");
                 }
-                QEPaths.add(QEPath);
             }
         }
         return QEPaths;
@@ -273,10 +207,8 @@ public class QENetLocal {
         if (tile == null) {
             return null;
         }
-        if (!this.QETileTileEntityMap.containsKey(tile)) {
-            return null;
-        }
-        return this.getTileEntity(this.QETileTileEntityMap.get(tile).getPos().offset(dir));
+
+        return this.getTileEntity(tile.getBlockPos().offset(dir));
     }
 
     private List<QETarget> getValidReceivers(final IQETile emitter, final boolean reverse) {
@@ -321,7 +253,7 @@ public class QENetLocal {
         workList.add(par1);
         while (workList.size() > 0) {
             final IQETile tile = workList.remove(0);
-            final TileEntity te = this.QETileTileEntityMap.get(tile);
+            final TileEntity te = tile.getTile();
             if (te == null) {
                 continue;
             }
@@ -347,44 +279,98 @@ public class QENetLocal {
 
 
     public void onTickEnd() {
-        if (this.world.provider.getWorldTime() % 20 == 0) {
-            if (this.waitingList.hasWork()) {
-                final List<IQETile> tiles = this.waitingList.getPathTiles();
-                for (final IQETile tile : tiles) {
-                    final List<IQESource> sources = this.discoverFirstPathOrSources(tile);
-                    if (sources.size() > 0) {
-                        this.QESourceToQEPathMap.removeAll(sources);
-                    }
+        if (this.waitingList.hasWork()) {
+            final List<IQETile> tiles = this.waitingList.getPathTiles();
+
+            for (final IQETile tile : tiles) {
+                final List<IQESource> sources = this.discoverFirstPathOrSources(tile);
+                if (sources.size() > 0) {
+                    this.QESourceToQEPathMap.removeAllSource1(sources);
                 }
-                this.waitingList.clear();
             }
+            this.waitingList.clear();
+
         }
-        if (this.world.provider.getWorldTime() % 2 == 0) {
-            for (IQESource entry : this.sources) {
-                if (entry != null) {
-                    double offer = entry.getOfferedQE();
-                    if (offer > 0) {
-                        for (double packetAmount = 1, i = 0; i < packetAmount; ++i) {
-                            offer = entry.getOfferedQE();
-                            if (offer < 1) {
-                                break;
-                            }
-                            final double removed = offer - this.emitQEFrom(entry, offer);
-                            entry.drawQE(removed);
-                            if (removed <= 0) {
-                                break;
-                            }
 
+        for (SystemTick<IQESource, QEPath> tick : this.QESourceToQEPathMap.senderPath) {
+            final IQESource entry = tick.getSource();
+            if (tick.getList() != null) {
+                if (tick.getList().isEmpty()) {
+                    continue;
+                }
+            }
 
-                        }
+            if (entry != null) {
+                if (entry.isSource()) {
+                    if (entry instanceof IQEDual) {
+                        ((IQEDual) entry).setPastEnergy1(((IQEDual) entry).getPastEnergy1());
                     } else {
                         entry.setPastEnergy(entry.getPerEnergy());
                     }
+                }
+                double offer = entry.getOfferedQE();
+                if (offer > 0) {
+
+                    final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
+                    entry.drawQE(removed);
+
+
+                } else {
+                    if (entry.isSource()) {
+                        if (entry instanceof IQEDual) {
+                            ((IQEDual) entry).setPastEnergy1(((IQEDual) entry).getPastEnergy1());
+                        } else {
+                            entry.setPastEnergy(entry.getPerEnergy());
+                        }
+                    }
 
                 }
+
             }
-            this.tick++;
+
         }
+        this.tick++;
+
+    }
+
+    public double emitEnergyFrom(final IQESource energySource, double amount, final SystemTick<IQESource, QEPath> tick) {
+        List<QEPath> energyPaths = tick.getList();
+        if (energyPaths == null) {
+            energyPaths = this.discover(energySource);
+            tick.setList(energyPaths);
+        }
+        if (!(energySource instanceof IQEDual) && energySource.isSource()) {
+            energySource.setPastEnergy(energySource.getPerEnergy());
+        } else if (energySource instanceof IQEDual && (energySource.isSource())) {
+            ((IQEDual) energySource).setPastEnergy1(((IQEDual) energySource).getPerEnergy1());
+
+        }
+        if (amount > 0) {
+            for (final QEPath energyPath : energyPaths) {
+                if (amount <= 0) {
+                    break;
+                }
+                final IQESink energySink = energyPath.target;
+                double demandedEnergy = energySink.getDemandedQE();
+                if (demandedEnergy <= 0.0) {
+                    continue;
+                }
+                double energyProvided = Math.min(demandedEnergy, amount);
+
+                final double adding = energySink.injectQE(energyPath.targetDirection, energyProvided, 0);
+                if (!(energySource instanceof IQEDual) && energySource.isSource()) {
+                    energySource.addPerEnergy(adding);
+                } else if ((energySource instanceof IQEDual) && energySource.isSource()) {
+                    ((IQEDual) energySource).addPerEnergy1(adding);
+                }
+
+                energyPath.tick(this.tick, energyProvided);
+                amount -= energyProvided;
+                amount = Math.max(0, amount);
+            }
+        }
+
+        return amount;
     }
 
     public IQETile getTileEntity(BlockPos pos) {
@@ -400,27 +386,20 @@ public class QENetLocal {
 
     void update(final int x, final int y, final int z) {
         for (final EnumFacing dir : EnumFacing.values()) {
-            if (this.world.isChunkGeneratedAt(x + dir.getFrontOffsetX() >> 4, z + dir.getFrontOffsetZ() >> 4)) {
-                BlockPos pos = new BlockPos(x, y,
-                        z
-                ).offset(dir);
-                if (this.chunkCoordinatesIQETileMap.containsKey(pos)) {
-                    if (this.chunkCoordinatesIQETileMap.get(pos) instanceof IQEConductor) {
-                        this.world.neighborChanged(pos, Blocks.AIR, pos);
-                    }
-                }
-
+            BlockPos pos = new BlockPos(x, y,
+                    z
+            ).offset(dir);
+            IQETile tile = this.chunkCoordinatesIQETileMap.get(pos);
+            if (tile instanceof IQEConductor) {
+                ((IQEConductor) tile).update_render();
             }
         }
     }
 
     public void onUnload() {
         this.QESourceToQEPathMap.clear();
-        this.sources.clear();
         this.waitingList.clear();
         this.chunkCoordinatesIQETileMap.clear();
-        this.chunkCoordinatesMap.clear();
-        this.QETileTileEntityMap.clear();
     }
 
     static class QETarget {
@@ -435,93 +414,129 @@ public class QENetLocal {
 
     }
 
-    static class QEBlockLink {
-
-        final EnumFacing direction;
-
-        QEBlockLink(final EnumFacing direction) {
-            this.direction = direction;
-        }
-
-    }
-
     static class QEPath {
 
         final Set<IQEConductor> conductors;
         final IQESink target;
         final EnumFacing targetDirection;
-        long totalQEConducted;
 
         QEPath(IQESink sink, EnumFacing facing) {
             this.target = sink;
             this.conductors = new HashSet<>();
-            this.totalQEConducted = 0L;
             this.targetDirection = facing;
+        }
+
+        public void tick(int tick, double adding) {
+            if (this.target.isSink()) {
+                if (this.target.getTick() != tick) {
+                    this.target.addTick(tick);
+                    this.target.setPastEnergy(this.target.getPerEnergy());
+
+                }
+                this.target.addPerEnergy(adding);
+            }
         }
 
     }
 
     static class QEPathMap {
 
-        final Map<IQESource, List<QEPath>> senderPath;
+        final List<SystemTick<IQESource, QEPath>> senderPath;
 
         QEPathMap() {
-            this.senderPath = new HashMap<>();
+            this.senderPath = new ArrayList<>();
         }
 
         public void put(final IQESource par1, final List<QEPath> par2) {
-            this.senderPath.put(par1, par2);
+            this.senderPath.add(new SystemTick<>(par1, par2));
         }
 
+
+        public boolean containsKey(final SystemTick<IQESource, QEPath> par1) {
+            return this.senderPath.contains(par1);
+        }
 
         public boolean containsKey(final IQESource par1) {
-            return this.senderPath.containsKey(par1);
+            return this.senderPath.contains(new SystemTick<IQESource, QEPath>(par1, null));
         }
 
-        public List<QEPath> get(final IQESource par1) {
-            return this.senderPath.get(par1);
-        }
 
+        public void remove1(final IQESource par1) {
+
+            for (SystemTick<IQESource, QEPath> ticks : this.senderPath) {
+                if (ticks.getSource() == par1) {
+                    ticks.setList(null);
+                    break;
+                }
+            }
+        }
 
         public void remove(final IQESource par1) {
+            this.senderPath.remove(new SystemTick<IQESource, QEPath>(par1, null));
+        }
+
+        public void remove(final SystemTick<IQESource, QEPath> par1) {
             this.senderPath.remove(par1);
         }
 
-        public void removeAll(final List<IQESource> par1) {
+        public void removeAll(final List<SystemTick<IQESource, QEPath>> par1) {
+            if (par1 == null) {
+                return;
+            }
+            for (SystemTick<IQESource, QEPath> iQESource : par1) {
+                iQESource.setList(null);
+            }
+        }
+
+        public void removeAllSource1(final List<IQESource> par1) {
+            if (par1 == null) {
+                return;
+            }
             for (IQESource iQESource : par1) {
-                this.remove(iQESource);
+                this.remove1(iQESource);
             }
         }
 
-
-        public List<QEPath> getPaths(final IQEAcceptor par1) {
-            final List<QEPath> paths = new ArrayList<>();
-            for (final IQESource source : this.getSources(par1)) {
-                if (this.containsKey(source)) {
-                    paths.addAll(this.get(source));
-                }
-            }
-            return paths;
-        }
-
-        public List<IQESource> getSources(final IQEAcceptor par1) {
-            final List<IQESource> source = new ArrayList<>();
-            for (final Map.Entry<IQESource, List<QEPath>> entry : this.senderPath.entrySet()) {
-                if (source.contains(entry.getKey())) {
+        public List<SystemTick<IQESource, QEPath>> getSources(final IQEAcceptor par1) {
+            final List<SystemTick<IQESource, QEPath>> source = new ArrayList<>();
+            for (final SystemTick<IQESource, QEPath> entry : this.senderPath) {
+                if (source.contains(entry)) {
                     continue;
                 }
-                for (QEPath path : entry.getValue()) {
-                    if ((!(par1 instanceof IQEConductor) || !path.conductors.contains(par1)) && (!(par1 instanceof IQESink) || path.target != par1)) {
-                        continue;
+                if (entry.getList() != null) {
+                    for (QEPath path : entry.getList()) {
+                        if ((!(par1 instanceof IQEConductor) || !path.conductors.contains(par1)) && (!(par1 instanceof IQESink) || path.target != par1)) {
+                            continue;
+                        }
+                        source.add(entry);
                     }
-                    source.add(entry.getKey());
                 }
             }
             return source;
         }
 
+
         public void clear() {
+            for (SystemTick<IQESource, QEPath> entry : this.senderPath) {
+                List<QEPath> list = entry.getList();
+                if (list != null) {
+                    for (QEPath QEPath : list) {
+                        QEPath.conductors.clear();
+                    }
+                }
+
+            }
             this.senderPath.clear();
+        }
+
+
+        public SystemTick<IQESource, QEPath> get(IQESource tileEntity) {
+            for (SystemTick<IQESource, QEPath> entry : this.senderPath) {
+                if (entry.getSource() == tileEntity) {
+                    return entry;
+                }
+            }
+            return null;
         }
 
     }

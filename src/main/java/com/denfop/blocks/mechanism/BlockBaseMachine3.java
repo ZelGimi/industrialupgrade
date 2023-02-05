@@ -35,6 +35,7 @@ import com.denfop.tiles.mechanism.TileEntityTunerWireless;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorAssembler;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import com.denfop.tiles.mechanism.cooling.TileEntityCooling;
+import com.denfop.tiles.mechanism.dual.heat.TileEntityWeldingMachine;
 import com.denfop.tiles.mechanism.energy.TileEntityEnergyController;
 import com.denfop.tiles.mechanism.energy.TileEntityEnergySubstitute;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityAdvRedstoneGenerator;
@@ -75,6 +76,7 @@ import com.denfop.tiles.mechanism.worlcollector.TileEntityCrystallize;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityEarthAssembler;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityEnderAssembler;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityNetherAssembler;
+import com.denfop.tiles.reactors.TileEntityHeatSensor;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
@@ -168,6 +170,8 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
     adv_redstone_generator(TileEntityAdvRedstoneGenerator.class, 71),
     imp_redstone_generator(TileEntityImpRedstoneGenerator.class, 72),
     per_redstone_generator(TileEntityPerRedstoneGenerator.class, 73),
+    welding(TileEntityWeldingMachine.class, 74),
+    heat_limiter(TileEntityHeatSensor.class, 75),
     ;
 
 

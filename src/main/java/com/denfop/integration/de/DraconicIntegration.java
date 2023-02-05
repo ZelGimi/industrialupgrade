@@ -50,7 +50,8 @@ public class DraconicIntegration {
                     new ItemStack(IUItem.blockpanel, 1), 400000000, 1, DEFeatures.wyvernCore, DEFeatures.wyvernCore,
                     DEFeatures.wyvernCore, DEFeatures.wyvernCore
             );
-            RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL,
+            RecipeManager.addFusion(
+                    RecipeManager.RecipeDifficulty.ALL,
                     new ItemStack(blockDESolarPanel, 1, 1),
                     new ItemStack(blockDESolarPanel, 1),
                     1000000000,
@@ -64,7 +65,8 @@ public class DraconicIntegration {
                     DEFeatures.awakenedCore,
                     DEFeatures.awakenedCore
             );
-            RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL,
+            RecipeManager.addFusion(
+                    RecipeManager.RecipeDifficulty.ALL,
                     new ItemStack(blockDESolarPanel, 1, 2),
                     new ItemStack(blockDESolarPanel, 1, 1),
                     2000000000,
@@ -83,7 +85,8 @@ public class DraconicIntegration {
                     new ItemStack(IUItem.upgradepanelkit, 1), 1000000, 1, DEFeatures.wyvernCore, DEFeatures.wyvernCore,
                     DEFeatures.wyvernCore, DEFeatures.wyvernCore
             );
-            RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL,
+            RecipeManager.addFusion(
+                    RecipeManager.RecipeDifficulty.ALL,
                     new ItemStack(IUItem.upgradepanelkit, 1, 15),
                     new ItemStack(IUItem.upgradepanelkit, 1),
                     10000000,
@@ -97,7 +100,8 @@ public class DraconicIntegration {
                     DEFeatures.awakenedCore,
                     DEFeatures.awakenedCore
             );
-            RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL,
+            RecipeManager.addFusion(
+                    RecipeManager.RecipeDifficulty.ALL,
                     new ItemStack(IUItem.upgradepanelkit, 1, 16),
                     new ItemStack(IUItem.upgradepanelkit, 1),
                     200000000,

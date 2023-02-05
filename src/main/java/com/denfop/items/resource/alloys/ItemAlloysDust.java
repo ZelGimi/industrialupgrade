@@ -32,7 +32,7 @@ public class ItemAlloysDust extends ItemMulti<ItemAlloysDust.Types> implements I
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloysdust" + super.getUnlocalizedName().substring(13);
     }
 
     @SideOnly(Side.CLIENT)

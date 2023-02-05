@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 public class InvSlotConverterSolidMatter extends InvSlot {
 
     public InvSlotConverterSolidMatter(TileEntityInventory base1, String string) {
-        super(base1, string, InvSlot.Access.I, 7, InvSlot.InvSide.TOP);
+        super(base1, string, InvSlot.Access.I, 7, InvSlot.InvSide.ANY);
 
     }
 

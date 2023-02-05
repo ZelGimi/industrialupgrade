@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -27,6 +28,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
+public class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
         IInventorySlotHolder<TileEntityInventory> {
 
     protected final List<InvSlot> invSlots = new ArrayList<>();
@@ -84,6 +86,10 @@ public abstract class TileEntityInventory extends TileEntityBlock implements ISi
                 }
             }
         }
+    }
+
+    public @NotNull BlockPos getBlockPos() {
+        return this.pos;
     }
 
     protected boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

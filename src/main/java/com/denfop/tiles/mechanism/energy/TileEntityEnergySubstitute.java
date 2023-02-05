@@ -27,6 +27,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,6 +67,11 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
         NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
         int insulation = nbt.getByte("insulation") & 255;
         return Math.min(insulation, type.maxInsulation);
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
     }
 
     @SideOnly(Side.CLIENT)
@@ -173,10 +179,15 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                     ), getInsulation(main_cableItem.getStack()));
                                     TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
                                             conductor);
-                                    final List<ItemStack> drops = tile.getBlockType().getDrops(world, tile.getPos(), tile.getBlockState(),
-                                           100);
-                                    if(!drops.isEmpty())
-                                    itemStackList.add(drops.get(0));
+                                    final List<ItemStack> drops = tile.getBlockType().getDrops(
+                                            world,
+                                            tile.getPos(),
+                                            tile.getBlockState(),
+                                            100
+                                    );
+                                    if (!drops.isEmpty()) {
+                                        itemStackList.add(drops.get(0));
+                                    }
                                     conductor.removeConductor();
                                     EnumFacing facing = tile.getFacing().getOpposite();
                                     BlockPos pos = tile.getPos();
@@ -193,8 +204,9 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                         EnergyNetGlobal.getForWorld(this.getWorld()).update(pos);
                                         TileEntityCable cable =
                                                 (TileEntityCable) this.getWorld().getTileEntity(pos);
-                                        if(cable != null)
-                                        cable.onNeighborChange(null, pos);
+                                        if (cable != null) {
+                                            cable.onNeighborChange(null, pos);
+                                        }
                                         break;
                                     }
                                 } else if (main_cableItem.getStack().getItem() instanceof com.denfop.items.transport.ItemCable) {
@@ -205,10 +217,15 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                     TileEntityBlock tile = (TileEntityBlock) EnergyNetGlobal.instance.getBlockPosFromEnergyTile(
                                             conductor);
                                     EnumFacing facing = tile.getFacing().getOpposite();
-                                    final List<ItemStack> drops = tile.getBlockType().getDrops(world, tile.getPos(), tile.getBlockState(),
-                                            100);
-                                    if(!drops.isEmpty())
+                                    final List<ItemStack> drops = tile.getBlockType().getDrops(
+                                            world,
+                                            tile.getPos(),
+                                            tile.getBlockState(),
+                                            100
+                                    );
+                                    if (!drops.isEmpty()) {
                                         itemStackList.add(drops.get(0));
+                                    }
                                     conductor.removeConductor();
                                     BlockPos pos = tile.getPos();
 
@@ -226,8 +243,9 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                                         com.denfop.tiles.transport.tiles.TileEntityCable cable =
                                                 (com.denfop.tiles.transport.tiles.TileEntityCable) this.getWorld().getTileEntity(
                                                         pos);
-                                        if(cable != null)
-                                        cable.update_render();
+                                        if (cable != null) {
+                                            cable.update_render();
+                                        }
                                         break;
                                     }
                                 }
@@ -242,8 +260,9 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
                     }
 
                 }
-                for (ItemStack stack:itemStackList)
+                for (ItemStack stack : itemStackList) {
                     this.slot.add(stack);
+                }
             }
             energyPathList.clear();
             conductorList.clear();
@@ -252,7 +271,7 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
             for (EnumFacing facing : EnumFacing.values()) {
                 final List<EnergyNetLocal.EnergyPath> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getPos().offset(facing)
+                        this.getBlockPos().offset(facing)
                 );
 
                 for (EnergyNetLocal.EnergyPath path : energyPathList1) {
@@ -280,7 +299,7 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
             for (EnumFacing facing : EnumFacing.values()) {
                 final List<EnergyNetLocal.EnergyPath> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getPos().offset(facing)
+                        this.getBlockPos().offset(facing)
                 );
 
                 for (EnergyNetLocal.EnergyPath path : energyPathList1) {
@@ -314,7 +333,7 @@ public class TileEntityEnergySubstitute extends TileEntityInventory implements I
             for (EnumFacing facing : EnumFacing.values()) {
                 final List<EnergyNetLocal.EnergyPath> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getPos().offset(facing)
+                        this.getBlockPos().offset(facing)
                 );
 
                 for (EnergyNetLocal.EnergyPath path : energyPathList1) {

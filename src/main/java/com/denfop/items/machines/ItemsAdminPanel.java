@@ -1,12 +1,16 @@
 package com.denfop.items.machines;
 
+import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.tiles.base.TileEntityAdminSolarPanel;
+import com.denfop.tiles.panels.entity.EnumSolarPanels;
+import com.denfop.utils.ModUtils;
 import ic2.core.block.BlockTileEntity;
 import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
+import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.item.block.ItemBlockTileEntity;
 import ic2.core.ref.BlockName;
@@ -17,6 +21,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,7 +34,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 
 public class ItemsAdminPanel extends ItemMulti<ItemsAdminPanel.Types> implements IModelRegister {
@@ -41,6 +49,30 @@ public class ItemsAdminPanel extends ItemMulti<ItemsAdminPanel.Types> implements
         this.setCreativeTab(IUCore.IUTab);
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            final @NotNull ItemStack stack,
+            @Nullable final World worldIn,
+            final @NotNull List<String> info,
+            final @NotNull ITooltipFlag flagIn
+    ) {
+        if (Config.promt) {
+            info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                    + ModUtils.getString(EnumSolarPanels.QUARK_SOLAR_PANEL.genday * 4) + " EU/t ");
+            info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                    + ModUtils.getString(EnumSolarPanels.QUARK_SOLAR_PANEL.genday * 2) + " EU/t ");
+
+            info.add(Localization.translate("ic2.item.tooltip.Output") + " "
+                    + ModUtils.getString(EnumSolarPanels.QUARK_SOLAR_PANEL.producing * 4) + " EU/t ");
+            info.add(Localization.translate("ic2.item.tooltip.Capacity") + " "
+                    + ModUtils.getString(EnumSolarPanels.QUARK_SOLAR_PANEL.maxstorage * 16) + " EU ");
+            info.add(Localization.translate("iu.tier") + ModUtils.getString(14));
+
+        }
+        super.addInformation(stack, worldIn, info, flagIn);
     }
 
     public EnumActionResult onItemUse(

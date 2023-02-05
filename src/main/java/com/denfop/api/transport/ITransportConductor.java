@@ -1,6 +1,5 @@
 package com.denfop.api.transport;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
 import java.util.List;

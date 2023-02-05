@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 public class InvSlotAntiUpgradeBlock extends InvSlot {
 
     public InvSlotAntiUpgradeBlock(TileEntityAntiUpgradeBlock tile) {
-        super(tile, "input", InvSlot.Access.I, 1, InvSlot.InvSide.TOP);
+        super(tile, "input", InvSlot.Access.I, 1, InvSlot.InvSide.ANY);
     }
 
     @Override

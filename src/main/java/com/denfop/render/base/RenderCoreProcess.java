@@ -45,12 +45,10 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
     );
 
     private static final Map<List<Serializable>, Integer> textureSizeCache = new HashMap<>();
-
-
+    private final Random random = new Random();
     public int ticker;
     float rotation;
     float prevRotation;
-    private final Random random = new Random();
 
     public static int getTextureSize(String s, int dv) {
         Integer textureSize = textureSizeCache.get(Arrays.asList(s, dv));
@@ -291,7 +289,8 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
                 GlStateManager.DestFactor.ZERO
         );
         GlStateManager.pushMatrix();
-        IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(itemstack,
+        IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                itemstack,
                 te.getEntityBlock().getWorld(),
                 null
         );

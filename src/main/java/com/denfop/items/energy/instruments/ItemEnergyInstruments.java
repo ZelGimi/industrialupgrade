@@ -555,7 +555,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             par3List.add(Localization.translate("iu.blacklist_gui") + Keyboard.getKeyName(Math.abs(KeyboardClient.blacklistviewmode.getKeyCode())));
 
         }
-
+        ModUtils.mode(par1ItemStack, par3List);
         super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
     }
 

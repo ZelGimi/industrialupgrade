@@ -390,7 +390,7 @@ public class TileEntityWindGenerator extends TileEntityInventory implements IWin
             if (this.mind_wind != 0) {
                 this.angle += (float) k * WindSystem.windSystem.getSpeed(Math.min(
                         24.7 + this.mind_speed,
-                        WindSystem.windSystem.getSpeedFromPower(this.getPos(), this,
+                        WindSystem.windSystem.getSpeedFromPower(this.getBlockPos(), this,
                                 this.generation
                         )
                 ) * this.getCoefficient());

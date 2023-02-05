@@ -27,8 +27,6 @@ public class EXPNetLocal {
 
     private final World world;
     private final EXPPathMap EXPSourceToEXPPathMap;
-    private final Map<IEXPTile, BlockPos> chunkCoordinatesMap;
-    private final Map<IEXPTile, TileEntity> EXPTileTileEntityMap;
     private final Map<BlockPos, IEXPTile> chunkCoordinatesIEXPTileMap;
     private final WaitingList waitingList;
 
@@ -38,8 +36,6 @@ public class EXPNetLocal {
         this.waitingList = new WaitingList();
         this.world = world;
         this.chunkCoordinatesIEXPTileMap = new HashMap<>();
-        this.chunkCoordinatesMap = new HashMap<>();
-        this.EXPTileTileEntityMap = new HashMap<>();
     }
 
 
@@ -57,8 +53,6 @@ public class EXPNetLocal {
         if (this.chunkCoordinatesIEXPTileMap.containsKey(coords)) {
             return;
         }
-        this.EXPTileTileEntityMap.put(tile, tileentity);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesIEXPTileMap.put(coords, tile);
         this.update(coords);
         if (tile instanceof IEXPAcceptor) {
@@ -73,17 +67,17 @@ public class EXPNetLocal {
     }
 
     public BlockPos getPos(final IEXPTile tile) {
-        return this.chunkCoordinatesMap.get(tile);
+        if (tile == null) {
+            return null;
+        }
+
+        return tile.getBlockPos();
     }
 
     public void addTileEntity(final BlockPos coords, final IEXPTile tile) {
         if (this.chunkCoordinatesIEXPTileMap.containsKey(coords)) {
             return;
         }
-
-        TileEntity te = getTileFromIEXP(tile);
-        this.EXPTileTileEntityMap.put(tile, te);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesIEXPTileMap.put(coords, tile);
         this.update(coords);
         if (tile instanceof IEXPAcceptor) {
@@ -103,12 +97,10 @@ public class EXPNetLocal {
 
 
     public void removeTileEntity(IEXPTile tile) {
-        if (!this.EXPTileTileEntityMap.containsKey(tile)) {
+        if (!this.chunkCoordinatesIEXPTileMap.containsKey(tile.getBlockPos())) {
             return;
         }
-        final BlockPos coord = this.chunkCoordinatesMap.get(tile);
-        this.chunkCoordinatesMap.remove(tile);
-        this.EXPTileTileEntityMap.remove(tile, this.EXPTileTileEntityMap.get(tile));
+        final BlockPos coord = tile.getBlockPos();
         this.chunkCoordinatesIEXPTileMap.remove(coord, tile);
         this.update(coord);
         if (tile instanceof IEXPAcceptor) {
@@ -120,9 +112,6 @@ public class EXPNetLocal {
         }
     }
 
-    public TileEntity getTileFromMap(IEXPTile tile) {
-        return this.EXPTileTileEntityMap.get(tile);
-    }
 
     public double emitEXPFrom(final IEXPSource EXPSource, double amount, final SystemTick<IEXPSource, EXPPath> tick) {
         List<EXPPath> EXPPaths = tick.getList();
@@ -205,11 +194,12 @@ public class EXPNetLocal {
         for (EXPPath EXPPath : EXPPaths) {
             IEXPTile tileEntity = EXPPath.target;
             EnumFacing EXPBlockLink = EXPPath.targetDirection;
+            BlockPos te = EXPPath.target.getBlockPos();
             if (emitter != null) {
                 while (tileEntity != emitter) {
-                    BlockPos te = this.chunkCoordinatesMap.get(tileEntity);
                     if (EXPBlockLink != null && te != null) {
                         tileEntity = this.getTileEntity(te.offset(EXPBlockLink));
+                        te = te.offset(EXPBlockLink);
                     }
                     if (!(tileEntity instanceof IEXPConductor)) {
                         break;
@@ -232,11 +222,9 @@ public class EXPNetLocal {
 
                             .getY() + "," + te
 
-                            .getZ() + ")\n" + "R: " + EXPPath.target + " (" + this.EXPTileTileEntityMap
-                            .get(EXPPath.target)
-                            .getPos()
-                            .getX() + "," + getTileFromMap(EXPPath.target).getPos().getY() + "," + getTileFromIEXP(
-                            EXPPath.target).getPos().getZ() + ")");
+                            .getZ() + ")\n" + "R: " + EXPPath.target + " (" + EXPPath.target
+                            .getBlockPos()
+                            .getX() + "," + EXPPath.target.getBlockPos().getY() + "," + EXPPath.target.getBlockPos().getZ() + ")");
                 }
             }
         }
@@ -247,11 +235,7 @@ public class EXPNetLocal {
         if (tile == null) {
             return null;
         }
-        final TileEntity tile1 = this.EXPTileTileEntityMap.get(tile);
-        if (tile1 == null) {
-            return null;
-        }
-        return this.getTileEntity(tile1.getPos().offset(dir));
+        return this.getTileEntity(tile.getBlockPos().offset(dir));
     }
 
     private List<EXPTarget> getValidReceivers(final IEXPTile emitter, final boolean reverse) {
@@ -297,7 +281,7 @@ public class EXPNetLocal {
         workList.add(par1);
         while (workList.size() > 0) {
             final IEXPTile tile = workList.remove(0);
-            final TileEntity te = this.EXPTileTileEntityMap.get(tile);
+            final TileEntity te = tile.getTile();
             if (te == null) {
                 continue;
             }
@@ -388,8 +372,6 @@ public class EXPNetLocal {
         this.EXPSourceToEXPPathMap.clear();
         this.waitingList.clear();
         this.chunkCoordinatesIEXPTileMap.clear();
-        this.chunkCoordinatesMap.clear();
-        this.EXPTileTileEntityMap.clear();
     }
 
     static class EXPTarget {

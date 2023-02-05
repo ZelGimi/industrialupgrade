@@ -2,7 +2,6 @@ package com.denfop.tiles.reactors;
 
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.reactor.IReactorChamber;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
@@ -24,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class TileEntityPerReactorChamberElectric extends TileEntityBlock implements IInventory, IReactorChamber, IEnergyEmitter {
+public class TileEntityPerReactorChamberElectric extends TileEntityBlock implements IInventory, IChamber, IEnergyEmitter {
 
     private TileEntityPerNuclearReactor reactor;
     private long lastReactorUpdate;
@@ -67,8 +66,8 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
             World world = this.getWorld();
             return reactor.getBlockType().onBlockActivated(
                     world,
-                    reactor.getPos(),
-                    world.getBlockState(reactor.getPos()),
+                    reactor.getBlockPos(),
+                    world.getBlockState(reactor.getBlockPos()),
                     player,
                     hand,
                     side,
@@ -80,23 +79,30 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
             return false;
         }
     }
+
     @Override
     protected void onBlockBreak() {
         super.onBlockBreak();
 
-        if(this.reactor != null) {
+        if (this.reactor != null) {
             this.reactor.change = true;
             this.reactor.getReactorSize();
+            BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
+            TileEntity tile = this.getWorld().getTileEntity(pos1);
+            if (tile instanceof TileEntityHeatSensor) {
+                this.reactor.isLimit = false;
+            }
         }
     }
+
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-            this.updateReactor();
-            if (this.reactor == null) {
-                this.destoryChamber(true);
-            } else {
-                this.reactor.change = true;
-            }
+        this.updateReactor();
+        if (this.reactor == null) {
+            this.destoryChamber(true);
+        } else {
+            this.reactor.change = true;
+        }
     }
 
     public void destoryChamber(boolean wrench) {
@@ -253,7 +259,7 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
         return super.hasCapability(capability, facing) || this.reactor != null && this.reactor.hasCapability(capability, facing);
     }
 
-    private TileEntityPerNuclearReactor getReactor() {
+    public TileEntityPerNuclearReactor getReactor() {
         long time = this.getWorld().getTotalWorldTime();
         if (time != this.lastReactorUpdate) {
             this.updateReactor();

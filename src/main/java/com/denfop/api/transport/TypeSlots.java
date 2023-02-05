@@ -9,9 +9,9 @@ public class TypeSlots {
     private final EnumTypeList enumTypeList;
     private final List<ItemStack> list;
 
-    public TypeSlots(List<ItemStack> list, EnumTypeList enumTypeList){
-        this.list=list;
-        this.enumTypeList=enumTypeList;
+    public TypeSlots(List<ItemStack> list, EnumTypeList enumTypeList) {
+        this.list = list;
+        this.enumTypeList = enumTypeList;
     }
 
     public List<ItemStack> getList() {

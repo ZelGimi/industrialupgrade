@@ -32,7 +32,7 @@ public class ItemAlloysCasing extends ItemMulti<ItemAlloysCasing.Types> implemen
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloyscasing" + super.getUnlocalizedName().substring(15);
     }
 
     @SideOnly(Side.CLIENT)

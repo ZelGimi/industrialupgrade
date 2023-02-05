@@ -138,8 +138,8 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
 
             if (energy2.getEnergy() > 0 && energy.getEnergy() < energy.getCapacity()) {
                 double add = Math.min(energy.getFreeEnergy(), energy2.getEnergy() * 10);
-                energy.addEnergy(add / 10);
-                energy2.useEnergy(add);
+                energy.addEnergy(add);
+                energy2.useEnergy(add / 10);
             }
 
         }
@@ -165,8 +165,9 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
                         this.differenceenergy = stats.getEnergyOut();
                     }
                     if (stats1 != null) {
-                        this.differenceenergy = stats1.getQEIn();
+                        this.differenceenergy1 = stats1.getQEIn();
                     }
+
                 }
             }
         }

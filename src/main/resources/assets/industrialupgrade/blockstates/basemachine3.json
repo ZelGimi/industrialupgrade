@@ -356,6 +356,15 @@
       },
       "per_solar_destiller": {
         "model": "industrialupgrade:basemachine/per_solar_destiller"
+      },
+      "welding": {
+        "model": "industrialupgrade:basemachine/welding"
+      },
+      "welding_active": {
+        "model": "industrialupgrade:basemachine/welding_active"
+      },
+      "heat_limiter": {
+        "model": "industrialupgrade:basemachine/heat_limiter"
       }
     },
     "facing": {

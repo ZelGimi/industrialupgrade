@@ -129,7 +129,7 @@ public class GuiWindGenerator extends GuiIU<ContainerWindGenerator> {
                 this.fontRenderer.drawString(Localization.translate("iu.wind_meter.info") + String.format(
                                 "%.1f",
                                 Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromPower(
-                                                this.container.base.getPos(),
+                                                this.container.base.getBlockPos(),
                                                 this.container.base,
                                                 this.container.base.generation
                                         ) / this.container.base.getCoefficient()

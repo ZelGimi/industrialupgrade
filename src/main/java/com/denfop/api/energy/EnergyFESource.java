@@ -1,6 +1,5 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.prefab.BasicSource;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

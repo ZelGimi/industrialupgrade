@@ -32,7 +32,7 @@ public class ItemAlloysIngot extends ItemMulti<ItemAlloysIngot.Types> implements
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloysingot" + super.getUnlocalizedName().substring(14);
     }
 
     @SideOnly(Side.CLIENT)

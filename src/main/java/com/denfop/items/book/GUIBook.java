@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,18 +77,18 @@ public class GUIBook extends GuiIC2<ContainerBook> {
     }
 
     public static List<String> splitEqually(String text, int size) {
-        List<String> ret = Arrays.asList(text.split("\\s"));
+        String[] ret = text.split("\\s");
         List<String> ret1 = new ArrayList<>();
         StringBuilder k = new StringBuilder();
-        for(String res : ret) {
-          if((k.length() + res.length() + 1)< size){
-              k.append(" ").append(res);
+        for (String res : ret) {
+            if ((k.length() + res.length() + 1) < size) {
+                k.append(" ").append(res);
 
-          }else{
-              ret1.add(k.toString());
-              k = new StringBuilder();
-              k.append(res);
-          }
+            } else {
+                ret1.add(k.toString());
+                k = new StringBuilder();
+                k.append(res);
+            }
         }
      /*   List<String> ret = new ArrayList<>((text.length() + size - 1) / size);
 

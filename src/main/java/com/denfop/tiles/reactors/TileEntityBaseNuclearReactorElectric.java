@@ -59,10 +59,14 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     public final InvSlotReactor reactorSlot;
     public boolean getblock;
     public boolean work;
+    public long tick = 0;
+    public double add_heat = 0;
     public float output = 0.0F;
     public int updateTicker;
     public int heat = 0;
     public int maxHeat = 10000;
+    public int limit = 10000;
+    public boolean isLimit = false;
     public float hem = 1.0F;
     public String background;
     public AudioSource audioSourceMain;
@@ -197,7 +201,6 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         return nbttagcompound;
     }
 
-
     public void drawEnergy(double amount) {
     }
 
@@ -212,7 +215,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     }
 
     public int getSourceTier() {
-        return Math.max(EnergyNet.instance.getTierFromPower(this.getOfferedEnergy()), 2);
+        return EnergyNet.instance.getTierFromPower(this.getOfferedEnergy());
     }
 
     abstract void getSubs();
@@ -229,8 +232,8 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         this.size_inventory = 0;
 
         InvSlot invSlot;
-        for (Iterator var2 = this.invSlots.iterator(); var2.hasNext(); size_inventory += invSlot.size()) {
-            invSlot = (InvSlot) var2.next();
+        for (Iterator<InvSlot> var2 = this.invSlots.iterator(); var2.hasNext(); size_inventory += invSlot.size()) {
+            invSlot = var2.next();
         }
 
     }
@@ -252,28 +255,29 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
-        if (this.updateTicker++ % this.getTickRate() == 0) {
-            if (!this.getWorld().isAreaLoaded(this.pos, 4)) {
+        if (isLimit) {
+            if (this.heat + this.add_heat >= Math.min(limit, 10000)) {
                 this.output = 0.0F;
-            } else {
-
-
-                this.output = 0.0F;
-                this.maxHeat = 10000;
-                this.hem = 1.0F;
-                this.processChambers();
-
-
-                if (this.calculateHeatEffects()) {
-                    return;
-                }
-                boolean work = this.receiveredstone();
-                if (this.getActive() != work) {
-                    this.setActive(work);
-                }
-
+                return;
             }
+        }
+        if (this.updateTicker++ % this.getTickRate() == 0) {
+
+
+            this.output = 0.0F;
+            this.maxHeat = 10000;
+            this.hem = 1.0F;
+            this.processChambers();
+
+
+            if (this.calculateHeatEffects()) {
+                return;
+            }
+            boolean work = this.receiveredstone();
+            if (this.getActive() != work) {
+                this.setActive(work);
+            }
+
 
         }
 
@@ -319,7 +323,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                     List<EntityLivingBase> list1 = this.getWorld().getEntitiesWithinAABB(
                             EntityLivingBase.class,
                             new AxisAlignedBB(
-                                    this.getPos().getX() - 3,
+                                    this.getBlockPos().getX() - 3,
                                     this.pos.getY() - 3,
                                     this.pos.getZ() - 3,
                                     this.pos.getX() + 4,
@@ -526,10 +530,21 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     }
 
     public void setHeat(int heat1) {
+        if (tick != this.getWorld().getWorldTime()) {
+            add_heat = 0;
+            tick = this.getWorld().getWorldTime();
+        }
+        double heat2 = this.heat - heat1;
+        add_heat += heat2;
         this.heat = heat1;
     }
 
     public int addHeat(int amount) {
+        if (tick != this.getWorld().getWorldTime()) {
+            add_heat = 0;
+            tick = this.getWorld().getWorldTime();
+        }
+        add_heat += amount;
         this.heat += amount;
         return this.heat;
     }

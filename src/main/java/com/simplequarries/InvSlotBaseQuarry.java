@@ -14,7 +14,7 @@ public class InvSlotBaseQuarry extends InvSlot {
     public int stackSizeLimit;
 
     public InvSlotBaseQuarry(TileEntityBaseQuarry base1, int oldStartIndex1) {
-        super(base1, "input", Access.I, oldStartIndex1, InvSlot.InvSide.TOP);
+        super(base1, "input", Access.I, oldStartIndex1, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }

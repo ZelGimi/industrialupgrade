@@ -10,7 +10,7 @@ public class InvSlotTuner extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotTuner(TileEntityInventory base1, String name) {
-        super(base1, name, InvSlot.Access.IO, 1, InvSlot.InvSide.TOP);
+        super(base1, name, InvSlot.Access.IO, 1, InvSlot.InvSide.ANY);
         this.stackSizeLimit = 1;
     }
 

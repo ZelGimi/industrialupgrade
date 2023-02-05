@@ -3031,3 +3031,13 @@ iu.limiter.info8=И указать то число, которое вам выг
 iu.limiter.info9=Максимальное число передачи энергии: 
 
 water.ocean_info=Убирает зависимость от биома океан и река
+button.update_info=Обновить
+button.delete_info=Удалить
+industrialupgrade.basemachine3.welding=Сварочный аппарат
+industrialupgrade.basemachine3.heat_limiter=Контроллер температуры реактора
+iu.heat_limiter.main_info=Информация про контроллер температуры реактора
+iu.heat_limiter.info=Поставьте вплотную к реакторной камере или ядерному реактору
+iu.heat_limiter.info1=Нажмите "Обновить", чтобы получить данные к реактору
+iu.heat_limiter.info2=Укажите температуру до 10000(100%)
+iu.heat_limiter.info3=Нажмите "Записать", чтобы записать данные в реакторе
+iu.heat_limiter.info4=Нажмите "Удалить", чтобы удалить данные про реактор

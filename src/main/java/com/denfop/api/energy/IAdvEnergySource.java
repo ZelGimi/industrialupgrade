@@ -2,7 +2,7 @@ package com.denfop.api.energy;
 
 import ic2.api.energy.tile.IEnergySource;
 
-public interface IAdvEnergySource extends IEnergySource {
+public interface IAdvEnergySource extends IEnergySource, IAdvEnergyTile {
 
     double getPerEnergy();
 

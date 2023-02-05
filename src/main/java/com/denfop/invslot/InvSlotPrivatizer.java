@@ -17,7 +17,7 @@ public class InvSlotPrivatizer extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotPrivatizer(TileEntityInventory base1, String name, int type, int count) {
-        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.TOP);
+        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
         this.stackSizeLimit = 1;
         this.type = type;
         this.tile = (TileEntityPrivatizer) base1;

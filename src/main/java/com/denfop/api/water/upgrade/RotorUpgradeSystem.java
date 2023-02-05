@@ -132,9 +132,11 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
                 canupgrade = true;
             }
             if (!name.equals("")) {
-                for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values() )
-                    if(enumInfoRotorUpgradeModules.name.equals(name))
-                lst.add(enumInfoRotorUpgradeModules);
+                for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values()) {
+                    if (enumInfoRotorUpgradeModules.name.equals(name)) {
+                        lst.add(enumInfoRotorUpgradeModules);
+                    }
+                }
             }
         }
         int ost = empty;
@@ -195,9 +197,11 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
         for (int i = 0; i < 4; i++) {
             String name = nbt.getString("mode_module" + i);
             if (!name.equals("")) {
-                for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values() )
-                    if(enumInfoRotorUpgradeModules.name.equals(name))
+                for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values()) {
+                    if (enumInfoRotorUpgradeModules.name.equals(name)) {
                         list.add(new ItemStack(IUItem.water_rotors_upgrade, 1, enumInfoRotorUpgradeModules.ordinal()));
+                    }
+                }
             } else {
                 list.add(ItemStack.EMPTY);
             }
@@ -211,9 +215,11 @@ public class RotorUpgradeSystem implements IRotorUpgradeSystem {
         for (int i = 0; i < 4; i++) {
             String name = nbt.getString("mode_module" + i);
             if (!name.equals("")) {
-                for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values() )
-                    if(enumInfoRotorUpgradeModules.name.equals(name))
-                        map.put(i,new ItemStack(IUItem.water_rotors_upgrade, 1, enumInfoRotorUpgradeModules.ordinal()));
+                for (EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules : EnumInfoRotorUpgradeModules.values()) {
+                    if (enumInfoRotorUpgradeModules.name.equals(name)) {
+                        map.put(i, new ItemStack(IUItem.water_rotors_upgrade, 1, enumInfoRotorUpgradeModules.ordinal()));
+                    }
+                }
             } else {
                 map.put(i, ItemStack.EMPTY);
             }

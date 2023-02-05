@@ -183,6 +183,17 @@ public class TileEntityPainting extends TileEntityDoubleElectricMachine implemen
         addpainting(new ItemStack(IUItem.quantumdrill, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.spectraldrill, 1, OreDictionary.WILDCARD_VALUE));
 
+        addpainting(new ItemStack(IUItem.nanoaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.quantumaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.spectralaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nanopickaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.quantumpickaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.spectralpickaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nanoshovel, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.quantumshovel, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.spectralshovel, 1, OreDictionary.WILDCARD_VALUE));
+
+
         addpainting(new ItemStack(IUItem.spectral_helmet, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.spectral_leggings, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.spectral_chestplate, 1, OreDictionary.WILDCARD_VALUE));

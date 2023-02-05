@@ -16,7 +16,7 @@ public class InvSlotModules extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotModules(TileEntityAutoSpawner base1) {
-        super(base1, "modules", InvSlot.Access.I, 4, InvSlot.InvSide.TOP);
+        super(base1, "modules", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }

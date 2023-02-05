@@ -53,6 +53,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -97,7 +98,10 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         this.addedToEnergyNet = false;
 
     }
-
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
+    }
     public static TileEntityUniversalCable delegate(UniversalType cableType, int insulation) {
         return new TileEntityUniversalCable(cableType, insulation);
     }
@@ -583,6 +587,16 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     @Override
     public boolean emitsSETo(final ISEAcceptor var1, final EnumFacing var2) {
         return true;
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
     }
 
 

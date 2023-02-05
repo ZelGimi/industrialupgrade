@@ -99,7 +99,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
 
-        this.energy.limit_amount = Math.min(i, this.max_value);
+        this.energy.limit_amount = (int) Math.min(i, this.max_value);
         this.energy.setDirections(EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
 
     }

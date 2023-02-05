@@ -71,6 +71,7 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("gearing", 1, true, false);
         this.addRecipeManager("water_rotor_assembler", 5, true, true);
         this.addRecipeManager("water_rotor_upgrade", 2, false, true);
+        this.addRecipeManager("welding", 2, true, false);
 
 
     }

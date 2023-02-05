@@ -27,8 +27,6 @@ public class CoolNetLocal {
 
     private final World world;
     private final CoolPathMap CoolSourceToCoolPathMap;
-    private final Map<ICoolTile, BlockPos> chunkCoordinatesMap;
-    private final Map<ICoolTile, TileEntity> CoolTileTileEntityMap;
     private final Map<BlockPos, ICoolTile> chunkCoordinatesICoolTileMap;
     private final WaitingList waitingList;
 
@@ -38,8 +36,6 @@ public class CoolNetLocal {
         this.waitingList = new WaitingList();
         this.world = world;
         this.chunkCoordinatesICoolTileMap = new HashMap<>();
-        this.chunkCoordinatesMap = new HashMap<>();
-        this.CoolTileTileEntityMap = new HashMap<>();
     }
 
 
@@ -57,8 +53,6 @@ public class CoolNetLocal {
         if (this.chunkCoordinatesICoolTileMap.containsKey(coords)) {
             return;
         }
-        this.CoolTileTileEntityMap.put(tile, tileentity);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesICoolTileMap.put(coords, tile);
         this.update(coords);
         if (tile instanceof ICoolAcceptor) {
@@ -73,17 +67,16 @@ public class CoolNetLocal {
     }
 
     public BlockPos getPos(final ICoolTile tile) {
-        return this.chunkCoordinatesMap.get(tile);
+        if (tile == null) {
+            return null;
+        }
+        return tile.getBlockPos();
     }
 
     public void addTileEntity(final BlockPos coords, final ICoolTile tile) {
         if (this.chunkCoordinatesICoolTileMap.containsKey(coords)) {
             return;
         }
-
-        TileEntity te = getTileFromICool(tile);
-        this.CoolTileTileEntityMap.put(tile, te);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesICoolTileMap.put(coords, tile);
         this.update(coords);
         if (tile instanceof ICoolAcceptor) {
@@ -103,12 +96,10 @@ public class CoolNetLocal {
 
 
     public void removeTileEntity(ICoolTile tile) {
-        if (!this.CoolTileTileEntityMap.containsKey(tile)) {
+        if (!this.chunkCoordinatesICoolTileMap.containsKey(tile.getBlockPos())) {
             return;
         }
-        final BlockPos coord = this.chunkCoordinatesMap.get(tile);
-        this.chunkCoordinatesMap.remove(tile);
-        this.CoolTileTileEntityMap.remove(tile, this.CoolTileTileEntityMap.get(tile));
+        final BlockPos coord = tile.getBlockPos();
         this.chunkCoordinatesICoolTileMap.remove(coord, tile);
         this.update(coord);
         if (tile instanceof ICoolAcceptor) {
@@ -120,9 +111,6 @@ public class CoolNetLocal {
         }
     }
 
-    public TileEntity getTileFromMap(ICoolTile tile) {
-        return this.CoolTileTileEntityMap.get(tile);
-    }
 
     public double emitCoolFrom(final ICoolSource CoolSource, double amount, final SystemTick<ICoolSource, CoolPath> tick) {
         List<CoolPath> CoolPaths = tick.getList();
@@ -139,11 +127,10 @@ public class CoolNetLocal {
                 if (demandedCool <= 0.0) {
                     continue;
                 }
-                double CoolProvided = amount;
                 double adding;
 
 
-                adding = Math.min(CoolProvided, demandedCool);
+                adding = Math.min(amount, demandedCool);
                 if (adding <= 0.0D) {
                     continue;
                 }
@@ -193,11 +180,10 @@ public class CoolNetLocal {
             if (CoolSink.needCooling()) {
                 CoolSource.setAllowed(true);
             }
-            double CoolProvided = amount;
             double adding;
 
 
-            adding = Math.min(CoolProvided, demandedCool);
+            adding = Math.min(amount, demandedCool);
             if (adding <= 0.0D) {
                 continue;
             }
@@ -265,11 +251,12 @@ public class CoolNetLocal {
         for (CoolPath CoolPath : CoolPaths) {
             ICoolTile tileEntity = CoolPath.target;
             EnumFacing CoolBlockLink = CoolPath.targetDirection;
+            BlockPos te = tileEntity.getBlockPos();
             if (emitter != null) {
                 while (tileEntity != emitter) {
-                    BlockPos te = this.chunkCoordinatesMap.get(tileEntity);
                     if (CoolBlockLink != null && te != null) {
                         tileEntity = this.getTileEntity(te.offset(CoolBlockLink));
+                        te = te.offset(CoolBlockLink);
                     }
                     if (!(tileEntity instanceof ICoolConductor)) {
                         break;
@@ -292,11 +279,9 @@ public class CoolNetLocal {
 
                             .getY() + "," + te
 
-                            .getZ() + ")\n" + "R: " + CoolPath.target + " (" + this.CoolTileTileEntityMap
-                            .get(CoolPath.target)
-                            .getPos()
-                            .getX() + "," + getTileFromMap(CoolPath.target).getPos().getY() + "," + getTileFromICool(
-                            CoolPath.target).getPos().getZ() + ")");
+                            .getZ() + ")\n" + "R: " + CoolPath.target + " (" + CoolPath.target
+                            .getBlockPos()
+                            .getX() + "," + CoolPath.target.getBlockPos().getY() + "," + CoolPath.target.getBlockPos().getZ() + ")");
                 }
             }
         }
@@ -307,11 +292,7 @@ public class CoolNetLocal {
         if (tile == null) {
             return null;
         }
-        final TileEntity tile1 = this.CoolTileTileEntityMap.get(tile);
-        if (tile1 == null) {
-            return null;
-        }
-        return this.getTileEntity(tile1.getPos().offset(dir));
+        return this.getTileEntity(tile.getBlockPos().offset(dir));
     }
 
     private List<CoolTarget> getValidReceivers(final ICoolTile emitter, final boolean reverse) {
@@ -357,7 +338,7 @@ public class CoolNetLocal {
         workList.add(par1);
         while (workList.size() > 0) {
             final ICoolTile tile = workList.remove(0);
-            final TileEntity te = this.CoolTileTileEntityMap.get(tile);
+            final TileEntity te = tile.getTile();
             if (te == null) {
                 continue;
             }
@@ -453,8 +434,6 @@ public class CoolNetLocal {
         this.CoolSourceToCoolPathMap.clear();
         this.waitingList.clear();
         this.chunkCoordinatesICoolTileMap.clear();
-        this.chunkCoordinatesMap.clear();
-        this.CoolTileTileEntityMap.clear();
     }
 
     static class CoolTarget {

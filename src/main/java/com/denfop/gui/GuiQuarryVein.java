@@ -39,9 +39,9 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         this.container = container1;
         for (int x1 = 74; x1 <= 112; x1++) {
             for (int y1 = 14; y1 <= 79; y1++) {
-                int y2 = getCoord(y1, this.container.base.getPos().getY());
-                int x2 = getCoordX(x1, this.container.base.getPos().getX(), 88);
-                final BlockPos pos = new BlockPos(x2, y2, this.container.base.getPos().getZ());
+                int y2 = getCoord(y1, this.container.base.getBlockPos().getY());
+                int x2 = getCoordX(x1, this.container.base.getBlockPos().getX(), 88);
+                final BlockPos pos = new BlockPos(x2, y2, this.container.base.getBlockPos().getZ());
                 IBlockState state = this.container.base.getWorld().getBlockState(pos);
                 colors[x1 - 74][y1 - 14] = this.getColor(state, this.container.base.getWorld(), pos);
             }
@@ -70,7 +70,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     List<String> getList() {
         List<String> lst = new ArrayList<>();
-        final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getPos());
+        final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getBlockPos());
         lst.add(Localization.translate("iu.biome") + biome.getBiomeName());
         lst.add(Localization.translate("iu.gettingvein") + getChance(biome) + "%");
         lst.add(Localization.translate("iu.gettingvein1") + 15 + "%");
@@ -80,7 +80,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 73 && mouseX <= 113 && mouseY >= 13 && mouseY < 80) {
-            int y = getCoord(mouseY, this.container.base.getPos().getY());
+            int y = getCoord(mouseY, this.container.base.getBlockPos().getY());
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.quarryveininformation"));
             List<String> compatibleUpgrades = getList();

@@ -14,7 +14,7 @@ public class InvSlotUpgradeModule extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotUpgradeModule(TileEntityAutoSpawner base1) {
-        super(base1, "ItemUpgradeModule", InvSlot.Access.I, 4, InvSlot.InvSide.TOP);
+        super(base1, "ItemUpgradeModule", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }

@@ -68,7 +68,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         };
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.containerslot = new InvSlotConsumableLiquidByList(this, "containerslot", InvSlot.Access.I, 1,
-                InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill, FluidName.uu_matter.getInstance()
+                InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill, FluidName.uu_matter.getInstance()
         );
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.inputSlot = new InvSlotMatter(this);
@@ -113,7 +113,9 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (this.fluidTank.getCapacity() <= 0) {
+            this.fluidTank.drain(Integer.MAX_VALUE, true);
+        }
         if (this.redstone.hasRedstoneInput() || this.energy.getEnergy() <= 0.0D) {
             if (this.getActive()) {
                 setState(0);

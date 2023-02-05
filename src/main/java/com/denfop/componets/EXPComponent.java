@@ -19,8 +19,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -213,17 +215,11 @@ public class EXPComponent extends TileEntityComponent {
         return this.storage;
     }
 
-    public double getFreeEnergy() {
-        return Math.max(0.0D, this.capacity - this.storage);
-    }
 
     public double getFillRatio() {
         return this.storage / this.capacity;
     }
 
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
-    }
 
     public double addEnergy(double amount) {
         amount = Math.min(this.capacity - this.storage, amount);
@@ -231,9 +227,6 @@ public class EXPComponent extends TileEntityComponent {
         return amount;
     }
 
-    public void forceAddEnergy(double amount) {
-        this.storage += amount;
-    }
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -284,20 +277,6 @@ public class EXPComponent extends TileEntityComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public boolean isMultiSource() {
-        return this.multiSource;
-    }
-
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
-    public void setPacketOutput(int number) {
-        if (this.multiSource) {
-            this.sourcePackets = number;
-        }
-
-    }
 
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
@@ -366,12 +345,6 @@ public class EXPComponent extends TileEntityComponent {
         }
     }
 
-    private int getPacketCount() {
-        return this.fullEnergy ? Math.min(
-                this.sourcePackets,
-                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
-        ) : this.sourcePackets;
-    }
 
     private abstract static class EnergyNetDelegate extends TileEntity implements IEXPTile {
 
@@ -388,6 +361,11 @@ public class EXPComponent extends TileEntityComponent {
 
         public boolean acceptsEXPFrom(IEXPEmitter emitter, EnumFacing dir) {
             return EXPComponent.this.sinkDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return EXPComponent.this.parent.getPos();
         }
 
         public boolean emitsEXPTo(IEXPAcceptor receiver, EnumFacing dir) {
@@ -430,14 +408,11 @@ public class EXPComponent extends TileEntityComponent {
             EXPComponent.this.storage = EXPComponent.this.storage - amount;
         }
 
-        public boolean sendMultipleEnergyPackets() {
-            return EXPComponent.this.multiSource;
-        }
 
-        public int getMultipleEnergyPacketAmount() {
-            return EXPComponent.this.getPacketCount();
+        @Override
+        public TileEntity getTile() {
+            return EXPComponent.this.parent;
         }
-
 
     }
 
@@ -453,6 +428,16 @@ public class EXPComponent extends TileEntityComponent {
 
         public boolean acceptsEXPFrom(IEXPEmitter emitter, EnumFacing dir) {
             return EXPComponent.this.sinkDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return EXPComponent.this.parent.getPos();
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return EXPComponent.this.parent;
         }
 
         public double getDemandedEXP() {
@@ -482,6 +467,16 @@ public class EXPComponent extends TileEntityComponent {
 
         public boolean emitsEXPTo(IEXPAcceptor receiver, EnumFacing dir) {
             return EXPComponent.this.sourceDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return EXPComponent.this.parent.getPos();
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return EXPComponent.this.parent;
         }
 
         public double getOfferedEXP() {

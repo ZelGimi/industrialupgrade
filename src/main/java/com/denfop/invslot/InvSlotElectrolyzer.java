@@ -12,7 +12,7 @@ public class InvSlotElectrolyzer extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotElectrolyzer(TileEntityInventory base1, String name, int type) {
-        super(base1, name, InvSlot.Access.I, 1, InvSlot.InvSide.TOP);
+        super(base1, name, InvSlot.Access.I, 1, InvSlot.InvSide.ANY);
         this.type = type;
         this.stackSizeLimit = 1;
     }

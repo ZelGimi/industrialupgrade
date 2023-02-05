@@ -13,6 +13,7 @@ import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,6 +31,7 @@ public class TileEntityBaseRedstoneGenerator extends TileEntityElectricMachine i
 
     public int fuel = 0;
     public int max_fuel = 400;
+    public int redstone_coef = 1;
 
     public TileEntityBaseRedstoneGenerator(double coef, int tier) {
         super(0, tier, 0);
@@ -69,6 +71,20 @@ public class TileEntityBaseRedstoneGenerator extends TileEntityElectricMachine i
     }
 
     @Override
+    protected void onLoaded() {
+        super.onLoaded();
+        final ItemStack content = this.slot.get();
+        if (content.isEmpty()) {
+            this.redstone_coef = 0;
+        }
+        if (content.getItem() == Items.REDSTONE) {
+            this.redstone_coef = 1;
+        } else {
+            this.redstone_coef = 9;
+        }
+    }
+
+    @Override
     protected void updateEntityServer() {
         super.updateEntityServer();
         if (!this.slot.isEmpty()) {
@@ -86,7 +102,7 @@ public class TileEntityBaseRedstoneGenerator extends TileEntityElectricMachine i
             }
         }
         if (this.getActive()) {
-            this.energy.addEnergy(25 * this.coef);
+            this.energy.addEnergy(25 * this.coef * redstone_coef);
         }
         fuel = Math.max(0, this.fuel - 1);
     }

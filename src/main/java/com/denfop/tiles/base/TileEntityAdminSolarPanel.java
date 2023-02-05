@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 
 import com.denfop.IUItem;
+import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityAdminSolarPanel extends TileEntitySolarPanel {
 
     public TileEntityAdminSolarPanel() {
-        super(11, 999999999, 999999999, 999999999, null);
+        super(14, EnumSolarPanels.QUARK_SOLAR_PANEL.genday * 4, EnumSolarPanels.QUARK_SOLAR_PANEL.producing * 4,
+                EnumSolarPanels.QUARK_SOLAR_PANEL.maxstorage * 16, null
+        );
     }
 
     protected boolean doesSideBlockRendering(EnumFacing side) {

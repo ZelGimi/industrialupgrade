@@ -2,7 +2,6 @@ package com.denfop.tiles.reactors;
 
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.reactor.IReactorChamber;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.Fluids;
 import ic2.core.util.StackUtil;
@@ -25,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class TileEntityImpReactorChamberElectric extends TileEntityBlock implements IInventory, IReactorChamber, IEnergyEmitter {
+public class TileEntityImpReactorChamberElectric extends TileEntityBlock implements IInventory, IChamber, IEnergyEmitter {
 
     protected final Fluids fluids = this.addComponent(new Fluids(this));
     private TileEntityImpNuclearReactor reactor;
@@ -64,8 +63,8 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
             World world = this.getWorld();
             return reactor.getBlockType().onBlockActivated(
                     world,
-                    reactor.getPos(),
-                    world.getBlockState(reactor.getPos()),
+                    reactor.getBlockPos(),
+                    world.getBlockState(reactor.getBlockPos()),
                     player,
                     hand,
                     side,
@@ -80,12 +79,12 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
 
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-            this.updateReactor();
-            if (this.reactor == null) {
-                this.destoryChamber(true);
-            } else {
-                this.reactor.change = true;
-            }
+        this.updateReactor();
+        if (this.reactor == null) {
+            this.destoryChamber(true);
+        } else {
+            this.reactor.change = true;
+        }
     }
 
     @Override
@@ -209,9 +208,14 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
     @Override
     protected void onBlockBreak() {
         super.onBlockBreak();
-        if(this.reactor != null) {
+        if (this.reactor != null) {
             this.reactor.change = true;
             this.reactor.getReactorSize();
+            BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
+            TileEntity tile = this.getWorld().getTileEntity(pos1);
+            if (tile instanceof TileEntityHeatSensor) {
+                this.reactor.isLimit = false;
+            }
         }
     }
 
@@ -252,7 +256,7 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
         return super.hasCapability(capability, facing) || this.reactor != null && this.reactor.hasCapability(capability, facing);
     }
 
-    private TileEntityImpNuclearReactor getReactor() {
+    public TileEntityImpNuclearReactor getReactor() {
         long time = this.getWorld().getTotalWorldTime();
         if (time != this.lastReactorUpdate) {
             this.updateReactor();

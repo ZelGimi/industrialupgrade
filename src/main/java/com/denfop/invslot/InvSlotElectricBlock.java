@@ -29,7 +29,7 @@ public class InvSlotElectricBlock extends InvSlot {
     private final int type;
 
     public InvSlotElectricBlock(TileEntityInventory base, int oldStartIndex1, String name, int count) {
-        super(base, name, InvSlot.Access.IO, count, InvSlot.InvSide.TOP);
+        super(base, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
         this.type = oldStartIndex1;
         this.setStackSizeLimit(1);
     }

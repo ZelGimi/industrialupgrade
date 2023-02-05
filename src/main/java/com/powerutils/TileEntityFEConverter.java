@@ -201,7 +201,7 @@ public class TileEntityFEConverter extends TileEntityInventory implements IHasGu
         EnumFacing[] var2 = EnumFacing.values();
 
         for (EnumFacing e : var2) {
-            BlockPos neighbor = this.getPos().offset(e);
+            BlockPos neighbor = this.getBlockPos().offset(e);
             if (this.world.isBlockLoaded(neighbor)) {
                 TileEntity te = this.world.getTileEntity(neighbor);
                 if (te != null) {

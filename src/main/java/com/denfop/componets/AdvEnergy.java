@@ -21,7 +21,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class AdvEnergy extends TileEntityComponent {
     public boolean sendingSidabled;
     public double tick1;
     public boolean limit;
-    public double limit_amount = 0;
+    public int limit_amount = 0;
     protected double pastEnergy;
     protected double perenergy;
     protected double pastEnergy1;
@@ -162,13 +164,13 @@ public class AdvEnergy extends TileEntityComponent {
 
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
-        this.limit_amount = nbt.getDouble("limit_amount");
+        this.limit_amount = nbt.getInteger("limit_amount");
     }
 
     public NBTTagCompound writeToNbt() {
         NBTTagCompound ret = new NBTTagCompound();
         ret.setDouble("storage", this.storage);
-        ret.setDouble("limit_amount", this.limit_amount);
+        ret.setInteger("limit_amount", this.limit_amount);
 
         return ret;
     }
@@ -190,9 +192,6 @@ public class AdvEnergy extends TileEntityComponent {
 
     }
 
-    public void setLimit_amount(final double limit_amount) {
-        this.limit_amount = limit_amount;
-    }
 
     public void setLimit(final boolean limit) {
         this.limit = limit;
@@ -222,6 +221,7 @@ public class AdvEnergy extends TileEntityComponent {
                 }
             }
 
+            assert this.delegate != null;
             this.delegate.setWorld(this.parent.getWorld());
             this.delegate.setPos(this.parent.getPos());
         }
@@ -251,7 +251,7 @@ public class AdvEnergy extends TileEntityComponent {
     public void onNetworkUpdate(DataInput is) throws IOException {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
-        limit_amount = is.readDouble();
+        limit_amount = is.readInt();
     }
 
     public boolean enableWorldTick() {
@@ -286,10 +286,6 @@ public class AdvEnergy extends TileEntityComponent {
 
     public double getFillRatio() {
         return this.storage / this.capacity;
-    }
-
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
     }
 
     public double addEnergy(double amount) {
@@ -352,10 +348,6 @@ public class AdvEnergy extends TileEntityComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public boolean isMultiSource() {
-        return this.multiSource;
-    }
-
     public AdvEnergy setMultiSource(boolean multiSource) {
         this.multiSource = multiSource;
         if (!multiSource) {
@@ -365,9 +357,6 @@ public class AdvEnergy extends TileEntityComponent {
         return this;
     }
 
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
 
     public void setPacketOutput(int number) {
         if (this.multiSource) {
@@ -425,13 +414,6 @@ public class AdvEnergy extends TileEntityComponent {
         }
     }
 
-    private int getPacketCount() {
-        return this.fullEnergy ? Math.min(
-                this.sourcePackets,
-                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
-        ) : this.sourcePackets;
-    }
-
 
     private abstract static class EnergyNetDelegate extends TileEntity implements IEnergyTile {
 
@@ -453,6 +435,16 @@ public class AdvEnergy extends TileEntityComponent {
 
         public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing dir) {
             return AdvEnergy.this.sourceDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return AdvEnergy.this.parent.getPos();
+        }
+
+        @Override
+        public TileEntity getTileEntity() {
+            return AdvEnergy.this.parent;
         }
 
         public double getDemandedEnergy() {
@@ -623,6 +615,16 @@ public class AdvEnergy extends TileEntityComponent {
             return true;
         }
 
+        @Override
+        public TileEntity getTileEntity() {
+            return AdvEnergy.this.parent;
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return AdvEnergy.this.parent.getPos();
+        }
+
     }
 
     private class EnergyNetDelegateSource extends AdvEnergy.EnergyNetDelegate implements IAdvEnergySource {
@@ -633,6 +635,10 @@ public class AdvEnergy extends TileEntityComponent {
 
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return AdvEnergy.this.parent.getPos();
+        }
 
         public int getSourceTier() {
             return AdvEnergy.this.sourceTier;
@@ -679,6 +685,11 @@ public class AdvEnergy extends TileEntityComponent {
             return true;
         }
 
+        @Override
+        public TileEntity getTileEntity() {
+            return this;
+        }
+
     }
 
     private class EnergyMetaNetDelegateSource extends EnergyNetDelegateSource implements IMetaDelegate {
@@ -704,6 +715,11 @@ public class AdvEnergy extends TileEntityComponent {
         public EnergyMetaNetDelegateSink() {
             list = new ArrayList<>();
             list.add(this);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return AdvEnergy.this.parent.getPos();
         }
 
         @Override

@@ -59,7 +59,7 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
         this.containerslot = new InvSlotConsumableLiquidByListRemake[name1.length];
         for (int i = 0; i < name1.length; i++) {
             this.containerslot[i] = new InvSlotConsumableLiquidByListRemake(this, "container" + i, InvSlot.Access.I, 1,
-                    InvSlot.InvSide.TOP,
+                    InvSlot.InvSide.ANY,
                     InvSlotConsumableLiquid.OpType.Fill, name1[i]
             );
         }

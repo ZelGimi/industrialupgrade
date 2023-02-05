@@ -113,7 +113,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
     public TileEntityBaseQuarry(String name, double coef, int index) {
         this.name = name;
-        this.energyconsume = 200 * coef;
+        this.energyconsume = 250 * coef;
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 5E7D, 14));
         this.energy1 = this.addComponent(QEComponent.asBasicSink(this, 200000, 14));
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
@@ -123,7 +123,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         this.index = index;
         this.speed = Math.pow(2, index - 1);
         this.input = new InvSlotBaseQuarry(this, index);
-        this.constenergyconsume = 200 * coef;
+        this.constenergyconsume = 250 * coef;
         this.min_y = 0;
         this.max_y = 256;
         this.chance = 0;

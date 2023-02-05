@@ -32,7 +32,7 @@ public class ItemAlloysNugget extends ItemMulti<ItemAlloysNugget.Types> implemen
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloysnugget" + super.getUnlocalizedName().substring(15);
     }
 
     @SideOnly(Side.CLIENT)

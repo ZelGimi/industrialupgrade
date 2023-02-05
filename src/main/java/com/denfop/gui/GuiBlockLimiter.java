@@ -51,6 +51,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         if (x >= 12 && x <= 46 && y >= 36 && y <= 48) {
             try {
                 IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, Integer.parseInt(textBox.getText()));
+                this.textBox.setText(String.valueOf(this.container.base.getEnergy().limit_amount));
             } catch (Exception ignored) {
             }
         }
@@ -68,6 +69,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
+
         this.mc.getTextureManager()
                 .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
