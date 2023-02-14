@@ -42,5 +42,5 @@ jobs :
 
       - uses : actions/upload-artifact@v2
         with :
-          path : build/libs/SuperSolarPanels*
+          path : build/libs/IndustrialUpgrade*
           if-no-files-found : error
