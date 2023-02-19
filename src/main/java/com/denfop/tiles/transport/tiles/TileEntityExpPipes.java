@@ -1,13 +1,14 @@
 package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUItem;
-import com.denfop.api.exp.EXPNet;
-import com.denfop.api.exp.IEXPAcceptor;
-import com.denfop.api.exp.IEXPConductor;
-import com.denfop.api.exp.IEXPEmitter;
-import com.denfop.api.exp.IEXPTile;
-import com.denfop.api.exp.event.EXPTileLoadEvent;
-import com.denfop.api.exp.event.EXPTileUnloadEvent;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.sytem.ITile;
 import com.denfop.tiles.transport.CableFoam;
 import com.denfop.tiles.transport.types.ExpType;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -48,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TileEntityExpPipes extends TileEntityBlock implements IEXPConductor, INetworkTileEntityEventListener {
+public class TileEntityExpPipes extends TileEntityBlock implements IConductor, INetworkTileEntityEventListener {
 
     public static final IUnlistedProperty<TileEntityExpPipes.CableRenderState> renderStateProperty = new UnlistedProperty<>(
             "renderstate",
@@ -110,7 +111,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IEXPConductor
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new EXPTileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent( this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE,this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
             if (this.foam == CableFoam.Soft) {
@@ -122,7 +123,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IEXPConductor
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EXPTileUnloadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent( this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE,this));
             this.addedToEnergyNet = false;
         }
 
@@ -262,12 +263,12 @@ public class TileEntityExpPipes extends TileEntityBlock implements IEXPConductor
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            IEXPTile tile = EXPNet.instance.getSubTile(world, this.pos.offset(dir));
+            ITile tile = EnergyBase.EXP.getSubTile(world, this.pos.offset(dir));
 
-            if ((tile instanceof IEXPAcceptor && ((IEXPAcceptor) tile).acceptsEXPFrom(
+            if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof IEXPEmitter && ((IEXPEmitter) tile).emitsEXPTo(
+            ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                     this,
                     dir.getOpposite()
             )) && this.canInteractWith()) {
@@ -341,11 +342,11 @@ public class TileEntityExpPipes extends TileEntityBlock implements IEXPConductor
         return false;
     }
 
-    public boolean acceptsEXPFrom(IEXPEmitter emitter, EnumFacing direction) {
+    public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
         return this.canInteractWith();
     }
 
-    public boolean emitsEXPTo(IEXPAcceptor receiver, EnumFacing direction) {
+    public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
         return this.canInteractWith();
     }
 
@@ -354,25 +355,27 @@ public class TileEntityExpPipes extends TileEntityBlock implements IEXPConductor
         return true;
     }
 
-    public double getConductionLoss() {
+    public double getConductionLoss(EnergyType type) {
         return this.cableType.loss;
     }
 
-    public double getInsulationEnergyAbsorption() {
+    public double getInsulationEnergyAbsorption(EnergyType type) {
 
         return 2.147483647E9D;
 
     }
 
-    public double getInsulationBreakdownEnergy() {
+    public double getInsulationBreakdownEnergy(EnergyType type) {
         return 9001.0D;
     }
 
-    public double getConductorBreakdownExperienceEnergy() {
+    public double getConductorBreakdownEnergy(EnergyType type) {
         return this.cableType.capacity + 1;
     }
 
-    public void removeInsulation() {
+
+
+    public void removeInsulation(EnergyType type) {
         this.tryRemoveInsulation(false);
     }
 

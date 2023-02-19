@@ -2,7 +2,11 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.api.Recipes;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.modules.ItemUpgradeModule;
@@ -18,13 +22,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import static com.denfop.events.IUEventHandler.getUpgradeItem;
 
 @SideOnly(Side.CLIENT)
-public class GuiUpgradeBlock extends GuiIC2<ContainerDoubleElectricMachine> {
+public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
 
     public final ContainerDoubleElectricMachine container;
 
     public GuiUpgradeBlock(ContainerDoubleElectricMachine container1) {
         super(container1);
         this.container = container1;
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+                new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
     }
 
     @Override

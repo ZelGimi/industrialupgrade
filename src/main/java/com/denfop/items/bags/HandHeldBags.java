@@ -104,6 +104,10 @@ public class HandHeldBags extends HandHeldInventory {
         return this.inventory[index];
     }
 
+    public ItemStack[] getAll() {
+        return this.inventory;
+    }
+
     public void put(ItemStack content) {
         this.put(0, content);
     }

@@ -260,7 +260,7 @@ public class TileEntityBaseWorldCollector extends TileEntityElectricMachine impl
                 setActive(false);
             }
         }
-        if ((!this.inputSlot.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

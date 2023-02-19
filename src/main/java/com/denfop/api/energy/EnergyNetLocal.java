@@ -217,6 +217,7 @@ public class EnergyNetLocal {
     }
 
     public void removeTile(IEnergyTile tile1) {
+
         if (tile1 instanceof IMetaDelegate) {
             final List<IEnergyTile> tiles = ((IMetaDelegate) tile1).getSubTiles();
             for (final IEnergyTile tile : tiles) {
@@ -236,6 +237,7 @@ public class EnergyNetLocal {
 
 
     public void removeTileEntity(BlockPos coord, IEnergyTile tile, IEnergyTile tile1) {
+
         if (!this.chunkCoordinatesIEnergyTileMap.containsKey(coord)) {
             return;
         }
@@ -256,7 +258,9 @@ public class EnergyNetLocal {
     }
 
     public void removeTileEntity(IEnergyTile tile) {
+
         if (tile instanceof IAdvEnergyTile) {
+
             if (!this.chunkCoordinatesIEnergyTileMap.containsKey(((IAdvEnergyTile) tile).getBlockPos())) {
                 return;
             }
@@ -320,13 +324,14 @@ public class EnergyNetLocal {
         tick.tick();
 
         if (amount > 0) {
-            for (final EnergyPath energyPath : energyPaths) {
+             for (final EnergyPath energyPath : energyPaths) {
                 if (amount <= 0) {
                     break;
                 }
                 final IEnergySink energySink = energyPath.target;
                 double demandedEnergy = energySink.getDemandedEnergy();
-                if (demandedEnergy <= 0.0) {
+
+                 if (demandedEnergy <= 0.0) {
                     continue;
                 }
                 double energyProvided = amount;

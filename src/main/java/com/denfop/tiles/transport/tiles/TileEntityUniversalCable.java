@@ -8,31 +8,19 @@ import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.api.energy.IAdvConductor;
-import com.denfop.api.exp.EXPNet;
-import com.denfop.api.exp.IEXPAcceptor;
-import com.denfop.api.exp.IEXPConductor;
-import com.denfop.api.exp.IEXPEmitter;
-import com.denfop.api.exp.event.EXPTileLoadEvent;
-import com.denfop.api.exp.event.EXPTileUnloadEvent;
 import com.denfop.api.heat.HeatNet;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatConductor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
-import com.denfop.api.qe.IQEAcceptor;
-import com.denfop.api.qe.IQEConductor;
-import com.denfop.api.qe.IQEEmitter;
-import com.denfop.api.qe.QENet;
-import com.denfop.api.qe.event.QETileLoadEvent;
-import com.denfop.api.qe.event.QETileUnloadEvent;
-import com.denfop.api.se.ISEAcceptor;
-import com.denfop.api.se.ISEConductor;
-import com.denfop.api.se.ISEEmitter;
-import com.denfop.api.se.SENet;
-import com.denfop.api.se.event.SETileLoadEvent;
-import com.denfop.api.se.event.SETileUnloadEvent;
-import com.denfop.componets.QEComponent;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
 import com.denfop.tiles.transport.types.UniversalType;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.event.EnergyTileLoadEvent;
@@ -73,7 +61,7 @@ import java.util.List;
 
 
 public class TileEntityUniversalCable extends TileEntityBlock implements IAdvConductor, IHeatConductor, ICoolConductor,
-        IQEConductor, ISEConductor, IEXPConductor,
+         IConductor,
         INetworkTileEntityEventListener {
 
     public static final IUnlistedProperty<TileEntityUniversalCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
@@ -98,10 +86,12 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         this.addedToEnergyNet = false;
 
     }
+
     @Override
     public BlockPos getBlockPos() {
         return this.pos;
     }
+
     public static TileEntityUniversalCable delegate(UniversalType cableType, int insulation) {
         return new TileEntityUniversalCable(cableType, insulation);
     }
@@ -127,9 +117,9 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
             MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
-            MinecraftForge.EVENT_BUS.post(new QETileLoadEvent(this, this.getWorld()));
-            MinecraftForge.EVENT_BUS.post(new EXPTileLoadEvent(this, this.getWorld()));
-            MinecraftForge.EVENT_BUS.post(new SETileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
 
             this.addedToEnergyNet = true;
             this.updateConnectivity();
@@ -143,9 +133,9 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
-            MinecraftForge.EVENT_BUS.post(new QETileUnloadEvent(this, this.getWorld()));
-            MinecraftForge.EVENT_BUS.post(new EXPTileUnloadEvent(this, this.getWorld()));
-            MinecraftForge.EVENT_BUS.post(new SETileUnloadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
 
             this.addedToEnergyNet = false;
         }
@@ -292,16 +282,15 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                     newConnectivity = (byte) (newConnectivity | mask);
                 }
             } else {
-                tile = SENet.instance.getSubTile(world, this.pos.offset(dir));
+                tile = EnergyBase.SE.getSubTile(world, this.pos.offset(dir));
                 if (tile != null) {
-                    if ((tile instanceof ISEAcceptor && ((ISEAcceptor) tile).acceptsSEFrom(
+                    if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                             this,
                             dir.getOpposite()
-                    ) || tile instanceof ISEEmitter && ((ISEEmitter) tile).emitsSETo(
+                    ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                             this,
                             dir.getOpposite()
-                    ) || tile instanceof TileEntityBlock && ((TileEntityBlock) tile).hasComponent(QEComponent.class)) && this.canInteractWith(
-                    )) {
+                    ))) {
                         newConnectivity = (byte) (newConnectivity | mask);
                     }
                 } else {
@@ -329,25 +318,25 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                                 newConnectivity = (byte) (newConnectivity | mask);
                             }
                         } else {
-                            tile = QENet.instance.getSubTile(world, this.pos.offset(dir));
+                            tile = EnergyBase.QE.getSubTile(world, this.pos.offset(dir));
                             if (tile != null) {
-                                if ((tile instanceof IQEAcceptor && ((IQEAcceptor) tile).acceptsQEFrom(
+                                if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                                         this,
                                         dir.getOpposite()
-                                ) || tile instanceof IQEEmitter && ((IQEEmitter) tile).emitsQETo(
+                                ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                                         this,
                                         dir.getOpposite()
-                                ) || tile instanceof TileEntityBlock && ((TileEntityBlock) tile).hasComponent(QEComponent.class)) && this.canInteractWith(
-                                )) {
+                                )) && this.canInteractWith()) {
                                     newConnectivity = (byte) (newConnectivity | mask);
                                 }
+
                             } else {
-                                tile = EXPNet.instance.getSubTile(world, this.pos.offset(dir));
+                                tile = EnergyBase.EXP.getSubTile(world, this.pos.offset(dir));
                                 if (tile != null) {
-                                    if ((tile instanceof IEXPAcceptor && ((IEXPAcceptor) tile).acceptsEXPFrom(
+                                    if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                                             this,
                                             dir.getOpposite()
-                                    ) || tile instanceof IEXPEmitter && ((IEXPEmitter) tile).emitsEXPTo(
+                                    ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                                             this,
                                             dir.getOpposite()
                                     )) && this.canInteractWith()) {
@@ -442,24 +431,39 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     }
 
     @Override
-    public double getConductorBreakdownSolariumEnergy() {
+    public double getConductionLoss(final EnergyType energyType) {
+        return this.cableType.loss;
+    }
+
+    @Override
+    public double getInsulationEnergyAbsorption(final EnergyType energyType) {
+        return 2.147483647E9D;
+    }
+
+    @Override
+    public double getInsulationBreakdownEnergy(final EnergyType energyType) {
+            return 9001.0D;
+    }
+
+    @Override
+    public double getConductorBreakdownEnergy(
+            EnergyType energyType
+    ) {
         return Integer.MAX_VALUE;
     }
 
     @Override
-    public double getConductorBreakdownQuantumEnergy() {
-        return Integer.MAX_VALUE;
+    public void removeInsulation(final EnergyType energyType) {
+
     }
+
 
     @Override
     public double getConductorBreakdownHeat() {
         return 16001;
     }
 
-    @Override
-    public double getConductorBreakdownExperienceEnergy() {
-        return Integer.MAX_VALUE;
-    }
+
 
     public double getConductorBreakdownCold() {
         return 65;
@@ -550,16 +554,6 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     }
 
     @Override
-    public boolean acceptsEXPFrom(final IEXPEmitter var1, final EnumFacing var2) {
-        return true;
-    }
-
-    @Override
-    public boolean emitsEXPTo(final IEXPAcceptor var1, final EnumFacing var2) {
-        return true;
-    }
-
-    @Override
     public boolean acceptsHeatFrom(final IHeatEmitter var1, final EnumFacing var2) {
         return true;
     }
@@ -570,22 +564,12 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     }
 
     @Override
-    public boolean acceptsQEFrom(final IQEEmitter var1, final EnumFacing var2) {
+    public boolean acceptsFrom(final IEmitter var1, final EnumFacing var2) {
         return true;
     }
 
     @Override
-    public boolean emitsQETo(final IQEAcceptor var1, final EnumFacing var2) {
-        return true;
-    }
-
-    @Override
-    public boolean acceptsSEFrom(final ISEEmitter var1, final EnumFacing var2) {
-        return true;
-    }
-
-    @Override
-    public boolean emitsSETo(final ISEAcceptor var1, final EnumFacing var2) {
+    public boolean emitsTo(final IAcceptor var1, final EnumFacing var2) {
         return true;
     }
 

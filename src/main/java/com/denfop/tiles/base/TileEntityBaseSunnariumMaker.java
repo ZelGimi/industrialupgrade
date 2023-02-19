@@ -3,7 +3,8 @@ package com.denfop.tiles.base;
 
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.componets.SEComponent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerSunnariumMaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -33,7 +34,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
-    public SEComponent sunenergy;
+    public ComponentBaseEnergy sunenergy;
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
     protected short progress;
@@ -52,8 +53,8 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
         this.defaultEnergyStorage = energyPerTick * length;
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.output = null;
-        this.sunenergy = this.addComponent(SEComponent
-                .asBasicSink(this, 10000, 1));
+        this.sunenergy = this.addComponent(ComponentBaseEnergy
+                .asBasicSink(EnergyType.SOLARIUM,this, 10000, 1));
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -172,7 +173,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
                 setActive(false);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

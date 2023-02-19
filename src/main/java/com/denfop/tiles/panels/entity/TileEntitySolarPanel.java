@@ -4,9 +4,11 @@ package com.denfop.tiles.panels.entity;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.IAdvEnergySource;
 import com.denfop.api.energy.SunCoef;
+import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.gui.GuiSolarPanels;
 import com.denfop.invslot.InvSlotPanel;
@@ -21,9 +23,11 @@ import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
+import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.network.INetworkUpdateListener;
 import ic2.api.tile.IWrenchable;
 import ic2.core.ContainerBase;
+import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
@@ -54,7 +58,7 @@ import java.util.List;
 
 public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEnergySource, IHasGui,
         IWrenchable, IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
-        INetworkUpdateListener {
+        INetworkUpdateListener, INetworkTileEntityEventListener {
 
 
     private final List<String> list_player = new ArrayList<>();
@@ -108,6 +112,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected double pastEnergy;
     protected double perenergy;
     List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
+    private AudioSource audioSource;
 
     public TileEntitySolarPanel(
             final int tier, final double gDay,
@@ -145,7 +150,26 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this(solarpanels.tier, solarpanels.genday, solarpanels.producing, solarpanels.maxstorage, solarpanels);
 
     }
+    public void initiate(int soundEvent) {
 
+        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+
+    }  public void onNetworkEvent(int event) {
+        if (this.audioSource == null && this.getStartSoundFile() != null) {
+            this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
+        }
+
+        if (event == 0) {
+            if (this.audioSource != null) {
+                this.audioSource.stop();
+                this.audioSource.play();
+            }
+        }
+    }
+
+    public String getStartSoundFile() {
+        return "Machines/pen.ogg";
+    }
     @Override
     public int getInventoryStackLimit() {
         return 1;
@@ -398,6 +422,10 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         super.onUnloaded();
         if (this.addedToEnet) {
             this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+        }
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
         }
     }
 
@@ -677,8 +705,10 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     @Override
     public void onNetworkEvent(EntityPlayer player, int event) {
-        this.rf = !this.rf;
-
+        if(getmodulerf) {
+            this.rf = !this.rf;
+            initiate(0);
+        }
     }
 
     public EnumType getType() {

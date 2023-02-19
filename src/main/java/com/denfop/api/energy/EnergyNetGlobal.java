@@ -17,7 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -35,6 +34,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     public static long tick = 0;
     private static Map<Integer, EnergyNetLocal> worldToEnergyNetMap;
     private static Map<Integer, List<BlockPos>> worldToEnergyNetList;
+    private static List<Integer> integerList = new ArrayList<>();
 
     static {
         EnergyNetGlobal.worldToEnergyNetMap = new WeakHashMap<>();
@@ -102,23 +102,22 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
 
     public static void onTickEnd(final World world) {
         final EnergyNetLocal energyNet = getForWorld(world);
-        if (tick == 0) {
-            tick = 1;
-            for (Map.Entry<Integer, List<BlockPos>> entry : worldToEnergyNetList.entrySet()) {
-                World world1 = DimensionManager.getWorld(entry.getKey());
-                List<BlockPos> blockPos = entry.getValue();
-                List<BlockPos> deletePos = new ArrayList<>();
+        if (!integerList.contains(world.provider.getDimension())) {
+            integerList.add(world.provider.getDimension());
+            List<BlockPos> blockPos = worldToEnergyNetList.get(world.provider.getDimension());
+            List<BlockPos> deletePos = new ArrayList<>();
+            if (blockPos != null) {
                 for (BlockPos pos : blockPos) {
-                    TileEntity tile = world1.getTileEntity(pos);
-                    IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(world1, pos);
+                    TileEntity tile = world.getTileEntity(pos);
+                    IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(world, pos);
                     if (CommonProxy.gc) {
                         boolean need = GCIntegration.check(tile);
                         if (need) {
-                            IEnergyTile iEnergyTile1 = EnergyNet.instance.getSubTile(world1, pos);
-                            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(world1, iEnergyTile1));
+                            IEnergyTile iEnergyTile1 = EnergyNet.instance.getSubTile(world, pos);
+                            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(world, iEnergyTile1));
                             if (tile instanceof IEnergySink) {
                                 MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                        world1,
+                                        world,
                                         tile,
                                         new EnergyGJSink((TileBaseUniversalElectrical) tile)
                                 ));
@@ -130,39 +129,42 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
                         deletePos.add(pos);
                         continue;
                     }
+                    if (tile instanceof cofh.redstoneflux.api.IEnergyHandler) {
+                        if (tile instanceof cofh.redstoneflux.api.IEnergyProvider && tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
+                            MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world, tile, new EnergyRFSinkSource(tile)));
+
+                        }
+                        if (tile instanceof cofh.redstoneflux.api.IEnergyProvider) {
+                            MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world, tile, new EnergyRFSource(tile)));
+
+                        }
+                        if (tile instanceof cofh.redstoneflux.api.IEnergyReceiver)
+                            MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world, tile, new EnergyRFSink(tile)));
+                        continue;
+                    }
                     for (EnumFacing facing : EnumFacing.values()) {
                         if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
                             IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, facing);
                             if (energy_storage != null) {
                                 if (energy_storage.canExtract() && energy_storage.canReceive()) {
-                                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                            world1,
-                                            tile,
+                                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world, tile,
                                             new EnergyFESinkSource(energy_storage, tile)
                                     ));
                                     break;
                                 }
                                 if (energy_storage.canExtract()) {
-                                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                            world1,
-                                            tile,
-                                            new EnergyFESource(energy_storage, tile)
-                                    ));
+                                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world, tile, new EnergyFESource(energy_storage, tile)));
                                     break;
                                 }
-                                MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(
-                                        world1,
-                                        tile,
-                                        new EnergyFESink(energy_storage, tile)
-                                ));
+                                MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(world, tile, new EnergyFESink(energy_storage, tile)));
                                 break;
                             }
                         }
                     }
-
                 }
                 blockPos.removeAll(deletePos);
             }
+
         }
         if (energyNet != null) {
             energyNet.onTickEnd();
@@ -182,9 +184,8 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         final EnergyNetLocal local = EnergyNetGlobal.worldToEnergyNetMap.get(world.provider.getDimension());
         if (local != null) {
             local.onUnload();
-
-
         }
+        integerList.remove((Integer) world.provider.getDimension());
     }
 
     public IEnergyTile getTileEntity(final World world, final int x, final int y, final int z) {

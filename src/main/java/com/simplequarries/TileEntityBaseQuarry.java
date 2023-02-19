@@ -8,16 +8,16 @@ import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
-import com.denfop.componets.EXPComponent;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.QEComponent;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.tiles.base.FakePlayerSpawner;
@@ -76,7 +76,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
     public final double constenergyconsume;
     public final double speed;
     public final InvSlotOutput outputSlot;
-    public final EXPComponent exp;
+    public final ComponentBaseEnergy exp;
     public final CoolComponent cold;
     public int min_y;
     public int max_y;
@@ -88,7 +88,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
     public boolean work;
     public boolean need_work = true;
     public List<ItemStack> list = new ArrayList<>();
-    public QEComponent energy1;
+    public ComponentBaseEnergy energy1;
     public boolean analyzer;
     public int progress;
     public EnumQuarryModules list_modules;
@@ -115,7 +115,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         this.name = name;
         this.energyconsume = 250 * coef;
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 5E7D, 14));
-        this.energy1 = this.addComponent(QEComponent.asBasicSink(this, 200000, 14));
+        this.energy1 = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 200000, 14));
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
 
         this.outputSlot = new InvSlotOutput(this, "output", 24);
@@ -131,7 +131,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         this.furnace = false;
         this.list_modules = null;
         this.consume = this.energyconsume;
-        this.exp = this.addComponent(EXPComponent.asBasicSource(this, 5000, 14));
+        this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE,this, 5000, 14));
 
     }
 
@@ -247,14 +247,14 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                             nbt.setDouble("energy", component.getEnergy());
                         }
                     }
-                    final QEComponent component1 = this.energy1;
+                    final ComponentBaseEnergy component1 = this.energy1;
                     if (component1 != null) {
                         if (component1.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy1", component1.getEnergy());
                         }
                     }
-                    final EXPComponent component2 = this.exp;
+                    final ComponentBaseEnergy component2 = this.exp;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -286,14 +286,14 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                 nbt.setDouble("energy", component.getEnergy());
             }
         }
-        final QEComponent component1 = this.energy1;
+        final ComponentBaseEnergy component1 = this.energy1;
         if (component1 != null) {
             if (component1.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy1", component1.getEnergy());
             }
         }
-        final EXPComponent component2 = this.exp;
+        final ComponentBaseEnergy component2 = this.exp;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

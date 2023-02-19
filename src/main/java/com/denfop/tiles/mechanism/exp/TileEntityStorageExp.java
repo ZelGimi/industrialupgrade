@@ -4,8 +4,9 @@ package com.denfop.tiles.mechanism.exp;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.audio.AudioSource;
-import com.denfop.componets.EXPComponent;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerStorageExp;
 import com.denfop.gui.GuiStorageExp;
 import com.denfop.invslot.InvSlotExpStorage;
@@ -38,7 +39,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         INetworkClientTileEntityEventListener, IAudioFixer {
 
     public final InvSlotExpStorage inputSlot;
-    public final EXPComponent energy;
+    public final ComponentBaseEnergy energy;
     public int expirencelevel;
     public int expirencelevel1;
     public AudioSource audioSource;
@@ -49,7 +50,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
 
     public TileEntityStorageExp() {
         this.inputSlot = new InvSlotExpStorage(this);
-        this.energy = this.addComponent(EXPComponent.asBasicSink(this, 2000000000, 14));
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE,this, 2000000000, 14));
 
     }
 
@@ -114,7 +115,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final EXPComponent component2 = this.energy;
+                    final ComponentBaseEnergy component2 = this.energy;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -133,7 +134,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
             }
         }
 
-        final EXPComponent component2 = this.energy;
+        final ComponentBaseEnergy component2 = this.energy;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

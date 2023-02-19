@@ -7,13 +7,14 @@ import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.QEComponent;
 import com.denfop.container.ContainerQuantumQuarry;
 import com.denfop.gui.GuiQuantumQuarry;
 import com.denfop.invslot.InvSlotQuantumQuarry;
@@ -68,7 +69,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     public List<QuarryItem> list;
     public AudioSource audioSource;
     public double getblock;
-    public QEComponent energy;
+    public ComponentBaseEnergy energy;
     public boolean analyzer;
     public int progress;
     public EnumQuarryModules list_modules;
@@ -85,7 +86,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         this.progress = 0;
         this.getblock = 0;
         this.energyconsume = Config.enerycost * coef;
-        this.energy = this.addComponent(QEComponent.asBasicSink(this, 5E7D, 14));
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 5E7D, 14));
         this.inputslot = new InvSlotQuantumQuarry(this, 25, "input", 0);
         this.inputslotA = new InvSlotQuantumQuarry(this, 26, "input1", 1);
         this.inputslotB = new InvSlotQuantumQuarry(this, 27, "input2", 2);
@@ -126,7 +127,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final QEComponent component2 = this.energy;
+                    final ComponentBaseEnergy component2 = this.energy;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -145,7 +146,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             }
         }
 
-        final QEComponent component2 = this.energy;
+        final ComponentBaseEnergy component2 = this.energy;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

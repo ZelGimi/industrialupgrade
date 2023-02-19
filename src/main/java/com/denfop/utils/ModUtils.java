@@ -3,6 +3,7 @@ package com.denfop.utils;
 import com.denfop.IUCore;
 import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.items.bags.HandHeldBags;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.init.Localization;
@@ -509,6 +510,36 @@ public class ModUtils {
                 }
 
             }
+        }
+
+    }
+
+    public static void tick(ItemStack[] slot, IItemHandler tile, HandHeldBags handHeldBags) {
+        if (tile == null) {
+            return;
+        }
+        final int slots = tile.getSlots();
+        for (int i = 0; i < slot.length; i++) {
+            ItemStack took = slot[i];
+            if (took.isEmpty()) {
+                continue;
+            }
+
+            if (!(tile instanceof ISidedInventory)) {
+                took = took.copy();
+                if (insertItem(tile, took, true, slots).isEmpty()) {
+                    handHeldBags.put(i, ItemStack.EMPTY);
+                    insertItem(tile, took, false, slots);
+                }
+            } else {
+                if (insertItem1(tile, took, true, slots).isEmpty()) {
+                    handHeldBags.put(i, ItemStack.EMPTY);
+                    insertItem1(tile, took, false, slots);
+
+                }
+            }
+
+
         }
 
     }

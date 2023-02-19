@@ -362,7 +362,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing,UpgradableProperty.FluidConsuming
         );
     }
 

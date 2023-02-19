@@ -23,11 +23,8 @@ public interface IRecipes {
 
     void addRecipeManager(String name, int size, boolean consume);
 
-    List<BaseFluidMachineRecipe> getFluidRecipes(String name);
 
-    BaseFluidMachineRecipe getFluidRecipe(List<FluidStack> fluidStacks, List<BaseFluidMachineRecipe> recipes);
-
-    void addRecipeManagerFluid(String name, int size, boolean consume);
+    RecipesFluidCore getRecipeFluid();
 
     List<IRecipeInputStack> getMap_recipe_managers_itemStack(String name);
 

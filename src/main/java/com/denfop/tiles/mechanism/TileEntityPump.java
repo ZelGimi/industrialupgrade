@@ -50,7 +50,6 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     public final InvSlotConsumableLiquid containerSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
-    private final String name;
     public int energyConsume;
     public int operationsPerTick;
     public short progress = 0;
@@ -58,7 +57,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     public float guiProgress;
     private AudioSource audioSource;
 
-    public TileEntityPump(String name, int size, int operationLength) {
+    public TileEntityPump(int size, int operationLength) {
         super(20, 1, size);
         this.containerSlot = new InvSlotConsumableLiquid(this, "containerSlot", Access.I, 1, InvSide.ANY, OpType.Fill);
         this.outputSlot = new InvSlotOutput(this, "output", 1);
@@ -66,7 +65,6 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = operationLength;
         this.defaultTier = 1;
-        this.name = name;
         this.defaultEnergyStorage = this.operationLength;
 
     }
@@ -132,9 +130,6 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
     }
 
-    public String getInventoryName() {
-        return Localization.translate(name);
-    }
 
     public boolean canoperate() {
         return this.operate(false);
@@ -195,7 +190,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
                         }
                     }
                 } else {
-                    if (this.getWorld().getBlockState(pos).getBlock().getMetaFromState(block) != 0) {
+                    if (block.getBlock().getMetaFromState(block) != 0) {
                         return null;
                     }
 

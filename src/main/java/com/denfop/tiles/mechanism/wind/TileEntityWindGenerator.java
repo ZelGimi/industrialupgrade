@@ -17,6 +17,8 @@ import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.client.ComponentClientEffectRender;
+import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerWindGenerator;
 import com.denfop.gui.GuiWindGenerator;
 import com.denfop.invslot.InvSlotRotorBlades;
@@ -90,6 +92,7 @@ public class TileEntityWindGenerator extends TileEntityInventory implements IWin
         this.addition_efficient = 0;
         this.addition_strength = 0;
         this.tick = 0;
+
     }
 
     @Override
@@ -374,7 +377,8 @@ public class TileEntityWindGenerator extends TileEntityInventory implements IWin
         ret.add("coefficient");
         ret.add("wind_side");
         ret.add("angle");
-
+        ret.add("mind_speed");
+        ret.add("generation");
         return ret;
     }
 

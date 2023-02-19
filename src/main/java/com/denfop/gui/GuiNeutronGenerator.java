@@ -2,6 +2,10 @@ package com.denfop.gui;
 
 
 import com.denfop.Constants;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerNeutronGenerator;
 import ic2.core.GuiIC2;
 import ic2.core.IC2;
@@ -15,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiNeutronGenerator extends GuiIC2<ContainerNeutronGenerator> {
+public class GuiNeutronGenerator extends GuiIU<ContainerNeutronGenerator> {
 
     public final ContainerNeutronGenerator container;
     public final String progressLabel;
@@ -28,6 +32,10 @@ public class GuiNeutronGenerator extends GuiIC2<ContainerNeutronGenerator> {
         this.amplifierLabel = Localization.translate("ic2.Matter.gui.info.amplifier");
         addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
         this.xSize = 200;
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+                new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
     }
 
     protected void mouseClicked(int i, int j, int k) throws IOException {
@@ -43,8 +51,8 @@ public class GuiNeutronGenerator extends GuiIC2<ContainerNeutronGenerator> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(this.progressLabel, 8, 22, 4210752);
-        this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 31, 4210752);
+        this.fontRenderer.drawString(this.progressLabel, 8, 28, 4210752);
+        this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 39, 4210752);
         new AdvArea(this, 182, 6, 190, 14).withTooltip(this.container.base.work ? Localization.translate("turn_off") :
                 Localization.translate("turn_on")).drawForeground(par1, par2);
         this.mc.getTextureManager().bindTexture(this.getTexture());

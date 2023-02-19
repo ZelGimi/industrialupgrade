@@ -207,7 +207,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
                 setActive(false);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

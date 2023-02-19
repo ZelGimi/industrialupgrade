@@ -208,7 +208,7 @@ public class WindSystem implements IWindSystem {
         }
 
         World world = event.world;
-        if (world.getWorldTime() % 40 == 0) {
+        if (world.getWorldTime() % 20 == 0) {
             if (!world.isRaining()) {
                 if (!world.isThundering()) {
                     if (world.getWorldInfo().getCleanWeatherTime() > 0) {

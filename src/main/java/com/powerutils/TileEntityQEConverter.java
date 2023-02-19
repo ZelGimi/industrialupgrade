@@ -1,9 +1,9 @@
 package com.powerutils;
 
-import com.denfop.api.qe.NodeQEStats;
-import com.denfop.api.qe.QENet;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.QEComponent;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.NodeStats;
@@ -42,7 +42,7 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
     public double capacity;
     public double capacity2;
     public double maxStorage2;
-    public QEComponent energy2;
+    public ComponentBaseEnergy energy2;
     public boolean rf;
     public double differenceenergy = 0;
     public double perenergy1 = 0;
@@ -59,7 +59,7 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
                 5, false
         )));
         this.energy.setDirections(Util.allFacings, Util.allFacings);
-        this.energy2 = this.addComponent(new QEComponent(this, 40000D / 16, Util.allFacings,
+        this.energy2 = this.addComponent(new ComponentBaseEnergy(EnergyType.QUANTUM, this, 40000D / 16, Util.allFacings,
                 Util.allFacings,
                 5,
                 5, false
@@ -147,25 +147,25 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
             if (!this.list.isEmpty()) {
                 if (this.rf) {
                     NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
-                    NodeQEStats stats1 = QENet.instance.getNodeStats(this.energy2.getDelegate(), this.world);
+                    com.denfop.api.sytem.NodeStats stats1 = EnergyBase.QE.getNodeStats(this.energy2.getDelegate(), this.world);
 
                     if (stats != null) {
                         this.differenceenergy1 = stats.getEnergyIn();
                     }
                     if (stats1 != null) {
-                        this.differenceenergy = stats1.getQE();
+                        this.differenceenergy = stats1.getOut();
                     }
 
                 } else {
                     this.perenergy1 = this.energy.getEnergy();
                     NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
-                    NodeQEStats stats1 = QENet.instance.getNodeStats(this.energy2.getDelegate(), this.world);
+                    com.denfop.api.sytem.NodeStats stats1 = EnergyBase.QE.getNodeStats(this.energy2.getDelegate(), this.world);
 
                     if (stats != null) {
                         this.differenceenergy = stats.getEnergyOut();
                     }
                     if (stats1 != null) {
-                        this.differenceenergy1 = stats1.getQEIn();
+                        this.differenceenergy1 = stats1.getIn();
                     }
 
                 }

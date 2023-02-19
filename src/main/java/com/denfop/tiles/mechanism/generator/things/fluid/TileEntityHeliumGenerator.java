@@ -113,7 +113,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
             }
 
             this.lastEnergy = this.energy.getEnergy();
-            if (needsInvUpdate && this.upgradeSlot.tickNoMark()) {
+            if ( this.upgradeSlot.tickNoMark() && needsInvUpdate ) {
                 setUpgradestat();
             }
         } else {

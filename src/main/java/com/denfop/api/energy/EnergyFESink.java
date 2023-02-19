@@ -3,6 +3,7 @@ package com.denfop.api.energy;
 import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class EnergyFESink extends BasicSink {
@@ -25,7 +26,7 @@ public class EnergyFESink extends BasicSink {
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing side) {
-        return this.energyfe.canReceive();
+        return true;
     }
 
 }

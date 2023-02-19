@@ -1,6 +1,10 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerQuantumQuarry;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
@@ -20,6 +24,9 @@ public class GuiQuantumQuarry extends GuiIU<ContainerQuantumQuarry> {
     public GuiQuantumQuarry(ContainerQuantumQuarry container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
+        this.addComponent(new GuiComponent(this, 10, 69, EnumTypeComponent.SOUND_BUTTON,
+                new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
     }
 
 

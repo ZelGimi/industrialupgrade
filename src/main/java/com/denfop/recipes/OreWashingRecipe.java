@@ -28,6 +28,14 @@ public class OreWashingRecipe {
             }
 
         }
+         for (final MachineRecipe<IRecipeInput, Collection<ItemStack>> recipe2 : Recipes.centrifuge.getRecipes()) {
+            List<ItemStack> list = (List<ItemStack>) recipe2.getOutput();
+            if(list.size() > 1)
+            if (list.get(0).isItemEqual(Ic2Items.silverDust)) {
+                list.remove(0);
+                list.add(new ItemStack(IUItem.iudust, 1, 14));
+            }
+        }
         addrecipe(0, null);
         addrecipe(1, new ItemStack(Blocks.SAND));
         addrecipe(2, new ItemStack(Ic2Items.smallLeadDust.getItem(), 2, 10));

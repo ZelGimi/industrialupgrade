@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.api.Recipes;
+import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.container.ContainerObsidianGenerator;
 import com.denfop.gui.GuiObsidianGenerator;
@@ -22,15 +23,20 @@ import java.util.Set;
 
 public class TileEntityObsidianGenerator extends TileEntityBaseObsidianGenerator implements IHasRecipe {
 
+
+
     public TileEntityObsidianGenerator() {
         super(1, 300, 1);
         this.inputSlotA = new InvSlotObsidianGenerator(this, "inputA", 2);
-        Recipes.recipes.addInitRecipes(this);
+        Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
 
     public void init() {
+
         Recipes.obsidianGenerator.addRecipe(new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.LAVA, 1000)
                 , new ItemStack(Blocks.OBSIDIAN));
+
+
     }
 
     public String getInventoryName() {

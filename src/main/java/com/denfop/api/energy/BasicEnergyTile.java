@@ -115,6 +115,19 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
         }
     }
 
+    @Override
+    public TileEntity getTileEntity() {
+        return this.tile;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        if (this.pos == null) {
+            this.pos = this.tile.getPos();
+        }
+        return this.pos;
+    }
+
     public boolean charge(ItemStack stack) {
         if (stack != null && Info.isIc2Available() && !this.getWorldObj().isRemote) {
             double energyStored = this.getEnergyStored();
@@ -161,13 +174,15 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
 
     public World getWorldObj() {
 
-
-        return this.world;
+        if (this.world == null) {
+            this.world = this.tile.getWorld();
+        }
+        return world;
     }
 
     public BlockPos getPosition() {
 
-        return this.pos;
+        return this.tile.getPos();
     }
 
 

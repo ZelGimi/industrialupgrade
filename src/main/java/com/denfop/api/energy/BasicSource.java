@@ -86,14 +86,6 @@ public class BasicSource extends BasicEnergyTile implements IAdvEnergySource {
         return "IC2BasicSource";
     }
 
-    @Override
-    public TileEntity getTileEntity() {
-        return this.tile;
-    }
 
-    @Override
-    public BlockPos getBlockPos() {
-        return this.pos;
-    }
 
 }

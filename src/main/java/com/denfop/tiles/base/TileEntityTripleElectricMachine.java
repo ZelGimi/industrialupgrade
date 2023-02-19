@@ -256,7 +256,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
                 ((TileEntityAdvAlloySmelter) this).heat.useEnergy(1);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if ( this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

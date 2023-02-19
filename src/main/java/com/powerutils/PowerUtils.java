@@ -3,13 +3,10 @@ package com.powerutils;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.QEComponent;
 import ic2.api.event.TeBlockFinalCallEvent;
 import ic2.api.recipe.Recipes;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
-import ic2.core.block.comp.Components;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -83,9 +80,7 @@ public final class PowerUtils {
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
-        Components.register(AdvEnergy.class, "AdvEnergy");
-        Components.register(QEComponent.class, "QEComponent");
-        Recipes.advRecipes.addRecipe(
+         Recipes.advRecipes.addRecipe(
                 new ItemStack(PowerItem.module_ic),
                 "ABA",
                 "CDC",

@@ -1,7 +1,8 @@
 package com.quantumgenerators;
 
 import com.denfop.IUItem;
-import com.denfop.componets.QEComponent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.items.ItemCore;
 import com.denfop.items.energy.ItemPurifier;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -28,7 +29,7 @@ import java.util.List;
 public class TileEntityQuantumGenerator extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener {
 
     public final String texture;
-    public final QEComponent energy;
+    public final ComponentBaseEnergy energy;
     private final int meta;
     private final int tier;
     public double gen;
@@ -38,7 +39,8 @@ public class TileEntityQuantumGenerator extends TileEntityInventory implements I
     public TileEntityQuantumGenerator(int tier, String texture, int meta) {
         this.gen = 5 * Math.pow(4, (tier - 1)) / 16;
         this.genmax = 5 * Math.pow(4, (tier - 1)) / 16;
-        this.energy = this.addComponent(QEComponent.asBasicSource(this, gen * 32,
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSource(
+                EnergyType.QUANTUM,this, gen * 32,
                         tier
                 )
         );

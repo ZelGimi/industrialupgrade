@@ -7,7 +7,8 @@ import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.componets.SEComponent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiSunnariumPanelMaker;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
@@ -30,12 +31,12 @@ import java.util.Set;
 
 public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
-    public final SEComponent sunenergy;
+    public final ComponentBaseEnergy sunenergy;
 
     public TileEntitySunnariumPanelMaker() {
         super(1, 300, 1, EnumDoubleElectricMachine.SUNNARIUM_PANEL);
-        this.sunenergy = this.addComponent(SEComponent
-                .asBasicSink(this, 10000, 1));
+        this.sunenergy = this.addComponent(ComponentBaseEnergy
+                .asBasicSink(EnergyType.SOLARIUM,this, 10000, 1));
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -176,7 +177,7 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
                 setActive(false);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

@@ -221,14 +221,14 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                 setActive(true);
             }
             if (this.inputslot.getwirelessmodule()) {
-                List list6 = this.inputslot.wirelessmodule();
-                int xx = (int) list6.get(0);
-                int yy = (int) list6.get(1);
-                int zz = (int) list6.get(2);
+                List<Integer> list6 = this.inputslot.wirelessmodule();
+                int xx = list6.get(0);
+                int yy = list6.get(1);
+                int zz = list6.get(2);
                 BlockPos pos1 = new BlockPos(xx, yy, zz);
                 final TileEntity tile = this.getWorld().getTileEntity(pos1);
                 if (tile instanceof TileEntityAnalyzerChest) {
-                    TileEntityAnalyzerChest target1 = (TileEntityAnalyzerChest) this.getWorld().getTileEntity(pos1);
+                    TileEntityAnalyzerChest target1 = (TileEntityAnalyzerChest) tile;
                     quarry(target1);
                 }
 

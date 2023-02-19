@@ -60,13 +60,12 @@ import com.denfop.blocks.mechanism.BlockTransformer;
 import com.denfop.blocks.mechanism.BlockUniversalCable;
 import com.denfop.blocks.mechanism.BlockUpgradeBlock;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
-import com.denfop.componets.EXPComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.ProcessMultiComponent;
-import com.denfop.componets.QEComponent;
 import com.denfop.componets.RFComponent;
-import com.denfop.componets.SEComponent;
+import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
 import com.denfop.events.Ic2IntegrationHandler;
@@ -479,18 +478,11 @@ public class CommonProxy implements IGuiHandler {
         if (Components.getId(AdvEnergy.class) == null) {
             Components.register(AdvEnergy.class, "AdvEnergy");
         }
-        if (Components.getId(QEComponent.class) == null) {
-            Components.register(QEComponent.class, "QEComponent");
-        }
+
         if (Components.getId(CoolComponent.class) == null) {
             Components.register(CoolComponent.class, "CoolComponent");
         }
-        if (Components.getId(SEComponent.class) == null) {
-            Components.register(SEComponent.class, "SEComponent");
-        }
-        if (Components.getId(EXPComponent.class) == null) {
-            Components.register(EXPComponent.class, "EXPComponent");
-        }
+
         if (Components.getId(HeatComponent.class) == null) {
             Components.register(HeatComponent.class, "HeatComponent");
         }
@@ -499,6 +491,12 @@ public class CommonProxy implements IGuiHandler {
         }
         if (Components.getId(ProcessMultiComponent.class) == null) {
             Components.register(ProcessMultiComponent.class, "ProcessMultiComponent");
+        }
+        if (Components.getId(ComponentBaseEnergy.class) == null) {
+            Components.register(ComponentBaseEnergy.class, "ComponentBaseEnergy");
+        }
+        if (Components.getId(ComponentClientEffectRender.class) == null) {
+            Components.register(ComponentClientEffectRender.class, "ComponentClientEffectRender");
         }
 
         if (Loader.isModLoaded("mets")) {
@@ -563,7 +561,6 @@ public class CommonProxy implements IGuiHandler {
                             new RecipeOutput(nbt, output)
                     )
             );
-            // Recipes.recipes.getMap_recipe_managers_itemStack("furnace").add(new RecipeInputStack(input));
         }
     }
 

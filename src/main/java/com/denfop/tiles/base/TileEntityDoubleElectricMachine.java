@@ -313,7 +313,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         }
 
 
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

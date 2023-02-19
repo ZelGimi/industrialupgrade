@@ -1,6 +1,8 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.audio.AudioSource;
@@ -47,10 +49,10 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
-    public InvSlotObsidianGenerator inputSlotA;
     protected short progress;
     protected double guiProgress;
 
+    public InvSlotObsidianGenerator inputSlotA;
     public TileEntityBaseObsidianGenerator(int energyPerTick, int length, int outputSlots) {
         this(energyPerTick, length, outputSlots, 1);
     }
@@ -74,7 +76,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
 
         );
-    }
+     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
@@ -228,9 +230,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     }
 
     public void operateOnce(List<ItemStack> processResult) {
-
         this.inputSlotA.consume();
-
         this.outputSlot.add(processResult);
     }
 
@@ -245,7 +245,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
             return null;
         }
 
-        RecipeOutput output = this.inputSlotA.process();
+      RecipeOutput output = this.inputSlotA.process();
 
         if (output == null) {
             return null;

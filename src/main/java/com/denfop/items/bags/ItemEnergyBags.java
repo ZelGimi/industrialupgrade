@@ -13,6 +13,7 @@ import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
+import ic2.core.IC2Potion;
 import ic2.core.IHasGui;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
@@ -27,16 +28,22 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
@@ -184,6 +191,33 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
             }
         }
         return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
+    }
+
+    @Override
+    public @NotNull EnumActionResult onItemUseFirst(
+            final @NotNull EntityPlayer player,
+            final @NotNull World world,
+            final @NotNull BlockPos pos,
+            final @NotNull EnumFacing side,
+            final float hitX,
+            final float hitY,
+            final float hitZ,
+            final @NotNull EnumHand hand
+    ) {
+        final TileEntity tile = world.getTileEntity(pos);
+        if(player.isSneaking())
+        if(tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,side)){
+            IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,side);
+            HandHeldBags box = (HandHeldBags) getInventory(player, player.getHeldItem(hand));
+            ItemStack[] itemStackList = box.getAll();
+            for(ItemStack stack : itemStackList){
+                if(stack == null || stack.isEmpty())
+                    continue;
+               ModUtils.tick(itemStackList,handler,box);
+            }
+            return EnumActionResult.SUCCESS;
+        }
+        return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
     }
 
     public void save(ItemStack stack, EntityPlayer player) {

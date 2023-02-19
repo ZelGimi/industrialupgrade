@@ -212,7 +212,7 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
                 setActive(false);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

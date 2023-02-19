@@ -154,15 +154,7 @@ public class BasicSinkSource extends BasicEnergyTile implements IAdvDual {
         return "IC2BasicSinkSource";
     }
 
-    @Override
-    public TileEntity getTileEntity() {
-        return this.tile;
-    }
 
-    @Override
-    public BlockPos getBlockPos() {
-        return null;
-    }
 
     @Override
     public boolean acceptsEnergyFrom(final IEnergyEmitter iEnergyEmitter, final EnumFacing enumFacing) {
@@ -173,5 +165,7 @@ public class BasicSinkSource extends BasicEnergyTile implements IAdvDual {
     public boolean emitsEnergyTo(final IEnergyAcceptor iEnergyAcceptor, final EnumFacing enumFacing) {
         return false;
     }
+
+
 
 }

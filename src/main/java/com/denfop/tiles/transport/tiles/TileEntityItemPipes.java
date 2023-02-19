@@ -1,6 +1,7 @@
 package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUItem;
+import com.denfop.api.transport.EnumTypeList;
 import com.denfop.api.transport.FluidHandler;
 import com.denfop.api.transport.ITransportAcceptor;
 import com.denfop.api.transport.ITransportConductor;
@@ -16,6 +17,7 @@ import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
 import ic2.core.IWorldTickCallback;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.block.TileEntityInventory;
 import ic2.core.block.state.Ic2BlockState;
 import ic2.core.block.state.UnlistedProperty;
 import net.minecraft.block.Block;
@@ -47,21 +49,22 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
-public class TileEntityItemPipes extends TileEntityBlock implements ITransportConductor, INetworkTileEntityEventListener {
+public class TileEntityItemPipes extends TileEntityInventory implements ITransportConductor, INetworkTileEntityEventListener {
 
     public static final IUnlistedProperty<CableRenderState> renderStateProperty = (IUnlistedProperty<CableRenderState>) new UnlistedProperty(
             "renderstate",
             CableRenderState.class
     );
-    private final IWorldTickCallback continuousUpdate = null;
     public boolean addedToEnergyNet = false;
     protected ItemType cableType = ItemType.itemcable;
     private byte connectivity = 0;
     private byte color = 0;
     private volatile CableRenderState renderState;
-
+    private EnumMap<EnumFacing, EnumTypeList> enumTypeListEnumMap = new EnumMap<>(EnumFacing.class);
+    private EnumMap<EnumFacing, List<ItemStack>> enumFacingListEnumMap = new EnumMap<>(EnumFacing.class);
     public TileEntityItemPipes(ItemType cableType) {
         this();
         this.cableType = cableType;
@@ -78,12 +81,26 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
         super.readFromNBT(nbt);
         this.cableType = ItemType.values[nbt.getByte("cableType") & 0xFF];
         this.color = nbt.getByte("color");
+        EnumFacing[] facings = EnumFacing.values();
+        NBTTagCompound  nbt_facing = (NBTTagCompound) nbt.getTag("facing");
+        for(EnumFacing facing : facings){
+            final String name = nbt_facing.getString(facing.toString().toLowerCase());
+            if(name.isEmpty())
+                continue;
+                enumTypeListEnumMap.put(facing, EnumTypeList.valueOf(name));
+        }
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
         nbt.setByte("color", this.color);
+        EnumFacing[] facings = EnumFacing.values();
+        NBTTagCompound  nbt_facing = new NBTTagCompound();
+        for(EnumFacing facing : facings){
+            nbt_facing.setString(facing.toString().toLowerCase(),enumTypeListEnumMap.get(facing).toString());
+        }
+        nbt.setTag("facing",nbt_facing);
         return nbt;
     }
 

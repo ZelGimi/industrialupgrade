@@ -6486,17 +6486,18 @@ public class BasicRecipe {
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.upgradeblock),
-                "   ",
-                " A ",
+                " E ",
+                "CAD",
                 " B ",
                 'D',
-                OreDictionary.getOres("doubleplateVanadoalumite"),
+                new ItemStack(IUItem.crafting_elements, 1, 66),
                 'B',
                 (IUItem.cirsuitQuantum),
                 'A',
                 Ic2Items.advancedMachine,
                 'C',
-                IUItem.quantumtool
+                new ItemStack(IUItem.crafting_elements, 1, 47),'E',
+                Ic2Items.elemotor
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 226),
@@ -7719,7 +7720,7 @@ public class BasicRecipe {
         if (!Loader.isModLoaded("simplyquarries")) {
             Recipes.advRecipes.addRecipe(
                     new ItemStack(IUItem.machines, 1, 8),
-                    " ",
+                    "   ",
                     " A ",
                     " B ", 'A', new ItemStack(IUItem.crafting_elements, 1, 250),
                     'B', Ic2Items.advancedMachine

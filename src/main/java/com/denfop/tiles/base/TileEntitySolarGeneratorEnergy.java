@@ -5,8 +5,9 @@ import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
 import com.denfop.invslot.InvSlotGenSunarrium;
@@ -38,7 +39,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     public final double maxSunEnergy;
     public final double cof;
     public boolean work;
-    public SEComponent sunenergy;
+    public ComponentBaseEnergy sunenergy;
     public List<Double> lst;
     public double coef_day;
     public double coef_night;
@@ -59,8 +60,8 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.lst.add(0D);
         this.lst.add(0D);
         this.lst.add(0D);
-        this.sunenergy = this.addComponent(SEComponent
-                .asBasicSource(this, 10000, 1));
+        this.sunenergy = this.addComponent(ComponentBaseEnergy
+                .asBasicSource(EnergyType.SOLARIUM,this, 10000, 1));
         this.coef_day = 0;
         this.coef_night = 0;
         this.update_night = 0;

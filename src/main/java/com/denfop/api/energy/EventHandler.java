@@ -79,12 +79,25 @@ public class EventHandler {
             if (iEnergyTile != null) {
                 return;
             }
+            if (tile instanceof cofh.redstoneflux.api.IEnergyHandler) {
+                if (tile instanceof cofh.redstoneflux.api.IEnergyProvider && tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
+                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(event
+                            .getWorld(), tile, new EnergyRFSinkSource(tile)));
+                } else if (tile instanceof cofh.redstoneflux.api.IEnergyProvider) {
+                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(event
+                            .getWorld(), tile, new EnergyRFSource(tile)));
+                } else if (tile instanceof cofh.redstoneflux.api.IEnergyReceiver) {
+                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(event
+                            .getWorld(), tile, new EnergyRFSink(tile)));
+                }
+                EnergyNetGlobal.addEnergyTile(event.getWorld(),tile.getPos());
+                return;
+            }
             for (EnumFacing facing : EnumFacing.values()) {
                 if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
                     IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY, facing);
-                    if (energy_storage == null) {
+                    if (energy_storage == null)
                         continue;
-                    }
                     if (energy_storage.canExtract() && energy_storage.canReceive()) {
                         MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(event.getWorld(), tile,
                                 new EnergyFESinkSource(energy_storage, tile)
@@ -97,7 +110,7 @@ public class EventHandler {
                         MinecraftForge.EVENT_BUS.post(new com.denfop.api.energy.event.EnergyTileLoadEvent(event
                                 .getWorld(), tile, new EnergyFESink(energy_storage, tile)));
                     }
-                    EnergyNetGlobal.addEnergyTile(event.getWorld(), tile.getPos());
+                    EnergyNetGlobal.addEnergyTile(event.getWorld(),tile.getPos());
                     break;
                 }
             }
@@ -132,12 +145,16 @@ public class EventHandler {
             if (tile instanceof ic2.core.block.TileEntityBlock || tile instanceof IEnergyTile) {
                 return;
             }
+            EnergyNetGlobal.removeEnergyTile(event.getWorld().provider.getDimension(),pos);
+            if (tile instanceof cofh.redstoneflux.api.IEnergyHandler) {
+                IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
+                MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
+            return;
+            }
             for (EnumFacing facing : EnumFacing.values()) {
                 if (tile.hasCapability(CapabilityEnergy.ENERGY, facing)) {
                     IEnergyTile iEnergyTile = EnergyNet.instance.getSubTile(event.getWorld(), pos);
                     MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(event.getWorld(), iEnergyTile));
-                    EnergyNetGlobal.removeEnergyTile(event.getWorld().provider.getDimension(), pos);
-                    return;
                 }
             }
 

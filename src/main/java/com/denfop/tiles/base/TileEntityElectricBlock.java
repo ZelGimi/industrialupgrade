@@ -5,8 +5,11 @@ import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.api.IStorage;
 import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.gui.GuiElectricBlock;
@@ -21,6 +24,7 @@ import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
+import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IHasGui;
@@ -57,7 +61,7 @@ import java.util.Random;
 
 public class TileEntityElectricBlock extends TileEntityInventory implements IHasGui,
         INetworkClientTileEntityEventListener, IEnergyHandler, IEnergyReceiver,
-        IEnergyProvider, IStorage {
+        IEnergyProvider, IStorage, INetworkTileEntityEventListener {
 
     public static EnumElectricBlock electricblock;
     public final double tier;
@@ -87,6 +91,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public boolean personality = false;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
+    private AudioSource audioSource;
 
     public TileEntityElectricBlock(double tier1, double output1, double maxStorage1, boolean chargepad, String name) {
 
@@ -112,7 +117,14 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         )));
         this.list_player = new ArrayList<>();
     }
+    protected void onUnloaded() {
+        super.onUnloaded();
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
+        }
 
+    }
     public TileEntityElectricBlock(EnumElectricBlock electricBlock) {
         this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1);
         electricblock = electricBlock;
@@ -130,6 +142,30 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     @Override
     protected boolean wrenchCanRemove(final EntityPlayer player) {
         return !this.personality || (this.list_player.contains(player.getName()));
+
+    }
+
+    public void initiate(int soundEvent) {
+
+        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+
+    }
+    public String getStartSoundFile() {
+        return "Machines/pen.ogg";
+    }
+
+
+    public void onNetworkEvent(int event) {
+        if (this.audioSource == null && this.getStartSoundFile() != null) {
+            this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
+        }
+
+        if (event == 0) {
+            if (this.audioSource != null) {
+                this.audioSource.stop();
+                this.audioSource.play();
+            }
+        }
 
     }
 
@@ -823,8 +859,10 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
 
     public void onNetworkEvent(EntityPlayer player, int event) {
-        this.rfeu = !this.rfeu;
-
+        if(this.rf) {
+            this.rfeu = !this.rfeu;
+            initiate(0);
+        }
     }
 
 

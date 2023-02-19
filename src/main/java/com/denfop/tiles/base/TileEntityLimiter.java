@@ -1,11 +1,15 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
+import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.gui.GuiBlockLimiter;
 import com.denfop.invslot.InvSlotLimiter;
 import ic2.api.energy.EnergyNet;
 import ic2.api.network.INetworkClientTileEntityEventListener;
+import ic2.api.network.INetworkTileEntityEventListener;
+import ic2.core.IC2;
 import ic2.core.IHasGui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,11 +20,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.EnumSet;
 import java.util.List;
 
-public class TileEntityLimiter extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener {
+public class TileEntityLimiter extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener,
+        INetworkTileEntityEventListener {
 
     public final InvSlotLimiter slot;
     private final AdvEnergy energy;
     private double max_value;
+    private AudioSource audioSource;
 
     public TileEntityLimiter() {
         this.energy = this.addComponent(new AdvEnergy(
@@ -33,6 +39,38 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
         ));
         this.energy.setLimit(true);
         this.slot = new InvSlotLimiter(this);
+
+    }
+
+    public void initiate(int soundEvent) {
+
+        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+
+    }
+
+    public String getStartSoundFile() {
+        return "Machines/pen.ogg";
+    }
+
+    public void onNetworkEvent(int event) {
+        if (this.audioSource == null && this.getStartSoundFile() != null) {
+            this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
+        }
+
+        if (event == 0) {
+            if (this.audioSource != null) {
+                this.audioSource.stop();
+                this.audioSource.play();
+            }
+        }
+    }
+
+    protected void onUnloaded() {
+        super.onUnloaded();
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
+        }
 
     }
 
@@ -101,6 +139,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
 
         this.energy.limit_amount = (int) Math.min(i, this.max_value);
         this.energy.setDirections(EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
+        initiate(0);
 
     }
 

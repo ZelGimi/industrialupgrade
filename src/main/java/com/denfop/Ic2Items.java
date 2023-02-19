@@ -434,6 +434,8 @@ public final class Ic2Items {
     public static ItemStack fluidEjectorUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.fluid_ejector);
     public static ItemStack redstoneinvUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.redstone_inverter);
     public static ItemStack pullingUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.pulling);
+    public static ItemStack fluidpullingUpgrade = ItemName.upgrade.getItemStack(ItemUpgradeModule.UpgradeType.fluid_pulling);
+
     public static ItemStack coin = ItemName.crafting.getItemStack(CraftingItemType.coin);
     public static ItemStack reinforcedDoor = BlockName.reinforced_door.getItemStack();
     public static ItemStack grinPowder = ItemName.crop_res.getItemStack(CropResItemType.grin_powder);

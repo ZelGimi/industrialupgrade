@@ -16,6 +16,8 @@ import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.client.ComponentClientEffectRender;
+import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerBaseWaterGenerator;
 import com.denfop.gui.GuiBaseWaterGenerator;
 import com.denfop.invslot.InvSlotWaterRotor;
@@ -94,6 +96,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
         this.addition_strength = 0;
         this.tick = 0;
         this.biome = 1;
+        this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.WATER_GENERATOR);
     }
 
     @Override
@@ -384,7 +387,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
         ret.add("coefficient");
         ret.add("wind_side");
         ret.add("angle");
-
+        ret.add("generation");
         return ret;
     }
 

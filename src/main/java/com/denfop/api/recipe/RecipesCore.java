@@ -2,7 +2,6 @@ package com.denfop.api.recipe;
 
 import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
 import java.util.ArrayList;
@@ -16,14 +15,18 @@ import java.util.stream.Collectors;
 public class RecipesCore implements IRecipes {
 
     private final List<IHasRecipe> recipes = new ArrayList<>();
+    private final RecipesFluidCore fluid_recipe;
     public Map<String, List<BaseMachineRecipe>> map_recipes = new HashMap<>();
     public Map<String, IBaseRecipe> map_recipe_managers = new HashMap<>();
     public Map<String, List<IRecipeInputStack>> map_recipe_managers_itemStack = new HashMap<>();
-    public Map<String, List<BaseFluidMachineRecipe>> map_recipes_fluid = new HashMap<>();
 
     public RecipesCore() {
         init();
+        this.fluid_recipe = new RecipesFluidCore();
+        fluid_recipe.init();
     }
+
+
 
     public void init() {
         this.addRecipeManager("alloysmelter", 2, true);
@@ -82,33 +85,12 @@ public class RecipesCore implements IRecipes {
 
     public void addRecipeManager(String name, int size, boolean consume) {
         this.map_recipe_managers.put(name, new RecipeManager(name, size, consume));
-        if (!this.map_recipes_fluid.containsKey(name)) {
-            List<BaseFluidMachineRecipe> lst = new ArrayList<>();
-            this.map_recipes_fluid.put(name, lst);
-        }
     }
 
-    public List<BaseFluidMachineRecipe> getFluidRecipes(String name) {
-        return this.map_recipes_fluid.get(name);
-    }
 
-    public BaseFluidMachineRecipe getFluidRecipe(List<FluidStack> fluidStacks, List<BaseFluidMachineRecipe> recipes) {
-        for (BaseFluidMachineRecipe recipe : recipes) {
-            if (recipe.matches(fluidStacks)) {
-                return recipe;
-            }
-        }
-        return null;
-    }
-
-    public void addRecipeManagerFluid(String name, int size, boolean consume) {
-        this.map_recipe_managers.put(name, new RecipeManager(name, size, consume));
-        if (!this.map_recipes.containsKey(name)) {
-            List<BaseMachineRecipe> lst = new ArrayList<>();
-            List<IRecipeInputStack> lst1 = new ArrayList<>();
-            this.map_recipes.put(name, lst);
-            this.map_recipe_managers_itemStack.put(name, lst1);
-        }
+    @Override
+    public RecipesFluidCore getRecipeFluid() {
+        return fluid_recipe;
     }
 
     public void addRecipeManager(String name, int size, boolean consume, boolean require) {
@@ -467,6 +449,7 @@ public class RecipesCore implements IRecipes {
     @Override
     public void initializationRecipes() {
         this.recipes.forEach(IHasRecipe::init);
+        this.fluid_recipe.initializationRecipes();
     }
 
     public BaseMachineRecipe getRecipeOutput(

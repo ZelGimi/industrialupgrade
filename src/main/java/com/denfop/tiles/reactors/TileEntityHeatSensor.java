@@ -1,8 +1,12 @@
 package com.denfop.tiles.reactors;
 
+import com.denfop.IUCore;
+import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerHeatLimiter;
 import com.denfop.gui.GuiHeatLimiter;
 import ic2.api.network.INetworkClientTileEntityEventListener;
+import ic2.api.network.INetworkTileEntityEventListener;
+import ic2.core.IC2;
 import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,10 +16,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener {
+public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener,
+        INetworkTileEntityEventListener {
 
     public int limit;
     public TileEntityBaseNuclearReactorElectric reactor;
+    private AudioSource audioSource;
 
     public void checkEntity() {
         BlockPos pos1 = pos.add(this.getFacing().getOpposite().getDirectionVec());
@@ -30,6 +36,16 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
 
     }
 
+
+    protected void onUnloaded() {
+        super.onUnloaded();
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
+        }
+
+    }
+
     @Override
     protected void onBlockBreak() {
         if (reactor != null) {
@@ -38,6 +54,10 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
         }
 
         super.onBlockBreak();
+    }
+
+    public String getStartSoundFile() {
+        return "Machines/pen.ogg";
     }
 
     @Override
@@ -60,7 +80,20 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
                 reactor.isLimit = false;
             }
         }
+        initiate(0);
+    }
 
+    public void onNetworkEvent(int event) {
+        if (this.audioSource == null && this.getStartSoundFile() != null) {
+            this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
+        }
+
+        if (event == 0) {
+            if (this.audioSource != null) {
+                this.audioSource.stop();
+                this.audioSource.play();
+            }
+        }
     }
 
     @Override
@@ -68,6 +101,12 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
         final NBTTagCompound nbt1 = super.writeToNBT(nbt);
         nbt1.setInteger("heat", limit);
         return nbt1;
+    }
+
+    public void initiate(int soundEvent) {
+
+        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+
     }
 
     @Override

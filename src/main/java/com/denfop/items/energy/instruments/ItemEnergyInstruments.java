@@ -53,11 +53,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -74,11 +70,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IHandHeldInventory, IUpgradeWithBlackList,
         IModelRegister {
@@ -169,7 +161,6 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                     return false;
                 }
 
-                block.onBlockHarvested(world, pos, state, (EntityPlayerMP) entity);
 
                 if (block.removedByPlayer(state, world, pos, (EntityPlayerMP) entity, true)) {
                     List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(stack);
@@ -750,9 +741,6 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
                             IBlockState state = world.getBlockState(pos_block);
                             Block localBlock = state.getBlock();
-                            if (localBlock.equals(Blocks.SKULL)) {
-                                continue;
-                            }
                             if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                                     && state.getBlockHardness(world, pos_block) >= 0.0F
                             ) {
@@ -785,10 +773,6 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             if (ElectricItem.manager.canUse(stack, energy)) {
                 IBlockState state = world.getBlockState(pos);
                 Block localBlock = state.getBlock();
-
-                if (localBlock.equals(Blocks.SKULL)) {
-                    return false;
-                }
                 if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (
@@ -821,9 +805,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             if (ElectricItem.manager.canUse(stack, energy)) {
                 IBlockState state = world.getBlockState(pos);
                 Block localBlock = state.getBlock();
-                if (localBlock.equals(Blocks.SKULL)) {
-                    return false;
-                }
+
                 if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (block == Blocks.MONSTER_EGG)) {
@@ -1053,7 +1035,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                         random, black_list, list
                 );
         }
-        return player.getEntityWorld().getBlockState(pos).getBlock().equals(Blocks.SKULL);
+        return false;
     }
 
     private boolean break_block_tunel(
@@ -1126,9 +1108,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
                             IBlockState state = world.getBlockState(pos_block);
                             Block localBlock = state.getBlock();
-                            if (localBlock.equals(Blocks.SKULL)) {
-                                continue;
-                            }
+
                             if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                                     && state.getBlockHardness(world, pos_block) >= 0.0F
                             ) {
@@ -1159,9 +1139,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                 IBlockState state = world.getBlockState(pos);
                 Block localBlock = state.getBlock();
 
-                if (localBlock.equals(Blocks.SKULL)) {
-                    return false;
-                }
+
                 if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (
@@ -1194,9 +1172,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             if (ElectricItem.manager.canUse(stack, energy)) {
                 IBlockState state = world.getBlockState(pos);
                 Block localBlock = state.getBlock();
-                if (localBlock.equals(Blocks.SKULL)) {
-                    return false;
-                }
+
                 if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (block == Blocks.MONSTER_EGG)) {
@@ -1346,7 +1322,6 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                     return false;
                 }
 
-                block.onBlockHarvested(world, pos, state, (EntityPlayerMP) entity);
 
                 if (block.removedByPlayer(state, world, pos, (EntityPlayerMP) entity, true)) {
                     block.onBlockDestroyedByPlayer(world, pos, state);

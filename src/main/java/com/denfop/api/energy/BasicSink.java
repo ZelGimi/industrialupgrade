@@ -86,14 +86,6 @@ public class BasicSink extends BasicEnergyTile implements IAdvEnergySink {
         return "IC2BasicSink";
     }
 
-    @Override
-    public TileEntity getTileEntity() {
-        return this.tile;
-    }
 
-    @Override
-    public BlockPos getBlockPos() {
-        return this.pos;
-    }
 
 }

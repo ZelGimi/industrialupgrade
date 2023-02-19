@@ -43,7 +43,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     private final int min;
     private final int max;
     private final CoolComponent cold;
-    private final EXPComponent exp;
+    private final ComponentBaseEnergy exp;
     private final boolean isCentrifuge;
     private final HeatComponent heat;
     public int energyConsume;
@@ -92,7 +92,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         this.random = enumMultiMachine.type == EnumTypeMachines.RECYCLER;
         this.output = new MachineRecipe[sizeWorkingSlot];
         this.cold = parent.getComponent(CoolComponent.class);
-        this.exp = parent.getComponent(EXPComponent.class);
+        this.exp = parent.getComponent(ComponentBaseEnergy.class);
         this.heat = parent.getComponent(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
     }
@@ -482,14 +482,15 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     }
 
     public double getProgress(int slotId) {
-        return this.guiProgress[slotId];
+        return this.progress[slotId]  * 1D / this.operationLength;
     }
 
     @Override
     public void onContainerUpdate(final EntityPlayerMP player) {
         GrowingBuffer buffer = new GrowingBuffer(16);
+        buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
-            buffer.writeDouble(this.guiProgress[i]);
+            buffer.writeInt(this.progress[i]);
         }
         buffer.writeInt(this.energyConsume);
         buffer.writeInt(this.mode);
@@ -500,8 +501,9 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     @Override
     public void onNetworkUpdate(final DataInput is) throws IOException {
         super.onNetworkUpdate(is);
+        this.operationLength = is.readInt();
         for (int i = 0; i < sizeWorkingSlot; i++) {
-            this.guiProgress[i] = is.readDouble();
+            this.progress[i] = (short) is.readInt();
         }
         this.energyConsume = is.readInt();
         this.mode = is.readInt();

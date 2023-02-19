@@ -198,7 +198,11 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
-        this.work = !this.work;
+        if (i != 10) {
+            this.work = !this.work;
+        } else {
+            super.onNetworkEvent(entityPlayer, i);
+        }
     }
 
 }

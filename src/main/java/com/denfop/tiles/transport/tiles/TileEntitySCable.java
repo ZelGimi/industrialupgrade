@@ -2,14 +2,14 @@ package com.denfop.tiles.transport.tiles;
 
 
 import com.denfop.IUItem;
-import com.denfop.api.se.ISEAcceptor;
-import com.denfop.api.se.ISEConductor;
-import com.denfop.api.se.ISEEmitter;
-import com.denfop.api.se.ISETile;
-import com.denfop.api.se.SENet;
-import com.denfop.api.se.event.SETileLoadEvent;
-import com.denfop.api.se.event.SETileUnloadEvent;
-import com.denfop.componets.QEComponent;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.sytem.ITile;
 import com.denfop.tiles.transport.CableFoam;
 import com.denfop.tiles.transport.types.SEType;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TileEntitySCable extends TileEntityBlock implements ISEConductor, INetworkTileEntityEventListener {
+public class TileEntitySCable extends TileEntityBlock implements IConductor, INetworkTileEntityEventListener {
 
     public static final IUnlistedProperty<TileEntitySCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
             "renderstate",
@@ -112,7 +112,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new SETileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM,this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
             if (this.foam == CableFoam.Soft) {
@@ -124,7 +124,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new SETileUnloadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM,this));
             this.addedToEnergyNet = false;
         }
 
@@ -264,15 +264,14 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            ISETile tile = SENet.instance.getSubTile(world, this.pos.offset(dir));
+            final ITile tile = EnergyBase.SE.getSubTile(world, this.pos.offset(dir));
 
-            if ((tile instanceof ISEAcceptor && ((ISEAcceptor) tile).acceptsSEFrom(
+            if (tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof ISEEmitter && ((ISEEmitter) tile).emitsSETo(
+            ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof TileEntityBlock && ((TileEntityBlock) tile).hasComponent(QEComponent.class)) && this.canInteractWith(
             )) {
                 newConnectivity = (byte) (newConnectivity | mask);
             }
@@ -346,11 +345,11 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         return false;
     }
 
-    public boolean acceptsSEFrom(ISEEmitter emitter, EnumFacing direction) {
+    public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
         return this.canInteractWith();
     }
 
-    public boolean emitsSETo(ISEAcceptor receiver, EnumFacing direction) {
+    public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
         return this.canInteractWith();
     }
 
@@ -359,25 +358,27 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         return true;
     }
 
-    public double getConductionLoss() {
+    public double getConductionLoss(EnergyType type) {
         return this.cableType.loss;
     }
 
-    public double getInsulationEnergyAbsorption() {
+    public double getInsulationEnergyAbsorption(EnergyType type) {
 
         return 2.147483647E9D;
 
     }
 
-    public double getInsulationBreakdownEnergy() {
+    public double getInsulationBreakdownEnergy(EnergyType type) {
         return 9001.0D;
     }
 
-    public double getConductorBreakdownSolariumEnergy() {
+    public double getConductorBreakdownEnergy(EnergyType type) {
         return this.cableType.capacity + 1;
     }
 
-    public void removeInsulation() {
+
+
+    public void removeInsulation(EnergyType type) {
         this.tryRemoveInsulation(false);
     }
 

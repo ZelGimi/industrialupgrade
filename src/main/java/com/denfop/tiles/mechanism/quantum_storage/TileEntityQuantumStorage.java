@@ -1,8 +1,9 @@
 package com.denfop.tiles.mechanism.quantum_storage;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.QEComponent;
 import com.denfop.container.ContainerQuantumStorage;
 import com.denfop.gui.GuiQuantumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -29,11 +30,11 @@ import java.util.List;
 
 public class TileEntityQuantumStorage extends TileEntityInventory implements IHasGui, IType {
 
-    public final QEComponent qe;
+    public final ComponentBaseEnergy qe;
     private final EnumTypeStyle enumTypeStyle;
 
     public TileEntityQuantumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
-        this.qe = this.addComponent((new QEComponent(this, maxStorage1,
+        this.qe = this.addComponent((new ComponentBaseEnergy(EnergyType.QUANTUM, this, maxStorage1,
                 new HashSet<>(
                         Arrays.asList(EnumFacing.values())), new HashSet<>(
                 Arrays.asList(EnumFacing.values())),
@@ -63,7 +64,7 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final QEComponent component2 = this.qe;
+                    final ComponentBaseEnergy component2 = this.qe;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -82,7 +83,7 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
             }
         }
 
-        final QEComponent component2 = this.qe;
+        final ComponentBaseEnergy component2 = this.qe;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

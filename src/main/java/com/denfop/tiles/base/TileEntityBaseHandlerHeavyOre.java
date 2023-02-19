@@ -207,7 +207,7 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
                 this.heat.addEnergy(2);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

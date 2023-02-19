@@ -3,13 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.container.ContainerConverterSolidMatter;
 import com.denfop.gui.GuiConverterSolidMatter;
 import com.denfop.invslot.InvSlotConverterSolidMatter;
@@ -22,6 +16,8 @@ import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.audio.AudioSource;
+import ic2.core.block.invslot.InvSlot;
+import ic2.core.util.StackUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -34,6 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -110,6 +107,38 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
             );
         }
 
+    }
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        } else {
+            InvSlot invSlot = this.getInventorySlot(index);
+            if(invSlot instanceof InvSlotConverterSolidMatter)
+                return ((InvSlotConverterSolidMatter) invSlot).accepts(this.locateInfoInvSlot(index).getIndex(), stack);
+            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack);
+        }
+    }
+    public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
+        if (StackUtil.isEmpty(stack)) {
+            return false;
+        } else {
+            InvSlot targetSlot = this.getInventorySlot(index);
+            if (targetSlot instanceof InvSlotConverterSolidMatter) {
+                return ((InvSlotConverterSolidMatter) targetSlot).accepts(this.locateInfoInvSlot(index).getIndex(), stack);
+            } else {
+                if (targetSlot == null) {
+                    return false;
+                } else if (targetSlot.canInput() && targetSlot.accepts(stack)) {
+                    if (targetSlot.preferredSide != InvSlot.InvSide.ANY && targetSlot.preferredSide.matches(side)) {
+                        return true;
+                    } else {
+                        return targetSlot.preferredSide == InvSlot.InvSide.ANY;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     public void init() {
@@ -286,7 +315,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
                 setActive(false);
             }
         }
-        if ((!this.inputSlot.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

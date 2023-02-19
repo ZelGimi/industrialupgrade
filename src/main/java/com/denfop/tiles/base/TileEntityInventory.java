@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.componets.client.ComponentClientEffectRender;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.IC2;
@@ -24,6 +25,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -41,9 +44,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
-    private final IItemHandler[] itemHandler;
+    protected final IItemHandler[] itemHandler;
     protected int size_inventory;
-
+    protected ComponentClientEffectRender componentClientEffectRender;
     public TileEntityInventory() {
         this.itemHandler = new IItemHandler[EnumFacing.VALUES.length + 1];
     }
@@ -55,7 +58,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     protected static int calcRedstoneFromInvSlots(InvSlot... slots) {
         return calcRedstoneFromInvSlots(Arrays.asList(slots));
     }
-
+    @SideOnly(Side.CLIENT)
+    protected void updateEntityClient() {
+        super.updateEntityClient();
+        if(componentClientEffectRender != null)
+            componentClientEffectRender.render();
+    }
     protected static int calcRedstoneFromInvSlots(Iterable<InvSlot> invSlots) {
         int space = 0;
         int used = 0;
@@ -126,6 +134,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
         return false;
     }
+
 
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);

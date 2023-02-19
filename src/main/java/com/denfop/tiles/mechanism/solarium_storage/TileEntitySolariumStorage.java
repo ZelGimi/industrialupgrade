@@ -1,8 +1,9 @@
 package com.denfop.tiles.mechanism.solarium_storage;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerSolariumStorage;
 import com.denfop.gui.GuiSolariumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -29,11 +30,11 @@ import java.util.List;
 
 public class TileEntitySolariumStorage extends TileEntityInventory implements IHasGui, IType {
 
-    public final SEComponent se;
+    public final ComponentBaseEnergy se;
     private final EnumTypeStyle enumTypeStyle;
 
     public TileEntitySolariumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
-        this.se = this.addComponent((new SEComponent(this, maxStorage1,
+        this.se = this.addComponent((new ComponentBaseEnergy(EnergyType.SOLARIUM, this, maxStorage1,
                 new HashSet<>(
                         Arrays.asList(EnumFacing.values())), new HashSet<>(
                 Arrays.asList(EnumFacing.values())),
@@ -61,7 +62,7 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IH
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final SEComponent component2 = this.se;
+                    final ComponentBaseEnergy component2 = this.se;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -80,7 +81,7 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IH
             }
         }
 
-        final SEComponent component2 = this.se;
+        final ComponentBaseEnergy component2 = this.se;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

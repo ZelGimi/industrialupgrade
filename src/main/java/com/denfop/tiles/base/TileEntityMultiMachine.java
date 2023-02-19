@@ -9,14 +9,17 @@ import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
-import com.denfop.componets.EXPComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.componets.RFComponent;
+import com.denfop.componets.client.ComponentClientEffectRender;
+import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.gui.GuiMultiMachine;
 import com.denfop.items.modules.ItemModuleTypePanel;
@@ -71,7 +74,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public final int sizeWorkingSlot;
     public HeatComponent heat = null;
     public FluidTank tank = null;
-    public EXPComponent exp;
+    public ComponentBaseEnergy exp;
     public EnumSolarPanels solartype;
     public RFComponent energy2;
     public AudioSource audioSource;
@@ -84,7 +87,6 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public TileEntityMultiMachine(int energyconsume, int OperationsPerTick, int type) {
         this(1, energyconsume, OperationsPerTick, type);
     }
-
     public TileEntityMultiMachine(
             int aDefaultTier,
             int energyconsume,
@@ -111,12 +113,18 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
 
         this.exp = null;
         if (this.getMachine().type == EnumTypeMachines.ELECTRICFURNACE) {
-            this.exp = this.addComponent(EXPComponent.asBasicSource(this, 5000, 14));
+            this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE,this, 5000, 14));
         }
         if (this.getMachine().type == EnumTypeMachines.Centrifuge) {
             this.heat = this.addComponent(HeatComponent.asBasicSink(this, 5000));
         }
         this.multi_process = this.addComponent(new ProcessMultiComponent(this, getMachine()));
+        this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.HEAT);
+    }
+    public List<String> getNetworkedFields() {
+        List<String> ret = super.getNetworkedFields();
+        ret.add("cold");
+        return ret;
     }
 
     public void init() {
@@ -126,6 +134,12 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public void changeSound() {
 
 
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        this.multi_process.setOverclockRates();
     }
 
     @SideOnly(Side.CLIENT)
@@ -229,7 +243,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                             nbt.setDouble("energy", component.getEnergy());
                         }
                     }
-                    final EXPComponent component2 = this.exp;
+                    final ComponentBaseEnergy component2 = this.exp;
                     if (component2 != null) {
                         if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -261,7 +275,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                 nbt.setDouble("energy", component.getEnergy());
             }
         }
-        final EXPComponent component2 = this.exp;
+        final ComponentBaseEnergy component2 = this.exp;
         if (component2 != null) {
             if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

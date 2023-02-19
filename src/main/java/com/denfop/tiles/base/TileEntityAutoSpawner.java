@@ -4,7 +4,8 @@ package com.denfop.tiles.base;
 import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
-import com.denfop.componets.EXPComponent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerAutoSpawner;
 import com.denfop.gui.GuiAutoSpawner;
 import com.denfop.invslot.InvSlotModules;
@@ -49,8 +50,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
     public final int[] progress;
     public final double maxEnergy2;
     public final int defaultconsume;
-    public final EXPComponent exp;
-    private final double defaultmaxprogress;
+    public final ComponentBaseEnergy exp;
     public int costenergy;
     public int tempprogress;
     public FakePlayerSpawner player;
@@ -71,7 +71,6 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
         this.module_upgrade = new InvSlotUpgradeModule(this);
         this.progress = new int[module_slot.size()];
         this.maxEnergy2 = 50000 * Config.coefficientrf;
-        this.defaultmaxprogress = 100;
         this.maxprogress = new double[4];
         this.tempprogress = 100;
         this.tempcostenergy = 1500;
@@ -81,7 +80,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
         this.spawn = 1;
         this.experience = 0;
         this.defaultconsume = this.costenergy;
-        this.exp = this.addComponent(EXPComponent.asBasicSource(this, 15000, 14));
+        this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE,this, 15000, 14));
 
     }
 
