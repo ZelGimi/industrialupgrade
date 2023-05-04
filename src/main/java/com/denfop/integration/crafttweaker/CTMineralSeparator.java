@@ -189,7 +189,7 @@ public class CTMineralSeparator {
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.input;
+            return "removing mineral separator recipe " + this.input;
         }
 
         public Object getOverrideKey() {

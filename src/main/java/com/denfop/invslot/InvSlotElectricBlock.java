@@ -16,7 +16,6 @@ import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.Energy;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -63,7 +62,7 @@ public class InvSlotElectricBlock extends InvSlot {
 
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 3) {
             return ((itemStack.getItemDamage() >= 4 || itemStack.getItemDamage() == 0)
                     && itemStack.getItem() instanceof ItemAdditionModule)

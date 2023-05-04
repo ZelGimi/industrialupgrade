@@ -1,7 +1,6 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -27,8 +26,9 @@ public class EnergyFESinkSource extends BasicSinkSource {
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing side) {
-        if(tile == null)
+        if (tile == null) {
             tile = this.world.getTileEntity(this.pos);
+        }
 
         IEnergyStorage cap = tile.getCapability(CapabilityEnergy.ENERGY, side);
         if (cap == null) {
@@ -39,8 +39,9 @@ public class EnergyFESinkSource extends BasicSinkSource {
     }
 
     public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing direction) {
-        if(tile == null)
+        if (tile == null) {
             tile = this.world.getTileEntity(this.pos);
+        }
         final IEnergyStorage cap = tile.getCapability(CapabilityEnergy.ENERGY, direction);
         if (cap == null) {
             return false;

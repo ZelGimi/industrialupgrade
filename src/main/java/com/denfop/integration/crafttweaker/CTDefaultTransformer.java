@@ -141,7 +141,7 @@ public class CTDefaultTransformer {
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing crystallizer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

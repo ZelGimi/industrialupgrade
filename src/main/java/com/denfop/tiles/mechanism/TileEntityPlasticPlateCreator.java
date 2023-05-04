@@ -2,20 +2,13 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerPlasticPlateCreator;
 import com.denfop.gui.GuiPlasticPlateCreator;
 import com.denfop.tiles.base.TileEntityBasePlasticPlateCreator;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,16 +48,17 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     }
 
 
+    @Override
+    public ContainerPlasticPlateCreator getGuiContainer(final EntityPlayer entityPlayer) {
+        return new ContainerPlasticPlateCreator(entityPlayer, this);
+    }
+
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiPlasticPlateCreator(new ContainerPlasticPlateCreator(entityPlayer, this));
 
     }
 
-    public ContainerBase<? extends TileEntityPlasticPlateCreator> getGuiContainer(EntityPlayer entityPlayer) {
-        return new ContainerPlasticPlateCreator(entityPlayer, this);
-
-    }
 
     public String getStartSoundFile() {
         return "Machines/plastic_plate.ogg";
@@ -79,8 +73,13 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing,UpgradableProperty.FluidConsuming
+        return EnumSet.of(
+                UpgradableProperty.Processing,
+                UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage,
+                UpgradableProperty.ItemConsuming,
+                UpgradableProperty.ItemProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

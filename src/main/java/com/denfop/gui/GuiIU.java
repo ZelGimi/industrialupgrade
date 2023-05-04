@@ -6,10 +6,9 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.container.ContainerBase;
+import com.denfop.invslot.InvSlot;
 import com.denfop.utils.ModUtils;
-import ic2.core.ContainerBase;
-import ic2.core.GuiIC2;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import net.minecraft.inventory.IInventory;
 

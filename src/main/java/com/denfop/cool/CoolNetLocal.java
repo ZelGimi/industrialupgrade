@@ -281,7 +281,9 @@ public class CoolNetLocal {
 
                             .getZ() + ")\n" + "R: " + CoolPath.target + " (" + CoolPath.target
                             .getBlockPos()
-                            .getX() + "," + CoolPath.target.getBlockPos().getY() + "," + CoolPath.target.getBlockPos().getZ() + ")");
+                            .getX() + "," + CoolPath.target.getBlockPos().getY() + "," + CoolPath.target
+                            .getBlockPos()
+                            .getZ() + ")");
                 }
             }
         }

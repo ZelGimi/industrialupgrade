@@ -1,10 +1,10 @@
 package com.powerutils;
 
 
+import com.denfop.IUCore;
+import com.denfop.gui.GuiIC2;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
-import ic2.core.GuiIC2;
-import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -37,11 +37,11 @@ public class GuiFEConverter extends GuiIC2<ContainerFEConverter> {
 
         if (x >= 43 && x <= 58 && y >= 77 && y <= 87) {
             if (this.container.base.rf) {
-                IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
             }
         } else if (x >= 59 && x <= 73 && y >= 77 && y <= 87) {
             if (!this.container.base.rf) {
-                IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
             }
 
         }

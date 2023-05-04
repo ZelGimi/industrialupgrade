@@ -1,11 +1,12 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.TextBox;
 import com.denfop.container.ContainerHeatLimiter;
 import com.denfop.utils.ListInformationUtils;
 import ic2.core.IC2;
-import ic2.core.gui.GuiElement;
-import ic2.core.gui.TextBox;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 
@@ -49,11 +50,11 @@ public class GuiHeatLimiter extends GuiIU<ContainerHeatLimiter> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 60 && x <= 120 && y >= 32 && y <= 44) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, -1);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, -1);
         }
         if (x >= 60 && x <= 120 && y >= 46 && y <= 58) {
             try {
-                IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, Math.min(
+                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, Math.min(
                         10000,
                         Math.max(0, Integer.parseInt(textBox.getText()))
                 ));
@@ -61,7 +62,7 @@ public class GuiHeatLimiter extends GuiIU<ContainerHeatLimiter> {
             }
         }
         if (x >= 60 && x <= 120 && y >= 60 && y <= 72) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 10001);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 10001);
         }
     }
 

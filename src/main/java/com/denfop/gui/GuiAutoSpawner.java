@@ -1,11 +1,10 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.api.gui.Area;
 import com.denfop.container.ContainerAutoSpawner;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
-import ic2.core.gui.Area;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;

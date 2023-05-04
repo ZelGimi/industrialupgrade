@@ -6,7 +6,6 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ public class InvSlotInput extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         final Block block = Block.getBlockFromItem(stack.getItem());
         return block != Blocks.AIR;
     }

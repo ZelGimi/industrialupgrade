@@ -165,7 +165,7 @@ public class CTGenMicrochip {
         }
 
         public String describe() {
-            return "Adding generation microchip bottle recipe " + this.container + " + " + this.fill + " => " + this.output;
+            return "Adding generation microchip recipe " + this.container + " + " + this.fill + " => " + this.output;
         }
 
         public Object getOverrideKey() {

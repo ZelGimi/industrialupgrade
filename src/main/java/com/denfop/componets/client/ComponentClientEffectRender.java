@@ -1,10 +1,8 @@
 package com.denfop.componets.client;
 
-import com.denfop.api.cool.ICoolSource;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.componets.CoolComponent;
 import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.TileEntityComponent;
 import net.minecraft.util.EnumFacing;
@@ -70,8 +68,9 @@ public class ComponentClientEffectRender extends TileEntityComponent {
                 TileEntityBaseWaterGenerator baseWaterGenerator = (TileEntityBaseWaterGenerator) this.parent;
                 if (baseWaterGenerator.getActive()) {
                     rnd = this.parent.getWorld().rand;
-                    if(WindSystem.windSystem.getLevelWind() <= 3)
+                    if (WindSystem.windSystem.getLevelWind() <= 3) {
                         break;
+                    }
                     if (rnd.nextInt(20 / WindSystem.windSystem.getLevelWind()) != 0) {
                         break;
                     }
@@ -94,13 +93,20 @@ public class ComponentClientEffectRender extends TileEntityComponent {
                                             pos2.getY() + rnd.nextFloat(),
                                             (float) pos2.getZ() + rnd.nextFloat(),
                                             0.0D, 0.05D,
-                                            -1D*(baseWaterGenerator.getFacing().getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? -1 : 1) * WindSystem.windSystem.getSpeed(Math.min(
-                                                    24.7 + baseWaterGenerator.mind_speed,
-                                                    WindSystem.windSystem.getSpeedFromPower(baseWaterGenerator.getBlockPos(), baseWaterGenerator,
-                                                            baseWaterGenerator.generation
-                                                    )
-                                            ) * baseWaterGenerator.getCoefficient()
-                                    )*2);
+                                            -1D * (baseWaterGenerator
+                                                    .getFacing()
+                                                    .getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE
+                                                    ? -1
+                                                    : 1) * WindSystem.windSystem.getSpeed(Math.min(
+                                                            24.7 + baseWaterGenerator.mind_speed,
+                                                            WindSystem.windSystem.getSpeedFromPower(
+                                                                    baseWaterGenerator.getBlockPos(),
+                                                                    baseWaterGenerator,
+                                                                    baseWaterGenerator.generation
+                                                            )
+                                                    ) * baseWaterGenerator.getCoefficient()
+                                            ) * 2
+                                    );
                                 }
                             }
                             break;
@@ -112,13 +118,19 @@ public class ComponentClientEffectRender extends TileEntityComponent {
                                             (float) pos2.getX() + rnd.nextFloat(),
                                             pos2.getY() + rnd.nextFloat(),
                                             (float) pos2.getZ() + rnd.nextFloat(),
-                                            -1D*(baseWaterGenerator.getFacing().getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE ? -1 : 1)* WindSystem.windSystem.getSpeed(Math.min(
+                                            -1D * (baseWaterGenerator
+                                                    .getFacing()
+                                                    .getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE
+                                                    ? -1
+                                                    : 1) * WindSystem.windSystem.getSpeed(Math.min(
                                                             24.7 + baseWaterGenerator.mind_speed,
-                                                            WindSystem.windSystem.getSpeedFromPower(baseWaterGenerator.getBlockPos(), baseWaterGenerator,
+                                                            WindSystem.windSystem.getSpeedFromPower(
+                                                                    baseWaterGenerator.getBlockPos(),
+                                                                    baseWaterGenerator,
                                                                     baseWaterGenerator.generation
                                                             )
                                                     ) * baseWaterGenerator.getCoefficient()
-                                            )*2, 0.05D, 0.0D
+                                            ) * 2, 0.05D, 0.0D
                                     );
                                 }
                             }

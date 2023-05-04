@@ -2,8 +2,10 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.api.IAdvEnergyNet;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
@@ -11,10 +13,7 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
 import com.denfop.invslot.InvSlotGenSunarrium;
-import ic2.api.energy.EnergyNet;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
@@ -61,7 +60,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.lst.add(0D);
         this.lst.add(0D);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
-                .asBasicSource(EnergyType.SOLARIUM,this, 10000, 1));
+                .asBasicSource(EnergyType.SOLARIUM, this, 10000, 1));
         this.coef_day = 0;
         this.coef_night = 0;
         this.update_night = 0;
@@ -112,8 +111,8 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         return true;
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("sunenergy");
 
         return ret;
@@ -128,7 +127,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.coef_day = this.lst.get(0);
         this.coef_night = this.lst.get(1);
         this.update_night = this.lst.get(2);
-        IAdvEnergyNet advEnergyNet = (IAdvEnergyNet) EnergyNet.instance;
+        IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
         this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
         updateVisibility();
 
@@ -183,7 +182,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     }
 
 
-    public ContainerBase<? extends TileEntitySolarGeneratorEnergy> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSolarGeneratorEnergy getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerSolarGeneratorEnergy(entityPlayer, this);
     }
 

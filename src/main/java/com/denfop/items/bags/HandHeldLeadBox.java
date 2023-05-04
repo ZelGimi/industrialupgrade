@@ -1,9 +1,9 @@
 package com.denfop.items.bags;
 
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerLeadBox;
 import com.denfop.gui.GuiLeadBox;
-import ic2.core.ContainerBase;
-import ic2.core.item.tool.HandHeldInventory;
+import com.denfop.items.HandHeldInventory;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

@@ -9,10 +9,10 @@ import com.denfop.api.sytem.IEmitter;
 import com.denfop.api.sytem.ISink;
 import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
+import com.denfop.invslot.InvSlot;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
+import ic2.core.block.comp.Components;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class ComponentBaseEnergy extends TileEntityComponent {
+public class ComponentBaseEnergy extends TileEntityAdvComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
@@ -100,10 +100,6 @@ public class ComponentBaseEnergy extends TileEntityComponent {
         return asBasicSink(type, parent, capacity, 1);
     }
 
-    public EnergyType getType() {
-        return type;
-    }
-
     public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityBlock parent, double capacity, int tier) {
         return new ComponentBaseEnergy(type, parent, capacity, Util.allFacings, Collections.emptySet(), tier);
     }
@@ -116,6 +112,15 @@ public class ComponentBaseEnergy extends TileEntityComponent {
         return new ComponentBaseEnergy(type, parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 
+    public EnergyType getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return Components.getId(this.getClass()) + this.type.name().toLowerCase();
+    }
+
     public void readFromNbt(NBTTagCompound nbt) {
         this.storage = nbt.getDouble("storage");
         this.capacity = nbt.getDouble("capacity");
@@ -126,6 +131,11 @@ public class ComponentBaseEnergy extends TileEntityComponent {
         ret.setDouble("storage", this.storage);
         ret.setDouble("capacity", this.capacity);
         return ret;
+    }
+
+    @Override
+    public boolean isServer() {
+        return false;
     }
 
     public void onLoaded() {
@@ -148,8 +158,9 @@ public class ComponentBaseEnergy extends TileEntityComponent {
                 }
 
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD,this.type,
-                        this.delegate));
+                MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD, this.type,
+                        this.delegate
+                ));
             }
 
             this.loaded = true;
@@ -185,8 +196,9 @@ public class ComponentBaseEnergy extends TileEntityComponent {
                 );
             }
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD,this.type,
-                    this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD, this.type,
+                    this.delegate
+            ));
             this.delegate = null;
         } else if (debugLoad) {
             IC2.log.debug(LogCategory.Component, "Skipping Energy onUnloaded for %s at %s.",
@@ -307,8 +319,9 @@ public class ComponentBaseEnergy extends TileEntityComponent {
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD,this.type,
-                    this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD, this.type,
+                    this.delegate
+            ));
         }
 
         this.sinkDirections = sinkDirections;
@@ -330,8 +343,9 @@ public class ComponentBaseEnergy extends TileEntityComponent {
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD,this.type,
-                    this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD, this.type,
+                    this.delegate
+            ));
         } else if (debugLoad) {
             IC2.log.debug(
                     LogCategory.Component,

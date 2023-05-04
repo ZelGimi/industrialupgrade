@@ -9,7 +9,6 @@ import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -189,7 +188,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
 
             return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(

@@ -2,7 +2,7 @@ package com.denfop.api.recipe;
 
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
 
 import java.util.List;
@@ -91,6 +91,8 @@ public interface IRecipes {
             boolean adjustInput,
             List<ItemStack> stacks
     );
+
+    List<Fluid> getInputFluidsFromRecipe(String name);
 
     IBaseRecipe getRecipe(String name);
 

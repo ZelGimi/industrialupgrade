@@ -1,70 +1,69 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.api.Recipes;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerReplicator;
 import com.denfop.gui.GuiReplicator;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.api.recipe.IPatternStorage;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.network.GuiSynced;
 import ic2.core.profile.NotClassic;
 import ic2.core.ref.FluidName;
 import ic2.core.util.StackUtil;
-import ic2.core.uu.UuIndex;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @NotClassic
 public class TileEntityBaseReplicator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock, IType,
         INetworkClientTileEntityEventListener {
 
-    private static final double uuPerTickBase = 1.0E-4D;
-    private static final double euPerTickBase = 512.0D;
-    private static final int defaultTier = 4;
-    private static final int defaultEnergyStorage = 2000000;
     public final InvSlotConsumableLiquid fluidSlot;
     public final InvSlotOutput cellSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
-    @GuiSynced
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final double coef;
     public double uuProcessed = 0.0D;
-    public ItemStack pattern;
+    public RecipeInfo pattern;
     public int index;
     public int maxIndex;
     public double patternUu;
     public double patternEu;
+    public TileEntityBaseReplicator.Mode mode;
+    Map<BlockPos, IPatternStorage> iPatternStorageMap = new HashMap<>();
+    List<IPatternStorage> iPatternStorageList = new ArrayList<>();
     private double uuPerTick = 1.0E-4D;
     private double euPerTick = 512.0D;
     private double extraUuStored = 0.0D;
-    private TileEntityBaseReplicator.Mode mode;
 
     public TileEntityBaseReplicator(double coef) {
         super(2000000, 4, 0);
@@ -85,6 +84,30 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
+    private static double applyModifier(int base, double extra, double multiplier) {
+        return (double) Math.round(((double) base + extra) * multiplier);
+    }
+
+    @Override
+    protected void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+
+        if (tile instanceof IPatternStorage) {
+            if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
+                this.iPatternStorageList.add((IPatternStorage) tile);
+                this.iPatternStorageMap.put(neighborPos, (IPatternStorage) tile);
+            }
+        } else if (tile == null) {
+            IPatternStorage storage = iPatternStorageMap.get(neighborPos);
+            if (storage != null) {
+                this.iPatternStorageList.remove(storage);
+                this.iPatternStorageMap.remove(neighborPos, storage);
+            }
+        }
+        refreshInfo();
+    }
+
     protected void updateEntityServer() {
         super.updateEntityServer();
         if (this.fluidTank.getFluidAmount() < this.fluidTank.getCapacity()) {
@@ -93,7 +116,7 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
 
         boolean newActive = false;
         if (this.mode != Mode.STOPPED && this.energy.getEnergy() >= this.euPerTick && this.pattern != null && this.outputSlot.canAdd(
-                this.pattern)) {
+                this.pattern.getStack())) {
             double uuRemaining = this.patternUu - this.uuProcessed;
             boolean finish;
             if (uuRemaining <= this.uuPerTick) {
@@ -116,7 +139,7 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
                     }
 
                     if (this.pattern != null) {
-                        this.outputSlot.add(this.pattern);
+                        this.outputSlot.add(this.pattern.getStack());
                     }
                 }
             }
@@ -154,11 +177,11 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
 
     public void refreshInfo() {
         IPatternStorage storage = this.getPatternStorage();
-        ItemStack oldPattern = this.pattern;
+        RecipeInfo oldPattern = this.pattern;
         if (storage == null) {
             this.pattern = null;
         } else {
-            List<ItemStack> patterns = storage.getPatterns();
+            List<RecipeInfo> patterns = storage.getPatterns();
             if (this.index < 0 || this.index >= patterns.size()) {
                 this.index = 0;
             }
@@ -168,8 +191,8 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
                 this.pattern = null;
             } else {
                 this.pattern = patterns.get(this.index);
-                this.patternUu = UuIndex.instance.getInBuckets(this.pattern) * this.coef;
-                if (!StackUtil.checkItemEqualityStrict(this.pattern, oldPattern)) {
+                this.patternUu = pattern.getCol() * this.coef;
+                if (oldPattern == null || !StackUtil.checkItemEqualityStrict(this.pattern.getStack(), oldPattern.getStack())) {
                     this.uuProcessed = 0.0D;
                     this.mode = Mode.STOPPED;
                 }
@@ -184,22 +207,17 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
     }
 
     public IPatternStorage getPatternStorage() {
-        World world = this.getWorld();
-        EnumFacing[] var2 = EnumFacing.VALUES;
-        for (EnumFacing dir : var2) {
-            TileEntity target = world.getTileEntity(this.pos.offset(dir));
-            if (target instanceof IPatternStorage) {
-                return (IPatternStorage) target;
-            }
+        if (this.iPatternStorageList.isEmpty()) {
+            return null;
+        } else {
+            return this.iPatternStorageList.get(0);
         }
-
-        return null;
     }
 
     public void setOverclockRates() {
         this.upgradeSlot.onChanged();
         this.uuPerTick = 1.0E-4D / this.upgradeSlot.processTimeMultiplier;
-        this.euPerTick = (512.0D + (double) this.upgradeSlot.extraEnergyDemand) * this.upgradeSlot.energyDemandMultiplier;
+        this.euPerTick = (512.0D + this.upgradeSlot.extraEnergyDemand) * this.upgradeSlot.energyDemandMultiplier;
         this.energy.setSinkTier(applyModifier(4, this.upgradeSlot.extraTier, 1.0D));
         this.energy.setCapacity(applyModifier(
                 2000000,
@@ -209,12 +227,12 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
+    public GuiReplicator getGui(EntityPlayer player, boolean isAdmin) {
         return new GuiReplicator(new ContainerReplicator(player, this));
 
     }
 
-    public ContainerBase<TileEntityBaseReplicator> getGuiContainer(EntityPlayer player) {
+    public ContainerReplicator getGuiContainer(EntityPlayer player) {
         return new ContainerReplicator(player, this);
 
     }
@@ -223,6 +241,22 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
             this.setOverclockRates();
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                final BlockPos neighborPos = pos.offset(facing);
+                final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+                if (tile instanceof IPatternStorage) {
+                    if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
+                        this.iPatternStorageList.add((IPatternStorage) tile);
+                        this.iPatternStorageMap.put(neighborPos, (IPatternStorage) tile);
+                    }
+                } else if (tile == null) {
+                    IPatternStorage storage = iPatternStorageMap.get(neighborPos);
+                    if (storage != null) {
+                        this.iPatternStorageList.remove(storage);
+                        this.iPatternStorageMap.remove(neighborPos, storage);
+                    }
+                }
+            }
             this.refreshInfo();
         }
 
@@ -236,8 +270,8 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
 
     }
 
-    public boolean gainFluid() {
-        return this.fluidSlot.processIntoTank(this.fluidTank, this.cellSlot);
+    public void gainFluid() {
+        this.fluidSlot.processIntoTank(this.fluidTank, this.cellSlot);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -248,7 +282,11 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         int modeIdx = nbt.getInteger("mode");
         this.mode = modeIdx < Mode.values().length ? Mode.values()[modeIdx] : Mode.STOPPED;
         NBTTagCompound contentTag = nbt.getCompoundTag("pattern");
-        this.pattern = new ItemStack(contentTag);
+        final ItemStack stack = new ItemStack(contentTag);
+        this.pattern = new RecipeInfo(stack, Recipes.recipes
+                .getRecipeOutput("replicator", false, stack)
+                .getOutput().metadata.getDouble(
+                        "matter"));
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -259,7 +297,7 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         nbt.setInteger("mode", this.mode.ordinal());
         if (this.pattern != null) {
             NBTTagCompound contentTag = new NBTTagCompound();
-            this.pattern.writeToNBT(contentTag);
+            this.pattern.getStack().writeToNBT(contentTag);
             nbt.setTag("pattern", contentTag);
         }
 
@@ -273,7 +311,7 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
                 if (this.mode == Mode.STOPPED) {
                     IPatternStorage storage = this.getPatternStorage();
                     if (storage != null) {
-                        List<ItemStack> patterns = storage.getPatterns();
+                        List<RecipeInfo> patterns = storage.getPatterns();
                         if (!patterns.isEmpty()) {
                             if (event == 0) {
                                 if (this.index <= 0) {

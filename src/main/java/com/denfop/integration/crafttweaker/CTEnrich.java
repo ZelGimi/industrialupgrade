@@ -132,7 +132,7 @@ public class CTEnrich {
         }
 
         public String describe() {
-            return "Adding enrich bottle recipe " + this.container + " + " + this.fill + " => " + this.output;
+            return "Adding enrich recipe " + this.container + " + " + this.fill + " => " + this.output;
         }
 
         public Object getOverrideKey() {

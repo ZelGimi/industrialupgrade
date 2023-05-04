@@ -2,15 +2,20 @@ package com.denfop.invslot;
 
 import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.componets.Fluids;
+import com.denfop.componets.Redstone;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.*;
+import ic2.api.upgrade.IAugmentationUpgrade;
+import ic2.api.upgrade.IEnergyStorageUpgrade;
+import ic2.api.upgrade.IFullUpgrade;
+import ic2.api.upgrade.IProcessingUpgrade;
+import ic2.api.upgrade.IRedstoneSensitiveUpgrade;
+import ic2.api.upgrade.ITransformerUpgrade;
+import ic2.api.upgrade.IUpgradableBlock;
+import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.comp.Redstone;
-import ic2.core.block.comp.Redstone.IRedstoneModifier;
 import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.util.StackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -30,7 +35,11 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InvSlotUpgrade extends InvSlot {
 
@@ -46,9 +55,9 @@ public class InvSlotUpgrade extends InvSlot {
     public int augmentation;
     public int extraProcessTime;
     public double processTimeMultiplier;
-    public int extraEnergyDemand;
+    public double extraEnergyDemand;
     public double energyDemandMultiplier;
-    public int extraEnergyStorage;
+    public double extraEnergyStorage;
     public double energyStorageMultiplier;
     public int extraTier;
     public int tick = 0;
@@ -56,7 +65,7 @@ public class InvSlotUpgrade extends InvSlot {
     List<InvSlotOutput> slots = new ArrayList<>();
     List<InvSlot> inv_slots = new ArrayList<>();
     private EnumFacing[] facings;
-    private List<IRedstoneModifier> redstoneModifiers = Collections.emptyList();
+    private List<Redstone.IRedstoneModifier> redstoneModifiers = Collections.emptyList();
     private boolean ejectorUpgrade;
     private boolean fluidEjectorUpgrade;
     private boolean pullingUpgrade;
@@ -96,13 +105,17 @@ public class InvSlotUpgrade extends InvSlot {
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
+    private static double applyModifier(double base, double extra, double multiplier) {
+        return (double) Math.round((base + extra) * multiplier);
+    }
+
     private static EnumFacing getDirection(ItemStack stack) {
         int rawDir = StackUtil.getOrCreateNbtData(stack).getByte("dir");
         return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
     }
 
 
-    public boolean accepts(ItemStack stack) {
+    public boolean accepts(ItemStack stack, final int index) {
         Item rawItem = stack.getItem();
         if (!(rawItem instanceof IUpgradeItem)) {
             return false;
@@ -182,7 +195,7 @@ public class InvSlotUpgrade extends InvSlot {
     public void onChanged() {
         this.resetRates();
         IUpgradableBlock block = (IUpgradableBlock) this.base;
-        List<IRedstoneModifier> newRedstoneModifiers = new ArrayList<>();
+        List<Redstone.IRedstoneModifier> newRedstoneModifiers = new ArrayList<>();
 
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
@@ -212,12 +225,6 @@ public class InvSlotUpgrade extends InvSlot {
                     this.extraTier += ((ITransformerUpgrade) upgrade).getExtraTier(stack, block) * size;
                 }
 
-                if (all || upgrade instanceof IRedstoneSensitiveUpgrade) {
-                    IRedstoneSensitiveUpgrade redUpgrade = (IRedstoneSensitiveUpgrade) upgrade;
-                    if (redUpgrade.modifiesRedstoneInput(stack, block)) {
-                        newRedstoneModifiers.add(new InvSlotUpgrade.UpgradeRedstoneModifier(redUpgrade, stack, block));
-                    }
-                }
             }
 
         }
@@ -230,7 +237,7 @@ public class InvSlotUpgrade extends InvSlot {
                 rs.update();
             }
         }
-        this.redstoneModifiers = newRedstoneModifiers.isEmpty() ? Collections.emptyList() : newRedstoneModifiers;
+        this.redstoneModifiers = newRedstoneModifiers;
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
             if (stack.isItemEqual(Ic2Items.ejectorUpgrade)) {
@@ -287,11 +294,19 @@ public class InvSlotUpgrade extends InvSlot {
         return (int) Math.min(Math.ceil(64.0D / stackOpLen), 2.147483647E9D);
     }
 
-    public int getEnergyDemand(int defaultEnergyDemand) {
+    public double getEnergyDemand(int defaultEnergyDemand) {
         return applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
     }
 
-    public int getEnergyStorage(int defaultEnergyStorage) {
+    public double getEnergyDemand(double defaultEnergyDemand) {
+        return applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
+    }
+
+    public double getEnergyStorage(int defaultEnergyStorage) {
+        return applyModifier(defaultEnergyStorage, this.extraEnergyStorage, this.energyStorageMultiplier);
+    }
+
+    public double getEnergyStorage(double defaultEnergyStorage) {
         return applyModifier(defaultEnergyStorage, this.extraEnergyStorage, this.energyStorageMultiplier);
     }
 
@@ -669,8 +684,13 @@ public class InvSlotUpgrade extends InvSlot {
 
         final IItemHandler dest = dest1.getHandler();
         final IInventory inventory = dest1.getInventory();
-        ItemStack stackInSlot = inventory.getStackInSlot(slot);
-
+        ItemStack stackInSlot;
+        int maxSlots = dest.getSlots();
+        try {
+            stackInSlot = inventory.getStackInSlot(slot);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            stackInSlot = dest.getStackInSlot(slot);
+        }
         int m;
         if (!stackInSlot.isEmpty()) {
 
@@ -740,7 +760,7 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
 
-    private static class UpgradeRedstoneModifier implements IRedstoneModifier {
+    private static class UpgradeRedstoneModifier implements Redstone.IRedstoneModifier {
 
         private final IRedstoneSensitiveUpgrade upgrade;
         private final ItemStack stack;

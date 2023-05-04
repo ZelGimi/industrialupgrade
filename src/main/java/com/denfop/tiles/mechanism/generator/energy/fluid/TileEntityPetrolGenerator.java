@@ -3,21 +3,21 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerPetrolGenerator;
 import com.denfop.gui.GuiPetrolGenerator;
+import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.InvSlotConsumableLiquid;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.tiles.base.TileEntityLiquidTankInventory;
 import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
-import ic2.core.ContainerBase;
+import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlotCharge;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory implements IHasGui, IAudioFixer {
+public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory implements IHasGui, IAudioFixer,
+        INetworkClientTileEntityEventListener {
 
     public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
     public final InvSlotConsumableLiquid fluidSlot;
@@ -70,12 +71,26 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+
+            }
+        }
+    }
+
+    @Override
+    public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
+        sound = !sound;
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
+
+        if (!sound) {
+            if (this.getType() == EnumTypeAudio.ON) {
+                setType(EnumTypeAudio.OFF);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }
@@ -216,7 +231,7 @@ public class TileEntityPetrolGenerator extends TileEntityLiquidTankInventory imp
     }
 
 
-    public ContainerBase<TileEntityPetrolGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPetrolGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerPetrolGenerator(entityPlayer, this);
     }
 

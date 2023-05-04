@@ -9,7 +9,7 @@ import java.util.Map;
 public class GlobalNet implements IGlobalNet {
 
     private final EnergyType type;
-    Map<Integer, ILocalNet> worldILocalNetMap = new HashMap<>();
+    Map<Integer, ILocalNet> worldILocalNetMap = new HashMap<>(3);
 
     public GlobalNet(EnergyType element) {
         this.type = element;
@@ -77,7 +77,7 @@ public class GlobalNet implements IGlobalNet {
     public NodeStats getNodeStats(final ITile delegate, final World world) {
         ILocalNet localNet = worldILocalNetMap.get(world.provider.getDimension());
         if (localNet != null) {
-           return localNet.getNodeStats(delegate);
+            return localNet.getNodeStats(delegate);
         }
         return null;
     }

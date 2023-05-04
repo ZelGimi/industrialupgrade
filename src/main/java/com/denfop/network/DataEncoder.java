@@ -2,6 +2,7 @@ package com.denfop.network;
 
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.api.research.main.BaseLevelSystem;
 import com.denfop.api.research.main.BaseResearch;
 import com.denfop.api.space.fakebody.FakeAsteroid;
@@ -9,6 +10,8 @@ import com.denfop.api.space.fakebody.FakePlanet;
 import com.denfop.api.space.fakebody.FakePlayer;
 import com.denfop.api.space.fakebody.FakeSatellite;
 import com.denfop.api.vein.Vein;
+import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.invslot.InvSlot;
 import com.mojang.authlib.GameProfile;
 import ic2.api.crops.CropCard;
 import ic2.api.crops.Crops;
@@ -17,8 +20,6 @@ import ic2.api.network.INetworkCustomEncoder;
 import ic2.api.recipe.IElectrolyzerRecipeManager.ElectrolyzerOutput;
 import ic2.api.recipe.IElectrolyzerRecipeManager.ElectrolyzerRecipe;
 import ic2.core.IC2;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.StackUtil;
 import ic2.core.util.Util;
@@ -196,7 +197,7 @@ public final class DataEncoder {
                 encode(os, ((Collection) o).toArray(), false);
                 break;
             case Component:
-                NBTTagCompound nbt = ((TileEntityComponent) o).writeToNbt();
+                NBTTagCompound nbt = ((TileEntityAdvComponent) o).writeToNbt();
                 encode(os, nbt == null ? new NBTTagCompound() : nbt, false);
                 break;
             case CropCard:
@@ -335,6 +336,10 @@ public final class DataEncoder {
                 Vein vein = (Vein) o;
                 encode(os, vein.writeTag(), true);
                 break;
+            case RecipeInfo:
+                RecipeInfo recipeInfo = (RecipeInfo) o;
+                encode(os, recipeInfo.writeCompound(), true);
+                break;
             case Radiation:
                 Radiation radiation = (Radiation) o;
                 encode(os, radiation.writeCompound(), true);
@@ -472,7 +477,7 @@ public final class DataEncoder {
                 encode(os, ((Collection) o).toArray(), false);
                 break;
             case Component:
-                NBTTagCompound nbt = ((TileEntityComponent) o).writeToNbt();
+                NBTTagCompound nbt = ((TileEntityAdvComponent) o).writeToNbt();
                 encode(os, nbt == null ? new NBTTagCompound() : nbt, false);
                 break;
             case CropCard:
@@ -843,6 +848,8 @@ public final class DataEncoder {
                 return new Vec3d(is.readDouble(), is.readDouble(), is.readDouble());
             case Vein:
                 return new Vein((NBTTagCompound) decode(is));
+            case RecipeInfo:
+                return new RecipeInfo((NBTTagCompound) decode(is));
             case Radiation:
                 return new Radiation((NBTTagCompound) decode(is));
             case FAKE_PLANET:
@@ -892,9 +899,9 @@ public final class DataEncoder {
                             dstT.put(i, srcT.get(i));
                         }
                     }
-                } else if (dst instanceof TileEntityComponent) {
+                } else if (dst instanceof TileEntityAdvComponent) {
                     NBTTagCompound nbt = (NBTTagCompound) src;
-                    ((TileEntityComponent) dst).readFromNbt(nbt);
+                    ((TileEntityAdvComponent) dst).readFromNbt(nbt);
                 } else {
                     if (!(dst instanceof Collection)) {
                         return false;
@@ -1067,7 +1074,7 @@ public final class DataEncoder {
         FAKE_PLANET(FakePlanet.class),
         FAKE_SATELLITE(FakeSatellite.class),
         FAKE_ASTEROID(FakeAsteroid.class),
-        Component(TileEntityComponent.class, false),
+        Component(TileEntityAdvComponent.class, false),
         CropCard(CropCard.class),
         ElectrolyzerRecipe(ElectrolyzerRecipe.class),
         Addon(null),
@@ -1076,6 +1083,7 @@ public final class DataEncoder {
         Collection(Collection.class),
         BaseLevelSystem(BaseLevelSystem.class),
         BaseResearch(BaseResearch.class),
+        RecipeInfo(RecipeInfo.class),
         Object(Object.class);
 
         static final DataEncoder.EncodedType[] types = values();

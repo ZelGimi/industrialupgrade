@@ -64,9 +64,9 @@ public class GenStarHandler {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    container.input.getInputs().get(4).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
+                    container.input.getInputs().get(4).getInputs().get(0),
                     container.input.getInputs().get(5).getInputs().get(0),
                     container.input.getInputs().get(6).getInputs().get(0),
                     container.getOutput().items.get(0)

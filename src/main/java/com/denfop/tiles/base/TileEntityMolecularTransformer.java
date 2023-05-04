@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -11,6 +12,7 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBaseMolecular;
 import com.denfop.gui.GuiMolecularTransformer;
@@ -20,9 +22,7 @@ import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.item.type.MiscResourceType;
 import ic2.core.item.type.NuclearResourceType;
@@ -194,7 +194,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     }
 
     @Override
-    public ContainerBase<? extends TileEntityMolecularTransformer> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseMolecular getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseMolecular(entityPlayer, this);
     }
 
@@ -214,7 +214,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -232,8 +232,8 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("guiProgress");
         ret.add("queue");
         ret.add("redstoneMode");
@@ -287,7 +287,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             if (this.redstoneMode >= 8) {
                 this.redstoneMode = 0;
             }
-            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
+            IUCore.network.get(true).updateTileEntityField(this, "redstoneMode");
         }
         if (event == 1) {
             this.queue = !this.queue;
@@ -355,7 +355,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         if (IC2.platform.isSimulating()) {
             inputSlot.load();
             this.setOverclockRates();
-            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
+            IUCore.network.get(true).updateTileEntityField(this, "redstoneMode");
 
         }
 
@@ -408,7 +408,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 this.perenergy = this.energy.getEnergy();
                 if (!this.getActive()) {
                     if (this.world.provider.getWorldTime() % 2 == 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                     }
                     setActive(true);
                     setOverclockRates();
@@ -433,7 +433,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             } else {
                 if (this.energy.getEnergy() != 0 && getActive()) {
                     if (this.world.provider.getWorldTime() % 2 == 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                        IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                     }
                 }
                 this.energy.useEnergy(this.energy.getEnergy());
@@ -447,7 +447,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 this.perenergy = this.energy.getEnergy();
                 if (!this.getActive()) {
                     if (this.world.provider.getWorldTime() % 2 == 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                     }
                     setActive(true);
                     setOverclockRates();

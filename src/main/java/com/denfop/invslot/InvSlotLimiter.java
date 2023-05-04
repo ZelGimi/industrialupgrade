@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.tiles.base.TileEntityLimiter;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotLimiter extends InvSlot {
@@ -17,7 +16,7 @@ public class InvSlotLimiter extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         return stack.getItem() instanceof ItemCraftingElements && stack.getItemDamage() >= 206 && stack.getItemDamage() <= 216;
     }
 

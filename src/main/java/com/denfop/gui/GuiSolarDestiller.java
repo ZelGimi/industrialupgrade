@@ -1,7 +1,7 @@
 package com.denfop.gui;
 
+import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerSolarDestiller;
-import ic2.core.gui.TankGauge;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

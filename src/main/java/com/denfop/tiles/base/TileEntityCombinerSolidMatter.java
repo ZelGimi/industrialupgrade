@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerCombinerSolidMatter;
@@ -10,9 +11,7 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -129,6 +128,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         super.updateEntityServer();
 
         if (this.energy.getCapacity() > 0 && this.energy.getEnergy() == this.energy.getCapacity()) {
+
             for (int i = 0; i < this.solid_col.length; i++) {
                 if (this.solid_col[i] == 0) {
                     continue;
@@ -168,7 +168,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         return new GuiCombinerSolidMatter(new ContainerCombinerSolidMatter(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityCombinerSolidMatter> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerCombinerSolidMatter getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerCombinerSolidMatter(entityPlayer, this);
     }
 

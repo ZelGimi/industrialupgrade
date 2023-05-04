@@ -14,7 +14,6 @@ import com.denfop.container.ContainerBaseGenerationChipMachine;
 import com.denfop.gui.GuiGenerationMicrochip;
 import com.denfop.items.resource.ItemIngots;
 import com.denfop.tiles.base.TileEntityBaseGenerationMicrochip;
-import com.denfop.utils.ModUtils;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
@@ -395,7 +394,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
     public void init() {
         add(new ItemStack(Items.FLINT), new ItemStack(Items.DYE, 1, 4), new ItemStack(Items.IRON_INGOT),
                 new ItemStack(IUItem.iuingot, 1
-                        , 11), new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.basecircuit), (short) 2000, false
+                        , 11), new ItemStack(IUItem.iuingot, 1, 15), new ItemStack(IUItem.basecircuit), (short) 3000, false
         );
         add(
                 new ItemStack(Items.IRON_INGOT),
@@ -408,8 +407,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
         );
         add(
                 new ItemStack(Items.IRON_INGOT),
-                ModUtils.getCable(Ic2Items.copperCableItem
-                        , 1),
+                IUItem.insulatedCopperCableItem,
                 new ItemStack(IUItem.basecircuit, 1, 15),
                 new ItemStack(IUItem.basecircuit, 1, 16),
                 new ItemStack(IUItem.basecircuit, 1, 17),
@@ -513,7 +511,7 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

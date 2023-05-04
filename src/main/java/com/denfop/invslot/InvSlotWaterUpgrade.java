@@ -6,9 +6,8 @@ import com.denfop.api.water.upgrade.RotorUpgradeItemInform;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.water.upgrade.event.EventRotorItemLoad;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
+import com.denfop.tiles.base.IInventorySlotHolder;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.IInventorySlotHolder;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,7 +25,7 @@ public class InvSlotWaterUpgrade extends InvSlot {
         this.tile = base1;
     }
 
-    public boolean accepts(ItemStack stack) {
+    public boolean accepts(ItemStack stack, final int index) {
         if (this.tile.getRotor() == null) {
             return false;
         }

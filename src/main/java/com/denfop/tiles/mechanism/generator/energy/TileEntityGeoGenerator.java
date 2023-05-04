@@ -1,18 +1,15 @@
 package com.denfop.tiles.mechanism.generator.energy;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGeoGenerator;
 import com.denfop.gui.GuiGeoGenerator;
-import ic2.core.ContainerBase;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquid.OpType;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByTank;
-import ic2.core.block.invslot.InvSlotOutput;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotConsumableLiquid;
+import com.denfop.invslot.InvSlotConsumableLiquidByTank;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
 import ic2.core.util.ConfigUtil;
@@ -48,10 +45,10 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
         this.fluidSlot = new InvSlotConsumableLiquidByTank(
                 this,
                 "fluidSlot",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.ANY,
-                OpType.Drain,
+                InvSlot.InvSide.ANY,
+                InvSlotConsumableLiquid.OpType.Drain,
                 this.fluidTank
         );
         this.outputSlot = new InvSlotOutput(this, "output", 1);
@@ -92,7 +89,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
 
     }
 
-    public ContainerBase<TileEntityGeoGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGeoGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerGeoGenerator(entityPlayer, this);
     }
 

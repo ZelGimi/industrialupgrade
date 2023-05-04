@@ -3,7 +3,6 @@ package com.denfop.componets;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.EnergyNet;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +11,7 @@ import net.minecraft.util.EnumFacing;
 import java.io.DataInput;
 import java.io.IOException;
 
-public class RFComponent extends TileEntityComponent implements IEnergyReceiver {
+public class RFComponent extends TileEntityAdvComponent implements IEnergyReceiver {
 
     private final AdvEnergy energy;
     public double capacity;
@@ -73,24 +72,12 @@ public class RFComponent extends TileEntityComponent implements IEnergyReceiver 
         this.storage = Math.min(this.capacity, this.storage);
     }
 
-    public void addCapacity(double capacity) {
-        this.capacity += capacity;
-    }
-
     public double getEnergy() {
         return this.storage;
     }
 
-    public double getFreeEnergy() {
-        return Math.max(0.0D, this.capacity - this.storage);
-    }
-
     public double getFillRatio() {
         return this.storage / this.capacity;
-    }
-
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
     }
 
     public double addEnergy(double amount) {
@@ -98,10 +85,6 @@ public class RFComponent extends TileEntityComponent implements IEnergyReceiver 
         this.storage += amount;
         this.storage = Math.min(this.storage, this.capacity);
         return amount;
-    }
-
-    public void forceAddEnergy(double amount) {
-        this.storage += amount;
     }
 
     public boolean canUseEnergy(double amount) {
@@ -115,6 +98,11 @@ public class RFComponent extends TileEntityComponent implements IEnergyReceiver 
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean isServer() {
+        return false;
     }
 
     public double useEnergy(double amount, boolean simulate) {

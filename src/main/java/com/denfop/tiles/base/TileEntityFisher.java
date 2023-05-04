@@ -13,9 +13,7 @@ import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -251,7 +249,7 @@ public class TileEntityFisher extends TileEntityElectricMachine
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -301,11 +299,11 @@ public class TileEntityFisher extends TileEntityElectricMachine
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiFisher getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiFisher(new ContainerFisher(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityFisher> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerFisher getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerFisher(entityPlayer, this);
     }
 

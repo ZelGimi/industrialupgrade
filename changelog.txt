@@ -1,6 +1,54 @@
 ###############################################
 #                  Changelog                  #
 ###############################################
+Version:2.5:
+1. The mod has completely moved away from the ic2 power grid
+2. Fixed information of the wattmeter
+3. Transformers transfer 4 times per tick energy
+4. Creation your own main GUI
+5. Creation your own main container
+6. Creation of a system of liquid recipes
+7. Slots depend on indices (this was not the case in ic2)
+8. Reworked the liquid matter system, optimization, abandoning the ic2 batch system
+9. The multistructure system has been reworked
+10. Added Natural Gas
+11. Added Chlorine, Bromine, Iodine
+12. Mechanisms have IC2Material.MACHINE
+13. Recycled almost all energies into one
+14. Optimization of panel rendering in synthesizer by Landex
+15. Fixed crash on planets with Galacticraft
+16. Adding sound to some mechanisms
+17. Adding mute sounds in some mechanisms
+18. Optimization of tighteners (now working)
+19. Added sounds when pressing buttons in mechanisms
+20. Fixed localization
+21. Added effects for a mechanism that is heated, or a refrigerator or hydro generator.
+22. Slots in solid matter transducers are now dependent on matter.
+23. Added an optimized version of redstone for reactors
+24. Added an optimized version of redstone for matter generators
+25. Added an optimized version of redstone for vaults
+26. Switching to a completely custom batch system
+27. Added support for craftweaker with filler
+28. Added support for craftweaker with preserving mechanism
+29. Fixed the robot of some tweakers
+30. Added various jei support
+31. Added support for OpenComputer (Reactors, Storages, Multi-mechanisms, Windmills / Hydrogenerators)
+32. The obsidian generator is the last mechanism that abandoned the ic2 recipe system
+33. Creation your own recipes with the replicator
+34. Support for craftweaker with replicator
+35. Items that can be created in the replicator, when you hover over them, you can see their price in matter
+36. Fixed a bug with the redstone generator
+37. Spectral Armor Optimization
+38. Fixed the cost of damage in spectral armor (was x2)
+39. If a player has a lead box with him, then when he picks up a radioactive element, he will immediately be in the box
+40. Fixed the work of wireless batteries
+41. Creation your own wires from copper to fiberglass
+42. Creation your own analogues of a solar panel, generator, geogenerator, pump, reactor with a camera, teleporter, harvester, auto gardener
+43. When creating a multi-block structure, the main block will draw a diagram of the creation of the structure
+44. Fixed for creating a modification module: Damage
+45. Fixed the load from the shipment of wind / hydro generators
+46. Increased the radius of the pump
+47. Optimization of oil and vein 
 Version:2.4:
 1. Adding your api for sounds, which facilitates the work of the client and server
 2. Adding a cooling system

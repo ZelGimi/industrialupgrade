@@ -67,6 +67,11 @@ public class GearingCategory extends Gui implements IRecipeCategory<GearingWrapp
         if (xScale > 24) {
             progress = 0;
         }
+        mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        drawTexturedModalRect(
+                +2, 45, 136, 4, 12,
+                14
+        );
         mc.getTextureManager().bindTexture(getTexture());
         drawTexturedModalRect(66 - 1, 12 + 19, 209, 64, 18, 25);
         drawTexturedModalRect(66 - 1, 12 + 19, 227, 64, 18, xScale + 1);
@@ -77,6 +82,7 @@ public class GearingCategory extends Gui implements IRecipeCategory<GearingWrapp
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
         drawTexturedModalRect(66 - 1, 56 - 1, 238, 0, 18, 18);
+        drawTexturedModalRect(2, 44 + 16, 238, 0, 18, 18);
 
     }
 

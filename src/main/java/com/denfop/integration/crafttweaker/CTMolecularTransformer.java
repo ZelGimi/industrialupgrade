@@ -182,7 +182,7 @@ public class CTMolecularTransformer {
         }
 
         public String describe() {
-            return "Adding moleculaqr recipe " + this.ingredient + " + " + this.tag + " => " + Arrays.toString(this.output);
+            return "Adding molecular recipe " + this.ingredient + " + " + this.tag + " => " + Arrays.toString(this.output);
         }
 
         public Object getOverrideKey() {

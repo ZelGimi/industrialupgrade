@@ -1,7 +1,7 @@
 package com.denfop.items.resource;
 
+import com.denfop.blocks.IIdProvider;
 import ic2.core.block.state.EnumProperty;
-import ic2.core.block.state.IIdProvider;
 import ic2.core.item.ItemIC2;
 import ic2.core.ref.IMultiItem;
 import ic2.core.ref.ItemName;

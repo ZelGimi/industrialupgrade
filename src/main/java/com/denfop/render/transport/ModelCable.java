@@ -130,7 +130,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
     }
 
     private IBakedModel generateModel(CableRenderState prop) {
-        float th = prop.type.thickness + (float) (0) * 0.0625F;
+        float th = prop.type.thickness + +(float) (prop.type.insulation * 2) * 0.0625F;
         float sp = (1.0F - th) / 2.0F;
         List<BakedQuad>[] faceQuads = new List[EnumFacing.VALUES.length];
 
@@ -139,8 +139,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
         }
 
         List<BakedQuad> generalQuads = new ArrayList<>();
-        TextureAtlasSprite sprite = this.textures.get(getTextureLocation(prop.type
-        ));
+        TextureAtlasSprite sprite = this.textures.get(getTextureLocation(prop.type));
         EnumFacing[] var7 = EnumFacing.VALUES;
         int i = var7.length;
 

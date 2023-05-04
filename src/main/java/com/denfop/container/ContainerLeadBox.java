@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.items.bags.HandHeldLeadBox;
-import ic2.core.item.ContainerHandHeldInventory;
 import ic2.core.slot.SlotHologramSlot;
 import ic2.core.util.StackUtil;
 import net.minecraft.entity.player.EntityPlayer;

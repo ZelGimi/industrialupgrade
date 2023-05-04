@@ -4,18 +4,14 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
+import com.denfop.blocks.IIdProvider;
 import ic2.api.item.IItemHudInfo;
-import ic2.api.upgrade.IProcessingUpgrade;
-import ic2.api.upgrade.ITransformerUpgrade;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.block.state.IIdProvider;
+import ic2.api.upgrade.*;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
+import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -28,14 +24,10 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implements IModelRegister, IProcessingUpgrade,
-        IUpgradeItem,
+        IUpgradeItem, IEnergyStorageUpgrade,
         ITransformerUpgrade, IItemHudInfo {
 
     protected static final String NAME = "upgrades";
@@ -48,6 +40,10 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         IUItem.overclockerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker2.ordinal()));
         IUItem.tranformerUpgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer.ordinal()));
         IUItem.tranformerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.transformer1.ordinal()));
+        IUItem.lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.storage.ordinal()));
+        IUItem.adv_lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.adv_storage.ordinal()));
+        IUItem.imp_lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.imp_storage.ordinal()));
+        IUItem.per_lap_energystorage_upgrade = UpgradeRegistry.register(new ItemStack(this, 1, Type.per_storage.ordinal()));
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
@@ -81,6 +77,11 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
             case transformer:
             case transformer1:
                 return types.contains(UpgradableProperty.Transformer);
+            case storage:
+            case adv_storage:
+            case imp_storage:
+            case per_storage:
+                return types.contains(UpgradableProperty.EnergyStorage);
 
         }
         return false;
@@ -140,6 +141,31 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         return 1.0D;
     }
 
+    public int getExtraEnergyStorage(ItemStack stack, IUpgradableBlock parent) {
+        Types type = this.getType(stack);
+        if (type == null) {
+            return 0;
+        } else {
+            switch (type) {
+                case storageUpgrade:
+                    return 100000;
+                case adv_storageUpgrade:
+                    return 1000000;
+                case imp_storageUpgrade:
+                    return 10000000;
+                case per_storageUpgrade:
+                    return 100000000;
+                default:
+                    return 0;
+            }
+        }
+    }
+
+    @Override
+    public double getEnergyStorageMultiplier(final ItemStack itemStack, final IUpgradableBlock iUpgradableBlock) {
+        return 1;
+    }
+
     @Override
     public int getExtraEnergyDemand(final ItemStack itemStack, final IUpgradableBlock iUpgradableBlock) {
         return 0;
@@ -193,6 +219,15 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
                         this.getExtraTier(stack, null) * stack.getCount()
                 ));
                 break;
+            case storage:
+            case adv_storage:
+            case imp_storage:
+            case per_storage:
+                list.add(Localization.translate(
+                        "ic2.tooltip.upgrade.storage",
+                        this.getExtraEnergyStorage(stack, null) * StackUtil.getSize(stack)
+                ));
+                break;
 
         }
     }
@@ -219,7 +254,15 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         Overclocker1,
         Overclocker2,
         transformer,
-        transformer1;
+        transformer1,
+
+        storage,
+
+        adv_storage,
+
+        imp_storage,
+
+        per_storage;
 
         public static final Type[] Values = values();
 
@@ -230,6 +273,11 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
         overclockerUpgrade2(1),
         transformerUpgrade1(2),
         transformerUpgrade2(3),
+
+        storageUpgrade(4),
+        adv_storageUpgrade(5),
+        imp_storageUpgrade(6),
+        per_storageUpgrade(7),
 
         ;
 

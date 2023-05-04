@@ -6,6 +6,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerBaseGenerationChipMachine;
+import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,7 +22,6 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
     ) {
         super(container1);
         this.container = container1;
-        this.componentList.clear();
         this.addComponent(new GuiComponent(this, 7, 48, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
@@ -42,7 +42,7 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 0, name, 4210752, false);
+        this.drawXCenteredString(this.xSize / 2, 0, name, ModUtils.convertRGBcolorToInt(255, 255, 255), false);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {

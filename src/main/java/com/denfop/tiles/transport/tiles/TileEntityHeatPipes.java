@@ -1,5 +1,6 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.heat.HeatNet;
 import com.denfop.api.heat.IHeatAcceptor;
@@ -78,15 +79,17 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
         this.continuousUpdate = null;
         this.obscuration = this.addComponent(new Obscuration(
                 this,
-                () -> IC2.network.get(true).updateTileEntityField(TileEntityHeatPipes.this, "obscuration")
+                () -> IUCore.network.get(true).updateTileEntityField(TileEntityHeatPipes.this, "obscuration")
         ));
     }
+
+    public static TileEntityHeatPipes delegate(HeatType cableType, int insulation) {
+        return new TileEntityHeatPipes(cableType, insulation);
+    }
+
     @Override
     public BlockPos getBlockPos() {
         return this.pos;
-    }
-    public static TileEntityHeatPipes delegate(HeatType cableType, int insulation) {
-        return new TileEntityHeatPipes(cableType, insulation);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -281,7 +284,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -337,7 +340,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
 
             --this.insulation;
             if (!this.getWorld().isRemote) {
-                IC2.network.get(true).updateTileEntityField(this, "insulation");
+                IUCore.network.get(true).updateTileEntityField(this, "insulation");
             }
 
             return true;
@@ -385,7 +388,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
     @Override
@@ -482,7 +485,7 @@ public class TileEntityHeatPipes extends TileEntityBlock implements IHeatConduct
                 }
 
                 if (!duringLoad) {
-                    IC2.network.get(true).updateTileEntityField(this, "foam");
+                    IUCore.network.get(true).updateTileEntityField(this, "foam");
                     world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
                     this.markDirty();
                 }

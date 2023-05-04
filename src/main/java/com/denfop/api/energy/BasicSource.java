@@ -1,10 +1,7 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergyAcceptor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 public class BasicSource extends BasicEnergyTile implements IAdvEnergySource {
 
@@ -20,7 +17,7 @@ public class BasicSource extends BasicEnergyTile implements IAdvEnergySource {
             throw new IllegalArgumentException("invalid tier: " + tier);
         } else {
             this.tier = tier;
-            double power = EnergyNet.instance.getPowerFromTier(tier);
+            double power = EnergyNetGlobal.instance.getPowerFromTier(tier);
             if (this.getCapacity() < power) {
                 this.setCapacity(power);
             }
@@ -73,7 +70,7 @@ public class BasicSource extends BasicEnergyTile implements IAdvEnergySource {
         if (tier < 0) {
             throw new IllegalArgumentException("invalid tier: " + tier);
         } else {
-            double power = EnergyNet.instance.getPowerFromTier(tier);
+            double power = EnergyNetGlobal.instance.getPowerFromTier(tier);
             if (this.getCapacity() < power) {
                 this.setCapacity(power);
             }
@@ -85,7 +82,6 @@ public class BasicSource extends BasicEnergyTile implements IAdvEnergySource {
     protected String getNbtTagName() {
         return "IC2BasicSource";
     }
-
 
 
 }

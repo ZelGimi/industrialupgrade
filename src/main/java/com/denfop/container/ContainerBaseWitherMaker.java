@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityBaseWitherMaker;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -58,7 +56,6 @@ public class ContainerBaseWitherMaker
         ret.add("guiProgress");
         ret.add("guiChargeLevel");
         ret.add("tier");
-        ret.add("energy");
         return ret;
     }
 

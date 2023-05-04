@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
 import com.denfop.componets.AdvEnergy;
@@ -8,7 +9,6 @@ import com.denfop.gui.GuiWaterRotorUpgrade;
 import com.denfop.invslot.InvSlotRotorWater;
 import com.denfop.invslot.InvSlotWaterUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;

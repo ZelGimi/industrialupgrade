@@ -1,13 +1,12 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerAdvOilRefiner;
 import com.denfop.gui.GuiAdvOilRefiner;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityBaseLiquedMachine;
-import ic2.core.ContainerBase;
-import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -99,7 +98,7 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine impleme
     }
 
     @Override
-    public ContainerBase<TileEntityAdvOilRefiner> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerAdvOilRefiner getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerAdvOilRefiner(entityPlayer, this);
 
     }
@@ -186,7 +185,7 @@ public class TileEntityAdvOilRefiner extends TileEntityBaseLiquedMachine impleme
                     }
                 }
                 if (need) {
-                    IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+                    IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
                 }
             }
 

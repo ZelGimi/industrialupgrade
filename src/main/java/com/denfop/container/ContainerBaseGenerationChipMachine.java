@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityBaseGenerationMicrochip;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -51,8 +49,6 @@ public class ContainerBaseGenerationChipMachine
         ret.add("guiProgress");
         ret.add("guiChargeLevel");
         ret.add("tier");
-        ret.add("heat");
-        ret.add("energy");
         ret.add("sound");
         return ret;
     }

@@ -1,6 +1,6 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.tile.IEnergyEmitter;
+
 import micdoodle8.mods.galacticraft.core.energy.tile.TileBaseUniversalElectrical;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -50,7 +50,7 @@ public class EnergyGJSink extends BasicSink {
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing side) {
-        return parent.acceptsEnergyFrom(iEnergyEmitter, side);
+        return parent.getElectricalInputDirections().contains(side);
     }
 
 }

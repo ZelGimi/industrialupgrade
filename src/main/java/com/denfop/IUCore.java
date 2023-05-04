@@ -19,50 +19,7 @@ import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.audio.AudioManager;
 import com.denfop.blocks.BlockIUFluid;
-import com.denfop.blocks.mechanism.BlockAdminPanel;
-import com.denfop.blocks.mechanism.BlockAdvChamber;
-import com.denfop.blocks.mechanism.BlockAdvRefiner;
-import com.denfop.blocks.mechanism.BlockAdvSolarEnergy;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockBlastFurnace;
-import com.denfop.blocks.mechanism.BlockCable;
-import com.denfop.blocks.mechanism.BlockChargepadStorage;
-import com.denfop.blocks.mechanism.BlockCombinerSolid;
-import com.denfop.blocks.mechanism.BlockConverterMatter;
-import com.denfop.blocks.mechanism.BlockCoolPipes;
-import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
-import com.denfop.blocks.mechanism.BlockEnergyStorage;
-import com.denfop.blocks.mechanism.BlockExpCable;
-import com.denfop.blocks.mechanism.BlockHeatColdPipes;
-import com.denfop.blocks.mechanism.BlockImpChamber;
-import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
-import com.denfop.blocks.mechanism.BlockItemPipes;
-import com.denfop.blocks.mechanism.BlockMolecular;
-import com.denfop.blocks.mechanism.BlockMoreMachine;
-import com.denfop.blocks.mechanism.BlockMoreMachine1;
-import com.denfop.blocks.mechanism.BlockMoreMachine2;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.blocks.mechanism.BlockPerChamber;
-import com.denfop.blocks.mechanism.BlockPetrolQuarry;
-import com.denfop.blocks.mechanism.BlockPipes;
-import com.denfop.blocks.mechanism.BlockQCable;
-import com.denfop.blocks.mechanism.BlockQuarryVein;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.blocks.mechanism.BlockSCable;
-import com.denfop.blocks.mechanism.BlockSimpleMachine;
-import com.denfop.blocks.mechanism.BlockSintezator;
-import com.denfop.blocks.mechanism.BlockSolarEnergy;
-import com.denfop.blocks.mechanism.BlockSolarPanels;
-import com.denfop.blocks.mechanism.BlockSolidMatter;
-import com.denfop.blocks.mechanism.BlockSunnariumMaker;
-import com.denfop.blocks.mechanism.BlockSunnariumPanelMaker;
-import com.denfop.blocks.mechanism.BlockTank;
-import com.denfop.blocks.mechanism.BlockTransformer;
-import com.denfop.blocks.mechanism.BlockUniversalCable;
-import com.denfop.blocks.mechanism.BlockUpgradeBlock;
+import com.denfop.blocks.mechanism.*;
 import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.heat.HeatNetGlobal;
@@ -79,13 +36,11 @@ import com.denfop.network.NetworkManager;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.tabs.TabCore;
-import com.denfop.tiles.mechanism.blastfurnace.api.BlastSystem;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.Keys;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
 import ic2.api.event.TeBlockFinalCallEvent;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipe;
@@ -114,10 +69,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -133,12 +85,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
@@ -317,16 +264,29 @@ public final class IUCore {
 
     public static void initENet() {
 
-        EnergyNet.instance = EnergyNetGlobal.initialize();
+
         HeatNet.instance = HeatNetGlobal.initialize();
         CoolNet.instance = CoolNetGlobal.initialize();
         EnergyBase.init();
         TransportNetGlobal.initialize();
-        BlastSystem.instance = new BlastSystem();
         new VeinSystem();
         new RadiationSystem();
         new WindSystem();
 
+    }
+
+    public static boolean isHasVersion(String modid, String version) {
+        final Map<String, ModContainer> map = Loader.instance().getIndexedModList();
+        ModContainer container = map.get(modid);
+        if (container != null) {
+            String version_this = container.getVersion();
+            final StringBuilder string_builder = new StringBuilder(version_this);
+            version_this = version_this.replace("2.8.", "").replace("-ex112", "");
+            if (Integer.parseInt(version_this) >= Integer.parseInt(version)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SubscribeEvent
@@ -340,6 +300,7 @@ public final class IUCore {
     @Mod.EventHandler
     public void load(final FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        EnergyNetGlobal.initialize();
         ModUtils.log = event.getModLog();
         IUCore.log = event.getModLog();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
@@ -349,7 +310,6 @@ public final class IUCore {
         new RotorUpgradeSystem();
         new com.denfop.api.water.upgrade.RotorUpgradeSystem();
         Recipes.recipes = new RecipesCore();
-        proxy.regrecipemanager();
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
 
 

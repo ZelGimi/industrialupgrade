@@ -49,13 +49,14 @@ public class ExtruderHandler {
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("extruding")) {
 
+            try {
+                addRecipe(
+                        container.input.getInputs().get(0).getInputs().get(0),
+                        container.getOutput().items.get(0)
+                );
 
-            addRecipe(
-                    container.input.getInputs().get(0).getInputs().get(0),
-                    container.getOutput().items.get(0)
-            );
-
-
+            } catch (Exception ignored) {
+            }
         }
     }
 

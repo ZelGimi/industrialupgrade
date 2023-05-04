@@ -1,12 +1,11 @@
 package com.denfop.gui;
 
+import com.denfop.IUCore;
+import com.denfop.api.gui.Area;
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
-import ic2.core.IC2;
-import ic2.core.gui.Area;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +39,7 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 70 && x <= 123 && y >= 40 && y <= 56) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.tileentity, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.tileentity, 0);
         }
 
 

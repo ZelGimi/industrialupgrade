@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -56,13 +57,13 @@ public class GuiCoolMachine extends GuiIU<ContainerCoolMachine> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 53 && x <= 63 && y >= 54 && y <= 64) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
         if (x >= 73 && x <= 83 && y >= 54 && y <= 64) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
         }
         if (x >= 144 && x <= 157 && y >= 33 && y <= 45) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
         }
     }
 

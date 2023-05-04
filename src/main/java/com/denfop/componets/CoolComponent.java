@@ -7,10 +7,9 @@ import com.denfop.api.cool.ICoolSource;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import com.denfop.invslot.InvSlot;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
@@ -29,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class CoolComponent extends TileEntityComponent {
+public class CoolComponent extends TileEntityAdvComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
@@ -216,6 +215,11 @@ public class CoolComponent extends TileEntityComponent {
 
     public boolean enableWorldTick() {
         return !this.parent.getWorld().isRemote && this.managedSlots != null;
+    }
+
+    @Override
+    public boolean isServer() {
+        return false;
     }
 
     public void onWorldTick() {

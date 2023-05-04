@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -64,7 +65,7 @@ public class GuiWindGenerator extends GuiIU<ContainerWindGenerator> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 12 && x <= 25 && y >= 45 && y <= 68) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
 
 

@@ -1,7 +1,6 @@
 package com.denfop.invslot;
 
 import com.denfop.items.ItemAdvancedWaterRotor;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotorWater extends InvSlot {
@@ -15,7 +14,7 @@ public class InvSlotRotorWater extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         return stack.getItem() instanceof ItemAdvancedWaterRotor;
     }
 

@@ -34,8 +34,9 @@ public class TileEntityCooling extends TileEntityElectricMachine implements INet
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
 
     }
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("cold");
         return ret;
     }

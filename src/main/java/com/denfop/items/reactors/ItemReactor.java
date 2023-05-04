@@ -47,7 +47,7 @@ public class ItemReactor extends AbstractDamageableReactorComponent {
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(5);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,26 +1,24 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Config;
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerNeutronGenerator;
 import com.denfop.gui.GuiNeutronGenerator;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
 import ic2.core.network.GuiSynced;
 import ic2.core.profile.NotClassic;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -53,9 +51,9 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
         this.containerslot = new InvSlotConsumableLiquidByList(
                 this,
                 "container",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.ANY,
+                InvSlot.InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidNeutron.getInstance()
         );
@@ -83,7 +81,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
 
     protected void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -147,12 +145,12 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
         return "" + p + "%";
     }
 
-    public ContainerBase<TileEntityNeutronGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerNeutronGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerNeutronGenerator(entityPlayer, this);
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiNeutronGenerator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiNeutronGenerator(new ContainerNeutronGenerator(entityPlayer, this));
     }
 

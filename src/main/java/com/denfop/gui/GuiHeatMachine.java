@@ -1,13 +1,13 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerHeatMachine;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
 import ic2.core.IC2;
-import ic2.core.gui.GuiElement;
-import ic2.core.gui.TankGauge;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -40,13 +40,13 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 53 && x <= 63 && y >= 54 && y <= 64) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
         if (x >= 73 && x <= 83 && y >= 54 && y <= 64) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
         }
         if (x >= 61 && x <= 74 && y >= 26 && y <= 38) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
         }
     }
 

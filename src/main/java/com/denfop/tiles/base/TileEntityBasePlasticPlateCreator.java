@@ -6,17 +6,14 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -30,17 +27,17 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidTankInventory
+public abstract class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidTankInventory
         implements IUpgradableBlock, IFluidHandler {
 
     public final InvSlotConsumableLiquidByList fluidSlot;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotOutput outputSlot1;
     public final InvSlotUpgrade upgradeSlot;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -194,7 +191,7 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
                 this.guiProgress = 0;
                 operate(output);
                 this.progress = 0;
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
             }
         } else {
             if (this.progress != 0 && getActive()) {
@@ -213,16 +210,6 @@ public class TileEntityBasePlasticPlateCreator extends TileEntityElectricLiquidT
 
     }
 
-    @Override
-    public ContainerBase<?> getGuiContainer(EntityPlayer entityPlayer) {
-        return null;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean b) {
-        return null;
-    }
 
     public MachineRecipe getOutput() {
         this.output = this.inputSlotA.process();

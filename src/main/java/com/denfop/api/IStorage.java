@@ -6,4 +6,18 @@ public interface IStorage {
 
     double getRFCapacity();
 
+    int getTier();
+
+    byte getRedstoneMode();
+
+    boolean shouldEmitRedstone();
+
+    boolean shouldEmitEnergy();
+
+    double getEUStored();
+
+    double getRFStored();
+
+    double getOutput();
+
 }

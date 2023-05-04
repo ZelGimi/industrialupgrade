@@ -4,12 +4,7 @@ import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.Config;
 import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.componets.AdvEnergy;
-import com.denfop.items.modules.EnumBaseType;
-import com.denfop.items.modules.EnumModule;
-import com.denfop.items.modules.ItemAdditionModule;
-import com.denfop.items.modules.ItemBaseModules;
-import com.denfop.items.modules.ItemModuleType;
-import com.denfop.items.modules.ItemModuleTypePanel;
+import com.denfop.items.modules.*;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
@@ -21,7 +16,6 @@ import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.Energy;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -50,7 +44,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
         tile.solarType = this.solartype();
     }
 
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         return stack.getItem() instanceof ItemBaseModules
                 || stack.getItem() instanceof ItemModuleTypePanel
                 || stack.getItem() instanceof ItemAdditionModule
@@ -246,6 +240,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
                 break;
             }
         }
+
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && EnumModule.getFromID(this
                     .get(i).getItemDamage()) != null && this.get(i).getItem() instanceof ItemBaseModules) {

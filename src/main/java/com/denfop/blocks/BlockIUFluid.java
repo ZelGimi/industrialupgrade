@@ -48,6 +48,7 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels() {
@@ -97,24 +98,16 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
             @Nonnull ItemStack stack
     ) {
         if (!world.isRemote) {
-            if (this.fluid == FluidName.fluidHelium.getInstance()
-                    || this.fluid == FluidName.fluidhyd.getInstance()
-                    || this.fluid == FluidName.fluidoxy.getInstance()
-                    || this.fluid == FluidName.fluidpolyeth.getInstance()
-                    || this.fluid == FluidName.fluidpolyprop.getInstance()
-                    || this.fluid == FluidName.fluidazot.getInstance()
-                    || this.fluid == FluidName.fluidco2.getInstance()
-            ) {
-                world.setBlockToAir(pos);
-                world.playSound(
-                        null,
-                        pos,
-                        SoundEvents.ITEM_FIRECHARGE_USE,
-                        SoundCategory.BLOCKS,
-                        1.0F,
-                        RANDOM.nextFloat() * 0.4F + 0.8F
-                );
-            }
+            world.setBlockToAir(pos);
+            world.playSound(
+                    null,
+                    pos,
+                    SoundEvents.ITEM_FIRECHARGE_USE,
+                    SoundCategory.BLOCKS,
+                    1.0F,
+                    RANDOM.nextFloat() * 0.4F + 0.8F
+            );
+
 
         }
     }

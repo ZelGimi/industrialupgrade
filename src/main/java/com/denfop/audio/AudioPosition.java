@@ -2,6 +2,7 @@ package com.denfop.audio;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.lang.ref.WeakReference;
@@ -18,6 +19,13 @@ public class AudioPosition {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public AudioPosition(World world, BlockPos pos) {
+        this.worldRef = new WeakReference<>(world);
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.z = pos.getZ();
     }
 
     public static AudioPosition getFrom(Object obj) {

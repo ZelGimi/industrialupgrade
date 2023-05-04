@@ -5,8 +5,10 @@ import com.denfop.IUCore;
 import com.denfop.tiles.reactors.TileEntityAdvReactorChamberElectric;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -66,6 +68,11 @@ public enum BlockAdvChamber implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Nullable

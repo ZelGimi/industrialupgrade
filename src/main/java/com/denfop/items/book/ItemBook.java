@@ -3,10 +3,10 @@ package com.denfop.items.book;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.items.IHandHeldInventory;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.BlocksItems;
-import ic2.core.item.IHandHeldInventory;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -77,7 +77,7 @@ public class ItemBook extends Item implements IHandHeldInventory, IModelRegister
 
         ItemStack stack = StackUtil.get(player, hand);
         if (IC2.platform.isSimulating()) {
-            IC2.platform.launchGui(player, this.getInventory(player, stack));
+            IUCore.proxy.launchGui(player, this.getInventory(player, stack));
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
         }

@@ -7,7 +7,6 @@ import com.denfop.container.ContainerRedstoneGenerator;
 import com.denfop.gui.GuiRedstoneGenerator;
 import com.denfop.invslot.InvSlotRedstoneGenerator;
 import com.denfop.tiles.base.TileEntityElectricMachine;
-import ic2.core.ContainerBase;
 import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
@@ -105,6 +104,11 @@ public class TileEntityBaseRedstoneGenerator extends TileEntityElectricMachine i
             this.energy.addEnergy(25 * this.coef * redstone_coef);
         }
         fuel = Math.max(0, this.fuel - 1);
+        if (fuel == 0) {
+            if (this.slot.get().isEmpty()) {
+                this.redstone_coef = 0;
+            }
+        }
     }
 
     public int gaugeFuelScaled(int i) {
@@ -132,7 +136,7 @@ public class TileEntityBaseRedstoneGenerator extends TileEntityElectricMachine i
         return nbt;
     }
 
-    public ContainerBase<TileEntityBaseRedstoneGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerRedstoneGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerRedstoneGenerator(entityPlayer, this);
     }
 

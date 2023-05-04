@@ -1,26 +1,23 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerPump;
 import com.denfop.gui.GuiPump;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityElectricLiquidTankInventory;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquid.OpType;
 import ic2.core.init.Localization;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -44,13 +41,13 @@ import java.util.Set;
 public class TileEntityPump extends TileEntityElectricLiquidTankInventory implements IHasGui, IUpgradableBlock, IType {
 
     public final int defaultTier;
-    public final int defaultEnergyStorage;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyStorage;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final InvSlotConsumableLiquid containerSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
-    public int energyConsume;
+    public double energyConsume;
     public int operationsPerTick;
     public short progress = 0;
     public int operationLength;
@@ -59,7 +56,14 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
     public TileEntityPump(int size, int operationLength) {
         super(20, 1, size);
-        this.containerSlot = new InvSlotConsumableLiquid(this, "containerSlot", Access.I, 1, InvSide.ANY, OpType.Fill);
+        this.containerSlot = new InvSlotConsumableLiquid(
+                this,
+                "containerSlot",
+                InvSlot.Access.I,
+                1,
+                InvSlot.InvSide.ANY,
+                InvSlotConsumableLiquid.OpType.Fill
+        );
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.defaultEnergyConsume = this.energyConsume = 1;
@@ -72,6 +76,10 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     private static int applyModifier(int base, int extra, double multiplier) {
         double ret = (double) Math.round(((double) base + (double) extra) * multiplier);
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
+    }
+
+    private static double applyModifier(double base, double extra, double multiplier) {
+        return (double) Math.round((base + extra) * multiplier);
     }
 
     @SideOnly(Side.CLIENT)
@@ -90,7 +98,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
     public void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -138,9 +146,9 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     public boolean operate(boolean sim) {
         FluidStack liquid;
         List<FluidStack> liquid_list = new ArrayList<>();
-        for (int i = this.pos.getX() - 1; i < this.pos.getX() + 1; i++) {
-            for (int j = this.pos.getZ() - 1; j < this.pos.getZ() + 1; j++) {
-                for (int k = this.pos.getY() - 1; k < this.pos.getY() + 1; k++) {
+        for (int i = this.pos.getX() - 3; i < this.pos.getX() + 3; i++) {
+            for (int j = this.pos.getZ() - 3; j < this.pos.getZ() + 3; j++) {
+                for (int k = this.pos.getY() - 3; k < this.pos.getY() + 3; k++) {
                     for (EnumFacing dir : EnumFacing.values()) {
                         liquid = this.pump(new BlockPos(i + dir.getFrontOffsetX(), k + dir.getFrontOffsetY(),
                                 j + dir.getFrontOffsetZ()
@@ -268,12 +276,12 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
         return nbttagcompound;
     }
 
-    public ContainerBase<TileEntityPump> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPump getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerPump(entityPlayer, this);
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiPump getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiPump(new ContainerPump(entityPlayer, this));
     }
 
@@ -283,7 +291,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
     public void onNetworkUpdate(String field) {
         if (field.equals("active")) {
             if (this.audioSource == null) {
-                this.audioSource = IC2.audioManager.createSource(
+                this.audioSource = IUCore.audioManager.createSource(
                         this,
                         PositionSpec.Center,
                         "Machines/PumpOp.ogg",

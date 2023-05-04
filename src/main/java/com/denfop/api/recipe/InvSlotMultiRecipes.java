@@ -4,9 +4,9 @@ package com.denfop.api.recipe;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
 import com.denfop.componets.ProcessMultiComponent;
+import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.upgrade.IUpgradeItem;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -104,7 +104,7 @@ public class InvSlotMultiRecipes extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack itemStack) {
+    public boolean accepts(final ItemStack itemStack, final int index) {
         return !itemStack.isEmpty() && !(itemStack.getItem() instanceof IUpgradeItem) && (recipe
                 .getName()
                 .equals("painter") || recipe
@@ -123,7 +123,10 @@ public class InvSlotMultiRecipes extends InvSlot {
 
 
         ItemStack stack = this.get(number);
-        if (!stack.isEmpty() && stack.getCount() >= 1 && this.accepts(stack) && (stack.getCount() >= 1 || consumeContainers || !stack
+        if (!stack.isEmpty() && stack.getCount() >= 1 && this.accepts(
+                stack,
+                number
+        ) && (stack.getCount() >= 1 || consumeContainers || !stack
                 .getItem()
                 .hasContainerItem(stack))) {
             int currentAmount = Math.min(amount, stack.getCount());

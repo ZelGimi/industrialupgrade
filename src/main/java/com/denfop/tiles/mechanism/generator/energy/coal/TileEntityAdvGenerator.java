@@ -5,9 +5,8 @@ import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerGenerator;
 import com.denfop.gui.GuiGenerator;
+import com.denfop.invslot.InvSlotConsumableFuel;
 import com.denfop.tiles.mechanism.generator.energy.TileEntityBaseGenerator;
-import ic2.core.ContainerBase;
-import ic2.core.block.invslot.InvSlotConsumableFuel;
 import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
@@ -101,7 +100,7 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
     }
 
 
-    public ContainerBase<TileEntityAdvGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerGenerator(entityPlayer, this);
     }
 

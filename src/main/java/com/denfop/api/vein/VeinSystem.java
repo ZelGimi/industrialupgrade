@@ -18,6 +18,7 @@ public class VeinSystem implements IVeinSystem {
 
     public static IVeinSystem system;
     private final Random rand;
+    public Vein EMPTY = new Vein(Type.EMPTY, 0, new ChunkPos(999999999, 999999999));
     List<Vein> list;
     List<ChunkPos> chunkPos;
     Map<ChunkPos, Vein> chunkPosVeinMap;
@@ -31,6 +32,9 @@ public class VeinSystem implements IVeinSystem {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public Vein getEMPTY() {
+        return EMPTY;
+    }
 
     public List<ChunkPos> getChunkPos() {
         return chunkPos;
@@ -73,7 +77,7 @@ public class VeinSystem implements IVeinSystem {
 
     @Override
     public Vein getVein(final ChunkPos pos) {
-        return this.chunkPosVeinMap.get(pos);
+        return this.chunkPosVeinMap.getOrDefault(pos, EMPTY);
     }
 
     @Override

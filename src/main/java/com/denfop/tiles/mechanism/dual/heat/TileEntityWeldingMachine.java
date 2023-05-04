@@ -114,7 +114,7 @@ public class TileEntityWeldingMachine extends TileEntityDoubleElectricMachine im
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

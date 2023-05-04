@@ -1,6 +1,8 @@
 package com.denfop.tiles.mechanism.water;
 
+import com.denfop.IUCore;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.water.upgrade.IRotorUpgradeItem;
 import com.denfop.api.water.upgrade.RotorUpgradeItemInform;
@@ -25,8 +27,6 @@ import com.denfop.invslot.InvSlotWaterRotorBlades;
 import com.denfop.items.ItemWindRod;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -51,10 +51,10 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
         INetworkClientTileEntityEventListener {
 
 
-    public final InvSlotWaterRotor slot;
     public final AdvEnergy energy;
     public final InvSlotWaterRotorBlades slot_blades;
     private final EnumLevelGenerators levelGenerators;
+    public InvSlotWaterRotor slot;
     public double generation = 0;
     public boolean need_repair;
     public int mind_wind;
@@ -108,7 +108,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -167,7 +167,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
 
     public boolean setFacingWrench(EnumFacing facing, EntityPlayer player) {
         boolean fac = super.setFacingWrench(facing, player);
-        IC2.network.get(true).updateTileEntityField(this, "facing");
+        IUCore.network.get(true).updateTileEntityField(this, "facing");
         return fac;
     }
 
@@ -185,14 +185,10 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
                         this.work = false;
                         ((TileEntityBaseWaterGenerator) tile).work = false;
                     }
-                    if (tile instanceof TileEntityBaseWaterGenerator) {
-                        this.work = false;
-                        ((TileEntityBaseWaterGenerator) tile).work = false;
-                    }
                 }
             }
         }
-        IC2.network.get(true).updateTileEntityField(this, "work");
+        IUCore.network.get(true).updateTileEntityField(this, "work");
     }
 
     public void update_generator(BlockPos pos) {
@@ -211,14 +207,11 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
                         this.work = false;
                         ((TileEntityBaseWaterGenerator) tile).work = false;
                     }
-                    if (tile instanceof TileEntityBaseWaterGenerator) {
-                        this.work = false;
-                        ((TileEntityBaseWaterGenerator) tile).work = false;
-                    }
+
                 }
             }
         }
-        IC2.network.get(true).updateTileEntityField(this, "work");
+        IUCore.network.get(true).updateTileEntityField(this, "work");
     }
 
     @Override
@@ -229,7 +222,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
     @Override
     public void setRotorSide(final EnumRotorSide rotorSide) {
         this.rotorSide = rotorSide;
-        IC2.network.get(true).updateTileEntityField(this, "rotorSide");
+        IUCore.network.get(true).updateTileEntityField(this, "rotorSide");
     }
 
     @Override
@@ -240,7 +233,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
     @Override
     public void setCoefficient(final double coefficient) {
         this.coefficient = coefficient;
-        IC2.network.get(true).updateTileEntityField(this, "coefficient");
+        IUCore.network.get(true).updateTileEntityField(this, "coefficient");
     }
 
     @Override
@@ -285,11 +278,11 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
         if (this.world.provider.getWorldTime() % 30 == 0) {
             if (this.getRotor() != null) {
                 space = checkSpace();
-                IC2.network.get(true).updateTileEntityField(this, "space");
+                IUCore.network.get(true).updateTileEntityField(this, "space");
             } else {
                 if (space) {
                     space = false;
-                    IC2.network.get(true).updateTileEntityField(this, "space");
+                    IUCore.network.get(true).updateTileEntityField(this, "space");
                 } else {
                     generation = 0;
                 }
@@ -309,7 +302,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
                 }
                 if (space) {
                     space = false;
-                    IC2.network.get(true).updateTileEntityField(this, "space");
+                    IUCore.network.get(true).updateTileEntityField(this, "space");
 
                 }
                 return;
@@ -340,9 +333,9 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
         this.change();
         this.setRotorSide(WindSystem.windSystem.getRotorSide(this.getFacing()));
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), true));
-        final List<String> list = getNetworkedFields();
+        final List<String> list = getNetworkFields();
         for (String str : list) {
-            IC2.network.get(true).updateTileEntityField(this, str);
+            IUCore.network.get(true).updateTileEntityField(this, str);
         }
         update_generator();
         if (this.getRotor() != null) {
@@ -358,6 +351,11 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
     @Override
     protected void onUnloaded() {
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
+        super.onUnloaded();
+    }
+
+    @Override
+    protected void onBlockBreak() {
         for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
             for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
                 for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
@@ -368,19 +366,23 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
                 }
             }
         }
-        super.onUnloaded();
+        super.onBlockBreak();
     }
 
     public void setActive(boolean active) {
         if (active != this.getActive()) {
-            IC2.network.get(true).updateTileEntityField(this, "slot");
+            IUCore.network.get(true).updateTileEntityField(this, "slot");
         }
 
         super.setActive(active);
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public double getGeneration() {
+        return generation;
+    }
+
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("speed");
         ret.add("slot");
         ret.add("space");
@@ -421,7 +423,7 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
     public void setRotationSpeed(final float speed) {
         if (this.speed != speed) {
             this.speed = speed;
-            IC2.network.get(true).updateTileEntityField(this, "speed");
+            IUCore.network.get(true).updateTileEntityField(this, "speed");
         }
     }
 
@@ -480,9 +482,9 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
             this.biome = modules == null ? 0.5 : 1;
         }
 
-        IC2.network.get(true).updateTileEntityField(this, "change_facing");
-        IC2.network.get(true).updateTileEntityField(this, "min_level");
-        IC2.network.get(true).updateTileEntityField(this, "mind_wind");
+        IUCore.network.get(true).updateTileEntityField(this, "change_facing");
+        IUCore.network.get(true).updateTileEntityField(this, "min_level");
+        IUCore.network.get(true).updateTileEntityField(this, "mind_wind");
 
         if (this.change_facing) {
             WindSystem.windSystem.getNewPositionOfMechanism(this);

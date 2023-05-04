@@ -141,7 +141,7 @@ public class CTEndTransformer {
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing ender transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

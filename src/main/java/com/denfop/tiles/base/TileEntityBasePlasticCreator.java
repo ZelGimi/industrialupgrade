@@ -6,15 +6,14 @@ import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerPlasticCreator;
 import com.denfop.gui.GuiPlasticCreator;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -37,13 +36,13 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
         implements IUpdateTick, IUpgradableBlock, IFluidHandler {
 
     public final InvSlotConsumableLiquidByList fluidSlot;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotOutput outputSlot1;
     public final InvSlotUpgrade upgradeSlot;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -191,7 +190,7 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
                 setActive(true);
             }
             if (this.progress == 0) {
-                IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
             }
             this.progress = (short) (this.progress + 1);
             this.energy.useEnergy(energyConsume);
@@ -221,7 +220,7 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
 
     }
 
-    public ContainerBase<? extends TileEntityBasePlasticCreator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPlasticCreator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerPlasticCreator(entityPlayer, this);
 
     }

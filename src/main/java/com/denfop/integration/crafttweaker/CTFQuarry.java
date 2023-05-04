@@ -1,6 +1,5 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
 import com.blamejared.mtlib.helpers.LogHelper;
 import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.IUCore;
@@ -43,7 +42,7 @@ public class CTFQuarry {
 
     @ZenMethod
     public static void remove(IItemStack input) {
-        ModTweaker.LATE_REMOVALS.add(new CTFQuarry.Remove(input));
+        CraftTweakerAPI.apply(new CTFQuarry.Remove(input));
     }
 
 

@@ -1,7 +1,6 @@
 package com.denfop.blocks;
 
 import com.denfop.Constants;
-import ic2.core.block.state.IIdProvider;
 import ic2.core.profile.NotClassic;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -19,7 +18,11 @@ public enum FluidName implements IIdProvider {
     fluidoxy,
     fluidhyd,
     fluidazot,
-    fluidco2;
+    fluidco2,
+    fluidgas,
+    fluidchlorum,
+    fluidbromine,
+    fluidiodine;
 
     public static final FluidName[] values = values();
     private final boolean hasFlowTexture;

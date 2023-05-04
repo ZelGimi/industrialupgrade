@@ -141,7 +141,7 @@ public class CTAquaTransformer {
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing aqua transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

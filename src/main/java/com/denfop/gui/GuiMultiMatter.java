@@ -2,18 +2,18 @@ package com.denfop.gui;
 
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMatter;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.IC2;
-import ic2.core.gui.Area;
-import ic2.core.gui.TankGauge;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -67,7 +67,7 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 182 && x <= 190 && y >= 6 && y <= 14) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
     }
 

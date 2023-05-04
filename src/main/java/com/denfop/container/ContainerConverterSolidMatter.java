@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityConverterSolidMatter;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -12,7 +10,7 @@ public class ContainerConverterSolidMatter extends ContainerFullInv<TileEntityCo
     public ContainerConverterSolidMatter(EntityPlayer entityPlayer, TileEntityConverterSolidMatter tileEntity) {
         super(entityPlayer, tileEntity, 240 - 16);
         for (int i = 0; i < 6; i++) {
-            addSlotToContainer(new SlotInvSlot(tileEntity.MatterSlot, i, 51 + (i%3) * 18, 9 + 18 *(i/3)));
+            addSlotToContainer(new SlotInvSlot(tileEntity.MatterSlot, i, 51 + (i % 3) * 18, 9 + 18 * (i / 3)));
         }
         addSlotToContainer(new SlotInvSlot(tileEntity.MatterSlot, 6, 153, 8));
         addSlotToContainer(new SlotInvSlot(tileEntity.MatterSlot, 7, 153, 26));

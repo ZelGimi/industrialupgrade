@@ -20,4 +20,6 @@ public interface IVeinSystem {
 
     List<ChunkPos> getChunkPos();
 
+    Vein getEMPTY();
+
 }

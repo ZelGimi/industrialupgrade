@@ -7,7 +7,6 @@ import com.denfop.invslot.InvSlotTuner;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,7 +44,7 @@ public class TileEntityTunerWireless extends TileEntityElectricMachine
         return new GuiTunerWireless(new ContainerTunerWireless(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityTunerWireless> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerTunerWireless getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerTunerWireless(entityPlayer, this);
     }
 

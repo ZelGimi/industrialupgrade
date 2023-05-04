@@ -365,7 +365,32 @@
       },
       "heat_limiter": {
         "model": "industrialupgrade:basemachine/heat_limiter"
-      }
+      },
+	   "gas_generator_active": {
+        "model": "industrialupgrade:basemachine/gas_generator_active"
+      },
+	  "gas_generator": { "model": "industrialupgrade:basemachine/gas_generator" },
+    
+      "generator_iu": { "model": "ic2:generator/electric/generator" },
+      "generator_iu_active": { "model": "ic2:generator/electric/generator_active" },
+      "geogenerator_iu": { "model": "ic2:generator/electric/geo_generator" },
+      "geogenerator_iu_active": { "model": "ic2:generator/electric/geo_generator_active" },
+      "solar_iu": { "model": "ic2:generator/electric/solar_generator" },
+      "solar_iu_active": { "model": "ic2:generator/electric/solar_generator" },
+      "reactor_iu": { "model": "ic2:generator/reactor/nuclear_reactor" },
+      "reactor_iu_active": { "model": "ic2:generator/reactor/nuclear_reactor_active" },
+      "chamber_iu": { "model": "ic2:generator/reactor/reactor_chamber" },
+      "pump_iu": { "model": "ic2:machine/fluid/pump" },
+      "pump_iu_active": { "model": "ic2:machine/fluid/pump_active" },
+      "pattern_storage_iu": { "model": "ic2:machine/uu/pattern_storage" },
+      "teleporter_iu": { "model": "ic2:machine/misc/teleporter" },
+      "teleporter_iu_active": { "model": "ic2:machine/misc/teleporter_active" },
+      "canner_iu": { "model": "ic2:machine/processing/basic/canner" },
+      "canner_iu_active": { "model": "ic2:machine/processing/basic/canner_active" },
+      "solid_canner_iu": { "model": "ic2:machine/processing/basic/solid_canner" },
+      "solid_canner_iu_active": { "model": "ic2:machine/processing/basic/solid_canner_active" },
+      "crop_harvester_iu": { "model": "ic2:machine/resource/crop_harvester" },
+      "crop_matron": { "model": "ic2:machine/resource/cropmatron" }
     },
     "facing": {
       "down": {

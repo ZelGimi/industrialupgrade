@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import ic2.core.IC2;
+import com.denfop.IUCore;
 import ic2.core.block.TileEntityBlock;
 
 public class ComponentButton {
@@ -30,7 +30,7 @@ public class ComponentButton {
     }
 
     public void ClickEvent() {
-        IC2.network.get(false).initiateClientTileEntityEvent(entityBlock, event);
+        IUCore.network.get(false).initiateClientTileEntityEvent(entityBlock, event);
     }
 
     public String getText() {

@@ -1,22 +1,29 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.componets.BasicRedstoneComponent;
+import com.denfop.componets.ComparatorEmitter;
+import com.denfop.componets.Redstone;
+import com.denfop.componets.RedstoneEmitter;
+import com.denfop.componets.TileEntityAdvComponent;
 import com.denfop.componets.client.ComponentClientEffectRender;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.network.INetworkDataProvider;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
-import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.IInventorySlotHolder;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlot.InvSide;
-import ic2.core.block.invslot.InvSlotUpgrade;
+import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.util.StackUtil;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -36,17 +43,27 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
-        IInventorySlotHolder<TileEntityInventory> {
+        IInventorySlotHolder<TileEntityInventory>, INetworkDataProvider {
 
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
     protected final IItemHandler[] itemHandler;
     protected int size_inventory;
     protected ComponentClientEffectRender componentClientEffectRender;
+    protected Map<Capability<?>, TileEntityAdvComponent> capabilityComponents;
+    protected List<TileEntityAdvComponent> componentList = new ArrayList<>();
+    protected List<TileEntityAdvComponent> updatableComponents = new ArrayList<>();
+    protected List<TileEntityAdvComponent> updateServerList = new ArrayList<>();
+    protected List<TileEntityAdvComponent> updateClientList = new ArrayList<>();
+    protected Map<String, TileEntityAdvComponent> advComponentMap = new HashMap<>();
+
     public TileEntityInventory() {
         this.itemHandler = new IItemHandler[EnumFacing.VALUES.length + 1];
     }
@@ -58,68 +75,100 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     protected static int calcRedstoneFromInvSlots(InvSlot... slots) {
         return calcRedstoneFromInvSlots(Arrays.asList(slots));
     }
-    @SideOnly(Side.CLIENT)
-    protected void updateEntityClient() {
-        super.updateEntityClient();
-        if(componentClientEffectRender != null)
-            componentClientEffectRender.render();
-    }
+
     protected static int calcRedstoneFromInvSlots(Iterable<InvSlot> invSlots) {
         int space = 0;
         int used = 0;
-        Iterator<InvSlot> var3 = invSlots.iterator();
-
-        while (true) {
-            InvSlot slot;
-            do {
-                if (!var3.hasNext()) {
-                    if (used != 0 && space != 0) {
-                        return 1 + used * 14 / space;
-                    }
-
-                    return 0;
-                }
-
-                slot = var3.next();
-            } while (slot instanceof InvSlotUpgrade);
-
+        for (InvSlot slot : invSlots) {
+            if (slot instanceof InvSlotUpgrade) {
+                continue;
+            }
             int size = slot.size();
             int limit = slot.getStackSizeLimit();
             space += size * limit;
 
-            for (int i = 0; i < size; ++i) {
-                ItemStack stack = slot.get(i);
-                if (!StackUtil.isEmpty(stack)) {
+            for (ItemStack stack : slot.gets()) {
+                if (!stack.isEmpty()) {
                     used += Math.min(limit, stack.getCount() * limit / stack.getMaxStackSize());
                 }
             }
         }
+        if (used != 0 && space != 0) {
+            return 1 + used * 14 / space;
+        }
+
+        return 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void updateEntityClient() {
+        super.updateEntityClient();
+        if (componentClientEffectRender != null) {
+            componentClientEffectRender.render();
+        }
+        this.updateClientList.forEach(TileEntityAdvComponent::updateEntityClient);
+
+    }
+
+    @Override
+    protected void onUnloaded() {
+        this.componentList.forEach(TileEntityAdvComponent::onUnloaded);
+        super.onUnloaded();
+    }
+
+    public NBTTagCompound getUpdateTag() {
+        (IUCore.network.get(true)).sendInitialData(this);
+        return new NBTTagCompound();
+    }
+
+    protected int getWeakPower(EnumFacing side) {
+        BasicRedstoneComponent component = this.getComponent(RedstoneEmitter.class);
+        return component == null ? 0 : component.getLevel();
+    }
+
+    protected boolean canConnectRedstone(EnumFacing side) {
+        return this.hasComponent(RedstoneEmitter.class) || this.hasComponent(Redstone.class);
+    }
+
+    protected int getComparatorInputOverride() {
+        BasicRedstoneComponent component = this.getComponent(ComparatorEmitter.class);
+        return component == null ? 0 : component.getLevel();
+    }
+
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        (IUCore.network.get(true)).sendInitialData(this);
+        return null;
     }
 
     public @NotNull BlockPos getBlockPos() {
         return this.pos;
     }
 
-    protected boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+
+
         final boolean action = ForgeHooks
                 .onRightClickBlock(player, hand, this.pos, side, new Vec3d(hitX, hitY, hitZ))
                 .isCanceled();
         if (!action) {
+            this.componentList.forEach(TileEntityAdvComponent::onBlockActivated);
             ItemStack stack = player.getHeldItem(hand);
-            if (stack.getItem() instanceof IUpgradeItem) {
-                if (this instanceof IUpgradableBlock) {
-                    IUpgradeItem iUpgradeItem = (IUpgradeItem) stack.getItem();
-                    IUpgradableBlock upgradableBlock = (IUpgradableBlock) this;
-                    if (iUpgradeItem.isSuitableFor(stack, upgradableBlock.getUpgradableProperties())) {
-                        for (final InvSlot invslot : this.invSlots) {
-                            if (invslot instanceof com.denfop.invslot.InvSlotUpgrade) {
-                                com.denfop.invslot.InvSlotUpgrade upgrade = (com.denfop.invslot.InvSlotUpgrade) invslot;
-                                if (upgrade.add(stack)) {
-                                    stack.setCount(0);
-                                    player.openContainer.detectAndSendChanges();
-                                    return true;
+            if (!stack.isEmpty()) {
+                if (stack.getItem() instanceof IUpgradeItem) {
+                    if (this instanceof IUpgradableBlock) {
+                        IUpgradeItem iUpgradeItem = (IUpgradeItem) stack.getItem();
+                        IUpgradableBlock upgradableBlock = (IUpgradableBlock) this;
+                        if (iUpgradeItem.isSuitableFor(stack, upgradableBlock.getUpgradableProperties())) {
+                            for (final InvSlot invslot : this.invSlots) {
+                                if (invslot instanceof com.denfop.invslot.InvSlotUpgrade) {
+                                    com.denfop.invslot.InvSlotUpgrade upgrade = (com.denfop.invslot.InvSlotUpgrade) invslot;
+                                    if (upgrade.add(stack)) {
+                                        stack.setCount(0);
+                                        player.openContainer.detectAndSendChanges();
+                                        return true;
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
@@ -127,7 +176,8 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             }
 
             if (this instanceof IHasGui) {
-                return this.getWorld().isRemote || IC2.platform.launchGui(player, (IHasGui) this);
+
+                return !this.getWorld().isRemote && IUCore.proxy.launchGui(player, (IHasGui) this);
             } else {
                 return false;
             }
@@ -143,12 +193,20 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         for (final InvSlot invSlot : this.invSlots) {
             invSlot.readFromNbt(invSlotsTag.getCompoundTag(invSlot.name));
         }
-
+        if (!this.componentList.isEmpty() && nbtTagCompound.hasKey("components", 10)) {
+            NBTTagCompound componentsNbt = nbtTagCompound.getCompoundTag("components");
+            for (int i = 0; i < this.componentList.size(); i++) {
+                final TileEntityAdvComponent component = this.componentList.get(i);
+                NBTTagCompound componentNbt = componentsNbt.getCompoundTag("component_" + i);
+                component.readFromNbt(componentNbt);
+            }
+        }
     }
 
     @Override
     protected void onLoaded() {
         super.onLoaded();
+        this.componentList.forEach(TileEntityAdvComponent::onLoaded);
         infoInvSlotsList.clear();
         for (InvSlot slot : this.invSlots) {
             for (int k = 0; k < slot.size(); k++) {
@@ -162,7 +220,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         for (Iterator<InvSlot> var2 = this.invSlots.iterator(); var2.hasNext(); size_inventory += invSlot.size()) {
             invSlot = var2.next();
         }
-
+        if (!this.getWorld().isRemote) {
+            IUCore.network.get(true).sendInitialData(this);
+        }
     }
 
     public List<InvSlot> getInvSlots() {
@@ -180,6 +240,19 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
 
         nbt.setTag("InvSlots", invSlotsTag);
+        if (!this.componentList.isEmpty()) {
+            NBTTagCompound componentsNbt = new NBTTagCompound();
+
+            for (int i = 0; i < this.componentList.size(); i++) {
+                final TileEntityAdvComponent component = this.componentList.get(i);
+                NBTTagCompound nbt1 = component.writeToNbt();
+                if (nbt1 == null) {
+                    nbt1 = new NBTTagCompound();
+                }
+                componentsNbt.setTag("component_" + i, nbt1);
+            }
+            nbt.setTag("components", componentsNbt);
+        }
         return nbt;
     }
 
@@ -313,7 +386,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             return false;
         } else {
             InvSlot invSlot = this.getInventorySlot(index);
-            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack);
+            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack, this.locateInfoInvSlot(index).getIndex());
         }
     }
 
@@ -335,11 +408,11 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             InvSlot targetSlot = this.getInventorySlot(index);
             if (targetSlot == null) {
                 return false;
-            } else if (targetSlot.canInput() && targetSlot.accepts(stack)) {
-                if (targetSlot.preferredSide != InvSide.ANY && targetSlot.preferredSide.matches(side)) {
+            } else if (targetSlot.canInput() && targetSlot.accepts(stack, this.locateInfoInvSlot(index).getIndex())) {
+                if (targetSlot.preferredSide != InvSlot.InvSide.ANY && targetSlot.preferredSide.matches(side)) {
                     return true;
                 } else {
-                    return targetSlot.preferredSide == InvSide.ANY;
+                    return targetSlot.preferredSide == InvSlot.InvSide.ANY;
                 }
             } else {
                 return false;
@@ -464,16 +537,136 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.itemHandler[facing.ordinal()]);
             }
         } else {
-            return super.getCapability(capability, facing);
+            if (this.capabilityComponents == null) {
+                return super.getCapability(capability, facing);
+            } else {
+                TileEntityComponent comp = this.capabilityComponents.get(capability);
+                return comp == null ? super.getCapability(capability, facing) : comp.getCapability(capability, facing);
+            }
+        }
+    }
+
+    @Override
+    protected void updateEntityServer() {
+        super.updateEntityServer();
+        for (TileEntityAdvComponent component : this.updateServerList) {
+            component.updateEntityServer();
         }
     }
 
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return true;
+        }
+        if (super.hasCapability(capability, facing)) {
+            return true;
+        } else if (this.capabilityComponents == null) {
+            return false;
+        } else {
+            TileEntityAdvComponent comp = this.capabilityComponents.get(capability);
+            return comp != null && comp.getProvidedCapabilities(facing).contains(capability);
+        }
+
     }
 
     protected int calcRedstoneFromInvSlots() {
         return calcRedstoneFromInvSlots(this.invSlots);
+    }
+
+    protected final <T extends TileEntityAdvComponent> T addComponent(T component) {
+        if (component == null) {
+            throw new NullPointerException("null component");
+        } else {
+
+            componentList.add(component);
+            advComponentMap.put(component.toString(), component);
+            if (component.isClient()) {
+                this.updateClientList.add(component);
+            }
+            if (component.isServer()) {
+                this.updateServerList.add(component);
+            }
+
+            for (final Capability<?> capability : component.getProvidedCapabilities(null)) {
+                this.addComponentCapability(capability, component);
+            }
+
+            return component;
+
+        }
+    }
+
+    private void addComponentCapability(Capability<?> cap, TileEntityAdvComponent component) {
+        if (this.capabilityComponents == null) {
+            this.capabilityComponents = new IdentityHashMap<>();
+        }
+
+        TileEntityAdvComponent prev = this.capabilityComponents.put(cap, component);
+
+        assert prev == null;
+
+    }
+
+    protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
+        if (this.componentList != null) {
+
+            for (final TileEntityAdvComponent component : componentList) {
+                component.onNeighborChange(neighbor, neighborPos);
+            }
+        }
+
+    }
+
+    public boolean hasComponent(Class<? extends TileEntityComponent> cls) {
+        for (final TileEntityAdvComponent component : componentList) {
+            if (component.getClass() == cls) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<TileEntityAdvComponent> getComponentList() {
+        return componentList;
+    }
+
+    public ComponentClientEffectRender getComponentClientEffectRender() {
+        return componentClientEffectRender;
+    }
+
+    public List<TileEntityAdvComponent> getUpdatableComponents() {
+        return updatableComponents;
+    }
+
+    public <T extends TileEntityAdvComponent> T getComponent(String cls) {
+        for (TileEntityAdvComponent component : this.componentList) {
+            if (component.toString().trim().equals(cls)) {
+                return (T) component;
+            }
+        }
+        return null;
+    }
+
+    public Map<Capability<?>, TileEntityAdvComponent> getCapabilityComponents() {
+        return capabilityComponents;
+    }
+
+    public <T extends TileEntityComponent> T getComponent(Class<T> cls) {
+        for (final TileEntityComponent component : componentList) {
+            if (component.getClass() == cls) {
+                return (T) component;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getNetworkFields() {
+        List<String> ret = new ArrayList<>(3);
+        ret.add("teBlk=" + ("") + this.teBlock.getName());
+        ret.add("active");
+        ret.add("facing");
+        return ret;
     }
 
 }

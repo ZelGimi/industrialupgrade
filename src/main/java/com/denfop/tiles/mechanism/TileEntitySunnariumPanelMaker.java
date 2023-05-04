@@ -2,11 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerDoubleElectricMachine;
@@ -36,7 +32,7 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
     public TileEntitySunnariumPanelMaker() {
         super(1, 300, 1, EnumDoubleElectricMachine.SUNNARIUM_PANEL);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
-                .asBasicSink(EnergyType.SOLARIUM,this, 10000, 1));
+                .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));
         Recipes.recipes.addInitRecipes(this);
     }
 

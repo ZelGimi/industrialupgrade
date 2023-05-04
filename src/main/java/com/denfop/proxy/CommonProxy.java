@@ -2,14 +2,17 @@ package com.denfop.proxy;
 
 import cofh.api.fluid.IFluidContainerItem;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.IULoots;
 import com.denfop.Ic2Items;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.ReplicatorRecipe;
 import com.denfop.api.research.BaseResearchSystem;
 import com.denfop.api.research.ResearchSystem;
 import com.denfop.api.space.BaseSpaceSystem;
@@ -62,6 +65,7 @@ import com.denfop.blocks.mechanism.BlockUpgradeBlock;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.componets.RFComponent;
@@ -79,6 +83,7 @@ import com.denfop.integration.de.DraconicIntegration;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.integration.forestry.FIntegration;
 import com.denfop.integration.mets.METSIntegration;
+import com.denfop.integration.oc.OCIntegration;
 import com.denfop.integration.projecte.ProjectEIntegration;
 import com.denfop.integration.thaumcraft.BlockThaumSolarPanel;
 import com.denfop.integration.thaumcraft.ThaumcraftIntegration;
@@ -86,15 +91,16 @@ import com.denfop.integration.thermal.ThermalExpansionIntegration;
 import com.denfop.items.CellType;
 import com.denfop.items.book.core.CoreBook;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import com.denfop.recipemanager.ObsidianRecipeManager;
 import com.denfop.recipes.BasicRecipe;
 import com.denfop.recipes.CannerRecipe;
 import com.denfop.recipes.CentrifugeRecipe;
 import com.denfop.recipes.CompressorRecipe;
+import com.denfop.recipes.ExtractorRecipe;
 import com.denfop.recipes.FurnaceRecipes;
 import com.denfop.recipes.MaceratorRecipe;
 import com.denfop.recipes.MetalFormerRecipe;
 import com.denfop.recipes.OreWashingRecipe;
+import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.tiles.base.TileEntityConverterSolidMatter;
@@ -116,8 +122,13 @@ import ic2.api.recipe.MachineRecipe;
 import ic2.core.IC2;
 import ic2.core.block.comp.Components;
 import ic2.core.block.machine.tileentity.TileEntityMatter;
+import ic2.core.ref.BlockName;
+import ic2.core.ref.ItemName;
+import ic2.core.ref.TeBlock;
 import ic2.core.util.LogCategory;
+import ic2.core.util.Util;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -152,6 +163,22 @@ public class CommonProxy implements IGuiHandler {
                     player,
                     text
             );
+        }
+    }
+
+    public boolean launchGui(EntityPlayer player, IHasGui inventory) {
+        if (!Util.isFakePlayer(player, true)) {
+            EntityPlayerMP playerMp = (EntityPlayerMP) player;
+            playerMp.getNextWindowId();
+            playerMp.closeContainer();
+            int windowId = playerMp.currentWindowId;
+            IUCore.network.get(true).initiateGuiDisplay(playerMp, inventory, windowId);
+            player.openContainer = inventory.getGuiContainer(player);
+            player.openContainer.windowId = windowId;
+            player.openContainer.addListener(playerMp);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -262,9 +289,11 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
+        InitMultiBlockSystem.init();
         BlockAdvChamber.adv_chamber.setPlaceHandler(Ic2IntegrationHandler.advReactorChamberPlace);
         BlockImpChamber.imp_chamber.setPlaceHandler(Ic2IntegrationHandler.impReactorChamberPlace);
         BlockPerChamber.per_chamber.setPlaceHandler(Ic2IntegrationHandler.perReactorChamberPlace);
+        BlockBaseMachine3.chamber_iu.setPlaceHandler(Ic2IntegrationHandler.ReactorChamberPlace);
 
         IUEventHandler sspEventHandler = new IUEventHandler();
         MinecraftForge.EVENT_BUS.register(sspEventHandler);
@@ -274,6 +303,8 @@ public class CommonProxy implements IGuiHandler {
         IC2.log.debug(LogCategory.General, "Checking recipes %d ",
                 ForgeRegistries.RECIPES.getValuesCollection().size()
         );
+
+
         for (IRecipe r : Lists.newArrayList(ForgeRegistries.RECIPES.getValuesCollection())) {
             List<List<ItemStack>> itemStackList = new ArrayList<>();
             for (Ingredient ingredient : r.getIngredients()) {
@@ -378,15 +409,8 @@ public class CommonProxy implements IGuiHandler {
         matterRecipeList.clear();
         itemStackMap1.clear();
         IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
-        writeRecipe(ic2.api.recipe.Recipes.macerator, "macerator");
-        writeRecipe(ic2.api.recipe.Recipes.compressor, "compressor");
-        writeRecipe(ic2.api.recipe.Recipes.extractor, "extractor");
-        writeRecipe(ic2.api.recipe.Recipes.metalformerCutting, "cutting");
-        writeRecipe(ic2.api.recipe.Recipes.metalformerExtruding, "extruding");
-        writeRecipe(ic2.api.recipe.Recipes.metalformerRolling, "rolling");
-        writeRecipe(ic2.api.recipe.Recipes.recycler, "recycler");
-        writeRecipe(ic2.api.recipe.Recipes.oreWashing, "orewashing");
-        writeRecipe(ic2.api.recipe.Recipes.centrifuge, "centrifuge");
+        IUItem.fluidMatterRecipe = Recipes.recipes.getRecipeStack("replicator");
+
         writeRecipe();
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
         for (int i = 0; i < 8; i++) {
@@ -447,14 +471,21 @@ public class CommonProxy implements IGuiHandler {
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.recycler));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.massFabricator));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.compressor));
+        if (IUCore.isHasVersion("ic2", "134")) {
+            ItemStack tank = BlockName.te.getItemStack(TeBlock.bronze_tank);
+            ItemStack tank1 = BlockName.te.getItemStack(TeBlock.iridium_tank);
+            ItemStack tank2 = BlockName.te.getItemStack(TeBlock.iron_tank);
+            ItemStack tank3 = BlockName.te.getItemStack(TeBlock.steel_tank);
 
-        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tank));
-        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tank1));
-        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tank2));
-        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tank3));
+            CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(tank));
+            CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(tank1));
+            CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(tank2));
+            CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(tank3));
+        }
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.iridiumDrill));
-
-        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.bronzerotor));
+        if (IUCore.isHasVersion("ic2", "154")) {
+            CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(ItemName.rotor_bronze.getItemStack()));
+        }
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.carbonrotor));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.ironrotor));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.woodrotor));
@@ -474,7 +505,16 @@ public class CommonProxy implements IGuiHandler {
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.geothermalGenerator));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.solarPanel));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.reactorVent));
-
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.silverBlock));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.crophavester));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.cropmatron));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.teleporter));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.canner));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.solidcanner));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.patternstorage));
+        ic2.api.recipe.Recipes.advRecipes.addRecipe(
+                new ItemStack(IUItem.block, 1, 14), "AAA", "AAA", "AAA", 'A', "blockSilver"
+        );
         if (Components.getId(AdvEnergy.class) == null) {
             Components.register(AdvEnergy.class, "AdvEnergy");
         }
@@ -497,6 +537,9 @@ public class CommonProxy implements IGuiHandler {
         }
         if (Components.getId(ComponentClientEffectRender.class) == null) {
             Components.register(ComponentClientEffectRender.class, "ComponentClientEffectRender");
+        }
+        if (Components.getId(Fluids.class) == null) {
+            Components.register(Fluids.class, "FluidsIU");
         }
 
         if (Loader.isModLoaded("mets")) {
@@ -521,6 +564,9 @@ public class CommonProxy implements IGuiHandler {
         if (Loader.isModLoaded("thermalexpansion")) {
             ThermalExpansionIntegration.init();
         }
+        if (Loader.isModLoaded("opencomputers")) {
+            OCIntegration.init();
+        }
         CompressorRecipe.recipe();
         CannerRecipe.recipe();
         FurnaceRecipes.recipe();
@@ -528,8 +574,8 @@ public class CommonProxy implements IGuiHandler {
         MaceratorRecipe.recipe();
         MetalFormerRecipe.init();
         OreWashingRecipe.init();
-
-
+        ExtractorRecipe.init();
+        ReplicatorRecipe.init();
     }
 
     private void writeRecipe() {
@@ -659,8 +705,9 @@ public class CommonProxy implements IGuiHandler {
     public void profilerEndSection() {
     }
 
-    public void regrecipemanager() {
-        Recipes.obsidianGenerator = new ObsidianRecipeManager();
+
+    public boolean launchGuiClient(EntityPlayer player, IHasGui inventory, boolean isAdmin) {
+        return false;
     }
 
 }

@@ -8,6 +8,7 @@ import com.denfop.IUItem;
 import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.audio.AudioSource;
@@ -15,6 +16,7 @@ import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.componets.RFComponent;
@@ -22,6 +24,8 @@ import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerMultiMachine;
 import com.denfop.gui.GuiMultiMachine;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.items.modules.ItemModuleTypePanel;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
@@ -32,10 +36,6 @@ import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
@@ -87,6 +87,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public TileEntityMultiMachine(int energyconsume, int OperationsPerTick, int type) {
         this(1, energyconsume, OperationsPerTick, type);
     }
+
     public TileEntityMultiMachine(
             int aDefaultTier,
             int energyconsume,
@@ -113,7 +114,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
 
         this.exp = null;
         if (this.getMachine().type == EnumTypeMachines.ELECTRICFURNACE) {
-            this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE,this, 5000, 14));
+            this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE, this, 5000, 14));
         }
         if (this.getMachine().type == EnumTypeMachines.Centrifuge) {
             this.heat = this.addComponent(HeatComponent.asBasicSink(this, 5000));
@@ -121,8 +122,9 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         this.multi_process = this.addComponent(new ProcessMultiComponent(this, getMachine()));
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.HEAT);
     }
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("cold");
         return ret;
     }
@@ -191,7 +193,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
@@ -399,7 +401,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer entityPlayer,
             final EnumHand hand,
             final EnumFacing side,
@@ -489,7 +491,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         } else {
 
             sound = !sound;
-            IC2.network.get(true).updateTileEntityField(this, "sound");
+            IUCore.network.get(true).updateTileEntityField(this, "sound");
 
             if (!sound) {
                 if (this.getType() == EnumTypeAudio.ON) {
@@ -504,7 +506,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     protected void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
-            IC2.network.get(true).updateTileEntityField(this, "sound");
+            IUCore.network.get(true).updateTileEntityField(this, "sound");
         }
 
     }
@@ -518,7 +520,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     protected void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 

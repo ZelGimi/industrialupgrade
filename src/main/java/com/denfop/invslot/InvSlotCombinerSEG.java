@@ -3,7 +3,6 @@ package com.denfop.invslot;
 
 import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -60,7 +59,7 @@ public class InvSlotCombinerSEG extends InvSlot {
     }
 
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem().equals(Item.getItemFromBlock(IUItem.adv_se_generator))
                 || itemStack.getItem().equals(Item.getItemFromBlock(IUItem.blockSE))
                 || itemStack.getItem().equals(Item.getItemFromBlock(IUItem.imp_se_generator))

@@ -64,12 +64,13 @@ import com.denfop.items.ItemCore;
 import com.denfop.items.ItemCoreWater;
 import com.denfop.items.ItemCoreWind;
 import com.denfop.items.ItemExcitedNucleus;
+import com.denfop.items.ItemFrequencyTransmitter;
 import com.denfop.items.ItemLens;
 import com.denfop.items.ItemPaints;
 import com.denfop.items.ItemPhotoniumGlass;
 import com.denfop.items.ItemRotorsUpgrade;
 import com.denfop.items.ItemSolidMatter;
-import com.denfop.items.ItemToolLimiter;
+import com.denfop.items.ItemToolMeter;
 import com.denfop.items.ItemVeinSensor;
 import com.denfop.items.ItemWaterRod;
 import com.denfop.items.ItemWaterRotorsUpgrade;
@@ -86,13 +87,17 @@ import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.book.ItemBook;
 import com.denfop.items.energy.ItemBattery;
+import com.denfop.items.energy.ItemElectricToolHoe;
 import com.denfop.items.energy.ItemEnergyBow;
 import com.denfop.items.energy.ItemGraviTool;
 import com.denfop.items.energy.ItemKatana;
 import com.denfop.items.energy.ItemMagnet;
+import com.denfop.items.energy.ItemNanoSaber;
 import com.denfop.items.energy.ItemPurifier;
 import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
+import com.denfop.items.energy.ItemToolWrenchElectric;
+import com.denfop.items.energy.ItemTreetapElectric;
 import com.denfop.items.energy.ItemWindMeter;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.items.energy.instruments.EnumVarietyInstruments;
@@ -118,6 +123,8 @@ import com.denfop.items.reactors.ItemRadioactive;
 import com.denfop.items.reactors.ItemReactorCondensator;
 import com.denfop.items.reactors.ItemReactorHeatStorage;
 import com.denfop.items.reactors.ItemReactorHeatSwitch;
+import com.denfop.items.reactors.ItemReactorPlating;
+import com.denfop.items.reactors.ItemReactorReflector;
 import com.denfop.items.reactors.ItemReactorVent;
 import com.denfop.items.reactors.ItemReactorVentSpread;
 import com.denfop.items.reactors.RadiationResources;
@@ -183,7 +190,6 @@ public class Register {
         IUItem.rotors_upgrade = new ItemRotorsUpgrade();
         IUItem.water_rotors_upgrade = new ItemWaterRotorsUpgrade();
         IUItem.water_rod = new ItemWaterRod();
-        IUItem.limiter = new ItemToolLimiter();
         IUItem.excitednucleus = new ItemExcitedNucleus();
         IUItem.templates = new ItemsTemplates();
         IUItem.crafting_elements = new ItemCraftingElements();
@@ -194,6 +200,8 @@ public class Register {
         IUItem.corewater = new ItemCoreWater();
         IUItem.heatcold_pipes = new ItemHeatColdPipes();
         IUItem.universal_cable = new ItemUniversalCable();
+        IUItem.energy_meter = new ItemToolMeter();
+        IUItem.frequency_transmitter = new ItemFrequencyTransmitter();
         IUItem.rotor_wood = new ItemAdvancedWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
                 "ic2",
                 "textures/items/rotor" +
@@ -307,8 +315,20 @@ public class Register {
         IUItem.chargepadelectricblock = TeBlockRegistry.get(BlockChargepadStorage.IDENTITY).setCreativeTab(IUCore.IUTab);
         IUItem.solidmatter = TeBlockRegistry.get(BlockSolidMatter.IDENTITY).setCreativeTab(IUCore.IUTab);
         IUItem.machines = TeBlockRegistry.get(BlockBaseMachine.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.advBatChargeCrystal = new ItemBattery("itemadvbatchargecrystal", Config.Storagequantumsuit, 32368D, 5, true);
-        IUItem.itemBatChargeCrystal = new ItemBattery("itembatchargecrystal", Config.Storagequantumsuit * 4, 129472D, 6, true);
+        IUItem.impBatChargeCrystal = new ItemBattery("itemadvbatchargecrystal", Config.Storagequantumsuit, 32368D, 5, true);
+        IUItem.perBatChargeCrystal = new ItemBattery("itembatchargecrystal", Config.Storagequantumsuit * 4, 129472D, 6, true);
+        IUItem.re_battery = new ItemBattery("re_battery", 10000.0, 100.0, 1);
+        IUItem.energy_crystal = new ItemBattery("energy_crystal", 1000000.0, 2048.0, 3);
+        IUItem.lapotron_crystal = new ItemBattery("lapotron_crystal", 1.0E7, 8092.0, 4);
+        IUItem.charging_re_battery = new ItemBattery("charging_re_battery", 40000.0, 128.0, 1, true);
+        IUItem.advanced_charging_re_battery = new ItemBattery("advanced_charging_re_battery", 400000.0, 1024.0, 2, true);
+        IUItem.charging_energy_crystal = new ItemBattery("charging_energy_crystal", 4000000.0, 8192.0, 3, true);
+        IUItem.charging_lapotron_crystal = new ItemBattery("charging_lapotron_crystal", 4.0E7, 32768.0, 4, true);
+        IUItem.advanced_re_battery = new ItemBattery("advanced_re_battery", 100000.0, 256.0, 2);
+        IUItem.batpack = new ItemLappack("batpack", 60000.0, 1, 100.0);
+        IUItem.advanced_batpack = new ItemLappack("advanced_batpack", 600000.0, 2, 1000.0);
+        IUItem.jetpack = new ItemAdvJetpack("jetpack", 30000.0, 60.0, 1);
+        IUItem.lappack = new ItemLappack("lappack", 2.0E7, 4, 2500.0);
         IUItem.blockSE = TeBlockRegistry.get(BlockSolarEnergy.IDENTITY).setCreativeTab(IUCore.IUTab);
         IUItem.blastfurnace = TeBlockRegistry.get(BlockBlastFurnace.IDENTITY).setCreativeTab(IUCore.IUTab);
 
@@ -741,6 +761,61 @@ public class Register {
         IUItem.impheatswitch = new ItemReactorHeatSwitch("impheatswitch", 5000, 60, 70);
         IUItem.reactorCoolantmax = new ItemStack(new ItemReactorHeatStorage("reactorcoolantmax", 240000));
         IUItem.reactorCoolanttwelve = new ItemStack(new ItemReactorHeatStorage("reactorcoolanttwelve", 120000));
+
+        IUItem.heat_storage = new ItemReactorHeatStorage("heat_storage", 10000);
+        IUItem.tri_heat_storage = new ItemReactorHeatStorage("tri_heat_storage", 30000);
+        IUItem.hex_heat_storage = new ItemReactorHeatStorage("hex_heat_storage", 60000);
+        IUItem.plating = new ItemReactorPlating("plating", 1000, 0.95F);
+        IUItem.heat_plating = new ItemReactorPlating("heat_plating", 2000, 0.99F);
+        IUItem.containment_plating = new ItemReactorPlating("containment_plating", 500, 0.9F);
+
+
+        IUItem.heat_exchanger = new ItemReactorHeatSwitch("heat_exchanger", 2500, 12, 4);
+        IUItem.reactor_heat_exchanger = new ItemReactorHeatSwitch("reactor_heat_exchanger", 5000, 0, 72);
+        IUItem.component_heat_exchanger = new ItemReactorHeatSwitch("component_heat_exchanger", 5000, 36, 0);
+        IUItem.advanced_heat_exchanger = new ItemReactorHeatSwitch("advanced_heat_exchanger", 10000, 24, 8);
+
+        IUItem.heat_vent = new ItemReactorVent("heat_vent", 1000, 6, 0);
+        IUItem.reactor_heat_vent = new ItemReactorVent("reactor_heat_vent", 1000, 5, 5);
+        IUItem.overclocked_heat_vent = new ItemReactorVent("overclocked_heat_vent", 1000, 20, 36);
+        IUItem.component_heat_vent = new ItemReactorVentSpread("component_heat_vent", 4);
+        IUItem.advanced_heat_vent = new ItemReactorVent("advanced_heat_vent", 1000, 12, 0);
+        IUItem.neutron_reflector = new ItemReactorReflector("neutron_reflector", 30000);
+        IUItem.thick_neutron_reflector = new ItemReactorReflector("thick_neutron_reflector", 120000);
+        IUItem.rsh_condensator = new ItemReactorCondensator("rsh_condensator", 20000);
+        IUItem.lzh_condensator = new ItemReactorCondensator("lzh_condensator", 100000);
+        IUItem.reactorDepleteduranSimple = new ItemStack(
+                new ItemDepletedRod("depleted_uranium"));
+        IUItem.reactorDepleteduranDual = new ItemStack(
+                new ItemDepletedRod("depleted_dual_uranium"));
+        IUItem.reactorDepleteduranQuad = new ItemStack(
+                new ItemDepletedRod("depleted_quad_uranium"));
+        IUItem.reactorDepletedumoxSimple = new ItemStack(
+                new ItemDepletedRod("depleted_mox"));
+        IUItem.reactorDepletedmoxDual = new ItemStack(
+                new ItemDepletedRod("depleted_dual_mox"));
+        IUItem.reactorDepletedmoxQuad = new ItemStack(
+                new ItemDepletedRod("depleted_quad_mox"));
+        stack1 = new ItemStack[]{IUItem.reactorDepleteduranSimple, IUItem.reactorDepleteduranDual, IUItem.reactorDepleteduranQuad};
+        IUItem.uranium_fuel_rod = new ItemStack(new ItemBaseRod("uranium_fuel_rod", 1,
+                10000, 0, (float) 1.5, stack1
+        ));
+        IUItem.dual_uranium_fuel_rod = new ItemStack(new ItemBaseRod("dual_uranium_fuel_rod", 2,
+                10000, 0, (float) 1.5, stack1
+        ));
+        IUItem.quad_uranium_fuel_rod = new ItemStack(new ItemBaseRod("quad_uranium_fuel_rod", 4,
+                10000, 0, (float) 1.5, stack1
+        ));
+        stack1 = new ItemStack[]{IUItem.reactorDepletedumoxSimple, IUItem.reactorDepletedmoxDual, IUItem.reactorDepletedmoxQuad};
+        IUItem.mox_fuel_rod = new ItemStack(new ItemBaseRod("mox_fuel_rod", 1,
+                10000, 2, (float) 3, stack1
+        ));
+        IUItem.dual_mox_fuel_rod = new ItemStack(new ItemBaseRod("dual_mox_fuel_rod", 2,
+                10000, 2, (float) 3, stack1
+        ));
+        IUItem.quad_mox_fuel_rod = new ItemStack(new ItemBaseRod("quad_mox_fuel_rod", 4,
+                10000, 2, (float) 3, stack1
+        ));
         IUItem.upgradepanelkit = new ItemUpgradePanelKit();
         IUItem.magnet = new ItemMagnet("magnet", 100000, 5000, 4, 7);
         IUItem.impmagnet = new ItemMagnet("impmagnet", 200000, 7500, 5, 11);
@@ -770,6 +845,13 @@ public class Register {
         IUItem.oilblock = new BlockOil();
         IUItem.toriyore = new BlockThoriumOre();
         IUItem.itemiu = new ItemIUCrafring();
+        IUItem.chainsaw = new ItemEnergyInstruments(EnumTypeInstruments.CHAINSAW, EnumVarietyInstruments.CHAINSAW, "chainsaw");
+
+        IUItem.drill = new ItemEnergyInstruments(EnumTypeInstruments.SIMPLE_DRILL, EnumVarietyInstruments.SIMPLE, "drill");
+        IUItem.diamond_drill = new ItemEnergyInstruments(EnumTypeInstruments.DIAMOND_DRILL, EnumVarietyInstruments.DIAMOND,
+                "diamond_drill"
+        );
+
         IUItem.nanopickaxe = new ItemEnergyInstruments(EnumTypeInstruments.PICKAXE, EnumVarietyInstruments.NANO, "nanopickaxe");
         IUItem.nanoshovel = new ItemEnergyInstruments(EnumTypeInstruments.SHOVEL, EnumVarietyInstruments.NANO, "nanoshovel");
         IUItem.nanoaxe = new ItemEnergyInstruments(EnumTypeInstruments.AXE, EnumVarietyInstruments.NANO, "nanoaxe");
@@ -830,6 +912,10 @@ public class Register {
         IUItem.quantumSaber = new ItemQuantumSaber("itemNanoSaber1", Config.maxCharge1, Config.transferLimit1,
                 Config.tier1, Config.spectralsaberactive1, Config.spectralsabernotactive1
         );
+        IUItem.electric_hoe = new ItemElectricToolHoe();
+        IUItem.electric_treetap = new ItemTreetapElectric();
+        IUItem.electric_wrench = new ItemToolWrenchElectric();
+        IUItem.nanosaber = new ItemNanoSaber("nano_saber", 160000, 500, 3, 19, 4);
         IUItem.spectral_helmet = new ItemArmorImprovemedQuantum(
                 "itemArmorQuantumHelmet",
                 EntityEquipmentSlot.HEAD,
@@ -943,6 +1029,19 @@ public class Register {
         IUItem.moonlinse_module = new ItemStack(IUItem.basemodules, 1, 15);
         IUItem.moonlinse_module1 = new ItemStack(IUItem.basemodules, 1, 16);
         IUItem.moonlinse_module2 = new ItemStack(IUItem.basemodules, 1, 17);
+        IUItem.copperCableItem = new ItemStack(IUItem.cable, 1, 11);
+        IUItem.insulatedCopperCableItem = new ItemStack(IUItem.cable, 1, 12);
+        IUItem.glassFiberCableItem = new ItemStack(IUItem.cable, 1, 13);
+        IUItem.goldCableItem = new ItemStack(IUItem.cable, 1, 14);
+        IUItem.insulatedGoldCableItem = new ItemStack(IUItem.cable, 1, 15);
+        IUItem.doubleInsulatedGoldCableItem = new ItemStack(IUItem.cable, 1, 16);
+        IUItem.ironCableItem = new ItemStack(IUItem.cable, 1, 17);
+        IUItem.insulatedIronCableItem = new ItemStack(IUItem.cable, 1, 18);
+        IUItem.doubleInsulatedIronCableItem = new ItemStack(IUItem.cable, 1, 19);
+        IUItem.trippleInsulatedIronCableItem = new ItemStack(IUItem.cable, 1, 20);
+        IUItem.tinCableItem = new ItemStack(IUItem.cable, 1, 21);
+        IUItem.insulatedTinCableItem = new ItemStack(IUItem.cable, 1, 22);
+
         if (Loader.isModLoaded("exnihilocreatio")) {
             ExNihiloIntegration.gravel = new GravelBlocks();
             ExNihiloIntegration.dust = new DustBlocks();

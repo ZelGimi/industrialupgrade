@@ -1,22 +1,20 @@
 package com.denfop.tiles.mechanism.generator.things.fluid;
 
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerLavaGenerator;
 import com.denfop.gui.GuiLavaGenerator;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
 import ic2.core.profile.NotClassic;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,14 +49,14 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
         this.containerslot = new InvSlotConsumableLiquidByList(
                 this,
                 "container",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.ANY,
+                InvSlot.InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidRegistry.LAVA
         );
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.Access.O, InvSide.ANY,
+        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.Access.O, InvSlot.InvSide.ANY,
                 Fluids.fluidPredicate(FluidRegistry.LAVA)
         );
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
@@ -91,7 +89,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
 
     protected void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -150,7 +148,7 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
         return "" + p + "%";
     }
 
-    public ContainerBase<TileEntityLavaGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerLavaGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerLavaGenerator(entityPlayer, this);
     }
 
@@ -162,8 +160,8 @@ public class TileEntityLavaGenerator extends TileEntityElectricMachine implement
     public void onGuiClosed(EntityPlayer player) {
     }
 
-    public List<String> getNetworkedFields() {
-        return super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        return super.getNetworkFields();
     }
 
     public void onNetworkUpdate(String field) {

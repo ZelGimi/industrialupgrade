@@ -2,7 +2,6 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerAnalyzerChest;
-import ic2.core.GuiIC2;
 import net.minecraft.util.ResourceLocation;
 
 

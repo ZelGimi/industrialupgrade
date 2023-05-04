@@ -1,7 +1,6 @@
 package com.denfop.invslot;
 
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityBaseRedstoneGenerator;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -17,7 +16,7 @@ public class InvSlotRedstoneGenerator extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         return stack.getItem() == Items.REDSTONE || stack.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK);
     }
 
@@ -25,12 +24,18 @@ public class InvSlotRedstoneGenerator extends InvSlot {
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
         if (content.isEmpty()) {
-            tile.redstone_coef = 0;
+            if (this.tile.fuel == 0) {
+                tile.redstone_coef = 0;
+            }
         }
         if (content.getItem() == Items.REDSTONE) {
             tile.redstone_coef = 1;
-        } else {
+        } else if (content.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK)) {
             tile.redstone_coef = 9;
+        } else {
+            if (this.tile.fuel == 0) {
+                tile.redstone_coef = 0;
+            }
         }
 
     }

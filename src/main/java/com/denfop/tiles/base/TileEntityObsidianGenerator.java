@@ -1,14 +1,14 @@
 package com.denfop.tiles.base;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.IBaseRecipe;
+import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.InputFluid;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerObsidianGenerator;
 import com.denfop.gui.GuiObsidianGenerator;
-import com.denfop.invslot.InvSlotObsidianGenerator;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -24,17 +24,17 @@ import java.util.Set;
 public class TileEntityObsidianGenerator extends TileEntityBaseObsidianGenerator implements IHasRecipe {
 
 
-
     public TileEntityObsidianGenerator() {
         super(1, 300, 1);
-        this.inputSlotA = new InvSlotObsidianGenerator(this, "inputA", 2);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
     }
 
     public void init() {
 
-        Recipes.obsidianGenerator.addRecipe(new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.LAVA, 1000)
-                , new ItemStack(Blocks.OBSIDIAN));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("obsidian", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(FluidRegistry.LAVA, 1000)
+        ), new RecipeOutput(null, new ItemStack(Blocks.OBSIDIAN))));
 
 
     }
@@ -46,7 +46,7 @@ public class TileEntityObsidianGenerator extends TileEntityBaseObsidianGenerator
 
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiObsidianGenerator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiObsidianGenerator(new ContainerObsidianGenerator(entityPlayer, this));
     }
 

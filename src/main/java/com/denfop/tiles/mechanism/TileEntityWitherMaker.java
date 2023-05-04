@@ -29,7 +29,6 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker implements 
     public TileEntityWitherMaker() {
         super(1, 1500, 1);
         this.inputSlotA = new InvSlotRecipes(this, "wither", this);
-        inputSlotA.setStackSizeLimit(1);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -39,7 +38,7 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker implements 
             IRecipeInput fill2, ItemStack output
     ) {
         Recipes.recipes.addRecipe("wither", new BaseMachineRecipe(
-                new Input(container, container, fill2, fill2, fill2, container, fill2),
+                new Input(container, container, container, fill2, fill2, fill2, fill2),
                 new RecipeOutput(
                         null,
                         output

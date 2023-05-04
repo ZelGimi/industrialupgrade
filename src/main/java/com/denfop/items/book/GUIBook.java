@@ -1,11 +1,11 @@
 package com.denfop.items.book;
 
 import com.denfop.Constants;
+import com.denfop.gui.GuiIC2;
 import com.denfop.items.book.core.AddPages;
 import com.denfop.items.book.core.MainPage;
 import com.denfop.items.book.core.Pages;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

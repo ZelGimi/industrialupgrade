@@ -3,6 +3,7 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.vein.Type;
+import com.denfop.api.vein.VeinSystem;
 import com.denfop.container.ContainerQuarryVein;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
@@ -207,7 +208,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         }
         handleUpgradeTooltip(par1, par2);
 
-        if (this.container.base.vein != null && this.container.base.vein.get()) {
+        if (this.container.base.vein != VeinSystem.system.getEMPTY() && this.container.base.vein.get()) {
             if (this.container.base.vein.getType() == Type.EMPTY || this.container.base.vein.getMaxCol() == 0) {
                 this.fontRenderer.drawString(
                         Localization.translate("iu.empty"),

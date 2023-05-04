@@ -1,5 +1,6 @@
 package com.denfop.integration.jei;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.blocks.mechanism.BlockAdvRefiner;
@@ -68,9 +69,21 @@ import com.denfop.integration.jei.bf.BlastFWrapper;
 import com.denfop.integration.jei.blastfurnace.BFCategory;
 import com.denfop.integration.jei.blastfurnace.BFHandler;
 import com.denfop.integration.jei.blastfurnace.BFWrapper;
+import com.denfop.integration.jei.canning.CanningCategory;
+import com.denfop.integration.jei.canning.CanningHandler;
+import com.denfop.integration.jei.canning.CanningRecipeWrapper;
+import com.denfop.integration.jei.canningsolid.CanningSolidCategory;
+import com.denfop.integration.jei.canningsolid.CanningSolidHandler;
+import com.denfop.integration.jei.canningsolid.CanningSolidRecipeWrapper;
+import com.denfop.integration.jei.centrifuge.CentrifugeCategory;
+import com.denfop.integration.jei.centrifuge.CentrifugeHandler;
+import com.denfop.integration.jei.centrifuge.CentrifugeWrapper;
 import com.denfop.integration.jei.combmac.CombMacCategory;
 import com.denfop.integration.jei.combmac.CombMacHandler;
 import com.denfop.integration.jei.combmac.CombMacRecipeWrapper;
+import com.denfop.integration.jei.compressor.CompressorCategory;
+import com.denfop.integration.jei.compressor.CompressorHandler;
+import com.denfop.integration.jei.compressor.CompressorWrapper;
 import com.denfop.integration.jei.convertermatter.ConverterCategory;
 import com.denfop.integration.jei.convertermatter.ConverterHandler;
 import com.denfop.integration.jei.convertermatter.ConverterWrapper;
@@ -86,6 +99,9 @@ import com.denfop.integration.jei.electrolyzer.ElectrolyzerRecipeWrapper;
 import com.denfop.integration.jei.enrichment.EnrichCategory;
 import com.denfop.integration.jei.enrichment.EnrichHandler;
 import com.denfop.integration.jei.enrichment.EnrichRecipeWrapper;
+import com.denfop.integration.jei.extractor.ExtractorCategory;
+import com.denfop.integration.jei.extractor.ExtractorHandler;
+import com.denfop.integration.jei.extractor.ExtractorWrapper;
 import com.denfop.integration.jei.extruder.ExtruderCategory;
 import com.denfop.integration.jei.extruder.ExtruderHandler;
 import com.denfop.integration.jei.extruder.ExtruderWrapper;
@@ -98,6 +114,9 @@ import com.denfop.integration.jei.fishmachine.FishMWrapper;
 import com.denfop.integration.jei.fquarry.FQuarryCategory;
 import com.denfop.integration.jei.fquarry.FQuarryHandler;
 import com.denfop.integration.jei.fquarry.FQuarryWrapper;
+import com.denfop.integration.jei.gasgenerator.GasGeneratorCategory;
+import com.denfop.integration.jei.gasgenerator.GasGeneratorHandler;
+import com.denfop.integration.jei.gasgenerator.GasGeneratorWrapper;
 import com.denfop.integration.jei.gearing.GearingCategory;
 import com.denfop.integration.jei.gearing.GearingHandler;
 import com.denfop.integration.jei.gearing.GearingWrapper;
@@ -134,6 +153,9 @@ import com.denfop.integration.jei.genstone.GenStoneRecipeWrapper;
 import com.denfop.integration.jei.handlerho.HandlerHOCategory;
 import com.denfop.integration.jei.handlerho.HandlerHOHandler;
 import com.denfop.integration.jei.handlerho.HandlerHORecipeWrapper;
+import com.denfop.integration.jei.macerator.MaceratorCategory;
+import com.denfop.integration.jei.macerator.MaceratorHandler;
+import com.denfop.integration.jei.macerator.MaceratorWrapper;
 import com.denfop.integration.jei.microchip.MicrochipCategory;
 import com.denfop.integration.jei.microchip.MicrochipHandler;
 import com.denfop.integration.jei.microchip.MicrochipRecipeWrapper;
@@ -148,6 +170,9 @@ import com.denfop.integration.jei.molecular.MolecularTransformerRecipeWrapper;
 import com.denfop.integration.jei.oilpump.OilPumpCategory;
 import com.denfop.integration.jei.oilpump.OilPumpHandler;
 import com.denfop.integration.jei.oilpump.OilPumpWrapper;
+import com.denfop.integration.jei.orewashing.OreWashingCategory;
+import com.denfop.integration.jei.orewashing.OreWashingHandler;
+import com.denfop.integration.jei.orewashing.OreWashingWrapper;
 import com.denfop.integration.jei.painting.PaintingCategory;
 import com.denfop.integration.jei.painting.PaintingHandler;
 import com.denfop.integration.jei.painting.PaintingWrapper;
@@ -169,6 +194,9 @@ import com.denfop.integration.jei.quarry_comb.СMQuarryHandler;
 import com.denfop.integration.jei.quarry_mac.MQuarryCategory;
 import com.denfop.integration.jei.quarry_mac.MQuarryHandler;
 import com.denfop.integration.jei.quarry_mac.MQuarryWrapper;
+import com.denfop.integration.jei.recycler.RecyclerCategory;
+import com.denfop.integration.jei.recycler.RecyclerHandler;
+import com.denfop.integration.jei.recycler.RecyclerWrapper;
 import com.denfop.integration.jei.refiner.RefinerCategory;
 import com.denfop.integration.jei.refiner.RefinerHandler;
 import com.denfop.integration.jei.refiner.RefinerRecipeWrapper;
@@ -238,13 +266,13 @@ import com.denfop.integration.jei.worldcollector.end.EndWrapper;
 import com.denfop.integration.jei.worldcollector.nether.NetherCategory;
 import com.denfop.integration.jei.worldcollector.nether.NetherHandler;
 import com.denfop.integration.jei.worldcollector.nether.NetherWrapper;
-import ic2.api.recipe.Recipes;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
+import ic2.core.item.type.CraftingItemType;
+import ic2.core.ref.BlockName;
+import ic2.core.ref.ItemName;
 import ic2.core.ref.TeBlock;
-import ic2.jeiIntegration.recipe.machine.DynamicCategory;
 import ic2.jeiIntegration.recipe.machine.IORecipeCategory;
-import ic2.jeiIntegration.recipe.machine.RecyclerCategory;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
@@ -278,6 +306,8 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new BlastFCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new RotorsRodCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new WaterRotorUpgradeCategory(registry.getJeiHelpers().getGuiHelper()));
+
+        registry.addRecipeCategories(new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()));
 
 
         registry.addRecipeCategories(new PlasticCreatorCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -337,11 +367,188 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new EndCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GearingCategory(registry.getJeiHelpers().getGuiHelper()));
 
+        registry.addRecipeCategories(new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new CompressorCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new GasGeneratorCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new CanningSolidCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new CanningCategory(registry.getJeiHelpers().getGuiHelper()));
+
 
     }
 
     public void register(IModRegistry registry) {
         itemRegistry = registry.getIngredientRegistry();
+        registry.addRecipes(
+                OreWashingHandler.getRecipes(),
+                new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                OreWashingHandler.class, OreWashingWrapper::new,
+                BlockMoreMachine3.orewashing.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 8),
+                new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 9),
+                new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 10),
+                new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 11),
+                new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                GasGeneratorHandler.getRecipes(),
+                new GasGeneratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                GasGeneratorHandler.class, GasGeneratorWrapper::new,
+                BlockBaseMachine3.gas_generator.getName()
+        );
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.gas_generator),
+                new GasGeneratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                CanningSolidHandler.getRecipes(),
+                new CanningSolidCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                CanningSolidHandler.class, CanningSolidRecipeWrapper::new,
+                BlockBaseMachine3.solid_canner_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.solid_canner_iu),
+                new CanningSolidCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                CanningHandler.getRecipes(),
+                new CanningCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                CanningHandler.class, CanningRecipeWrapper::new,
+                BlockBaseMachine3.canner_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.canner_iu),
+                new CanningCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+
+        registry.addRecipes(
+                CompressorHandler.getRecipes(),
+                new CompressorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.handleRecipes(
+                CompressorHandler.class, CompressorWrapper::new,
+                BlockSimpleMachine.compressor_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.simplemachine, 1, 1),
+                new CompressorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 3),
+                new CompressorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 4),
+                new CompressorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 5),
+                new CompressorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                ExtractorHandler.getRecipes(),
+                new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                ExtractorHandler.class, ExtractorWrapper::new,
+                BlockSimpleMachine.extractor_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.simplemachine, 1, 3),
+                new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 9),
+                new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 10),
+                new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                CentrifugeHandler.getRecipes(),
+                new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                CentrifugeHandler.class, CentrifugeWrapper::new,
+                BlockMoreMachine3.centrifuge_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 12),
+                new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 13),
+                new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 14),
+                new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base3, 1, 15),
+                new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipes(
+                MaceratorHandler.getRecipes(),
+                new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                MaceratorHandler.class, MaceratorWrapper::new,
+                BlockSimpleMachine.macerator_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.simplemachine, 1, 0),
+                new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 0),
+                new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 1),
+                new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 2),
+                new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+
         registry.addRecipeClickArea(GuiMolecularTransformer.class, 23, 48, 10, 15, BlockMolecular.molecular.getName());
         registry.addRecipes(
                 MolecularTransformerHandler.getRecipes(),
@@ -1348,71 +1555,7 @@ public final class JEICompat implements IModPlugin {
                 new ItemStack(IUItem.machines_base2, 1, 3),
                 new RollingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.double_macerator);
 
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.triple_macerator);
-
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.quad_macerator);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.macerator, Recipes.macerator,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockSimpleMachine.macerator_iu);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.double_extractor);
-
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.triple_extractor);
-
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.quad_extractor);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.extractor, Recipes.extractor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockSimpleMachine.extractor_iu);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.double_commpressor);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.triple_commpressor);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockSimpleMachine.compressor_iu);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.compressor, Recipes.compressor,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine.quad_commpressor);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.ore_washing_plant, Recipes.oreWashing,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.doubleorewashing);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.ore_washing_plant, Recipes.oreWashing,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.tripleorewashing);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.ore_washing_plant, Recipes.oreWashing,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.orewashing);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.ore_washing_plant, Recipes.oreWashing,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.quadorewashing);
-        //
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.centrifuge, Recipes.centrifuge,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.doublecentrifuge);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.centrifuge, Recipes.centrifuge,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.triplecentrifuge);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.centrifuge, Recipes.centrifuge,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.centrifuge_iu);
-        this.addMachineRecipes(registry, new DynamicCategory<>(TeBlock.centrifuge, Recipes.centrifuge,
-                registry.getJeiHelpers().getGuiHelper()
-        ), BlockMoreMachine3.quadcentrifuge);
         //
         registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.double_furnace), "minecraft.smelting");
         registry.addRecipeCatalyst(getBlockStack(BlockMoreMachine.triple_furnace), "minecraft.smelting");
@@ -1420,13 +1563,6 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCatalyst(getBlockStack(BlockSimpleMachine.furnace_iu), "minecraft.smelting");
 
         final IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.double_recycler);
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.triple_recycler);
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.quad_recycler);
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.double_comb_recycler);
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.triple_comb_recycler);
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockMoreMachine1.quad_comb_recycler);
-        this.addMachineRecipes(registry, new RecyclerCategory(guiHelper), BlockSimpleMachine.recycler_iu);
 
 
         registry.addRecipes(
@@ -1518,6 +1654,47 @@ public final class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3.welding),
                 new WeldingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
+        registry.addRecipes(
+                RecyclerHandler.getRecipes(),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                RecyclerHandler.class, RecyclerWrapper::new,
+                BlockSimpleMachine.recycler_iu.getName()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.simplemachine, 1, 5),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 0),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 1),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 2),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 3),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 4),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 5),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base1, 1, 6),
+                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
     }
 
     public void onRuntimeAvailable(@Nonnull IJeiRuntime iJeiRuntime) {
@@ -1533,8 +1710,18 @@ public final class JEICompat implements IModPlugin {
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.woodrotorblade));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ironrotor));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ironrotorblade));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.bronzerotorblade));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.bronzerotor));
+            if (IUCore.isHasVersion("ic2", "154")) {
+                this.itemRegistry.removeIngredientsAtRuntime(
+                        VanillaTypes.ITEM,
+                        Collections.singleton(ItemName.crafting.getItemStack(
+                                CraftingItemType.bronze_rotor_blade))
+                );
+                this.itemRegistry.removeIngredientsAtRuntime(
+                        VanillaTypes.ITEM,
+                        Collections.singleton(ItemName.rotor_bronze.getItemStack())
+                );
+
+            }
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfeUnit));
 
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfeUnit));
@@ -1551,10 +1738,17 @@ public final class JEICompat implements IModPlugin {
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ChargepadmfeUnit));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ChargepadmfsUnit));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.electrolyzer));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.tank));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.tank1));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.tank2));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.tank3));
+            if (IUCore.isHasVersion("ic2", "134")) {
+                ItemStack tank = BlockName.te.getItemStack(TeBlock.bronze_tank);
+                ItemStack tank1 = BlockName.te.getItemStack(TeBlock.iridium_tank);
+                ItemStack tank2 = BlockName.te.getItemStack(TeBlock.iron_tank);
+                ItemStack tank3 = BlockName.te.getItemStack(TeBlock.steel_tank);
+
+                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank));
+                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank1));
+                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank2));
+                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank3));
+            }
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.silverBlock));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.silverDust));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.silverIngot));

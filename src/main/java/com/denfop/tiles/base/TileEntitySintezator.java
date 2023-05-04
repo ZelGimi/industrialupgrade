@@ -3,7 +3,9 @@ package com.denfop.tiles.base;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.container.ContainerSinSolarPanel;
 import com.denfop.gui.GuiSintezator;
 import com.denfop.invslot.InvSlotSintezator;
@@ -18,9 +20,7 @@ import ic2.api.energy.tile.IEnergySource;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -238,7 +238,8 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
             this.addedToEnergyNet = true;
         }
         intialize();
-        this.markDirty();
+        this.inputslot.update();
+        this.inputslotA.update();
     }
 
     public void onUnloaded() {
@@ -274,7 +275,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
 
     public void updateTileEntityField() {
         if (this.world != null) {
-            IC2.network.get(true).updateTileEntityField(this, "solartype");
+            IUCore.network.get(true).updateTileEntityField(this, "type");
         }
 
     }
@@ -294,7 +295,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
 
     }
 
-    public ContainerBase<? extends TileEntitySintezator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSinSolarPanel getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerSinSolarPanel(entityPlayer, this);
     }
 
@@ -407,6 +408,11 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
 
         if (this.getWorld().provider.getWorldTime() % 80 == 0) {
             this.updateVisibility();
+            int type = this.solartype;
+            this.solartype = this.inputslotA.solartype();
+            if (type != this.solartype) {
+                this.updateTileEntityField();
+            }
         }
 
 
@@ -437,8 +443,8 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("generating");
         ret.add("genDay");
         ret.add("genNight");
@@ -446,7 +452,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
         ret.add("maxStorage");
         ret.add("production");
         ret.add("machineTire");
-        ret.add("solartype");
+        ret.add("type");
         return ret;
     }
 

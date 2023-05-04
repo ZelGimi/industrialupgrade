@@ -3,6 +3,15 @@ package com.denfop.items.energy.instruments;
 import com.denfop.Config;
 
 public enum EnumVarietyInstruments {
+    CHAINSAW(1, 100, 30000, 12, 5, 0, 0, 10,
+            0, 0, 0
+    ),
+    SIMPLE(1, 100, 30000, 8, 5, 0, 0, 6,
+            0, 0, 0
+    ),
+    DIAMOND(1, 100, 30000, 16, 8, 0, 0, 20,
+            30, 0, 0
+    ),
     NANO(2, Config.nano_transfer, Config.nano_maxEnergy, 30, 15, Config.ultraLowPower, 0, Config.nano_energyPerOperation,
             Config.nano_energyPerbigHolePowerOperation, Config.energyPerbigHolePowerOperation, 0
     ),

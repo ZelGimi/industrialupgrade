@@ -6,30 +6,29 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.api.IAdvEnergyNet;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.SunCoef;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.gui.GuiSolarPanels;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotPanel;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.api.network.INetworkUpdateListener;
 import ic2.api.tile.IWrenchable;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.StackUtil;
@@ -63,7 +62,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     private final List<String> list_player = new ArrayList<>();
     public double coef;
-    public List<IEnergyTile> list;
+    public List<IAdvEnergyTile> list;
     public EnumSolarPanels solarpanels;
     public int tier;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
@@ -136,7 +135,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this.tier = tier;
         this.o = tier;
         this.inputslot = new InvSlotPanel(this, tier, 9, InvSlot.Access.IO);
-        this.tierPower = EnergyNet.instance.getPowerFromTier(tier);
+        this.tierPower = EnergyNetGlobal.instance.getPowerFromTier(tier);
         this.type = EnumType.DEFAULT;
         this.solarpanels = type;
         this.list = new ArrayList<>();
@@ -150,11 +149,14 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this(solarpanels.tier, solarpanels.genday, solarpanels.producing, solarpanels.maxstorage, solarpanels);
 
     }
+
     public void initiate(int soundEvent) {
 
-        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
 
-    }  public void onNetworkEvent(int event) {
+    }
+
+    public void onNetworkEvent(int event) {
         if (this.audioSource == null && this.getStartSoundFile() != null) {
             this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
         }
@@ -170,6 +172,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     public String getStartSoundFile() {
         return "Machines/pen.ogg";
     }
+
     @Override
     public int getInventoryStackLimit() {
         return 1;
@@ -274,7 +277,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     @Override
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
-        this.player = placer.getName();
+        if (placer != null) {
+            this.player = placer.getName();
+        }
         NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
         if (nbt.getBoolean("hasPollution")) {
             this.time = nbt.getInteger("time");
@@ -312,7 +317,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected void onLoaded() {
         super.onLoaded();
         if (!this.world.isRemote) {
-            this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
             this.hasSky = !this.world.provider.isNether();
             this.biome = this.world.getBiome(this.pos);
@@ -323,7 +328,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
             this.solarType = this.inputslot.solartype();
             this.wirelessTransferList.clear();
             this.inputslot.wirelessmodule();
-            IAdvEnergyNet advEnergyNet = (IAdvEnergyNet) EnergyNet.instance;
+            IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
             this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
             if (this.personality) {
                 for (int h = 0; h < this.inputslot.size(); h++) {
@@ -338,7 +343,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
                     }
 
                 }
-                this.list_player.add(this.player);
+                if (player != null) {
+                    this.list_player.add(this.player);
+                }
             }
         }
     }
@@ -359,7 +366,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this.time = nbttagcompound.getInteger("time");
         this.time1 = nbttagcompound.getInteger("time1");
         this.time2 = nbttagcompound.getInteger("time2");
-        this.player = nbttagcompound.getString("player");
+        if (nbttagcompound.hasKey("player")) {
+            this.player = nbttagcompound.getString("player");
+        }
         this.storage2 = nbttagcompound.getDouble("storage2");
     }
 
@@ -368,7 +377,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         nbttagcompound.setInteger("time", this.time);
         nbttagcompound.setInteger("time1", this.time1);
         nbttagcompound.setInteger("time2", this.time2);
-        nbttagcompound.setString("player", player);
+        if (player != null) {
+            nbttagcompound.setString("player", player);
+        }
         nbttagcompound.setDouble("storage", this.storage);
         nbttagcompound.setDouble("storage2", this.storage2);
         return nbttagcompound;
@@ -421,7 +432,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected void onUnloaded() {
         super.onUnloaded();
         if (this.addedToEnet) {
-            this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+            this.addedToEnet = MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
         }
         if (IC2.platform.isRendering() && this.audioSource != null) {
             IUCore.audioManager.removeSources(this);
@@ -608,7 +619,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -657,7 +668,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     public void onGuiClosed(EntityPlayer player) {
     }
 
-    public ContainerBase<TileEntitySolarPanel> getGuiContainer(EntityPlayer player) {
+    public ContainerSolarPanels getGuiContainer(EntityPlayer player) {
         return new ContainerSolarPanels(player, this);
     }
 
@@ -691,8 +702,8 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("generating");
         ret.add("storage");
         ret.add("maxStorage");
@@ -705,7 +716,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     @Override
     public void onNetworkEvent(EntityPlayer player, int event) {
-        if(getmodulerf) {
+        if (getmodulerf) {
             this.rf = !this.rf;
             initiate(0);
         }

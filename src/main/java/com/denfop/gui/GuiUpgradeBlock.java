@@ -11,7 +11,6 @@ import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,13 +1,11 @@
 package com.denfop.integration.jei.cutting;
 
 
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipe;
-import ic2.api.recipe.Recipes;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CuttingHandler {
@@ -49,9 +47,14 @@ public class CuttingHandler {
     }
 
     public static void initRecipes() {
-        for (MachineRecipe<IRecipeInput, Collection<ItemStack>> container : Recipes.metalformerCutting.getRecipes()) {
-            addRecipe(container.getInput().getInputs().get(0), new ArrayList<>(container.getOutput()).get(0)
+        for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("cutting")) {
+
+
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.getOutput().items.get(0)
             );
+
 
         }
     }

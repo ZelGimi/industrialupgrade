@@ -4,11 +4,9 @@ import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerMagnetGenerator;
 import com.denfop.gui.GuiMagnetGenerator;
 import com.denfop.tiles.base.TileEntityElectricMachine;
-import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.StackUtil;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -105,13 +103,13 @@ public class TileEntityMagnetGenerator extends TileEntityElectricMachine {
     }
 
     @Override
-    public ContainerBase<?> getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerMagnetGenerator getGuiContainer(final EntityPlayer entityPlayer) {
         return new ContainerMagnetGenerator(entityPlayer, this);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public GuiScreen getGui(final EntityPlayer entityPlayer, final boolean b) {
+    public GuiMagnetGenerator getGui(final EntityPlayer entityPlayer, final boolean b) {
         return new GuiMagnetGenerator(new ContainerMagnetGenerator(entityPlayer, this));
     }
 

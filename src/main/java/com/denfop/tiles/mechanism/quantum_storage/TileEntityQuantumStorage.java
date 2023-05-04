@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.quantum_storage;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
@@ -9,7 +10,6 @@ import com.denfop.gui.GuiQuantumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;

@@ -8,7 +8,6 @@ import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerBaseGenerationChipMachine;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
@@ -25,13 +24,13 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
         implements IUpgradableBlock {
 
 
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotUpgrade upgradeSlot;
     public final HeatComponent heat;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -146,7 +145,7 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
             }
             if (this.progress == 0) {
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                 }
             }
             this.progress = (short) (this.progress + 1);
@@ -231,7 +230,7 @@ public abstract class TileEntityBaseGenerationMicrochip extends TileEntityElectr
 
     public abstract String getInventoryName();
 
-    public ContainerBase<? extends TileEntityBaseGenerationMicrochip> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseGenerationChipMachine getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseGenerationChipMachine(
                 entityPlayer, this);
     }

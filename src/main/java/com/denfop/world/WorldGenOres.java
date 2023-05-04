@@ -43,7 +43,7 @@ public class WorldGenOres implements IWorldGenerator {
             int var4;
             int var5;
 
-            if (world.provider.getDimension() == 0 && random.nextInt(100) + 1 > 70 && world.getBiome(new BlockPos(chunkX * 16, 0,
+            if (random.nextInt(100) + 1 > 70 && world.getBiome(new BlockPos(chunkX * 16, 0,
                     chunkZ * 16
             )) == Biome.getBiome(2)) {
                 for (var2 = 0; var2 < 1; ++var2) {
@@ -57,7 +57,7 @@ public class WorldGenOres implements IWorldGenerator {
 
                 }
             }
-            if (world.provider.getDimension() == 0 && random.nextInt(1000) + 1 > 900) {
+            if (random.nextInt(1000) + 1 > 900) {
 
                 var3 = chunkX * 16 + random.nextInt(16) + 8;
                 var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8);
@@ -66,10 +66,19 @@ public class WorldGenOres implements IWorldGenerator {
 
 
             }
+            if (random.nextInt(900) + 1 > 800) {
+
+                var3 = chunkX * 16 + random.nextInt(16) + 8;
+                var4 = random.nextInt(random.nextInt(random.nextInt(30) + 20) + 8);
+                var5 = chunkZ * 16 + random.nextInt(16) + 8;
+                new WorldGenGas().generate(world, random, new BlockPos(var3, var4, var5));
+
+
+            }
         }
-        if (Config.DimensionList.contains(world.provider.getDimension())) {
-            generateSurface(world, random, chunkX * 16, chunkZ * 16);
-        }
+
+        generateSurface(world, random, chunkX * 16, chunkZ * 16);
+
 
     }
 

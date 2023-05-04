@@ -3,7 +3,7 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import ic2.core.block.state.IIdProvider;
+import com.denfop.blocks.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -322,6 +322,7 @@ public class ItemCraftingElements extends ItemMulti<ItemCraftingElements.Types> 
         crafting_260_element(260),
         crafting_261_element(261),
         crafting_262_element(262),
+        crafting_263_element(263),
         ;
 
         private final String name;

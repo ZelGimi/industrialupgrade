@@ -1,11 +1,20 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerConverterSolidMatter;
 import com.denfop.gui.GuiConverterSolidMatter;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConverterSolidMatter;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.utils.ModUtils;
@@ -13,12 +22,8 @@ import com.denfop.utils.Precision;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.util.StackUtil;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -108,16 +113,19 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         }
 
     }
+
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
         } else {
             InvSlot invSlot = this.getInventorySlot(index);
-            if(invSlot instanceof InvSlotConverterSolidMatter)
+            if (invSlot instanceof InvSlotConverterSolidMatter) {
                 return ((InvSlotConverterSolidMatter) invSlot).accepts(this.locateInfoInvSlot(index).getIndex(), stack);
-            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack);
+            }
+            return invSlot != null && invSlot.canInput() && invSlot.accepts(stack, this.locateInfoInvSlot(index).getIndex());
         }
     }
+
     public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
         if (StackUtil.isEmpty(stack)) {
             return false;
@@ -128,7 +136,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
             } else {
                 if (targetSlot == null) {
                     return false;
-                } else if (targetSlot.canInput() && targetSlot.accepts(stack)) {
+                } else if (targetSlot.canInput() && targetSlot.accepts(stack, this.locateInfoInvSlot(index).getIndex())) {
                     if (targetSlot.preferredSide != InvSlot.InvSide.ANY && targetSlot.preferredSide.matches(side)) {
                         return true;
                     } else {
@@ -227,10 +235,10 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         addrecipe(Ic2Items.casinglead, 80 / 18D, 0, 0, 0, 0, 40 / 18D, 0, 0);
 
 
-        addrecipe(ModUtils.getCable(Ic2Items.copperCableItem, 0), 8 / 18D, 0, 0, 0, 0, 4 / 18D, 0, 0);
-        addrecipe(ModUtils.getCable(Ic2Items.tinCableItem, 0), 10 / 27D, 0, 0, 0, 0, 4 / 27D, 0, 0);
-        addrecipe(ModUtils.getCable(Ic2Items.goldCableItem, 0), 5, 0, 0, 0, 0, 0, 0, 0);
-        addrecipe(ModUtils.getCable(Ic2Items.ironCableItem, 0), 2.67 / 4D, 0, 0, 0, 0, 0, 0, 0);
+        addrecipe(IUItem.copperCableItem, 8 / 18D, 0, 0, 0, 0, 4 / 18D, 0, 0);
+        addrecipe(IUItem.tinCableItem, 10 / 27D, 0, 0, 0, 0, 4 / 27D, 0, 0);
+        addrecipe(IUItem.goldCableItem, 5, 0, 0, 0, 0, 0, 0, 0);
+        addrecipe(IUItem.ironCableItem, 2.67 / 4D, 0, 0, 0, 0, 0, 0, 0);
         addrecipe(Ic2Items.plategold, 20, 0, 0, 0, 0, 0, 0, 0);
         addrecipe(Ic2Items.plateiron, 2.67, 0, 0, 0, 0, 0, 0, 0);
 
@@ -463,11 +471,11 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
 
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiConverterSolidMatter getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiConverterSolidMatter(new ContainerConverterSolidMatter(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityConverterSolidMatter> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerConverterSolidMatter getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerConverterSolidMatter(entityPlayer, this);
     }
 
@@ -475,7 +483,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
     }
@@ -495,7 +503,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     @Override
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
         }
         switch (event) {
             case 0:
@@ -507,7 +515,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;

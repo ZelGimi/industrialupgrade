@@ -16,8 +16,10 @@ import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleExtracto
 import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleMacerator;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -85,6 +87,11 @@ public enum BlockMoreMachine implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Override

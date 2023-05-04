@@ -1,5 +1,6 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.sytem.EnergyEvent;
@@ -78,15 +79,17 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
         this.continuousUpdate = null;
         this.obscuration = this.addComponent(new Obscuration(
                 this,
-                () -> IC2.network.get(true).updateTileEntityField(TileEntityExpPipes.this, "obscuration")
+                () -> IUCore.network.get(true).updateTileEntityField(TileEntityExpPipes.this, "obscuration")
         ));
     }
+
+    public static TileEntityExpPipes delegate(ExpType cableType, int insulation) {
+        return new TileEntityExpPipes(cableType, insulation);
+    }
+
     @Override
     public BlockPos getBlockPos() {
         return this.pos;
-    }
-    public static TileEntityExpPipes delegate(ExpType cableType, int insulation) {
-        return new TileEntityExpPipes(cableType, insulation);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -111,7 +114,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent( this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE,this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
             if (this.foam == CableFoam.Soft) {
@@ -123,7 +126,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyEvent( this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE,this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
             this.addedToEnergyNet = false;
         }
 
@@ -280,7 +283,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -332,7 +335,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
 
             --this.insulation;
             if (!this.getWorld().isRemote) {
-                IC2.network.get(true).updateTileEntityField(this, "insulation");
+                IUCore.network.get(true).updateTileEntityField(this, "insulation");
             }
 
         }
@@ -374,14 +377,13 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
     }
 
 
-
     public void removeInsulation(EnergyType type) {
         this.tryRemoveInsulation(false);
     }
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
     @Override
@@ -478,7 +480,7 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
                 }
 
                 if (!duringLoad) {
-                    IC2.network.get(true).updateTileEntityField(this, "foam");
+                    IUCore.network.get(true).updateTileEntityField(this, "foam");
                     world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
                     this.markDirty();
                 }

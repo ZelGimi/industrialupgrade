@@ -3,6 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
@@ -12,15 +13,13 @@ import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,16 +38,16 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
     public final AdvEnergy energy;
     public final InvSlotDischarge dischargeSlot;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotRecipes inputSlotA;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final HeatComponent heat;
     protected final EnumDoubleElectricMachine type;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -99,12 +98,12 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
     public void onNetworkEvent(EntityPlayer var1, int var2) {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }
@@ -112,12 +111,12 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }
@@ -189,7 +188,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
@@ -354,7 +353,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         return this.output;
     }
 
-    public ContainerBase<? extends TileEntityDoubleElectricMachine> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerDoubleElectricMachine getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerDoubleElectricMachine(entityPlayer, this, type);
     }
 

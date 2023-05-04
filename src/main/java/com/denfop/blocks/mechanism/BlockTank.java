@@ -9,8 +9,10 @@ import com.denfop.tiles.tank.TileEntityTank;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -71,6 +73,11 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
                 }
             }
         }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Override

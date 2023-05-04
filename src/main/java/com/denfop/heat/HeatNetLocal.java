@@ -225,7 +225,9 @@ public class HeatNetLocal {
 
                             .getZ() + ")\n" + "R: " + HeatPath.target + " (" + HeatPath.target
                             .getBlockPos()
-                            .getX() + "," + HeatPath.target.getBlockPos().getY() + "," + HeatPath.target.getBlockPos().getZ() + ")");
+                            .getX() + "," + HeatPath.target.getBlockPos().getY() + "," + HeatPath.target
+                            .getBlockPos()
+                            .getZ() + ")");
                 }
             }
         }

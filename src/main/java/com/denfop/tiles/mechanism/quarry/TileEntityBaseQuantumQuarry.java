@@ -6,6 +6,7 @@ import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.vein.Type;
@@ -25,14 +26,11 @@ import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
 import ic2.core.ref.TeBlock;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,6 +77,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     public boolean can_dig_vein = true;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
+    public double col_tick;
     private boolean sound = true;
 
     public TileEntityBaseQuantumQuarry(int coef) {
@@ -176,7 +175,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
@@ -196,7 +195,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
@@ -222,7 +221,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         this.inputslotA.update();
         this.inputslotB.update();
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
@@ -252,7 +251,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             this.energy.addEnergy(energy1);
         }
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
@@ -286,12 +285,14 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                 }
             }
         }
+        this.col_tick = 0;
         if (this.analyzer && !Config.enableonlyvein) {
             double col = this.col;
             int chance2 = this.chance;
             int coble = rand.nextInt((int) col + 1);
             this.getblock += coble;
             col -= coble;
+            this.col_tick = col;
             boolean work = this.energy.getEnergy() >= proccent;
             for (double i = 0; i < col; i++) {
                 if (this.energy.getEnergy() >= proccent) {
@@ -359,13 +360,13 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     }
 
-    public ContainerBase<? extends TileEntityBaseQuantumQuarry> getGuiContainer(EntityPlayer player) {
+    public ContainerQuantumQuarry getGuiContainer(EntityPlayer player) {
         return new ContainerQuantumQuarry(player, this);
 
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
+    public GuiQuantumQuarry getGui(EntityPlayer player, boolean isAdmin) {
 
         return new GuiQuantumQuarry(new ContainerQuantumQuarry(player, this));
     }
@@ -474,12 +475,12 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }

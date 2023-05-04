@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.reactors.TileEntityHeatSensor;
-import ic2.core.ContainerFullInv;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;

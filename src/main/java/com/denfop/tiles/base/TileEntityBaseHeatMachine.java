@@ -1,14 +1,14 @@
 package com.denfop.tiles.base;
 
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerHeatMachine;
 import com.denfop.gui.GuiHeatMachine;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

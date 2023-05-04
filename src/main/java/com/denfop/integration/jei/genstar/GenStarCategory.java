@@ -92,13 +92,13 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
         isg.init(1, true, 25, 4);
         isg.set(1, recipes.getInput1());
         isg.init(2, true, 43, 4);
-        isg.set(2, recipes.getInput5());
+        isg.set(2, recipes.getInput2());
         isg.init(3, true, 7, 22);
         isg.set(3, recipes.getInput3());
         isg.init(4, true, 25, 22);
         isg.set(4, recipes.getInput4());
         isg.init(5, true, 43, 22);
-        isg.set(5, recipes.getInput2());
+        isg.set(5, recipes.getInput5());
         isg.init(6, true, 25, 40);
         isg.set(6, recipes.getInput6());
 

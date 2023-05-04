@@ -30,7 +30,6 @@ public class TileEntityRenderConverterMatter extends TileEntitySpecialRenderer<T
             float alpha
     ) {
         GL11.glPushMatrix();
-
         GL11.glTranslated(x, y, z);
         GL11.glTranslatef(0.5F, 0F, 0.5F);
         GL11.glRotatef(0F, 0.0F, 0.0F, 1.0F);

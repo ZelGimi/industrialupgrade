@@ -141,7 +141,7 @@ public class CTNetherTransformer {
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing nether transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

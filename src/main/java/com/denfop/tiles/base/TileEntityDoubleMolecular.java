@@ -2,6 +2,7 @@ package com.denfop.tiles.base;
 
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
@@ -12,6 +13,8 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.audio.AudioSource;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBaseDoubleMolecular;
 import com.denfop.gui.GuiDoubleMolecularTransformer;
@@ -21,9 +24,7 @@ import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
 import ic2.core.block.TileEntityBlock;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.enchantment.EnchantmentData;
@@ -47,6 +48,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.denfop.recipes.BasicRecipe.getBlockStack;
 
 public class TileEntityDoubleMolecular extends TileEntityElectricMachine implements
         IEnergyReceiver, INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
@@ -217,7 +220,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
 
         addrecipe(
                 new ItemStack(IUItem.module_schedule, 1),
-                new ItemStack(IUItem.itemBatChargeCrystal, 1, OreDictionary.WILDCARD_VALUE),
+                new ItemStack(IUItem.perBatChargeCrystal, 1, OreDictionary.WILDCARD_VALUE),
                 new ItemStack(IUItem.upgrademodule, 1, 23),
                 4000000
         );
@@ -294,6 +297,12 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 new ItemStack(IUItem.module_schedule, 1),
                 PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.LONG_STRENGTH),
                 new ItemStack(IUItem.upgrademodule, 1, 11),
+                2500000
+        );
+        addrecipe(
+                new ItemStack(IUItem.module_schedule, 1),
+                new ItemStack(IUItem.compressIridiumplate),
+                new ItemStack(IUItem.upgrademodule, 1, 12),
                 2500000
         );
         addrecipe(
@@ -523,7 +532,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         );
         addrecipe(
                 new ItemStack(IUItem.module_schedule, 1),
-                Ic2Items.generator,
+                getBlockStack(BlockBaseMachine3.generator_iu),
                 new ItemStack(IUItem.upgrademodule, 1, 39),
                 1500000
         );
@@ -539,12 +548,12 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
     }
 
     @Override
-    public ContainerBase<? extends TileEntityDoubleMolecular> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseDoubleMolecular getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseDoubleMolecular(entityPlayer, this);
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -576,8 +585,8 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         return false;
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("guiProgress");
         ret.add("queue");
         ret.add("redstoneMode");
@@ -614,7 +623,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
             inputSlot.load();
             this.setOverclockRates();
             this.onUpdate();
-            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
+            IUCore.network.get(true).updateTileEntityField(this, "redstoneMode");
 
         }
 
@@ -642,7 +651,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
             if (this.redstoneMode >= 8) {
                 this.redstoneMode = 0;
             }
-            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
+            IUCore.network.get(true).updateTileEntityField(this, "redstoneMode");
         }
         if (event == 1) {
             this.queue = !this.queue;
@@ -826,7 +835,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 this.differenceenergy = this.energy.getEnergy() - this.perenergy;
                 this.perenergy = this.energy.getEnergy();
                 if (!this.getActive()) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                     setActive(true);
                     setOverclockRates();
                 }
@@ -841,11 +850,11 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                     this.progress = 0;
                     this.energy.useEnergy(this.energy.getEnergy());
 
-                    IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
                 }
             } else {
                 if (this.energy.getEnergy() != 0 && getActive()) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                 }
                 this.energy.useEnergy(this.energy.getEnergy());
                 this.energy.setCapacity(0);
@@ -855,7 +864,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         } else {
             if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items)) {
                 if (!this.getActive()) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
                     setActive(true);
                     setOverclockRates();
                 }
@@ -912,7 +921,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 }
             } else {
                 if (this.energy.getEnergy() != 0 && getActive()) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                 }
                 this.energy.useEnergy(this.energy.getEnergy());
                 this.energy.setCapacity(0);

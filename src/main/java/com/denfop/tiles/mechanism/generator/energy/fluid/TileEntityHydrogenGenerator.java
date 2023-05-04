@@ -3,20 +3,19 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerHydrogenGenerator;
 import com.denfop.gui.GuiHydrogenGenerator;
+import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.InvSlotConsumableLiquid;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.tiles.base.TileEntityLiquidTankInventory;
 import ic2.api.item.ElectricItem;
-import ic2.core.ContainerBase;
-import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlotCharge;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
+import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.core.init.MainConfig;
 import ic2.core.util.ConfigUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -29,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory implements IHasGui,
-        IAudioFixer {
+        IAudioFixer, INetworkClientTileEntityEventListener {
 
     public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 1);
     public final InvSlotConsumableLiquid fluidSlot;
@@ -56,6 +55,20 @@ public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory i
     }
 
     @Override
+    public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
+        sound = !sound;
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
+
+        if (!sound) {
+            if (this.getType() == EnumTypeAudio.ON) {
+                setType(EnumTypeAudio.OFF);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
+
+            }
+        }
+    }
+
+    @Override
     public void readFromNBT(final NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
@@ -64,12 +77,12 @@ public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory i
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }
@@ -100,7 +113,7 @@ public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory i
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
@@ -164,7 +177,7 @@ public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory i
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;
@@ -214,7 +227,7 @@ public class TileEntityHydrogenGenerator extends TileEntityLiquidTankInventory i
     }
 
 
-    public ContainerBase<TileEntityHydrogenGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerHydrogenGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerHydrogenGenerator(entityPlayer, this);
     }
 

@@ -1,6 +1,7 @@
 package com.quantumgenerators;
 
-import ic2.core.ContainerFullInv;
+
+import com.denfop.container.ContainerFullInv;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;

@@ -6,7 +6,6 @@ import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileEntityAnalyzer;
 import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -51,7 +50,7 @@ public class InvSlotAnalyzer extends InvSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (this.type == 0) {
             for (int i = 0; i < this.size(); i++) {
                 if (!this.get(i).isEmpty()) {

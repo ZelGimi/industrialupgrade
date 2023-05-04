@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
 
@@ -25,7 +24,7 @@ public class InvSlotElectrolyzer extends InvSlot {
         return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
             return itemStack.getItem().equals(IUItem.anode);
         }
@@ -53,7 +52,7 @@ public class InvSlotElectrolyzer extends InvSlot {
             ItemStack stack = get(i);
             if (stack != null && stack.getCount() >= 1 &&
 
-                    accepts(stack) && (ret == null ||
+                    accepts(stack, i) && (ret == null ||
                     isStackEqualStrict(stack, ret)) && (stack.getCount() == 1 || consumeContainers ||
                     !stack.getItem().hasContainerItem(stack))) {
                 int currentAmount = Math.min(amount, stack.getCount());

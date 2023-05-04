@@ -3,15 +3,15 @@ package com.denfop.items.bags;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.container.ContainerLeadBox;
+import com.denfop.items.IHandHeldInventory;
 import com.denfop.items.reactors.ItemBaseRod;
 import com.denfop.utils.ModUtils;
 import ic2.core.IC2;
 import ic2.core.IC2Potion;
-import ic2.core.IHasGui;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
-import ic2.core.item.IHandHeldInventory;
 import ic2.core.item.reactor.ItemReactorUranium;
 import ic2.core.item.type.IRadioactiveItemType;
 import ic2.core.util.StackUtil;
@@ -62,6 +62,28 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
                 "bags" + "/" + name;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+        HandHeldLeadBox box = (HandHeldLeadBox) getInventory(player, stack);
+        NBTTagCompound nbt = ModUtils.nbt(stack);
+        boolean rod = nbt.getBoolean("rod");
+        if (stack1.getItem() instanceof IRadioactiveItemType) {
+            if (!rod) {
+                if (stack1.getItem() instanceof ItemReactorUranium || stack1.getItem() instanceof ItemBaseRod) {
+                    return false;
+                }
+            } else {
+                return box.canAdd(stack1);
+            }
+        }
+        return false;
+    }
+
+    public void insert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+        HandHeldLeadBox box = (HandHeldLeadBox) getInventory(player, stack);
+        box.add(stack1);
+        box.markDirty();
     }
 
     @Override
@@ -173,7 +195,7 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
         ItemStack stack = StackUtil.get(player, hand);
         if (IC2.platform.isSimulating() && !player.isSneaking()) {
             save(stack, player);
-            IC2.platform.launchGui(player, this.getInventory(player, stack));
+            IUCore.proxy.launchGui(player, this.getInventory(player, stack));
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
         } else if (IC2.platform.isSimulating() && player.isSneaking()) {

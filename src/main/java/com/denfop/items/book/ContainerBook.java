@@ -1,6 +1,7 @@
 package com.denfop.items.book;
 
-import ic2.core.item.ContainerHandHeldInventory;
+
+import com.denfop.container.ContainerHandHeldInventory;
 
 public class ContainerBook extends ContainerHandHeldInventory<HandHeldBook> {
 

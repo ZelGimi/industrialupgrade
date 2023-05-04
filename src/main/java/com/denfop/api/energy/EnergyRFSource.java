@@ -1,7 +1,6 @@
 package com.denfop.api.energy;
 
 import cofh.redstoneflux.api.IEnergyProvider;
-import ic2.api.energy.tile.IEnergyAcceptor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
@@ -24,7 +23,7 @@ public class EnergyRFSource extends BasicSource {
                     energyfe.getEnergyStored(null),
                     energyfe.extractEnergy(null, energyfe.getEnergyStored(null), true)
             ) / 4D;
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
             return 0;
         }
     }

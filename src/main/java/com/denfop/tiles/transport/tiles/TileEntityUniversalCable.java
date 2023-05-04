@@ -1,5 +1,6 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.cool.ICoolAcceptor;
@@ -7,7 +8,12 @@ import com.denfop.api.cool.ICoolConductor;
 import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvConductor;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyEmitter;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.heat.HeatNet;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatConductor;
@@ -22,11 +28,6 @@ import com.denfop.api.sytem.IAcceptor;
 import com.denfop.api.sytem.IConductor;
 import com.denfop.api.sytem.IEmitter;
 import com.denfop.tiles.transport.types.UniversalType;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
@@ -61,7 +62,7 @@ import java.util.List;
 
 
 public class TileEntityUniversalCable extends TileEntityBlock implements IAdvConductor, IHeatConductor, ICoolConductor,
-         IConductor,
+        IConductor,
         INetworkTileEntityEventListener {
 
     public static final IUnlistedProperty<TileEntityUniversalCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
@@ -87,13 +88,13 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     }
 
+    public static TileEntityUniversalCable delegate(UniversalType cableType, int insulation) {
+        return new TileEntityUniversalCable(cableType, insulation);
+    }
+
     @Override
     public BlockPos getBlockPos() {
         return this.pos;
-    }
-
-    public static TileEntityUniversalCable delegate(UniversalType cableType, int insulation) {
-        return new TileEntityUniversalCable(cableType, insulation);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -114,7 +115,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
@@ -130,7 +131,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
@@ -270,8 +271,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            Object tile = EnergyNet.instance.getSubTile(world, this.pos.offset(dir));
-            if (tile != null) {
+            Object tile = EnergyNetGlobal.instance.getSubTile(world, this.pos.offset(dir));
+            if (tile != EnergyNetGlobal.EMPTY) {
                 if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
                         this,
                         dir.getOpposite()
@@ -283,6 +284,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                 }
             } else {
                 tile = EnergyBase.SE.getSubTile(world, this.pos.offset(dir));
+
                 if (tile != null) {
                     if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                             this,
@@ -353,7 +355,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -442,7 +444,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     @Override
     public double getInsulationBreakdownEnergy(final EnergyType energyType) {
-            return 9001.0D;
+        return 9001.0D;
     }
 
     @Override
@@ -464,7 +466,6 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     }
 
 
-
     public double getConductorBreakdownCold() {
         return 65;
     }
@@ -475,7 +476,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
 

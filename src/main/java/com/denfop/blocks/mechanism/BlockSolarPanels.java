@@ -18,8 +18,10 @@ import com.denfop.tiles.panels.overtime.TileEntitySpectralSolarPanel;
 import com.denfop.tiles.panels.overtime.TileEntityUltimateSolarPanel;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -51,7 +53,6 @@ public enum BlockSolarPanels implements ITeBlock {
     ;
 
 
-    //
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("machines");
 
     private final Class<? extends TileEntityBlock> teClass;
@@ -59,11 +60,6 @@ public enum BlockSolarPanels implements ITeBlock {
     private final EnumRarity rarity;
     private TileEntityBlock dummyTe;
 
-
-    BlockSolarPanels(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
-        this(teClass, itemMeta, EnumRarity.UNCOMMON);
-
-    }
 
     BlockSolarPanels(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
@@ -96,6 +92,11 @@ public enum BlockSolarPanels implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.simplequarries;
 
+import com.denfop.invslot.InvSlot;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotBaseQuarry extends InvSlot {
@@ -160,7 +160,7 @@ public class InvSlotBaseQuarry extends InvSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
 
 
         if (itemStack.getItem() instanceof ItemQuarryModule) {

@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism.triple.heat;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.audio.EnumTypeAudio;
@@ -93,7 +94,7 @@ public class TileEntityAdvAlloySmelter extends TileEntityTripleElectricMachine i
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -165,7 +166,7 @@ public class TileEntityAdvAlloySmelter extends TileEntityTripleElectricMachine i
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {

@@ -7,16 +7,21 @@ import com.denfop.tiles.base.TileEntityAntiUpgradeBlock;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import com.denfop.tiles.base.TileEntityAutoSpawner;
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
+import com.denfop.tiles.base.TileEntityCropHarvester;
 import com.denfop.tiles.base.TileEntityLimiter;
 import com.denfop.tiles.base.TileEntityRadiationPurifier;
+import com.denfop.tiles.base.TileEntityTeleporter;
 import com.denfop.tiles.mechanism.TileEntityAdvHandlerHeavyOre;
 import com.denfop.tiles.mechanism.TileEntityAdvScanner;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
+import com.denfop.tiles.mechanism.TileEntityCanner;
 import com.denfop.tiles.mechanism.TileEntityCreatorSchedules;
+import com.denfop.tiles.mechanism.TileEntityCropmatron;
 import com.denfop.tiles.mechanism.TileEntityGasCombiner;
 import com.denfop.tiles.mechanism.TileEntityImpHandlerHeavyOre;
 import com.denfop.tiles.mechanism.TileEntityImpScanner;
 import com.denfop.tiles.mechanism.TileEntityKineticGeneratorAssembler;
+import com.denfop.tiles.mechanism.TileEntityPatternStorage;
 import com.denfop.tiles.mechanism.TileEntityPerHandlerHeavyOre;
 import com.denfop.tiles.mechanism.TileEntityPerScanner;
 import com.denfop.tiles.mechanism.TileEntityPrivatizer;
@@ -29,15 +34,21 @@ import com.denfop.tiles.mechanism.TileEntityRodManufacturer;
 import com.denfop.tiles.mechanism.TileEntityRotorAssembler;
 import com.denfop.tiles.mechanism.TileEntityRotorModifier;
 import com.denfop.tiles.mechanism.TileEntitySatelliteAssembler;
+import com.denfop.tiles.mechanism.TileEntitySimplePump;
 import com.denfop.tiles.mechanism.TileEntitySimpleScanner;
 import com.denfop.tiles.mechanism.TileEntitySoilAnalyzer;
 import com.denfop.tiles.mechanism.TileEntityTunerWireless;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorAssembler;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import com.denfop.tiles.mechanism.cooling.TileEntityCooling;
+import com.denfop.tiles.mechanism.dual.TileEntitySolidCanner;
 import com.denfop.tiles.mechanism.dual.heat.TileEntityWeldingMachine;
 import com.denfop.tiles.mechanism.energy.TileEntityEnergyController;
 import com.denfop.tiles.mechanism.energy.TileEntityEnergySubstitute;
+import com.denfop.tiles.mechanism.generator.energy.TileEntitySolarGenerator;
+import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityGasGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityGeoGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityAdvRedstoneGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityImpRedstoneGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityPerRedstoneGenerator;
@@ -77,11 +88,15 @@ import com.denfop.tiles.mechanism.worlcollector.TileEntityEarthAssembler;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityEnderAssembler;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityNetherAssembler;
 import com.denfop.tiles.reactors.TileEntityHeatSensor;
+import com.denfop.tiles.reactors.TileEntityNuclearReactorElectric;
+import com.denfop.tiles.reactors.TileEntityReactorChamberElectric;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -90,6 +105,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -172,7 +188,20 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
     per_redstone_generator(TileEntityPerRedstoneGenerator.class, 73),
     welding(TileEntityWeldingMachine.class, 74),
     heat_limiter(TileEntityHeatSensor.class, 75),
-    ;
+    gas_generator(TileEntityGasGenerator.class, 76),
+    pattern_storage_iu(TileEntityPatternStorage.class, 77),
+    generator_iu(TileEntityGenerator.class, 78),
+    geogenerator_iu(TileEntityGeoGenerator.class, 79),
+    pump_iu(TileEntitySimplePump.class, 80),
+    solar_iu(TileEntitySolarGenerator.class, 81),
+
+    reactor_iu(TileEntityNuclearReactorElectric.class, 82),
+    chamber_iu(TileEntityReactorChamberElectric.class, 83),
+    teleporter_iu(TileEntityTeleporter.class, 84),
+    crop_harvester_iu(TileEntityCropHarvester.class, 86),
+    crop_matron(TileEntityCropmatron.class, 87),
+    solid_canner_iu(TileEntitySolidCanner.class, 88),
+    canner_iu(TileEntityCanner.class, 89);
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("basemachine3");
@@ -181,6 +210,7 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
     private final int itemMeta;
     private final EnumRarity rarity;
     private TileEntityBlock dummyTe;
+    private TeBlock.ITePlaceHandler placeHandler;
 
 
     BlockBaseMachine3(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
@@ -214,6 +244,26 @@ public enum BlockBaseMachine3 implements ITeBlock, ITeBlockSpecialItem {
                 }
             }
         }
+
+    }
+
+    @Nullable
+    @Override
+    public TeBlock.ITePlaceHandler getPlaceHandler() {
+        return placeHandler;
+    }
+
+    public void setPlaceHandler(TeBlock.ITePlaceHandler handler) {
+        if (this.placeHandler != null) {
+            throw new RuntimeException("duplicate place handler");
+        } else {
+            this.placeHandler = handler;
+        }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Override

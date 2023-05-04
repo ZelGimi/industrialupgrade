@@ -1,14 +1,15 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvConductor;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyEmitter;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.tiles.transport.types.CableType;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
@@ -89,7 +90,7 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this, this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
 
@@ -99,7 +100,7 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
         }
 
@@ -120,9 +121,10 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
         return new ItemStack(IUItem.cable, 1, this.cableType.ordinal());
     }
 
+
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
         {
-            float th = this.cableType.thickness + (float) (0) * 0.0625F;
+            float th = this.cableType.thickness + (float) (this.cableType.insulation * 2) * 0.0625F;
             float sp = (1.0F - th) / 2.0F;
             List<AxisAlignedBB> ret = new ArrayList<>(7);
             ret.add(new AxisAlignedBB(
@@ -183,7 +185,7 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
 
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
+        return this.cableType.insulation > 0;
     }
 
     protected boolean isNormalCube() {
@@ -233,7 +235,7 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            IEnergyTile tile = EnergyNet.instance.getSubTile(world, this.pos.offset(dir));
+            IAdvEnergyTile tile = EnergyNetGlobal.instance.getSubTile(world, this.pos.offset(dir));
 
             if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
                     this,
@@ -250,7 +252,7 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -332,7 +334,7 @@ public class TileEntityCable extends TileEntityBlock implements IAdvConductor, I
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
 

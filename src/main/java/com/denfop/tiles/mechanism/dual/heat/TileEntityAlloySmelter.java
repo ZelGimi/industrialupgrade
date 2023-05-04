@@ -139,7 +139,7 @@ public class TileEntityAlloySmelter extends TileEntityDoubleElectricMachine impl
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

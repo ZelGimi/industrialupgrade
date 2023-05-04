@@ -58,9 +58,9 @@ import java.util.List;
 public class ItemLappack extends ItemArmorElectric implements IElectricItem, IModelRegister, IMetalArmor, ISpecialArmor,
         IItemHudInfo, IUpgradeItem {
 
-    private final int maxCharge;
+    private final double maxCharge;
 
-    private final int transferLimit;
+    private final double transferLimit;
 
     private final int tier;
 
@@ -69,9 +69,9 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
     public ItemLappack(
             String name,
-            int MaxCharge,
+            double MaxCharge,
             int Tier,
-            int TransferLimit
+            double TransferLimit
     ) {
         super(null, "", EntityEquipmentSlot.CHEST, MaxCharge, TransferLimit, Tier);
 

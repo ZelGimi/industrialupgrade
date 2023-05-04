@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotTuner extends InvSlot {
@@ -14,7 +13,7 @@ public class InvSlotTuner extends InvSlot {
         this.stackSizeLimit = 1;
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
 
         return itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10;
 

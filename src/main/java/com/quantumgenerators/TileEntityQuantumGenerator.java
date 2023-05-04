@@ -1,6 +1,7 @@
 package com.quantumgenerators;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.items.ItemCore;
@@ -9,7 +10,6 @@ import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -40,7 +40,7 @@ public class TileEntityQuantumGenerator extends TileEntityInventory implements I
         this.gen = 5 * Math.pow(4, (tier - 1)) / 16;
         this.genmax = 5 * Math.pow(4, (tier - 1)) / 16;
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSource(
-                EnergyType.QUANTUM,this, gen * 32,
+                        EnergyType.QUANTUM, this, gen * 32,
                         tier
                 )
         );
@@ -119,7 +119,7 @@ public class TileEntityQuantumGenerator extends TileEntityInventory implements I
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

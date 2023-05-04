@@ -1,8 +1,7 @@
 package com.denfop.gui;
 
+import com.denfop.IUCore;
 import com.denfop.container.ContainerTransformer;
-import ic2.core.GuiIC2;
-import ic2.core.IC2;
 import ic2.core.init.Localization;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.gui.GuiButton;
@@ -30,7 +29,7 @@ public class GuiTransformer extends GuiIC2<ContainerTransformer> {
 
     protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
-        IC2.network.get(false).initiateClientTileEntityEvent(
+        IUCore.network.get(false).initiateClientTileEntityEvent(
                 this.container.base,
                 guibutton.id
         );
@@ -41,7 +40,7 @@ public class GuiTransformer extends GuiIC2<ContainerTransformer> {
         int x = i - this.guiLeft;
         int y = j - this.guiTop;
         if (x >= 150 && y >= 32 && x <= 167 && y <= 49) {
-            IC2.network.get(false).initiateClientTileEntityEvent(
+            IUCore.network.get(false).initiateClientTileEntityEvent(
                     this.container.base,
                     3
             );

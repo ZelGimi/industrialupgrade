@@ -105,7 +105,7 @@ public class TransportNetLocal {
 
         if (!list.isEmpty()) {
             for (TransportPath TransportPath : TransportPaths) {
-                 if (list.isEmpty()) {
+                if (list.isEmpty()) {
                     break;
                 }
                 ITransportSink<ItemStack, IItemHandler> TransportSink = TransportPath.target;

@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.IUpdateTick;
@@ -14,7 +15,6 @@ import com.denfop.gui.GuiHandlerHeavyOre;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,16 +36,16 @@ import java.util.Set;
 public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMachine
         implements IUpgradableBlock, IUpdateTick, IType {
 
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final HeatComponent heat;
     private final EnumTypeStyle enumTypeSlot;
     private final double coef;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -121,7 +121,7 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -299,7 +299,7 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
     protected void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -307,7 +307,7 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
 
 
     @Override
-    public ContainerBase<? extends TileEntityBaseHandlerHeavyOre> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerHandlerHeavyOre getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerHandlerHeavyOre(entityPlayer, this);
 
     }

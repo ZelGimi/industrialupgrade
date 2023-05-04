@@ -1,5 +1,6 @@
 package com.simplequarries;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.gui.AdvArea;
 import com.denfop.gui.GuiIU;
@@ -92,25 +93,25 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
         int y = j - yMin;
         boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
         if (x >= 179 && x <= 189 && y >= 29 && y <= 39) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0 + (shift ? 1 : 0));
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, (shift ? 1 : 0));
         }
         if (x >= 206 && x <= 216 && y >= 29 && y <= 39) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 10 + (shift ? 1 : 0));
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 10 + (shift ? 1 : 0));
         }
         if (x >= 179 && x <= 189 && y >= 64 && y <= 74) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 20 + (shift ? 1 : 0));
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 20 + (shift ? 1 : 0));
         }
         if (x >= 206 && x <= 216 && y >= 64 && y <= 74) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 30 + (shift ? 1 : 0));
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 30 + (shift ? 1 : 0));
         }
         if (x >= 146 && x <= 160 && y >= 5 && y <= 23) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 40 + (shift ? 1 : 0));
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 40 + (shift ? 1 : 0));
         }
         if (x >= 189 && x <= 206 && y >= 83 && y <= 100) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 50);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 50);
         }
         if (x >= 209 && x <= 224 && y >= 86 && y <= 99) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 60);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 60);
         }
     }
 

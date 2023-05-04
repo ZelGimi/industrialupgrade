@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
+import com.denfop.componets.Fluids;
 import com.google.common.base.Predicate;
-import ic2.core.block.comp.Fluids;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 public abstract class TileEntityElectricLiquidTankInventory extends TileEntityElectricMachine implements IFluidHandler {
 
     public Fluids fluids;
-    public FluidTank fluidTank;
+    public Fluids.InternalFluidTank fluidTank;
 
     public TileEntityElectricLiquidTankInventory(
             final double MaxEnergy, final int tier, final int tanksize,

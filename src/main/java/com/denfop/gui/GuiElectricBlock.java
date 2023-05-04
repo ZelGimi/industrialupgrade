@@ -1,14 +1,17 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.gui.Area;
+import com.denfop.componets.VanillaButton;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
-import ic2.core.GuiIC2;
 import ic2.core.IC2;
-import ic2.core.gui.Area;
 import ic2.core.init.Localization;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
@@ -33,7 +36,9 @@ public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
         this.ySize = 196;
         this.container = container1;
         this.armorInv = Localization.translate("ic2.EUStorage.gui.info.armor");
-
+        this.addElement((new VanillaButton(this, 152, 4, 20, 20, this.createEventSender(0)))
+                .withIcon(() -> new ItemStack(Items.REDSTONE))
+                .withTooltip(container.base::getStringRedstoneMode));
         this.name = Localization.translate(container.base.getName());
     }
 
@@ -44,7 +49,7 @@ public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 110 && x <= 130 && y >= 34 && y <= 50) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 10);
         }
     }
 
@@ -71,7 +76,7 @@ public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
 
         String output = Localization.translate(
                 "ic2.EUStorage.gui.info.output",
-                ModUtils.getString(EnergyNet.instance.getPowerFromTier(this.container.base.energy.getSourceTier())
+                ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(this.container.base.energy.getSourceTier())
                 )
         );
         this.fontRenderer.drawString(output, 85, 70, 4210752);
@@ -118,6 +123,7 @@ public class GuiElectricBlock extends GuiIC2<ContainerElectricBlock> {
 
             }
         }
+        this.elements.get(0).drawBackground(j, k);
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {

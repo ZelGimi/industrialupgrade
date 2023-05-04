@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -68,6 +69,16 @@ public class ModUtils {
         final NBTTagCompound nbt = ModUtils.nbt(cell);
         final NBTTagCompound nbt1 = ModUtils.nbt();
         nbt1.setString("FluidName", name);
+        nbt1.setInteger("Amount", 1000);
+        nbt.setTag("Fluid", nbt1);
+        return cell;
+    }
+
+    public static ItemStack getCellFromFluid(Fluid name) {
+        final ItemStack cell = Ic2Items.FluidCell.copy();
+        final NBTTagCompound nbt = ModUtils.nbt(cell);
+        final NBTTagCompound nbt1 = ModUtils.nbt();
+        nbt1.setString("FluidName", name.getName());
         nbt1.setInteger("Amount", 1000);
         nbt.setTag("Fluid", nbt1);
         return cell;
@@ -646,5 +657,11 @@ public class ModUtils {
         return stack;
     }
 
+
+    public static ItemStack setSize(ItemStack stack, int col) {
+        stack = stack.copy();
+        stack.setCount(col);
+        return stack;
+    }
 
 }

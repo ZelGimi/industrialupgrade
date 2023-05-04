@@ -1,21 +1,21 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerTripleElectricMachine;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.mechanism.triple.heat.TileEntityAdvAlloySmelter;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,15 +33,15 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
         implements IUpgradableBlock, IUpdateTick {
 
     public final InvSlotDischarge dischargeSlot;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotRecipes inputSlotA;
     public final InvSlotUpgrade upgradeSlot;
     protected final String name;
     protected final EnumTripleElectricMachine type;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -88,12 +88,12 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }
@@ -182,7 +182,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
     protected void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -219,7 +219,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
             setActive(true);
             if (this.progress == 0) {
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                 }
             }
             this.progress = (short) (this.progress + 1);
@@ -232,7 +232,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
                 operate(output);
                 this.progress = 0;
                 if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[2 % valuesAudio.length])) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
                 }
             }
         } else {
@@ -243,7 +243,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
             }
             if (this.progress != 0 && getActive()) {
                 if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[1 % valuesAudio.length])) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                 }
             }
             if (output == null) {
@@ -256,7 +256,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
                 ((TileEntityAdvAlloySmelter) this).heat.useEnergy(1);
             }
         }
-        if ( this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 
@@ -299,7 +299,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
         return this.output;
     }
 
-    public ContainerBase<? extends TileEntityTripleElectricMachine> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerTripleElectricMachine getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerTripleElectricMachine(entityPlayer, this, type);
     }
 
@@ -313,7 +313,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
 
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && this.getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, this.getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
         }
 
         switch (event) {
@@ -326,7 +326,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (this.getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(
+                        IUCore.audioManager.playOnce(
                                 this,
                                 PositionSpec.Center,
                                 this.getInterruptSoundFile(),
@@ -373,7 +373,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 

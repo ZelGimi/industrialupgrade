@@ -1,7 +1,11 @@
 package com.denfop.tiles.reactors;
 
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
+
+import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import ic2.api.reactor.IReactor;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
@@ -16,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class TileEntityPerReactorChamberElectric extends TileEntityBlock implements IInventory, IChamber, IEnergyEmitter {
+public class TileEntityPerReactorChamberElectric extends TileEntityBlock implements IInventory, IChamber, IAdvEnergySource {
 
     private TileEntityPerNuclearReactor reactor;
     private long lastReactorUpdate;
@@ -35,13 +40,26 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
     protected void onLoaded() {
         super.onLoaded();
         this.onNeighborChange(this.getBlockType().getBlockState().getBlock(), this.getPos());
+        if (this.reactor != null) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this.reactor, this));
 
+        }
     }
 
     @Override
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
 
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
     }
 
     protected void updateEntityServer() {
@@ -80,6 +98,7 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
         }
     }
 
+
     @Override
     protected void onBlockBreak() {
         super.onBlockBreak();
@@ -107,6 +126,8 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
 
     public void destoryChamber(boolean wrench) {
         World world = this.getWorld();
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+
         world.setBlockToAir(this.pos);
 
         for (final ItemStack drop : this.getSelfDrops(0, wrench)) {
@@ -119,7 +140,9 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
     protected void onUnloaded() {
         if (this.reactor != null) {
             if (!this.reactor.isInvalid()) {
-                this.reactor.getSubs();
+                this.reactor.change = true;
+                this.reactor.getReactorSize();
+                MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             }
         }
         super.onUnloaded();
@@ -271,6 +294,11 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
         return this.reactor;
     }
 
+    @Override
+    public void setReactor(final IReactor reactor) {
+        this.reactor = (TileEntityPerNuclearReactor) reactor;
+    }
+
     private void updateReactor() {
         World world = this.getWorld();
         this.reactor = null;
@@ -284,6 +312,67 @@ public class TileEntityPerReactorChamberElectric extends TileEntityBlock impleme
             }
         }
 
+    }
+
+    @Override
+    public double getPerEnergy() {
+        if (this.reactor != null) {
+            return this.reactor.getPerEnergy();
+        }
+        return 0;
+    }
+
+    @Override
+    public double getPastEnergy() {
+        if (this.reactor != null) {
+            return this.reactor.getPastEnergy();
+        }
+        return 0;
+    }
+
+    @Override
+    public void setPastEnergy(final double pastEnergy) {
+        if (this.reactor != null) {
+            this.reactor.setPastEnergy(pastEnergy);
+        }
+    }
+
+    @Override
+    public void addPerEnergy(final double setEnergy) {
+        if (this.reactor != null) {
+            this.reactor.addPerEnergy(setEnergy);
+        }
+    }
+
+    @Override
+    public boolean isSource() {
+        if (this.reactor != null) {
+            return this.reactor.isSource();
+        }
+        return false;
+    }
+
+    @Override
+    public double getOfferedEnergy() {
+        if (this.reactor != null) {
+            return this.reactor.getOfferedEnergy();
+        }
+        return 0;
+    }
+
+    @Override
+    public void drawEnergy(final double var1) {
+        if (this.reactor != null) {
+            this.reactor.drawEnergy(var1);
+        }
+    }
+
+    @Override
+    public int getSourceTier() {
+        if (this.reactor != null) {
+            return this.reactor.getSourceTier();
+        }
+        return 0;
     }
 
 }

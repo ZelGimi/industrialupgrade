@@ -1,12 +1,11 @@
 package com.denfop.api.recipe;
 
-import ic2.api.recipe.IRecipeInput;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class InputFluid implements IInput {
+public class InputFluid implements IInputFluid {
 
     private final List<FluidStack> inputsfluid;
 
@@ -14,23 +13,12 @@ public class InputFluid implements IInput {
         this.inputsfluid = Arrays.asList(inputs);
     }
 
-    @Override
-    public List<IRecipeInput> getInputs() {
-        return null;
+    public InputFluid(List<FluidStack> inputsfluid) {
+        this.inputsfluid = inputsfluid;
     }
 
     @Override
-    public boolean hasFluids() {
-        return true;
-    }
-
-    @Override
-    public FluidStack getFluid() {
-        return this.inputsfluid.get(0);
-    }
-
-    @Override
-    public List<FluidStack> getFluidInputs() {
+    public List<FluidStack> getInputs() {
         return this.inputsfluid;
     }
 

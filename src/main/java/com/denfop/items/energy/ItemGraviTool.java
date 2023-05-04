@@ -214,9 +214,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                 }
 
                 if (world.isRemote && player != null) {
-                    IC2.audioManager.playOnce(
+                    IUCore.audioManager.playOnce(
                             player,
-                            ic2.core.audio.PositionSpec.Hand,
+                            PositionSpec.Hand,
                             "Tools/Treetap.ogg",
                             true,
                             IC2.audioManager.getDefaultVolume()
@@ -243,9 +243,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                     }
 
                     if (world.isRemote && player != null) {
-                        IC2.audioManager.playOnce(
+                        IUCore.audioManager.playOnce(
                                 player,
-                                ic2.core.audio.PositionSpec.Hand,
+                                PositionSpec.Hand,
                                 "Tools/Treetap.ogg",
                                 true,
                                 IC2.audioManager.getDefaultVolume()

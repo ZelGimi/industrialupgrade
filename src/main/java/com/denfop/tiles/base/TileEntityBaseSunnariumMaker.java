@@ -1,16 +1,16 @@
 package com.denfop.tiles.base;
 
 
+import com.denfop.IUCore;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.audio.AudioSource;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerSunnariumMaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,12 +25,12 @@ import java.util.List;
 public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMachine
         implements IUpgradableBlock {
 
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotUpgrade upgradeSlot;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -54,7 +54,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.output = null;
         this.sunenergy = this.addComponent(ComponentBaseEnergy
-                .asBasicSink(EnergyType.SOLARIUM,this, 10000, 1));
+                .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -116,7 +116,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
     }
@@ -163,7 +163,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
         } else {
             if (this.progress != 0 && getActive()) {
                 if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[1 % valuesAudio.length])) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                 }
             }
             if (output == null) {
@@ -224,7 +224,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
 
     public abstract String getInventoryName();
 
-    public ContainerBase<? extends TileEntityBaseSunnariumMaker> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSunnariumMaker getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerSunnariumMaker(entityPlayer, this);
     }
 
@@ -238,7 +238,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
 
     public void onNetworkEvent(int event) {
         if (this.audioSource == null && getStartSoundFile() != null) {
-            this.audioSource = IC2.audioManager.createSource(this, getStartSoundFile());
+            this.audioSource = IUCore.audioManager.createSource(this, getStartSoundFile());
         }
         switch (event) {
             case 0:
@@ -250,7 +250,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     if (getInterruptSoundFile() != null) {
-                        IC2.audioManager.playOnce(this, getInterruptSoundFile());
+                        IUCore.audioManager.playOnce(this, getInterruptSoundFile());
                     }
                 }
                 break;

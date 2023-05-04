@@ -22,4 +22,5 @@ public interface IGlobalNet {
     void TickEnd(int id);
 
     NodeStats getNodeStats(ITile delegate, World world);
+
 }

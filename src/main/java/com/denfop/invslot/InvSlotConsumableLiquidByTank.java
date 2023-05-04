@@ -1,7 +1,7 @@
 package com.denfop.invslot;
 
 import com.denfop.api.recipe.InvSlotOutput;
-import ic2.core.block.IInventorySlotHolder;
+import com.denfop.tiles.base.IInventorySlotHolder;
 import ic2.core.util.StackUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;

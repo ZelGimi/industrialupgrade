@@ -6,7 +6,6 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TileEntityModuleMachine;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -50,7 +49,7 @@ public class InvSlotModule extends InvSlot implements ITypeSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
             if (OreDictionary.getOreIDs(itemStack).length > 0) {
                 int id = OreDictionary.getOreIDs(itemStack)[0];

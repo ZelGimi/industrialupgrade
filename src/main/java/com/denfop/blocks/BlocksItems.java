@@ -30,7 +30,7 @@ public class BlocksItems {
         if (!fluid.canBePlacedInWorld()) {
             Block block = new BlockIUFluid(name, fluid, steam);
             fluid.setBlock(block);
-            fluid.setUnlocalizedName(block.getUnlocalizedName().substring(4));
+            fluid.setUnlocalizedName(block.getUnlocalizedName().substring(3));
         }
 
         name.setInstance(fluid);
@@ -45,19 +45,22 @@ public class BlocksItems {
     private void initFluids() {
 
         registerIC2fluid(FluidName.fluidNeutron, 3000, 300, false);
-        registerIC2fluid(FluidName.fluidHelium, 1000, 300, true);
+        registerIC2fluid(FluidName.fluidHelium, -1000, 300, true);
         registerIC2fluid(FluidName.fluidbenz, 3000, 500, false);
         registerIC2fluid(FluidName.fluiddizel, 3000, 500, false);
         registerIC2fluid(FluidName.fluidneft, 3000, 500, false);
 //
-        registerIC2fluid(FluidName.fluidpolyeth, 3000, 2000, true);
-        registerIC2fluid(FluidName.fluidpolyprop, 3000, 2000, true);
-        registerIC2fluid(FluidName.fluidoxy, 3000, 500, true);
+        registerIC2fluid(FluidName.fluidpolyeth, -3000, 2000, true);
+        registerIC2fluid(FluidName.fluidpolyprop, -3000, 2000, true);
+        registerIC2fluid(FluidName.fluidoxy, -3000, 500, true);
 
-        registerIC2fluid(FluidName.fluidhyd, 3000, 500, true);
-        registerIC2fluid(FluidName.fluidazot, 3000, 500, true);
-        registerIC2fluid(FluidName.fluidco2, 3000, 500, true);
-
+        registerIC2fluid(FluidName.fluidhyd, -3000, 500, true);
+        registerIC2fluid(FluidName.fluidazot, -3000, 500, true);
+        registerIC2fluid(FluidName.fluidco2, -3000, 500, true);
+        registerIC2fluid(FluidName.fluidgas, -3000, 500, true);
+        registerIC2fluid(FluidName.fluidchlorum, -3000, 500, true);
+        registerIC2fluid(FluidName.fluidbromine, -3000, 500, true);
+        registerIC2fluid(FluidName.fluidiodine, 3000, 500, true);
 
     }
 

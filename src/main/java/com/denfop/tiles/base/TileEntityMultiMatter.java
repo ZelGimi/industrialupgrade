@@ -1,13 +1,15 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
+import com.denfop.componets.*;
 import com.denfop.container.ContainerMultiMatter;
 import com.denfop.gui.GuiMultiMatter;
-import com.denfop.invslot.InvSlotConsumableLiquid;
-import com.denfop.invslot.InvSlotConsumableLiquidByList;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.invslot.*;
 import ic2.api.energy.tile.IExplosionPowerOverride;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.recipe.IRecipeInput;
@@ -15,15 +17,7 @@ import ic2.api.recipe.MachineRecipeResult;
 import ic2.api.recipe.Recipes;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
-import ic2.core.block.invslot.InvSlotProcessable;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
 import ic2.core.network.GuiSynced;
@@ -50,13 +44,15 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         IExplosionPowerOverride, INetworkClientTileEntityEventListener, IType {
 
     public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotProcessable<IRecipeInput, Integer, ItemStack> amplifierSlot;
+    public final InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack> amplifierSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
     @GuiSynced
     public final FluidTank fluidTank;
     public final float energycost;
     protected final Fluids fluids;
+    private final Redstone redstone;
+    private final BasicRedstoneComponent comparator;
     public boolean work;
     public int scrap = 0;
     public boolean redstonePowered = false;
@@ -68,7 +64,11 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
 
     public TileEntityMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy) {
         super(Math.round(maxtempEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor")), 3, 1);
-        this.amplifierSlot = new InvSlotProcessable<IRecipeInput, Integer, ItemStack>(this, "scrap", 1, Recipes.matterAmplifier
+        this.amplifierSlot = new InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack>(
+                this,
+                "scrap",
+                1,
+                Recipes.matterAmplifier
         ) {
             protected ItemStack getInput(ItemStack stack) {
                 return stack;
@@ -85,9 +85,9 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         this.containerslot = new InvSlotConsumableLiquidByList(
                 this,
                 "container",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.ANY,
+                InvSlot.InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.uu_matter.getInstance()
         );
@@ -95,10 +95,21 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         this.fluidTank = this.fluids.addTank("fluidTank", sizeTank * 1000,
                 Fluids.fluidPredicate(FluidName.uu_matter.getInstance())
         );
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
-
-
-        this.work = true;
+        this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
+        this.redstone = this.addComponent(new Redstone(this));
+        this.redstone.subscribe((newLevel) -> {
+            this.energy.setEnabled(newLevel == 0);
+            this.work = newLevel != 0;
+        });
+        this.comparator = this.addComponent(new ComparatorEmitter(this));
+        this.comparator.setUpdate(() -> {
+            int count = calcRedstoneFromInvSlots(this.amplifierSlot);
+            if (count > 0) {
+                return count;
+            } else {
+                return this.scrap > 0 ? 1 : 0;
+            }
+        });
     }
 
     private static int applyModifier(int extra) {
@@ -162,7 +173,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
 
     protected void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
             this.audioSourceScrap = null;
         }
@@ -220,17 +231,16 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         }
     }
 
-    public boolean attemptGeneration() {
+    public void attemptGeneration() {
         int k = (int) (this.energy.getEnergy() / this.energycost);
         int m;
 
         if (this.fluidTank.getFluidAmount() + 1 > this.fluidTank.getCapacity()) {
-            return false;
+            return;
         }
         m = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
         this.fluidTank.fillInternal(new FluidStack(FluidName.uu_matter.getInstance(), Math.min(m, k)), true);
         this.energy.useEnergy(this.energycost * Math.min(m, k));
-        return true;
     }
 
     public String getProgressAsString() {
@@ -238,7 +248,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         return "" + p + "%";
     }
 
-    public ContainerBase<TileEntityMultiMatter> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerMultiMatter getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerMultiMatter(entityPlayer, this);
     }
 
@@ -253,16 +263,16 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
     private void setState(int aState) {
         this.state = aState;
         if (this.prevState != this.state) {
-            IC2.network.get(true).updateTileEntityField(this, "state");
+            IUCore.network.get(true).updateTileEntityField(this, "state");
         }
 
         this.prevState = this.state;
     }
 
-    public List<String> getNetworkedFields() {
+    public List<String> getNetworkFields() {
         List<String> ret = new ArrayList<>();
         ret.add("state");
-        ret.addAll(super.getNetworkedFields());
+        ret.addAll(super.getNetworkFields());
         return ret;
     }
 
@@ -281,7 +291,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
                 case 1:
                     if (sound) {
                         if (this.audioSource == null) {
-                            this.audioSource = IC2.audioManager.createSource(
+                            this.audioSource = IUCore.audioManager.createSource(
                                     this,
                                     PositionSpec.Center,
                                     "Generators/MassFabricator/MassFabLoop.ogg",
@@ -302,7 +312,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
                 case 2:
                     if (sound) {
                         if (this.audioSource == null) {
-                            this.audioSource = IC2.audioManager.createSource(
+                            this.audioSource = IUCore.audioManager.createSource(
                                     this,
                                     PositionSpec.Center,
                                     "Generators/MassFabricator/MassFabLoop.ogg",
@@ -313,7 +323,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
                         }
 
                         if (this.audioSourceScrap == null) {
-                            this.audioSourceScrap = IC2.audioManager.createSource(
+                            this.audioSourceScrap = IUCore.audioManager.createSource(
                                     this,
                                     PositionSpec.Center,
                                     "Generators/MassFabricator/MassFabScrapSolo.ogg",

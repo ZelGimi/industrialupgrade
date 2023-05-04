@@ -171,7 +171,7 @@ public class CTAdvAlloySmelter {
         }
 
         public String describe() {
-            return "Adding canner bottle recipe " + this.container + " + " + this.fill + " + " + this.fill1 + " => " + this.output;
+            return "Adding advanced alloy smelter recipe " + this.container + " + " + this.fill + " + " + this.fill1 + " => " + this.output;
         }
 
         public Object getOverrideKey() {

@@ -6,12 +6,14 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.IFluidModelProvider;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.blocks.FluidName;
 import com.denfop.events.TickHandler;
 import com.denfop.gui.GuiColorPicker;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.base.IUModelLoader;
 import com.denfop.render.base.RenderCoreProcess;
+import com.denfop.render.multiblock.TileEntityMultiBlockRender;
 import com.denfop.render.oilquarry.TileEntityQuarryOilRender;
 import com.denfop.render.oilrefiner.TileEntityOilRefinerRender;
 import com.denfop.render.sintezator.TileEntitySintezatorRender;
@@ -41,6 +43,7 @@ import com.denfop.tiles.base.TileEntityQuarryVein;
 import com.denfop.tiles.base.TileEntitySintezator;
 import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
 import com.denfop.tiles.mechanism.TileEntityOilRefiner;
+import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockBase;
 import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
 import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
 import com.denfop.tiles.mechanism.worlcollector.TileEntityCrystallize;
@@ -67,6 +70,7 @@ import java.util.ArrayList;
 public class ClientProxy extends CommonProxy {
 
     public static final ArrayList<IModelRegister> modelList = new ArrayList<>();
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
@@ -102,6 +106,10 @@ public class ClientProxy extends CommonProxy {
                 new RenderCoreProcess<>()
         );
         ClientRegistry.bindTileEntitySpecialRenderer(
+                TileEntityMultiBlockBase.class,
+                new TileEntityMultiBlockRender<>()
+        );
+        ClientRegistry.bindTileEntitySpecialRenderer(
                 TileEntityDoubleMolecular.class,
                 new RenderCoreProcess<>()
         );
@@ -132,9 +140,11 @@ public class ClientProxy extends CommonProxy {
 
     }
 
-    public void regrecipemanager() {
-        super.regrecipemanager();
+    public boolean launchGuiClient(EntityPlayer player, IHasGui inventory, boolean isAdmin) {
+        this.mc.displayGuiScreen(inventory.getGui(player, isAdmin));
+        return true;
     }
+
 
     @Override
     public void profilerEndStartSection(final String section) {

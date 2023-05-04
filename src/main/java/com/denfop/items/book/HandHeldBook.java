@@ -1,7 +1,7 @@
 package com.denfop.items.book;
 
-import ic2.core.ContainerBase;
-import ic2.core.item.tool.HandHeldInventory;
+import com.denfop.container.ContainerBase;
+import com.denfop.items.HandHeldInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

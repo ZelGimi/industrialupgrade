@@ -1,7 +1,6 @@
 package com.denfop.api.energy;
 
 import cofh.redstoneflux.api.IEnergyReceiver;
-import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

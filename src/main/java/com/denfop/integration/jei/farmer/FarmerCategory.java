@@ -67,6 +67,11 @@ public class FarmerCategory extends Gui implements IRecipeCategory<FarmerRecipeW
         if (xScale > 24) {
             progress = 0;
         }
+        mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        drawTexturedModalRect(
+                +2, 45, 136, 4, 12,
+                14
+        );
         mc.getTextureManager().bindTexture(getTexture());
         drawTexturedModalRect(66, 12 + 19, 192 - 16, 14, 16, 24);
 
@@ -77,6 +82,7 @@ public class FarmerCategory extends Gui implements IRecipeCategory<FarmerRecipeW
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
         drawTexturedModalRect(66 - 1, 56 - 1, 238, 0, 18, 18);
+        drawTexturedModalRect(2, 44 + 16, 238, 0, 18, 18);
 
     }
 

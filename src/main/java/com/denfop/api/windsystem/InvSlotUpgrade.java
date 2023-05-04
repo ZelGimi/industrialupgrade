@@ -5,9 +5,9 @@ import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeItemInform;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
+import com.denfop.invslot.InvSlot;
+import com.denfop.tiles.base.IInventorySlotHolder;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.IInventorySlotHolder;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,7 +25,7 @@ public class InvSlotUpgrade extends InvSlot {
         this.tile = base1;
     }
 
-    public boolean accepts(ItemStack stack) {
+    public boolean accepts(ItemStack stack, final int index) {
         if (this.tile.getRotor() == null) {
             return false;
         }

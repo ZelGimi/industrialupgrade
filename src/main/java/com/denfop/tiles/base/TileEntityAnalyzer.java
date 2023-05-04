@@ -12,13 +12,11 @@ import com.denfop.invslot.InvSlotAnalyzer;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -439,7 +437,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                     .getWorld()
                     .getChunkFromBlockCoords(new BlockPos(tempx, 0, tempz))
                     .getPos());
-            if (vein != null) {
+            if (vein != VeinSystem.system.getEMPTY()) {
                 if (vein.getType() == Type.VEIN) {
                     final ItemStack stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
                     int id = OreDictionary.getOreIDs(stack)[0];
@@ -680,7 +678,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                         .getWorld()
                         .getChunkFromBlockCoords(new BlockPos(tempx, 0, tempz))
                         .getPos());
-                if (vein != null) {
+                if (vein != VeinSystem.system.getEMPTY()) {
                     if (vein.getType() == Type.VEIN) {
                         final ItemStack stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
                         int size = vein.getCol();
@@ -820,11 +818,11 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
 
     @Override
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiAnalyzer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiAnalyzer(new ContainerAnalyzer(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityAnalyzer> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerAnalyzer getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerAnalyzer(entityPlayer, this);
     }
 

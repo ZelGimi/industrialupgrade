@@ -21,6 +21,7 @@ public class EnergyBase {
         QE = new GlobalNet(EnergyType.QUANTUM);
         EXP = new GlobalNet(EnergyType.EXPERIENCE);
         rad = new GlobalNet(EnergyType.RADIATION);
+
     }
 
 }

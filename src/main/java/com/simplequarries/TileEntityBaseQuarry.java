@@ -6,6 +6,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
@@ -27,9 +28,7 @@ import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
@@ -113,7 +112,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
     public TileEntityBaseQuarry(String name, double coef, int index) {
         this.name = name;
-        this.energyconsume = 250 * coef;
+        this.energyconsume = 450 * coef;
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 5E7D, 14));
         this.energy1 = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 200000, 14));
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
@@ -123,7 +122,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         this.index = index;
         this.speed = Math.pow(2, index - 1);
         this.input = new InvSlotBaseQuarry(this, index);
-        this.constenergyconsume = 250 * coef;
+        this.constenergyconsume = 450 * coef;
         this.min_y = 0;
         this.max_y = 256;
         this.chance = 0;
@@ -131,7 +130,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         this.furnace = false;
         this.list_modules = null;
         this.consume = this.energyconsume;
-        this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE,this, 5000, 14));
+        this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE, this, 5000, 14));
 
     }
 
@@ -206,14 +205,14 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                     ".simplyquarries.info3"));
         }
 
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
+
+        AdvEnergy energy = this.energy;
+        if (!energy.getSourceDirs().isEmpty()) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+        } else if (!energy.getSinkDirs().isEmpty()) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
         }
+
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {
@@ -371,7 +370,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         super.onPlaced(stack, placer, facing);
         this.max_y = placer.getEntityWorld().provider.getHeight();
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 this.vein = null;
             }
@@ -414,7 +413,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         }
 
         this.vein = VeinSystem.system.getVein(chunk.getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 this.vein = null;
             }
@@ -710,7 +709,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         }
     }
 
-    public ContainerBase<? extends TileEntityBaseQuarry> getGuiContainer(EntityPlayer player) {
+    public ContainerBaseQuarry getGuiContainer(EntityPlayer player) {
         return new ContainerBaseQuarry(player, this);
 
     }

@@ -9,6 +9,8 @@ public enum EnumDoubleElectricMachine {
     UPGRADE("upgradeblock", 14, 34, 64, 34, 0, 0, false, 110, 34),
     WELDING("welding", 38, 17, 74, 17, 56, 53, true, 116, 35, true),
 
+    CANNING("cannerbottle", 67, 36, 37, 36, 8, 62, true, 116, 36),
+
     ;
 
     public final int inputx;

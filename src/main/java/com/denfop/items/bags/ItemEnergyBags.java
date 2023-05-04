@@ -3,21 +3,20 @@ package com.denfop.items.bags;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.container.ContainerBags;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.items.IHandHeldInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.core.IC2;
-import ic2.core.IC2Potion;
-import ic2.core.IHasGui;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
-import ic2.core.item.IHandHeldInventory;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -185,7 +184,7 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
             ItemStack stack = StackUtil.get(player, hand);
             if (IC2.platform.isSimulating()) {
                 save(stack, player);
-                IC2.platform.launchGui(player, this.getInventory(player, stack));
+                IUCore.proxy.launchGui(player, this.getInventory(player, stack));
                 return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
             }
@@ -205,17 +204,19 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
             final @NotNull EnumHand hand
     ) {
         final TileEntity tile = world.getTileEntity(pos);
-        if(player.isSneaking())
-        if(tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,side)){
-            IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,side);
-            HandHeldBags box = (HandHeldBags) getInventory(player, player.getHeldItem(hand));
-            ItemStack[] itemStackList = box.getAll();
-            for(ItemStack stack : itemStackList){
-                if(stack == null || stack.isEmpty())
-                    continue;
-               ModUtils.tick(itemStackList,handler,box);
+        if (player.isSneaking()) {
+            if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
+                IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+                HandHeldBags box = (HandHeldBags) getInventory(player, player.getHeldItem(hand));
+                ItemStack[] itemStackList = box.getAll();
+                for (ItemStack stack : itemStackList) {
+                    if (stack == null || stack.isEmpty()) {
+                        continue;
+                    }
+                    ModUtils.tick(itemStackList, handler, box);
+                }
+                return EnumActionResult.SUCCESS;
             }
-            return EnumActionResult.SUCCESS;
         }
         return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
     }

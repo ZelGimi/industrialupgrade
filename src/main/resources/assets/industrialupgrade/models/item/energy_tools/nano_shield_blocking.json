@@ -1,0 +1,43 @@
+{
+    "parent": "item/shield",
+    "textures": {
+        "base": "industrialupgrade:items/nano_shield",
+        "overlay": "items/shield_overlay",
+        "blocking": "items/shield_blocking"
+    },
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [0, 90, 45],
+            "translation": [0, 1.25, -3.5],
+            "scale": [0.375, 0.375, 0.375]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [0, 90, -45],
+            "translation": [0, 1.25, -3.5],
+            "scale": [0.375, 0.375, 0.375]
+        },
+        "firstperson_righthand": {
+            "rotation": [0, -90, 25],
+            "translation": [1.13, 3.2, 1.13],
+            "scale": [0.4, 0.4, 0.4]
+        },
+        "firstperson_lefthand": {
+            "rotation": [0, -90, -25],
+            "translation": [1.13, 3.2, 1.13],
+            "scale": [0.4, 0.4, 0.4]
+        },
+        "gui": {
+            "rotation": [15, -25, -5],
+            "translation": [2, 3, 0],
+            "scale": [0.65, 0.65, 0.65]
+        },
+        "fixed": {
+            "rotation": [0, 180, 0],
+            "translation": [0, 0, 0],
+            "scale": [1, 1, 1]
+        }
+    },
+    "overrides": [
+        {"predicate": {"blocking": 1}, "model": "item/shield_blocking"}
+    ]
+}

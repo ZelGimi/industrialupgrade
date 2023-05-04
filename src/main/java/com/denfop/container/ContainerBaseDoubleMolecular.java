@@ -2,8 +2,6 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.base.TileEntityDoubleMolecular;
-import ic2.core.ContainerBase;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 

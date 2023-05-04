@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBlockLimiter;
@@ -10,7 +11,6 @@ import ic2.api.energy.EnergyNet;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,8 +23,8 @@ import java.util.List;
 public class TileEntityLimiter extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener,
         INetworkTileEntityEventListener {
 
-    public final InvSlotLimiter slot;
     private final AdvEnergy energy;
+    public InvSlotLimiter slot;
     private double max_value;
     private AudioSource audioSource;
 
@@ -75,8 +75,8 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
     }
 
     @Override
-    public List<String> getNetworkedFields() {
-        final List<String> list = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        final List<String> list = super.getNetworkFields();
         list.add("energy");
         list.add("max_value");
         list.add("slot");

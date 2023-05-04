@@ -14,9 +14,7 @@ import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityBlaze;
@@ -80,7 +78,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
         this.spawn = 1;
         this.experience = 0;
         this.defaultconsume = this.costenergy;
-        this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE,this, 15000, 14));
+        this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE, this, 15000, 14));
 
     }
 
@@ -145,11 +143,11 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
 
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiAutoSpawner getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiAutoSpawner(new ContainerAutoSpawner(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityAutoSpawner> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerAutoSpawner getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerAutoSpawner(entityPlayer, this);
     }
 

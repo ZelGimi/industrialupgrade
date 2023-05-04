@@ -1,9 +1,8 @@
 package com.denfop.invslot;
 
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.tiles.base.IInventorySlotHolder;
 import ic2.api.util.FluidContainerOutputMode;
-import ic2.core.block.IInventorySlotHolder;
-import ic2.core.block.invslot.InvSlotConsumable;
 import ic2.core.util.LiquidUtil;
 import ic2.core.util.LiquidUtil.FluidOperationResult;
 import ic2.core.util.StackUtil;
@@ -35,7 +34,7 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
         this.opType = opType1;
     }
 
-    public boolean accepts(ItemStack stack) {
+    public boolean accepts(ItemStack stack, final int index) {
         if (StackUtil.isEmpty(stack)) {
             return false;
         } else if (!LiquidUtil.isFluidContainer(stack)) {

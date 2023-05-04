@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
 import com.denfop.tiles.mechanism.TileEntitySunnariumPanelMaker;
-import com.denfop.tiles.mechanism.dual.heat.TileEntityAlloySmelter;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -81,7 +79,7 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
         if (this.base instanceof TileEntitySunnariumPanelMaker) {
             ret.add("sunenergy");
         }
-        if (this.base instanceof TileEntityAlloySmelter) {
+        if (this.base.heat != null) {
             ret.add("heat");
         }
 

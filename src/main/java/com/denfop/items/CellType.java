@@ -2,7 +2,7 @@ package com.denfop.items;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
-import ic2.core.block.state.IIdProvider;
+import com.denfop.blocks.IIdProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.Fluid;

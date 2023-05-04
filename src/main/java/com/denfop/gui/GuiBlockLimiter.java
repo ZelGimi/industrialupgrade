@@ -1,10 +1,11 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.gui.TextBox;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.utils.ListInformationUtils;
 import ic2.core.IC2;
-import ic2.core.gui.TextBox;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 
@@ -50,7 +51,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         int y = j - yMin;
         if (x >= 12 && x <= 46 && y >= 36 && y <= 48) {
             try {
-                IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, Integer.parseInt(textBox.getText()));
+                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, Integer.parseInt(textBox.getText()));
                 this.textBox.setText(String.valueOf(this.container.base.getEnergy().limit_amount));
             } catch (Exception ignored) {
             }

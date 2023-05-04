@@ -1,13 +1,13 @@
 package com.denfop.tiles.reactors;
 
 import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerHeatLimiter;
 import com.denfop.gui.GuiHeatLimiter;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.block.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -105,7 +105,7 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
 
     public void initiate(int soundEvent) {
 
-        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
 
     }
 

@@ -1,8 +1,6 @@
 package com.denfop.render.base;
 
 import com.denfop.api.render.IModelCustom;
-import ic2.core.IC2;
-import ic2.core.util.LogCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -293,18 +291,8 @@ public class WavefrontObject implements IModelCustom {
         } else {
             tessellator.getBuffer().begin(4, DefaultVertexFormats.POSITION_TEX_NORMAL);
         }
-        long startTime = System.nanoTime();
         this.tessellateAll(tessellator);
-        IC2.log.debug(
-                LogCategory.General, "Finished  work tessellateAll after %d mcs. ",
-                (System.nanoTime() - startTime) / 1000L
-        );
-        startTime = System.nanoTime();
         tessellator.draw();
-        IC2.log.debug(
-                LogCategory.General, "Finished  work tessellate draw after %d mcs. ",
-                (System.nanoTime() - startTime) / 1000L
-        );
     }
 
     @SideOnly(Side.CLIENT)
@@ -493,7 +481,7 @@ public class WavefrontObject implements IModelCustom {
 
         @SideOnly(Side.CLIENT)
         public void render(Tessellator tessellator) {
-            faces.forEach(face ->face.addFaceForRender(tessellator));
+            faces.forEach(face -> face.addFaceForRender(tessellator));
 
         }
 
@@ -508,6 +496,7 @@ public class WavefrontObject implements IModelCustom {
         private boolean update = false;
         private float averageU;
         private float averageV;
+
         public Face() {
         }
 
@@ -521,7 +510,7 @@ public class WavefrontObject implements IModelCustom {
             if (this.faceNormal == null) {
                 this.faceNormal = this.calculateFaceNormal();
             }
-            if(!this.update) {
+            if (!this.update) {
                 this.update = true;
                 this.averageU = 0.0F;
                 this.averageV = 0.0F;

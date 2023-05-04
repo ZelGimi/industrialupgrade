@@ -8,4 +8,5 @@ public interface IMjReceiver extends IMjConnector {
     default boolean canReceive() {
         return true;
     }
+
 }

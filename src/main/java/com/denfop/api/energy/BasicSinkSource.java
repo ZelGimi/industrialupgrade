@@ -1,11 +1,7 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 public class BasicSinkSource extends BasicEnergyTile implements IAdvDual {
 
@@ -141,7 +137,7 @@ public class BasicSinkSource extends BasicEnergyTile implements IAdvDual {
         if (tier < 0) {
             throw new IllegalArgumentException("invalid tier: " + tier);
         } else {
-            double power = EnergyNet.instance.getPowerFromTier(tier);
+            double power = EnergyNetGlobal.instance.getPowerFromTier(tier);
             if (this.getCapacity() < power) {
                 this.setCapacity(power);
             }
@@ -155,7 +151,6 @@ public class BasicSinkSource extends BasicEnergyTile implements IAdvDual {
     }
 
 
-
     @Override
     public boolean acceptsEnergyFrom(final IEnergyEmitter iEnergyEmitter, final EnumFacing enumFacing) {
         return false;
@@ -165,7 +160,6 @@ public class BasicSinkSource extends BasicEnergyTile implements IAdvDual {
     public boolean emitsEnergyTo(final IEnergyAcceptor iEnergyAcceptor, final EnumFacing enumFacing) {
         return false;
     }
-
 
 
 }

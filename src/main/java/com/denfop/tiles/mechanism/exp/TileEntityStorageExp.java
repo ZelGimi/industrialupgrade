@@ -4,6 +4,7 @@ package com.denfop.tiles.mechanism.exp;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.audio.AudioSource;
 import com.denfop.componets.ComponentBaseEnergy;
@@ -16,9 +17,7 @@ import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
@@ -50,7 +49,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
 
     public TileEntityStorageExp() {
         this.inputSlot = new InvSlotExpStorage(this);
-        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE,this, 2000000000, 14));
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
 
     }
 
@@ -81,13 +80,13 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
@@ -173,7 +172,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         return new GuiStorageExp(new ContainerStorageExp(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityStorageExp> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerStorageExp getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerStorageExp(entityPlayer, this);
     }
 

@@ -16,7 +16,11 @@
 			"fluidoxy": { "custom": { "fluid": "iufluidoxy" } },
 			"fluidazot": { "custom": { "fluid": "iufluidazot" } },
 			"fluidco2": { "custom": { "fluid": "iufluidco2" } },
-			"fluidhyd": { "custom": { "fluid": "iufluidhyd" } }
+			"fluidhyd": { "custom": { "fluid": "iufluidhyd" } },
+			"fluidgas": { "custom": { "fluid": "iufluidgas" } },
+			"fluidchlorum": { "custom": { "fluid": "iufluidchlorum" } },
+			"fluidbromine": { "custom": { "fluid": "iufluidbromine" } },
+			"fluidiodine": { "custom": { "fluid": "iufluidiodine" } }
 		}
 	}
 }

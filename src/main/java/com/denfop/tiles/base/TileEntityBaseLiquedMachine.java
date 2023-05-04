@@ -1,7 +1,10 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByListRemake;
 import com.denfop.invslot.InvSlotConsumableLiquidByTank;
@@ -9,8 +12,6 @@ import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.LiquidUtil;
@@ -152,7 +153,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
                     this.fluidTank[i].fill(fluidStack, true);
                 }
             }
-            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
         }
     }
 
@@ -242,7 +243,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
             }
         }
         if (needsInvUpdate) {
-            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
         }
 
         if (this.upgradeSlot.tickNoMark()) {
@@ -286,7 +287,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -361,8 +362,13 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     @Override
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing,UpgradableProperty.FluidConsuming
+        return EnumSet.of(
+                UpgradableProperty.RedstoneSensitive,
+                UpgradableProperty.Transformer,
+                UpgradableProperty.ItemConsuming,
+                UpgradableProperty.ItemProducing,
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

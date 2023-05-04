@@ -5,7 +5,6 @@ import com.denfop.api.recipe.ISlotInv;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileEntityConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
@@ -43,7 +42,7 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem() instanceof ItemSolidMatter;
     }
 

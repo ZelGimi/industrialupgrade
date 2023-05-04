@@ -1,23 +1,18 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.IAdvDual;
-import com.denfop.api.energy.IAdvEnergySink;
-import com.denfop.api.energy.IAdvEnergySource;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
+import com.denfop.api.energy.*;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.InvSlotDischarge;
 import ic2.api.energy.tile.IChargingSlot;
 import ic2.api.energy.tile.IDischargingSlot;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergyTile;
-import ic2.api.energy.tile.IMetaDelegate;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.Util;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -32,10 +27,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class AdvEnergy extends TileEntityComponent {
+public class AdvEnergy extends TileEntityAdvComponent {
 
     public final boolean fullEnergy;
-    private final boolean meta;
     public double tick;
     public boolean upgrade;
     public double capacity;
@@ -44,7 +38,7 @@ public class AdvEnergy extends TileEntityComponent {
     public int sourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
-    public List<InvSlot> managedSlots;
+    public List<InvSlot> managedSlots = new ArrayList<>();
     public boolean multiSource;
     public int sourcePackets;
     public AdvEnergy.EnergyNetDelegate delegate;
@@ -61,10 +55,6 @@ public class AdvEnergy extends TileEntityComponent {
 
     public AdvEnergy(TileEntityBlock parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
-    }
-
-    public AdvEnergy(TileEntityBlock parent, double capacity, boolean meta) {
-        this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1, 1, false, meta);
     }
 
     public AdvEnergy(
@@ -93,41 +83,13 @@ public class AdvEnergy extends TileEntityComponent {
         this.capacity = capacity;
         this.sinkTier = sinkTier;
         this.sourceTier = sourceTier;
-        this.sinkDirections = sinkDirections;
-        this.sourceDirections = sourceDirections;
+        this.sinkDirections = sinkDirections == null ? Collections.emptySet() : sinkDirections;
+        this.sourceDirections = sourceDirections == null ? Collections.emptySet() : sourceDirections;
         this.fullEnergy = fullEnergy;
         this.pastEnergy = 0;
         this.perenergy = 0;
         this.tick = 0;
-        this.meta = false;
     }
-
-    public AdvEnergy(
-            TileEntityBlock parent,
-            double capacity,
-            Set<EnumFacing> sinkDirections,
-            Set<EnumFacing> sourceDirections,
-            int sinkTier,
-            int sourceTier,
-            boolean fullEnergy,
-            boolean meta
-    ) {
-        super(parent);
-        this.multiSource = false;
-        this.sourcePackets = 1;
-        this.capacity = capacity;
-        this.sinkTier = sinkTier;
-        this.sourceTier = sourceTier;
-        this.sinkDirections = sinkDirections;
-        this.sourceDirections = sourceDirections;
-        this.fullEnergy = fullEnergy;
-        this.pastEnergy = 0;
-        this.perenergy = 0;
-        this.tick = 0;
-        this.meta = meta;
-
-    }
-
 
     public static AdvEnergy asBasicSink(TileEntityBlock parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
@@ -138,7 +100,7 @@ public class AdvEnergy extends TileEntityComponent {
     }
 
     public static AdvEnergy asBasicSink(TileEntityBlock parent, double capacity, boolean meta) {
-        return new AdvEnergy(parent, capacity, Util.allFacings, Collections.emptySet(), 14, 14, false, meta);
+        return new AdvEnergy(parent, capacity, Util.allFacings, Collections.emptySet(), 14, 14, false);
     }
 
     public static AdvEnergy asBasicSource(TileEntityBlock parent, double capacity) {
@@ -147,6 +109,35 @@ public class AdvEnergy extends TileEntityComponent {
 
     public static AdvEnergy asBasicSource(TileEntityBlock parent, double capacity, int tier) {
         return new AdvEnergy(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
+    }
+
+    @Override
+    public void updateEntityServer() {
+        for (InvSlot slot : managedSlots) {
+            if (slot instanceof InvSlotDischarge) {
+                InvSlotDischarge discharge = (InvSlotDischarge) slot;
+                if (!discharge.isEmpty()) {
+                    if (discharge.get().getItem() == Items.REDSTONE) {
+                        double energy = discharge.dischargeWithRedstone(this.capacity, this.getFreeEnergy());
+                        this.addEnergy(energy);
+                    } else {
+                        double energy = discharge.discharge(this.getFreeEnergy(), false);
+                        this.addEnergy(energy);
+                    }
+                }
+            } else if (slot instanceof InvSlotCharge) {
+                InvSlotCharge charge = (InvSlotCharge) slot;
+                if (!charge.isEmpty()) {
+                    double energy = charge.charge(this.storage);
+                    this.useEnergy(energy);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean isServer() {
+        return !this.managedSlots.isEmpty();
     }
 
     public AdvEnergy addManagedSlot(InvSlot slot) {
@@ -179,12 +170,9 @@ public class AdvEnergy extends TileEntityComponent {
         assert this.delegate == null;
 
         if (!this.parent.getWorld().isRemote) {
-            if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
-            } else {
-
-
+            if (!(this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty())) {
                 this.createDelegate();
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.delegate));
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
             }
 
             this.loaded = true;
@@ -192,6 +180,9 @@ public class AdvEnergy extends TileEntityComponent {
 
     }
 
+    public int getComparatorValue() {
+        return Math.min((int) (this.storage * 15.0 / this.capacity), 15);
+    }
 
     public void setLimit(final boolean limit) {
         this.limit = limit;
@@ -202,9 +193,8 @@ public class AdvEnergy extends TileEntityComponent {
             throw new IllegalStateException();
         } else {
 
-            assert !this.sinkDirections.isEmpty() || !this.sourceDirections.isEmpty();
 
-            if (!this.meta) {
+            if (!this.multiSource) {
                 if (this.sinkDirections.isEmpty()) {
                     this.delegate = new AdvEnergy.EnergyNetDelegateSource();
                 } else if (this.sourceDirections.isEmpty()) {
@@ -214,14 +204,10 @@ public class AdvEnergy extends TileEntityComponent {
                     this.delegate = new AdvEnergy.EnergyNetDelegateDual();
                 }
             } else {
-                if (this.sinkDirections.isEmpty()) {
-                    this.delegate = new AdvEnergy.EnergyMetaNetDelegateSource();
-                } else if (this.sourceDirections.isEmpty()) {
-                    this.delegate = new AdvEnergy.EnergyMetaNetDelegateSink();
-                }
+                this.delegate = new AdvEnergy.EnergyNetDelegateMultiDual();
             }
 
-            assert this.delegate != null;
+
             this.delegate.setWorld(this.parent.getWorld());
             this.delegate.setPos(this.parent.getPos());
         }
@@ -231,7 +217,7 @@ public class AdvEnergy extends TileEntityComponent {
         if (this.delegate != null) {
 
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
             this.delegate = null;
         }
 
@@ -243,25 +229,18 @@ public class AdvEnergy extends TileEntityComponent {
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeDouble(this.limit_amount);
-
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
 
     public void onNetworkUpdate(DataInput is) throws IOException {
+
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
         limit_amount = is.readInt();
-    }
-
-    public boolean enableWorldTick() {
-        return !this.parent.getWorld().isRemote && this.managedSlots != null;
-    }
-
-    public void onWorldTick() {
-
 
     }
+
 
     public double getCapacity() {
         return this.capacity;
@@ -326,6 +305,12 @@ public class AdvEnergy extends TileEntityComponent {
 
     public void setSinkTier(int tier) {
         this.sinkTier = tier;
+        for (InvSlot slot : this.managedSlots) {
+            if (slot instanceof InvSlotDischarge) {
+                InvSlotDischarge discharge = (InvSlotDischarge) slot;
+                discharge.setTier(tier);
+            }
+        }
     }
 
     public int getSourceTier() {
@@ -333,6 +318,12 @@ public class AdvEnergy extends TileEntityComponent {
     }
 
     public void setSourceTier(int tier) {
+        for (InvSlot slot : this.managedSlots) {
+            if (slot instanceof InvSlotCharge) {
+                InvSlotCharge discharge = (InvSlotCharge) slot;
+                discharge.setTier(tier);
+            }
+        }
         this.sourceTier = tier;
     }
 
@@ -366,12 +357,11 @@ public class AdvEnergy extends TileEntityComponent {
     }
 
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
-
         if (this.delegate != null) {
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
         }
 
         this.sinkDirections = sinkDirections;
@@ -381,16 +371,35 @@ public class AdvEnergy extends TileEntityComponent {
         } else if (this.delegate == null && this.loaded) {
             this.createDelegate();
         }
-
         if (this.delegate != null) {
 
 
             assert !this.parent.getWorld().isRemote;
 
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.delegate));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
         }
 
 
+    }
+
+    public void loadFast() {
+        if (this.delegate != null) {
+
+
+            assert !this.parent.getWorld().isRemote;
+
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
+        }
+    }
+
+    public void unloadFast() {
+        if (this.delegate != null) {
+
+
+            assert !this.parent.getWorld().isRemote;
+
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
+        }
     }
 
     public Set<EnumFacing> getSourceDirs() {
@@ -401,13 +410,13 @@ public class AdvEnergy extends TileEntityComponent {
         return Collections.unmodifiableSet(this.sinkDirections);
     }
 
-    public IEnergyTile getDelegate() {
+    public IAdvEnergyTile getDelegate() {
         return this.delegate;
     }
 
     private double getSourceEnergy() {
         if (!limit) {
-            return Math.min(this.storage, EnergyNet.instance.getPowerFromTier(this.sourceTier));
+            return Math.min(this.storage, EnergyNetGlobal.instance.getPowerFromTier(this.sourceTier));
         } else {
 
             return Math.min(this.storage, this.limit_amount);
@@ -415,7 +424,7 @@ public class AdvEnergy extends TileEntityComponent {
     }
 
 
-    private abstract static class EnergyNetDelegate extends TileEntity implements IEnergyTile {
+    private abstract static class EnergyNetDelegate extends TileEntity implements IAdvEnergyTile {
 
         private EnergyNetDelegate() {
         }
@@ -426,6 +435,139 @@ public class AdvEnergy extends TileEntityComponent {
 
 
         private EnergyNetDelegateDual() {
+            super();
+        }
+
+        public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing dir) {
+            return AdvEnergy.this.sinkDirections.contains(dir);
+        }
+
+        public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing dir) {
+            return AdvEnergy.this.sourceDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return AdvEnergy.this.parent.getPos();
+        }
+
+        @Override
+        public TileEntity getTileEntity() {
+            return AdvEnergy.this.parent;
+        }
+
+        public double getDemandedEnergy() {
+            return !AdvEnergy.this.receivingDisabled && AdvEnergy.this.storage < AdvEnergy.this.capacity
+                    ? AdvEnergy.this.capacity - AdvEnergy.this.storage
+                    : 0.0D;
+        }
+
+        public double getOfferedEnergy() {
+
+            return !AdvEnergy.this.sendingSidabled
+                    ? AdvEnergy.this.getSourceEnergy()
+                    : 0.0D;
+        }
+
+        public int getSinkTier() {
+            return AdvEnergy.this.sinkTier;
+        }
+
+        public int getSourceTier() {
+            return AdvEnergy.this.sourceTier;
+        }
+
+        public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+            AdvEnergy.this.storage = AdvEnergy.this.storage + amount;
+            return 0.0D;
+        }
+
+        public void drawEnergy(double amount) {
+            assert amount <= AdvEnergy.this.storage;
+
+            AdvEnergy.this.storage = AdvEnergy.this.storage - amount;
+        }
+
+
+        @Override
+        public double getPerEnergy() {
+            return AdvEnergy.this.perenergy;
+        }
+
+        @Override
+        public double getPastEnergy() {
+            return AdvEnergy.this.pastEnergy;
+        }
+
+        @Override
+        public void setPastEnergy(final double pastEnergy) {
+            AdvEnergy.this.pastEnergy = pastEnergy;
+        }
+
+        @Override
+        public void addPerEnergy(final double setEnergy) {
+            AdvEnergy.this.perenergy += setEnergy;
+        }
+
+        @Override
+        public boolean isSource() {
+            return !AdvEnergy.this.sendingSidabled;
+        }
+
+
+        @Override
+        public void addTick(final double tick) {
+            AdvEnergy.this.tick = tick;
+        }
+
+        @Override
+        public double getTick() {
+            return AdvEnergy.this.tick;
+        }
+
+        @Override
+        public boolean isSink() {
+            return !AdvEnergy.this.receivingDisabled;
+        }
+
+
+        @Override
+        public double getPerEnergy1() {
+            return AdvEnergy.this.perenergy1;
+        }
+
+        @Override
+        public double getPastEnergy1() {
+            return AdvEnergy.this.pastEnergy1;
+        }
+
+        @Override
+        public void setPastEnergy1(final double pastEnergy) {
+            AdvEnergy.this.pastEnergy1 = pastEnergy;
+        }
+
+        @Override
+        public void addPerEnergy1(final double setEnergy) {
+            AdvEnergy.this.perenergy1 += setEnergy;
+        }
+
+
+        @Override
+        public void addTick1(final double tick) {
+            AdvEnergy.this.tick1 = tick;
+        }
+
+        @Override
+        public double getTick1() {
+            return AdvEnergy.this.tick1;
+        }
+
+    }
+
+    private class EnergyNetDelegateMultiDual extends AdvEnergy.EnergyNetDelegate implements IMultiDual {
+
+
+        private EnergyNetDelegateMultiDual() {
             super();
         }
 
@@ -570,9 +712,7 @@ public class AdvEnergy extends TileEntityComponent {
         }
 
         public double getDemandedEnergy() {
-            return !AdvEnergy.this.receivingDisabled
-                    ? AdvEnergy.this.capacity - AdvEnergy.this.storage
-                    : 0.0D;
+            return AdvEnergy.this.capacity - AdvEnergy.this.storage;
         }
 
         public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
@@ -692,41 +832,5 @@ public class AdvEnergy extends TileEntityComponent {
 
     }
 
-    private class EnergyMetaNetDelegateSource extends EnergyNetDelegateSource implements IMetaDelegate {
-
-        List<IEnergyTile> list;
-
-        public EnergyMetaNetDelegateSource() {
-            list = new ArrayList<>();
-            list.add(this);
-        }
-
-        @Override
-        public List<IEnergyTile> getSubTiles() {
-            return list;
-        }
-
-    }
-
-    private class EnergyMetaNetDelegateSink extends EnergyNetDelegateSink implements IMetaDelegate {
-
-        List<IEnergyTile> list;
-
-        public EnergyMetaNetDelegateSink() {
-            list = new ArrayList<>();
-            list.add(this);
-        }
-
-        @Override
-        public @NotNull BlockPos getBlockPos() {
-            return AdvEnergy.this.parent.getPos();
-        }
-
-        @Override
-        public List<IEnergyTile> getSubTiles() {
-            return list;
-        }
-
-    }
 
 }

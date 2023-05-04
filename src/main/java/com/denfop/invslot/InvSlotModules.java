@@ -5,7 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileEntityAutoSpawner;
 import com.denfop.utils.CapturedMobUtils;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
@@ -21,7 +20,7 @@ public class InvSlotModules extends InvSlot {
         this.stackSizeLimit = 1;
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (!(itemStack.getItem() instanceof ItemEntityModule)) {
             return false;
         }

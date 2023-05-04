@@ -7,7 +7,6 @@ import com.denfop.container.ContainerMagnet;
 import com.denfop.gui.GuiMagnet;
 import com.denfop.tiles.base.TileEntityAntiMagnet;
 import com.denfop.tiles.base.TileEntityElectricMachine;
-import ic2.core.ContainerBase;
 import ic2.core.ExplosionIC2;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
@@ -172,7 +171,7 @@ public class TileEntityMagnet extends TileEntityElectricMachine {
         return new GuiMagnet(new ContainerMagnet(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityMagnet> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerMagnet getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerMagnet(entityPlayer, this);
     }
 

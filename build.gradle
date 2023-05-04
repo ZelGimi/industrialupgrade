@@ -127,7 +127,7 @@ dependencies {
     compileOnly "curse.maven:wireless-industry-377164:3864415"
     compileOnly "curse.maven:botania-225643:2846950"
 	compileOnly "curse.maven:baubles-227083:2518667"
-    runtimeOnly "net.industrial-craft:industrialcraft-2:${project.ic2_max_ver}"
+    runtimeOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
     compileOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
     compileOnly "curse.maven:projecte-226410:2702991"
     runtimeOnly "curse.maven:projecte-226410:2702991"
@@ -141,6 +141,8 @@ dependencies {
     runtimeOnly "curse.maven:avaritia-1-10-261348:3143349"
 	runtimeOnly "curse.maven:cofh-core-69162:2920433"
 	compileOnly "curse.maven:cofh-core-69162:2920433"
+    runtimeOnly "curse.maven:immersive-engineering-231951:2974106"
+    compileOnly "curse.maven:immersive-engineering-231951:2974106"
 	runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
 	compileOnly "curse.maven:thermal-expansion-69163:2926431"
     runtimeOnly "curse.maven:journeymap-32274:2916002"
@@ -189,6 +191,8 @@ dependencies {
     compileOnly "curse.maven:ae2-extended-life-570458:4323863"
     compileOnly "curse.maven:galacticraft-legacy-564236:4052975"
     compileOnly "curse.maven:ender-io-64578:3328811"
+    runtimeOnly "curse.maven:compact-machines-224218:2707509"
+    compileOnly "curse.maven:compact-machines-224218:2707509"
     runtimeOnly fileTree('lib')
 	compileOnly fileTree('lib')
 	compileOnly fileTree('libs')

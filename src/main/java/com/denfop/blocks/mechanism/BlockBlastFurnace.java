@@ -2,16 +2,13 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastFurnaceMain;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastInputItem;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastOutput;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityFluidInput;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityHeatBlock;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityOtherPart;
+import com.denfop.tiles.mechanism.blastfurnace.block.*;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -74,6 +71,11 @@ public enum BlockBlastFurnace implements ITeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     public EnumBlockRenderType getRenderType(IBlockState state) {

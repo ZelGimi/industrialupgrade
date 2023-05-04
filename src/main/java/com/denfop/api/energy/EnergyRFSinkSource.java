@@ -2,8 +2,6 @@ package com.denfop.api.energy;
 
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
@@ -19,7 +17,6 @@ public class EnergyRFSinkSource extends BasicSinkSource {
     }
 
     public double getDemandedEnergy() {
-
         return this.energyfe.receiveEnergy(null, Integer.MAX_VALUE, true) / 4D;
     }
 
@@ -42,7 +39,7 @@ public class EnergyRFSinkSource extends BasicSinkSource {
                     energyfe1.getEnergyStored(null),
                     energyfe1.extractEnergy(null, energyfe1.getEnergyStored(null), true)
             ) / 4D;
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
             return 0;
         }
     }

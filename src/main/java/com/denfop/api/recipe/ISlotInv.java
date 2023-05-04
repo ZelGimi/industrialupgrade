@@ -5,4 +5,5 @@ import net.minecraft.item.ItemStack;
 public interface ISlotInv {
 
     boolean accepts(int index, ItemStack stack);
+
 }

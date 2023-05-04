@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -15,7 +16,6 @@ import com.denfop.container.ContainerRotorAssembler;
 import com.denfop.gui.GuiRotorAssembler;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;

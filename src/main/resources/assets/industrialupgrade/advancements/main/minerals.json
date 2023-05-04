@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "items": ["industrialupgrade:heavyore"]
+            "item": "industrialupgrade:heavyore"
           }
         ]
       }

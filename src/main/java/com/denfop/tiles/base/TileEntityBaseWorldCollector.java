@@ -38,13 +38,13 @@ public class TileEntityBaseWorldCollector extends TileEntityElectricMachine impl
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotWorldCollector MatterSlot;
     public final double max_matter_energy;
-    private final int defaultEnergyConsume;
+    private final double defaultEnergyConsume;
     private final int defaultOperationLength;
     public double matter_energy;
     public double need_matter;
     public double guiProgress;
     protected MachineRecipe machineRecipe;
-    private int energyConsume;
+    private double energyConsume;
     private int operationLength;
     private int operationsPerTick;
     private boolean canWork = false;

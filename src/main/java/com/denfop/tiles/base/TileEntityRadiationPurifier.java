@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.audio.AudioSource;
-import ic2.core.ContainerBase;
+import com.denfop.container.ContainerBase;
 import ic2.core.IC2;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -97,7 +97,7 @@ public class TileEntityRadiationPurifier extends TileEntityElectricMachine {
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

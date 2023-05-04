@@ -8,7 +8,6 @@ import com.denfop.audio.AudioSource;
 import com.denfop.container.ContainerBaseWitherMaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,12 +27,12 @@ import java.util.Random;
 public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachine
         implements IUpgradableBlock, IUpdateTick {
 
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotUpgrade upgradeSlot;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -173,7 +172,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
             this.guiProgress = (k / this.operationLength);
             if (this.getWorld().provider.getWorldTime() % 20 == 0) {
                 if (sound) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 3, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 3, true);
                 }
             }
             if (this.progress >= this.operationLength) {
@@ -242,7 +241,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
 
     public abstract String getInventoryName();
 
-    public ContainerBase<? extends TileEntityBaseWitherMaker> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseWitherMaker getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseWitherMaker(
                 entityPlayer, this);
     }

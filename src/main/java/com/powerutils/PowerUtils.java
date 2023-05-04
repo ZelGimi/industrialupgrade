@@ -80,13 +80,13 @@ public final class PowerUtils {
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
-         Recipes.advRecipes.addRecipe(
+        Recipes.advRecipes.addRecipe(
                 new ItemStack(PowerItem.module_ic),
                 "ABA",
                 "CDC",
                 "ABA",
                 Character.valueOf('A'),
-                Ic2Items.copperCableItem,
+                IUItem.copperCableItem,
                 Character.valueOf('B'),
                 new ItemStack(IUItem.tranformer, 1, 8),
                 Character.valueOf('C'),

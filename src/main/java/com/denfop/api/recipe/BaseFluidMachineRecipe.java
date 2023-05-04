@@ -16,11 +16,14 @@ public class BaseFluidMachineRecipe {
         this.output_fluid = output;
         this.output = null;
     }
+
     public BaseFluidMachineRecipe(IInputFluid input, RecipeOutput output) {
         this.input = input;
         this.output_fluid = new ArrayList<>();
         this.output = output;
     }
+
+
     public boolean matches(List<FluidStack> stacks) {
         for (int i = 0; i < stacks.size(); i++) {
             if (this.input.getInputs().get(i).getFluid().equals(stacks.get(i).getFluid())) {

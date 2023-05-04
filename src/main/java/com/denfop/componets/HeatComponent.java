@@ -7,10 +7,9 @@ import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
+import com.denfop.invslot.InvSlot;
 import ic2.core.IC2;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
@@ -30,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class HeatComponent extends TileEntityComponent {
+public class HeatComponent extends TileEntityAdvComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
@@ -105,6 +104,11 @@ public class HeatComponent extends TileEntityComponent {
 
     public static HeatComponent asBasicSource(TileEntityBlock parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
+    }
+
+    @Override
+    public boolean isServer() {
+        return false;
     }
 
     public void readFromNbt(NBTTagCompound nbt) {

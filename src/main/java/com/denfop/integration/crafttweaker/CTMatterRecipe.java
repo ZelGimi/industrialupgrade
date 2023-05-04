@@ -1,6 +1,5 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
 import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -67,7 +66,7 @@ public class CTMatterRecipe {
 
     @ZenMethod
     public static void remove(IItemStack input) {
-        ModTweaker.LATE_REMOVALS.add(new CTMatterRecipe.Remove(input));
+        CraftTweakerAPI.apply(new CTMatterRecipe.Remove(input));
     }
 
     private static class Remove extends BaseAction {

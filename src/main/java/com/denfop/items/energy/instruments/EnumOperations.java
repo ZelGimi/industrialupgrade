@@ -11,7 +11,8 @@ public enum EnumOperations {
 
     ORE("message.ultDDrill.mode.pickaxe", "message.description.pickaxe", TextFormatting.DARK_AQUA, 1, 1, 1),
     TREE("message.ultDDrill.mode.treemode", "message.description.treemode", TextFormatting.DARK_GREEN, 1, 1, 1),
-    TUNNEL("message.ultDDrill.mode.tunel", "message.description.tunel", TextFormatting.BLUE, 1, 1, 8);
+    TUNNEL("message.ultDDrill.mode.tunel", "message.description.tunel", TextFormatting.BLUE, 1, 1, 8),
+    SHEARS("message.ultDDrill.mode.shears", "message.description.shears", TextFormatting.DARK_GREEN, 1, 1, 1);
 
     private final String name_mode;
     private final String description;

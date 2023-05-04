@@ -7,10 +7,14 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.api.IStorage;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.audio.AudioSource;
-import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComparatorEmitter;
+import com.denfop.componets.Redstone;
+import com.denfop.componets.RedstoneEmitter;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.gui.GuiElectricBlock;
 import com.denfop.invslot.InvSlotElectricBlock;
@@ -20,14 +24,11 @@ import com.denfop.tiles.panels.entity.TransferRFEnergy;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
 import ic2.core.ref.TeBlock;
@@ -74,6 +75,9 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public final InvSlotElectricBlock inputslotB;
     public final InvSlotElectricBlock inputslotC;
     public final List<String> list_player;
+    private final RedstoneEmitter rsEmitter;
+    private final Redstone redstone;
+    private final ComparatorEmitter comparator;
     public boolean wireless;
     public EntityPlayer player;
     public double output;
@@ -92,12 +96,13 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
     private AudioSource audioSource;
+    private byte redstoneMode = 0;
 
     public TileEntityElectricBlock(double tier1, double output1, double maxStorage1, boolean chargepad, String name) {
 
         this.energy2 = 0.0D;
         this.tier = tier1;
-        this.output = EnergyNet.instance.getPowerFromTier((int) tier);
+        this.output = EnergyNetGlobal.instance.getPowerFromTier((int) tier);
         this.player = null;
         this.maxStorage2 = maxStorage1 * 4;
         this.chargepad = chargepad;
@@ -112,19 +117,16 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         this.l = output1;
         this.energy = this.addComponent((new AdvEnergy(this, maxStorage1,
                 EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()),
-                EnergyNet.instance.getTierFromPower(this.output),
-                EnergyNet.instance.getTierFromPower(this.output), false
+                EnergyNetGlobal.instance.getTierFromPower(this.output),
+                EnergyNetGlobal.instance.getTierFromPower(this.output), false
         )));
+        this.rsEmitter = this.addComponent(new RedstoneEmitter(this));
+        this.redstone = this.addComponent(new Redstone(this));
+        this.comparator = this.addComponent(new ComparatorEmitter(this));
+        this.comparator.setUpdate(this.energy::getComparatorValue);
         this.list_player = new ArrayList<>();
     }
-    protected void onUnloaded() {
-        super.onUnloaded();
-        if (IC2.platform.isRendering() && this.audioSource != null) {
-            IUCore.audioManager.removeSources(this);
-            this.audioSource = null;
-        }
 
-    }
     public TileEntityElectricBlock(EnumElectricBlock electricBlock) {
         this(electricBlock.tier, electricBlock.producing, electricBlock.maxstorage, electricBlock.chargepad, electricBlock.name1);
         electricblock = electricBlock;
@@ -133,6 +135,15 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public static EnumElectricBlock getElectricBlock() {
 
         return electricblock;
+    }
+
+    protected void onUnloaded() {
+        super.onUnloaded();
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
+        }
+
     }
 
     protected boolean canEntityDestroy(Entity entity) {
@@ -147,9 +158,10 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     public void initiate(int soundEvent) {
 
-        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
 
     }
+
     public String getStartSoundFile() {
         return "Machines/pen.ogg";
     }
@@ -178,7 +190,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
 
 
-        info.add(Localization.translate("ic2.item.tooltip.Output") + " " + ModUtils.getString(EnergyNet.instance.getPowerFromTier(
+        info.add(Localization.translate("ic2.item.tooltip.Output") + " " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(
                 this.energy.getSourceTier())) + " EU/t ");
         info.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.energy.getCapacity()) + " EU ");
         info.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.maxStorage2) + " RF ");
@@ -192,7 +204,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     }
 
-    public ContainerBase<TileEntityElectricBlock> getGuiContainer(EntityPlayer player) {
+    public ContainerElectricBlock getGuiContainer(EntityPlayer player) {
         return new ContainerElectricBlock(player, this);
     }
 
@@ -201,7 +213,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return new GuiElectricBlock(new ContainerElectricBlock(entityPlayer, this));
     }
 
-    protected boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
         if (personality) {
             if (!(this.list_player.contains(player.getName()) || player.capabilities.isCreativeMode)) {
@@ -210,7 +222,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             }
         }
         module_charge(player);
-        return this.getWorld().isRemote || IC2.platform.launchGui(player, this);
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
 
     }
 
@@ -233,6 +245,33 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         }
         this.wirelessTransferList.clear();
         this.inputslotC.wirelessmodule();
+
+    }
+
+    public boolean shouldEmitEnergy() {
+        boolean redstone = this.redstone.hasRedstoneInput();
+        if (this.redstoneMode == 5) {
+            return !redstone;
+        } else if (this.redstoneMode != 6) {
+            return true;
+        } else {
+            return !redstone || this.energy.getEnergy() > this.energy.getCapacity() - this.output * 20.0;
+        }
+    }
+
+    @Override
+    public double getEUStored() {
+        return this.energy.getEnergy();
+    }
+
+    @Override
+    public double getRFStored() {
+        return this.energy2;
+    }
+
+    @Override
+    public double getOutput() {
+        return this.output;
     }
 
     protected void getItems(EntityPlayer player) {
@@ -549,16 +588,12 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         }
     }
 
-    protected boolean shouldEmitEnergy() {
-
-        return true;
-
-    }
 
     protected void updateEntityServer() {
         super.updateEntityServer();
         this.needsInvUpdate = false;
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
+        this.rsEmitter.setLevel(this.shouldEmitRedstone() ? 15 : 0);
         if (this.wireless) {
             boolean refresh = false;
             try {
@@ -729,6 +764,11 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return amount;
     }
 
+    @Override
+    public int getTier() {
+        return this.energy.getSinkTier();
+    }
+
     public double extractEnergy1(double maxExtract, boolean simulate) {
         double temp;
 
@@ -831,7 +871,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 this.maxStorage2
         );
         this.rfeu = nbttagcompound.getBoolean("rfeu");
-
+        this.redstoneMode = nbttagcompound.getByte("redstoneMode");
     }
 
     public void setFacing(EnumFacing facing) {
@@ -849,7 +889,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         nbttagcompound.setDouble("energy2", this.energy2);
         nbttagcompound.setString("UUID", this.UUID);
         nbttagcompound.setBoolean("rfeu", this.rfeu);
-
+        nbttagcompound.setByte("redstoneMode", this.redstoneMode);
         return nbttagcompound;
     }
 
@@ -857,12 +897,45 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public void onGuiClosed(EntityPlayer player) {
     }
 
+    public boolean shouldEmitRedstone() {
+        switch (this.redstoneMode) {
+            case 1:
+                return this.energy.getEnergy() >= this.energy.getCapacity() - this.output * 20.0;
+            case 2:
+                return this.energy.getEnergy() > this.output && this.energy.getEnergy() < this.energy.getCapacity() - this.output;
+            case 3:
+                return this.energy.getEnergy() < this.energy.getCapacity() - this.output;
+            case 4:
+                return this.energy.getEnergy() < this.output;
+            default:
+                return false;
+        }
+    }
 
     public void onNetworkEvent(EntityPlayer player, int event) {
-        if(this.rf) {
-            this.rfeu = !this.rfeu;
-            initiate(0);
+        if (event == 10) {
+            if (this.rf) {
+                this.rfeu = !this.rfeu;
+                initiate(0);
+            }
+        } else {
+            ++this.redstoneMode;
+            if (this.redstoneMode >= 7) {
+                this.redstoneMode = 0;
+            }
+
+            IC2.platform.messagePlayer(player, this.getStringRedstoneMode());
+
         }
+    }
+
+    public byte getRedstoneMode() {
+        return redstoneMode;
+    }
+
+    public String getStringRedstoneMode() {
+        return this.redstoneMode < 7 && this.redstoneMode >= 0 ?
+                Localization.translate("ic2.EUStorage.gui.mod.redstone" + this.redstoneMode) : "";
     }
 
 

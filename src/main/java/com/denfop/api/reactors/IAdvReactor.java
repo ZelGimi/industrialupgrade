@@ -9,4 +9,10 @@ public interface IAdvReactor extends IReactor {
 
     List<ReactorsItem> getReactorsItems();
 
+    boolean isWork();
+
+    void setWork(final boolean work);
+
+    boolean isFull();
+
 }

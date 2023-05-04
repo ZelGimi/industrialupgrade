@@ -1,7 +1,8 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
+
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import ic2.api.info.Info;
 import ic2.api.item.ElectricItem;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
 public abstract class BasicEnergyTile implements IAdvEnergyTile {
@@ -27,6 +29,12 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
         this.capacity = capacity;
     }
 
+    public BasicEnergyTile() {
+        this.world = DimensionManager.getWorld(0);
+        this.pos = new BlockPos(0, 0, 0);
+        this.capacity = 0;
+    }
+
 
     public void update() {
         if (!this.addedToEnet) {
@@ -36,8 +44,8 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
     }
 
     public void onLoad() {
-        if (!this.addedToEnet && !this.getWorldObj().isRemote && Info.isIc2Available()) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+        if (!this.addedToEnet && !this.getWorldObj().isRemote) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorldObj(), this.tile, this));
             this.addedToEnet = true;
         }
 
@@ -48,8 +56,8 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
     }
 
     public void onChunkUnload() {
-        if (this.addedToEnet && !this.getWorldObj().isRemote && Info.isIc2Available()) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+        if (this.addedToEnet && !this.getWorldObj().isRemote) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorldObj(), this));
             this.addedToEnet = false;
         }
 

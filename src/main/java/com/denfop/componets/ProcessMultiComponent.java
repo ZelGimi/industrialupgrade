@@ -12,7 +12,6 @@ import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import ic2.core.IC2;
-import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -23,13 +22,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public class ProcessMultiComponent extends TileEntityComponent implements IMultiUpdateTick {
+public class ProcessMultiComponent extends TileEntityAdvComponent implements IMultiUpdateTick {
 
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final AdvEnergy energy;
     public final InvSlotMultiRecipes inputSlots;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     private final RFComponent energy2;
     private final int sizeWorkingSlot;
@@ -37,7 +36,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     private final double[] guiProgress;
     private final TileEntityMultiMachine multimachine;
     private final int defaultTier;
-    private final int defaultEnergyStorage;
+    private final double defaultEnergyStorage;
     private final EnumMultiMachine enumMultiMachine;
     private final boolean random;
     private final int min;
@@ -46,7 +45,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     private final ComponentBaseEnergy exp;
     private final boolean isCentrifuge;
     private final HeatComponent heat;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public boolean quickly;
     public int module;
@@ -173,6 +172,15 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         }
     }
 
+    public CoolComponent getCold() {
+        return cold;
+    }
+
+    @Override
+    public boolean isServer() {
+        return true;
+    }
+
     public void operateOnce(int slotId, List<ItemStack> processResult, int size) {
 
         for (int i = 0; i < size; i++) {
@@ -225,7 +233,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     }
 
     @Override
-    public void onWorldTick() {
+    public void updateEntityServer() {
         if (this.parent.getWorld().isRemote) {
             return;
         }
@@ -482,7 +490,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     }
 
     public double getProgress(int slotId) {
-        return this.progress[slotId]  * 1D / this.operationLength;
+        return this.progress[slotId] * 1D / this.operationLength;
     }
 
     @Override
@@ -492,7 +500,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         for (int i = 0; i < sizeWorkingSlot; i++) {
             buffer.writeInt(this.progress[i]);
         }
-        buffer.writeInt(this.energyConsume);
+        buffer.writeDouble(this.energyConsume);
         buffer.writeInt(this.mode);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
@@ -505,7 +513,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         for (int i = 0; i < sizeWorkingSlot; i++) {
             this.progress[i] = (short) is.readInt();
         }
-        this.energyConsume = is.readInt();
+        this.energyConsume = is.readDouble();
         this.mode = is.readInt();
     }
 

@@ -1,7 +1,7 @@
 package com.denfop.gui;
 
-import ic2.core.GuiIC2;
-import ic2.core.gui.Area;
+
+import com.denfop.api.gui.Area;
 
 public class AdvArea extends Area {
 

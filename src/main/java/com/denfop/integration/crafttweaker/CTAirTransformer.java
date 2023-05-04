@@ -141,7 +141,7 @@ public class CTAirTransformer {
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing air transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

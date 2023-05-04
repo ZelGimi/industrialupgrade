@@ -12,10 +12,13 @@ import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.blocks.BlockIUFluid;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerBags;
+import com.denfop.container.ContainerLeadBox;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.bags.ItemEnergyBags;
+import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
@@ -33,9 +36,9 @@ import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
 import ic2.core.IC2;
 import ic2.core.IWorldTickCallback;
-import ic2.core.block.wiring.TileEntityCable;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemNuclearResource;
+import ic2.core.item.block.ItemBlockIC2;
 import ic2.core.item.reactor.ItemReactorUranium;
 import ic2.core.item.type.IRadioactiveItemType;
 import ic2.core.util.StackUtil;
@@ -128,16 +131,7 @@ public class IUEventHandler {
         if (stack.getItem() == Ic2Items.cutter.getItem()) {
 
             final TileEntity tile = event.getWorld().getTileEntity(event.getPos());
-            if (tile instanceof TileEntityCable) {
-                TileEntityCable cable = (TileEntityCable) tile;
-                final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
-                        100
-                );
-                if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
-                }
-                cable.removeConductor();
-            } else if (tile instanceof com.denfop.tiles.transport.tiles.TileEntityCable) {
+            if (tile instanceof com.denfop.tiles.transport.tiles.TileEntityCable) {
                 com.denfop.tiles.transport.tiles.TileEntityCable cable = (com.denfop.tiles.transport.tiles.TileEntityCable) tile;
                 final List<ItemStack> drops = tile.getBlockType().getDrops(event.getWorld(), tile.getPos(), cable.getBlockState(),
                         100
@@ -232,7 +226,10 @@ public class IUEventHandler {
     public void bag_pickup(EntityItemPickupEvent event) {
         EntityPlayer player = event.getEntityPlayer();
         try {
-            if (!(player.openContainer instanceof ContainerBags)) {
+            boolean isContainerBags = !(player.openContainer instanceof ContainerBags);
+            boolean isContainerBox = !(player.openContainer instanceof ContainerLeadBox);
+
+            if (isContainerBags) {
                 InventoryPlayer inventory = player.inventory;
 
                 for (int i = 0; i < inventory.mainInventory.size(); ++i) {
@@ -243,6 +240,7 @@ public class IUEventHandler {
                             if (!(event.getItem().getItem().getItem() instanceof ItemEnergyBags)) {
                                 if (bags.canInsert(player, stack, event.getItem().getItem())) {
                                     bags.insert(player, stack, event.getItem().getItem());
+                                    event.getItem().getItem().setCount(0);
                                     return;
                                 }
                             }
@@ -251,23 +249,26 @@ public class IUEventHandler {
                 }
 
             }
-        } catch (NoClassDefFoundError error) {
-            InventoryPlayer inventory = player.inventory;
-
-            for (int i = 0; i < inventory.mainInventory.size(); ++i) {
-                ItemStack stack = inventory.mainInventory.get(i);
-                if (stack.getItem() instanceof ItemEnergyBags) {
-                    if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.BAGS, stack)) {
-                        ItemEnergyBags bags = (ItemEnergyBags) stack.getItem();
-                        if (!(event.getItem().getItem().getItem() instanceof ItemEnergyBags)) {
+            if (isContainerBox) {
+                InventoryPlayer inventory = player.inventory;
+                for (int i = 0; i < inventory.mainInventory.size(); ++i) {
+                    ItemStack stack = inventory.mainInventory.get(i);
+                    if (stack.getItem() instanceof ItemLeadBox) {
+                        ItemLeadBox bags = (ItemLeadBox) stack.getItem();
+                        if (!(event.getItem().getItem().getItem() instanceof ItemLeadBox)) {
                             if (bags.canInsert(player, stack, event.getItem().getItem())) {
                                 bags.insert(player, stack, event.getItem().getItem());
+                                event.getItem().getItem().setCount(0);
                                 return;
                             }
                         }
+
                     }
                 }
+
             }
+        } catch (NoClassDefFoundError ignored) {
+
         }
     }
 
@@ -439,8 +440,18 @@ public class IUEventHandler {
                 event.getToolTip().add(Objects.requireNonNull(entity).getName());
             }
         }
-        if (item.equals(Ic2Items.copperCableItem.getItem())) {
-            event.getToolTip().add(Localization.translate("iu.transport.energy"));
+        if (item instanceof ItemBlockIC2) {
+            ItemBlockIC2 itemBlockTileEntity = (ItemBlockIC2) item;
+            if (itemBlockTileEntity.getBlock() instanceof BlockIUFluid) {
+                BlockIUFluid blockFluid = (BlockIUFluid) itemBlockTileEntity.getBlock();
+                if (blockFluid.getFluid() == FluidName.fluidgas.getInstance()) {
+                    event.getToolTip().add(Localization.translate("find.gas_vein"));
+                }
+                if (blockFluid.getFluid() == FluidName.fluidneft.getInstance()) {
+                    event.getToolTip().add(Localization.translate("find.oil_vein"));
+                }
+
+            }
         }
         if (item.equals(
                 IUItem.module_quickly) || item.equals(
@@ -570,7 +581,27 @@ public class IUEventHandler {
                         }
                     }
                 }
-                return;
+                break;
+            }
+        }
+        for (Map.Entry<ItemStack, BaseMachineRecipe> entry : IUItem.fluidMatterRecipe) {
+            if (entry.getKey().isItemEqual(stack)) {
+                if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (!event.getToolTip().contains(Localization.translate("press.lshift"))) {
+                        event.getToolTip().add(Localization.translate("press.lshift"));
+                    }
+                }
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+
+                    final RecipeOutput output1 = entry.getValue().output;
+                    final double matter = output1.metadata.getDouble("matter");
+                    String usingMatter = Util.toSiString(matter, 4) + Localization.translate("ic2.generic.text.bucketUnit");
+                    event
+                            .getToolTip()
+                            .add(Localization.translate("iu.replicator_using_matter") + TextFormatting.DARK_PURPLE + usingMatter);
+
+                }
+                break;
             }
         }
     }

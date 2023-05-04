@@ -412,10 +412,9 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
         int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, stack).number : 0);
 
-
         ElectricItem.manager.discharge(
                 stack,
-                (damage * (this.getEnergyPerDamage() - this.getEnergyPerDamage() * 0.2 * protect) * 2),
+                (damage * (this.getEnergyPerDamage() - this.getEnergyPerDamage() * 0.2 * protect)),
                 2147483647,
                 true,
                 false,
@@ -834,54 +833,55 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
                     }
                 }
 
+                if (!player.getEntityWorld().isRemote && player.getEntityWorld().provider.getWorldTime() % 40 == 0) {
+                    for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
 
-                for (int i = 0; i < player.inventory.armorInventory.size(); i++) {
+                        if (!player.inventory.armorInventory.get(i).isEmpty() && player.inventory.armorInventory
+                                .get(i)
+                                .getItem() instanceof IElectricItem && player.inventory.armorInventory
+                                .get(i)
+                                .getItem() != this) {
+                            if (ElectricItem.manager.getCharge(itemStack) > 0) {
+                                double sentPacket = ElectricItem.manager.charge(
+                                        player.inventory.armorInventory.get(i),
+                                        ElectricItem.manager.getCharge(itemStack),
+                                        2147483647,
+                                        true,
+                                        false
+                                );
 
-                    if (!player.inventory.armorInventory.get(i).isEmpty() && player.inventory.armorInventory
-                            .get(i)
-                            .getItem() instanceof IElectricItem && player.inventory.armorInventory
-                            .get(i)
-                            .getItem() != this) {
-                        if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                            double sentPacket = ElectricItem.manager.charge(
-                                    player.inventory.armorInventory.get(i),
-                                    ElectricItem.manager.getCharge(itemStack),
-                                    2147483647,
-                                    true,
-                                    false
-                            );
+                                if (sentPacket > 0.0D) {
+                                    ElectricItem.manager.discharge(itemStack, sentPacket, Integer.MAX_VALUE, true, false, false);
+                                    ret = true;
 
-                            if (sentPacket > 0.0D) {
-                                ElectricItem.manager.discharge(itemStack, sentPacket, Integer.MAX_VALUE, true, false, false);
-                                ret = true;
-
+                                }
                             }
                         }
-                    }
-                    IEnergyContainerItem item;
-                    if (!player.inventory.armorInventory.get(i).isEmpty()
-                            && player.inventory.armorInventory.get(i).getItem() instanceof IEnergyContainerItem) {
-                        if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                            item = (IEnergyContainerItem) player.inventory.armorInventory.get(i).getItem();
+                        IEnergyContainerItem item;
+                        if (!player.inventory.armorInventory.get(i).isEmpty()
+                                && player.inventory.armorInventory.get(i).getItem() instanceof IEnergyContainerItem) {
+                            if (ElectricItem.manager.getCharge(itemStack) > 0) {
+                                item = (IEnergyContainerItem) player.inventory.armorInventory.get(i).getItem();
 
-                            int amountRfCanBeReceivedIncludesLimit = item.receiveEnergy(
-                                    player.inventory.armorInventory.get(i),
-                                    Integer.MAX_VALUE,
-                                    true
-                            );
-                            double realSentEnergyRF = Math.min(
-                                    amountRfCanBeReceivedIncludesLimit,
-                                    ElectricItem.manager.getCharge(itemStack) * Config.coefficientrf
-                            );
-                            item.receiveEnergy(player.inventory.armorInventory.get(i), (int) realSentEnergyRF, false);
-                            ElectricItem.manager.discharge(
-                                    itemStack,
-                                    realSentEnergyRF / (double) Config.coefficientrf,
-                                    Integer.MAX_VALUE,
-                                    true,
-                                    false,
-                                    false
-                            );
+                                int amountRfCanBeReceivedIncludesLimit = item.receiveEnergy(
+                                        player.inventory.armorInventory.get(i),
+                                        Integer.MAX_VALUE,
+                                        true
+                                );
+                                double realSentEnergyRF = Math.min(
+                                        amountRfCanBeReceivedIncludesLimit,
+                                        ElectricItem.manager.getCharge(itemStack) * Config.coefficientrf
+                                );
+                                item.receiveEnergy(player.inventory.armorInventory.get(i), (int) realSentEnergyRF, false);
+                                ElectricItem.manager.discharge(
+                                        itemStack,
+                                        realSentEnergyRF / (double) Config.coefficientrf,
+                                        Integer.MAX_VALUE,
+                                        true,
+                                        false,
+                                        false
+                                );
+                            }
                         }
                     }
                 }

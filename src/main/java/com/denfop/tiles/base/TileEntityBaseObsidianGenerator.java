@@ -1,20 +1,16 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.IBaseRecipe;
+import com.denfop.api.recipe.FluidHandlerRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.audio.AudioSource;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerObsidianGenerator;
-import com.denfop.invslot.InvSlotObsidianGenerator;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,21 +34,21 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     public final InvSlotOutput outputSlot1;
     public final InvSlotConsumableLiquidByList fluidSlot1;
     public final InvSlotConsumableLiquidByList fluidSlot2;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotUpgrade upgradeSlot;
     public final FluidTank fluidTank1;
     public final FluidTank fluidTank2;
-    public int energyConsume;
+    private final FluidHandlerRecipe fluid_handler;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
     public AudioSource audioSource;
     protected short progress;
     protected double guiProgress;
 
-    public InvSlotObsidianGenerator inputSlotA;
     public TileEntityBaseObsidianGenerator(int energyPerTick, int length, int outputSlots) {
         this(energyPerTick, length, outputSlots, 1);
     }
@@ -76,7 +72,8 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
 
         );
-     }
+        this.fluid_handler = new FluidHandlerRecipe("obsidian", fluids);
+    }
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
@@ -118,13 +115,14 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
             setOverclockRates();
+            this.fluid_handler.load();
         }
     }
 
     public void onUnloaded() {
         super.onUnloaded();
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
     }
@@ -139,6 +137,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     public void updateEntityServer() {
         super.updateEntityServer();
         MutableObject<ItemStack> output1 = new MutableObject<>();
+        boolean check = false;
         if (this.fluidSlot1.transferToTank(
                 this.fluidTank1,
                 output1,
@@ -148,6 +147,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
             if (output1.getValue() != null) {
                 this.outputSlot1.add(output1.getValue());
             }
+            check = true;
         }
         if (this.fluidSlot2.transferToTank(
                 this.fluidTank2,
@@ -158,16 +158,19 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
             if (output1.getValue() != null) {
                 this.outputSlot1.add(output1.getValue());
             }
+            check = true;
         }
-        RecipeOutput output = getOutput();
+        if (check) {
+            this.fluid_handler.getOutput();
+        }
 
 
-        if (output != null && this.energy.canUseEnergy(energyConsume)) {
+        if (this.fluid_handler.output() != null && this.energy.canUseEnergy(energyConsume)) {
             if (!this.getActive()) {
                 setActive(true);
             }
             if (this.progress == 0) {
-                IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                initiate(0);
             }
             this.progress = (short) (this.progress + 1);
             this.energy.useEnergy(energyConsume);
@@ -176,15 +179,15 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
             this.guiProgress = (k / this.operationLength);
             if (this.progress >= this.operationLength) {
                 this.guiProgress = 0;
-                operate(output);
+                operate(this.fluid_handler.getOutput().getOutput());
                 this.progress = 0;
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                initiate(2);
             }
         } else {
             if (this.progress != 0 && getActive()) {
-                IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                initiate(0);
             }
-            if (output == null) {
+            if (this.fluid_handler.output() == null) {
                 this.progress = 0;
             }
             if (this.getActive()) {
@@ -214,52 +217,24 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
     public void operate(RecipeOutput output) {
         for (int i = 0; i < this.operationsPerTick; i++) {
             List<ItemStack> processResult = output.items;
-            for (int j = 0; j < this.upgradeSlot.size(); j++) {
-                ItemStack stack = this.upgradeSlot.get(j);
-                if (stack != null && stack.getItem() instanceof IUpgradeItem) {
-                    ((IUpgradeItem) stack.getItem()).onProcessEnd(stack, this, processResult);
-                }
-            }
             operateOnce(processResult);
 
-            output = getOutput();
-            if (output == null) {
+            this.fluid_handler.checkOutput();
+            if (this.fluid_handler.output() == null) {
                 break;
             }
         }
     }
 
     public void operateOnce(List<ItemStack> processResult) {
-        this.inputSlotA.consume();
+        this.fluid_handler.consume();
         this.outputSlot.add(processResult);
     }
 
-    public RecipeOutput getOutput() {
-        if (this.fluidTank2.getFluid() == null) {
-            return null;
-        }
-        if (this.fluidTank1.getFluid() == null) {
-            return null;
-        }
-        if (this.fluidTank2.getFluid().amount < 1000) {
-            return null;
-        }
-
-      RecipeOutput output = this.inputSlotA.process();
-
-        if (output == null) {
-            return null;
-        }
-        if (this.outputSlot.canAdd(output.items)) {
-            return output;
-        }
-
-        return null;
-    }
 
     public abstract String getInventoryName();
 
-    public ContainerBase<? extends TileEntityBaseObsidianGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerObsidianGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerObsidianGenerator(entityPlayer, this);
     }
 

@@ -1,8 +1,6 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.tile.IEnergySource;
-
-public interface IAdvEnergySource extends IEnergySource, IAdvEnergyTile {
+public interface IAdvEnergySource extends IEnergyEmitter {
 
     double getPerEnergy();
 
@@ -13,5 +11,11 @@ public interface IAdvEnergySource extends IEnergySource, IAdvEnergyTile {
     void addPerEnergy(double setEnergy);
 
     boolean isSource();
+
+    double getOfferedEnergy();
+
+    void drawEnergy(double var1);
+
+    int getSourceTier();
 
 }
