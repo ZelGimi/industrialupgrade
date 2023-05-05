@@ -48,13 +48,13 @@ public class TileEntityMultiBlockElement extends TileEntityInventory implements 
 
     @Override
     protected void onUnloaded() {
-        super.onUnloaded();
         if (this.getMain() != null && !this.getWorld().isRemote) {
             if (this.getMain().isFull()) {
                 getMain().setFull(false);
                 getMain().setActivated(false);
             }
         }
+        super.onUnloaded();
     }
 
 }

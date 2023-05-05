@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:basemachine",
-	  "data": 6
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine",
+      "data" : 6
     },
-    "title": {
-      "translate": "achievement.circuit_manufacturer"
+    "title" : {
+      "translate" : "achievement.circuit_manufacturer"
     },
-    "description": {
-      "translate": "achievement.circuit_manufacturer.desc"
+    "description" : {
+      "translate" : "achievement.circuit_manufacturer.desc"
     }
   },
-  "parent": "industrialupgrade:main/basic_circuit",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/basic_circuit",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:basemachine",
-			"data": 6
+            "item" : "industrialupgrade:basemachine",
+            "data" : 6
           }
         ]
       }

@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/supersolarpanels.itemarmorquantumhelmet_dark"
-	}
+  "parent" : "ic2:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/supersolarpanels.itemarmorquantumhelmet_dark"
+  }
 }

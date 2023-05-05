@@ -1,13 +1,12 @@
-
 package com.denfop.componets;
 
 import com.denfop.invslot.InvSlot;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import ic2.api.recipe.ILiquidAcceptManager;
-import ic2.core.block.TileEntityBlock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -31,7 +30,7 @@ public class Fluids extends TileEntityAdvComponent {
     protected final List<Fluids.InternalFluidTank> managedTanks = new ArrayList<>();
     protected final List<Supplier<? extends Collection<Fluids.InternalFluidTank>>> unmanagedTanks = new ArrayList();
 
-    public Fluids(TileEntityBlock parent) {
+    public Fluids(TileEntityInventory parent) {
         super(parent);
     }
 

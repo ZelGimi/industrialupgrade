@@ -1,26 +1,26 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:machines",
-      "data": 9
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:machines",
+      "data" : 9
     },
-    "title": {
-      "translate": "achievement.neu_panel"
+    "title" : {
+      "translate" : "achievement.neu_panel"
     },
-    "description": {
-      "translate": "achievement.neu_panel.desc"
+    "description" : {
+      "translate" : "achievement.neu_panel.desc"
     },
-    "frame": "challenge"
+    "frame" : "challenge"
   },
-  "parent": "industrialupgrade:main/neu_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/neu_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:machines",
-            "data": 9
+            "item" : "industrialupgrade:machines",
+            "data" : 9
           }
         ]
       }

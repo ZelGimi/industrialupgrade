@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemcell",
-      "data": 5
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcell",
+      "data" : 5
     },
-    "title": {
-      "translate": "achievement.oil_cell"
+    "title" : {
+      "translate" : "achievement.oil_cell"
     },
-    "description": {
-      "translate": "achievement.oil_cell.desc"
+    "description" : {
+      "translate" : "achievement.oil_cell.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemcell",
-            "data": 5
+            "item" : "industrialupgrade:itemcell",
+            "data" : 5
           }
         ]
       }

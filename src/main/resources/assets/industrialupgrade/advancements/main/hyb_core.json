@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemcore",
-      "data": 1
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcore",
+      "data" : 1
     },
-    "title": {
-      "translate": "achievement.hyb_core"
+    "title" : {
+      "translate" : "achievement.hyb_core"
     },
-    "description": {
-      "translate": "achievement.hyb_core.desc"
+    "description" : {
+      "translate" : "achievement.hyb_core.desc"
     }
   },
-  "parent": "industrialupgrade:main/adv_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/adv_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemcore",
-            "data": 1
+            "item" : "industrialupgrade:itemcore",
+            "data" : 1
           }
         ]
       }

@@ -1,10 +1,9 @@
 package com.denfop.tiles.base;
 
 import com.denfop.invslot.InvSlot;
-import ic2.core.block.TileEntityBlock;
 import net.minecraft.inventory.IInventory;
 
-public interface IInventorySlotHolder<P extends TileEntityBlock & IInventory> {
+public interface IInventorySlotHolder<P extends TileEntityInventory & IInventory> {
 
     P getParent();
 

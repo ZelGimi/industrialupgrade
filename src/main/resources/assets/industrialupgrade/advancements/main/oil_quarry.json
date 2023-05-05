@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:quarry_vein_item"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:quarry_vein_item"
     },
-    "title": {
-      "translate": "achievement.oil_quarry"
+    "title" : {
+      "translate" : "achievement.oil_quarry"
     },
-    "description": {
-      "translate": "achievement.oil_quarry.desc"
+    "description" : {
+      "translate" : "achievement.oil_quarry.desc"
     }
   },
-  "parent": "industrialupgrade:main/oil_drilling_rig",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/oil_drilling_rig",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:quarry_vein_item"
+            "item" : "industrialupgrade:quarry_vein_item"
           }
         ]
       }

@@ -1,12 +1,12 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "particle": "industrialupgrade:blocks/manasteel_bottom",
-    "down": "industrialupgrade:blocks/manasteel_bottom",
-    "up": "industrialupgrade:blocks/manasteel_top",
-    "north": "industrialupgrade:blocks/manasteel_side",
-    "east": "industrialupgrade:blocks/manasteel_side",
-    "south": "industrialupgrade:blocks/manasteel_side",
-    "west": "industrialupgrade:blocks/manasteel_side"
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/manasteel_bottom",
+    "down" : "industrialupgrade:blocks/manasteel_bottom",
+    "up" : "industrialupgrade:blocks/manasteel_top",
+    "north" : "industrialupgrade:blocks/manasteel_side",
+    "east" : "industrialupgrade:blocks/manasteel_side",
+    "south" : "industrialupgrade:blocks/manasteel_side",
+    "west" : "industrialupgrade:blocks/manasteel_side"
   }
 }

@@ -1,166 +1,164 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "type": {
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "adv_matter": {
-        "model": "industrialupgrade:basemachine/adv_matter"
+      "adv_matter" : {
+        "model" : "industrialupgrade:basemachine/adv_matter"
       },
-	  "adv_matter_active": {
-        "model": "industrialupgrade:basemachine/adv_matter_active"
+      "adv_matter_active" : {
+        "model" : "industrialupgrade:basemachine/adv_matter_active"
       },
-	  "adv_quantum_quarry": {
-        "model": "industrialupgrade:basemachine/adv_quantum_quarry"
+      "adv_quantum_quarry" : {
+        "model" : "industrialupgrade:basemachine/adv_quantum_quarry"
       },
-	  "adv_quantum_quarry_active": {
-        "model": "industrialupgrade:basemachine/adv_quantum_quarry_active"
+      "adv_quantum_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/adv_quantum_quarry_active"
       },
-	  "alloy_smelter": {
-        "model": "industrialupgrade:basemachine/alloy_smelter"
+      "alloy_smelter" : {
+        "model" : "industrialupgrade:basemachine/alloy_smelter"
       },
-	   "alloy_smelter_active": {
-        "model": "industrialupgrade:basemachine/alloy_smelter_active"
+      "alloy_smelter_active" : {
+        "model" : "industrialupgrade:basemachine/alloy_smelter_active"
       },
-	  "enrichment": {
-        "model": "industrialupgrade:basemachine/enrichment"
+      "enrichment" : {
+        "model" : "industrialupgrade:basemachine/enrichment"
       },
-	   "sintezator": {
-        "model": "industrialupgrade:basemachine/sintezator"
+      "sintezator" : {
+        "model" : "industrialupgrade:basemachine/sintezator"
       },
-	  "enrichment_active": {
-        "model": "industrialupgrade:basemachine/enrichment_active"
+      "enrichment_active" : {
+        "model" : "industrialupgrade:basemachine/enrichment_active"
       },
-	  "gen_stone": {
-        "model": "industrialupgrade:basemachine/gen_stone"
+      "gen_stone" : {
+        "model" : "industrialupgrade:basemachine/gen_stone"
       },
-	  "gen_stone_active": {
-        "model": "industrialupgrade:basemachine/gen_stone_active"
+      "gen_stone_active" : {
+        "model" : "industrialupgrade:basemachine/gen_stone_active"
       },
-	  "imp_matter": {
-        "model": "industrialupgrade:basemachine/imp_matter"
+      "imp_matter" : {
+        "model" : "industrialupgrade:basemachine/imp_matter"
       },
-	  "imp_matter_active": {
-        "model": "industrialupgrade:basemachine/imp_matter_active"
+      "imp_matter_active" : {
+        "model" : "industrialupgrade:basemachine/imp_matter_active"
       },
-	  "imp_quantum_quarry": {
-        "model": "industrialupgrade:basemachine/imp_quantum_quarry"
+      "imp_quantum_quarry" : {
+        "model" : "industrialupgrade:basemachine/imp_quantum_quarry"
       },
-	  "imp_quantum_quarry_active": {
-        "model": "industrialupgrade:basemachine/imp_quantum_quarry_active"
+      "imp_quantum_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/imp_quantum_quarry_active"
       },
-	  "modulator": {
-        "model": "industrialupgrade:basemachine/modulator"
+      "modulator" : {
+        "model" : "industrialupgrade:basemachine/modulator"
       },
-	  "modulator_active": {
-        "model": "industrialupgrade:basemachine/modulator_active"
+      "modulator_active" : {
+        "model" : "industrialupgrade:basemachine/modulator_active"
       },
-	  "per_matter": {
-        "model": "industrialupgrade:basemachine/per_matter"
+      "per_matter" : {
+        "model" : "industrialupgrade:basemachine/per_matter"
       },
-	  "per_matter_active": {
-        "model": "industrialupgrade:basemachine/per_matter_active"
+      "per_matter_active" : {
+        "model" : "industrialupgrade:basemachine/per_matter_active"
       },
-	  "per_quantum_quarry": {
-        "model": "industrialupgrade:basemachine/per_quantum_quarry"
+      "per_quantum_quarry" : {
+        "model" : "industrialupgrade:basemachine/per_quantum_quarry"
       },
-	  "per_quantum_quarry_active": {
-        "model": "industrialupgrade:basemachine/per_quantum_quarry_active"
+      "per_quantum_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/per_quantum_quarry_active"
       },
-	  "quantum_quarry": {
-        "model": "industrialupgrade:basemachine/quantum_quarry"
+      "quantum_quarry" : {
+        "model" : "industrialupgrade:basemachine/quantum_quarry"
       },
-	  "quantum_quarry_active": {
-        "model": "industrialupgrade:basemachine/quantum_quarry_active"
+      "quantum_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/quantum_quarry_active"
       },
-	  "neutron_generator": {
-        "model": "industrialupgrade:basemachine/neutron_generator"
+      "neutron_generator" : {
+        "model" : "industrialupgrade:basemachine/neutron_generator"
       },
-	  "neutron_generator_active": {
-        "model": "industrialupgrade:basemachine/neutron_generator_active"
+      "neutron_generator_active" : {
+        "model" : "industrialupgrade:basemachine/neutron_generator_active"
       },
-	  "generator_microchip": {
-        "model": "industrialupgrade:basemachine/generator_microchip"
+      "generator_microchip" : {
+        "model" : "industrialupgrade:basemachine/generator_microchip"
       },
-	  "generator_microchip_active": {
-        "model": "industrialupgrade:basemachine/generator_microchip_active"
+      "generator_microchip_active" : {
+        "model" : "industrialupgrade:basemachine/generator_microchip_active"
       },
-	  "adv_gen": {
-        "model": "industrialupgrade:basemachine/adv_gen"
+      "adv_gen" : {
+        "model" : "industrialupgrade:basemachine/adv_gen"
       },
-	  "adv_gen_active": {
-        "model": "industrialupgrade:basemachine/adv_gen_active"
+      "adv_gen_active" : {
+        "model" : "industrialupgrade:basemachine/adv_gen_active"
       },
-	  "imp_gen": {
-        "model": "industrialupgrade:basemachine/imp_gen"
+      "imp_gen" : {
+        "model" : "industrialupgrade:basemachine/imp_gen"
       },
-	  "imp_gen_active": {
-        "model": "industrialupgrade:basemachine/imp_gen_active"
+      "imp_gen_active" : {
+        "model" : "industrialupgrade:basemachine/imp_gen_active"
       },
-	  "per_gen": {
-        "model": "industrialupgrade:basemachine/per_gen"
+      "per_gen" : {
+        "model" : "industrialupgrade:basemachine/per_gen"
       },
-	  "per_gen_active": {
-        "model": "industrialupgrade:basemachine/per_gen_active"
+      "per_gen_active" : {
+        "model" : "industrialupgrade:basemachine/per_gen_active"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  "se_advgen": {
-        "model": "industrialupgrade:basemachine/se_advgen"
+      "se_advgen" : {
+        "model" : "industrialupgrade:basemachine/se_advgen"
       },
-	  
-	  
-      "quantum_solar_panelrain": {
-        "model": "industrialupgrade:quantum_solar_panelrain"
+      "quantum_solar_panelrain" : {
+        "model" : "industrialupgrade:quantum_solar_panelrain"
       }
     },
-    "facing": {
-      "down": {
-        "x": 90
+    "facing" : {
+      "down" : {
+        "x" : 90
       },
-      "up": {
-        "x": 270
+      "up" : {
+        "x" : 270
       },
-      "north": {
-        "transform": "forge:default-block"
+      "north" : {
+        "transform" : "forge:default-block"
       },
-      "south": {
-        "y": 180
+      "south" : {
+        "y" : 180
       },
-      "west": {
-        "y": 270
+      "west" : {
+        "y" : 270
       },
-      "east": {
-        "y": 90
+      "east" : {
+        "y" : 90
       }
     },
-    "inventory": [
+    "inventory" : [
       {}
     ]
   }

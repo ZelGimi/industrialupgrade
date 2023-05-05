@@ -206,11 +206,13 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         }
 
 
-        AdvEnergy energy = this.energy;
-        if (!energy.getSourceDirs().isEmpty()) {
-            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
-        } else if (!energy.getSinkDirs().isEmpty()) {
-            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
+            if (!energy.getSourceDirs().isEmpty()) {
+                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+            } else if (!energy.getSinkDirs().isEmpty()) {
+                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+            }
         }
 
         final NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -278,7 +280,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
                     return BlockName.resource.getItemStack(ResourceBlock.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComponent(AdvEnergy.class);
+        final AdvEnergy component = this.getComp(AdvEnergy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

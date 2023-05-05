@@ -1,11 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.IUCore;
-import com.denfop.api.gui.GuiElement;
-import com.denfop.api.gui.IClickHandler;
-import com.denfop.api.gui.IKeyboardDependent;
-import com.denfop.api.gui.MouseButton;
-import com.denfop.api.gui.ScrollDirection;
+import com.denfop.api.gui.*;
 import com.denfop.container.ContainerBase;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
@@ -27,11 +23,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public abstract class GuiIC2<T extends ContainerBase<? extends IInventory>> extends GuiContainer {
 

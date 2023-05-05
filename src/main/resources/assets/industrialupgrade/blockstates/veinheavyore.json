@@ -1,94 +1,94 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "cube_all",
-		"transform": "forge:default-block"
-	},
-	"variants": {
-		"type": {
-			"magnetite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/magnetit"
-				}
-			},
-			"calaverite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/calaverite"
-				}
-			},
-			"galena": {
-				"textures": {
-					"all": "industrialupgrade:blocks/galena"
-				}
-			},
-			"nickelite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/nickelite"
-				}
-			},
-			"pyrite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/pyrite"
-				}
-			},
-			"quartzite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/quartzite"
-				}
-			},
-			"uranite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/uranite"
-				}
-			},
-			"azurite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/azurite"
-				}
-			},
-			"rhodonite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/rhodonite"
-				}
-			},
-			"alfildit": {
-				"textures": {
-					"all": "industrialupgrade:blocks/alfildit"
-				}
-			},
-			"euxenite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/euxenite"
-				}
-			},
-			"smithsonite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/smithsonite"
-				}
-			},
-			"ilmenite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/ilmenite"
-				}
-			},
-			"todorokite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/todorokite"
-				}
-			},
-			"ferroaugite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/ferroaugite"
-				}
-			},
-			"sheelite": {
-				"textures": {
-					"all": "industrialupgrade:blocks/sheelite"
-				}
-			}
-		},
-		"inventory": [
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "magnetite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/magnetit"
+        }
+      },
+      "calaverite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/calaverite"
+        }
+      },
+      "galena" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/galena"
+        }
+      },
+      "nickelite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nickelite"
+        }
+      },
+      "pyrite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/pyrite"
+        }
+      },
+      "quartzite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/quartzite"
+        }
+      },
+      "uranite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/uranite"
+        }
+      },
+      "azurite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/azurite"
+        }
+      },
+      "rhodonite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/rhodonite"
+        }
+      },
+      "alfildit" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/alfildit"
+        }
+      },
+      "euxenite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/euxenite"
+        }
+      },
+      "smithsonite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/smithsonite"
+        }
+      },
+      "ilmenite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/ilmenite"
+        }
+      },
+      "todorokite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/todorokite"
+        }
+      },
+      "ferroaugite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/ferroaugite"
+        }
+      },
+      "sheelite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/sheelite"
+        }
+      }
+    },
+    "inventory" : [
       {}
     ]
-	}
+  }
 }

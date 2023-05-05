@@ -1,15 +1,11 @@
 package com.denfop.componets;
 
-import com.denfop.api.cool.ICoolAcceptor;
-import com.denfop.api.cool.ICoolEmitter;
-import com.denfop.api.cool.ICoolSink;
-import com.denfop.api.cool.ICoolSource;
-import com.denfop.api.cool.ICoolTile;
+import com.denfop.api.cool.*;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.IC2;
-import ic2.core.block.TileEntityBlock;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
@@ -51,12 +47,12 @@ public class CoolComponent extends TileEntityAdvComponent {
     public boolean allow = false;
     private double coef;
 
-    public CoolComponent(TileEntityBlock parent, double capacity) {
+    public CoolComponent(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public CoolComponent(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -66,7 +62,7 @@ public class CoolComponent extends TileEntityAdvComponent {
     }
 
     public CoolComponent(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -87,19 +83,19 @@ public class CoolComponent extends TileEntityAdvComponent {
         this.coef = 1;
     }
 
-    public static CoolComponent asBasicSink(TileEntityBlock parent, double capacity) {
+    public static CoolComponent asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static CoolComponent asBasicSink(TileEntityBlock parent, double capacity, int tier) {
+    public static CoolComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
         return new CoolComponent(parent, capacity, Util.allFacings, Collections.emptySet(), tier);
     }
 
-    public static CoolComponent asBasicSource(TileEntityBlock parent, double capacity) {
+    public static CoolComponent asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static CoolComponent asBasicSource(TileEntityBlock parent, double capacity, int tier) {
+    public static CoolComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new CoolComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 

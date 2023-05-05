@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:circuit",
-	  "data": 10
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:circuit",
+      "data" : 10
     },
-    "title": {
-      "translate": "achievement.quantum_circuit"
+    "title" : {
+      "translate" : "achievement.quantum_circuit"
     },
-    "description": {
-      "translate": "achievement.quantum_circuit.desc"
+    "description" : {
+      "translate" : "achievement.quantum_circuit.desc"
     }
   },
-  "parent": "industrialupgrade:main/nano_circuit",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/nano_circuit",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:circuit",
-			"data": 10
+            "item" : "industrialupgrade:circuit",
+            "data" : 10
           }
         ]
       }

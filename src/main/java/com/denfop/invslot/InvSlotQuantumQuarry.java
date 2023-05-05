@@ -108,6 +108,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 break;
             case 2:
                 this.tile.analyzer = !this.get().isEmpty();
+                IUCore.network.get(true).updateTileEntityField(this.tile, "analyzer");
                 break;
         }
     }
@@ -184,6 +185,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 break;
             case 2:
                 this.tile.analyzer = !this.get().isEmpty();
+                IUCore.network.get(true).updateTileEntityField(this.tile, "analyzer");
                 break;
         }
     }

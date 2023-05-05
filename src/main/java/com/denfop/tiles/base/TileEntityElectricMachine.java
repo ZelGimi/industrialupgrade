@@ -68,7 +68,7 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final AdvEnergy component = this.getComponent(AdvEnergy.class);
+                    final AdvEnergy component = this.getComp(AdvEnergy.class);
                     if (component != null) {
                         if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -86,7 +86,7 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
                     return BlockName.resource.getItemStack(ResourceBlock.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComponent(AdvEnergy.class);
+        final AdvEnergy component = this.getComp(AdvEnergy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -132,8 +132,8 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -146,8 +146,8 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
                         energy.getCapacity())
                         + " EU ");
             }
-        }
 
+        }
     }
 
     public EnumTypeAudio getType() {

@@ -1,34 +1,32 @@
 {
-  "forge_marker": 1,
-  
-  "variants": {
-    "type": {
-	  "upgrade_block": {
-        "model": "industrialupgrade:basemachine/upgrade_block"
-      }
-	  
-    },
-    "facing": {
-      "down": {
-        "x": 90
-      },
-      "up": {
-        "x": 270
-      },
-      "north": {
-        "transform": "forge:default-block"
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      },
-      "east": {
-        "y": 90
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "upgrade_block" : {
+        "model" : "industrialupgrade:basemachine/upgrade_block"
       }
     },
-    "inventory": [
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
       {}
     ]
   }

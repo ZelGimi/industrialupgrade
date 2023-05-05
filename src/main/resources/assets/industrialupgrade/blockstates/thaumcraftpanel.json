@@ -1,36 +1,35 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "type": {
-      "thaum_solar_panel": {
-        "model": "industrialupgrade:thaum_solar_panel"
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "thaum_solar_panel" : {
+        "model" : "industrialupgrade:thaum_solar_panel"
       },
-	  
-	  "void_solar_panel": {
-        "model": "industrialupgrade:void_solar_panel"
+      "void_solar_panel" : {
+        "model" : "industrialupgrade:void_solar_panel"
       }
     },
-    "facing": {
-      "down": {
-        "x": 90
+    "facing" : {
+      "down" : {
+        "x" : 90
       },
-      "up": {
-        "x": 270
+      "up" : {
+        "x" : 270
       },
-      "north": {
-        "transform": "forge:default-block"
+      "north" : {
+        "transform" : "forge:default-block"
       },
-      "south": {
-        "y": 180
+      "south" : {
+        "y" : 180
       },
-      "west": {
-        "y": 270
+      "west" : {
+        "y" : 270
       },
-      "east": {
-        "y": 90
+      "east" : {
+        "y" : 90
       }
     },
-    "inventory": [
+    "inventory" : [
       {}
     ]
   }

@@ -1,4 +1,3 @@
-
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
@@ -45,7 +44,6 @@ import java.util.Random;
 
 public class TileEntityTeleporter extends TileEntityInventory implements INetworkTileEntityEventListener {
 
-    private static final int EventTeleport = 0;
     protected final ComparatorEmitter comparator;
     private BlockPos target;
     private AudioSource audioSource = null;

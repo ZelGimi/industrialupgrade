@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:plastic_plate"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:plastic_plate"
     },
-    "title": {
-      "translate": "achievement.plastic_plate"
+    "title" : {
+      "translate" : "achievement.plastic_plate"
     },
-    "description": {
-      "translate": "achievement.plastic_plate.desc"
+    "description" : {
+      "translate" : "achievement.plastic_plate.desc"
     }
   },
-  "parent": "industrialupgrade:main/plastic_plate_creator",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/plastic_plate_creator",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:plastic_plate"
+            "item" : "industrialupgrade:plastic_plate"
           }
         ]
       }

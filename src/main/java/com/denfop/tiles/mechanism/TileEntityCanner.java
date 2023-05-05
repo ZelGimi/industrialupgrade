@@ -320,6 +320,7 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiCanner getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiCanner(getGuiContainer(var1));
     }

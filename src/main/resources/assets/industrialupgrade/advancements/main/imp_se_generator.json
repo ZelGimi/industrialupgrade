@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:imp_se_gen"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:imp_se_gen"
     },
-    "title": {
-      "translate": "achievement.imp_SE_generator"
+    "title" : {
+      "translate" : "achievement.imp_SE_generator"
     },
-    "description": {
-      "translate": "achievement.imp_SE_generator.desc"
+    "description" : {
+      "translate" : "achievement.imp_SE_generator.desc"
     }
   },
-  "parent": "industrialupgrade:main/adv_se_generator",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/adv_se_generator",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:imp_se_gen"
+            "item" : "industrialupgrade:imp_se_gen"
           }
         ]
       }

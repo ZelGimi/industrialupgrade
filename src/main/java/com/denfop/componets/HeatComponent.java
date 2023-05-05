@@ -8,8 +8,8 @@ import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.IC2;
-import ic2.core.block.TileEntityBlock;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
@@ -52,12 +52,12 @@ public class HeatComponent extends TileEntityAdvComponent {
     Random rand = new Random();
     private double coef;
 
-    public HeatComponent(TileEntityBlock parent, double capacity) {
+    public HeatComponent(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public HeatComponent(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -67,7 +67,7 @@ public class HeatComponent extends TileEntityAdvComponent {
     }
 
     public HeatComponent(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -90,19 +90,19 @@ public class HeatComponent extends TileEntityAdvComponent {
         this.coef = 0;
     }
 
-    public static HeatComponent asBasicSink(TileEntityBlock parent, double capacity) {
+    public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static HeatComponent asBasicSink(TileEntityBlock parent, double capacity, int tier) {
+    public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Util.allFacings, Collections.emptySet(), tier);
     }
 
-    public static HeatComponent asBasicSource(TileEntityBlock parent, double capacity) {
+    public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static HeatComponent asBasicSource(TileEntityBlock parent, double capacity, int tier) {
+    public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 

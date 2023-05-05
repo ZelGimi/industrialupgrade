@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:refiner_item"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:refiner_item"
     },
-    "title": {
-      "translate": "achievement.oil_refinery"
+    "title" : {
+      "translate" : "achievement.oil_refinery"
     },
-    "description": {
-      "translate": "achievement.oil_refinery.desc"
+    "description" : {
+      "translate" : "achievement.oil_refinery.desc"
     }
   },
-  "parent": "industrialupgrade:main/oil_quarry",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/oil_quarry",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:refiner_item"
+            "item" : "industrialupgrade:refiner_item"
           }
         ]
       }

@@ -229,6 +229,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             if (list(this.list_modules, stack)) {
                 this.can_dig_vein = false;
             }
+            IUCore.network.get(true).updateTileEntityField(this, "vein");
         }
     }
 
@@ -259,7 +260,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             if (list(this.list_modules, stack1)) {
                 this.can_dig_vein = false;
             }
-
+            IUCore.network.get(true).updateTileEntityField(this, "vein");
         }
 
     }

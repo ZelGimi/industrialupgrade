@@ -11,11 +11,13 @@ import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerBlastFurnace;
 import com.denfop.gui.GuiBlastFurnace;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.register.InitMultiBlockSystem;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastHeat;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastMain;
@@ -53,6 +55,7 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
     public final FluidTank tank;
     public final InvSlotOutput output1;
     public final InvSlotConsumableLiquidByList fluidSlot;
+    public final HeatComponent heat;
     public boolean load = false;
     public InvSlotBlastFurnace invSlotBlastFurnace = new InvSlotBlastFurnace(this);
     public InvSlotOutput output = new InvSlotOutput(this, "output", 1);
@@ -80,6 +83,7 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
         this.entityPlayerList = new ArrayList<>();
         this.fluidSlot = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidRegistry.WATER);
         this.output1 = new InvSlotOutput(this, "output1", 1);
+        this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
     }
 
     @Override
@@ -190,6 +194,7 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
 
     }
 
+
     @Override
     protected void onLoaded() {
         super.onLoaded();
@@ -219,70 +224,68 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
             }
             return;
         }
-        IUCore.network.get(true).updateTileEntityField(this, "full");
 
         MutableObject<ItemStack> output1 = new MutableObject<>();
         if (this.fluidSlot.transferToTank(
-                this.tank,
+                this.tank1,
                 output1,
                 true
-        ) && (output1.getValue() == null || this.output.canAdd(output1.getValue()))) {
-            this.fluidSlot.transferToTank(this.tank, output1, false);
+        ) && (output1.getValue() == null || this.output1.canAdd(output1.getValue()))) {
+            this.fluidSlot.transferToTank(this.tank1, output1, false);
             if (output1.getValue() != null) {
-                this.output.add(output1.getValue());
+                this.output1.add(output1.getValue());
             }
         }
-        try {
 
-            if (!this.invSlotBlastFurnace.isEmpty()) {
-                int amount_stream = tank.getFluidAmount();
-                if (this.getHeat().getHeatComponent().getEnergy() == this.getHeat().getHeatComponent().getCapacity()) {
-                    int bar1 = bar;
-                    if (amount_stream < bar1 * 2) {
-                        bar1 = amount_stream / 2;
+
+        if (!this.invSlotBlastFurnace.isEmpty()) {
+            int amount_stream = tank.getFluidAmount();
+            if (this.heat.getEnergy() == this.heat.getCapacity()) {
+                int bar1 = bar;
+                if (amount_stream < bar1 * 2) {
+                    bar1 = amount_stream / 2;
+                }
+                if (bar1 > 0) {
+                    if (progress == 0) {
+                        this.setActive(true);
+                        initiate(0);
                     }
-                    if (bar1 > 0) {
-                        if (progress == 0) {
-                            this.setActive(true);
-                            initiate(0);
-                        }
-                        if (!this.getActive()) {
-                            this.setActive(true);
-                        }
-                        progress += 1 + (0.25 * (bar1 - 1));
-                        tank.drain(Math.min(bar1 * 2, this.tank.getFluidAmount()), true);
-                        if (progress >= 3600 && this.output.add(Ic2Items.advIronIngot)) {
-                            progress = 0;
-                            this.invSlotBlastFurnace.get(0).shrink(1);
-                            this.setActive(false);
-                            initiate(2);
-                        }
+                    if (!this.getActive()) {
+                        this.setActive(true);
+                    }
+                    progress += 1 + (0.25 * (bar1 - 1));
+                    tank.drain(Math.min(bar1 * 2, this.tank.getFluidAmount()), true);
+                    if (progress >= 3600 && this.output.add(Ic2Items.advIronIngot)) {
+                        progress = 0;
+                        this.invSlotBlastFurnace.get(0).shrink(1);
+                        this.setActive(false);
+                        initiate(2);
                     }
                 }
-                double heat = this.getHeat().getHeatComponent().getEnergy();
-                if (heat > 250 && this.tank.getFluidAmount() + 2 < this.tank.getCapacity()) {
-                    int size = this.tank1.getFluidAmount();
-                    int size_stream = this.tank.getCapacity() - this.tank.getFluidAmount();
-                    int size1 = size / 5;
-                    size1 = Math.min(size1, 10);
-                    if (size1 > 0) {
-                        int add = Math.min(size_stream / 2, size1);
-                        if (add > 0) {
-                            this.tank.fill(new FluidStack(FluidName.steam.getInstance(), add * 2), true);
-                            this.getInputFluid().getFluidTank().drain(add * 5, true);
+            }
+            double heat = this.heat.getEnergy();
+            if (heat > 250 && this.tank.getFluidAmount() + 2 < this.tank.getCapacity()) {
+                int size = this.tank1.getFluidAmount();
+                int size_stream = this.tank.getCapacity() - this.tank.getFluidAmount();
+                int size1 = size / 5;
+                size1 = Math.min(size1, 10);
+                if (size1 > 0) {
+                    int add = Math.min(size_stream / 2, size1);
+                    if (add > 0) {
+                        this.tank.fill(new FluidStack(FluidName.steam.getInstance(), add * 2), true);
+                        this.getInputFluid().getFluidTank().drain(add * 5, true);
 
-                        }
                     }
                 }
+            }
 
-            } else if (this.getActive()) {
-                this.setActive(false);
-            }
-            if (this.blastHeat.getHeatComponent().getEnergy() > 0) {
-                this.blastHeat.getHeatComponent().useEnergy(1);
-            }
-        } catch (Exception ignored) {
+        } else if (this.getActive()) {
+            this.setActive(false);
         }
+        if (heat.getEnergy() > 0) {
+            heat.useEnergy(1);
+        }
+
     }
 
     @Override
@@ -293,8 +296,15 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
     @Override
     public void setHeat(final IBlastHeat blastHeat) {
         this.blastHeat = blastHeat;
-        IUCore.network.get(true).updateTileEntityField(this, "blastHeat");
-
+        try {
+            this.heat.onUnloaded();
+        } catch (Exception ignored) {
+        }
+        ;
+        if (this.blastHeat != null) {
+            this.heat.setParent((TileEntityInventory) blastHeat);
+            this.heat.onLoaded();
+        }
     }
 
     @Override

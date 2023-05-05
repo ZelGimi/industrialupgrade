@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import ic2.core.block.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -11,7 +11,7 @@ public class ReactorRedstone extends Redstone {
 
     List<BlockPos> blockPosList = new ArrayList<>();
 
-    public ReactorRedstone(final TileEntityBlock parent) {
+    public ReactorRedstone(final TileEntityInventory parent) {
         super(parent);
     }
 

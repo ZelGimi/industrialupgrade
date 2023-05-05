@@ -2,7 +2,6 @@ package com.denfop.tiles.mechanism.blastfurnace.block;
 
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
-import com.denfop.componets.HeatComponent;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastHeat;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import ic2.core.init.Localization;
@@ -15,10 +14,9 @@ import java.util.List;
 
 public class TileEntityHeatBlock extends TileEntityMultiBlockElement implements IBlastHeat {
 
-    public final HeatComponent heat;
 
     public TileEntityHeatBlock() {
-        this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
+
     }
 
     @Override
@@ -34,19 +32,6 @@ public class TileEntityHeatBlock extends TileEntityMultiBlockElement implements 
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
         tooltip.add(Localization.translate("iu.blastfurnace.info5") + Localization.translate(Ic2Items.ForgeHammer.getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
-    }
-
-
-    @Override
-    public HeatComponent getHeatComponent() {
-        return heat;
-    }
-
-    @Override
-    public List<String> getNetworkedFields() {
-        final List<String> list = super.getNetworkedFields();
-        list.add("heat");
-        return list;
     }
 
 

@@ -4,15 +4,18 @@ import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.componets.AdvEnergy;
-import com.denfop.items.modules.*;
+import com.denfop.items.modules.EnumBaseType;
+import com.denfop.items.modules.EnumModule;
+import com.denfop.items.modules.ItemAdditionModule;
+import com.denfop.items.modules.ItemBaseModules;
+import com.denfop.items.modules.ItemModuleType;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntitySintezator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.tile.IEnergySink;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Energy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -173,17 +176,11 @@ public class InvSlotSintezator extends InvSlot {
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
                 final TileEntity tile2 = tile.getWorld().getTileEntity(pos);
-                if (tile2 instanceof TileEntityBlock && x != 0
+                if (tile2 instanceof TileEntityInventory && x != 0
                         && y != 0 && z != 0 && !nbttagcompound.getBoolean("change")) {
-                    TileEntityBlock tile1 = (TileEntityBlock) tile2;
-                    if (tile1.getComponent(Energy.class) != null) {
-
-                        final Energy energy = tile1.getComponent(Energy.class);
-                        if (energy.getDelegate() instanceof IEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
-                        }
-                    } else if (tile1.getComponent(AdvEnergy.class) != null) {
-                        final AdvEnergy energy = tile1.getComponent(AdvEnergy.class);
+                    TileEntityInventory tile1 = (TileEntityInventory) tile2;
+                    if (tile1.getComp(AdvEnergy.class) != null) {
+                        final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
                         if (energy.getDelegate() instanceof IAdvEnergySink) {
                             tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
                         }

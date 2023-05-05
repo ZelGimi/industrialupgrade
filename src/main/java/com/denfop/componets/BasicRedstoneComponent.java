@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import ic2.core.block.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 
 import java.util.function.IntSupplier;
 
@@ -9,7 +9,7 @@ public abstract class BasicRedstoneComponent extends TileEntityAdvComponent {
     private int level;
     private IntSupplier update;
 
-    public BasicRedstoneComponent(TileEntityBlock parent) {
+    public BasicRedstoneComponent(TileEntityInventory parent) {
         super(parent);
     }
 

@@ -62,14 +62,6 @@ import com.denfop.blocks.mechanism.BlockTank;
 import com.denfop.blocks.mechanism.BlockTransformer;
 import com.denfop.blocks.mechanism.BlockUniversalCable;
 import com.denfop.blocks.mechanism.BlockUpgradeBlock;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.CoolComponent;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.ProcessMultiComponent;
-import com.denfop.componets.RFComponent;
-import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
 import com.denfop.events.Ic2IntegrationHandler;
@@ -120,7 +112,6 @@ import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.MachineRecipe;
 import ic2.core.IC2;
-import ic2.core.block.comp.Components;
 import ic2.core.block.machine.tileentity.TileEntityMatter;
 import ic2.core.ref.BlockName;
 import ic2.core.ref.ItemName;
@@ -515,33 +506,6 @@ public class CommonProxy implements IGuiHandler {
         ic2.api.recipe.Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.block, 1, 14), "AAA", "AAA", "AAA", 'A', "blockSilver"
         );
-        if (Components.getId(AdvEnergy.class) == null) {
-            Components.register(AdvEnergy.class, "AdvEnergy");
-        }
-
-        if (Components.getId(CoolComponent.class) == null) {
-            Components.register(CoolComponent.class, "CoolComponent");
-        }
-
-        if (Components.getId(HeatComponent.class) == null) {
-            Components.register(HeatComponent.class, "HeatComponent");
-        }
-        if (Components.getId(RFComponent.class) == null) {
-            Components.register(RFComponent.class, "RFComponent");
-        }
-        if (Components.getId(ProcessMultiComponent.class) == null) {
-            Components.register(ProcessMultiComponent.class, "ProcessMultiComponent");
-        }
-        if (Components.getId(ComponentBaseEnergy.class) == null) {
-            Components.register(ComponentBaseEnergy.class, "ComponentBaseEnergy");
-        }
-        if (Components.getId(ComponentClientEffectRender.class) == null) {
-            Components.register(ComponentClientEffectRender.class, "ComponentClientEffectRender");
-        }
-        if (Components.getId(Fluids.class) == null) {
-            Components.register(Fluids.class, "FluidsIU");
-        }
-
         if (Loader.isModLoaded("mets")) {
             METSIntegration.init();
         }

@@ -71,9 +71,9 @@ public class ProcessMultiComponent extends TileEntityAdvComponent implements IMu
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
         this.upgradeSlot = new InvSlotUpgrade(parent, "upgrade", 4);
-        this.energy = parent.getComponent(AdvEnergy.class);
+        this.energy = parent.getComp(AdvEnergy.class);
         this.enumMultiMachine = enumMultiMachine;
-        this.energy2 = parent.getComponent(RFComponent.class);
+        this.energy2 = parent.getComp(RFComponent.class);
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
         this.progress = new short[sizeWorkingSlot];
         this.guiProgress = new double[sizeWorkingSlot];
@@ -90,9 +90,9 @@ public class ProcessMultiComponent extends TileEntityAdvComponent implements IMu
         this.max = enumMultiMachine.getMax();
         this.random = enumMultiMachine.type == EnumTypeMachines.RECYCLER;
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.cold = parent.getComponent(CoolComponent.class);
-        this.exp = parent.getComponent(ComponentBaseEnergy.class);
-        this.heat = parent.getComponent(HeatComponent.class);
+        this.cold = parent.getComp(CoolComponent.class);
+        this.exp = parent.getComp(ComponentBaseEnergy.class);
+        this.heat = parent.getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
     }
 

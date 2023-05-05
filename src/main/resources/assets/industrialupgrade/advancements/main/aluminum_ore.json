@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:baseore",
-      "data": 1
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 1
     },
-    "title": {
-      "translate": "achievement.aluminiumore"
+    "title" : {
+      "translate" : "achievement.aluminiumore"
     },
-    "description": {
-      "translate": "achievement.aluminiumore.desc"
+    "description" : {
+      "translate" : "achievement.aluminiumore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:baseore",
-            "data": 1
+            "item" : "industrialupgrade:baseore",
+            "data" : 1
           }
         ]
       }

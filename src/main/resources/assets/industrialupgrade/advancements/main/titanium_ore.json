@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:baseore",
-      "data": 8
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 8
     },
-    "title": {
-      "translate": "achievement.titaniumore"
+    "title" : {
+      "translate" : "achievement.titaniumore"
     },
-    "description": {
-      "translate": "achievement.titaniumore.desc"
+    "description" : {
+      "translate" : "achievement.titaniumore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:baseore",
-            "data": 8
+            "item" : "industrialupgrade:baseore",
+            "data" : 8
           }
         ]
       }

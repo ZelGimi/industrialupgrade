@@ -1,16 +1,34 @@
 package com.denfop.componets;
 
 import com.denfop.IUCore;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Components;
-import ic2.core.block.comp.TileEntityComponent;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.network.GrowingBuffer;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 
-public abstract class TileEntityAdvComponent extends TileEntityComponent {
+import java.io.DataInput;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
-    public TileEntityAdvComponent(final TileEntityBlock parent) {
-        super(parent);
+public abstract class TileEntityAdvComponent {
+
+    protected TileEntityInventory parent;
+
+    public TileEntityAdvComponent(final TileEntityInventory parent) {
+        this.parent = parent;
+    }
+
+    public TileEntityInventory getParent() {
+        return this.parent;
+    }
+
+    public void setParent(final TileEntityInventory parent) {
+        this.parent = parent;
     }
 
     public boolean isClient() {
@@ -36,7 +54,44 @@ public abstract class TileEntityAdvComponent extends TileEntityComponent {
 
     @Override
     public String toString() {
-        return Components.getId(this.getClass());
+        return this.getClass().getName();
+    }
+
+    public void readFromNbt(NBTTagCompound nbt) {
+    }
+
+    public NBTTagCompound writeToNbt() {
+        return null;
+    }
+
+    public void onLoaded() {
+    }
+
+    public void onUnloaded() {
+    }
+
+    public void onNeighborChange(Block srcBlock, BlockPos srcPos) {
+    }
+
+    public void onContainerUpdate(EntityPlayerMP player) {
+    }
+
+    public void onNetworkUpdate(DataInput is) throws IOException {
+    }
+
+    public boolean enableWorldTick() {
+        return false;
+    }
+
+    public void onWorldTick() {
+    }
+
+    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
+        return Collections.emptySet();
+    }
+
+    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
+        return null;
     }
 
 }

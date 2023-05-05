@@ -1,104 +1,101 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "type": {
-      "rolling": {
-        "model": "industrialupgrade:moremachine2/rolling"
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "rolling" : {
+        "model" : "industrialupgrade:moremachine2/rolling"
       },
-	  
-	  "rolling_active": {
-        "model": "industrialupgrade:moremachine2/rolling_active"
+      "rolling_active" : {
+        "model" : "industrialupgrade:moremachine2/rolling_active"
       },
-      "double_rolling": {
-        "model": "industrialupgrade:moremachine2/double_rolling"
+      "double_rolling" : {
+        "model" : "industrialupgrade:moremachine2/double_rolling"
       },
-      "double_rolling_active": {
-        "model": "industrialupgrade:moremachine2/double_rolling_active"
+      "double_rolling_active" : {
+        "model" : "industrialupgrade:moremachine2/double_rolling_active"
       },
-      "triple_rolling": {
-        "model": "industrialupgrade:moremachine2/triple_rolling"
+      "triple_rolling" : {
+        "model" : "industrialupgrade:moremachine2/triple_rolling"
       },
-	  
-      "triple_rolling_active": {
-        "model": "industrialupgrade:moremachine2/triple_rolling_active"
+      "triple_rolling_active" : {
+        "model" : "industrialupgrade:moremachine2/triple_rolling_active"
       },
-      "quad_rolling": {
-        "model": "industrialupgrade:moremachine2/quad_rolling"
+      "quad_rolling" : {
+        "model" : "industrialupgrade:moremachine2/quad_rolling"
       },
-      "quad_rolling_active": {
-        "model": "industrialupgrade:moremachine2/quad_rolling_active"
+      "quad_rolling_active" : {
+        "model" : "industrialupgrade:moremachine2/quad_rolling_active"
       },
-      "extruder": {
-        "model": "industrialupgrade:moremachine2/extruder"
+      "extruder" : {
+        "model" : "industrialupgrade:moremachine2/extruder"
       },
-      "extruder_active": {
-        "model": "industrialupgrade:moremachine2/extruder_active"
+      "extruder_active" : {
+        "model" : "industrialupgrade:moremachine2/extruder_active"
       },
-      "double_extruder": {
-        "model": "industrialupgrade:moremachine2/double_extruder"
+      "double_extruder" : {
+        "model" : "industrialupgrade:moremachine2/double_extruder"
       },
-      "double_extruder_active": {
-        "model": "industrialupgrade:moremachine2/double_extruder_active"
+      "double_extruder_active" : {
+        "model" : "industrialupgrade:moremachine2/double_extruder_active"
       },
-      "triple_extruder": {
-        "model": "industrialupgrade:moremachine2/triple_extruder"
+      "triple_extruder" : {
+        "model" : "industrialupgrade:moremachine2/triple_extruder"
       },
-      "triple_extruder_active": {
-        "model": "industrialupgrade:moremachine2/triple_extruder_active"
+      "triple_extruder_active" : {
+        "model" : "industrialupgrade:moremachine2/triple_extruder_active"
       },
-      "quad_extruder": {
-        "model": "industrialupgrade:moremachine2/quad_extruder"
+      "quad_extruder" : {
+        "model" : "industrialupgrade:moremachine2/quad_extruder"
       },
-      "quad_extruder_active": {
-        "model": "industrialupgrade:moremachine2/quad_extruder_active"
+      "quad_extruder_active" : {
+        "model" : "industrialupgrade:moremachine2/quad_extruder_active"
       },
-      "cutting": {
-        "model": "industrialupgrade:moremachine2/cutting"
+      "cutting" : {
+        "model" : "industrialupgrade:moremachine2/cutting"
       },
-      "cutting_active": {
-        "model": "industrialupgrade:moremachine2/cutting_active"
+      "cutting_active" : {
+        "model" : "industrialupgrade:moremachine2/cutting_active"
       },
-      "double_cutting": {
-        "model": "industrialupgrade:moremachine2/double_cutting"
+      "double_cutting" : {
+        "model" : "industrialupgrade:moremachine2/double_cutting"
       },
-	   "double_cutting_active": {
-        "model": "industrialupgrade:moremachine2/double_cutting_active"
+      "double_cutting_active" : {
+        "model" : "industrialupgrade:moremachine2/double_cutting_active"
       },
-	   "triple_cutting": {
-        "model": "industrialupgrade:moremachine2/triple_cutting"
+      "triple_cutting" : {
+        "model" : "industrialupgrade:moremachine2/triple_cutting"
       },
-      "triple_cutting_active": {
-        "model": "industrialupgrade:moremachine2/triple_cutting_active"
+      "triple_cutting_active" : {
+        "model" : "industrialupgrade:moremachine2/triple_cutting_active"
       },
-	  
-	   "quad_cutting": {
-        "model": "industrialupgrade:moremachine2/quad_cutting"
+      "quad_cutting" : {
+        "model" : "industrialupgrade:moremachine2/quad_cutting"
       },
-      "quad_cutting_active": {
-        "model": "industrialupgrade:moremachine2/quad_cutting_active"
+      "quad_cutting_active" : {
+        "model" : "industrialupgrade:moremachine2/quad_cutting_active"
       }
     },
-    "facing": {
-      "down": {
-        "x": 90
+    "facing" : {
+      "down" : {
+        "x" : 90
       },
-      "up": {
-        "x": 270
+      "up" : {
+        "x" : 270
       },
-      "north": {
-        "transform": "forge:default-block"
+      "north" : {
+        "transform" : "forge:default-block"
       },
-      "south": {
-        "y": 180
+      "south" : {
+        "y" : 180
       },
-      "west": {
-        "y": 270
+      "west" : {
+        "y" : 270
       },
-      "east": {
-        "y": 90
+      "east" : {
+        "y" : 90
       }
     },
-    "inventory": [
+    "inventory" : [
       {}
     ]
   }

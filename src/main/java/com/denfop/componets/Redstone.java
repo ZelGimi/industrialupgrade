@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import ic2.core.block.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,7 +19,7 @@ public class Redstone extends TileEntityAdvComponent {
     protected Set<Redstone.IRedstoneModifier> modifiers;
     protected Redstone.LinkHandler outboundLink;
 
-    public Redstone(TileEntityBlock parent) {
+    public Redstone(TileEntityInventory parent) {
         super(parent);
     }
 

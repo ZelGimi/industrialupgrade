@@ -14,8 +14,6 @@ import com.denfop.utils.ModUtils;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Energy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -214,20 +212,16 @@ public class InvSlotElectricBlock extends InvSlot {
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
                 if (tile.getWorld().getTileEntity(pos) != null
-                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityBlock && x != 0 && nbttagcompound.getBoolean(
+                        && tile
+                        .getWorld()
+                        .getTileEntity(pos) instanceof TileEntityInventory && x != 0 && nbttagcompound.getBoolean(
                         "change")
                         && y != 0 && z != 0) {
-                    TileEntityBlock tile1 = (TileEntityBlock) tile.getWorld().getTileEntity(pos);
+                    TileEntityInventory tile1 = (TileEntityInventory) tile.getWorld().getTileEntity(pos);
 
                     assert tile1 != null;
-                    if (tile1.getComponent(Energy.class) != null) {
-
-                        final Energy energy = tile1.getComponent(Energy.class);
-                        if (energy.getDelegate() instanceof IEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
-                        }
-                    } else if (tile1.getComponent(AdvEnergy.class) != null) {
-                        final AdvEnergy energy = tile1.getComponent(AdvEnergy.class);
+                    if (tile1.getComp(AdvEnergy.class) != null) {
+                        final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
                         if (energy.getDelegate() instanceof IAdvEnergySink) {
                             tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
                         }

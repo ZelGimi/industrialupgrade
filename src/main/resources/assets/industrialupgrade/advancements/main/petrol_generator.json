@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:basemachine2",
-      "data": 5
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine2",
+      "data" : 5
     },
-    "title": {
-      "translate": "achievement.petrol_generator"
+    "title" : {
+      "translate" : "achievement.petrol_generator"
     },
-    "description": {
-      "translate": "achievement.petrol_generator.desc"
+    "description" : {
+      "translate" : "achievement.petrol_generator.desc"
     }
   },
-  "parent": "industrialupgrade:main/petrol",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/petrol",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:basemachine2",
-            "data": 5
+            "item" : "industrialupgrade:basemachine2",
+            "data" : 5
           }
         ]
       }

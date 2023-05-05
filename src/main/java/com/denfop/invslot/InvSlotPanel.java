@@ -4,7 +4,13 @@ import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.Config;
 import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.componets.AdvEnergy;
-import com.denfop.items.modules.*;
+import com.denfop.items.modules.EnumBaseType;
+import com.denfop.items.modules.EnumModule;
+import com.denfop.items.modules.ItemAdditionModule;
+import com.denfop.items.modules.ItemBaseModules;
+import com.denfop.items.modules.ItemModuleType;
+import com.denfop.items.modules.ItemModuleTypePanel;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
@@ -14,8 +20,6 @@ import ic2.api.energy.tile.IChargingSlot;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Energy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -306,18 +310,12 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
                 if (tile.getWorld().getTileEntity(pos) != null
-                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityBlock && x != 0
+                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityInventory && x != 0
                         && y != 0 && z != 0 && !nbttagcompound.getBoolean("change")) {
-                    TileEntityBlock tile1 = (TileEntityBlock) tile.getWorld().getTileEntity(pos);
+                    TileEntityInventory tile1 = (TileEntityInventory) tile.getWorld().getTileEntity(pos);
                     assert tile1 != null;
-                    if (tile1.getComponent(Energy.class) != null) {
-
-                        final Energy energy = tile1.getComponent(Energy.class);
-                        if (energy.getDelegate() instanceof IEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
-                        }
-                    } else if (tile1.getComponent(AdvEnergy.class) != null) {
-                        final AdvEnergy energy = tile1.getComponent(AdvEnergy.class);
+                    if (tile1.getComp(AdvEnergy.class) != null) {
+                        final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
                         if (energy.getDelegate() instanceof IAdvEnergySink) {
                             tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
                         }

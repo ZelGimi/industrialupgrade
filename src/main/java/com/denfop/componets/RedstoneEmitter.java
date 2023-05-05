@@ -1,10 +1,10 @@
 package com.denfop.componets;
 
-import ic2.core.block.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 
 public class RedstoneEmitter extends BasicRedstoneComponent {
 
-    public RedstoneEmitter(TileEntityBlock parent) {
+    public RedstoneEmitter(TileEntityInventory parent) {
         super(parent);
     }
 

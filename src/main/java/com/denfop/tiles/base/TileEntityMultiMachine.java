@@ -155,9 +155,9 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.multi_process.defaultOperationLength);
         }
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
 
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -270,7 +270,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                     return BlockName.resource.getItemStack(ResourceBlock.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComponent(AdvEnergy.class);
+        final AdvEnergy component = this.getComp(AdvEnergy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);

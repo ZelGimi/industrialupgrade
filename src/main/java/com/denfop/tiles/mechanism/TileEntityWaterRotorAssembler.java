@@ -3,7 +3,14 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.inv.IHasGui;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.IUpdateTick;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerWaterRotorAssembler;
 import com.denfop.gui.GuiWaterRotorAssembler;
@@ -93,8 +100,8 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {

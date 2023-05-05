@@ -16,7 +16,6 @@ import ic2.api.upgrade.IUpgradeItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
 import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -122,16 +121,16 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     }
 
     protected int getWeakPower(EnumFacing side) {
-        BasicRedstoneComponent component = this.getComponent(RedstoneEmitter.class);
+        BasicRedstoneComponent component = this.getComp(RedstoneEmitter.class);
         return component == null ? 0 : component.getLevel();
     }
 
     protected boolean canConnectRedstone(EnumFacing side) {
-        return this.hasComponent(RedstoneEmitter.class) || this.hasComponent(Redstone.class);
+        return this.hasComp(RedstoneEmitter.class) || this.hasComp(Redstone.class);
     }
 
     protected int getComparatorInputOverride() {
-        BasicRedstoneComponent component = this.getComponent(ComparatorEmitter.class);
+        BasicRedstoneComponent component = this.getComp(ComparatorEmitter.class);
         return component == null ? 0 : component.getLevel();
     }
 
@@ -540,7 +539,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             if (this.capabilityComponents == null) {
                 return super.getCapability(capability, facing);
             } else {
-                TileEntityComponent comp = this.capabilityComponents.get(capability);
+                TileEntityAdvComponent comp = this.capabilityComponents.get(capability);
                 return comp == null ? super.getCapability(capability, facing) : comp.getCapability(capability, facing);
             }
         }
@@ -617,7 +616,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     }
 
-    public boolean hasComponent(Class<? extends TileEntityComponent> cls) {
+    public boolean hasComp(Class<? extends TileEntityAdvComponent> cls) {
         for (final TileEntityAdvComponent component : componentList) {
             if (component.getClass() == cls) {
                 return true;
@@ -638,7 +637,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return updatableComponents;
     }
 
-    public <T extends TileEntityAdvComponent> T getComponent(String cls) {
+    public <T extends TileEntityAdvComponent> T getComp(String cls) {
         for (TileEntityAdvComponent component : this.componentList) {
             if (component.toString().trim().equals(cls)) {
                 return (T) component;
@@ -651,13 +650,17 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return capabilityComponents;
     }
 
-    public <T extends TileEntityComponent> T getComponent(Class<T> cls) {
-        for (final TileEntityComponent component : componentList) {
+    public <T extends TileEntityAdvComponent> T getComp(Class<T> cls) {
+        for (final TileEntityAdvComponent component : componentList) {
             if (component.getClass() == cls) {
                 return (T) component;
             }
         }
         return null;
+    }
+
+    public final Iterable<? extends TileEntityAdvComponent> getComps() {
+        return componentList;
     }
 
     @Override

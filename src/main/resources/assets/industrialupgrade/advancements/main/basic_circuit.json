@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "ic2:crafting",
-	  "data": 1
+  "display" : {
+    "icon" : {
+      "item" : "ic2:crafting",
+      "data" : 1
     },
-    "title": {
-      "translate": "achievement.basic_circuit"
+    "title" : {
+      "translate" : "achievement.basic_circuit"
     },
-    "description": {
-      "translate": "achievement.basic_circuit.desc"
+    "description" : {
+      "translate" : "achievement.basic_circuit.desc"
     }
   },
-  "parent": "industrialupgrade:main/silver_ore",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/silver_ore",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "ic2:crafting",
-			"data": 1
+            "item" : "ic2:crafting",
+            "data" : 1
           }
         ]
       }

@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:machines",
-      "data": 5
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:machines",
+      "data" : 5
     },
-    "title": {
-      "translate": "achievement.pro_panel"
+    "title" : {
+      "translate" : "achievement.pro_panel"
     },
-    "description": {
-      "translate": "achievement.pro_panel.desc"
+    "description" : {
+      "translate" : "achievement.pro_panel.desc"
     }
   },
-  "parent": "industrialupgrade:main/pro_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/pro_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:machines",
-            "data": 5
+            "item" : "industrialupgrade:machines",
+            "data" : 5
           }
         ]
       }

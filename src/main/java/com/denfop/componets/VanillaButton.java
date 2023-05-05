@@ -10,21 +10,6 @@ import net.minecraft.util.ResourceLocation;
 public class VanillaButton extends Button<VanillaButton> {
 
     private static final ResourceLocation texture = new ResourceLocation("textures/gui/widgets.png");
-    private static final int uNormal = 0;
-    private static final int vNormal = 66;
-    private static final int uHover = 0;
-    private static final int vHover = 86;
-    private static final int uDisabled = 0;
-    private static final int vDisabled = 46;
-    private static final int rawWidth = 200;
-    private static final int rawHeight = 20;
-    private static final int minLeft = 2;
-    private static final int minRight = 2;
-    private static final int minTop = 2;
-    private static final int minBottom = 3;
-    private static final int colorNormal = 14737632;
-    private static final int colorHover = 16777120;
-    private static final int colorDisabled = 10526880;
     protected IEnableHandler disableHandler;
 
     public VanillaButton(GuiIC2<?> gui, int x, int y, int width, int height, IClickHandler handler) {

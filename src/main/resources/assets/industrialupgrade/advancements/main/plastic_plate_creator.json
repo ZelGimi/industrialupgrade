@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:basemachine2",
-      "data": 13
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine2",
+      "data" : 13
     },
-    "title": {
-      "translate": "achievement.plastic_plate_creator"
+    "title" : {
+      "translate" : "achievement.plastic_plate_creator"
     },
-    "description": {
-      "translate": "achievement.plastic_plate_creator.desc"
+    "description" : {
+      "translate" : "achievement.plastic_plate_creator.desc"
     }
   },
-  "parent": "industrialupgrade:main/oxygen",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/oxygen",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:basemachine2",
-            "data": 13
+            "item" : "industrialupgrade:basemachine2",
+            "data" : 13
           }
         ]
       }

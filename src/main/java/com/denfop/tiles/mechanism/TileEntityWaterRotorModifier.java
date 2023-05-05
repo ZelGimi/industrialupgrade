@@ -3,23 +3,18 @@ package com.denfop.tiles.mechanism;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
-import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerWaterRotorUpgrade;
 import com.denfop.gui.GuiWaterRotorUpgrade;
 import com.denfop.invslot.InvSlotRotorWater;
 import com.denfop.invslot.InvSlotWaterUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class TileEntityWaterRotorModifier extends TileEntityInventory implements IWindUpgradeBlock, IHasGui {
 
@@ -31,18 +26,6 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
         rotor_slot = new InvSlotRotorWater(slot);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
-        }
-
-    }
 
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {

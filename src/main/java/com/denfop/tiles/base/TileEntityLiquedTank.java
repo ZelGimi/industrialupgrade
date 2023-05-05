@@ -85,7 +85,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         if (!this.getWorld().isRemote && LiquidUtil.isFluidContainer(player.getHeldItem(hand))) {
 
             return FluidUtil.interactWithFluidHandler(player, hand,
-                    this.getComponent(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);

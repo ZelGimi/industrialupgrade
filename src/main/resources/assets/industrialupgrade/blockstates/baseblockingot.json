@@ -1,94 +1,94 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "cube_all",
-		"transform": "forge:default-block"
-	},
-	"variants": {
-		"type": {
-			"mikhail": {
-				"textures": {
-					"all": "industrialupgrade:blocks/mikhail_block"
-				}
-			},
-			"aluminium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/aluminium_block"
-				}
-			},
-			"vanady": {
-				"textures": {
-					"all": "industrialupgrade:blocks/vanady_block"
-				}
-			},
-			"wolfram": {
-				"textures": {
-					"all": "industrialupgrade:blocks/wolfram_block"
-				}
-			},
-			"cobalt": {
-				"textures": {
-					"all": "industrialupgrade:blocks/cobalt_block"
-				}
-			},
-			"magnesium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/magnesium_block"
-				}
-			},
-			"nickel": {
-				"textures": {
-					"all": "industrialupgrade:blocks/nickel_block"
-				}
-			},
-			"platium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/platium_block"
-				}
-			},
-			"titanium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/titanium_block"
-				}
-			},
-			"chromium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/chromium_block"
-				}
-			},
-			"spinel": {
-				"textures": {
-					"all": "industrialupgrade:blocks/spinel_block"
-				}
-			},
-			"silver": {
-				"textures": {
-					"all": "industrialupgrade:blocks/silver_block"
-				}
-			},
-			"zinc": {
-				"textures": {
-					"all": "industrialupgrade:blocks/zinc_block"
-				}
-			},
-			"invar": {
-				"textures": {
-					"all": "industrialupgrade:blocks/invar_block"
-				}
-			},
-			"caravky": {
-				"textures": {
-					"all": "industrialupgrade:blocks/caravky_block"
-				}
-			},
-			"electrium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/electrium_block"
-				}
-			}
-		},
-		"inventory": [
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "mikhail" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mikhail_block"
+        }
+      },
+      "aluminium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/aluminium_block"
+        }
+      },
+      "vanady" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/vanady_block"
+        }
+      },
+      "wolfram" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/wolfram_block"
+        }
+      },
+      "cobalt" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/cobalt_block"
+        }
+      },
+      "magnesium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/magnesium_block"
+        }
+      },
+      "nickel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nickel_block"
+        }
+      },
+      "platium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/platium_block"
+        }
+      },
+      "titanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/titanium_block"
+        }
+      },
+      "chromium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/chromium_block"
+        }
+      },
+      "spinel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/spinel_block"
+        }
+      },
+      "silver" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/silver_block"
+        }
+      },
+      "zinc" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/zinc_block"
+        }
+      },
+      "invar" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/invar_block"
+        }
+      },
+      "caravky" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/caravky_block"
+        }
+      },
+      "electrium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/electrium_block"
+        }
+      }
+    },
+    "inventory" : [
       {}
     ]
-	}
+  }
 }

@@ -2,9 +2,9 @@ package com.denfop.componets.client;
 
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -13,11 +13,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class ComponentClientEffectRender extends TileEntityComponent {
+public class ComponentClientEffectRender extends TileEntityAdvComponent {
 
     private final EffectType effectType;
 
-    public ComponentClientEffectRender(final TileEntityBlock parent, EffectType effectType) {
+    public ComponentClientEffectRender(final TileEntityInventory parent, EffectType effectType) {
         super(parent);
         this.effectType = effectType;
     }
@@ -26,7 +26,7 @@ public class ComponentClientEffectRender extends TileEntityComponent {
     public void render() {
         switch (effectType) {
             case HEAT:
-                CoolComponent comp = parent.getComponent(CoolComponent.class);
+                CoolComponent comp = ((TileEntityInventory) parent).getComp(CoolComponent.class);
                 if (comp == null || comp.upgrade) {
                     break;
                 }
@@ -139,7 +139,7 @@ public class ComponentClientEffectRender extends TileEntityComponent {
                 }
                 break;
             case REFRIGERATOR:
-                comp = parent.getComponent(CoolComponent.class);
+                comp = ((TileEntityInventory) parent).getComp(CoolComponent.class);
                 if (comp == null) {
                     break;
                 }

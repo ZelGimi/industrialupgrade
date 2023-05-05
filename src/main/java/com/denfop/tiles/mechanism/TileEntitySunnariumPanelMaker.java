@@ -2,7 +2,11 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerDoubleElectricMachine;

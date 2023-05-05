@@ -10,9 +10,8 @@ import com.denfop.api.sytem.ISink;
 import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
 import com.denfop.invslot.InvSlot;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.IC2;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Components;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
@@ -57,12 +56,12 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
     private double pastEnergy1;
     private double tick1;
 
-    public ComponentBaseEnergy(EnergyType type, TileEntityBlock parent, double capacity) {
+    public ComponentBaseEnergy(EnergyType type, TileEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public ComponentBaseEnergy(
-            EnergyType type, TileEntityBlock parent,
+            EnergyType type, TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -72,7 +71,7 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
     }
 
     public ComponentBaseEnergy(
-            EnergyType type, TileEntityBlock parent,
+            EnergyType type, TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -96,19 +95,19 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
         this.tick = 0;
     }
 
-    public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityBlock parent, double capacity) {
+    public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityInventory parent, double capacity) {
         return asBasicSink(type, parent, capacity, 1);
     }
 
-    public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityBlock parent, double capacity, int tier) {
+    public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityInventory parent, double capacity, int tier) {
         return new ComponentBaseEnergy(type, parent, capacity, Util.allFacings, Collections.emptySet(), tier);
     }
 
-    public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityBlock parent, double capacity) {
+    public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityInventory parent, double capacity) {
         return asBasicSource(type, parent, capacity, 1);
     }
 
-    public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityBlock parent, double capacity, int tier) {
+    public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityInventory parent, double capacity, int tier) {
         return new ComponentBaseEnergy(type, parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 
@@ -118,7 +117,7 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
 
     @Override
     public String toString() {
-        return Components.getId(this.getClass()) + this.type.name().toLowerCase();
+        return super.toString() + this.type.name().toLowerCase();
     }
 
     public void readFromNbt(NBTTagCompound nbt) {

@@ -1,8 +1,8 @@
 package com.denfop.componets;
 
 import cofh.redstoneflux.api.IEnergyReceiver;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.EnergyNet;
-import ic2.core.block.TileEntityBlock;
 import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +18,7 @@ public class RFComponent extends TileEntityAdvComponent implements IEnergyReceiv
     public double storage;
     private boolean rf;
 
-    public RFComponent(final TileEntityBlock parent, int capacity, AdvEnergy energy) {
+    public RFComponent(final TileEntityInventory parent, int capacity, AdvEnergy energy) {
         super(parent);
         this.energy = energy;
         this.capacity = capacity;

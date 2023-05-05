@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "ic2:items/armor/jetpack_electric"
-	}
+  "parent" : "ic2:item/default",
+  "textures" : {
+    "layer0" : "ic2:items/armor/jetpack_electric"
+  }
 }

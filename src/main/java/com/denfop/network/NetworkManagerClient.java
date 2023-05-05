@@ -413,7 +413,7 @@ public class NetworkManagerClient extends NetworkManager {
                                 TileEntity teRaw = world.getTileEntity(pos1);
                                 if (teRaw instanceof TileEntityInventory) {
                                     TileEntityInventory tile = (TileEntityInventory) teRaw;
-                                    TileEntityAdvComponent component = tile.getComponent(componentName);
+                                    TileEntityAdvComponent component = tile.getComp(componentName);
 
                                     if (component != null) {
                                         DataInputStream dataIs = new DataInputStream(new ByteArrayInputStream(data));

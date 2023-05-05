@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:heavyore"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:heavyore"
     },
-    "title": {
-      "translate": "achievement.minerals"
+    "title" : {
+      "translate" : "achievement.minerals"
     },
-    "description": {
-      "translate": "achievement.minerals.desc"
+    "description" : {
+      "translate" : "achievement.minerals.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:heavyore"
+            "item" : "industrialupgrade:heavyore"
           }
         ]
       }

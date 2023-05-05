@@ -1,4 +1,3 @@
-
 package com.denfop.gui;
 
 import com.denfop.Constants;
@@ -25,11 +24,13 @@ public class GuiCanner extends GuiIU<ContainerCanner> {
         this.addElement((new CustomButton(this, 77, 64, 22, 13, this.createEventSender(3))).withTooltip("ic2.Canner.gui" +
                 ".switchTanks"));
 
-        this.addElement(new AdvArea(this,
+        this.addElement(new AdvArea(
+                this,
                 61,
                 79,
                 114,
-                96).withTooltip(Localization.translate("ic2.Canner.gui.switch.EnrichLiquid")));
+                96
+        ).withTooltip(Localization.translate("ic2.Canner.gui.switch.EnrichLiquid")));
         this.addElement(TankGauge.createNormal(this, 39, 42, container.base.fluidTank));
         this.addElement(TankGauge.createNormal(this, 117, 42, container.base.outputTank));
         this.addComponent(new GuiComponent(this, 12, 62, EnumTypeComponent.ENERGY_CLASSIC,

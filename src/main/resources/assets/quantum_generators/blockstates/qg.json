@@ -1,49 +1,47 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "type": {
-      "phsp_gen": {
-        "model": "quantum_generators:phsp_gen"
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "phsp_gen" : {
+        "model" : "quantum_generators:phsp_gen"
       },
-	  
-	  "nsp_gen": {
-        "model": "quantum_generators:nsp_gen"
+      "nsp_gen" : {
+        "model" : "quantum_generators:nsp_gen"
       },
-      "bsp_gen": {
-        "model": "quantum_generators:bsp_gen"
+      "bsp_gen" : {
+        "model" : "quantum_generators:bsp_gen"
       },
-      "adsp_gen": {
-        "model": "quantum_generators:adsp_gen"
+      "adsp_gen" : {
+        "model" : "quantum_generators:adsp_gen"
       },
-      "grasp_gen": {
-        "model": "quantum_generators:grasp_gen"
+      "grasp_gen" : {
+        "model" : "quantum_generators:grasp_gen"
       },
-	  
-      "kvsp_gen": {
-        "model": "quantum_generators:kvsp_gen"
+      "kvsp_gen" : {
+        "model" : "quantum_generators:kvsp_gen"
       }
     },
-    "facing": {
-      "down": {
-        "x": 90
+    "facing" : {
+      "down" : {
+        "x" : 90
       },
-      "up": {
-        "x": 270
+      "up" : {
+        "x" : 270
       },
-      "north": {
-        "transform": "forge:default-block"
+      "north" : {
+        "transform" : "forge:default-block"
       },
-      "south": {
-        "y": 180
+      "south" : {
+        "y" : 180
       },
-      "west": {
-        "y": 270
+      "west" : {
+        "y" : 270
       },
-      "east": {
-        "y": 90
+      "east" : {
+        "y" : 90
       }
     },
-    "inventory": [
+    "inventory" : [
       {}
     ]
   }

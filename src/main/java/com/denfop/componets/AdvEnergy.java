@@ -1,14 +1,21 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IAdvDual;
+import com.denfop.api.energy.IAdvEnergySink;
+import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyEmitter;
+import com.denfop.api.energy.IMultiDual;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotDischarge;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.tile.IChargingSlot;
 import ic2.api.energy.tile.IDischargingSlot;
-import ic2.core.block.TileEntityBlock;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.Util;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,12 +60,12 @@ public class AdvEnergy extends TileEntityAdvComponent {
     protected double pastEnergy1;
     protected double perenergy1;
 
-    public AdvEnergy(TileEntityBlock parent, double capacity) {
+    public AdvEnergy(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public AdvEnergy(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -68,7 +75,7 @@ public class AdvEnergy extends TileEntityAdvComponent {
     }
 
     public AdvEnergy(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -91,23 +98,23 @@ public class AdvEnergy extends TileEntityAdvComponent {
         this.tick = 0;
     }
 
-    public static AdvEnergy asBasicSink(TileEntityBlock parent, double capacity) {
+    public static AdvEnergy asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static AdvEnergy asBasicSink(TileEntityBlock parent, double capacity, int tier) {
+    public static AdvEnergy asBasicSink(TileEntityInventory parent, double capacity, int tier) {
         return new AdvEnergy(parent, capacity, Util.allFacings, Collections.emptySet(), tier);
     }
 
-    public static AdvEnergy asBasicSink(TileEntityBlock parent, double capacity, boolean meta) {
+    public static AdvEnergy asBasicSink(TileEntityInventory parent, double capacity, boolean meta) {
         return new AdvEnergy(parent, capacity, Util.allFacings, Collections.emptySet(), 14, 14, false);
     }
 
-    public static AdvEnergy asBasicSource(TileEntityBlock parent, double capacity) {
+    public static AdvEnergy asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static AdvEnergy asBasicSource(TileEntityBlock parent, double capacity, int tier) {
+    public static AdvEnergy asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new AdvEnergy(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
     }
 

@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:baseore",
-      "data": 12
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 12
     },
-    "title": {
-      "translate": "achievement.zincore"
+    "title" : {
+      "translate" : "achievement.zincore"
     },
-    "description": {
-      "translate": "achievement.zincore.desc"
+    "description" : {
+      "translate" : "achievement.zincore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:baseore",
-            "data": 12
+            "item" : "industrialupgrade:baseore",
+            "data" : 12
           }
         ]
       }

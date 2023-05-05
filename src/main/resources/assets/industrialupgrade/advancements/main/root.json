@@ -1,26 +1,26 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:machines",
-      "data": 5
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:machines",
+      "data" : 5
     },
-    "title": {
-      "translate": "achievement.start"
+    "title" : {
+      "translate" : "achievement.start"
     },
-    "description": {
-      "translate": "achievement.start.desc"
+    "description" : {
+      "translate" : "achievement.start.desc"
     },
-    "background": "industrialupgrade:textures/blocks/thorium_ore.png",
-    "show_toast": false,
-    "announce_to_chat": false
+    "background" : "industrialupgrade:textures/blocks/thorium_ore.png",
+    "show_toast" : false,
+    "announce_to_chat" : false
   },
-  "criteria": {
-    "tttt": {
-      "trigger": "minecraft:inventory_changed",
-      "condition": {
-        "items": [
+  "criteria" : {
+    "tttt" : {
+      "trigger" : "minecraft:inventory_changed",
+      "condition" : {
+        "items" : [
           {
-            "item": "industrialupgrade:book_iu"
+            "item" : "industrialupgrade:book_iu"
           }
         ]
       }

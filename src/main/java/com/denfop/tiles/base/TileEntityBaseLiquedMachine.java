@@ -298,7 +298,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         if (!this.getWorld().isRemote && LiquidUtil.isFluidContainer(player.getHeldItem(hand))) {
 
             return FluidUtil.interactWithFluidHandler(player, hand,
-                    this.getComponent(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
         if (level < 10) {

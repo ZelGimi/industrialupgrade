@@ -4,6 +4,7 @@ import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
+import com.denfop.componets.TileEntityAdvComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IAugmentationUpgrade;
@@ -14,8 +15,6 @@ import ic2.api.upgrade.IRedstoneSensitiveUpgrade;
 import ic2.api.upgrade.ITransformerUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.util.StackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -43,7 +42,7 @@ import java.util.Map;
 
 public class InvSlotUpgrade extends InvSlot {
 
-    private final TileEntityBlock tile;
+    private final TileEntityInventory tile;
     private final Map<EnumFacing, HandlerInventory> iItemHandlerMap;
     private final Map<IItemHandler, Integer> slotHandler;
 
@@ -90,7 +89,7 @@ public class InvSlotUpgrade extends InvSlot {
             }
         });
         main_handler = base.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, base.getFacing());
-        fluids = base.getParent().getComponent(Fluids.class);
+        fluids = base.getParent().getComp(Fluids.class);
         if (fluids != null) {
             fluids.getAllTanks().forEach(fluidTankList::add);
         }
@@ -229,7 +228,7 @@ public class InvSlotUpgrade extends InvSlot {
 
         }
 
-        for (final TileEntityComponent component : this.base.getParent().getComponents()) {
+        for (final TileEntityAdvComponent component : this.base.getParent().getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
                 rs.removeRedstoneModifiers(this.redstoneModifiers);

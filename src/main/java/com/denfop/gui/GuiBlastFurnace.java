@@ -31,12 +31,11 @@ public class GuiBlastFurnace extends GuiIU<ContainerBlastFurnace> {
         super(container1);
         this.container = container1;
         componentList.clear();
-        if (this.container.base.blastHeat != null) {
 
-            this.addComponent(new GuiComponent(this, 60, 67, EnumTypeComponent.HEAT,
-                    new Component<>(this.container.base.blastHeat.getHeatComponent())
-            ));
-        }
+        this.addComponent(new GuiComponent(this, 60, 67, EnumTypeComponent.HEAT,
+                new Component<>(this.container.base.heat)
+        ));
+
         this.addComponent(new GuiComponent(this, 159, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));

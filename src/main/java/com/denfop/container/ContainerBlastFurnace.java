@@ -1,11 +1,7 @@
 package com.denfop.container;
 
-import com.denfop.componets.TileEntityAdvComponent;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastFurnaceMain;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IContainerListener;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -34,18 +30,6 @@ public class ContainerBlastFurnace extends ContainerFullInv<TileEntityBlastFurna
         ));
     }
 
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        if (this.base.getHeat() instanceof TileEntityInventory) {
-            for (final TileEntityAdvComponent component : ((TileEntityInventory) this.base.getHeat()).getComponentList()) {
-                for (IContainerListener var5 : this.listeners) {
-                    if (var5 instanceof EntityPlayerMP) {
-                        component.onContainerUpdate((EntityPlayerMP) var5);
-                    }
-                }
-            }
-        }
-    }
 
     @Override
     public void onContainerClosed(@Nonnull final EntityPlayer playerIn) {
@@ -58,10 +42,10 @@ public class ContainerBlastFurnace extends ContainerFullInv<TileEntityBlastFurna
         ret.add("tank");
         ret.add("full");
         ret.add("tank1");
-        ret.add("blastHeat");
         ret.add("progress");
         ret.add("bar");
         ret.add("sound");
+        ret.add("heat");
         return ret;
 
     }
