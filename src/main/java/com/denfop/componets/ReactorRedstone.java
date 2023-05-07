@@ -16,30 +16,31 @@ public class ReactorRedstone extends Redstone {
     }
 
     public void update() {
-        int input = 0;
-        for (BlockPos pos : blockPosList) {
-            input = this.parent.getWorld().getRedstonePower(pos, EnumFacing.DOWN);
+        try {
+            int input = 0;
+            for (BlockPos pos : blockPosList) {
+                input = this.parent.getWorld().getRedstonePower(pos, EnumFacing.DOWN);
 
-            if (input > 0) {
-                break;
-            }
-        }
-        if (modifiers != null) {
-            for (IRedstoneModifier modifier : modifiers) {
-                input = modifier.getRedstoneInput(input);
-            }
-        }
-
-        if (input != redstoneInput) {
-            redstoneInput = input;
-
-            if (changeSubscribers != null) {
-                for (IRedstoneChangeHandler subscriber : changeSubscribers) {
-                    subscriber.onRedstoneChange(input);
+                if (input > 0) {
+                    break;
                 }
             }
-        }
+            if (modifiers != null) {
+                for (IRedstoneModifier modifier : modifiers) {
+                    input = modifier.getRedstoneInput(input);
+                }
+            }
 
+            if (input != redstoneInput) {
+                redstoneInput = input;
+
+                if (changeSubscribers != null) {
+                    for (IRedstoneChangeHandler subscriber : changeSubscribers) {
+                        subscriber.onRedstoneChange(input);
+                    }
+                }
+            }
+        }catch (Exception ignored){};
     }
 
     public void setBlockPosList(final List<BlockPos> blockPosList) {

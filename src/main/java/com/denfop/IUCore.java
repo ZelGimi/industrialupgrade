@@ -170,7 +170,11 @@ public final class IUCore {
     public static final List<ItemStack> list_furnace_adding = new ArrayList<>();
     public static final List<ItemStack> list_furnace_removing = new ArrayList<>();
 
+    public static final List<ItemStack> list_crushed_adding = new ArrayList<>();
+    public static final List<ItemStack> list_crushed_removing = new ArrayList<>();
 
+    public static final List<ItemStack> list_comb_crushed_adding = new ArrayList<>();
+    public static final List<ItemStack> list_comb_crushed_removing = new ArrayList<>();
     public static final List<QuarryItem> list_quarry = new ArrayList<>();
 
     public static final List<QuarryItem> get_ingot_quarry = new ArrayList<>();
@@ -559,18 +563,23 @@ public final class IUCore {
             get_all_list.add(new RecipeInputStack(stack));
         });
         get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack));
+        IUCore.list_furnace_adding.forEach(stack -> addOre2(stack));
+        IUCore.list_furnace_removing.forEach(stack -> removeOre2(stack));
         IUCore.get_ingot.forEach(stack -> {
 
             get_all_list.add(new RecipeInputStack(stack));
         });
-        IUCore.list_furnace_adding.forEach(stack -> addOre2(stack));
-        IUCore.list_furnace_removing.forEach(stack -> removeOre2(stack));
+
         get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack));
+        IUCore.list_comb_crushed_adding.forEach(stack -> addOre4(stack));
+        IUCore.list_comb_crushed_removing.forEach(stack -> removeOre4(stack));
         IUCore.get_comb_crushed.forEach(stack -> {
 
             get_all_list.add(new RecipeInputStack(stack));
         });
         get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack));
+        IUCore.list_crushed_adding.forEach(stack -> addOre3(stack));
+        IUCore.list_crushed_removing.forEach(stack -> removeOre3(stack));
         IUCore.get_crushed.forEach(stack -> {
 
             get_all_list.add(new RecipeInputStack(stack));
@@ -757,11 +766,21 @@ public final class IUCore {
     public void addOre2(ItemStack name) {
         get_ingot.add(name);
     }
-
+    public void addOre3(ItemStack name) {
+        get_crushed.add(name);
+    }
+    public void addOre4(ItemStack name) {
+        get_comb_crushed.add(name);
+    }
     public void removeOre2(ItemStack name) {
         get_ingot.removeIf(stack -> stack.isItemEqual(name));
     }
-
+    public void removeOre3(ItemStack name) {
+        get_crushed.removeIf(stack -> stack.isItemEqual(name));
+    }
+    public void removeOre4(ItemStack name) {
+        get_comb_crushed.removeIf(stack -> stack.isItemEqual(name));
+    }
     public void removeOre(String name) {
         if (OreDictionary.getOres(name).size() >= 1) {
             if (list.contains(OreDictionary.getOres(name).get(0))) {

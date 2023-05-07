@@ -38,6 +38,10 @@ public class WorldSavedDataIU extends WorldSavedData {
         this.world = world;
     }
 
+    public World getWorld() {
+        return world;
+    }
+
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound compound) {
 

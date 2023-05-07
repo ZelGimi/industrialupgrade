@@ -166,6 +166,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
                                     if (upgrade.add(stack)) {
                                         stack.setCount(0);
                                         player.openContainer.detectAndSendChanges();
+                                        this.markDirty();
                                         return true;
                                     }
                                     break;

@@ -16,6 +16,7 @@ import java.util.Objects;
 public class EventHandlerPlanet {
 
     private final boolean load;
+    public WorldSavedDataIU data;
 
     public EventHandlerPlanet() {
         this.load = false;
@@ -33,6 +34,15 @@ public class EventHandlerPlanet {
     }
 
     @SubscribeEvent
+    public void onQuit(final WorldEvent.Unload event) {
+        if (event.getWorld().provider.getDimension() == 0 && !event.getWorld().isRemote) {
+            if (data != null) {
+                event.getWorld().getMapStorage().saveData(data);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void load(final ResearchTableLoadEvent event) {
         final Map<FakePlayer, IResearchTable> map = SpaceNet.instance
                 .getFakeSpaceSystem()
@@ -47,7 +57,7 @@ public class EventHandlerPlanet {
     public void loadWorld(final WorldEvent.Load event) {
         if (event.getWorld().provider.getDimension() == 0 && !event.getWorld().isRemote) {
 
-            WorldSavedDataIU data = (WorldSavedDataIU) Objects.requireNonNull(event.getWorld().getMapStorage())
+            this.data = (WorldSavedDataIU) Objects.requireNonNull(event.getWorld().getMapStorage())
                     .getOrLoadData(
                             WorldSavedDataIU.class,
                             Constants.MOD_ID

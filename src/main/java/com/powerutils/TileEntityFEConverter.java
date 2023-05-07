@@ -1,6 +1,7 @@
 package com.powerutils;
 
 import com.denfop.Config;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -127,10 +128,7 @@ public class TileEntityFEConverter extends TileEntityInventory implements IHasGu
         }
         int i = (int) Math.min(
                 this.maxStorage2 - this.energy2,
-                Math.min(
-                        EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() * Config.coefficientrf),
-                        paramInt
-                )
+                paramInt
         );
         if (!paramBoolean) {
             this.energy2 += i;
@@ -186,7 +184,7 @@ public class TileEntityFEConverter extends TileEntityInventory implements IHasGu
         }
 
 
-        int transfer = (int) Math.min(this.energy2, 10000);
+        int transfer = (int) Math.min(this.energy2, EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier()));
         this.energy2 -= transfer;
         this.energy2 += this.transmitEnergy(transfer);
 
@@ -242,7 +240,8 @@ public class TileEntityFEConverter extends TileEntityInventory implements IHasGu
         if (!this.rf) {
             return 0;
         }
-        int i = (int) Math.min(this.energy2, paramInt);
+        int i = (int) Math.min(Math.min(this.energy2, EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier())),
+                paramInt);
         if (!paramBoolean) {
             this.energy2 -= i;
             this.differenceenergy += i;

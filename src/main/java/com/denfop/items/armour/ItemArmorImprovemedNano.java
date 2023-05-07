@@ -415,7 +415,7 @@ public class ItemArmorImprovemedNano extends ItemArmorElectric
 
 
     public int getEnergyPerDamage() {
-        return 4000;
+        return 10000;
     }
 
 

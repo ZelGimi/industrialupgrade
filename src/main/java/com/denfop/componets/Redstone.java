@@ -40,26 +40,27 @@ public class Redstone extends TileEntityAdvComponent {
     }
 
     public void update() {
-        World world = parent.getWorld();
+        try {
+            World world = parent.getWorld();
 
-        int input = world.isBlockIndirectlyGettingPowered(parent.getPos());
+            int input = world.isBlockIndirectlyGettingPowered(parent.getPos());
 
-        if (modifiers != null) {
-            for (IRedstoneModifier modifier : modifiers) {
-                input = modifier.getRedstoneInput(input);
-            }
-        }
-
-        if (input != redstoneInput) {
-            redstoneInput = input;
-
-            if (changeSubscribers != null) {
-                for (IRedstoneChangeHandler subscriber : changeSubscribers) {
-                    subscriber.onRedstoneChange(input);
+            if (modifiers != null) {
+                for (IRedstoneModifier modifier : modifiers) {
+                    input = modifier.getRedstoneInput(input);
                 }
             }
-        }
 
+            if (input != redstoneInput) {
+                redstoneInput = input;
+
+                if (changeSubscribers != null) {
+                    for (IRedstoneChangeHandler subscriber : changeSubscribers) {
+                        subscriber.onRedstoneChange(input);
+                    }
+                }
+            }
+        }catch (Exception ignored){};
     }
 
     public int getRedstoneInput() {
