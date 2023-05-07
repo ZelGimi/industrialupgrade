@@ -124,11 +124,8 @@ public class InvSlot implements Iterable<ItemStack> {
     }
 
     public boolean isEmpty() {
-        ItemStack[] var1 = this.contents;
-        int var2 = var1.length;
 
-        for (int var3 = 0; var3 < var2; ++var3) {
-            ItemStack stack = var1[var3];
+        for (ItemStack stack : this.contents) {
             if (!StackUtil.isEmpty(stack)) {
                 return false;
             }

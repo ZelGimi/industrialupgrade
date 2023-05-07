@@ -87,7 +87,11 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
         this.solartype = 0;
         this.type = EnumType.DEFAULT;
     }
-
+    public void loadBeforeFirstUpdate() {
+        super.loadBeforeFirstUpdate();
+        this.wirelessTransferList.clear();
+        this.inputslot.wirelessmodule();
+    }
     @Override
     public int getInventoryStackLimit() {
         return 1;
@@ -119,8 +123,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     public void intialize() {
         this.noSunWorld = this.getWorld().provider.isNether();
         this.updateVisibility();
-        this.wirelessTransferList.clear();
-        this.inputslot.wirelessmodule();
+
 
     }
 

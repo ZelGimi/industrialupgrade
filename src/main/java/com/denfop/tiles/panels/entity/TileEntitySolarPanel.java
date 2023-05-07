@@ -168,7 +168,12 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
             }
         }
     }
-
+    public void loadBeforeFirstUpdate() {
+      super.loadBeforeFirstUpdate();
+        this.wirelessTransferList.clear();
+        this.inputslot.wirelessmodule();
+        this.wireless = !this.wirelessTransferList.isEmpty();
+    }
     public String getStartSoundFile() {
         return "Machines/pen.ogg";
     }
@@ -326,8 +331,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
             this.inputslot.getrfmodule();
             this.inputslot.personality();
             this.solarType = this.inputslot.solartype();
-            this.wirelessTransferList.clear();
-            this.inputslot.wirelessmodule();
             IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
             this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
             if (this.personality) {

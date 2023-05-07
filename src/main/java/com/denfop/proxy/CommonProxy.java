@@ -503,6 +503,8 @@ public class CommonProxy implements IGuiHandler {
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.canner));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.solidcanner));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.patternstorage));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.glassFiberCableItem));
+
         ic2.api.recipe.Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.block, 1, 14), "AAA", "AAA", "AAA", 'A', "blockSilver"
         );

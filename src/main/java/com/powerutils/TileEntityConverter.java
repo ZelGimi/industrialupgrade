@@ -41,8 +41,8 @@ public class TileEntityConverter extends TileEntityInventory implements IHasGui,
 
     public final AdvEnergy energy;
     public final InvSlotUpgrade upgradeSlot;
-    public final int defaultEnergyRFStorage;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyRFStorage;
+    public final double defaultEnergyStorage;
     public double capacity;
     public double maxStorage2;
     public double energy2;
@@ -161,6 +161,7 @@ public class TileEntityConverter extends TileEntityInventory implements IHasGui,
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
                 double add = Math.min(maxStorage2 - energy2, energy.getEnergy() * Config.coefficientrf);
+                add = Math.max(add,0);
                 energy2 += add;
                 energy.useEnergy(add / Config.coefficientrf);
             }

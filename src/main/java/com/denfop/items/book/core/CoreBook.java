@@ -32,6 +32,8 @@ public class CoreBook {
         new MainPage("basic", 1, "description.basic", new ItemStack(IUItem.book));
         new Pages("info", "basic", 1, "description.basic.info", new ItemStack(IUItem.book));
         new AddPages("desinfo", "info", 0, "description.basic.info.desc", "iu.text1");
+        new Pages("info_ore", "basic", 2, "description.info_ore.info", new ItemStack(IUItem.ore));
+        new Pages("info_mineral_ore", "basic", 3, "description.info_mineral_ore.info", new ItemStack(IUItem.heavyore));
 
     }
 

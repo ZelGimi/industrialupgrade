@@ -6,6 +6,8 @@ import com.denfop.gui.GuiSolar;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntitySolarGenerator extends TileEntityBaseGenerator implements IHasGui {
 
@@ -63,6 +65,7 @@ public class TileEntitySolarGenerator extends TileEntityBaseGenerator implements
         return new ContainerSolar(this, player);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public GuiSolar getGui(final EntityPlayer player, final boolean isAdmin) {
         return new GuiSolar(getGuiContainer(player));

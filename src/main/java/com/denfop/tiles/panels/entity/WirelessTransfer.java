@@ -1,20 +1,20 @@
 package com.denfop.tiles.panels.entity;
 
-import ic2.api.energy.tile.IEnergySink;
+import com.denfop.api.energy.IAdvEnergySink;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
 public class WirelessTransfer {
 
-    private final IEnergySink sink;
+    private final IAdvEnergySink sink;
     private final TileEntity tile;
 
-    public WirelessTransfer(TileEntity tile, IEnergySink sink) {
+    public WirelessTransfer(TileEntity tile, IAdvEnergySink sink) {
         this.tile = tile;
         this.sink = sink;
     }
 
-    public IEnergySink getSink() {
+    public IAdvEnergySink getSink() {
         return sink;
     }
 

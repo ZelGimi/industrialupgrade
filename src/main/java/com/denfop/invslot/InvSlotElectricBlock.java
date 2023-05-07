@@ -2,7 +2,9 @@ package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.IUItem;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySink;
+import com.denfop.api.energy.IAdvEnergyTile;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
@@ -31,34 +33,8 @@ public class InvSlotElectricBlock extends InvSlot {
         this.setStackSizeLimit(1);
     }
 
-    @Override
-    public void onChanged() {
-        super.onChanged();
-        TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
-        if (this.type == 3) {
-            if (tile.UUID != null) {
-                tile.personality = this.personality();
-            }
-            tile.output_plus = this.output_plus(tile.l);
-            tile.output = tile.l + tile.output_plus;
-            tile.movementcharge = this.getstats().get(0);
-            tile.movementchargeitem = this.getstats().get(1);
-            tile.movementchargerf = this.getstats().get(2);
-            tile.movementchargeitemrf = this.getstats().get(3);
-
-            tile.rf = this.getstats().get(4);
-
-        }
-        for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
-                tile.wireless = true;
-            }
-        }
 
 
-    }
 
     public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 3) {
@@ -191,8 +167,30 @@ public class InvSlotElectricBlock extends InvSlot {
     @Override
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
+        TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
         if (this.type == 3) {
-            wirelessmodule();
+            if (tile.UUID != null) {
+                tile.personality = this.personality();
+            }
+            tile.output_plus = this.output_plus(tile.l);
+            tile.output = tile.l + tile.output_plus;
+            tile.movementcharge = this.getstats().get(0);
+            tile.movementchargeitem = this.getstats().get(1);
+            tile.movementchargerf = this.getstats().get(2);
+            tile.movementchargeitemrf = this.getstats().get(3);
+
+            tile.rf = this.getstats().get(4);
+            tile.wireless = false;
+            tile.wirelessTransferList.clear();
+            for (int i = 0; i < this.size(); i++) {
+                if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
+                        .get(i)
+                        .getItemDamage() == 10) {
+                    tile.wireless = true;
+                    this.wirelessmodule();
+                    break;
+                }
+            }
         }
     }
 
@@ -200,7 +198,7 @@ public class InvSlotElectricBlock extends InvSlot {
         TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
 
         for (int i = 0; i < this.size(); i++) {
-            if (this.get(i) != null && this.get(i).getItem() instanceof ItemAdditionModule && this.get(i).getItemDamage() == 10) {
+            if (this.get(i).getItem() instanceof ItemAdditionModule && this.get(i).getItemDamage() == 10) {
 
                 int x;
                 int y;
@@ -211,22 +209,11 @@ public class InvSlotElectricBlock extends InvSlot {
                 y = nbttagcompound.getInteger("Ycoord");
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
-                if (tile.getWorld().getTileEntity(pos) != null
-                        && tile
-                        .getWorld()
-                        .getTileEntity(pos) instanceof TileEntityInventory && x != 0 && nbttagcompound.getBoolean(
-                        "change")
-                        && y != 0 && z != 0) {
-                    TileEntityInventory tile1 = (TileEntityInventory) tile.getWorld().getTileEntity(pos);
-
-                    assert tile1 != null;
-                    if (tile1.getComp(AdvEnergy.class) != null) {
-                        final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
-                        if (energy.getDelegate() instanceof IAdvEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
-                        }
-                    }
-
+                final IAdvEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
+                        .getParent()
+                        .getWorld(), pos);
+                if (energy instanceof IAdvEnergySink) {
+                    tile.wirelessTransferList.add(new WirelessTransfer( tile.getWorld().getTileEntity(pos), (IAdvEnergySink) energy));
                 }
             }
 

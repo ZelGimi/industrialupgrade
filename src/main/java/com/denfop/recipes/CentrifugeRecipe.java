@@ -103,7 +103,7 @@ public class CentrifugeRecipe {
         addcentrifuge1("Tin", Ic2Items.smallIronDust);
         addcentrifuge1("Iron", Ic2Items.smallIronDust);
         addcentrifuge("Iron", Ic2Items.smallIronDust);
-        addcentrifuge(new ItemStack(Ic2Items.clayDust.getItem(), 4, Ic2Items.clayDust.getItemDamage()));
+        addcentrifuge(new ItemStack(Ic2Items.clayDust.getItem(), 4, Ic2Items.clayDust.getItemDamage()),Ic2Items.silicondioxideDust);
         addcentrifuge(new ItemStack(Items.QUARTZ, 2), Ic2Items.lithiumDust);
         addcentrifuge(new ItemStack(Blocks.COBBLESTONE), Ic2Items.stoneDust);
         addcentrifuge(Ic2Items.RTGPellets, new ItemStack(Ic2Items.Plutonium.getItem(), 3, 3),

@@ -159,6 +159,11 @@ public class CompressorRecipe {
                 "plateDenseSteel"
         );
         addcompressor(
+                "plateLead",
+                9,
+                "plateDenseLead"
+        );
+        addcompressor(
                 "dustTinyLapis",
                 9,
                 "dustLapis"

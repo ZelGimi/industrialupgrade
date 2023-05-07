@@ -51,6 +51,8 @@ import java.util.Map;
 public class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
         IInventorySlotHolder<TileEntityInventory>, INetworkDataProvider {
 
+    protected boolean isLoaded = false;
+
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
     protected final IItemHandler[] itemHandler;
@@ -551,6 +553,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         for (TileEntityAdvComponent component : this.updateServerList) {
             component.updateEntityServer();
         }
+        if(!isLoaded)
+            this.loadBeforeFirstUpdate();
+    }
+
+    public void loadBeforeFirstUpdate() {
+        isLoaded  = true;
     }
 
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

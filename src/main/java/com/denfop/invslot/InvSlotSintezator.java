@@ -182,7 +182,7 @@ public class InvSlotSintezator extends InvSlot {
                     if (tile1.getComp(AdvEnergy.class) != null) {
                         final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
                         if (energy.getDelegate() instanceof IAdvEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
+                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IAdvEnergySink) energy.getDelegate()));
                         }
                     }
 
@@ -277,6 +277,15 @@ public class InvSlotSintezator extends InvSlot {
                 if (damage == 2) {
                     tile.machineTire1--;
                 }
+            }
+        }
+        tile.wirelessTransferList.clear();
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
+                    .get(i)
+                    .getItemDamage() == 10) {
+                this.wirelessmodule();
+                break;
             }
         }
         tile.genDay = temp_day;

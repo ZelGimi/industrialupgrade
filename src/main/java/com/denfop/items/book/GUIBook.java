@@ -54,6 +54,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
     RenderItemIU item = new RenderItemIU();
     RenderItemIUM itemmini = new RenderItemIUM();
 
+
     public GUIBook(EntityPlayer player, final ItemStack itemStack1, final ContainerBook containerBook) {
         super(containerBook);
 
@@ -74,27 +75,30 @@ public class GUIBook extends GuiIC2<ContainerBook> {
         this.maxmain = Math.ceil((double) MainPage.lst.size() / 12);
         this.next = MainPage.lst.size() > 12;
         this.scale = Minecraft.getMinecraft().gameSettings.guiScale;
+
+
+        //      String locale = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
+        //      this.text_max = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().equals("en_us") ? ;
+
     }
 
     public static List<String> splitEqually(String text, int size) {
-        String[] ret = text.split("\\s");
+        String[] ret = text.split(" ");
         List<String> ret1 = new ArrayList<>();
         StringBuilder k = new StringBuilder();
         for (String res : ret) {
-            if ((k.length() + res.length() + 1) < size) {
+            if ((k.length() + res.length() + 1) < size && !res.equals("\n")) {
                 k.append(" ").append(res);
 
             } else {
-                ret1.add(k.toString());
+                ret1.add(k.toString().trim());
                 k = new StringBuilder();
                 k.append(res);
             }
         }
-     /*   List<String> ret = new ArrayList<>((text.length() + size - 1) / size);
-
-        for (int start = 0; start < text.length(); start += size) {
-            ret.add(text.substring(start, Math.min(text.length(), start + size)));
-        }*/
+        if (k.length() > 0) {
+            ret1.add(k.toString().trim());
+        }
         return ret1;
     }
 
@@ -286,6 +290,11 @@ public class GUIBook extends GuiIC2<ContainerBook> {
 
     public void drawForegroundLayer(int par1, int par2) {
         handleUpgradeTooltip(par1, par2);
+
+        final boolean isUkrOrrus = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().equals(
+                "ru_ru") || (Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().equals(
+                "uk_ua"));
+
         if (this.next) {
             draw(par1, par2, 111, 129, "description.next");
         }
@@ -296,7 +305,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
             MainPage page = MainPage.lst.get(mainindex - 1);
             List<Pages> lst = MainPage.mainpages.get(page);
             if (index <= 0) {
-                int x = 12;
+                int x = 8;
                 int y = 14;
                 for (int m = colindex; m < Math.min(colindexmax, lst.size()); m++) {
                     Pages page1 = lst.get(m);
@@ -306,38 +315,71 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                     );
                 }
             } else {
+
                 Pages page1 = Pages.lst.get(index - 1);
                 List<AddPages> lst1 = Pages.pages.get(page1);
                 if (indexpage < lst1.size()) {
                     AddPages addpag = lst1.get(indexpage);
+                    int max = isUkrOrrus ? 43 : 33;
                     if (addpag.resource == null) {
-                        List<String> list = splitEqually(Localization.translate(addpag.description), 32);
+
+                    List<String> list = splitEqually(Localization.translate(addpag.description), max);
+                      /*     List<String> list = splitEqually(" The mod adds many new ores, there are 4 types in total, in this" +
+                                   " article we will analyze the first type. There are 16 ores of the first type in total. " +
+                                   "Information about each ore will be specifically given below, namely: name, min and max " +
+                                   "height, min and max quantity: " +
+                                   "\n \n Michalov ore - 0 - 70 - 3 - 6 " +
+                                   "\n Aluminium ore - 0 - 70 - 3 - 6 " +
+                                   "\n Vanadium ore - 0 - 70 - 3 - 6 " +
+                                   "\n Tungsten ore - 0 - 70 - 3 - 6 " +
+                                   "\n Cobalt ore - 0 - 70 - 3 - 6 " +
+                                   "\n Magnesium ore - 0 - 70 - 3 - 6 " +
+                                   "\n Nickel ore - 0 - 70 - 3 - 6 " +
+                                   "\n Platium ore - 0 - 70 - 3 - 6 " +
+                                   "\n Titanium ore - 0 - 70 - 3 - 6 " +
+                                   "\n Chromium ore - 0 - 70 - 3 - 6 " , max);*/
                         int x0 = 12;
-                        int y = 20;
+                        int y = 26;
                         if (indexpage > 0) {
                             y -= 6;
                         }
                         if (indexpage == 0) {
                             String name = Localization.translate(page1.text);
                             int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
-                            this.fontRenderer.drawString(name, nmPos, 12, ModUtils.convertRGBcolorToInt(13, 229, 34));
+                            this.fontRenderer.drawString(name, nmPos, 11, ModUtils.convertRGBcolorToInt(
+                                    13,
+                                    229,
+                                    34
+                            ));
                         }
+
+                            GlStateManager.scale(0.75F, 0.75F, 0.75F);
+
+
                         for (String str : list) {
+
                             this.fontRenderer.drawString(str, x0, y,
                                     ModUtils.convertRGBcolorToInt(13, 229, 34)
                             );
-                            y += 8;
-                            if (y > 165) {
+                            y += 9;
+                            if (y > 205) {
                                 break;
                             }
                         }
+
+                            GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
+
+
                     } else {
-                        List<String> list = splitEqually(Localization.translate(addpag.textBefore), 30);
+                        List<String> list = splitEqually(Localization.translate(addpag.textBefore), max);
                         int x0 = 16;
                         int y = 20;
                         if (indexpage > 0) {
                             y -= 6;
                         }
+
+                            GlStateManager.scale(0.75F, 0.75F, 0.75F);
+
                         if (indexpage == 0) {
                             String name = Localization.translate(page1.text);
                             int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
@@ -354,6 +396,9 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                                 break;
                             }
                         }
+
+                            GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
+
                         y += 3;
                         int y0 = y;
                         y = Math.min(165 - y, (addpag.y1 - addpag.y));
@@ -570,7 +615,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
             MainPage page = MainPage.lst.get(mainindex - 1);
             List<Pages> lst = MainPage.mainpages.get(page);
             if (index <= 0) {
-                int x = 15;
+                int x = 10;
                 int y = 13;
                 for (int m = colindex; m < Math.min(colindexmax, lst.size()); m++) {
                     Pages page1 = lst.get(m);

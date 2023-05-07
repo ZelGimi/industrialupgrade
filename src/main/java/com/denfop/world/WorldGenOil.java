@@ -28,10 +28,10 @@ public class WorldGenOil extends WorldGenerator {
         int z = pos.getZ() - 8;
         int y = pos.getY();
         final IBlockState block_state = world.getBlockState(pos);
-        while (y > 5 && block_state.getMaterial() == Material.AIR) {
+        while (y > 40 && block_state.getMaterial() == Material.AIR) {
             y--;
         }
-        if (y <= 4) {
+        if (y <= 40) {
             return false;
         }
 

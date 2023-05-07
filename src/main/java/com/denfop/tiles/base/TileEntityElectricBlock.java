@@ -91,6 +91,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public boolean movementchargeitemrf = false;
     public double output_plus;
     public short temp;
+    public boolean load = false;
     public boolean movementchargeitem = false;
     public boolean personality = false;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
@@ -243,8 +244,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             }
 
         }
-        this.wirelessTransferList.clear();
-        this.inputslotC.wirelessmodule();
 
     }
 
@@ -591,6 +590,12 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     protected void updateEntityServer() {
         super.updateEntityServer();
+        if(!load) {
+            this.wirelessTransferList.clear();
+            this.inputslotC.wirelessmodule();
+            this.wireless = !this.wirelessTransferList.isEmpty();
+            this.load = true;
+        }
         this.needsInvUpdate = false;
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
         this.rsEmitter.setLevel(this.shouldEmitRedstone() ? 15 : 0);

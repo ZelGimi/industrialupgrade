@@ -27,7 +27,7 @@ public class WorldGenGas extends WorldGenerator {
         if (rand.nextInt(500) <= 450) {
             return false;
         }
-        if (y > 25) {
+        if (y > 40) {
             return false;
         }
 

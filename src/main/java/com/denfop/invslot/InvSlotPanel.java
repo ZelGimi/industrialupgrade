@@ -2,7 +2,9 @@ package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.Config;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySink;
+import com.denfop.api.energy.IAdvEnergyTile;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
@@ -234,12 +236,12 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
         tile.moonPhase = 1;
         tile.coef = 0;
         tile.wireless = false;
+        tile.wirelessTransferList.clear();
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
                     .get(i)
                     .getItemDamage() == 10) {
                 tile.wireless = true;
-                tile.wirelessTransferList.clear();
                 this.wirelessmodule();
                 break;
             }
@@ -313,12 +315,11 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
                         && tile.getWorld().getTileEntity(pos) instanceof TileEntityInventory && x != 0
                         && y != 0 && z != 0 && !nbttagcompound.getBoolean("change")) {
                     TileEntityInventory tile1 = (TileEntityInventory) tile.getWorld().getTileEntity(pos);
-                    assert tile1 != null;
-                    if (tile1.getComp(AdvEnergy.class) != null) {
-                        final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
-                        if (energy.getDelegate() instanceof IAdvEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
-                        }
+                    final IAdvEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
+                            .getParent()
+                            .getWorld(), pos);
+                    if (energy instanceof IAdvEnergySink) {
+                        tile.wirelessTransferList.add(new WirelessTransfer( tile1, (IAdvEnergySink) energy));
                     }
 
                 }
