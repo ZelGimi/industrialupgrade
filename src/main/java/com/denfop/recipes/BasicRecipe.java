@@ -2927,7 +2927,7 @@ public class BasicRecipe {
                 new ItemStack(IUItem.spawnermodules, 1, 3),
                 "ABA",
                 'B',
-                new ItemStack(IUItem.module9, 1, 5),
+                new ItemStack(IUItem.module9, 1, 3),
                 'A',
                 OreDictionary.getOres("doubleplateNichrome")
         );
@@ -4799,6 +4799,19 @@ public class BasicRecipe {
                 "gearRedbrass",
                 'E',
                 IUItem.compressIridiumplate
+        );
+        Recipes.advRecipes.addRecipe(
+                Ic2Items.iridiumPlate,
+                "ABA",
+                "BCB",
+                "ABA",
+                'A',
+                Ic2Items.iridiumOre,
+                'C',
+                "gemDiamond",
+                'B',
+                Ic2Items.advancedAlloy
+
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 3), "CCC", "BAB", "DED", 'A', ADV_SENSOR, 'C', "gearGermanium", 'B',

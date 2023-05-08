@@ -591,7 +591,7 @@ public class TileEntityAnalyzer extends TileEntityElectricMachine implements INe
                                                 temp = name.substring("Infused".length() + 3);
                                             }
 
-                                            if (!(("gem" + temp).equals("gemIridium")) && !name.equals("oreRedstone") && (OreDictionary.getOres(
+                                            if (!name.equals("oreRedstone") && (OreDictionary.getOres(
                                                     "gem" + temp) == null || OreDictionary
                                                     .getOres("gem" + temp)
                                                     .size() < 1) && (OreDictionary.getOres("shard" + temp) == null || OreDictionary
