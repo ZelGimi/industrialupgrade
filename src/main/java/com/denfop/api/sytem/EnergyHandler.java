@@ -1,6 +1,7 @@
 package com.denfop.api.sytem;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -23,10 +24,19 @@ public class EnergyHandler {
     }
 
     @SubscribeEvent
-    public void tick(final EnergyEvent event) {
+    public void tick(final WorldEvent.Unload event) {
         if (event.getWorld().isRemote) {
             return;
         }
+        for (IGlobalNet globalNet : EnergyBase.listGlobal) {
+            globalNet.onUnload(event.getWorld().provider.getDimension());
+        }
+
+    }
+
+    @SubscribeEvent
+    public void tick(final EnergyEvent event) {
+
         IGlobalNet globalNet = EnergyBase.globalNetMap.get(event.getEnergyType());
         if (globalNet != null) {
             if (event.getEvent() == EnumTypeEvent.LOAD) {

@@ -293,12 +293,12 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             int coble = rand.nextInt((int) col + 1);
             this.getblock += coble;
             col -= coble;
-            this.col_tick = col;
+
             boolean work = this.energy.getEnergy() >= proccent;
             for (double i = 0; i < col; i++) {
                 if (this.energy.getEnergy() >= proccent) {
                     work = true;
-
+                    this.col_tick++;
                     this.energy.useEnergy(proccent);
                     this.getblock++;
                     int num = main_list.size();

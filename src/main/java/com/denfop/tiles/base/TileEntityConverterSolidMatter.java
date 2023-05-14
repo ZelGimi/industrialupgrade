@@ -163,8 +163,14 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
         addrecipe(new ItemStack(Blocks.IRON_BLOCK), 24, 0, 0, 0, 0, 0, 0, 0);
         addrecipe(new ItemStack(Items.GOLD_INGOT), 20, 0, 0, 0, 0, 0, 0, 0);
         addrecipe(new ItemStack(Items.IRON_INGOT), 2.67, 0, 0, 0, 0, 0, 0, 0);
+        addrecipe(new ItemStack(Items.DIAMOND), 50, 0, 10, 0, 0, 40, 0, 0);
+        addrecipe(new ItemStack(Items.EMERALD), 70, 0, 10, 0, 0, 40, 0, 200);
         addrecipe(new ItemStack(Blocks.DIAMOND_BLOCK), 500, 0, 100, 0, 0, 400, 0, 0);
         addrecipe(new ItemStack(Blocks.EMERALD_BLOCK), 700, 0, 100, 0, 0, 400, 0, 200);
+        addrecipe(new ItemStack(Items.COAL), 1.5, 0, 0, 0, 0, 0.55, 0, 0);
+        addrecipe(new ItemStack(Items.DYE,1,4), 5, 0, 0, 0, 1, 7, 0, 0);
+        addrecipe(new ItemStack(Items.REDSTONE,1,4), 0.5, 0.5, 0, 0, 0, 1.7, 0, 0);
+
         addrecipe(new ItemStack(Blocks.COAL_BLOCK), 15, 0, 0, 0, 0, 4, 0, 0);
         addrecipe(new ItemStack(Items.STRING), 150, 0, 0, 0, 0, 0, 0, 200);
         addrecipe(new ItemStack(Items.LEATHER), 150, 0, 0, 0, 0, 0, 0, 50);

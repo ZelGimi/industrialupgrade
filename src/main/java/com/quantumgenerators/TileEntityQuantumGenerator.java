@@ -119,6 +119,11 @@ public class TileEntityQuantumGenerator extends TileEntityInventory implements I
     }
 
     @Override
+    protected void onLoaded() {
+        super.onLoaded();
+    }
+
+    @Override
     public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,

@@ -103,7 +103,7 @@ public class MaceratorRecipe {
         if (IUCore.isHasVersion("ic2", "220")) {
             addmacerator(new ItemStack(Items.ENDER_PEARL), ItemName.dust.getItemStack(DustResourceType.ender_pearl));
         }
-        addmacerator(new ItemStack(Items.COAL), "dustIron");
+        addmacerator(new ItemStack(Items.COAL), "dustCoal");
         addmacerator("crushedLead", "dustLead");
         addmacerator("crushedTin", "dustTin");
         addmacerator("crushedGold", "dustGold");

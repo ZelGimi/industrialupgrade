@@ -576,57 +576,6 @@ public class CommonProxy implements IGuiHandler {
         }
     }
 
-    private void writeRecipe(IBasicMachineRecipeManager recipeManager, String name) {
-
-        if (!name.equals("recycler")) {
-            final Iterable<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> recipe = recipeManager.getRecipes();
-            for (final MachineRecipe<IRecipeInput, Collection<ItemStack>> recipe1 : recipe) {
-                List<ItemStack> list = (List<ItemStack>) recipe1.getOutput();
-                if (!list.get(0).isItemEqual(Ic2Items.iridiumOre)) {
-                    Recipes.recipes.addRecipe(
-                            name,
-                            new BaseMachineRecipe(
-                                    new Input(
-                                            recipe1.getInput()
-                                    ),
-                                    new RecipeOutput(recipe1.getMetaData(), list)
-                            )
-                    );
-                } else if (!name.equals("compressor")) {
-                    Recipes.recipes.addRecipe(
-                            name,
-                            new BaseMachineRecipe(
-                                    new Input(
-                                            recipe1.getInput()
-                                    ),
-                                    new RecipeOutput(recipe1.getMetaData(), list)
-                            )
-                    );
-                }
-            }
-        } else {
-
-            if (ic2.api.recipe.Recipes.recyclerWhitelist.isEmpty()) {
-
-
-            } else {
-
-                for (final IRecipeInput stack : ic2.api.recipe.Recipes.recyclerBlacklist) {
-                    Recipes.recipes.addRecipe(
-                            name,
-                            new BaseMachineRecipe(
-                                    new Input(
-                                            stack
-                                    ),
-                                    new RecipeOutput(null, Ic2Items.scrap)
-                            )
-                    );
-                }
-            }
-
-        }
-    }
-
     public boolean addIModelRegister(IModelRegister modelRegister) {
         return false;
     }

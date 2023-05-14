@@ -61,6 +61,14 @@ public class GlobalNet implements IGlobalNet {
     }
 
     @Override
+    public void onUnload(int id) {
+        ILocalNet localNet = worldILocalNetMap.get(id);
+        if (localNet != null) {
+            localNet.onUnload();
+        }
+    }
+
+    @Override
     public Map<Integer, ILocalNet> getLocalNetMap() {
         return worldILocalNetMap;
     }

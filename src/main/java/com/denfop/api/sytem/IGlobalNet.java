@@ -17,6 +17,8 @@ public interface IGlobalNet {
 
     ILocalNet getLocalSystem(int id);
 
+    void onUnload(int id);
+
     Map<Integer, ILocalNet> getLocalNetMap();
 
     void TickEnd(int id);

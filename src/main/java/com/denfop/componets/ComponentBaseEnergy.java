@@ -33,7 +33,7 @@ import java.util.Set;
 public class ComponentBaseEnergy extends TileEntityAdvComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
-    public final World world;
+
     public final boolean fullEnergy;
     private final EnergyType type;
     public double capacity;
@@ -89,7 +89,6 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
         this.fullEnergy = fullEnergy;
-        this.world = parent.getWorld();
         this.pastEnergy = 0;
         this.perenergy = 0;
         this.tick = 0;
@@ -140,6 +139,7 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
     public void onLoaded() {
         assert this.delegate == null;
 
+
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
                 if (debugLoad) {
@@ -171,7 +171,6 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
         if (this.delegate != null) {
             throw new IllegalStateException();
         } else {
-            assert !this.sinkDirections.isEmpty() || !this.sourceDirections.isEmpty();
 
             if (this.sinkDirections.isEmpty()) {
                 this.delegate = new ComponentBaseEnergy.EnergyNetDelegateSource();
@@ -307,6 +306,8 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
 
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
+        this.sinkDirections = sinkDirections;
+        this.sourceDirections = sourceDirections;
         if (this.delegate != null) {
             if (debugLoad) {
                 IC2.log.debug(
@@ -323,8 +324,6 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
             ));
         }
 
-        this.sinkDirections = sinkDirections;
-        this.sourceDirections = sourceDirections;
         if (sinkDirections.isEmpty() && sourceDirections.isEmpty()) {
             this.delegate = null;
         } else if (this.delegate == null && this.loaded) {

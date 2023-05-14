@@ -89,6 +89,8 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
             this.setOverclockRates();
+            this.energy.setDirections(Util.allFacings, Util.allFacings);
+            this.energy2.setDirections(Util.allFacings, Util.allFacings);
         }
 
 
@@ -190,11 +192,9 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.energy.setDirections(Util.allFacings, Util.allFacings);
-        this.energy2.setDirections(Util.allFacings, Util.allFacings);
+
         this.tier = nbttagcompound.getInteger("tier");
 
-        this.energy2.setDirections(Util.allFacings, Util.allFacings);
         this.rf = nbttagcompound.getBoolean("rf");
 
     }

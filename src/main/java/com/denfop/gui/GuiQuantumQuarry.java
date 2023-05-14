@@ -56,7 +56,7 @@ public class GuiQuantumQuarry extends GuiIU<ContainerQuantumQuarry> {
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
                         "QE";
         new AdvArea(this, 147, 27, 158, 76)
-                .withTooltip(tooltip2 + "\n" + Localization.translate("iu.machines_work_energy") + (int) this.container.base.consume * this.container.base.col + "QE/t")
+                .withTooltip(tooltip2 + "\n" + Localization.translate("iu.machines_work_energy") + ModUtils.getString(this.container.base.consume * this.container.base.col_tick) + "QE/t")
                 .drawForeground(par1, par2);
     }
 

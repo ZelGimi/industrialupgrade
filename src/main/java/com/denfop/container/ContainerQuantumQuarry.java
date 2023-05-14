@@ -60,6 +60,8 @@ public class ContainerQuantumQuarry extends ContainerFullInv<TileEntityBaseQuant
         ret.add("inputslot");
         ret.add("outputSlot");
         ret.add("consume");
+        ret.add("col_tick");
+
         return ret;
     }
 
