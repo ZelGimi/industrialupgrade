@@ -18,10 +18,11 @@ public class EnergyAESink extends BasicSink {
     }
 
     public double getDemandedEnergy() {
-        return (this.energyfe.getExternalPowerDemand(PowerUnits.EU, this.energyfe.getAEMaxPower()));
+       return (this.energyfe.getExternalPowerDemand(PowerUnits.EU, this.energyfe.getAEMaxPower()));
     }
 
     public double injectEnergy(EnumFacing directionFrom, double amt, double voltage) {
+
         this.energyfe.injectExternalPower(PowerUnits.EU, amt, Actionable.MODULATE);
         return 0;
     }

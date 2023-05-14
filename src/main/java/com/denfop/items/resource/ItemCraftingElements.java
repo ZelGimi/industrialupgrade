@@ -323,6 +323,14 @@ public class ItemCraftingElements extends ItemMulti<ItemCraftingElements.Types> 
         crafting_261_element(261),
         crafting_262_element(262),
         crafting_263_element(263),
+        crafting_264_element(264),
+        crafting_265_element(265),
+        crafting_266_element(266),
+        crafting_267_element(267),
+        crafting_268_element(268),
+        crafting_269_element(269),
+        crafting_270_element(270),
+
         ;
 
         private final String name;

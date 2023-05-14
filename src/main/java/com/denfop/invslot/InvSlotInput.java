@@ -38,6 +38,7 @@ public class InvSlotInput extends InvSlot {
             final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
                     block.getStateFromMeta(content.getItemDamage()), this.tile.chance
             );
+
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
                 final List<ItemStack> list2 = new ArrayList<>();
@@ -157,6 +158,7 @@ public class InvSlotInput extends InvSlot {
                 list.removeAll(list1);
                 list.addAll(list2);
             }
+
             this.tile.setBaseMachineRecipe(i, new BaseMachineRecipe(
                     new Input(input.forStack(this.get(i))),
                     new RecipeOutput(null, list)

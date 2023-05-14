@@ -3,11 +3,8 @@ package com.denfop.tiles.mechanism.dual;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiSynthesis;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
@@ -66,6 +63,30 @@ public class TileEntitySynthesis extends TileEntityDoubleElectricMachine impleme
         addsynthesis(
                 new ItemStack(IUItem.radiationresources, 1, 7),
                 new ItemStack(IUItem.cell_all, 1, 2),
+                19,
+                new ItemStack(IUItem.radiationresources, 1, 5)
+        );
+        addsynthesis(
+                new ItemStack(IUItem.radiationresources, 1, 2),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                32,
+                new ItemStack(IUItem.radiationresources, 1, 3)
+        );
+        addsynthesis(
+                new ItemStack(IUItem.radiationresources, 1, 3),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                27,
+                new ItemStack(IUItem.radiationresources, 1, 6)
+        );
+        addsynthesis(
+                new ItemStack(IUItem.radiationresources, 1, 6),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
+                22,
+                new ItemStack(IUItem.radiationresources, 1, 7)
+        );
+        addsynthesis(
+                new ItemStack(IUItem.radiationresources, 1, 7),
+                ModUtils.getCellFromFluid(FluidName.fluidHelium.getInstance()),
                 19,
                 new ItemStack(IUItem.radiationresources, 1, 5)
         );

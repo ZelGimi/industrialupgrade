@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 public class AEIntegration {
 
     public static void init() {
+
         MaceratorRecipe.addmacerator(
                 new ItemStack(Items.QUARTZ),
                 Api.INSTANCE.definitions().materials().netherQuartzDust().maybeStack(1).get()

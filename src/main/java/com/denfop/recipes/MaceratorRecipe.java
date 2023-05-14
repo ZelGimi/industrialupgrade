@@ -150,7 +150,7 @@ public class MaceratorRecipe {
         addmacerator(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.SAND));
         addmacerator(
                 new ItemStack(Ic2Items.energyCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE),
-                ItemName.dust.getItemStack(DustResourceType.energium)
+                ItemName.dust.getItemStack(DustResourceType.energium),9
         );
         addmacerator(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5, 0));
         addmacerator(new ItemStack(Items.WHEAT, 8), Ic2Items.biochaff);

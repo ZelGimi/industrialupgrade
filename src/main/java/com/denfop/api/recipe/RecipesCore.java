@@ -84,6 +84,8 @@ public class RecipesCore implements IRecipes {
 
         this.addRecipeManager("cannerbottle", 2, true, true);
         this.addRecipeManager("cannerenrich", 2, true, true);
+        this.addRecipeManager("empty", 1, false, true);
+
     }
 
     public IBaseRecipe getRecipe(String name) {

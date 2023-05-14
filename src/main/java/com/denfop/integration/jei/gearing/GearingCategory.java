@@ -73,8 +73,8 @@ public class GearingCategory extends Gui implements IRecipeCategory<GearingWrapp
                 14
         );
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66 - 1, 12 + 19, 209, 64, 18, 25);
-        drawTexturedModalRect(66 - 1, 12 + 19, 227, 64, 18, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 22, 209, 64, 18, 25);
+        drawTexturedModalRect(66 - 1, 12 + 22, 227, 64, 18, xScale + 1);
 
         drawTexturedModalRect(
                 +2, 44 + 14 - energylevel, 176, 14 - energylevel, 14,

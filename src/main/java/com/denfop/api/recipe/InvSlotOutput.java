@@ -50,6 +50,7 @@ public class InvSlotOutput extends InvSlot {
     }
 
     private boolean add(List<ItemStack> stacks, boolean simulate) {
+
         if (stacks != null && !stacks.isEmpty()) {
 
             for (ItemStack stack : stacks) {

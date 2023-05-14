@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -100,7 +100,7 @@ public class CTAlloySmelter {
         }
 
         public String describe() {
-            return "Adding alloy smelter bottle recipe " + this.container + " + " + this.fill + " => " + this.output;
+            return "Adding alloy smelter recipe " + this.container + " + " + this.fill + " => " + this.output;
         }
 
         public Object getOverrideKey() {

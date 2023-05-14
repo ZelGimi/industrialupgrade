@@ -8054,6 +8054,17 @@ public class BasicRecipe {
         );
         Recipes.advRecipes.addRecipe(
                 getBlockStack(BlockBaseMachine3.teleporter_iu),
+                " A ",
+                " B ",
+                "   ",
+                'A',
+                new ItemStack(IUItem.crafting_elements,1,268),
+                'B',
+                Ic2Items.advancedMachine
+
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(IUItem.crafting_elements,1,268),
                 "AEA",
                 "CBC",
                 "ADA",
@@ -8062,42 +8073,59 @@ public class BasicRecipe {
                 'C',
                 IUItem.glassFiberCableItem,
                 'D',
-                "gemDiamond",
+                new ItemStack(IUItem.crafting_elements,1,270),
                 'B',
-                Ic2Items.advancedMachine,
+                 DEFAULT_SENSOR,
                 'E',
                 IUItem.frequency_transmitter
 
         );
         Recipes.advRecipes.addRecipe(
                 getBlockStack(BlockBaseMachine3.solid_canner_iu),
-                " A ",
-                " A ",
-                "BCB",
+                "   ",
+                "BAC",
+                " D ",
                 'A',
-                Ic2Items.tinCan,
-                'C',
                 Ic2Items.machine,
+                'C',
+                new ItemStack(IUItem.crafting_elements,1,264),
                 'D',
-                "gemDiamond",
+               Ic2Items.elemotor,
                 'B',
-                Ic2Items.electronicCircuit,
-                'E',
-                IUItem.frequency_transmitter
+                new ItemStack(IUItem.crafting_elements,1,47)
+
 
         );
         Recipes.advRecipes.addRecipe(
                 getBlockStack(BlockBaseMachine3.canner_iu),
-                "ACA",
-                "ABA",
-                "AAA",
+                "A D",
+                "EBF",
+                " C ",
                 'A',
-                "plateTin",
+                new ItemStack(IUItem.crafting_elements, 1, 265),
                 'B',
                 Ic2Items.machine,
                 'C',
-                Ic2Items.electronicCircuit
+                Ic2Items.elemotor,
+                'D',
+                new ItemStack(IUItem.crafting_elements, 1, 27),
+                'E',
+                new ItemStack(IUItem.crafting_elements, 1, 47),
+                'F',
+                new ItemStack(IUItem.crafting_elements, 1, 154)
 
+        );
+        Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 265),
+                "CCC",
+                "BAB",
+                "DDD",
+                'A',
+               DEFAULT_SENSOR,
+                'B',
+                "gearMuntsa",
+                'C',
+                 "plateTin",
+                'D', "gearElectrum"
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 263),
                 " C ",
@@ -8139,6 +8167,19 @@ public class BasicRecipe {
         Recipes.advRecipes.addShapelessRecipe(getBlockStack(BlockBaseMachine3.pump_iu), Ic2Items.pump);
         Recipes.advRecipes.addShapelessRecipe(getBlockStack(BlockBaseMachine3.reactor_iu), Ic2Items.nuclearReactor);
         Recipes.advRecipes.addShapelessRecipe(getBlockStack(BlockBaseMachine3.chamber_iu), Ic2Items.reactorChamber);
+
+        Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 264),
+                " C ",
+                "BAB",
+                "DDD",
+                'A',
+                DEFAULT_SENSOR,
+                'B',
+                "doubleplateNichrome",
+                'C',
+                Ic2Items.tinCan,
+                'D', "plateVanadoalumite"
+        );
     }
 
     public static ItemStack getBlockStack(ITeBlock block) {

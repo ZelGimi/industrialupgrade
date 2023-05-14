@@ -169,7 +169,7 @@ public class CompressorRecipe {
                 "dustLapis"
         );
         addcompressor(
-                new ItemStack(Items.DYE, 4, 9),
+                new ItemStack(Items.DYE, 9, 4),
                 new ItemStack(Blocks.LAPIS_BLOCK)
         );
         addcompressor(
@@ -318,13 +318,14 @@ public class CompressorRecipe {
 
 
     public static void addcompressor(ItemStack input, int n, ItemStack output) {
-
+        input = input.copy();
+        input.setCount(n);
         final IRecipeInputFactory input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input, n)
+                                input1.forStack(input)
                         ),
                         new RecipeOutput(null, output)
                 )
@@ -365,7 +366,7 @@ public class CompressorRecipe {
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input, 1)
+                                input1.forStack(input)
                         ),
                         new RecipeOutput(null, output)
                 )

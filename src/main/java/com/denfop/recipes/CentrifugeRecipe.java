@@ -129,6 +129,16 @@ public class CentrifugeRecipe {
         addcentrifuge(Ic2Items.reactorDepletedUraniumQuad, growCount(Ic2Items.Uran238, 16),
                 growCount(Ic2Items.smallPlutonium, 4), growCount(Ic2Items.ironDust, 7)
         );
+
+        addcentrifuge1("crushedPurifiedUranium", new ItemStack(Ic2Items.Plutonium.getItem(), 1, 5),
+                new ItemStack(Ic2Items.Uran238.getItem(), 6, Ic2Items.Uran238.getItemDamage())
+        );
+        addcentrifuge1("crushedUranium", new ItemStack(Ic2Items.Plutonium.getItem(), 1, 5),
+                new ItemStack(Ic2Items.Uran238.getItem(), 4, Ic2Items.Uran238.getItemDamage()),Ic2Items.stoneDust
+        );
+        addcentrifuge(growCount(Ic2Items.UranFuel, 20), growCount(Ic2Items.Uran238, 112),
+                growCount(Ic2Items.Uran235, 7)
+        );
     }
 
     public static void addcentrifuge(ItemStack stack, ItemStack... output) {
@@ -145,7 +155,20 @@ public class CentrifugeRecipe {
                 )
         );
     }
-
+    public static void addcentrifuge1(String stack, ItemStack... output) {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setShort("minHeat", (short) 5000);
+        final IRecipeInputFactory input = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "centrifuge",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.forOreDict(stack)
+                        ),
+                        new RecipeOutput(nbt, output)
+                )
+        );
+    }
     public static ItemStack growCount(ItemStack stack, int count) {
         final ItemStack stack1 = stack.copy();
         stack1.setCount(count);

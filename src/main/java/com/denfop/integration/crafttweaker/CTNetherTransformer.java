@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -137,7 +137,7 @@ public class CTNetherTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("netherassembler", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.removeRecipe("nethercollector", new RecipeOutput(null, getItemStack(this.output)));
         }
 
         public String describe() {

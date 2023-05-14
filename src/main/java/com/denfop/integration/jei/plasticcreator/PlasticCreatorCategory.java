@@ -98,7 +98,7 @@ public class PlasticCreatorCategory extends Gui implements IRecipeCategory<Plast
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
 
-        fff.init(2, true, 5, 4, 12, 47, 10000, true, null);
+        fff.init(2, true, 5, 4, 12, 47, 12000, true, null);
         fff.set(2, recipes.getInput2());
 
         isg.init(3, false, 110, 28);

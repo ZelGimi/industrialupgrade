@@ -122,18 +122,18 @@ public class MetalFormerRecipe {
         addCutting("plateMuntsa", 4, new ItemStack(IUItem.expcable)
         );
         //
-        addmolot("ingotSteel", "plateSteel");
-        addmolot("ingotCopper", "plateCopper");
-        addmolot("ingotLead", "plateLead");
-        addmolot("ingotGold", "plateGold");
-        addmolot("ingotTin", "plateTin");
-        addmolot("ingotIron", "plateIron");
-        addmolot("ingotBronze", "plateBronze");
-        addmolot("plateBronze", "casingBronze", 2);
-        addmolot("plateIron", "casingIron", 2);
-        addmolot("plateSteel", "casingSteel", 2);
+        addmolot("ingotSteel", Ic2Items.plateadviron);
+        addmolot("ingotCopper", Ic2Items.platecopper);
+        addmolot("ingotLead", Ic2Items.platelead);
+        addmolot("ingotGold", Ic2Items.plategold);
+        addmolot("ingotTin", Ic2Items.platetin);
+        addmolot("ingotIron", Ic2Items.plateiron);
+        addmolot("ingotBronze", Ic2Items.platebronze);
+        addmolot("plateBronze", Ic2Items.casingbronze, 2);
+        addmolot("plateIron", Ic2Items.casingiron, 2);
+        addmolot("plateSteel", Ic2Items.casingadviron, 2);
         addmolot("plateCopper", Ic2Items.casingcopper, 2);
-        addmolot("plateLead", "casingLead", 2);
+        addmolot("plateLead", Ic2Items.casinglead, 2);
         addmolot("plateGold", Ic2Items.casinggold, 2);
         addmolot("plateTin", Ic2Items.casingtin, 2);
 
@@ -222,7 +222,19 @@ public class MetalFormerRecipe {
                 )
         );
     }
+    public static void addmolot(String input, ItemStack output) {
 
+        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "rolling",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.forOreDict(input, 1)
+                        ),
+                        new RecipeOutput(null, output)
+                )
+        );
+    }
     public static void addExtruding(String input, String output, int n) {
         final IRecipeInputFactory input1 = Recipes.inputFactory;
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();
