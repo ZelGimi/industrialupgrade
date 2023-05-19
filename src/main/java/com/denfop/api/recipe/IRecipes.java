@@ -19,6 +19,9 @@ public interface IRecipes {
 
     Set<Map.Entry<ItemStack, BaseMachineRecipe>> getRecipeStack(String name);
 
+    void removeAll(String recipe);
+
+    void reloadRecipes(String recipe);
     void initializationRecipes();
 
     void addRecipeManager(String name, int size, boolean consume);

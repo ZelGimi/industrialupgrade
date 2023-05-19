@@ -694,7 +694,7 @@ public class InvSlotUpgrade extends InvSlot {
         if (!stackInSlot.isEmpty()) {
 
             int max = stackInSlot.getMaxStackSize();
-            int limit = dest.getSlotLimit(slot);
+            int limit = dest.getSlotLimit(slot );
             if (stackInSlot.getCount() >= Math.min(max, limit)) {
                 return stack;
             }
@@ -749,7 +749,12 @@ public class InvSlotUpgrade extends InvSlot {
                 return stack;
             } else {
                 if (!simulate) {
-                    inventory.setInventorySlotContents(slot, stack);
+                    try {
+                       inventory.setInventorySlotContents(slot, stack);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                       dest.insertItem(slot, stack,false);
+                    }
+
 
                 }
                 return ItemStack.EMPTY;

@@ -155,6 +155,7 @@ public class MaceratorRecipe {
         addmacerator(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5, 0));
         addmacerator(new ItemStack(Items.WHEAT, 8), Ic2Items.biochaff);
         addmacerator(new ItemStack(Blocks.LAPIS_BLOCK), "dustLapis", 9);
+        addmacerator(new ItemStack(Items.DYE,1,4), "dustLapis", 1);
         addmacerator(new ItemStack(Blocks.STONE), new ItemStack(Blocks.COBBLESTONE));
 
     }

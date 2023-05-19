@@ -382,6 +382,7 @@ public final class IUCore {
         proxy.registerRecipe();
         initENet();
 
+
     }
 
     @SubscribeEvent

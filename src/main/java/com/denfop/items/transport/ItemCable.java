@@ -191,10 +191,10 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         }
     }
 
+
     public ItemStack getCable(CableType type) {
         return new ItemStack(this, 1, type.getId());
     }
-
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
         if (meta >= name.length) {
@@ -275,8 +275,6 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
             List<ItemStack> variants = new ArrayList<>(ItemCable.variants);
-
-
             itemList.addAll(variants);
         }
     }

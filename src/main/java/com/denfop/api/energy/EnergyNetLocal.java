@@ -9,6 +9,7 @@ import ic2.core.IC2;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.IItemHandler;
@@ -24,6 +25,9 @@ public class EnergyNetLocal {
     private final EnergyPathMap energySourceToEnergyPathMap;
     private final List<IEnergyController> controllerList;
     private final Map<BlockPos, IAdvEnergyTile> chunkCoordinatesIAdvEnergyTileMap;
+
+    private final Map<ChunkPos, List< IAdvEnergyTile>> chunkPosIAdvEnergyTileMap;
+
     private final WaitingList waitingList;
     private final List<IAdvEnergySource> energySourceList = new ArrayList<>();
     private final SunCoef suncoef;
@@ -39,6 +43,7 @@ public class EnergyNetLocal {
         this.world = world;
         this.controllerList = new ArrayList<>();
         this.chunkCoordinatesIAdvEnergyTileMap = new HashMap<>();
+        this.chunkPosIAdvEnergyTileMap = new HashMap<>();
         this.tick = 0;
         this.suncoef = new SunCoef(world);
         this.losing = EnergyNetGlobal.instance.getLosing();
@@ -59,6 +64,11 @@ public class EnergyNetLocal {
         this.ignoring = EnergyNetGlobal.instance.needIgnoringTiers();
         this.explosing = EnergyNetGlobal.instance.needExplosion();
         this.hasrestrictions = EnergyNetGlobal.instance.hasRestrictions();
+        this.chunkPosIAdvEnergyTileMap = new HashMap<>();
+    }
+
+    public Map<ChunkPos, List< IAdvEnergyTile>> getChunkPosIAdvEnergyTileMap() {
+        return chunkPosIAdvEnergyTileMap;
     }
 
     public void explodeTiles(IAdvEnergySink sink) {

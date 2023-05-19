@@ -3156,3 +3156,6 @@ iu.itemtin1_cable=Insulated Tin Cable
 find.gas_vein=Gas is generated in large quantities underground
 find.oil_vein=Oil is generated in huge quantities in the desert
 iu.replicator_using_matter=To create an item in a replicator, you need: 
+
+iu.cooling_sensor=Mechanism Heating Sensor
+iu.heat_sensor=Mechanism Heat Sensor

@@ -473,6 +473,27 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
+    public void removeAll(final String recipe) {
+        map_recipes.remove(recipe);
+        map_recipe_managers_itemStack.remove(recipe);
+    }
+
+    @Override
+    public void reloadRecipes(final String className) {
+
+        this.recipes.forEach(iHasRecipe ->  {
+                    System.out.println(iHasRecipe.getClass().getName());
+            if(className.equals(iHasRecipe.getClass().getName())) {
+                iHasRecipe.init();
+                return;
+            }
+
+        }
+
+        );
+    }
+
+    @Override
     public void initializationRecipes() {
         this.recipes.forEach(IHasRecipe::init);
         this.fluid_recipe.initializationRecipes();

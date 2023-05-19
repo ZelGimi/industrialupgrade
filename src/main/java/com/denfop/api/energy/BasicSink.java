@@ -21,6 +21,11 @@ public class BasicSink extends BasicEnergyTile implements IAdvEnergySink {
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+    }
+
+    @Override
     public double getPerEnergy() {
         return this.perenergy;
     }

@@ -19,6 +19,7 @@ public interface IAdvEnergyNet {
 
     double getRFFromEU(int amount);
 
+    EnergyNetLocal getEnergyLocal(World world);
 
     SunCoef getSunCoefficient(World world);
 

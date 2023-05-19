@@ -275,7 +275,10 @@ public class CommonProxy implements IGuiHandler {
         SpaceInit.init();
 
         ResearchSystem.instance = new BaseResearchSystem();
-
+        if(Loader.isModLoaded("jaopca")){
+            Recipes.recipes.removeAll("comb_macerator");
+            Recipes.recipes.reloadRecipes("com.denfop.tiles.mechanism.multimechanism.simple.TileEntityCombMacerator");
+        }
 
     }
 

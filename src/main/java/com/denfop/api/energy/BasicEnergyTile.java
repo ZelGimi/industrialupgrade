@@ -37,17 +37,13 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
 
 
     public void update() {
-        if (!this.addedToEnet) {
-            this.onLoad();
-        }
+
+
 
     }
 
     public void onLoad() {
-        if (!this.addedToEnet && !this.getWorldObj().isRemote) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorldObj(), this.tile, this));
-            this.addedToEnet = true;
-        }
+        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorldObj(), this.world.getTileEntity(pos), this));
 
     }
 
@@ -56,10 +52,11 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
     }
 
     public void onChunkUnload() {
-        if (this.addedToEnet && !this.getWorldObj().isRemote) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorldObj(), this));
-            this.addedToEnet = false;
-        }
+         if(this.tile == null)
+            if(this.pos != null)
+                if(this.world != null)
+                    this.tile = this.world.getTileEntity(pos);
+           MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorldObj(), this));
 
     }
 

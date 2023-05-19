@@ -32,7 +32,9 @@ import ic2.core.IC2;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.StackUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -48,12 +50,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEnergySource, IHasGui,
         IWrenchable, IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
@@ -112,6 +118,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected double perenergy;
     List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
     private AudioSource audioSource;
+    Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
 
     public TileEntitySolarPanel(
             final int tier, final double gDay,
@@ -168,6 +175,26 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
             }
         }
     }
+
+    @Override
+    protected void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
+        super.onNeighborChange(srcBlock, srcPos);
+        TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
+        boolean hasElement =  this.energyStorageMap.containsKey(srcPos);
+        if(srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement)
+            this.energyStorageMap.remove(srcPos);
+        else if(hasElement)
+            this.energyStorageMap.remove(srcPos);
+        if(tile instanceof TileEntityInventory)
+            return;
+        if(tile == null)
+            return;
+        if(tile.hasCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite())){
+            IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite());
+            this.energyStorageMap.put(srcPos,energy_storage);
+        }
+    }
+
     public void loadBeforeFirstUpdate() {
       super.loadBeforeFirstUpdate();
         this.wirelessTransferList.clear();
@@ -445,7 +472,16 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-
+        if(!this.energyStorageMap.isEmpty() ){
+            for(Map.Entry<BlockPos,IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()){
+                this.storage -= (4 * iEnergyStorageEntry.getValue().receiveEnergy((int)Math.min(Math.min(this.storage / 4,
+                                Integer.MAX_VALUE - 1),this.getOfferedEnergy() / 4),
+                        false));
+                if (this.storage <= 0) {
+                    break;
+                }
+            }
+        }
 
         if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             updateVisibility();

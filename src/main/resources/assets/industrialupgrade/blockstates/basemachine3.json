@@ -362,11 +362,11 @@
       "heat_limiter" : {
         "model" : "industrialupgrade:basemachine/heat_limiter"
       },
-      "gas_generator_active" : {
-        "model" : "industrialupgrade:basemachine/gas_generator_active"
-      },
       "gas_generator" : {
         "model" : "industrialupgrade:basemachine/gas_generator"
+      },
+      "gas_generator_active" : {
+        "model" : "industrialupgrade:basemachine/gas_generator_active"
       },
       "generator_iu" : {
         "model" : "ic2:generator/electric/generator"

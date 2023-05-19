@@ -31,6 +31,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -49,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
-        IInventorySlotHolder<TileEntityInventory>, INetworkDataProvider {
+        IInventorySlotHolder<TileEntityInventory>, INetworkDataProvider, ICapabilityProvider {
 
     protected boolean isLoaded = false;
 
@@ -542,6 +544,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             if (this.capabilityComponents == null) {
                 return super.getCapability(capability, facing);
             } else {
+
                 TileEntityAdvComponent comp = this.capabilityComponents.get(capability);
                 return comp == null ? super.getCapability(capability, facing) : comp.getCapability(capability, facing);
             }
@@ -563,6 +566,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     }
 
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return true;
         }

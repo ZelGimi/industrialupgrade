@@ -34,7 +34,6 @@ public class CraftManagerUtils {
         try {
             ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES;
             recipeRegistry.unfreeze();
-
             recipeRegistry.remove(recipe.getRegistryName());
         } catch (Exception ignored) {
 

@@ -215,7 +215,7 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         }
     }
 
-    public void operate(MachineRecipe output) {
+    public void operate() {
         for (int i = 0; i < this.operationsPerTick; i++) {
             List<ItemStack> processResult = output.getRecipe().output.items;
             operateOnce(processResult);
@@ -238,7 +238,7 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        MachineRecipe output = this.output;
+
         if (this.output == null && this.fluid_amount != this.fluidTank.getFluidAmount()) {
             this.getOutput();
             this.fluid_amount = this.fluidTank.getFluidAmount();
@@ -266,7 +266,7 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
             this.guiProgress = (k / this.operationLength);
             if (this.progress >= this.operationLength) {
                 this.guiProgress = 0;
-                operate(output);
+                operate();
                 this.progress = 0;
                 initiate(2);
             }

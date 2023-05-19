@@ -1765,13 +1765,13 @@ public class BasicRecipe {
                 "BBB", "BAB", "BBB", 'B', new ItemStack(IUItem.stik, 1, 15), 'A', new ItemStack(IUItem.basecircuit, 1, 15)
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.basecircuit, 1, 17),
-                "CCC", "A A", "DDD", 'D', OreDictionary.getOres("plateSilver"), 'C', ModUtils.getCable(IUItem.copperCableItem
-                        , 1),
+                "CCC", "A A", "DDD", 'D', OreDictionary.getOres("plateSilver"), 'C', IUItem.insulatedCopperCableItem
+                        ,
                 'A', new ItemStack(IUItem.basecircuit, 1, 15)
         );
         Recipes.advRecipes.addRecipe(Ic2Items.electronicCircuit,
                 "EDE", "A A", "FBF", 'D', new ItemStack(IUItem.basecircuit, 1, 17), 'B', new ItemStack(IUItem.basecircuit, 1, 16),
-                'A', new ItemStack(IUItem.basecircuit, 1, 15), 'E', ModUtils.getCable(IUItem.copperCableItem, 1), 'F',
+                'A', new ItemStack(IUItem.basecircuit, 1, 15), 'E', IUItem.insulatedCopperCableItem, 'F',
                 new ItemStack(Items.IRON_INGOT)
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.cable, 1, 10),
@@ -7881,7 +7881,7 @@ public class BasicRecipe {
                 'C',
                 Blocks.GLASS,
                 'D',
-                Ic2Items.tinCableItem
+                IUItem.tinCableItem
         );
         Recipes.advRecipes.addRecipe(
                 Ic2Items.reBattery,
@@ -8122,10 +8122,10 @@ public class BasicRecipe {
                 'A',
                DEFAULT_SENSOR,
                 'B',
-                "gearMuntsa",
+                "gearNickel",
                 'C',
                  "plateTin",
-                'D', "gearElectrum"
+                'D', "gearSilver"
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 263),
                 " C ",
@@ -8179,6 +8179,16 @@ public class BasicRecipe {
                 'C',
                 Ic2Items.tinCan,
                 'D', "plateVanadoalumite"
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(IUItem.coolingsensor, 1),
+                "CBC", "BDB", "BAB", 'A', Ic2Items.electronicCircuit,
+                'B', "plateIron", 'C', new ItemStack(IUItem.coolpipes,1,3), 'D', "doubleplateMikhail"
+        );
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(IUItem.heatsensor, 1),
+                "CBC", "BDB", "BAB", 'A', Ic2Items.electronicCircuit,
+                'B', "plateIron", 'C', new ItemStack(IUItem.pipes,1,3), 'D', new ItemStack(IUItem.preciousblock)
         );
     }
 

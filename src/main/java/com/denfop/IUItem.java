@@ -6,22 +6,7 @@ import com.denfop.blocks.BlockOre;
 import com.denfop.blocks.BlockPreciousOre;
 import com.denfop.blocks.BlockThoriumOre;
 import com.denfop.blocks.BlocksRadiationOre;
-import com.denfop.items.IUItemBase;
-import com.denfop.items.ItemAdvancedWaterRotor;
-import com.denfop.items.ItemAdvancedWindRotor;
-import com.denfop.items.ItemBlueprint;
-import com.denfop.items.ItemCell;
-import com.denfop.items.ItemCoreWater;
-import com.denfop.items.ItemCoreWind;
-import com.denfop.items.ItemExcitedNucleus;
-import com.denfop.items.ItemFrequencyTransmitter;
-import com.denfop.items.ItemRotorsUpgrade;
-import com.denfop.items.ItemToolMeter;
-import com.denfop.items.ItemVeinSensor;
-import com.denfop.items.ItemWaterRod;
-import com.denfop.items.ItemWaterRotorsUpgrade;
-import com.denfop.items.ItemWindRod;
-import com.denfop.items.ItemsTemplates;
+import com.denfop.items.*;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemLappack;
 import com.denfop.items.bags.ItemLeadBox;
@@ -514,6 +499,8 @@ public class IUItem {
     public static ItemStack per_lap_energystorage_upgrade;
     public static ItemStack tinCableItem;
     public static Set<Map.Entry<ItemStack, BaseMachineRecipe>> fluidMatterRecipe;
+    public static ItemsCoolingSensor coolingsensor;
+    public static ItemsHeatSensor heatsensor;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

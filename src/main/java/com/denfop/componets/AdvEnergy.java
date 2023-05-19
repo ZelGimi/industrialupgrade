@@ -1,13 +1,6 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvDual;
-import com.denfop.api.energy.IAdvEnergySink;
-import com.denfop.api.energy.IAdvEnergySource;
-import com.denfop.api.energy.IAdvEnergyTile;
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.IEnergyEmitter;
-import com.denfop.api.energy.IMultiDual;
+import com.denfop.api.energy.*;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.invslot.InvSlot;
@@ -18,6 +11,8 @@ import ic2.api.energy.tile.IChargingSlot;
 import ic2.api.energy.tile.IDischargingSlot;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.Util;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,14 +20,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class AdvEnergy extends TileEntityAdvComponent {
 
@@ -59,6 +54,7 @@ public class AdvEnergy extends TileEntityAdvComponent {
     protected double perenergy;
     protected double pastEnergy1;
     protected double perenergy1;
+    Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
 
     public AdvEnergy(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
@@ -98,6 +94,24 @@ public class AdvEnergy extends TileEntityAdvComponent {
         this.tick = 0;
     }
 
+    @Override
+    public void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
+        TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
+      boolean hasElement =  this.energyStorageMap.containsKey(srcPos);
+        if(srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement)
+            this.energyStorageMap.remove(srcPos);
+        else if(hasElement)
+            this.energyStorageMap.remove(srcPos);
+        if(tile instanceof TileEntityInventory)
+            return;
+        if(tile == null)
+            return;
+        if(tile.hasCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite())){
+           IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite());
+           this.energyStorageMap.put(srcPos,energy_storage);
+        }
+    }
+
     public static AdvEnergy asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
@@ -110,6 +124,20 @@ public class AdvEnergy extends TileEntityAdvComponent {
         return new AdvEnergy(parent, capacity, Util.allFacings, Collections.emptySet(), 14, 14, false);
     }
 
+    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
+        return Collections.singleton(CapabilityEnergy.ENERGY);
+    }
+
+    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
+
+        boolean isSource = this.sourceDirections.contains(side);
+        boolean isSink = this.sinkDirections.contains(side);
+        return cap == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(new ComponentsForgeEnergy(this, isSink, isSource,
+                this.delegate
+        )) : super.getCapability(cap, side);
+
+    }
+
     public static AdvEnergy asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
@@ -120,23 +148,35 @@ public class AdvEnergy extends TileEntityAdvComponent {
 
     @Override
     public void updateEntityServer() {
-        for (InvSlot slot : managedSlots) {
-            if (slot instanceof InvSlotDischarge) {
-                InvSlotDischarge discharge = (InvSlotDischarge) slot;
-                if (!discharge.isEmpty()) {
-                    if (discharge.get().getItem() == Items.REDSTONE) {
-                        double energy = discharge.dischargeWithRedstone(this.capacity, this.getFreeEnergy());
-                        this.addEnergy(energy);
-                    } else {
-                        double energy = discharge.discharge(this.getFreeEnergy(), false);
-                        this.addEnergy(energy);
-                    }
+        if(!this.energyStorageMap.isEmpty() && this.getDelegate() != null && !this.sourceDirections.isEmpty()){
+            for(Map.Entry<BlockPos,IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()){
+               this.useEnergy(4 * iEnergyStorageEntry.getValue().receiveEnergy((int)Math.min(Math.min(this.getEnergy() / 4,
+                               Integer.MAX_VALUE - 1),((IAdvEnergySource)this.getDelegate()).getOfferedEnergy() / 4),
+                       false));
+                if (this.getEnergy() <= 0) {
+                   break;
                 }
-            } else if (slot instanceof InvSlotCharge) {
-                InvSlotCharge charge = (InvSlotCharge) slot;
-                if (!charge.isEmpty()) {
-                    double energy = charge.charge(this.storage);
-                    this.useEnergy(energy);
+            }
+        }
+        if (!managedSlots.isEmpty()) {
+            for (InvSlot slot : managedSlots) {
+                if (slot instanceof InvSlotDischarge) {
+                    InvSlotDischarge discharge = (InvSlotDischarge) slot;
+                    if (!discharge.isEmpty()) {
+                        if (discharge.get().getItem() == Items.REDSTONE) {
+                            double energy = discharge.dischargeWithRedstone(this.capacity, this.getFreeEnergy());
+                            this.addEnergy(energy);
+                        } else {
+                            double energy = discharge.discharge(this.getFreeEnergy(), false);
+                            this.addEnergy(energy);
+                        }
+                    }
+                } else if (slot instanceof InvSlotCharge) {
+                    InvSlotCharge charge = (InvSlotCharge) slot;
+                    if (!charge.isEmpty()) {
+                        double energy = charge.charge(this.storage);
+                        this.useEnergy(energy);
+                    }
                 }
             }
         }
@@ -144,7 +184,7 @@ public class AdvEnergy extends TileEntityAdvComponent {
 
     @Override
     public boolean isServer() {
-        return !this.managedSlots.isEmpty();
+        return true;
     }
 
     public AdvEnergy addManagedSlot(InvSlot slot) {

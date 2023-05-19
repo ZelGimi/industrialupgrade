@@ -75,6 +75,8 @@ import com.denfop.items.ItemVeinSensor;
 import com.denfop.items.ItemWaterRod;
 import com.denfop.items.ItemWaterRotorsUpgrade;
 import com.denfop.items.ItemWindRod;
+import com.denfop.items.ItemsCoolingSensor;
+import com.denfop.items.ItemsHeatSensor;
 import com.denfop.items.ItemsTemplates;
 import com.denfop.items.armour.BaseArmor;
 import com.denfop.items.armour.ItemAdvJetpack;
@@ -201,6 +203,8 @@ public class Register {
         IUItem.heatcold_pipes = new ItemHeatColdPipes();
         IUItem.universal_cable = new ItemUniversalCable();
         IUItem.energy_meter = new ItemToolMeter();
+        IUItem.coolingsensor = new ItemsCoolingSensor();
+        IUItem.heatsensor = new ItemsHeatSensor();
         IUItem.frequency_transmitter = new ItemFrequencyTransmitter();
         IUItem.rotor_wood = new ItemAdvancedWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
                 "ic2",
