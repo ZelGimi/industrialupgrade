@@ -300,7 +300,6 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
             this.heat.onUnloaded();
         } catch (Exception ignored) {
         }
-        ;
         if (this.blastHeat != null) {
             this.heat.setParent((TileEntityInventory) blastHeat);
             this.heat.onLoaded();

@@ -3,14 +3,7 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.sytem.EnergyBase;
-import com.denfop.api.sytem.EnergyEvent;
-import com.denfop.api.sytem.EnergyType;
-import com.denfop.api.sytem.EnumTypeEvent;
-import com.denfop.api.sytem.IAcceptor;
-import com.denfop.api.sytem.IConductor;
-import com.denfop.api.sytem.IEmitter;
-import com.denfop.api.sytem.ITile;
+import com.denfop.api.sytem.*;
 import com.denfop.tiles.transport.CableFoam;
 import com.denfop.tiles.transport.types.SEType;
 import ic2.api.network.INetworkTileEntityEventListener;

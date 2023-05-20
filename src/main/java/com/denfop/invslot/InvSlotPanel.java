@@ -5,7 +5,6 @@ import com.denfop.Config;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.api.energy.IAdvEnergyTile;
-import com.denfop.componets.AdvEnergy;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
@@ -19,7 +18,6 @@ import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.tile.IChargingSlot;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.item.ItemStack;
@@ -319,7 +317,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
                             .getParent()
                             .getWorld(), pos);
                     if (energy instanceof IAdvEnergySink) {
-                        tile.wirelessTransferList.add(new WirelessTransfer( tile1, (IAdvEnergySink) energy));
+                        tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IAdvEnergySink) energy));
                     }
 
                 }

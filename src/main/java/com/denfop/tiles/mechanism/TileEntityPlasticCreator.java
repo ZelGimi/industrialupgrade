@@ -57,9 +57,9 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator imple
                 new Input(
                         new FluidStack(FluidName.fluidazot.getInstance(), 12000),
                         input.forOreDict("blockVitalium"),
-                        input.forStack(new ItemStack(IUItem.crafting_elements,1,269))
+                        input.forStack(new ItemStack(IUItem.crafting_elements, 1, 269))
                 ),
-                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements,1,270))
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 270))
         ));
     }
 

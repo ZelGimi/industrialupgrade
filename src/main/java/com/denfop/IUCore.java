@@ -767,21 +767,27 @@ public final class IUCore {
     public void addOre2(ItemStack name) {
         get_ingot.add(name);
     }
+
     public void addOre3(ItemStack name) {
         get_crushed.add(name);
     }
+
     public void addOre4(ItemStack name) {
         get_comb_crushed.add(name);
     }
+
     public void removeOre2(ItemStack name) {
         get_ingot.removeIf(stack -> stack.isItemEqual(name));
     }
+
     public void removeOre3(ItemStack name) {
         get_crushed.removeIf(stack -> stack.isItemEqual(name));
     }
+
     public void removeOre4(ItemStack name) {
         get_comb_crushed.removeIf(stack -> stack.isItemEqual(name));
     }
+
     public void removeOre(String name) {
         if (OreDictionary.getOres(name).size() >= 1) {
             if (list.contains(OreDictionary.getOres(name).get(0))) {

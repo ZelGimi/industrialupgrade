@@ -62,9 +62,6 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
     }
 
 
-
-
-
     public static void addEnergyTileFromSave(final int id, BlockPos blockPos) {
 
         List<BlockPos> list = worldToEnergyNetList.get(id);

@@ -32,12 +32,12 @@ public class WorldSavedDataIU extends WorldSavedData {
         super(name);
     }
 
-    public void setWorld(final World world) {
-        this.world = world;
-    }
-
     public World getWorld() {
         return world;
+    }
+
+    public void setWorld(final World world) {
+        this.world = world;
     }
 
     @Override
@@ -95,7 +95,6 @@ public class WorldSavedDataIU extends WorldSavedData {
         } else {
             compound.setTag("radiations", new NBTTagCompound());
         }
-
 
 
     }

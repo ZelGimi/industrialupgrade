@@ -155,7 +155,7 @@ public class TileEntityFEConverter extends TileEntityInventory implements IHasGu
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
                 double add = Math.min(maxStorage2 - energy2, energy.getEnergy() * Config.coefficientrf);
-                add = Math.max(add,0);
+                add = Math.max(add, 0);
                 energy2 += add;
                 energy.useEnergy(add / Config.coefficientrf);
             }
@@ -240,8 +240,10 @@ public class TileEntityFEConverter extends TileEntityInventory implements IHasGu
         if (!this.rf) {
             return 0;
         }
-        int i = (int) Math.min(Math.min(this.energy2, EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier())),
-                paramInt);
+        int i = (int) Math.min(
+                Math.min(this.energy2, EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier())),
+                paramInt
+        );
         if (!paramBoolean) {
             this.energy2 -= i;
             this.differenceenergy += i;

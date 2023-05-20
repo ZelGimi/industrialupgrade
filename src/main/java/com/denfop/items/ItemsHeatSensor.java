@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemsHeatSensor extends Item implements   IModelRegister {
+public class ItemsHeatSensor extends Item implements IModelRegister {
 
     public static String NAME = "heat_sensor";
 
@@ -37,6 +37,7 @@ public class ItemsHeatSensor extends Item implements   IModelRegister {
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public String getUnlocalizedName() {
         return "iu" + super.getUnlocalizedName().substring(4);
     }
@@ -81,17 +82,19 @@ public class ItemsHeatSensor extends Item implements   IModelRegister {
             if (tileEntity instanceof TileEntityInventory) {
                 TileEntityInventory tileEntityInventory = (TileEntityInventory) tileEntity;
                 HeatComponent component = tileEntityInventory.getComp(HeatComponent.class);
-                if(component == null)
+                if (component == null) {
                     return EnumActionResult.PASS;
+                }
                 IC2.platform.messagePlayer(
                         player,
-                         String.format("%.2f", component.getEnergy()) + "°C" + "/" + component.getCapacity()+ "°C"
+                        String.format("%.2f", component.getEnergy()) + "°C" + "/" + component.getCapacity() + "°C"
                 );
                 return EnumActionResult.SUCCESS;
             }
         }
         return EnumActionResult.PASS;
     }
+
     @Override
     public void registerModels() {
         registerModel();
@@ -108,4 +111,5 @@ public class ItemsHeatSensor extends Item implements   IModelRegister {
                 )
         );
     }
+
 }

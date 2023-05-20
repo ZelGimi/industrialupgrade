@@ -3,11 +3,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.*;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMatter;
 import ic2.api.upgrade.IUpgradableBlock;

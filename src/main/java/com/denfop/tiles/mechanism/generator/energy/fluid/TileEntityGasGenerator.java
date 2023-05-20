@@ -129,7 +129,7 @@ public class TileEntityGasGenerator extends TileEntityLiquidTankInventory implem
             }
         }
 
-        this.setActive( this.gainEnergy());
+        this.setActive(this.gainEnergy());
         if (this.energy.getEnergy() >= 1.0D && !this.chargeSlot.get().isEmpty()) {
             double used = ElectricItem.manager.charge(this.chargeSlot.get(), this.energy.getEnergy(), 1, false, false);
             this.energy.useEnergy(used);

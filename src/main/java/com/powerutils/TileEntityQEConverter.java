@@ -133,7 +133,7 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2.getEnergy() < energy2.getCapacity()) {
                 double add = Math.min(energy2.getFreeEnergy(), energy.getEnergy() / 16);
-                add = Math.max(add,0);
+                add = Math.max(add, 0);
                 energy2.addEnergy(add);
                 energy.useEnergy(add * 16);
             }

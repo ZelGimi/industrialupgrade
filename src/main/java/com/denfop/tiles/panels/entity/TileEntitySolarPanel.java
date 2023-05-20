@@ -6,11 +6,7 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.api.IAdvEnergyNet;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvEnergySource;
-import com.denfop.api.energy.IAdvEnergyTile;
-import com.denfop.api.energy.IEnergyAcceptor;
-import com.denfop.api.energy.SunCoef;
+import com.denfop.api.energy.*;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.inv.IHasGui;
@@ -55,11 +51,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEnergySource, IHasGui,
         IWrenchable, IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
@@ -117,8 +109,8 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected double pastEnergy;
     protected double perenergy;
     List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
-    private AudioSource audioSource;
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
+    private AudioSource audioSource;
 
     public TileEntitySolarPanel(
             final int tier, final double gDay,
@@ -180,27 +172,32 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
         super.onNeighborChange(srcBlock, srcPos);
         TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
-        boolean hasElement =  this.energyStorageMap.containsKey(srcPos);
-        if(srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement)
+        boolean hasElement = this.energyStorageMap.containsKey(srcPos);
+        if (srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement) {
             this.energyStorageMap.remove(srcPos);
-        else if(hasElement)
+        } else if (hasElement) {
             this.energyStorageMap.remove(srcPos);
-        if(tile instanceof TileEntityInventory)
+        }
+        if (tile instanceof TileEntityInventory) {
             return;
-        if(tile == null)
+        }
+        if (tile == null) {
             return;
-        if(tile.hasCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite())){
-            IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite());
-            this.energyStorageMap.put(srcPos,energy_storage);
+        }
+        if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
+            IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,
+                    this.getParent().getFacing().getOpposite());
+            this.energyStorageMap.put(srcPos, energy_storage);
         }
     }
 
     public void loadBeforeFirstUpdate() {
-      super.loadBeforeFirstUpdate();
+        super.loadBeforeFirstUpdate();
         this.wirelessTransferList.clear();
         this.inputslot.wirelessmodule();
         this.wireless = !this.wirelessTransferList.isEmpty();
     }
+
     public String getStartSoundFile() {
         return "Machines/pen.ogg";
     }
@@ -472,11 +469,15 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        if(!this.energyStorageMap.isEmpty() ){
-            for(Map.Entry<BlockPos,IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()){
-                this.storage -= (4 * iEnergyStorageEntry.getValue().receiveEnergy((int)Math.min(Math.min(this.storage / 4,
-                                Integer.MAX_VALUE - 1),this.getOfferedEnergy() / 4),
-                        false));
+        if (!this.energyStorageMap.isEmpty()) {
+            for (Map.Entry<BlockPos, IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()) {
+                this.storage -= (4 * iEnergyStorageEntry.getValue().receiveEnergy(
+                        (int) Math.min(Math.min(
+                                this.storage / 4,
+                                Integer.MAX_VALUE - 1
+                        ), this.getOfferedEnergy() / 4),
+                        false
+                ));
                 if (this.storage <= 0) {
                     break;
                 }

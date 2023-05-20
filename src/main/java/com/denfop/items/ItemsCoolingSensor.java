@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemsCoolingSensor  extends Item implements   IModelRegister {
+public class ItemsCoolingSensor extends Item implements IModelRegister {
 
     public static String NAME = "cooling_sensor";
 
@@ -37,6 +37,7 @@ public class ItemsCoolingSensor  extends Item implements   IModelRegister {
         BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
+
     public String getUnlocalizedName() {
         return "iu" + super.getUnlocalizedName().substring(4);
     }
@@ -52,6 +53,7 @@ public class ItemsCoolingSensor  extends Item implements   IModelRegister {
     public String getItemStackDisplayName(ItemStack stack) {
         return Localization.translate(this.getUnlocalizedName(stack));
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(
@@ -64,6 +66,7 @@ public class ItemsCoolingSensor  extends Item implements   IModelRegister {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         tooltip.add(Localization.translate("module.wireless"));
     }
+
     public EnumActionResult onItemUseFirst(
             EntityPlayer player,
             World world,
@@ -79,17 +82,22 @@ public class ItemsCoolingSensor  extends Item implements   IModelRegister {
             if (tileEntity instanceof TileEntityInventory) {
                 TileEntityInventory tileEntityInventory = (TileEntityInventory) tileEntity;
                 CoolComponent component = tileEntityInventory.getComp(CoolComponent.class);
-                if(component == null)
+                if (component == null) {
                     return EnumActionResult.PASS;
+                }
                 IC2.platform.messagePlayer(
                         player,
-                         Localization.translate("iu.temperature")+ String.format("%.2f", component.getEnergy()) + "°C" + "/" + component.getCapacity()+ "°C"
+                        Localization.translate("iu.temperature") + String.format(
+                                "%.2f",
+                                component.getEnergy()
+                        ) + "°C" + "/" + component.getCapacity() + "°C"
                 );
                 return EnumActionResult.SUCCESS;
             }
         }
         return EnumActionResult.PASS;
     }
+
     @Override
     public void registerModels() {
         registerModel();
@@ -106,4 +114,5 @@ public class ItemsCoolingSensor  extends Item implements   IModelRegister {
                 )
         );
     }
+
 }

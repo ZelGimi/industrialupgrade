@@ -14,7 +14,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class EnergyNetLocal {
 
@@ -26,7 +33,7 @@ public class EnergyNetLocal {
     private final List<IEnergyController> controllerList;
     private final Map<BlockPos, IAdvEnergyTile> chunkCoordinatesIAdvEnergyTileMap;
 
-    private final Map<ChunkPos, List< IAdvEnergyTile>> chunkPosIAdvEnergyTileMap;
+    private final Map<ChunkPos, List<IAdvEnergyTile>> chunkPosIAdvEnergyTileMap;
 
     private final WaitingList waitingList;
     private final List<IAdvEnergySource> energySourceList = new ArrayList<>();
@@ -67,7 +74,7 @@ public class EnergyNetLocal {
         this.chunkPosIAdvEnergyTileMap = new HashMap<>();
     }
 
-    public Map<ChunkPos, List< IAdvEnergyTile>> getChunkPosIAdvEnergyTileMap() {
+    public Map<ChunkPos, List<IAdvEnergyTile>> getChunkPosIAdvEnergyTileMap() {
         return chunkPosIAdvEnergyTileMap;
     }
 

@@ -39,7 +39,6 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
     public void update() {
 
 
-
     }
 
     public void onLoad() {
@@ -52,11 +51,14 @@ public abstract class BasicEnergyTile implements IAdvEnergyTile {
     }
 
     public void onChunkUnload() {
-         if(this.tile == null)
-            if(this.pos != null)
-                if(this.world != null)
+        if (this.tile == null) {
+            if (this.pos != null) {
+                if (this.world != null) {
                     this.tile = this.world.getTileEntity(pos);
-           MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorldObj(), this));
+                }
+            }
+        }
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorldObj(), this));
 
     }
 

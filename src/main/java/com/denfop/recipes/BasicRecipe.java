@@ -1766,7 +1766,7 @@ public class BasicRecipe {
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.basecircuit, 1, 17),
                 "CCC", "A A", "DDD", 'D', OreDictionary.getOres("plateSilver"), 'C', IUItem.insulatedCopperCableItem
-                        ,
+                ,
                 'A', new ItemStack(IUItem.basecircuit, 1, 15)
         );
         Recipes.advRecipes.addRecipe(Ic2Items.electronicCircuit,
@@ -8058,13 +8058,13 @@ public class BasicRecipe {
                 " B ",
                 "   ",
                 'A',
-                new ItemStack(IUItem.crafting_elements,1,268),
+                new ItemStack(IUItem.crafting_elements, 1, 268),
                 'B',
                 Ic2Items.advancedMachine
 
         );
         Recipes.advRecipes.addRecipe(
-                new ItemStack(IUItem.crafting_elements,1,268),
+                new ItemStack(IUItem.crafting_elements, 1, 268),
                 "AEA",
                 "CBC",
                 "ADA",
@@ -8073,9 +8073,9 @@ public class BasicRecipe {
                 'C',
                 IUItem.glassFiberCableItem,
                 'D',
-                new ItemStack(IUItem.crafting_elements,1,270),
+                new ItemStack(IUItem.crafting_elements, 1, 270),
                 'B',
-                 DEFAULT_SENSOR,
+                DEFAULT_SENSOR,
                 'E',
                 IUItem.frequency_transmitter
 
@@ -8088,11 +8088,11 @@ public class BasicRecipe {
                 'A',
                 Ic2Items.machine,
                 'C',
-                new ItemStack(IUItem.crafting_elements,1,264),
+                new ItemStack(IUItem.crafting_elements, 1, 264),
                 'D',
-               Ic2Items.elemotor,
+                Ic2Items.elemotor,
                 'B',
-                new ItemStack(IUItem.crafting_elements,1,47)
+                new ItemStack(IUItem.crafting_elements, 1, 47)
 
 
         );
@@ -8120,11 +8120,11 @@ public class BasicRecipe {
                 "BAB",
                 "DDD",
                 'A',
-               DEFAULT_SENSOR,
+                DEFAULT_SENSOR,
                 'B',
                 "gearNickel",
                 'C',
-                 "plateTin",
+                "plateTin",
                 'D', "gearSilver"
         );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 263),
@@ -8183,12 +8183,12 @@ public class BasicRecipe {
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.coolingsensor, 1),
                 "CBC", "BDB", "BAB", 'A', Ic2Items.electronicCircuit,
-                'B', "plateIron", 'C', new ItemStack(IUItem.coolpipes,1,3), 'D', "doubleplateMikhail"
+                'B', "plateIron", 'C', new ItemStack(IUItem.coolpipes, 1, 3), 'D', "doubleplateMikhail"
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.heatsensor, 1),
                 "CBC", "BDB", "BAB", 'A', Ic2Items.electronicCircuit,
-                'B', "plateIron", 'C', new ItemStack(IUItem.pipes,1,3), 'D', new ItemStack(IUItem.preciousblock)
+                'B', "plateIron", 'C', new ItemStack(IUItem.pipes, 1, 3), 'D', new ItemStack(IUItem.preciousblock)
         );
     }
 

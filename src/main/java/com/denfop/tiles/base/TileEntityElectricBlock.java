@@ -590,7 +590,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        if(!load) {
+        if (!load) {
             this.wirelessTransferList.clear();
             this.inputslotC.wirelessmodule();
             this.wireless = !this.wirelessTransferList.isEmpty();

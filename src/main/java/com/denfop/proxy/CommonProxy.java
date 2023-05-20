@@ -107,10 +107,8 @@ import com.denfop.world.WorldGenOres;
 import com.google.common.collect.Lists;
 import forestry.api.core.IToolPipette;
 import ic2.api.item.ElectricItem;
-import ic2.api.recipe.IBasicMachineRecipeManager;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.MachineRecipe;
 import ic2.core.IC2;
 import ic2.core.block.machine.tileentity.TileEntityMatter;
 import ic2.core.ref.BlockName;
@@ -137,7 +135,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,7 +272,7 @@ public class CommonProxy implements IGuiHandler {
         SpaceInit.init();
 
         ResearchSystem.instance = new BaseResearchSystem();
-        if(Loader.isModLoaded("jaopca")){
+        if (Loader.isModLoaded("jaopca")) {
             Recipes.recipes.removeAll("comb_macerator");
             Recipes.recipes.reloadRecipes("com.denfop.tiles.mechanism.multimechanism.simple.TileEntityCombMacerator");
         }

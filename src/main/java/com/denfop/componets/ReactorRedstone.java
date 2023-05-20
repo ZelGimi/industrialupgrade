@@ -40,7 +40,8 @@ public class ReactorRedstone extends Redstone {
                     }
                 }
             }
-        }catch (Exception ignored){};
+        } catch (Exception ignored) {
+        }
     }
 
     public void setBlockPosList(final List<BlockPos> blockPosList) {

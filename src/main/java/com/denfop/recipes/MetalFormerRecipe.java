@@ -222,6 +222,7 @@ public class MetalFormerRecipe {
                 )
         );
     }
+
     public static void addmolot(String input, ItemStack output) {
 
         final IRecipeInputFactory input1 = Recipes.inputFactory;
@@ -235,6 +236,7 @@ public class MetalFormerRecipe {
                 )
         );
     }
+
     public static void addExtruding(String input, String output, int n) {
         final IRecipeInputFactory input1 = Recipes.inputFactory;
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();

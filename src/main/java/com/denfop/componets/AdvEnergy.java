@@ -1,6 +1,13 @@
 package com.denfop.componets;
 
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IAdvDual;
+import com.denfop.api.energy.IAdvEnergySink;
+import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyEmitter;
+import com.denfop.api.energy.IMultiDual;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.invslot.InvSlot;
@@ -27,7 +34,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AdvEnergy extends TileEntityAdvComponent {
 
@@ -94,24 +107,6 @@ public class AdvEnergy extends TileEntityAdvComponent {
         this.tick = 0;
     }
 
-    @Override
-    public void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
-        TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
-      boolean hasElement =  this.energyStorageMap.containsKey(srcPos);
-        if(srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement)
-            this.energyStorageMap.remove(srcPos);
-        else if(hasElement)
-            this.energyStorageMap.remove(srcPos);
-        if(tile instanceof TileEntityInventory)
-            return;
-        if(tile == null)
-            return;
-        if(tile.hasCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite())){
-           IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,this.getParent().getFacing().getOpposite());
-           this.energyStorageMap.put(srcPos,energy_storage);
-        }
-    }
-
     public static AdvEnergy asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
@@ -124,20 +119,6 @@ public class AdvEnergy extends TileEntityAdvComponent {
         return new AdvEnergy(parent, capacity, Util.allFacings, Collections.emptySet(), 14, 14, false);
     }
 
-    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
-        return Collections.singleton(CapabilityEnergy.ENERGY);
-    }
-
-    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
-
-        boolean isSource = this.sourceDirections.contains(side);
-        boolean isSink = this.sinkDirections.contains(side);
-        return cap == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(new ComponentsForgeEnergy(this, isSink, isSource,
-                this.delegate
-        )) : super.getCapability(cap, side);
-
-    }
-
     public static AdvEnergy asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
@@ -147,14 +128,59 @@ public class AdvEnergy extends TileEntityAdvComponent {
     }
 
     @Override
+    public void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
+        TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
+        boolean hasElement = this.energyStorageMap.containsKey(srcPos);
+        if (srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement) {
+            this.energyStorageMap.remove(srcPos);
+        } else if (hasElement) {
+            this.energyStorageMap.remove(srcPos);
+        }
+        if (tile instanceof TileEntityInventory) {
+            return;
+        }
+        if (tile == null) {
+            return;
+        }
+        if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
+            IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,
+                    this.getParent().getFacing().getOpposite());
+            this.energyStorageMap.put(srcPos, energy_storage);
+        }
+    }
+
+    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
+        return Collections.singleton(CapabilityEnergy.ENERGY);
+    }
+
+    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
+
+        boolean isSource = this.sourceDirections.contains(side);
+        boolean isSink = this.sinkDirections.contains(side);
+
+        if (this.delegate == null) {
+            this.createDelegate();
+        }
+
+        return cap == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(new ComponentsForgeEnergy(this, isSink, isSource,
+                this.delegate
+        )) : super.getCapability(cap, side);
+
+    }
+
+    @Override
     public void updateEntityServer() {
-        if(!this.energyStorageMap.isEmpty() && this.getDelegate() != null && !this.sourceDirections.isEmpty()){
-            for(Map.Entry<BlockPos,IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()){
-               this.useEnergy(4 * iEnergyStorageEntry.getValue().receiveEnergy((int)Math.min(Math.min(this.getEnergy() / 4,
-                               Integer.MAX_VALUE - 1),((IAdvEnergySource)this.getDelegate()).getOfferedEnergy() / 4),
-                       false));
+        if (!this.energyStorageMap.isEmpty() && this.getDelegate() != null && !this.sourceDirections.isEmpty()) {
+            for (Map.Entry<BlockPos, IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()) {
+                this.useEnergy(4 * iEnergyStorageEntry.getValue().receiveEnergy(
+                        (int) Math.min(Math.min(
+                                this.getEnergy() / 4,
+                                Integer.MAX_VALUE - 1
+                        ), ((IAdvEnergySource) this.getDelegate()).getOfferedEnergy() / 4),
+                        false
+                ));
                 if (this.getEnergy() <= 0) {
-                   break;
+                    break;
                 }
             }
         }
@@ -237,7 +263,6 @@ public class AdvEnergy extends TileEntityAdvComponent {
 
     private void createDelegate() {
         if (this.delegate != null) {
-            throw new IllegalStateException();
         } else {
 
 

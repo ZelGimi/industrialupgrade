@@ -195,6 +195,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     public ItemStack getCable(CableType type) {
         return new ItemStack(this, 1, type.getId());
     }
+
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
         if (meta >= name.length) {

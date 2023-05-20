@@ -26,7 +26,7 @@ public class ComponentClientEffectRender extends TileEntityAdvComponent {
     public void render() {
         switch (effectType) {
             case HEAT:
-                CoolComponent comp = ((TileEntityInventory) parent).getComp(CoolComponent.class);
+                CoolComponent comp = parent.getComp(CoolComponent.class);
                 if (comp == null || comp.upgrade) {
                     break;
                 }
@@ -139,7 +139,7 @@ public class ComponentClientEffectRender extends TileEntityAdvComponent {
                 }
                 break;
             case REFRIGERATOR:
-                comp = ((TileEntityInventory) parent).getComp(CoolComponent.class);
+                comp = parent.getComp(CoolComponent.class);
                 if (comp == null) {
                     break;
                 }

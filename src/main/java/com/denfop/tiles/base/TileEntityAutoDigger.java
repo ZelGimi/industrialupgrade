@@ -73,8 +73,9 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
                 }
                 if (this.energy.canUseEnergy(this.consume) && this.outputSlot.canAdd(baseMachineRecipe1.getOutput().items)) {
                     this.energy.useEnergy(this.consume);
-                    for(ItemStack stack : baseMachineRecipe1.getOutput().items)
-                    this.outputSlot.add(stack);
+                    for (ItemStack stack : baseMachineRecipe1.getOutput().items) {
+                        this.outputSlot.add(stack);
+                    }
                     this.inputslot.get(i).shrink(1);
                     if (this.inputslot.get(i).isEmpty()) {
                         baseMachineRecipe[i] = null;

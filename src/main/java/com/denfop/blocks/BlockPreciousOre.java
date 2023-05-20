@@ -83,7 +83,7 @@ public class BlockPreciousOre extends BlockCore implements IModelRegister {
 
 
         int count = quantityDropped(fortune, rand);
-         for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
 
             drops.add(new ItemStack(IUItem.preciousgem, 1, state.getBlock().getMetaFromState(state)));
 

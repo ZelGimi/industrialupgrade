@@ -161,7 +161,7 @@ public class TileEntityConverter extends TileEntityInventory implements IHasGui,
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
                 double add = Math.min(maxStorage2 - energy2, energy.getEnergy() * Config.coefficientrf);
-                add = Math.max(add,0);
+                add = Math.max(add, 0);
                 energy2 += add;
                 energy.useEnergy(add / Config.coefficientrf);
             }

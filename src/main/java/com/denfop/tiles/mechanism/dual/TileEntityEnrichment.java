@@ -57,8 +57,8 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine implem
                 new ItemStack(IUItem.radiationresources, 1, 4)
         );
         addenrichment(
-                new ItemStack(IUItem.preciousgem,4,1),
-               "blockCobalt",
+                new ItemStack(IUItem.preciousgem, 4, 1),
+                "blockCobalt",
                 new ItemStack(IUItem.crafting_elements, 1, 269)
         );
         addenrichment(

@@ -323,7 +323,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                     int max = isUkrOrrus ? 43 : 33;
                     if (addpag.resource == null) {
 
-                    List<String> list = splitEqually(Localization.translate(addpag.description), max);
+                        List<String> list = splitEqually(Localization.translate(addpag.description), max);
                       /*     List<String> list = splitEqually(" The mod adds many new ores, there are 4 types in total, in this" +
                                    " article we will analyze the first type. There are 16 ores of the first type in total. " +
                                    "Information about each ore will be specifically given below, namely: name, min and max " +
@@ -353,7 +353,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                             ));
                         }
 
-                            GlStateManager.scale(0.75F, 0.75F, 0.75F);
+                        GlStateManager.scale(0.75F, 0.75F, 0.75F);
 
 
                         for (String str : list) {
@@ -367,7 +367,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                             }
                         }
 
-                            GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
+                        GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
 
 
                     } else {
@@ -378,7 +378,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                             y -= 6;
                         }
 
-                            GlStateManager.scale(0.75F, 0.75F, 0.75F);
+                        GlStateManager.scale(0.75F, 0.75F, 0.75F);
 
                         if (indexpage == 0) {
                             String name = Localization.translate(page1.text);
@@ -397,7 +397,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                             }
                         }
 
-                            GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
+                        GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
 
                         y += 3;
                         int y0 = y;

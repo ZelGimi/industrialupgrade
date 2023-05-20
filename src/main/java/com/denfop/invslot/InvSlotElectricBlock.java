@@ -5,7 +5,6 @@ import com.denfop.IUItem;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.api.energy.IAdvEnergyTile;
-import com.denfop.componets.AdvEnergy;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
@@ -13,7 +12,6 @@ import com.denfop.tiles.base.TileEntityElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import net.minecraft.item.ItemStack;
@@ -32,8 +30,6 @@ public class InvSlotElectricBlock extends InvSlot {
         this.type = oldStartIndex1;
         this.setStackSizeLimit(1);
     }
-
-
 
 
     public boolean accepts(ItemStack itemStack, final int index) {
@@ -213,7 +209,10 @@ public class InvSlotElectricBlock extends InvSlot {
                         .getParent()
                         .getWorld(), pos);
                 if (energy instanceof IAdvEnergySink) {
-                    tile.wirelessTransferList.add(new WirelessTransfer( tile.getWorld().getTileEntity(pos), (IAdvEnergySink) energy));
+                    tile.wirelessTransferList.add(new WirelessTransfer(
+                            tile.getWorld().getTileEntity(pos),
+                            (IAdvEnergySink) energy
+                    ));
                 }
             }
 

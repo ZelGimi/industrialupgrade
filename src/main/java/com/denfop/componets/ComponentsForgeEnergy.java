@@ -12,11 +12,11 @@ public class ComponentsForgeEnergy implements IEnergyStorage {
     private final boolean isSource;
     private final IAdvEnergyTile tile;
 
-    public ComponentsForgeEnergy(AdvEnergy inventory, boolean isSink, boolean isSource, IAdvEnergyTile tile){
+    public ComponentsForgeEnergy(AdvEnergy inventory, boolean isSink, boolean isSource, IAdvEnergyTile tile) {
         this.advEnergy = inventory;
         this.isSink = isSink;
         this.isSource = isSource;
-        this.tile=tile;
+        this.tile = tile;
     }
 
     @Override
@@ -25,11 +25,12 @@ public class ComponentsForgeEnergy implements IEnergyStorage {
         if (!simulate) {
             ((IAdvEnergySink) tile).injectEnergy(null, maxReceive / 4D, 0);
         }
-        demand = Math.min(demand,maxReceive);
-        if(demand > Integer.MAX_VALUE)
+        demand = Math.min(demand, maxReceive);
+        if (demand > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE - 1;
-        else
+        } else {
             return (int) demand;
+        }
     }
 
     @Override
@@ -39,24 +40,27 @@ public class ComponentsForgeEnergy implements IEnergyStorage {
         if (!simulate) {
             ((IAdvEnergySource) tile).drawEnergy(maxExtract / 4D);
         }
-        offeredEnergy = Math.min(offeredEnergy,maxExtract);
-        if(offeredEnergy > Integer.MAX_VALUE)
+        offeredEnergy = Math.min(offeredEnergy, maxExtract);
+        if (offeredEnergy > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE - 1;
-        else
+        } else {
             return (int) offeredEnergy;
+        }
     }
 
     @Override
     public int getEnergyStored() {
-        if(advEnergy.getEnergy() * 4 > Integer.MAX_VALUE)
-            return Integer.MAX_VALUE -1;
+        if (advEnergy.getEnergy() * 4 > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE - 1;
+        }
         return (int) advEnergy.getEnergy() * 4;
     }
 
     @Override
     public int getMaxEnergyStored() {
-        if(advEnergy.getCapacity() * 4 > Integer.MAX_VALUE)
-            return Integer.MAX_VALUE -1;
+        if (advEnergy.getCapacity() * 4 > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE - 1;
+        }
         return (int) advEnergy.getCapacity() * 4;
     }
 

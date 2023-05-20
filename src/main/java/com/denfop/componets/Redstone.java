@@ -60,7 +60,8 @@ public class Redstone extends TileEntityAdvComponent {
                     }
                 }
             }
-        }catch (Exception ignored){};
+        } catch (Exception ignored) {
+        }
     }
 
     public int getRedstoneInput() {

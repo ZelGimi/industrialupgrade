@@ -22,6 +22,7 @@ public interface IRecipes {
     void removeAll(String recipe);
 
     void reloadRecipes(String recipe);
+
     void initializationRecipes();
 
     void addRecipeManager(String name, int size, boolean consume);

@@ -32,7 +32,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -53,11 +52,10 @@ import java.util.Map;
 public class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
         IInventorySlotHolder<TileEntityInventory>, INetworkDataProvider, ICapabilityProvider {
 
-    protected boolean isLoaded = false;
-
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
     protected final IItemHandler[] itemHandler;
+    protected boolean isLoaded = false;
     protected int size_inventory;
     protected ComponentClientEffectRender componentClientEffectRender;
     protected Map<Capability<?>, TileEntityAdvComponent> capabilityComponents;
@@ -557,12 +555,13 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         for (TileEntityAdvComponent component : this.updateServerList) {
             component.updateEntityServer();
         }
-        if(!isLoaded)
+        if (!isLoaded) {
             this.loadBeforeFirstUpdate();
+        }
     }
 
     public void loadBeforeFirstUpdate() {
-        isLoaded  = true;
+        isLoaded = true;
     }
 
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {

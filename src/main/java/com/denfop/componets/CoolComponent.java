@@ -1,6 +1,10 @@
 package com.denfop.componets;
 
-import com.denfop.api.cool.*;
+import com.denfop.api.cool.ICoolAcceptor;
+import com.denfop.api.cool.ICoolEmitter;
+import com.denfop.api.cool.ICoolSink;
+import com.denfop.api.cool.ICoolSource;
+import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.invslot.InvSlot;

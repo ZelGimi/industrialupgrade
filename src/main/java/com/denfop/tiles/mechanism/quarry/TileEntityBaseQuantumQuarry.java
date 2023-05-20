@@ -43,11 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements IHasGui, IAudioFixer,
         IUpgradableBlock, IType, INetworkClientTileEntityEventListener {

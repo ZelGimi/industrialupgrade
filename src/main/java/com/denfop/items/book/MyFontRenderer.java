@@ -2,16 +2,7 @@ package com.denfop.items.book;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import sun.font.TrueTypeFont;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-import java.util.HashMap;
 
 public class MyFontRenderer extends FontRenderer {
 
@@ -21,12 +12,18 @@ public class MyFontRenderer extends FontRenderer {
     public MyFontRenderer(Minecraft mc) {
         super(mc.gameSettings, FONT_TEXTURE, mc.getTextureManager(), false);
     }
+
     public MyFontRenderer(FontRenderer fontRenderer) {
-        super(Minecraft.getMinecraft().gameSettings, fontRenderer.locationFontTexture,fontRenderer.renderEngine, fontRenderer.getUnicodeFlag());
+        super(
+                Minecraft.getMinecraft().gameSettings,
+                fontRenderer.locationFontTexture,
+                fontRenderer.renderEngine,
+                fontRenderer.getUnicodeFlag()
+        );
     }
-    public int getCharWidth(char character)
-    {
-      return   super.getCharWidth(character);
+
+    public int getCharWidth(char character) {
+        return super.getCharWidth(character);
     }
 
 
