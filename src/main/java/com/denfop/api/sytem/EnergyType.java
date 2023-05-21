@@ -3,7 +3,7 @@ package com.denfop.api.sytem;
 public enum EnergyType {
     SOLARIUM(" SE", false, true, false),
     QUANTUM(" QE", false, true, false),
-    EXPERIENCE("EXP", false, true, false),
+    EXPERIENCE(" EXP", false, true, false),
     RADIATION(" ", false, true, false);
 
     private final String prefix;

@@ -1,9 +1,9 @@
+
 package com.denfop.integration.crafttweaker;
 
 import crafttweaker.IAction;
 
 public abstract class BaseAction implements IAction {
-
     protected final String name;
     protected boolean success = false;
 
@@ -25,7 +25,7 @@ public abstract class BaseAction implements IAction {
         } else if (!(obj instanceof BaseAction)) {
             return false;
         } else {
-            BaseAction u = (BaseAction) obj;
+            BaseAction u = (BaseAction)obj;
             return this.name.equals(u.name);
         }
     }
@@ -33,5 +33,4 @@ public abstract class BaseAction implements IAction {
     public int hashCode() {
         return this.name.hashCode();
     }
-
 }

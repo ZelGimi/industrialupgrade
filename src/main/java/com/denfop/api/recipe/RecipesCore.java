@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidTank;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,7 +115,28 @@ public class RecipesCore implements IRecipes {
 
     public void removeRecipe(String name, RecipeOutput output) {
         List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
-        recipes.removeIf(recipe -> recipe.getOutput().items.get(0).isItemEqual(output.items.get(0)));
+        BaseMachineRecipe deleteRecipe = null;
+        for(BaseMachineRecipe recipe : recipes){
+            for(ItemStack stack : output.items){
+                for(ItemStack output_stack : recipe.output.items){
+                    if(stack.isItemEqual(output_stack)) {
+                        deleteRecipe = recipe;
+                        break;
+                    }
+                }
+            }
+        }
+        if(deleteRecipe != null){
+            recipes.remove(deleteRecipe);
+            final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
+            IInput input = deleteRecipe.input;
+            final List<IRecipeInput> list2 = input.getInputs();
+            for(IRecipeInput input1 : list2){
+                IRecipeInputStack iRecipeInputStack = new RecipeInputStack(input1);
+                list.remove(iRecipeInputStack);
+            }
+
+        }
 
     }
 
@@ -482,7 +504,6 @@ public class RecipesCore implements IRecipes {
     public void reloadRecipes(final String className) {
 
         this.recipes.forEach(iHasRecipe -> {
-                    System.out.println(iHasRecipe.getClass().getName());
                     if (className.equals(iHasRecipe.getClass().getName())) {
                         iHasRecipe.init();
                     }

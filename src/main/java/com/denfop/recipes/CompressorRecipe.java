@@ -26,19 +26,6 @@ public class CompressorRecipe {
     public static final String[] recipe1 = {"doubleplate", "dust", "smalldust"};
 
     public static void recipe() {
-        final Iterable<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> recipe3 = Recipes.compressor.getRecipes();
-        final Iterator<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> iter1 = recipe3.iterator();
-        while (iter1.hasNext()) {
-            MachineRecipe<IRecipeInput, Collection<ItemStack>> recipe2 = iter1.next();
-            List<ItemStack> list = (List<ItemStack>) recipe2.getOutput();
-            if (list.get(0).isItemEqual(Ic2Items.silverBlock)) {
-                iter1.remove();
-            }
-            if (list.get(0).isItemEqual(Ic2Items.iridiumOre)) {
-                iter1.remove();
-            }
-        }
-
         addcompressor(new ItemStack(IUItem.sunnarium, 1, 3), new ItemStack(IUItem.sunnarium, 1, 2));
         addcompressor(Ic2Items.carbonPlate, 9, new ItemStack(IUItem.compresscarbon));
         addcompressor(Ic2Items.advancedAlloy, 9, new ItemStack(IUItem.compresscarbonultra));

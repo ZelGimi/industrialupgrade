@@ -52,7 +52,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 =  stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -65,7 +68,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 =  stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -81,8 +87,13 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    final List<ItemStack> list3 = new ArrayList<>(recipe.getOutput().items);
+                    final List<ItemStack> list3 = new ArrayList<>();
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 =  stack1.copy();
+                        list3.add(stack1);
+                    });
                     list3.forEach(stack1 -> stack1.setCount(stack.getCount()));
+
                     list2.addAll(list3);
                 }
                 list.removeAll(list1);
@@ -122,7 +133,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 =  stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -136,7 +150,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 =  stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -153,7 +170,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 =  stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);

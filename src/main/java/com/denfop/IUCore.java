@@ -354,7 +354,9 @@ public final class IUCore {
     }
 
     @Mod.EventHandler
-    public void load(final FMLPreInitializationEvent event) {
+    public void load(final FMLPreInitializationEvent event) throws Exception {
+        if(Loader.isModLoaded("mekanism"))
+            throw new Exception("The author of the Mekanism mod fix your api! Your api breaks the launch of my mod with yours!");
         MinecraftForge.EVENT_BUS.register(this);
         EnergyNetGlobal.initialize();
         ModUtils.log = event.getModLog();

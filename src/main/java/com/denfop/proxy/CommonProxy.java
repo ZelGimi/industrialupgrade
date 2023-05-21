@@ -261,6 +261,15 @@ public class CommonProxy implements IGuiHandler {
         IUItem.register_mineral();
         TileEntityMatter.addAmplifier(new ItemStack(IUItem.doublescrapBox), 1, 405000);
         Recipes.recipes.initializationRecipes();
+        CompressorRecipe.recipe();
+        CannerRecipe.recipe();
+        FurnaceRecipes.recipe();
+        CentrifugeRecipe.init();
+        MaceratorRecipe.recipe();
+        MetalFormerRecipe.init();
+        OreWashingRecipe.init();
+        ExtractorRecipe.init();
+        ReplicatorRecipe.init();
     }
 
     public void init(FMLInitializationEvent event) {
@@ -533,15 +542,7 @@ public class CommonProxy implements IGuiHandler {
         if (Loader.isModLoaded("opencomputers")) {
             OCIntegration.init();
         }
-        CompressorRecipe.recipe();
-        CannerRecipe.recipe();
-        FurnaceRecipes.recipe();
-        CentrifugeRecipe.init();
-        MaceratorRecipe.recipe();
-        MetalFormerRecipe.init();
-        OreWashingRecipe.init();
-        ExtractorRecipe.init();
-        ReplicatorRecipe.init();
+
     }
 
     private void writeRecipe() {
