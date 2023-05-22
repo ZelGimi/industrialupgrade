@@ -387,7 +387,20 @@ public class TileEntitySCable extends TileEntityBlock implements IConductor, INe
         this.updateConnectivity();
     }
 
+    @Override
+    public EnergyType getEnergyType() {
+        return EnergyType.SOLARIUM;
+    }
 
+    @Override
+    public boolean hasEnergies() {
+        return false;
+    }
+
+    @Override
+    public List<EnergyType> getEnergies() {
+        return null;
+    }
     public List<String> getNetworkedFields() {
         List<String> ret = new ArrayList<>();
         ret.add("cableType");

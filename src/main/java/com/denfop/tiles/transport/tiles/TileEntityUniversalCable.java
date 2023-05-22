@@ -50,6 +50,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -537,7 +538,20 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
             this.updateConnectivity();
         }
     }
+    @Override
+    public EnergyType getEnergyType() {
+        return EnergyType.QUANTUM;
+    }
 
+    @Override
+    public boolean hasEnergies() {
+        return true;
+    }
+
+    @Override
+    public List<EnergyType> getEnergies() {
+        return Arrays.asList(new EnergyType[] {EnergyType.QUANTUM,EnergyType.SOLARIUM,EnergyType.EXPERIENCE});
+    }
     @Override
     public boolean acceptsCoolFrom(final ICoolEmitter var1, final EnumFacing var2) {
         return true;

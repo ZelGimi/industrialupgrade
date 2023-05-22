@@ -489,7 +489,7 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
 
         @Override
         public boolean isSource() {
-            return !ComponentBaseEnergy.this.sendingSidabled;
+            return true;
         }
 
         @Override
@@ -504,7 +504,7 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
 
         @Override
         public boolean isSink() {
-            return ComponentBaseEnergy.this.sendingSidabled;
+            return true;
         }
 
         @Override

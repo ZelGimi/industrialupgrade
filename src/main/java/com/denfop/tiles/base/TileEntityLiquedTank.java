@@ -59,9 +59,11 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         this.containerslot = new InvSlotConsumableLiquidByList(this,
                 "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill
         );
+        this.containerslot.setUsually(true);
         this.containerslot1 = new InvSlotConsumableLiquidByList(this,
                 "containerslot1", InvSlot.Access.I, 1, InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Drain
         );
+        this.containerslot1.setUsually(true);
         this.texture = new ResourceLocation(
                 Constants.TEXTURES,
                 "textures/models/" + texturename + ".png"

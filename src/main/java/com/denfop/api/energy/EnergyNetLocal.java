@@ -349,7 +349,7 @@ public class EnergyNetLocal {
             for (final EnergyPath energyPath : this.energySourceToEnergyPathMap.getPaths((IEnergyAcceptor) tileEntity)) {
                 if (energyPath.conductors.contains(
                         tileEntity)) {
-                    ret += energyPath.totalEnergyConducted;
+                    ret += this.getTotalEnergySunken( energyPath.target);
                     col++;
                 }
             }
@@ -385,7 +385,7 @@ public class EnergyNetLocal {
                 for (final EnergyPath energyPath : this.energySourceToEnergyPathMap.getPaths((IEnergyAcceptor) tileEntity)) {
                     if (energyPath.conductors.contains(
                             tileEntity)) {
-                        ret += energyPath.totalEnergyConducted;
+                        ret += this.getTotalEnergySunken( energyPath.target);
                         col++;
                     }
                 }

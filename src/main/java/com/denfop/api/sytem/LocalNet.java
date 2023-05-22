@@ -1,5 +1,10 @@
 package com.denfop.api.sytem;
 
+import com.denfop.api.energy.EnergyNetLocal;
+import com.denfop.api.energy.EnergyTick;
+import com.denfop.api.energy.IAdvConductor;
+import com.denfop.api.energy.IAdvEnergySink;
+import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.SystemTick;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -97,7 +102,7 @@ public class LocalNet implements ILocalNet {
             this.waitingList.clear();
 
         }
-        if (!this.energyType.isAuto_mode()) {
+
             for (SystemTick<ISource, Path> tick : this.SourceToPathMap.senderPath) {
                 final ISource entry = tick.getSource();
                 if (tick.getList() != null) {
@@ -136,23 +141,7 @@ public class LocalNet implements ILocalNet {
                 }
             }
 
-        } else {
-            for (SystemTick<ISource, Path> tick : this.SourceToPathMap.senderPath) {
-                final ISourceTemperature entry = (ISourceTemperature) tick.getSource();
-                double offered = entry.getOffered();
 
-                if (entry.isAllowed()) {
-
-                    this.emitHeatFrom(entry, offered, tick);
-
-
-                } else {
-                    this.emitHeatFromNotAllowed(entry, offered, tick);
-
-                }
-
-            }
-        }
         this.tick++;
     }
 
@@ -188,7 +177,7 @@ public class LocalNet implements ILocalNet {
 
 
             adding -= HeatSink.inject(HeatPath.targetDirection, adding, 0);
-            HeatPath.totalHeatConducted = (long) adding;
+            HeatPath.totalConducted = (long) adding;
 
             if (this.energyType.isBreak_conductors()) {
                 if (adding > HeatPath.min) {
@@ -236,7 +225,7 @@ public class LocalNet implements ILocalNet {
                 allow = allow || HeatSink.needTemperature();
 
                 adding -= HeatSink.inject(HeatPath.targetDirection, adding, 0);
-                HeatPath.totalHeatConducted = (long) adding;
+                HeatPath.totalConducted = (long) adding;
 
                 if (this.energyType.isBreak_conductors()) {
                     if (adding > HeatPath.min) {
@@ -261,7 +250,17 @@ public class LocalNet implements ILocalNet {
 
     public double getTotalEmitted(final ITile tileEntity) {
         double ret = 0.0;
+        int col = 0;
+        if (tileEntity instanceof IConductor) {
+            for (final Path energyPath : this.SourceToPathMap.getPaths((IAcceptor) tileEntity)) {
+                if (energyPath.conductors.contains(
+                        tileEntity)) {
+                    ret += this.getTotalAccepted( energyPath.target);
+                    col++;
+                }
+            }
 
+        }
         if (tileEntity instanceof ISource) {
             ISource advEnergySource = (ISource) tileEntity;
             if (!(advEnergySource instanceof IDual) && advEnergySource.isSource()) {
@@ -274,7 +273,7 @@ public class LocalNet implements ILocalNet {
 
             }
         }
-        return ret;
+        return col == 0 ? ret : ret / col;
     }
 
     public List<ISource> discoverFirstPathOrSources(final ITile par1) {
@@ -500,7 +499,7 @@ public class LocalNet implements ILocalNet {
         final Set<IConductor> conductors;
         final ISink target;
         final EnumFacing targetDirection;
-        long totalHeatConducted = 0;
+        long totalConducted = 0;
         double min = Double.MAX_VALUE;
 
         Path(ISink sink, EnumFacing facing) {
@@ -736,6 +735,20 @@ public class LocalNet implements ILocalNet {
             for (ISource iSESource : par1) {
                 this.remove1(iSESource);
             }
+        }
+        public List<Path> getPaths(final IAcceptor par1) {
+            final List<Path> paths = new ArrayList<>();
+
+            List<SystemTick<ISource, Path>> sources_list = this.getSources(par1);
+            if (sources_list == null || sources_list.isEmpty()) {
+                return paths;
+            }
+            for (final SystemTick<ISource, Path> source : sources_list) {
+                if (this.containsKey(source)) {
+                    paths.addAll(source.getList());
+                }
+            }
+            return paths;
         }
 
         public List<SystemTick<ISource, Path>> getSources(final IAcceptor par1) {

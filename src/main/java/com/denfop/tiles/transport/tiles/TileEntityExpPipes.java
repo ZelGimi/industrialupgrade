@@ -384,6 +384,21 @@ public class TileEntityExpPipes extends TileEntityBlock implements IConductor, I
         this.updateConnectivity();
     }
 
+    @Override
+    public EnergyType getEnergyType() {
+        return EnergyType.EXPERIENCE;
+    }
+
+    @Override
+    public boolean hasEnergies() {
+        return false;
+    }
+
+    @Override
+    public List<EnergyType> getEnergies() {
+        return null;
+    }
+
 
     public List<String> getNetworkedFields() {
         List<String> ret = new ArrayList<>();

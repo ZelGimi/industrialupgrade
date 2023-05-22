@@ -36,7 +36,7 @@ public class OreWashingRecipe {
         addrecipe(
                 "crushedIron",
                 "crushedPurifiedIron",
-                new ItemStack(Ic2Items.smallIronDust.getItem(), 2, Ic2Items.smallIronDust.getItemDamage())
+                new ItemStack(Ic2Items.smallGoldDust.getItem(), 2, Ic2Items.smallGoldDust.getItemDamage())
         );
         addrecipe("crushedTin", "crushedPurifiedTin", new ItemStack(Ic2Items.smallTinDust.getItem(), 2,
                 Ic2Items.smallTinDust.getItemDamage()

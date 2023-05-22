@@ -24,4 +24,8 @@ public class EnergyBase {
 
     }
 
+    public static IGlobalNet getGlobal(EnergyType energyType) {
+        return globalNetMap.get(energyType);
+    }
+
 }

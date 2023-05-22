@@ -124,7 +124,11 @@ public class RecipesCore implements IRecipes {
                         break;
                     }
                 }
+                if(deleteRecipe != null)
+                    break;
             }
+            if(deleteRecipe != null)
+                break;
         }
         if(deleteRecipe != null){
             recipes.remove(deleteRecipe);
