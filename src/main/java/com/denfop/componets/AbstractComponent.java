@@ -5,6 +5,7 @@ import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.network.GrowingBuffer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -14,12 +15,13 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
-public abstract class TileEntityAdvComponent {
+public abstract class AbstractComponent {
 
     protected TileEntityInventory parent;
 
-    public TileEntityAdvComponent(final TileEntityInventory parent) {
+    public AbstractComponent(final TileEntityInventory parent) {
         this.parent = parent;
     }
 
@@ -41,7 +43,9 @@ public abstract class TileEntityAdvComponent {
 
     public void updateEntityServer() {
     }
-
+    public List<ItemStack> getDrops() {
+        return Collections.emptyList();
+    }
     public void updateEntityClient() {
     }
 

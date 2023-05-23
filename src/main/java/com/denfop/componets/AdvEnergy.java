@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AdvEnergy extends TileEntityAdvComponent {
+public class AdvEnergy extends AbstractComponent {
 
     public final boolean fullEnergy;
     public double tick;

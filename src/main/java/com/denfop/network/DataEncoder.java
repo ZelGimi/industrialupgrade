@@ -10,7 +10,7 @@ import com.denfop.api.space.fakebody.FakePlanet;
 import com.denfop.api.space.fakebody.FakePlayer;
 import com.denfop.api.space.fakebody.FakeSatellite;
 import com.denfop.api.vein.Vein;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.invslot.InvSlot;
 import com.mojang.authlib.GameProfile;
 import ic2.api.crops.CropCard;
@@ -191,7 +191,7 @@ public final class DataEncoder {
                 encode(os, ((Collection) o).toArray(), false);
                 break;
             case Component:
-                NBTTagCompound nbt = ((TileEntityAdvComponent) o).writeToNbt();
+                NBTTagCompound nbt = ((AbstractComponent) o).writeToNbt();
                 encode(os, nbt == null ? new NBTTagCompound() : nbt, false);
                 break;
             case CropCard:
@@ -471,7 +471,7 @@ public final class DataEncoder {
                 encode(os, ((Collection) o).toArray(), false);
                 break;
             case Component:
-                NBTTagCompound nbt = ((TileEntityAdvComponent) o).writeToNbt();
+                NBTTagCompound nbt = ((AbstractComponent) o).writeToNbt();
                 encode(os, nbt == null ? new NBTTagCompound() : nbt, false);
                 break;
             case CropCard:
@@ -893,9 +893,9 @@ public final class DataEncoder {
                             dstT.put(i, srcT.get(i));
                         }
                     }
-                } else if (dst instanceof TileEntityAdvComponent) {
+                } else if (dst instanceof AbstractComponent) {
                     NBTTagCompound nbt = (NBTTagCompound) src;
-                    ((TileEntityAdvComponent) dst).readFromNbt(nbt);
+                    ((AbstractComponent) dst).readFromNbt(nbt);
                 } else {
                     if (!(dst instanceof Collection)) {
                         return false;
@@ -1068,7 +1068,7 @@ public final class DataEncoder {
         FAKE_PLANET(FakePlanet.class),
         FAKE_SATELLITE(FakeSatellite.class),
         FAKE_ASTEROID(FakeAsteroid.class),
-        Component(TileEntityAdvComponent.class, false),
+        Component(AbstractComponent.class, false),
         CropCard(CropCard.class),
         ElectrolyzerRecipe(ElectrolyzerRecipe.class),
         Addon(null),

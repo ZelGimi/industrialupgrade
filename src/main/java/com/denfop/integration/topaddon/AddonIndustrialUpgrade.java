@@ -14,7 +14,7 @@ import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.CoolComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemArmorAdvHazmat;
 import com.denfop.items.armour.ItemArmorImprovemedNano;
@@ -27,7 +27,6 @@ import com.denfop.tiles.base.TileEntityObsidianGenerator;
 import com.denfop.tiles.mechanism.TileEntityPlasticCreator;
 import com.denfop.tiles.mechanism.TileEntityPlasticPlateCreator;
 import com.denfop.tiles.mechanism.TileEntityPump;
-import com.denfop.tiles.tank.TileEntityTank;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import io.github.drmanganese.topaddons.addons.AddonBlank;
@@ -46,7 +45,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidTank;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -156,7 +154,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
             }
               }else  if (tile instanceof TileEntityInventory) {
             TileEntityInventory tileBlock = (TileEntityInventory) tile;
-            for (TileEntityAdvComponent component : tileBlock.getComponentList()) {
+            for (AbstractComponent component : tileBlock.getComponentList()) {
                 if (component instanceof AdvEnergy) {
                     euBar(probeInfo, (int) ((AdvEnergy) component).getEnergy(), (int) ((AdvEnergy) component).getCapacity());
                 }

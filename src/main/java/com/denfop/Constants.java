@@ -4,7 +4,7 @@ public class Constants {
 
     public static final String MOD_ID = "industrialupgrade";
     public static final String MOD_NAME = "Industrial Upgrade";
-    public static final String MOD_VERSION = "2.5.0.11";
+    public static final String MOD_VERSION = "2.5.0.12";
     public static final String MOD_DEPS = "required-after:ic2;after:placebo;after:thuttech;after:thutcore;" +
             "before:nuclearcraft;" +
             "before:advanced_solar_panels;" +

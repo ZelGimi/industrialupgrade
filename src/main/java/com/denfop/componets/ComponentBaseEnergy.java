@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class ComponentBaseEnergy extends TileEntityAdvComponent {
+public class ComponentBaseEnergy extends AbstractComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
 

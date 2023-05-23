@@ -281,12 +281,15 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         this.index = nbt.getInteger("index");
         int modeIdx = nbt.getInteger("mode");
         this.mode = modeIdx < Mode.values().length ? Mode.values()[modeIdx] : Mode.STOPPED;
-        NBTTagCompound contentTag = nbt.getCompoundTag("pattern");
-        final ItemStack stack = new ItemStack(contentTag);
-        this.pattern = new RecipeInfo(stack, Recipes.recipes
-                .getRecipeOutput("replicator", false, stack)
-                .getOutput().metadata.getDouble(
-                        "matter"));
+        boolean isPattern = nbt.getBoolean("isPattern");
+        if(isPattern) {
+            NBTTagCompound contentTag = nbt.getCompoundTag("pattern");
+            final ItemStack stack = new ItemStack(contentTag);
+            this.pattern = new RecipeInfo(stack, Recipes.recipes
+                    .getRecipeOutput("replicator", false, stack)
+                    .getOutput().metadata.getDouble(
+                            "matter"));
+        }
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -296,10 +299,12 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         nbt.setInteger("index", this.index);
         nbt.setInteger("mode", this.mode.ordinal());
         if (this.pattern != null) {
+            nbt.setBoolean("isPattern", true);
             NBTTagCompound contentTag = new NBTTagCompound();
             this.pattern.getStack().writeToNBT(contentTag);
             nbt.setTag("pattern", contentTag);
-        }
+        }else
+            nbt.setBoolean("isPattern", false);
 
         return nbt;
     }

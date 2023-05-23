@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import java.util.*;
 
-public class Fluids extends TileEntityAdvComponent {
+public class Fluids extends AbstractComponent {
 
     protected final List<Fluids.InternalFluidTank> managedTanks = new ArrayList<>();
     protected final List<Supplier<? extends Collection<Fluids.InternalFluidTank>>> unmanagedTanks = new ArrayList();

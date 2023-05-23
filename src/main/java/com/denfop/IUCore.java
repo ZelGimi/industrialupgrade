@@ -180,7 +180,7 @@ public final class IUCore {
     public static final List<QuarryItem> get_ingot_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_crushed_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_comb_crushed_quarry = new ArrayList<>();
-
+    public static final List<List<ItemStack>> removing_list = new ArrayList<>();
     public static boolean dynamicTrees = false;
     public static Logger log;
     @SidedProxy(clientSide = "com.denfop.proxy.ClientProxy", serverSide = "com.denfop.proxy.CommonProxy")
@@ -557,6 +557,7 @@ public final class IUCore {
                 this.get_ingot.add(stack);
             }
         }
+
         IUCore.list_adding.forEach(stack -> addOre1(stack));
         IUCore.list_removing.forEach(stack -> removeOre(stack));
         IUCore.list.forEach(stack -> {

@@ -4,7 +4,7 @@ import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IAugmentationUpgrade;
@@ -228,7 +228,7 @@ public class InvSlotUpgrade extends InvSlot {
 
         }
 
-        for (final TileEntityAdvComponent component : this.base.getParent().getComps()) {
+        for (final AbstractComponent component : this.base.getParent().getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
                 rs.removeRedstoneModifiers(this.redstoneModifiers);
@@ -356,16 +356,14 @@ public class InvSlotUpgrade extends InvSlot {
             ItemStack stack = this.get(i);
             if (!StackUtil.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
                 update = true;
-                if (stack.isItemEqual(Ic2Items.ejectorUpgrade)) {
+                if (stack.isItemEqual(Ic2Items.ejectorUpgrade) || stack.isItemEqual(Ic2Items.advejectorUpgrade)) {
                     this.tick(i);
                 } else if (stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
                     this.tick_fluid(i);
-                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.pullingUpgrade)) {
+                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.pullingUpgrade)|| stack.isItemEqual(Ic2Items.advpullingUpgrade)) {
                     this.tickPullIn(i);
                 } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
                     this.tickPullIn_fluid(i);
-                } else {
-                    ((IUpgradeItem) stack.getItem()).onTick(stack, block);
                 }
                 ret = true;
             }

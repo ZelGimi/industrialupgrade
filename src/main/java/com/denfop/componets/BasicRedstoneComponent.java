@@ -4,7 +4,7 @@ import com.denfop.tiles.base.TileEntityInventory;
 
 import java.util.function.IntSupplier;
 
-public abstract class BasicRedstoneComponent extends TileEntityAdvComponent {
+public abstract class BasicRedstoneComponent extends AbstractComponent {
 
     private int level;
     private IntSupplier update;
