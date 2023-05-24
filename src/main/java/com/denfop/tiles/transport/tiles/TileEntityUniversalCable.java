@@ -20,7 +20,13 @@ import com.denfop.api.heat.IHeatConductor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
-import com.denfop.api.sytem.*;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
 import com.denfop.tiles.transport.types.UniversalType;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
@@ -538,6 +544,7 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
             this.updateConnectivity();
         }
     }
+
     @Override
     public EnergyType getEnergyType() {
         return EnergyType.QUANTUM;
@@ -550,8 +557,9 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     @Override
     public List<EnergyType> getEnergies() {
-        return Arrays.asList(new EnergyType[] {EnergyType.QUANTUM,EnergyType.SOLARIUM,EnergyType.EXPERIENCE});
+        return Arrays.asList(new EnergyType[]{EnergyType.QUANTUM, EnergyType.SOLARIUM, EnergyType.EXPERIENCE});
     }
+
     @Override
     public boolean acceptsCoolFrom(final ICoolEmitter var1, final EnumFacing var2) {
         return true;

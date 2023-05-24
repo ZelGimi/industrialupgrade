@@ -102,6 +102,8 @@ public interface IRecipes {
 
     void removeRecipe(String name, RecipeOutput output);
 
+    void removeAllRecipe(String name, RecipeOutput output);
+
     void removeRecipe(String name, ItemStack output);
 
     BaseMachineRecipe getRecipeOutputFluid(String name, boolean consume, List<ItemStack> list, FluidTank tank);

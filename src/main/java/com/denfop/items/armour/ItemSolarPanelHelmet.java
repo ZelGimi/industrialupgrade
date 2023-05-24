@@ -55,7 +55,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class ItemSolarPanelHelmet extends ItemArmorElectric implements IElectricItem, IModelRegister, IMetalArmor, ISpecialArmor,
         IItemHudInfo, IUpgradeItem {

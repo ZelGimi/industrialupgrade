@@ -1,10 +1,5 @@
 package com.denfop.api.sytem;
 
-import com.denfop.api.energy.EnergyNetLocal;
-import com.denfop.api.energy.EnergyTick;
-import com.denfop.api.energy.IAdvConductor;
-import com.denfop.api.energy.IAdvEnergySink;
-import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.SystemTick;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -103,15 +98,32 @@ public class LocalNet implements ILocalNet {
 
         }
 
-            for (SystemTick<ISource, Path> tick : this.SourceToPathMap.senderPath) {
-                final ISource entry = tick.getSource();
-                if (tick.getList() != null) {
-                    if (tick.getList().isEmpty()) {
-                        continue;
+        for (SystemTick<ISource, Path> tick : this.SourceToPathMap.senderPath) {
+            final ISource entry = tick.getSource();
+            if (tick.getList() != null) {
+                if (tick.getList().isEmpty()) {
+                    continue;
+                }
+            }
+
+            if (entry != null) {
+                if (entry.isSource()) {
+                    if (entry instanceof IDual) {
+                        ((IDual) entry).setPastEnergy1(((IDual) entry).getPastEnergy1());
+                    } else {
+                        entry.setPastEnergy(entry.getPerEnergy());
                     }
                 }
+                double offer = entry.getOffered();
+                if (offer > 0) {
 
-                if (entry != null) {
+                    final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
+                    if (this.energyType.isDraw()) {
+                        entry.draw(removed);
+                    }
+
+
+                } else {
                     if (entry.isSource()) {
                         if (entry instanceof IDual) {
                             ((IDual) entry).setPastEnergy1(((IDual) entry).getPastEnergy1());
@@ -119,27 +131,10 @@ public class LocalNet implements ILocalNet {
                             entry.setPastEnergy(entry.getPerEnergy());
                         }
                     }
-                    double offer = entry.getOffered();
-                    if (offer > 0) {
 
-                        final double removed = offer - this.emitEnergyFrom(entry, offer, tick);
-                        if (this.energyType.isDraw()) {
-                            entry.draw(removed);
-                        }
-
-
-                    } else {
-                        if (entry.isSource()) {
-                            if (entry instanceof IDual) {
-                                ((IDual) entry).setPastEnergy1(((IDual) entry).getPastEnergy1());
-                            } else {
-                                entry.setPastEnergy(entry.getPerEnergy());
-                            }
-                        }
-
-                    }
                 }
             }
+        }
 
 
         this.tick++;
@@ -255,7 +250,7 @@ public class LocalNet implements ILocalNet {
             for (final Path energyPath : this.SourceToPathMap.getPaths((IAcceptor) tileEntity)) {
                 if (energyPath.conductors.contains(
                         tileEntity)) {
-                    ret += this.getTotalAccepted( energyPath.target);
+                    ret += this.getTotalAccepted(energyPath.target);
                     col++;
                 }
             }
@@ -736,6 +731,7 @@ public class LocalNet implements ILocalNet {
                 this.remove1(iSESource);
             }
         }
+
         public List<Path> getPaths(final IAcceptor par1) {
             final List<Path> paths = new ArrayList<>();
 

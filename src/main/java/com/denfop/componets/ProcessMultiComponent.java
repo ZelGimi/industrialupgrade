@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public class ProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
+public class ProcessMultiComponent extends TileEntityAdvComponent implements IMultiUpdateTick {
 
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;

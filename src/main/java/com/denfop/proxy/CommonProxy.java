@@ -1,7 +1,11 @@
 package com.denfop.proxy;
 
 import cofh.api.fluid.IFluidContainerItem;
-import com.denfop.*;
+import com.denfop.Config;
+import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.IULoots;
+import com.denfop.Ic2Items;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.Recipes;
 import com.denfop.api.inv.IHasGui;
@@ -15,7 +19,49 @@ import com.denfop.api.space.BaseSpaceSystem;
 import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.blocks.BlocksItems;
-import com.denfop.blocks.mechanism.*;
+import com.denfop.blocks.mechanism.BlockAdminPanel;
+import com.denfop.blocks.mechanism.BlockAdvChamber;
+import com.denfop.blocks.mechanism.BlockAdvRefiner;
+import com.denfop.blocks.mechanism.BlockAdvSolarEnergy;
+import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.blocks.mechanism.BlockBaseMachine1;
+import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockBlastFurnace;
+import com.denfop.blocks.mechanism.BlockCable;
+import com.denfop.blocks.mechanism.BlockChargepadStorage;
+import com.denfop.blocks.mechanism.BlockCombinerSolid;
+import com.denfop.blocks.mechanism.BlockConverterMatter;
+import com.denfop.blocks.mechanism.BlockCoolPipes;
+import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
+import com.denfop.blocks.mechanism.BlockEnergyStorage;
+import com.denfop.blocks.mechanism.BlockExpCable;
+import com.denfop.blocks.mechanism.BlockHeatColdPipes;
+import com.denfop.blocks.mechanism.BlockImpChamber;
+import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
+import com.denfop.blocks.mechanism.BlockMolecular;
+import com.denfop.blocks.mechanism.BlockMoreMachine;
+import com.denfop.blocks.mechanism.BlockMoreMachine1;
+import com.denfop.blocks.mechanism.BlockMoreMachine2;
+import com.denfop.blocks.mechanism.BlockMoreMachine3;
+import com.denfop.blocks.mechanism.BlockPerChamber;
+import com.denfop.blocks.mechanism.BlockPetrolQuarry;
+import com.denfop.blocks.mechanism.BlockPipes;
+import com.denfop.blocks.mechanism.BlockQCable;
+import com.denfop.blocks.mechanism.BlockQuarryVein;
+import com.denfop.blocks.mechanism.BlockRefiner;
+import com.denfop.blocks.mechanism.BlockSCable;
+import com.denfop.blocks.mechanism.BlockSimpleMachine;
+import com.denfop.blocks.mechanism.BlockSintezator;
+import com.denfop.blocks.mechanism.BlockSolarEnergy;
+import com.denfop.blocks.mechanism.BlockSolarPanels;
+import com.denfop.blocks.mechanism.BlockSolidMatter;
+import com.denfop.blocks.mechanism.BlockSunnariumMaker;
+import com.denfop.blocks.mechanism.BlockSunnariumPanelMaker;
+import com.denfop.blocks.mechanism.BlockTank;
+import com.denfop.blocks.mechanism.BlockTransformer;
+import com.denfop.blocks.mechanism.BlockUniversalCable;
+import com.denfop.blocks.mechanism.BlockUpgradeBlock;
 import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
 import com.denfop.events.Ic2IntegrationHandler;
@@ -37,13 +83,26 @@ import com.denfop.integration.thermal.ThermalExpansionIntegration;
 import com.denfop.items.CellType;
 import com.denfop.items.book.core.CoreBook;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import com.denfop.recipes.*;
+import com.denfop.recipes.BasicRecipe;
+import com.denfop.recipes.CannerRecipe;
+import com.denfop.recipes.CentrifugeRecipe;
+import com.denfop.recipes.CompressorRecipe;
+import com.denfop.recipes.ExtractorRecipe;
+import com.denfop.recipes.FurnaceRecipes;
+import com.denfop.recipes.MaceratorRecipe;
+import com.denfop.recipes.MetalFormerRecipe;
+import com.denfop.recipes.OreWashingRecipe;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.tiles.base.TileEntityConverterSolidMatter;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
-import com.denfop.utils.*;
+import com.denfop.utils.CraftManagerUtils;
+import com.denfop.utils.ElectricItemManager;
+import com.denfop.utils.ListInformationUtils;
+import com.denfop.utils.MatterRecipe;
+import com.denfop.utils.ModUtils;
+import com.denfop.utils.Precision;
 import com.denfop.world.WorldGenOres;
 import com.google.common.collect.Lists;
 import forestry.api.core.IToolPipette;
@@ -74,7 +133,11 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CommonProxy implements IGuiHandler {
 
@@ -351,7 +414,7 @@ public class CommonProxy implements IGuiHandler {
 
         writeRecipe();
         for (List<ItemStack> stack : IUCore.removing_list) {
-            Recipes.recipes.removeRecipe("furnace", new RecipeOutput(null, stack));
+            Recipes.recipes.removeAllRecipe("furnace", new RecipeOutput(null, stack));
         }
 
         final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
@@ -455,6 +518,9 @@ public class CommonProxy implements IGuiHandler {
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.solidcanner));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.patternstorage));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.glassFiberCableItem));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.copperCableItem));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tinCableItem));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.goldCableItem));
 
         ic2.api.recipe.Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.block, 1, 14), "AAA", "AAA", "AAA", 'A', "blockSilver"

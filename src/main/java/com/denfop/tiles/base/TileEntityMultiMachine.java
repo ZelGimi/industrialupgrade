@@ -8,6 +8,7 @@ import com.denfop.IUItem;
 import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.sytem.EnergyType;
@@ -31,7 +32,6 @@ import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
@@ -534,7 +534,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
                 TileEntitySolarPanel panel = new TileEntitySolarPanel(solartype);
                 if (panel.getWorld() != this.getWorld()) {
                     panel.setWorld(this.getWorld());
-                    IAdvEnergyNet advEnergyNet = (IAdvEnergyNet) EnergyNet.instance;
+                    IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
                     panel.sunCoef = advEnergyNet.getSunCoefficient(this.world);
                 }
                 panel.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&

@@ -1,6 +1,12 @@
 package com.denfop.api.gui;
 
-import com.denfop.componets.*;
+import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.ComponentButton;
+import com.denfop.componets.ComponentProcessRender;
+import com.denfop.componets.CoolComponent;
+import com.denfop.componets.HeatComponent;
+import com.denfop.componets.RFComponent;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import net.minecraftforge.fluids.FluidTank;

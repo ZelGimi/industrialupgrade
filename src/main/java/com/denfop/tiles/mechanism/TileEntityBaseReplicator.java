@@ -282,7 +282,7 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         int modeIdx = nbt.getInteger("mode");
         this.mode = modeIdx < Mode.values().length ? Mode.values()[modeIdx] : Mode.STOPPED;
         boolean isPattern = nbt.getBoolean("isPattern");
-        if(isPattern) {
+        if (isPattern) {
             NBTTagCompound contentTag = nbt.getCompoundTag("pattern");
             final ItemStack stack = new ItemStack(contentTag);
             this.pattern = new RecipeInfo(stack, Recipes.recipes
@@ -303,8 +303,9 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
             NBTTagCompound contentTag = new NBTTagCompound();
             this.pattern.getStack().writeToNBT(contentTag);
             nbt.setTag("pattern", contentTag);
-        }else
+        } else {
             nbt.setBoolean("isPattern", false);
+        }
 
         return nbt;
     }

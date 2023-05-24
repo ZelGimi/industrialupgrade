@@ -8,7 +8,6 @@ import net.minecraftforge.fluids.FluidTank;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,26 +115,61 @@ public class RecipesCore implements IRecipes {
     public void removeRecipe(String name, RecipeOutput output) {
         List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
         BaseMachineRecipe deleteRecipe = null;
-        for(BaseMachineRecipe recipe : recipes){
-            for(ItemStack stack : output.items){
-                for(ItemStack output_stack : recipe.output.items){
-                    if(stack.isItemEqual(output_stack)) {
+        for (BaseMachineRecipe recipe : recipes) {
+            for (ItemStack stack : output.items) {
+                for (ItemStack output_stack : recipe.output.items) {
+                    if (stack.isItemEqual(output_stack)) {
                         deleteRecipe = recipe;
                         break;
                     }
                 }
-                if(deleteRecipe != null)
+                if (deleteRecipe != null) {
                     break;
+                }
             }
-            if(deleteRecipe != null)
+            if (deleteRecipe != null) {
                 break;
+            }
         }
-        if(deleteRecipe != null){
+        if (deleteRecipe != null) {
             recipes.remove(deleteRecipe);
             final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
             IInput input = deleteRecipe.input;
             final List<IRecipeInput> list2 = input.getInputs();
-            for(IRecipeInput input1 : list2){
+            for (IRecipeInput input1 : list2) {
+                IRecipeInputStack iRecipeInputStack = new RecipeInputStack(input1);
+                list.remove(iRecipeInputStack);
+            }
+
+        }
+
+    }
+
+    public void removeAllRecipe(String name, RecipeOutput output) {
+        List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
+        List<BaseMachineRecipe> deleteRecipes = new ArrayList<>();
+        for (BaseMachineRecipe recipe : recipes) {
+            boolean find = false;
+            for (ItemStack stack : output.items) {
+                for (ItemStack output_stack : recipe.output.items) {
+                    if (stack.isItemEqual(output_stack)) {
+                        deleteRecipes.add(recipe);
+                        find = true;
+                        break;
+                    }
+                }
+                if (find) {
+                    break;
+                }
+            }
+
+        }
+        for (BaseMachineRecipe deleteRecipe : deleteRecipes) {
+            recipes.remove(deleteRecipe);
+            final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
+            IInput input = deleteRecipe.input;
+            final List<IRecipeInput> list2 = input.getInputs();
+            for (IRecipeInput input1 : list2) {
                 IRecipeInputStack iRecipeInputStack = new RecipeInputStack(input1);
                 list.remove(iRecipeInputStack);
             }

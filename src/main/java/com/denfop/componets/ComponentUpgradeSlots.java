@@ -3,7 +3,7 @@ package com.denfop.componets;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 
-public class ComponentUpgradeSlots extends AbstractComponent{
+public class ComponentUpgradeSlots extends TileEntityAdvComponent {
 
     private final InvSlotUpgrade invSlot;
     private final boolean needUpdate;
@@ -13,7 +13,8 @@ public class ComponentUpgradeSlots extends AbstractComponent{
         this.invSlot = invSlotUpgrade;
         this.needUpdate = parent instanceof IComponentUpdate;
     }
-    public boolean condition(){
+
+    public boolean condition() {
         return true;
     }
 
@@ -25,9 +26,10 @@ public class ComponentUpgradeSlots extends AbstractComponent{
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if(condition()){
-            if(invSlot.tickNoMark())
-                ((IComponentUpdate)parent).setOverclockRates();
+        if (condition()) {
+            if (invSlot.tickNoMark()) {
+                ((IComponentUpdate) parent).setOverclockRates();
+            }
         }
 
     }

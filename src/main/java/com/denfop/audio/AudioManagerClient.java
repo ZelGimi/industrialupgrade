@@ -31,14 +31,8 @@ import paulscode.sound.SoundSystemConfig;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 @SideOnly(Side.CLIENT)
 public final class AudioManagerClient extends AudioManager {

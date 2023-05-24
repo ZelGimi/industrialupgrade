@@ -69,6 +69,10 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
         return opType;
     }
 
+    public void setOpType(InvSlotConsumableLiquid.OpType opType1) {
+        this.opType = opType1;
+    }
+
     public FluidStack drain(Fluid fluid, int maxAmount, MutableObject<ItemStack> output, boolean simulate) {
         output.setValue(null);
         if (fluid != null && !this.acceptsLiquid(fluid)) {
@@ -211,10 +215,6 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
         } else {
             return false;
         }
-    }
-
-    public void setOpType(InvSlotConsumableLiquid.OpType opType1) {
-        this.opType = opType1;
     }
 
     protected boolean acceptsLiquid(Fluid fluid) {

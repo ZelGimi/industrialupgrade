@@ -2,7 +2,6 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.items.machines.ItemsRefiner;
 import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
@@ -159,6 +158,6 @@ public enum BlockAdvRefiner implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
-        return  new ModelResourceLocation(Constants.MOD_ID + ":" + "adv_refiner_item", null);
+        return new ModelResourceLocation(Constants.MOD_ID + ":" + "adv_refiner_item", null);
     }
 }

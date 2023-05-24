@@ -54,11 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ItemQuantumSaber extends ItemTool implements IElectricItem, IUpgradeItem, IBoxable, IItemHudInfo, IModelRegister {
 

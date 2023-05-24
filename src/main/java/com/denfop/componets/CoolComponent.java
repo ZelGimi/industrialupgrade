@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class CoolComponent extends AbstractComponent {
+public class CoolComponent extends TileEntityAdvComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;

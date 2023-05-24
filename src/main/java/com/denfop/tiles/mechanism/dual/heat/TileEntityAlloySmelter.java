@@ -87,7 +87,7 @@ public class TileEntityAlloySmelter extends TileEntityDoubleElectricMachine impl
         addAlloysmelter(
                 input.forOreDict("ingotTin", 1),
                 input.forOreDict("ingotCopper", 3),
-                Ic2Items.bronzeIngot, 1000
+                ModUtils.setSize(Ic2Items.bronzeIngot, 4), 1000
         );
         addAlloysmelter(
                 input.forOreDict("ingotAluminium", 1),

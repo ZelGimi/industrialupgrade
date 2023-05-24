@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class HeatComponent extends AbstractComponent {
+public class HeatComponent extends TileEntityAdvComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;

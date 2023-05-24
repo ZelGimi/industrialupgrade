@@ -17,11 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractComponent {
+public abstract class TileEntityAdvComponent {
 
     protected TileEntityInventory parent;
 
-    public AbstractComponent(final TileEntityInventory parent) {
+    public TileEntityAdvComponent(final TileEntityInventory parent) {
         this.parent = parent;
     }
 
@@ -41,11 +41,14 @@ public abstract class AbstractComponent {
         return false;
     }
 
+
     public void updateEntityServer() {
     }
+
     public List<ItemStack> getDrops() {
         return Collections.emptyList();
     }
+
     public void updateEntityClient() {
     }
 

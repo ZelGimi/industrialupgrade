@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AdvEnergy extends AbstractComponent {
+public class AdvEnergy extends TileEntityAdvComponent {
 
     public final boolean fullEnergy;
     public double tick;
@@ -143,8 +143,10 @@ public class AdvEnergy extends AbstractComponent {
             return;
         }
         if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
-            IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,
-                    this.getParent().getFacing().getOpposite());
+            IEnergyStorage energy_storage = tile.getCapability(
+                    CapabilityEnergy.ENERGY,
+                    this.getParent().getFacing().getOpposite()
+            );
             this.energyStorageMap.put(srcPos, energy_storage);
         }
     }
@@ -247,7 +249,6 @@ public class AdvEnergy extends AbstractComponent {
                 this.createDelegate();
                 MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
             }
-
             this.loaded = true;
         }
 
@@ -287,12 +288,9 @@ public class AdvEnergy extends AbstractComponent {
 
     public void onUnloaded() {
         if (this.delegate != null) {
-
-
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
             this.delegate = null;
         }
-
         this.loaded = false;
     }
 

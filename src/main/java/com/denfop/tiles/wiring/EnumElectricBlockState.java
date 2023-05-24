@@ -1,8 +1,24 @@
 package com.denfop.tiles.wiring;
 
 import com.denfop.tiles.base.TileEntityElectricBlock;
-import com.denfop.tiles.wiring.chargepad.*;
-import com.denfop.tiles.wiring.storage.*;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadAdvMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadBarMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadGraMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadHadrMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadKvrMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadMFE;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadPerMFSU;
+import com.denfop.tiles.wiring.chargepad.TileEntityChargepadUltMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricAdvMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricBarMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricGraMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricHadrMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricKvrMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricMFE;
+import com.denfop.tiles.wiring.storage.TileEntityElectricMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricPerMFSU;
+import com.denfop.tiles.wiring.storage.TileEntityElectricUltMFSU;
 
 public enum EnumElectricBlockState {
     BATBOX(EnumElectricBlock.BATBOX),

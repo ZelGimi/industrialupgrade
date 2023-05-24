@@ -1,8 +1,8 @@
 package com.denfop.componets.client;
 
 import com.denfop.api.windsystem.WindSystem;
-import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.TileEntityAdvComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
 import net.minecraft.util.EnumFacing;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class ComponentClientEffectRender extends AbstractComponent {
+public class ComponentClientEffectRender extends TileEntityAdvComponent {
 
     private final EffectType effectType;
 

@@ -4918,7 +4918,7 @@ public class BasicRecipe {
                 'A',
                 DEFAULT_SENSOR,
                 'C',
-                Blocks.CRAFTING_TABLE
+                "workbench"
                 ,
                 'B',
                 "platePlatinum",
@@ -4928,15 +4928,15 @@ public class BasicRecipe {
                 "plateIron"
         );
         Recipes.advRecipes.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 129), "DCD", "BAB", " E ", 'A', ADV_SENSOR, 'C', Blocks.CRAFTING_TABLE
+                new ItemStack(IUItem.crafting_elements, 1, 129), "DCD", "BAB", " E ", 'A', ADV_SENSOR, 'C', "workbench"
                 , 'B', "platePlatinum", 'D', "plateTin", 'E', "plateIron"
         );
         Recipes.advRecipes.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 130), "DCD", "BAB", " E ", 'A', IMP_SENSOR, 'C', Blocks.CRAFTING_TABLE
+                new ItemStack(IUItem.crafting_elements, 1, 130), "DCD", "BAB", " E ", 'A', IMP_SENSOR, 'C', "workbench"
                 , 'B', "platePlatinum", 'D', "plateTin", 'E', "plateIron"
         );
         Recipes.advRecipes.addRecipe(
-                new ItemStack(IUItem.crafting_elements, 1, 131), "DCD", "BAB", " E ", 'A', PER_SENSOR, 'C', Blocks.CRAFTING_TABLE
+                new ItemStack(IUItem.crafting_elements, 1, 131), "DCD", "BAB", " E ", 'A', PER_SENSOR, 'C', "workbench"
                 , 'B', "platePlatinum", 'D', "plateTin", 'E', "plateIron"
         );
         Recipes.advRecipes.addRecipe(
@@ -8189,6 +8189,18 @@ public class BasicRecipe {
                 new ItemStack(IUItem.heatsensor, 1),
                 "CBC", "BDB", "BAB", 'A', Ic2Items.electronicCircuit,
                 'B', "plateIron", 'C', new ItemStack(IUItem.pipes, 1, 3), 'D', new ItemStack(IUItem.preciousblock)
+        );
+        Recipes.advRecipes.addShapelessRecipe(
+                ModUtils.setSize(IUItem.copperCableItem, 2),
+                "craftingToolWireCutter", "plateCopper"
+        );
+        Recipes.advRecipes.addShapelessRecipe(
+                ModUtils.setSize(IUItem.tinCableItem, 3),
+                "craftingToolWireCutter", "plateTin"
+        );
+        Recipes.advRecipes.addShapelessRecipe(
+                ModUtils.setSize(IUItem.goldCableItem, 4),
+                "craftingToolWireCutter", "plateGold"
         );
     }
 

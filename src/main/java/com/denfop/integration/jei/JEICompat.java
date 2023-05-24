@@ -496,7 +496,10 @@ public final class JEICompat implements IModPlugin {
                 new ItemStack(IUItem.machines_base, 1, 10),
                 new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
-
+        registry.addRecipeCatalyst(
+                new ItemStack(IUItem.machines_base, 1, 11),
+                new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
         registry.addRecipes(
                 CentrifugeHandler.getRecipes(),
                 new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
@@ -1722,7 +1725,54 @@ public final class JEICompat implements IModPlugin {
                 );
 
             }
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfeUnit));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.copperCableItem));
+            this.itemRegistry.removeIngredientsAtRuntime(
+                    VanillaTypes.ITEM,
+                    Collections.singleton(Ic2Items.insulatedCopperCableItem)
+            );
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.goldCableItem));
+            this.itemRegistry.removeIngredientsAtRuntime(
+                    VanillaTypes.ITEM,
+                    Collections.singleton(Ic2Items.insulatedGoldCableItem)
+            );
+            this.itemRegistry.removeIngredientsAtRuntime(
+                    VanillaTypes.ITEM,
+                    Collections.singleton(Ic2Items.doubleInsulatedGoldCableItem)
+            );
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ironCableItem));
+            this.itemRegistry.removeIngredientsAtRuntime(
+                    VanillaTypes.ITEM,
+                    Collections.singleton(Ic2Items.insulatedIronCableItem)
+            );
+            this.itemRegistry.removeIngredientsAtRuntime(
+                    VanillaTypes.ITEM,
+                    Collections.singleton(Ic2Items.doubleInsulatedIronCableItem)
+            );
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.tinCableItem));
+            this.itemRegistry.removeIngredientsAtRuntime(
+                    VanillaTypes.ITEM,
+                    Collections.singleton(Ic2Items.insulatedTinCableItem)
+            );
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.glassFiberCableItem));
+
+
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.solarPanel));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.solardestiller));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.macerator));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.orewashingplant));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.teleporter));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.electroFurnace));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.centrifuge));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.compressor));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.extractor));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.pump));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.generator));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.geothermalGenerator));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.reactorChamber));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.nuclearReactor));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.recycler));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.massFabricator));
+            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.metalformer));
 
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfeUnit));
             this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfsukit));

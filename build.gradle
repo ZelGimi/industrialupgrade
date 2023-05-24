@@ -137,6 +137,8 @@ dependencies {
     runtimeOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
     compileOnly "curse.maven:forestry-59751:2684780"
     runtimeOnly "curse.maven:forestry-59751:2684780"
+    compileOnly "curse.maven:patchouli-306770:3087124"
+    runtimeOnly "curse.maven:patchouli-306770:3087124"
     compileOnly "curse.maven:avaritia-1-10-261348:3143349"
     runtimeOnly "curse.maven:avaritia-1-10-261348:3143349"
 	runtimeOnly "curse.maven:cofh-core-69162:2920433"
@@ -193,6 +195,10 @@ dependencies {
     compileOnly "curse.maven:ender-io-64578:3328811"
     runtimeOnly "curse.maven:compact-machines-224218:2707509"
     compileOnly "curse.maven:compact-machines-224218:2707509"
+    runtimeOnly "curse.maven:the-one-probe-245211:2667280"
+    compileOnly "curse.maven:the-one-probe-245211:2667280"
+    runtimeOnly "curse.maven:top-addons-247111:2887479"
+    compileOnly "curse.maven:top-addons-247111:2887479"
     runtimeOnly fileTree('lib')
 	compileOnly fileTree('lib')
 	compileOnly fileTree('libs')

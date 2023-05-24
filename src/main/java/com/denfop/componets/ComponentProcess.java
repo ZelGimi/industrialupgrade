@@ -2,9 +2,9 @@ package com.denfop.componets;
 
 import com.denfop.tiles.base.TileEntityInventory;
 
-public class ComponentProcess extends AbstractComponent{
+public class ComponentProcess extends TileEntityAdvComponent {
 
-    public ComponentProcess(final TileEntityInventory parent,int operationLength) {
+    public ComponentProcess(final TileEntityInventory parent, int operationLength) {
         super(parent);
     }
 

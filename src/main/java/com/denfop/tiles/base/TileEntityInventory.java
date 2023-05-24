@@ -2,8 +2,11 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.api.inv.IHasGui;
-import com.denfop.componets.*;
-import com.denfop.componets.AbstractComponent;
+import com.denfop.componets.BasicRedstoneComponent;
+import com.denfop.componets.ComparatorEmitter;
+import com.denfop.componets.Redstone;
+import com.denfop.componets.RedstoneEmitter;
+import com.denfop.componets.TileEntityAdvComponent;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -55,12 +58,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     protected boolean isLoaded = false;
     protected int size_inventory;
     protected ComponentClientEffectRender componentClientEffectRender;
-    protected Map<Capability<?>, AbstractComponent> capabilityComponents;
-    protected List<AbstractComponent> componentList = new ArrayList<>();
-    protected List<AbstractComponent> updatableComponents = new ArrayList<>();
-    protected List<AbstractComponent> updateServerList = new ArrayList<>();
-    protected List<AbstractComponent> updateClientList = new ArrayList<>();
-    protected Map<String, AbstractComponent> advComponentMap = new HashMap<>();
+    protected Map<Capability<?>, TileEntityAdvComponent> capabilityComponents;
+    protected List<TileEntityAdvComponent> componentList = new ArrayList<>();
+    protected List<TileEntityAdvComponent> updatableComponents = new ArrayList<>();
+    protected List<TileEntityAdvComponent> updateServerList = new ArrayList<>();
+    protected List<TileEntityAdvComponent> updateClientList = new ArrayList<>();
+    protected Map<String, TileEntityAdvComponent> advComponentMap = new HashMap<>();
 
     public TileEntityInventory() {
         this.itemHandler = new IItemHandler[EnumFacing.VALUES.length + 1];
@@ -104,13 +107,13 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         if (componentClientEffectRender != null) {
             componentClientEffectRender.render();
         }
-        this.updateClientList.forEach(AbstractComponent::updateEntityClient);
+        this.updateClientList.forEach(TileEntityAdvComponent::updateEntityClient);
 
     }
 
     @Override
     protected void onUnloaded() {
-        this.componentList.forEach(AbstractComponent::onUnloaded);
+        this.componentList.forEach(TileEntityAdvComponent::onUnloaded);
         super.onUnloaded();
     }
 
@@ -144,12 +147,15 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
+        if (this.getWorld().isRemote) {
+            return false;
+        }
 
         final boolean action = ForgeHooks
                 .onRightClickBlock(player, hand, this.pos, side, new Vec3d(hitX, hitY, hitZ))
                 .isCanceled();
         if (!action) {
-            this.componentList.forEach(AbstractComponent::onBlockActivated);
+            this.componentList.forEach(TileEntityAdvComponent::onBlockActivated);
             ItemStack stack = player.getHeldItem(hand);
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof IUpgradeItem) {
@@ -176,7 +182,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
             if (this instanceof IHasGui) {
 
-                return !this.getWorld().isRemote && IUCore.proxy.launchGui(player, (IHasGui) this);
+                return IUCore.proxy.launchGui(player, (IHasGui) this);
             } else {
                 return false;
             }
@@ -195,7 +201,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         if (!this.componentList.isEmpty() && nbtTagCompound.hasKey("components", 10)) {
             NBTTagCompound componentsNbt = nbtTagCompound.getCompoundTag("components");
             for (int i = 0; i < this.componentList.size(); i++) {
-                final AbstractComponent component = this.componentList.get(i);
+                final TileEntityAdvComponent component = this.componentList.get(i);
                 NBTTagCompound componentNbt = componentsNbt.getCompoundTag("component_" + i);
                 component.readFromNbt(componentNbt);
             }
@@ -205,7 +211,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     @Override
     protected void onLoaded() {
         super.onLoaded();
-        this.componentList.forEach(AbstractComponent::onLoaded);
+        this.componentList.forEach(TileEntityAdvComponent::onLoaded);
         infoInvSlotsList.clear();
         for (InvSlot slot : this.invSlots) {
             for (int k = 0; k < slot.size(); k++) {
@@ -243,7 +249,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             NBTTagCompound componentsNbt = new NBTTagCompound();
 
             for (int i = 0; i < this.componentList.size(); i++) {
-                final AbstractComponent component = this.componentList.get(i);
+                final TileEntityAdvComponent component = this.componentList.get(i);
                 NBTTagCompound nbt1 = component.writeToNbt();
                 if (nbt1 == null) {
                     nbt1 = new NBTTagCompound();
@@ -515,9 +521,10 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
                 }
             }
         }
-        for (AbstractComponent component : this.getComponentList()) {
-            if(!component.getDrops().isEmpty())
+        for (TileEntityAdvComponent component : this.getComponentList()) {
+            if (!component.getDrops().isEmpty()) {
                 ret.addAll(component.getDrops());
+            }
         }
         return ret;
     }
@@ -542,7 +549,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
                 return super.getCapability(capability, facing);
             } else {
 
-                AbstractComponent comp = this.capabilityComponents.get(capability);
+                TileEntityAdvComponent comp = this.capabilityComponents.get(capability);
                 return comp == null ? super.getCapability(capability, facing) : comp.getCapability(capability, facing);
             }
         }
@@ -551,7 +558,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     @Override
     protected void updateEntityServer() {
         super.updateEntityServer();
-        for (AbstractComponent component : this.updateServerList) {
+        for (TileEntityAdvComponent component : this.updateServerList) {
             component.updateEntityServer();
         }
         if (!isLoaded) {
@@ -573,7 +580,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         } else if (this.capabilityComponents == null) {
             return false;
         } else {
-            AbstractComponent comp = this.capabilityComponents.get(capability);
+            TileEntityAdvComponent comp = this.capabilityComponents.get(capability);
             return comp != null && comp.getProvidedCapabilities(facing).contains(capability);
         }
 
@@ -583,7 +590,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return calcRedstoneFromInvSlots(this.invSlots);
     }
 
-    protected final <T extends AbstractComponent> T addComponent(T component) {
+    protected final <T extends TileEntityAdvComponent> T addComponent(T component) {
         if (component == null) {
             throw new NullPointerException("null component");
         } else {
@@ -606,12 +613,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
     }
 
-    private void addComponentCapability(Capability<?> cap, AbstractComponent component) {
+    private void addComponentCapability(Capability<?> cap, TileEntityAdvComponent component) {
         if (this.capabilityComponents == null) {
             this.capabilityComponents = new IdentityHashMap<>();
         }
 
-        AbstractComponent prev = this.capabilityComponents.put(cap, component);
+        TileEntityAdvComponent prev = this.capabilityComponents.put(cap, component);
 
         assert prev == null;
 
@@ -619,16 +626,15 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         if (this.componentList != null) {
-
-            for (final AbstractComponent component : componentList) {
+            for (final TileEntityAdvComponent component : componentList) {
                 component.onNeighborChange(neighbor, neighborPos);
             }
         }
 
     }
 
-    public boolean hasComp(Class<? extends AbstractComponent> cls) {
-        for (final AbstractComponent component : componentList) {
+    public boolean hasComp(Class<? extends TileEntityAdvComponent> cls) {
+        for (final TileEntityAdvComponent component : componentList) {
             if (component.getClass() == cls) {
                 return true;
             }
@@ -636,7 +642,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return false;
     }
 
-    public List<AbstractComponent> getComponentList() {
+    public List<TileEntityAdvComponent> getComponentList() {
         return componentList;
     }
 
@@ -644,12 +650,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return componentClientEffectRender;
     }
 
-    public List<AbstractComponent> getUpdatableComponents() {
+    public List<TileEntityAdvComponent> getUpdatableComponents() {
         return updatableComponents;
     }
 
-    public <T extends AbstractComponent> T getComp(String cls) {
-        for (AbstractComponent component : this.componentList) {
+    public <T extends TileEntityAdvComponent> T getComp(String cls) {
+        for (TileEntityAdvComponent component : this.componentList) {
             if (component.toString().trim().equals(cls)) {
                 return (T) component;
             }
@@ -657,12 +663,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return null;
     }
 
-    public Map<Capability<?>, AbstractComponent> getCapabilityComponents() {
+    public Map<Capability<?>, TileEntityAdvComponent> getCapabilityComponents() {
         return capabilityComponents;
     }
 
-    public <T extends AbstractComponent> T getComp(Class<T> cls) {
-        for (final AbstractComponent component : componentList) {
+    public <T extends TileEntityAdvComponent> T getComp(Class<T> cls) {
+        for (final TileEntityAdvComponent component : componentList) {
             if (component.getClass() == cls) {
                 return (T) component;
             }
@@ -670,7 +676,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return null;
     }
 
-    public final Iterable<? extends AbstractComponent> getComps() {
+    public final Iterable<? extends TileEntityAdvComponent> getComps() {
         return componentList;
     }
 

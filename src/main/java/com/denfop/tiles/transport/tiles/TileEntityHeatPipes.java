@@ -2,7 +2,11 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.heat.*;
+import com.denfop.api.heat.HeatNet;
+import com.denfop.api.heat.IHeatAcceptor;
+import com.denfop.api.heat.IHeatConductor;
+import com.denfop.api.heat.IHeatEmitter;
+import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.tiles.transport.CableFoam;

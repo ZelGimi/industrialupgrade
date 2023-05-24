@@ -407,6 +407,7 @@ public class TileEntityQCable extends TileEntityBlock implements IConductor, INe
     public List<EnergyType> getEnergies() {
         return null;
     }
+
     public List<String> getNetworkedFields() {
         List<String> ret = new ArrayList<>();
         ret.add("cableType");

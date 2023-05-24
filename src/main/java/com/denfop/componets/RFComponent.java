@@ -11,7 +11,7 @@ import net.minecraft.util.EnumFacing;
 import java.io.DataInput;
 import java.io.IOException;
 
-public class RFComponent extends AbstractComponent implements IEnergyReceiver {
+public class RFComponent extends TileEntityAdvComponent implements IEnergyReceiver {
 
     private final AdvEnergy energy;
     public double capacity;

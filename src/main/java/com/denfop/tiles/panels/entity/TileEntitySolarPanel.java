@@ -6,7 +6,11 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.api.IAdvEnergyNet;
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.SunCoef;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.inv.IHasGui;
@@ -51,7 +55,11 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEnergySource, IHasGui,
         IWrenchable, IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
@@ -185,8 +193,10 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
             return;
         }
         if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
-            IEnergyStorage energy_storage = tile.getCapability(CapabilityEnergy.ENERGY,
-                    this.getParent().getFacing().getOpposite());
+            IEnergyStorage energy_storage = tile.getCapability(
+                    CapabilityEnergy.ENERGY,
+                    this.getParent().getFacing().getOpposite()
+            );
             this.energyStorageMap.put(srcPos, energy_storage);
         }
     }

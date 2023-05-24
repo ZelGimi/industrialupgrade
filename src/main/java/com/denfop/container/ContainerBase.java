@@ -1,14 +1,18 @@
 package com.denfop.container;
 
 import com.denfop.IUCore;
-import com.denfop.componets.AbstractComponent;
+import com.denfop.componets.TileEntityAdvComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.slot.SlotHologramSlot;
 import ic2.core.slot.SlotInvSlotReadOnly;
 import ic2.core.util.StackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.jetbrains.annotations.NotNull;
@@ -161,7 +165,7 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
 
             if (this.base instanceof TileEntityInventory) {
 
-                for (final AbstractComponent component : ((TileEntityInventory) this.base).getComponentList()) {
+                for (final TileEntityAdvComponent component : ((TileEntityInventory) this.base).getComponentList()) {
                     for (IContainerListener var5 : this.listeners) {
                         if (var5 instanceof EntityPlayerMP) {
                             component.onContainerUpdate((EntityPlayerMP) var5);

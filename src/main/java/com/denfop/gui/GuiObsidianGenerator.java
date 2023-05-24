@@ -67,7 +67,7 @@ public class GuiObsidianGenerator extends GuiIU<ContainerObsidianGenerator> {
         TankGauge.createNormal(this, 40, 8, container.base.fluidTank1).drawBackground(xoffset, yoffset);
         TankGauge.createNormal(this, 64, 8, container.base.fluidTank2).drawBackground(xoffset, yoffset);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 0, name, 4210752, false);
+        this.drawXCenteredString(this.xSize / 2 + 15, 1, name, 4210752, false);
 
     }
 

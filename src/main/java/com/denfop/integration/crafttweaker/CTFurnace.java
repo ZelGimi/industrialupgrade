@@ -24,10 +24,10 @@ import java.util.Arrays;
 public class CTFurnace {
 
     @ZenMethod
-    public static void addRecipe(IItemStack output, IIngredient container,float experience) {
+    public static void addRecipe(IItemStack output, IIngredient container, float experience) {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setFloat("experience",experience);
+        nbt.setFloat("experience", experience);
 
         Recipes.recipes.addRecipe(
                 "furnace",
@@ -60,7 +60,7 @@ public class CTFurnace {
 
         public void apply() {
             IUCore.removing_list.add(Arrays.asList(CraftTweakerMC.getItemStacks(output)));
-         }
+        }
 
         protected String getRecipeInfo() {
             return LogHelper.getStackDescription(this.output);

@@ -7,18 +7,12 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.MachineRecipe;
 import ic2.api.recipe.Recipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 public class CompressorRecipe {
 
@@ -87,11 +81,11 @@ public class CompressorRecipe {
                 "plateDenseCopper"
         );
         addcompressor(
-                new ItemStack(Items.SNOWBALL, 4, 1),
+                new ItemStack(Items.SNOWBALL, 4),
                 new ItemStack(Blocks.SNOW)
         );
         addcompressor(
-                new ItemStack(Items.NETHERBRICK, 4, 1),
+                new ItemStack(Items.NETHERBRICK, 4),
                 new ItemStack(Blocks.NETHER_BRICK)
         );
         addcompressor(
@@ -105,7 +99,7 @@ public class CompressorRecipe {
                 "dustIron"
         );
         addcompressor(
-                new ItemStack(Items.REDSTONE, 9, 1),
+                new ItemStack(Items.REDSTONE, 9),
                 new ItemStack(Blocks.REDSTONE_BLOCK)
         );
         addcompressor(
@@ -114,11 +108,11 @@ public class CompressorRecipe {
                 "dustObsidian"
         );
         addcompressor(
-                new ItemStack(Items.BLAZE_POWDER, 5, 1),
+                new ItemStack(Items.BLAZE_POWDER, 5),
                 new ItemStack(Items.BLAZE_ROD)
         );
         addcompressor(
-                new ItemStack(Items.BRICK, 4, 1),
+                new ItemStack(Items.BRICK, 4),
                 new ItemStack(Blocks.BRICK_BLOCK)
         );
         addcompressor(

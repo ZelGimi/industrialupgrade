@@ -1,10 +1,6 @@
 package com.denfop.gui;
 
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.IEnableHandler;
-import com.denfop.api.gui.ItemImage;
-import com.denfop.api.gui.Text;
-import com.denfop.api.gui.TextProvider;
+import com.denfop.api.gui.*;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.container.ContainerPatternStorage;
 import com.denfop.tiles.mechanism.TileEntityPatternStorage;

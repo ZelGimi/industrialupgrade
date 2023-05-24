@@ -2,12 +2,7 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastFurnaceMain;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastInputItem;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastOutput;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityFluidInput;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityHeatBlock;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityOtherPart;
+import com.denfop.tiles.mechanism.blastfurnace.block.*;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.IC2Material;

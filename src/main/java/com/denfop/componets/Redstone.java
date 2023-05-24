@@ -5,14 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class Redstone extends AbstractComponent {
+public class Redstone extends TileEntityAdvComponent {
 
     protected int redstoneInput;
     protected Set<Redstone.IRedstoneChangeHandler> changeSubscribers;
