@@ -242,6 +242,29 @@ public class AdvEnergy extends TileEntityAdvComponent {
     }
 
     public void onLoaded() {
+        if (!this.parent.getWorld().isRemote) {
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                final BlockPos srcPos = this.parent.getPos().offset(facing);
+                TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
+                boolean hasElement = this.energyStorageMap.containsKey(srcPos);
+                if (hasElement) {
+                    continue;
+                }
+                if (tile instanceof TileEntityInventory) {
+                    continue;
+                }
+                if (tile == null) {
+                    continue;
+                }
+                if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
+                    IEnergyStorage energy_storage = tile.getCapability(
+                            CapabilityEnergy.ENERGY,
+                            this.getParent().getFacing().getOpposite()
+                    );
+                    this.energyStorageMap.put(srcPos, energy_storage);
+                }
+            }
+        }
         assert this.delegate == null;
 
         if (!this.parent.getWorld().isRemote) {

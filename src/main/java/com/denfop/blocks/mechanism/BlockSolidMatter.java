@@ -2,14 +2,7 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.solidmatter.TileEntityAerSolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntityAquaSolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntityEarthSolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntityEndSolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntityNetherSolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntityNightSolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntitySolidEntityMatter;
-import com.denfop.tiles.solidmatter.TileEntitySunSolidEntityMatter;
+import com.denfop.tiles.solidmatter.*;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.IC2Material;

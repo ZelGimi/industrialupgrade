@@ -1,7 +1,11 @@
 package com.denfop.api.gui;
 
 import com.denfop.Constants;
-import com.denfop.componets.*;
+import com.denfop.componets.ComponentButton;
+import com.denfop.componets.ComponentProcessRender;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.ComponentSoundButton;
+import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIC2;
 import com.denfop.gui.GuiIU;

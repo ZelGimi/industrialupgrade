@@ -5,7 +5,7 @@ import com.denfop.componets.EnumTypeStyle;
 public class TileEntityAdvQuantumStorage extends TileEntityQuantumStorage {
 
     public TileEntityAdvQuantumStorage() {
-        super(400000, EnumTypeStyle.ADVANCED);
+        super(1600000, EnumTypeStyle.ADVANCED);
     }
 
 }

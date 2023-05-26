@@ -93,7 +93,7 @@ public enum BlockSintezator implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override
@@ -153,11 +153,11 @@ public enum BlockSintezator implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean doesOverrideDefault(final ItemStack itemStack) {
-        return false;
+        return true;
     }
 
     @Override
     public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
-        return null;
+        return new ModelResourceLocation(Constants.MOD_ID + ":" + "sintezator_item", null);
     }
 }

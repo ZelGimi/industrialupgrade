@@ -306,10 +306,7 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new BlastFCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new RotorsRodCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new WaterRotorUpgradeCategory(registry.getJeiHelpers().getGuiHelper()));
-
         registry.addRecipeCategories(new ExtractorCategory(registry.getJeiHelpers().getGuiHelper()));
-
-
         registry.addRecipeCategories(new PlasticCreatorCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new PlasticCreatorPlateCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new UpgradeBlockCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -324,7 +321,6 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new VeinCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new OilPumpCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new RotorUpgradeCategory(registry.getJeiHelpers().getGuiHelper()));
-
         registry.addRecipeCategories(new WeldingCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GenStarCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new HandlerHOCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -336,13 +332,10 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new GenPetrolCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GenDieselCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GenHydCategory(registry.getJeiHelpers().getGuiHelper()));
-
         registry.addRecipeCategories(new GenObsCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new FishMCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new RotorsCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new WaterRotorsCategory(registry.getJeiHelpers().getGuiHelper()));
-
-
         registry.addRecipeCategories(new RefinerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new AdvRefinerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new FarmerCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -358,7 +351,6 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new MQuarryCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new AirColCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new CMQuarryCategory(registry.getJeiHelpers().getGuiHelper()));
-
         registry.addRecipeCategories(new CrystallizeCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new AerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new AquaCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -366,7 +358,6 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new NetherCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new EndCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GearingCategory(registry.getJeiHelpers().getGuiHelper()));
-
         registry.addRecipeCategories(new CentrifugeCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new MaceratorCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new CompressorCategory(registry.getJeiHelpers().getGuiHelper()));

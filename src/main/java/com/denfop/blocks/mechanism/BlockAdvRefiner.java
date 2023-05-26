@@ -93,7 +93,7 @@ public enum BlockAdvRefiner implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override

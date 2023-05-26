@@ -3,6 +3,7 @@ package com.denfop.blocks.mechanism;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.tiles.base.TileEntityAdminSolarPanel;
+import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.ref.IC2Material;
@@ -10,7 +11,9 @@ import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +24,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockAdminPanel implements ITeBlock {
+public enum BlockAdminPanel implements ITeBlock , ITeBlockSpecialItem {
 
     admpanel(TileEntityAdminSolarPanel.class, 0),
     ;
@@ -95,7 +98,7 @@ public enum BlockAdminPanel implements ITeBlock {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override
@@ -151,5 +154,15 @@ public enum BlockAdminPanel implements ITeBlock {
     @Override
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
+    }
+
+    @Override
+    public boolean doesOverrideDefault(final ItemStack itemStack) {
+        return true;
+    }
+
+    @Override
+    public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
+        return new ModelResourceLocation(Constants.MOD_ID + ":" + "adminpanel_item", null);
     }
 }

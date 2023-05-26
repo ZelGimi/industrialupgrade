@@ -2,11 +2,7 @@ package com.denfop.tiles.mechanism.dual.heat;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiWelding;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;

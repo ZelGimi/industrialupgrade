@@ -44,7 +44,13 @@ import net.minecraftforge.fluids.FluidTank;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public final class DataEncoder {
 

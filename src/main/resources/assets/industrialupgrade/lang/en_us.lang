@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§dHadron Solar Panel
 industrialupgrade.machines.graviton_solar_panel=§dGraviton Solar Panel
 industrialupgrade.machines.quark_solar_panel=§dQuark Solar Panel
 blockAdministatorSolarPanel.name=§8Administrative Solar Panel
-iu.adminpanel_item.adminpanel_item=§8Administrative Solar Panel
+industrialupgrade.admpanel.admpanel=§8Administrative Solar Panel
 
 # Draconic Evolution Panels
 industrialupgrade.draconicpanel.draconium_solar_panel=§dDraconic Solar Panel
@@ -448,7 +448,7 @@ ic2.item.tooltip.Store=Store:
 wirelles=§eAllows you to transfer power wirelessly
 transformator=Increases the panel level
 transformator1=Decreases the panel level
-iu.sintezator_item.sintezator_item=Panel Combiner
+industrialupgrade.sintezator.sintezator=Panel Combiner
 iu.sintezator=The panels are folded inside. Slot limit: 2
 supsolpans.SpecSP.Output=Output:
 supsolpans.SpecSP.Storage=Capacity:
@@ -1604,7 +1604,7 @@ industrialupgrade.basemachine1.magnet_generator=Magnetic Generator
 industrialupgrade.basemachine2.fisher=Fishing Machine
 industrialupgrade.basemachine2.painter=Dyeing Machine
 industrialupgrade.upgrade_block.upgrade_block=Modification Station
-iu.quarry_vein_item.quarry_vein_item=Core Search Drilling Rig
+industrialupgrade.quarry_vein.quarry_vein=Core Search Drilling Rig
 industrialupgrade.petrol_quarry.petrol_quarry=Pumpjack
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=Solid Matter Generator Combiner
 industrialupgrade.basemachine2.expierence_block=Experience Storage
@@ -3159,3 +3159,4 @@ iu.replicator_using_matter=To create an item in a replicator, you need:
 
 iu.cooling_sensor=Mechanism Heating Sensor
 iu.heat_sensor=Mechanism Heat Sensor
+iu.aircollector.info=Generates in %d tick: 

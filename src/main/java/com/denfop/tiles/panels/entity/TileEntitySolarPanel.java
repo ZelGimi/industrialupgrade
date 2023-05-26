@@ -356,6 +356,29 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected void onLoaded() {
         super.onLoaded();
         if (!this.world.isRemote) {
+            if (!this.getWorld().isRemote) {
+                for (EnumFacing facing : EnumFacing.VALUES) {
+                    final BlockPos srcPos = this.getPos().offset(facing);
+                    TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
+                    boolean hasElement = this.energyStorageMap.containsKey(srcPos);
+                    if (hasElement) {
+                        continue;
+                    }
+                    if (tile instanceof TileEntityInventory) {
+                        continue;
+                    }
+                    if (tile == null) {
+                        continue;
+                    }
+                    if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
+                        IEnergyStorage energy_storage = tile.getCapability(
+                                CapabilityEnergy.ENERGY,
+                                this.getParent().getFacing().getOpposite()
+                        );
+                        this.energyStorageMap.put(srcPos, energy_storage);
+                    }
+                }
+            }
             this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
             this.hasSky = !this.world.provider.isNether();

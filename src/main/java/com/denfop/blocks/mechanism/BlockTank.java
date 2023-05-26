@@ -2,6 +2,7 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.blocks.IIdProvider;
 import com.denfop.tiles.tank.TileEntityAdvTank;
 import com.denfop.tiles.tank.TileEntityImpTank;
 import com.denfop.tiles.tank.TileEntityPerTank;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
+import java.util.Locale;
 import java.util.Set;
 
 public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
@@ -98,7 +100,7 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override
@@ -158,11 +160,39 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean doesOverrideDefault(final ItemStack itemStack) {
-        return false;
+        return true;
     }
 
     @Override
     public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
-        return null;
+        return new ModelResourceLocation(Constants.MOD_ID + ":" + Types.getFromID(itemStack.getItemDamage()).getName(), null);
+    }
+}
+
+enum Types implements IIdProvider {
+    fluid_tank_normal(0),
+    fluid_tank_normal_adv(1),
+    fluid_tank_normal_imp(2),
+    fluid_tank_normal_per(3),
+    ;
+
+    private final String name;
+    private final int ID;
+
+    Types(final int ID) {
+        this.name = this.name().toLowerCase(Locale.US);
+        this.ID = ID;
+    }
+
+    public static Types getFromID(final int ID) {
+        return values()[ID % values().length];
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getId() {
+        return this.ID;
     }
 }

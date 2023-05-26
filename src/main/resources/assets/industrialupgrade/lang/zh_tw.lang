@@ -64,7 +64,7 @@ industrialupgrade.machines.hadron_solar_panel=§d強子太陽能板
 industrialupgrade.machines.graviton_solar_panel=§d引力太陽能板
 industrialupgrade.machines.quark_solar_panel=§d夸克太陽能板
 blockAdministatorSolarPanel.name=§8管理員太陽能板
-iu.adminpanel_item.adminpanel_item=§8管理員太陽能板
+industrialupgrade.admpanel.admpanel=§8管理員太陽能板
 
 # 《龍之進化》太陽能板
 industrialupgrade.draconicpanel.draconium_solar_panel=§d飛龍太陽能板
@@ -434,7 +434,7 @@ ic2.item.tooltip.Store=儲存：
 wirelles=§e允許無線輸電
 transformator=升高太陽能板等級
 transformator1=降低太陽能板等級
-iu.sintezator_item.sintezator_item=太陽能板合路器
+industrialupgrade.sintezator.sintezator=太陽能板合路器
 iu.sintezator=太陽能板在其中折疊。插槽限制：2
 supsolpans.SpecSP.Output=輸出：
 supsolpans.SpecSP.Storage=容量：
@@ -1562,7 +1562,7 @@ industrialupgrade.basemachine1.magnet_generator=電磁發電機
 industrialupgrade.basemachine2.fisher=釣魚機
 industrialupgrade.basemachine2.painter=印染機
 industrialupgrade.upgrade_block.upgrade_block=改裝站
-iu.quarry_vein_item.quarry_vein_item=核心搜尋鑽機
+industrialupgrade.quarry_vein.quarry_vein=核心搜尋鑽機
 industrialupgrade.petrol_quarry.petrol_quarry=抽油機
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=固體物質生成機合路器
 industrialupgrade.basemachine2.expierence_block=經驗儲存裝置

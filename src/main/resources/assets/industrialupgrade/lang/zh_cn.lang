@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§d强子太阳能
 industrialupgrade.machines.graviton_solar_panel=§d重力太阳能
 industrialupgrade.machines.quark_solar_panel=§d夸克太阳能
 blockAdministatorSolarPanel.name=§8管理员太阳能
-iu.adminpanel_item.adminpanel_item=§8管理员太阳能
+industrialupgrade.admpanel.admpanel=§8管理员太阳能
 
 # Draconic Evolution Panels
 industrialupgrade.draconicpanel.draconium_solar_panel=§d飞龙太阳能
@@ -399,7 +399,7 @@ ic2.item.tooltip.Store=储存:
 wirelles=§e允许您无线传递电力
 transformator=增加太阳能等级
 transformator1=降低太阳能等级
-iu.sintezator_item.sintezator_item=太阳能合成器
+industrialupgrade.sintezator.sintezator=太阳能合成器
 iu.sintezator=太阳能在里面折叠. 插槽上限: 2
 supsolpans.SpecSP.Output=输出:
 supsolpans.SpecSP.Storage=容量:
@@ -1516,7 +1516,7 @@ industrialupgrade.basemachine1.magnet_generator=电磁发电机
 industrialupgrade.basemachine2.fisher=自动钓鱼机
 industrialupgrade.basemachine2.painter=印染机
 industrialupgrade.upgrade_block.upgrade_block=修改站
-iu.quarry_vein_item.quarry_vein_item=核心钻探装置
+industrialupgrade.quarry_vein.quarry_vein=核心钻探装置
 industrialupgrade.petrol_quarry.petrol_quarry=石油钻井
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=固体物质发生组合器
 industrialupgrade.basemachine2.expierence_block=经验储存器

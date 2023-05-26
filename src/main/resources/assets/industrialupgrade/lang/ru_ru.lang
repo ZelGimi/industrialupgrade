@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§dАдронная солнечн
 industrialupgrade.machines.graviton_solar_panel=§dГравитонная солнечная панель
 industrialupgrade.machines.quark_solar_panel=§dКварковая солнечная панель
 blockAdministatorSolarPanel.name=§8Административная солнечная панель
-iu.adminpanel_item.adminpanel_item=§8Административная солнечная панель
+industrialupgrade.admpanel.admpanel=§8Административная солнечная панель
 
 # Панели Draconic Evolution
 industrialupgrade.draconicpanel.draconium_solar_panel=§dДракониевая солнечная панель
@@ -452,7 +452,7 @@ ic2.item.tooltip.Store=Хранит:
 wirelles=§eПозволяет передавать энергию без проводов
 transformator=Повышает уровень панели
 transformator1=Понижает уровень панели
-iu.sintezator_item.sintezator_item=Объединитель панелей
+industrialupgrade.sintezator.sintezator=Объединитель панелей
 iu.sintezator=Панели складываются внутри. Лимит на слот:
 supsolpans.SpecSP.Output=Выход:
 supsolpans.SpecSP.Storage=Ёмкость:
@@ -1608,7 +1608,7 @@ industrialupgrade.basemachine1.magnet_generator=Магнитный генера�
 industrialupgrade.basemachine2.fisher=Рыболовная машина
 industrialupgrade.basemachine2.painter=Красильная машина
 industrialupgrade.upgrade_block.upgrade_block=Модификационная станция
-iu.quarry_vein_item.quarry_vein_item=Буровая установка для поиска жил
+industrialupgrade.quarry_vein.quarry_vein=Буровая установка для поиска жил
 industrialupgrade.petrol_quarry.petrol_quarry=Станок-качалка
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=Объединитель генераторов твёрдой материи
 industrialupgrade.basemachine2.expierence_block=Хранилище опыта
@@ -3163,3 +3163,4 @@ iu.replicator_using_matter=Для создания предмета в репл�
 
 iu.cooling_sensor=Сенсор нагрева механизма
 iu.heat_sensor=Сенсор тепла механизма 
+iu.aircollector.info=Генерирует за %d тик: 

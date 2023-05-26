@@ -5,7 +5,7 @@ import com.brandon3055.draconicevolution.lib.RecipeManager;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import ic2.api.recipe.IRecipeInputFactory;
+import com.denfop.recipes.CompressorRecipe;
 import ic2.api.recipe.Recipes;
 import ic2.core.block.TeBlockRegistry;
 import net.minecraft.block.Block;
@@ -34,11 +34,10 @@ public class DraconicIntegration {
 
 
     public static void Recipes() {
-        final IRecipeInputFactory input = Recipes.inputFactory;
         if (Config.Draconic) {
-            Recipes.compressor.addRecipe(
-                    input.forStack(new ItemStack(DEFeatures.chaosShard, 1, 2), 1),
-                    null, false, new ItemStack(chaosingot, 1)
+            CompressorRecipe.addcompressor(
+                    new ItemStack(DEFeatures.chaosShard, 1, 2),
+                    new ItemStack(chaosingot, 1)
             );
 
             Recipes.advRecipes.addRecipe(new ItemStack(ChaosEnergyCore, 1), " B ", "BAB", " B ", 'B',

@@ -1,6 +1,13 @@
 package com.denfop.gui;
 
-import com.denfop.api.gui.*;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.CustomButton;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ItemImage;
+import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.Text;
+import com.denfop.api.gui.TextProvider;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerReplicator;

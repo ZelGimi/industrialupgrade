@@ -15,7 +15,11 @@ import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.energy.ItemBattery;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.*;
+import ic2.api.item.ElectricItem;
+import ic2.api.item.IElectricItem;
+import ic2.api.item.IHazmatLike;
+import ic2.api.item.IItemHudInfo;
+import ic2.api.item.IMetalArmor;
 import ic2.core.IC2;
 import ic2.core.IC2Potion;
 import ic2.core.init.BlocksItems;
@@ -47,7 +51,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -65,7 +73,12 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("SameReturnValue")
 public class ItemArmorImprovemedQuantum extends ItemArmorElectric
