@@ -108,7 +108,7 @@ public class RecipesCore implements IRecipes {
     }
 
     public void removeRecipe(String name, RecipeOutput output) {
-        List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
+        List<BaseMachineRecipe> recipes = this.map_recipes.getOrDefault(name,new ArrayList<>());
         BaseMachineRecipe deleteRecipe = null;
         for (BaseMachineRecipe recipe : recipes) {
             for (ItemStack stack : output.items) {
@@ -126,7 +126,7 @@ public class RecipesCore implements IRecipes {
                 break;
             }
         }
-        if (deleteRecipe != null) {
+        if (deleteRecipe != null)  {
             recipes.remove(deleteRecipe);
             final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
             IInput input = deleteRecipe.input;

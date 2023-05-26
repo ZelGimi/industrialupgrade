@@ -1,7 +1,7 @@
 package com.denfop.container;
 
 import com.denfop.IUCore;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.slot.SlotHologramSlot;
 import ic2.core.slot.SlotInvSlotReadOnly;
@@ -165,7 +165,7 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
 
             if (this.base instanceof TileEntityInventory) {
 
-                for (final TileEntityAdvComponent component : ((TileEntityInventory) this.base).getComponentList()) {
+                for (final AbstractComponent component : ((TileEntityInventory) this.base).getComponentList()) {
                     for (IContainerListener var5 : this.listeners) {
                         if (var5 instanceof EntityPlayerMP) {
                             component.onContainerUpdate((EntityPlayerMP) var5);

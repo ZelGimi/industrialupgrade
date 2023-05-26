@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Redstone extends TileEntityAdvComponent {
+public class Redstone extends AbstractComponent {
 
     protected int redstoneInput;
     protected Set<Redstone.IRedstoneChangeHandler> changeSubscribers;

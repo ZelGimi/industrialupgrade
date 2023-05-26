@@ -13,6 +13,7 @@ import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotDischarge;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.tile.IChargingSlot;
 import ic2.api.energy.tile.IDischargingSlot;
@@ -42,15 +43,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AdvEnergy extends TileEntityAdvComponent {
+public class AdvEnergy extends AbstractComponent {
 
     public final boolean fullEnergy;
+    private final double defaultCapacity;
     public double tick;
     public boolean upgrade;
     public double capacity;
     public double storage;
     public int sinkTier;
     public int sourceTier;
+
+    public int defaultSinkTier;
+    public int defaultSourceTier;
     public Set<EnumFacing> sinkDirections;
     public Set<EnumFacing> sourceDirections;
     public List<InvSlot> managedSlots = new ArrayList<>();
@@ -105,6 +110,9 @@ public class AdvEnergy extends TileEntityAdvComponent {
         this.pastEnergy = 0;
         this.perenergy = 0;
         this.tick = 0;
+        this.defaultSinkTier = sinkTier;
+        this.defaultSourceTier = sourceTier;
+        this.defaultCapacity = capacity;
     }
 
     public static AdvEnergy asBasicSink(TileEntityInventory parent, double capacity) {
@@ -391,7 +399,19 @@ public class AdvEnergy extends TileEntityAdvComponent {
         }
         return ret;
     }
-
+    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+        if(this.getDelegate() instanceof IAdvEnergySink) {
+            int tier = invSlotUpgrade.getTier(this.defaultSinkTier);
+            this.setSinkTier(tier);
+        }
+        if(this.getDelegate() instanceof IAdvEnergySource) {
+            int tier = invSlotUpgrade.getTier(this.defaultSourceTier);
+            this.setSinkTier(tier);
+        }
+        this.setCapacity(invSlotUpgrade.getEnergyStorage(
+                this.defaultCapacity
+        ));
+    }
     public int getSinkTier() {
         return this.sinkTier;
     }

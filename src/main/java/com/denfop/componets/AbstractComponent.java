@@ -1,6 +1,7 @@
 package com.denfop.componets;
 
 import com.denfop.IUCore;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.network.GrowingBuffer;
 import net.minecraft.block.Block;
@@ -17,11 +18,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TileEntityAdvComponent {
+public abstract class AbstractComponent {
 
     protected TileEntityInventory parent;
 
-    public TileEntityAdvComponent(final TileEntityInventory parent) {
+    public AbstractComponent(final TileEntityInventory parent) {
         this.parent = parent;
     }
 
@@ -41,6 +42,9 @@ public abstract class TileEntityAdvComponent {
         return false;
     }
 
+    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+
+    }
 
     public void updateEntityServer() {
     }
@@ -84,13 +88,6 @@ public abstract class TileEntityAdvComponent {
     }
 
     public void onNetworkUpdate(DataInput is) throws IOException {
-    }
-
-    public boolean enableWorldTick() {
-        return false;
-    }
-
-    public void onWorldTick() {
     }
 
     public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {

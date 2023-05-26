@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class Fluids extends TileEntityAdvComponent {
+public class Fluids extends AbstractComponent {
 
     protected final List<Fluids.InternalFluidTank> managedTanks = new ArrayList<>();
     protected final List<Supplier<? extends Collection<Fluids.InternalFluidTank>>> unmanagedTanks = new ArrayList();

@@ -3,24 +3,44 @@ package com.denfop.componets;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 
-public class ComponentUpgradeSlots extends TileEntityAdvComponent {
+public class ComponentUpgradeSlots extends AbstractComponent {
 
     private final InvSlotUpgrade invSlot;
-    private final boolean needUpdate;
+
+    ComponentProcess componentProcess;
+    private AdvEnergy advEnergy;
 
     public ComponentUpgradeSlots(final TileEntityInventory parent, InvSlotUpgrade invSlotUpgrade) {
         super(parent);
         this.invSlot = invSlotUpgrade;
-        this.needUpdate = parent instanceof IComponentUpdate;
     }
 
     public boolean condition() {
         return true;
     }
 
+    public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
+        if (this.parent instanceof IComponentUpdate) {
+            ((IComponentUpdate) parent).setOverclockRates();
+        }
+        if (this.componentProcess != null) {
+            this.componentProcess.setOverclockRates(this.invSlot);
+        }
+        if (this.advEnergy != null) {
+            this.advEnergy.setOverclockRates(this.invSlot);
+        }
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        this.componentProcess = this.getParent().getComp(ComponentProcess.class);
+        this.advEnergy = this.getParent().getComp(AdvEnergy.class);
+    }
+
     @Override
     public boolean isServer() {
-        return needUpdate;
+        return true;
     }
 
     @Override
@@ -28,7 +48,15 @@ public class ComponentUpgradeSlots extends TileEntityAdvComponent {
         super.updateEntityServer();
         if (condition()) {
             if (invSlot.tickNoMark()) {
-                ((IComponentUpdate) parent).setOverclockRates();
+                if (this.parent instanceof IComponentUpdate) {
+                    ((IComponentUpdate) parent).setOverclockRates();
+                }
+                if (this.componentProcess != null) {
+                    this.componentProcess.setOverclockRates(this.invSlot);
+                }
+                if (this.advEnergy != null) {
+                    this.advEnergy.setOverclockRates(this.invSlot);
+                }
             }
         }
 

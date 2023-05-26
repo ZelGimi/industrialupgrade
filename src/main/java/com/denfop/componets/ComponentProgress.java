@@ -7,15 +7,23 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import java.io.DataInput;
 import java.io.IOException;
 
-public class ComponentProgress extends TileEntityAdvComponent {
+public class ComponentProgress extends AbstractComponent {
 
     private final short[] progress;
-    private final short maxValue;
+    private short maxValue;
 
     public ComponentProgress(final TileEntityInventory parent, int col, short max) {
         super(parent);
         this.progress = new short[col];
         this.maxValue = max;
+    }
+
+    public void setMaxValue(final short maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public short getMaxValue() {
+        return maxValue;
     }
 
     public void addProgress() {
@@ -34,6 +42,19 @@ public class ComponentProgress extends TileEntityAdvComponent {
         return this.progress[col] * 1D / this.maxValue;
     }
 
+    public short getProgress(int index) {
+        return progress[index];
+    }
+    public short getProgress() {
+        return getProgress(0);
+    }
+    public void cancellationProgress(){
+        cancellationProgress(0);
+    }
+
+    public void cancellationProgress(int index){
+        this.progress[index] = 0;
+    }
     public double getBar() {
         return this.getBar(0);
     }
@@ -45,6 +66,7 @@ public class ComponentProgress extends TileEntityAdvComponent {
         for (final short value : progress) {
             buffer.writeShort(value);
         }
+        buffer.writeShort(this.maxValue);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -56,6 +78,7 @@ public class ComponentProgress extends TileEntityAdvComponent {
         for (int i = 0; i < size; i++) {
             this.progress[i] = is.readShort();
         }
+        this.maxValue = is.readShort();
     }
 
 }

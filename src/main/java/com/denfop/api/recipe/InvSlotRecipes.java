@@ -63,8 +63,16 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         this.tank = tank;
     }
 
+    public IUpdateTick getTile() {
+        return tile;
+    }
+
     public void setInvSlotConsumableLiquidByList(final InvSlotConsumableLiquidByList invSlotConsumableLiquidByList) {
         this.invSlotConsumableLiquidByList = invSlotConsumableLiquidByList;
+    }
+
+    public Fluids.InternalFluidTank getTank() {
+        return tank;
     }
 
     public void load() {

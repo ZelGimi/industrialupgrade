@@ -9,7 +9,7 @@ import com.denfop.api.research.main.BaseLevelSystem;
 import com.denfop.api.research.main.EnumLeveling;
 import com.denfop.audio.AudioPosition;
 import com.denfop.audio.PositionSpec;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.items.IHandHeldInventory;
 import com.denfop.items.IHandHeldSubInventory;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -413,7 +413,7 @@ public class NetworkManagerClient extends NetworkManager {
                                 TileEntity teRaw = world.getTileEntity(pos1);
                                 if (teRaw instanceof TileEntityInventory) {
                                     TileEntityInventory tile = (TileEntityInventory) teRaw;
-                                    TileEntityAdvComponent component = tile.getComp(componentName);
+                                    AbstractComponent component = tile.getComp(componentName);
 
                                     if (component != null) {
                                         DataInputStream dataIs = new DataInputStream(new ByteArrayInputStream(data));

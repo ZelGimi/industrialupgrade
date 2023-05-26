@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class CoolComponent extends TileEntityAdvComponent {
+public class CoolComponent extends AbstractComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
@@ -213,19 +213,14 @@ public class CoolComponent extends TileEntityAdvComponent {
         this.meta = is.readInt();
     }
 
-    public boolean enableWorldTick() {
-        return !this.parent.getWorld().isRemote && this.managedSlots != null;
-    }
+
 
     @Override
     public boolean isServer() {
         return false;
     }
 
-    public void onWorldTick() {
 
-
-    }
 
     public double getCapacity() {
         return this.capacity;

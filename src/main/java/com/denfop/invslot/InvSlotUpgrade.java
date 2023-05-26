@@ -4,7 +4,7 @@ import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IAugmentationUpgrade;
@@ -228,7 +228,7 @@ public class InvSlotUpgrade extends InvSlot {
 
         }
 
-        for (final TileEntityAdvComponent component : this.base.getParent().getComps()) {
+        for (final AbstractComponent component : this.base.getParent().getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
                 rs.removeRedstoneModifiers(this.redstoneModifiers);

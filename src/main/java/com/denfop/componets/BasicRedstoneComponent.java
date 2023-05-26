@@ -4,7 +4,7 @@ import com.denfop.tiles.base.TileEntityInventory;
 
 import java.util.function.IntSupplier;
 
-public abstract class BasicRedstoneComponent extends TileEntityAdvComponent {
+public abstract class BasicRedstoneComponent extends AbstractComponent {
 
     private int level;
     private IntSupplier update;
@@ -26,15 +26,19 @@ public abstract class BasicRedstoneComponent extends TileEntityAdvComponent {
 
     public abstract void onChange();
 
-    public boolean enableWorldTick() {
+    public boolean isServer() {
         return this.update != null;
     }
 
-    public void onWorldTick() {
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
         assert this.update != null;
 
         this.setLevel(this.update.getAsInt());
     }
+
+
 
     public void setUpdate(IntSupplier update) {
         this.update = update;

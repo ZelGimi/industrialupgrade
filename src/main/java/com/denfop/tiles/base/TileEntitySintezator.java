@@ -5,6 +5,10 @@ import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.container.ContainerSinSolarPanel;
 import com.denfop.gui.GuiSintezator;
@@ -13,10 +17,6 @@ import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.tiles.panels.entity.TransferRFEnergy;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergySource;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
@@ -37,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntitySintezator extends TileEntityInventory implements IEnergySource, IHasGui,
+public class TileEntitySintezator extends TileEntityInventory implements IAdvEnergySource, IHasGui,
         IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
         INetworkUpdateListener {
 
@@ -69,6 +69,8 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     public TileEntitySolarPanel.GenerationState active;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
+    private double pastEnergy;
+    private double perenergy;
 
     public TileEntitySintezator() {
         this.facing = 2;
@@ -239,7 +241,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
     public void onLoaded() {
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(),this));
             this.addedToEnergyNet = true;
         }
         intialize();
@@ -249,11 +251,36 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
 
     public void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(),this));
             this.addedToEnergyNet = false;
         }
 
         super.onUnloaded();
+    }
+
+    @Override
+    public double getPerEnergy() {
+        return this.perenergy;
+    }
+
+    @Override
+    public double getPastEnergy() {
+        return this.pastEnergy;
+    }
+
+    @Override
+    public void setPastEnergy(final double pastEnergy) {
+        this.pastEnergy = pastEnergy;
+    }
+
+    @Override
+    public void addPerEnergy(final double setEnergy) {
+        this.perenergy += setEnergy;
+    }
+
+    @Override
+    public boolean isSource() {
+        return true;
     }
 
     public double getOfferedEnergy() {
@@ -290,10 +317,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
         return true;
     }
 
-    @Override
-    public boolean emitsEnergyTo(final IEnergyAcceptor iEnergyAcceptor, final EnumFacing enumFacing) {
-        return true;
-    }
+
 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
@@ -524,6 +548,16 @@ public class TileEntitySintezator extends TileEntityInventory implements IEnergy
         }
         setType(EnumType.DEFAULT);
         return 0;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    @Override
+    public boolean emitsEnergyTo(final IEnergyAcceptor var1, final EnumFacing var2) {
+        return true;
     }
 
 }

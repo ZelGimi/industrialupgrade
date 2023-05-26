@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class ComponentBaseEnergy extends TileEntityAdvComponent {
+public class ComponentBaseEnergy extends AbstractComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
 
@@ -220,14 +220,7 @@ public class ComponentBaseEnergy extends TileEntityAdvComponent {
         this.storage = is.readDouble();
     }
 
-    public boolean enableWorldTick() {
-        return !this.parent.getWorld().isRemote && this.managedSlots != null;
-    }
 
-    public void onWorldTick() {
-
-
-    }
 
     public double getCapacity() {
         return this.capacity;

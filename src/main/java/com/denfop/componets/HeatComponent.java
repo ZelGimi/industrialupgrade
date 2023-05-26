@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class HeatComponent extends TileEntityAdvComponent {
+public class HeatComponent extends AbstractComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
@@ -222,13 +222,7 @@ public class HeatComponent extends TileEntityAdvComponent {
         this.need = is.readBoolean();
     }
 
-    public boolean enableWorldTick() {
-        return !this.parent.getWorld().isRemote;
-    }
 
-    public void onWorldTick() {
-
-    }
 
     public double getCapacity() {
         return this.capacity;

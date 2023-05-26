@@ -9,12 +9,8 @@ import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.sytem.IConductor;
 import com.denfop.api.sytem.ITile;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.CoolComponent;
-import com.denfop.componets.Fluids;
-import com.denfop.componets.HeatComponent;
-import com.denfop.componets.TileEntityAdvComponent;
+import com.denfop.componets.*;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemArmorAdvHazmat;
 import com.denfop.items.armour.ItemArmorImprovemedNano;
@@ -216,7 +212,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
             }
         } else if (tile instanceof TileEntityInventory) {
             TileEntityInventory tileBlock = (TileEntityInventory) tile;
-            for (TileEntityAdvComponent component : tileBlock.getComponentList()) {
+            for (AbstractComponent component : tileBlock.getComponentList()) {
                 if (component instanceof AdvEnergy) {
                     euBar(probeInfo, (int) ((AdvEnergy) component).getEnergy(), (int) ((AdvEnergy) component).getCapacity());
                 }

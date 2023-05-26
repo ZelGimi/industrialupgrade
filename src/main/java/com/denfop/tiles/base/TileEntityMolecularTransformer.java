@@ -5,6 +5,7 @@ import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -530,7 +531,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
     public int receiveEnergy(int paramInt, boolean paramBoolean) {
         int i = (int) Math.min(
-                ((IEnergySink) this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
+                ((IAdvEnergySink) this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
                 Math.min(EnergyNet.instance.getPowerFromTier(14) * Config.coefficientrf, paramInt)
         );
         if (!paramBoolean) {
