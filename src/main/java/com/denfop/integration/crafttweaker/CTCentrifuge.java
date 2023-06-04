@@ -26,7 +26,7 @@ public class CTCentrifuge {
         final NBTTagCompound nbt = ModUtils.nbt();
         nbt.setShort("minHeat", temperature);
 
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "centrifuge",
                 new BaseMachineRecipe(
                         new Input(
@@ -58,7 +58,7 @@ public class CTCentrifuge {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("centrifuge", CraftTweakerMC.getItemStacks(input)[0]);
+            Recipes.recipes.addRemoveRecipe("centrifuge", CraftTweakerMC.getItemStack(input));
         }
 
         protected String getRecipeInfo() {

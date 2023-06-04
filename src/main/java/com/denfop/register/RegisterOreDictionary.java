@@ -183,6 +183,7 @@ public class RegisterOreDictionary {
         deleteOre("blockSilver", Ic2Items.silverBlock);
         deleteOre("oreIridium", Ic2Items.iridiumOre);
         deleteOre("gemIridium", Ic2Items.iridiumOre);
+        deleteOre("ingotIridium", Ic2Items.iridiumOre);
         for (int j = 0; j < list_item1.size(); j++) {
             for (int i = 0; i < list_string1.size(); i++) {
 

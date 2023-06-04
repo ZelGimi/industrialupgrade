@@ -28,10 +28,11 @@ public class InvSlotWorldCollector extends InvSlot {
 
         for (int i = 0; i < this.size(); i++) {
             if (!get(i).isEmpty()) {
-                while (!this.get(i).isEmpty() && this.tile.matter_energy + 200 <= this.tile.max_matter_energy) {
-                    this.tile.matter_energy += 200;
-                    this.consume(i, 1);
-                }
+                int col = 5;
+                col -= Math.ceil(this.tile.matter_energy / 200);
+                this.tile.matter_energy += 200 * col;
+                this.consume(i, col);
+
 
             }
         }

@@ -45,7 +45,7 @@ public class GuiCanner extends GuiIU<ContainerCanner> {
         this.bindTexture();
 
 
-        int progressSize = (int) Math.round(this.container.base.getProgress() * 23.0F);
+        int progressSize = (int) Math.round(this.container.base.componentProgress.getBar() * 23.0F);
         if (progressSize > 0) {
             this.drawTexturedRect(74.0, 22.0, progressSize, 14.0, 233.0, 0.0);
         }

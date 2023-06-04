@@ -57,7 +57,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
 
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 300;
-        this.defaultTier = 14;
+        this.defaultTier = 1;
         this.defaultEnergyStorage = 2 * 300;
         this.output = null;
         this.outputSlot = new InvSlotOutput(this, "output", 1);

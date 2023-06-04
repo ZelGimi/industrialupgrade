@@ -62,12 +62,12 @@ public class BotaniaIntegration {
 
         BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_energy, 1, 0), 12000,
                 LibOreDict.RUNE[0], LibOreDict.RUNE[1], new ItemStack(IUItem.photoniy),
-                new ItemStack(IUItem.itemiu, 1, 0), new ItemStack(IUItem.iuingot, 1, 17),
+                new ItemStack(IUItem.itemiu, 1, 0), "ingotIridium",
                 new ItemStack(elementium_plate), new ItemStack(IUItem.compresscarbonultra)
         );
         BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_sun, 1, 0), 12000,
                 LibOreDict.RUNE[4], LibOreDict.RUNE[3], new ItemStack(IUItem.photoniy_ingot),
-                new ItemStack(IUItem.itemiu, 1, 0), new ItemStack(IUItem.iuingot, 1, 17),
+                new ItemStack(IUItem.itemiu, 1, 0), "ingotIridium",
                 new ItemStack(elementium_plate), new ItemStack(IUItem.compresscarbon)
         );
         BotaniaAPI.registerRuneAltarRecipe(
@@ -85,7 +85,7 @@ public class BotaniaIntegration {
                 new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
                 new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
                 new ItemStack(IUItem.itemiu, 1, 0),
-                new ItemStack(IUItem.iuingot, 1, 17),
+                "ingotIridium",
                 new ItemStack(manasteel_plate),
                 new ItemStack(IUItem.coal_chunk1)
         );

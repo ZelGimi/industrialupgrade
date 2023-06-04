@@ -4,7 +4,10 @@ package com.denfop.tiles.mechanism.dual;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiEnriched;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
@@ -17,8 +20,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class TileEntityEnrichment extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
@@ -70,12 +71,6 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine implem
                 new ItemStack(IUItem.sunnarium, 1, 0)
         );
 
-    }
-
-    @Override
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
     }
 
     @SideOnly(Side.CLIENT)

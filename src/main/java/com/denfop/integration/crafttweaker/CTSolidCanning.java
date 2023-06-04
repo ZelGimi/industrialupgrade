@@ -11,6 +11,7 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.liquid.ILiquidStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -58,7 +59,8 @@ public class CTSolidCanning {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("cannerbottle", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("cannerbottle", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
@@ -118,7 +120,7 @@ public class CTSolidCanning {
         }
 
         public void apply() {
-            Recipes.recipes.addRecipe(
+            Recipes.recipes.addAdderRecipe(
                     "cannerbottle",
                     new BaseMachineRecipe(
                             new Input(

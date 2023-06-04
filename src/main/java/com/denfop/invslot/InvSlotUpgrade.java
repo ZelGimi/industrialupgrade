@@ -2,19 +2,12 @@ package com.denfop.invslot;
 
 import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
-import com.denfop.componets.AbstractComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.IAugmentationUpgrade;
-import ic2.api.upgrade.IEnergyStorageUpgrade;
-import ic2.api.upgrade.IFullUpgrade;
-import ic2.api.upgrade.IProcessingUpgrade;
-import ic2.api.upgrade.IRedstoneSensitiveUpgrade;
-import ic2.api.upgrade.ITransformerUpgrade;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
+import ic2.api.upgrade.*;
 import ic2.core.util.StackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -34,29 +27,29 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InvSlotUpgrade extends InvSlot {
 
     private final TileEntityInventory tile;
     private final Map<EnumFacing, HandlerInventory> iItemHandlerMap;
     private final Map<IItemHandler, Integer> slotHandler;
-
     private final EnumFacing[] enumFacings = EnumFacing.values();
     private final Map<EnumFacing, IFluidHandler> iFluidHandlerMap;
     private final Fluids fluids;
     private final List<Fluids.InternalFluidTank> fluidTankList = new ArrayList<>();
     private final IItemHandler main_handler;
+    public boolean isUpdate = false;
     public int augmentation;
     public int extraProcessTime;
     public double processTimeMultiplier;
     public double extraEnergyDemand;
     public double energyDemandMultiplier;
     public double extraEnergyStorage;
+
+    public double operationsPerTick;
+    public double operationLength;
+    public double energyConsume;
     public double energyStorageMultiplier;
     public int extraTier;
     public int tick = 0;
@@ -271,18 +264,45 @@ public class InvSlotUpgrade extends InvSlot {
         this.facings = new EnumFacing[this.size()];
     }
 
+    public int getOperationsPerTick1(int defaultOperationLength) {
+        if (this.isUpdate) {
+            this.operationsPerTick = defaultOperationLength == 0 ? 64 :
+                    this.getOpsPerTick(this.getStackOpLen(defaultOperationLength));
+
+        }
+        return (int) this.operationsPerTick;
+    }
+
+    public int getOperationLength1(int defaultOperationLength) {
+        if (this.isUpdate) {
+            if (defaultOperationLength == 0) {
+                this.operationLength = 1;
+            } else {
+                double stackOpLen = this.getStackOpLen(defaultOperationLength);
+                int opsPerTick = this.getOpsPerTick(stackOpLen);
+                this.operationLength = Math.max(1, (int) Math.round(stackOpLen * (double) opsPerTick / 64.0D));
+            }
+        }
+        return (int) this.operationLength;
+    }
+
     public int getOperationsPerTick(int defaultOperationLength) {
-        return defaultOperationLength == 0 ? 64 : this.getOpsPerTick(this.getStackOpLen(defaultOperationLength));
+        this.operationsPerTick = defaultOperationLength == 0 ? 64 :
+                this.getOpsPerTick(this.getStackOpLen(defaultOperationLength));
+
+        return (int) this.operationsPerTick;
     }
 
     public int getOperationLength(int defaultOperationLength) {
         if (defaultOperationLength == 0) {
-            return 1;
+            this.operationLength = 1;
         } else {
             double stackOpLen = this.getStackOpLen(defaultOperationLength);
             int opsPerTick = this.getOpsPerTick(stackOpLen);
-            return Math.max(1, (int) Math.round(stackOpLen * (double) opsPerTick / 64.0D));
+            this.operationLength = Math.max(1, (int) Math.round(stackOpLen * (double) opsPerTick / 64.0D));
         }
+
+        return (int) this.operationLength;
     }
 
     private double getStackOpLen(int defaultOperationLength) {
@@ -298,7 +318,16 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     public double getEnergyDemand(double defaultEnergyDemand) {
-        return applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
+        this.energyConsume = applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
+
+        return this.energyConsume;
+    }
+
+    public double getEnergyDemand1(double defaultEnergyDemand) {
+        if (this.isUpdate) {
+            this.energyConsume = applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
+        }
+        return this.energyConsume;
     }
 
     public double getEnergyStorage(int defaultEnergyStorage) {
@@ -314,7 +343,6 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     public boolean tickNoMark() {
-        IUpgradableBlock block = (IUpgradableBlock) this.base;
         boolean ret = false;
         this.tick++;
         if (this.tick % 20 == 0) {

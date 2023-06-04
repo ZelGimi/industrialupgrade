@@ -5,7 +5,6 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiSolidCanner;
@@ -23,8 +22,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class TileEntitySolidCanner extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
@@ -112,11 +109,6 @@ public class TileEntitySolidCanner extends TileEntityDoubleElectricMachine imple
 
     }
 
-    @Override
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
-    }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

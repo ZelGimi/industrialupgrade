@@ -1,12 +1,9 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
-import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
-import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -19,10 +16,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBaseDoubleMolecular;
 import com.denfop.gui.GuiDoubleMolecularTransformer;
-import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.core.IC2;
@@ -40,7 +34,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,7 +46,7 @@ import java.util.List;
 import static com.denfop.recipes.BasicRecipe.getBlockStack;
 
 public class TileEntityDoubleMolecular extends TileEntityElectricMachine implements
-        IEnergyReceiver, INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
+        INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
 
     public boolean need;
     public MachineRecipe output;
@@ -61,7 +54,6 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
     public boolean queue;
     public byte redstoneMode;
     public int operationLength;
-    public boolean rf = false;
     public boolean need_put_check = false;
     public int operationsPerTick;
     public AudioSource audioSource;
@@ -539,38 +531,12 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         );
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.rf) {
-            ret.add(new ItemStack(IUItem.module7, 1, 4));
-            this.rf = false;
-        }
-        return ret;
-    }
 
     @Override
     public ContainerBaseDoubleMolecular getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseDoubleMolecular(entityPlayer, this);
     }
 
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (player.getHeldItem(hand).getItem() instanceof ItemAdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
-            if (!this.rf) {
-                this.rf = true;
-                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
-                return true;
-            }
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     protected boolean doesSideBlockRendering(EnumFacing side) {
         return false;
@@ -614,7 +580,6 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         this.redstoneMode = nbttagcompound.getByte("redstoneMode");
         this.queue = nbttagcompound.getBoolean("queue");
         this.progress = nbttagcompound.getDouble("progress");
-        this.rf = nbttagcompound.getBoolean("rf");
 
     }
 
@@ -634,7 +599,6 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         super.writeToNBT(nbttagcompound);
         nbttagcompound.setByte("redstoneMode", this.redstoneMode);
         nbttagcompound.setDouble("progress", this.progress);
-        nbttagcompound.setBoolean("rf", this.rf);
         nbttagcompound.setBoolean("queue", this.queue);
         return nbttagcompound;
 
@@ -954,44 +918,10 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
     }
 
 
-    @Override
-    public int receiveEnergy(final EnumFacing enumFacing, final int i, final boolean b) {
-        if (this.rf) {
-            return receiveEnergy(i, b);
-        } else {
-            return 0;
-        }
-    }
-
-    public int receiveEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(
-                ((IAdvEnergySink) this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
-                Math.min(EnergyNet.instance.getPowerFromTier(14) * Config.coefficientrf, paramInt)
-        );
-        if (!paramBoolean) {
-            this.energy.addEnergy(i * 1F / Config.coefficientrf);
-        }
-        return i;
-    }
-
     public String getStartSoundFile() {
         return "Machines/molecular.ogg";
     }
 
-    @Override
-    public int getEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.energy.getEnergy();
-    }
-
-    @Override
-    public int getMaxEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.energy.getCapacity();
-    }
-
-    @Override
-    public boolean canConnectEnergy(final EnumFacing enumFacing) {
-        return true;
-    }
 
     @Override
     public void onUpdate() {

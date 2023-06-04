@@ -10,6 +10,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,7 +80,7 @@ public class CTMolecularTransformer {
         public Remove(
                 IItemStack output
         ) {
-            super("molecular");
+            super("MolecularTransformer");
             this.output = output;
         }
 
@@ -97,7 +98,7 @@ public class CTMolecularTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("molecular", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("molecular", CraftTweakerMC.getItemStack(output));
         }
 
         public String describe() {
@@ -161,7 +162,7 @@ public class CTMolecularTransformer {
             if (oreDictionary) {
                 ItemStack stack = new IC2RecipeInput(this.ingredient).getInputs().get(0);
                 String ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
-                Recipes.recipes.addRecipe("molecular", new BaseMachineRecipe(
+                Recipes.recipes.addAdderRecipe("molecular", new BaseMachineRecipe(
                         new Input(
                                 OreDictionary.getOres(ore).isEmpty()
                                         ? new IC2RecipeInput(this.ingredient)
@@ -171,7 +172,7 @@ public class CTMolecularTransformer {
 
 
             } else {
-                Recipes.recipes.addRecipe("molecular", new BaseMachineRecipe(
+                Recipes.recipes.addAdderRecipe("molecular", new BaseMachineRecipe(
                         new Input(
                                 new IC2RecipeInput(this.ingredient)),
                         new RecipeOutput(tag, output)

@@ -35,6 +35,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     public final boolean fullEnergy;
     private final EnergyType type;
+    private final double defaultCapacity;
     public double capacity;
     public double storage;
     public int sinkTier;
@@ -83,6 +84,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.multiSource = false;
         this.sourcePackets = 1;
         this.capacity = capacity;
+        this.defaultCapacity = capacity;
         this.sinkTier = sinkTier;
         this.sourceTier = sourceTier;
         this.sinkDirections = sinkDirections;
@@ -138,7 +140,9 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public void onLoaded() {
         assert this.delegate == null;
 
-
+        if (this.capacity < this.defaultCapacity) {
+            this.capacity = this.defaultCapacity;
+        }
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
                 if (debugLoad) {
@@ -219,7 +223,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
     }
-
 
 
     public double getCapacity() {

@@ -127,7 +127,9 @@ public class TileEntityBaseWorldCollector extends TileEntityElectricMachine impl
         for (int i = 0; i < this.operationsPerTick; i++) {
 
             operateOnce(output.getRecipe().output.items);
-
+            if (this.matter_energy < this.need_matter) {
+                break;
+            }
             if (this.inputSlot.get(0).isEmpty() || this.inputSlot
                     .get(0)
                     .getCount() < this.machineRecipe.getRecipe().input
@@ -139,7 +141,7 @@ public class TileEntityBaseWorldCollector extends TileEntityElectricMachine impl
                 this.getOutput();
                 break;
             } else {
-                if (this.inputSlot.get(0).isEmpty() || this.inputSlot
+                if (this.matter_energy < this.need_matter && this.inputSlot.get(0).isEmpty() || this.inputSlot
                         .get(0)
                         .getCount() < 1 || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
                     this.getOutput();
@@ -226,13 +228,14 @@ public class TileEntityBaseWorldCollector extends TileEntityElectricMachine impl
 
 
         MachineRecipe output = this.machineRecipe;
+        if (this.world.provider.getWorldTime() % 20 == 0 && output != null && this.matter_energy + 200 < this.max_matter_energy) {
+            this.MatterSlot.getmatter();
+        }
         if (output != null && this.outputSlot.canAdd(this.machineRecipe.getRecipe().output.items) && !this.inputSlot.isEmpty() && this.canWork && this.need_matter <= this.matter_energy) {
             if (!this.getActive()) {
                 setActive(true);
             }
-            if (this.world.provider.getWorldTime() % 20 == 0) {
-                this.MatterSlot.getmatter();
-            }
+
             this.progress++;
 
             double p = (this.progress * 1D / operationLength);

@@ -102,6 +102,7 @@ public class AdvEnergy extends AbstractComponent {
         this.multiSource = false;
         this.sourcePackets = 1;
         this.capacity = capacity;
+
         this.sinkTier = sinkTier;
         this.sourceTier = sourceTier;
         this.sinkDirections = sinkDirections == null ? Collections.emptySet() : sinkDirections;
@@ -250,6 +251,9 @@ public class AdvEnergy extends AbstractComponent {
     }
 
     public void onLoaded() {
+        if (this.capacity < this.defaultCapacity) {
+            this.capacity = this.defaultCapacity;
+        }
         if (!this.parent.getWorld().isRemote) {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 final BlockPos srcPos = this.parent.getPos().offset(facing);
@@ -399,19 +403,33 @@ public class AdvEnergy extends AbstractComponent {
         }
         return ret;
     }
+
     public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
-        if(this.getDelegate() instanceof IAdvEnergySink) {
+        if (this.getDelegate() instanceof IAdvEnergySink) {
             int tier = invSlotUpgrade.getTier(this.defaultSinkTier);
             this.setSinkTier(tier);
+            for (InvSlot slot : this.managedSlots) {
+                if (slot instanceof InvSlotDischarge) {
+                    InvSlotDischarge discharge = (InvSlotDischarge) slot;
+                    discharge.setTier(tier);
+                }
+            }
         }
-        if(this.getDelegate() instanceof IAdvEnergySource) {
+        if (this.getDelegate() instanceof IAdvEnergySource) {
             int tier = invSlotUpgrade.getTier(this.defaultSourceTier);
             this.setSinkTier(tier);
+            for (InvSlot slot : this.managedSlots) {
+                if (slot instanceof InvSlotCharge) {
+                    InvSlotCharge discharge = (InvSlotCharge) slot;
+                    discharge.setTier(tier);
+                }
+            }
         }
         this.setCapacity(invSlotUpgrade.getEnergyStorage(
                 this.defaultCapacity
         ));
     }
+
     public int getSinkTier() {
         return this.sinkTier;
     }

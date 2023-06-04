@@ -101,7 +101,6 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
                     }
                     final NBTTagCompound nbt = ModUtils.nbt(stack1);
                     nbt.setDouble("energy", tile.energy.getEnergy());
-                    nbt.setDouble("energy2", tile.energy2);
 
                     world.removeTileEntity(pos);
                     world.setBlockToAir(pos);

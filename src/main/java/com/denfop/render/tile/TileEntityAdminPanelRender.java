@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.render.IModelCustom;
 import com.denfop.render.base.AdvancedModelLoader;
 import com.denfop.tiles.base.TileEntityAdminSolarPanel;
-import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -17,27 +16,28 @@ public class TileEntityAdminPanelRender extends TileEntitySpecialRenderer<TileEn
     public static final ResourceLocation texture = new ResourceLocation(Constants.TEXTURES, "textures/models/panel.png");
     static final IModelCustom model = AdvancedModelLoader
             .loadModel(new ResourceLocation(Constants.TEXTURES, "models/panel.obj"));
-    public void getRotate( TileEntityAdminSolarPanel tile){
 
-        if(tile.getFacing() == EnumFacing.SOUTH){
+    public void getRotate(TileEntityAdminSolarPanel tile) {
+
+        if (tile.getFacing() == EnumFacing.SOUTH) {
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
             return;
         }
-        if(tile.getFacing() == EnumFacing.WEST){
+        if (tile.getFacing() == EnumFacing.WEST) {
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(90F, 0.0F, 1.0F, 0F);
             return;
         }
-        if(tile.getFacing() == EnumFacing.EAST){
+        if (tile.getFacing() == EnumFacing.EAST) {
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(90F, 0.0F, 1.0F, 0F);
             return;
         }
-        if(tile.getFacing() == EnumFacing.NORTH){
+        if (tile.getFacing() == EnumFacing.NORTH) {
             GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-            return;
         }
     }
+
     public void render(
             @Nonnull TileEntityAdminSolarPanel tile,
             double x,

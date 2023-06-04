@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockAdminPanel implements ITeBlock , ITeBlockSpecialItem {
+public enum BlockAdminPanel implements ITeBlock, ITeBlockSpecialItem {
 
     admpanel(TileEntityAdminSolarPanel.class, 0),
     ;

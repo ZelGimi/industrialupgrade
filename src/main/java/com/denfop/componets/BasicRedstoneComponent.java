@@ -33,11 +33,8 @@ public abstract class BasicRedstoneComponent extends AbstractComponent {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        assert this.update != null;
 
-        this.setLevel(this.update.getAsInt());
     }
-
 
 
     public void setUpdate(IntSupplier update) {

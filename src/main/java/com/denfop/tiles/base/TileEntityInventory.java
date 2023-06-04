@@ -2,22 +2,27 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.api.inv.IHasGui;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.BasicRedstoneComponent;
 import com.denfop.componets.ComparatorEmitter;
+import com.denfop.componets.ComponentPrivate;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneEmitter;
-import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.INetworkDataProvider;
+import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
+import ic2.core.IC2;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -48,6 +53,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TileEntityInventory extends TileEntityBlock implements ISidedInventory,
         IInventorySlotHolder<TileEntityInventory>, INetworkDataProvider, ICapabilityProvider {
@@ -55,6 +61,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
     protected final IItemHandler[] itemHandler;
+    private final ComponentPrivate componentPrivate;
     protected boolean isLoaded = false;
     protected int size_inventory;
     protected ComponentClientEffectRender componentClientEffectRender;
@@ -67,6 +74,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     public TileEntityInventory() {
         this.itemHandler = new IItemHandler[EnumFacing.VALUES.length + 1];
+        componentPrivate = this.addComponent(new ComponentPrivate(this));
     }
 
     public static int getIndex(int loc) {
@@ -148,14 +156,20 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
         if (this.getWorld().isRemote) {
-            return false;
+            return true;
         }
 
         final boolean action = ForgeHooks
                 .onRightClickBlock(player, hand, this.pos, side, new Vec3d(hitX, hitY, hitZ))
                 .isCanceled();
         if (!action) {
-            this.componentList.forEach(AbstractComponent::onBlockActivated);
+            final AtomicBoolean end = new AtomicBoolean(false);
+            this.componentList.forEach(abstractComponent -> {
+                end.set(end.get() || abstractComponent.onBlockActivated(player, hand));
+            });
+            if (end.get()) {
+                return true;
+            }
             ItemStack stack = player.getHeldItem(hand);
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof IUpgradeItem) {
@@ -184,10 +198,10 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
                 return IUCore.proxy.launchGui(player, (IHasGui) this);
             } else {
-                return false;
+                return true;
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -351,7 +365,11 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         for (final InvSlot invSlot : this.invSlots) {
             invSlot.onChanged();
         }
-
+        if (IC2.platform.isSimulating()) {
+            for (final AbstractComponent abstractComponent : this.componentList) {
+                abstractComponent.markDirty();
+            }
+        }
     }
 
     @Nonnull
@@ -512,6 +530,53 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return loc == null ? null : loc.getSlot();
     }
 
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
+        for (AbstractComponent component : this.componentList) {
+            if (component.needWriteNBTToDrops()) {
+                NBTTagCompound tagCompound = ModUtils.nbt(stack);
+                final NBTTagCompound tag = tagCompound.getCompoundTag(component.toString());
+                component.readFromNbt(tag);
+            }
+            component.onPlaced(stack, placer, facing);
+        }
+    }
+
+    @Override
+    public boolean canEntityDestroy(final Entity entity) {
+        for (AbstractComponent component : this.componentList) {
+            if (!component.canEntityDestroy(entity)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    protected boolean wrenchCanRemove(final EntityPlayer player) {
+        for (AbstractComponent component : this.componentList) {
+            if (!component.wrenchCanRemove(player)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
+        final List<ItemStack> list = super.getSelfDrops(fortune, wrench);
+        if (!list.isEmpty()) {
+            ItemStack drop = list.get(0);
+            for (AbstractComponent component : this.componentList) {
+                if (component.needWriteNBTToDrops()) {
+                    NBTTagCompound tagCompound = ModUtils.nbt(drop);
+                    tagCompound.setTag(component.toString(), component.writeNBTToDrops(new NBTTagCompound()));
+                }
+            }
+        }
+        return list;
+    }
+
     public List<ItemStack> getAuxDrops(int fortune) {
         List<ItemStack> ret = new ArrayList<>(super.getAuxDrops(fortune));
         for (final InvSlot slot : this.invSlots) {
@@ -523,7 +588,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
         for (AbstractComponent component : this.getComponentList()) {
             if (!component.getDrops().isEmpty()) {
-                ret.addAll(component.getDrops());
+                component.getDrops().forEach(stack -> ret.add(stack));
             }
         }
         return ret;
@@ -613,6 +678,27 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
     }
 
+    protected final <T extends AbstractComponent> void removeComponent(T component) {
+        if (component == null) {
+            throw new NullPointerException("null component");
+        } else {
+
+            componentList.remove(component);
+            advComponentMap.remove(component.toString(), component);
+            if (component.isClient()) {
+                this.updateClientList.remove(component);
+            }
+            if (component.isServer()) {
+                this.updateServerList.remove(component);
+            }
+
+            for (final Capability<?> capability : component.getProvidedCapabilities(null)) {
+                this.removeComponentCapability(capability, component);
+            }
+
+        }
+    }
+
     private void addComponentCapability(Capability<?> cap, AbstractComponent component) {
         if (this.capabilityComponents == null) {
             this.capabilityComponents = new IdentityHashMap<>();
@@ -621,6 +707,16 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         AbstractComponent prev = this.capabilityComponents.put(cap, component);
 
         assert prev == null;
+
+    }
+
+    private void removeComponentCapability(Capability<?> cap, AbstractComponent component) {
+        if (this.capabilityComponents == null) {
+            this.capabilityComponents = new IdentityHashMap<>();
+        }
+
+        this.capabilityComponents.remove(cap, component);
+
 
     }
 

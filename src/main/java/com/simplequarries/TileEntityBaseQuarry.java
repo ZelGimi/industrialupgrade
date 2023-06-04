@@ -45,9 +45,6 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
@@ -162,20 +159,6 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
         event.setCanceled(preCancelEvent);
         MinecraftForge.EVENT_BUS.post(event);
 
-        // Handle if the event is canceled
-        if (event.isCanceled()) {
-            // Let the client know the block still exists
-            entityPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
-
-            // Update any tile entity data for this block
-            TileEntity tileentity = world.getTileEntity(pos);
-            if (tileentity != null) {
-                Packet<?> pkt = tileentity.getUpdatePacket();
-                if (pkt != null) {
-                    entityPlayer.connection.sendPacket(pkt);
-                }
-            }
-        }
         return event.isCanceled() ? -1 : event.getExpToDrop();
     }
 

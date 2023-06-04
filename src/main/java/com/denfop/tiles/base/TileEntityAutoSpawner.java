@@ -11,17 +11,14 @@ import com.denfop.gui.GuiAutoSpawner;
 import com.denfop.invslot.InvSlotModules;
 import com.denfop.invslot.InvSlotUpgradeModule;
 import com.denfop.utils.ModUtils;
+import com.google.common.collect.Lists;
 import ic2.api.energy.EnergyNet;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,11 +26,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +49,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
     public final int defaultconsume;
     public final ComponentBaseEnergy exp;
     public int costenergy;
-    public int tempprogress;
+    public int[] tempprogress;
     public FakePlayerSpawner player;
     public double energy2;
     public int speed;
@@ -61,6 +60,8 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
     public String[] description_mobs = new String[4];
     public LootTable[] loot_Tables = new LootTable[4];
     public LootContext.Builder[] lootContext = new LootContext.Builder[4];
+
+    public List<LootPool>[] lootPoolList = new List[4];
     public int fireAspect;
 
     public TileEntityAutoSpawner() {
@@ -70,7 +71,7 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
         this.progress = new int[module_slot.size()];
         this.maxEnergy2 = 50000 * Config.coefficientrf;
         this.maxprogress = new double[4];
-        this.tempprogress = 100;
+        this.tempprogress = new int[]{100, 100, 100, 100};
         this.tempcostenergy = 1500;
         this.costenergy = 1500;
         this.speed = 0;
@@ -172,9 +173,9 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
                         this.energy2 -= this.costenergy * Config.coefficientrf;
                     }
                 }
-                this.tempprogress = (int) (this.maxprogress[i] - this.speed);
-                this.tempprogress = Math.max(1, this.tempprogress);
-                if (this.progress[i] >= this.tempprogress) {
+                this.tempprogress[i] = (int) (this.maxprogress[i] - this.speed);
+                this.tempprogress[i] = Math.max(1, this.tempprogress[i]);
+                if (this.progress[i] >= this.tempprogress[i]) {
                     this.progress[i] = 0;
                     if (this.mobUtils[i] == null) {
                         continue;
@@ -182,15 +183,10 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
 
                     final EntityLiving entity = this.mobUtils[i];
                     entity.setWorld(this.getWorld());
-                    for (int j = 0; j < this.spawn; j++) {
 
-
-                        dropItemFromEntity(entity, DamageSource.causePlayerDamage(player), this.loot_Tables[i], i);
-                        int exp = Math.max(entity.getExperiencePoints(this.player), 1);
-                        this.exp.addEnergy((exp + this.experience * exp / 100D));
-
-
-                    }
+                    dropItemFromEntity(entity, DamageSource.causePlayerDamage(player), this.loot_Tables[i], i);
+                    int exp = Math.max(entity.getExperiencePoints(this.player), 1);
+                    this.exp.addEnergy((exp + this.experience * exp / 100D));
 
 
                 }
@@ -208,23 +204,28 @@ public class TileEntityAutoSpawner extends TileEntityElectricMachine
                 }
                 if (lootcontext$builder == null) {
                     lootcontext$builder = this.lootContext[index] = (new LootContext.Builder((WorldServer) this.world))
-                            .withLootedEntity(entity)
+                            .withLootedEntity(entity).withPlayer(this.player)
                             .withDamageSource(source).withLuck(i);
-                }
-                List<ItemStack> list = table.generateLootForPools(
-                        this.getWorld().rand,
-                        lootcontext$builder.build()
-                );
-
-                if (entity instanceof EntityBlaze) {
-                    list.add(new ItemStack(Items.BLAZE_ROD, this.getWorld().rand.nextInt(i + 1) + 1));
-                } else if (entity instanceof EntitySlime) {
-                    if (((EntitySlime) entity).isSmallSlime()) {
-                        list.add(new ItemStack(Items.SLIME_BALL, this.getWorld().rand.nextInt(i + 1) + 1));
+                    List<LootPool> lootPools = new ArrayList<>();
+                    final LootPool mainPool = table.getPool("main");
+                    if (mainPool != null) {
+                        lootPools.add(mainPool);
+                        int in = 1;
+                        LootPool pool = table.getPool("pool" + in);
+                        while (pool != null) {
+                            lootPools.add(pool);
+                            in++;
+                            pool = table.getPool("pool" + in);
+                        }
                     }
-                } else if (entity instanceof EntityWitherSkeleton) {
-                    if (this.world.rand.nextInt(101) >= 100 - (chance + 2)) {
-                        list.add(new ItemStack(Items.SKULL, 1, 1));
+                    this.lootPoolList[index] = lootPools;
+                }
+                final LootContext context = lootcontext$builder.build();
+
+                List<ItemStack> list = Lists.newArrayList();
+                for (int j = 0; j < this.spawn; j++) {
+                    for (LootPool lootpool : this.lootPoolList[index]) {
+                        lootpool.generateLoot(list, this.getWorld().rand, context);
                     }
                 }
                 for (ItemStack item : list) {

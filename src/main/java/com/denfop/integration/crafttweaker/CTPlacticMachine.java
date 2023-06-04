@@ -22,7 +22,7 @@ public class CTPlacticMachine {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container, ILiquidStack liquidStack) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "plasticplate",
                 new BaseMachineRecipe(
                         new Input(
@@ -52,8 +52,10 @@ public class CTPlacticMachine {
             this.output = output;
         }
 
+
         public void apply() {
-            Recipes.recipes.removeRecipe("plasticplate", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("plasticplate", CraftTweakerMC.getItemStack(output));
+
 
         }
 

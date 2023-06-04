@@ -10,6 +10,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -74,7 +75,7 @@ public class CTGenMicrochip {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("microchip", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("microchip", CraftTweakerMC.getItemStack(output));
         }
 
         public String describe() {
@@ -152,7 +153,7 @@ public class CTGenMicrochip {
         }
 
         public void apply() {
-            Recipes.recipes.addRecipe("microchip", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("microchip", new BaseMachineRecipe(
                     new Input(
                             new IC2RecipeInput(this.container),
                             new IC2RecipeInput(this.fill),

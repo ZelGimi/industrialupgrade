@@ -569,7 +569,7 @@ aer_matter.name=Air Solid Matter
 
 personality=§cPrevents other players from opening the panel interface.
 personality1=§cA player who does not own the panel cannot dismantle the panel.
-iu.error=§cError! The module: Privacy has been triggered. You are not the owner of the panel!
+iu.error=§cError! The module: Privacy has been triggered. You are not the owner!
 iu.miny=Minimum Height:
 iu.maxy=Maximum Height:
 iu.storage.helmet=Panel Energy Capacity: 

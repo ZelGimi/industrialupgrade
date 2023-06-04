@@ -21,7 +21,7 @@ public class CTExtruder {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "extruding",
                 new BaseMachineRecipe(
                         new Input(
@@ -51,7 +51,8 @@ public class CTExtruder {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("extruding", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("extruding", CraftTweakerMC.getItemStack(output));
+
 
         }
 

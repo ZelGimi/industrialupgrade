@@ -96,7 +96,7 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
         this.mc.getTextureManager().bindTexture(this.getTexture());
 
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (14 * this.container.base.getProgress());
+        int progress = (int) (14 * this.container.base.componentProgress.getBar());
 
         if (chargeLevel > 0) {
             drawTexturedModalRect(this.guiLeft + 25, this.guiTop + 57 + 14 - chargeLevel, 176, 14 - chargeLevel,

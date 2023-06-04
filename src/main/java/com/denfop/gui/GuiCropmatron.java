@@ -1,5 +1,6 @@
 package com.denfop.gui;
 
+import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -24,7 +25,7 @@ public class GuiCropmatron extends GuiIU<ContainerCropmatron> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation("ic2", "textures/gui/GUICropmatron.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICropmatron.png");
     }
 
 }

@@ -21,7 +21,7 @@ public class CTGearing {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "gearing",
                 new BaseMachineRecipe(
                         new Input(
@@ -51,7 +51,8 @@ public class CTGearing {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("gearing", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("gearing", CraftTweakerMC.getItemStack(output));
+
         }
 
         protected String getRecipeInfo() {

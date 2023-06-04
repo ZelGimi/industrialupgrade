@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 
+import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -20,7 +21,7 @@ public class GuiCropHarvester extends GuiIU<ContainerCropHarvester> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation("ic2", "textures/gui/GUICropHarvester.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICropHarvester.png");
     }
 
 }

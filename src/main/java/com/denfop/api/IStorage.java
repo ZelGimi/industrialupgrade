@@ -4,7 +4,6 @@ public interface IStorage {
 
     double getEUCapacity();
 
-    double getRFCapacity();
 
     int getTier();
 
@@ -15,8 +14,6 @@ public interface IStorage {
     boolean shouldEmitEnergy();
 
     double getEUStored();
-
-    double getRFStored();
 
     double getOutput();
 

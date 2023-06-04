@@ -10,6 +10,9 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerCanner;
 import com.denfop.gui.GuiCanner;
@@ -28,7 +31,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,7 +38,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -46,19 +47,11 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
 
     public final InvSlotRecipes inputSlotA;
     public final Fluids.InternalFluidTank outputTank;
-    public final double defaultEnergyConsume;
-    public final int defaultOperationLength;
-    public final int defaultTier;
-    public final double defaultEnergyStorage;
     public final InvSlotUpgrade upgradeSlot;
-    public Mode mode;
-    public double energyConsume;
-    public int operationLength;
-    public int operationsPerTick;
+    public final ComponentUpgradeSlots componentUpgrade;
+    public final ComponentProcess componentProcess;
+    public final ComponentProgress componentProgress;
     public MachineRecipe output;
-    public List<EntityPlayer> entityPlayerList = new ArrayList<>();
-    protected short progress;
-    protected double guiProgress;
     private int fluid_amount;
 
     public TileEntityCanner() {
@@ -66,14 +59,16 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         this.inputSlotA = new InvSlotRecipes(this, "cannerenrich", this, this.fluidTank);
         Recipes.recipes.addInitRecipes(this);
         this.outputTank = this.fluids.addTankExtract("outputTank", 8000);
-        this.mode = Mode.cannerEnrich;
-        this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
-        this.defaultOperationLength = this.operationLength = 300;
-        this.defaultTier = 1;
-        this.defaultEnergyStorage = 300;
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
-
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
+        this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                (short) 300
+        ));
+        this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1));
+        this.componentProcess.setHasAudio(true);
+        this.componentProcess.setHasTank(true);
+        this.componentProcess.setSlotOutput(outputSlot);
+        this.componentProcess.setInvSlotRecipes(this.inputSlotA);
 
     }
 
@@ -129,19 +124,6 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         ));
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getShort("progress");
-        this.mode = Mode.values[nbttagcompound.getShort("mode")];
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
-        nbttagcompound.setShort("mode", (short) this.mode.ordinal());
-        return nbttagcompound;
-    }
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
@@ -149,21 +131,14 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultEnergyConsume + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip, advanced);
 
     }
 
-    public void onNetworkUpdate(String field) {
-        super.onNetworkUpdate(field);
-        if (field.equals("mode")) {
-            this.setMode(this.mode);
-        }
-
-    }
 
     private void switchTanks() {
         FluidStack inputStack = this.fluidTank.getFluid();
@@ -178,14 +153,10 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
 
     }
 
-    public double getProgress() {
-        return this.guiProgress;
-    }
 
     public void onLoaded() {
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
-            setOverclockRates();
             inputSlotA.load();
             this.getOutput();
         }
@@ -201,40 +172,6 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         }
     }
 
-    public void setOverclockRates() {
-        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
-        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
-        this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
-        int tier = this.upgradeSlot.getTier(this.defaultTier);
-        this.energy.setSinkTier(tier);
-        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
-                this.defaultEnergyStorage
-        ));
-        if (this.operationLength < 1) {
-            this.operationLength = 1;
-        }
-    }
-
-    public void operate() {
-        for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.getRecipe().output.items;
-            operateOnce(processResult);
-
-            if (!this.inputSlotA.continue_process(this.output) || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
-                getOutput();
-                break;
-            }
-            if (this.output == null) {
-                break;
-            }
-        }
-    }
-
-    public void operateOnce(List<ItemStack> processResult) {
-
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -244,47 +181,6 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
             this.fluid_amount = this.fluidTank.getFluidAmount();
         }
 
-
-        if (this.output != null && this.energy.canUseEnergy(energyConsume) && this.outputSlot.canAdd(
-                this.output.getRecipe().getOutput().items) && (this.output.getRecipe().input.getFluid() == null || (
-                this.fluidTank.getFluid() != null && this.fluidTank
-                        .getFluid()
-                        .getFluid()
-                        .equals(this.output.getRecipe().input
-                                .getFluid()
-                                .getFluid()) && this.fluidTank.getFluidAmount() >= this.output.getRecipe().input.getFluid().amount))) {
-            if (!this.getActive()) {
-                setActive(true);
-            }
-            if (this.progress == 0) {
-                initiate(0);
-            }
-            this.progress = (short) (this.progress + 1);
-            this.energy.useEnergy(energyConsume);
-            double k = this.progress;
-
-            this.guiProgress = (k / this.operationLength);
-            if (this.progress >= this.operationLength) {
-                this.guiProgress = 0;
-                operate();
-                this.progress = 0;
-                initiate(2);
-            }
-        } else {
-            if (this.progress != 0 && getActive()) {
-                initiate(1);
-            }
-            if (output == null) {
-                this.progress = 0;
-            }
-            if (this.getActive()) {
-                setActive(false);
-            }
-        }
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
-
     }
 
     public MachineRecipe getOutput() {
@@ -292,30 +188,9 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         return this.output;
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-            this.getOutput();
-        }
-
-    }
-
-    public Mode getMode() {
-        return this.mode;
-    }
-
-    public void setMode(Mode mode) {
-        this.mode = mode;
-
-
-    }
-
     @Override
     public ContainerCanner getGuiContainer(final EntityPlayer var1) {
-        if (!this.entityPlayerList.contains(var1)) {
-            this.entityPlayerList.add(var1);
-        }
+
         return new ContainerCanner(this, var1);
     }
 
@@ -390,13 +265,5 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         this.output = output;
     }
 
-    public enum Mode {
-        cannerEnrich;
-
-        public static final Mode[] values = values();
-
-        Mode() {
-        }
-    }
 
 }

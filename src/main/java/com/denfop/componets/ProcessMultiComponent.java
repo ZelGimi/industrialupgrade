@@ -1,13 +1,11 @@
 package com.denfop.componets;
 
-import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.IMultiUpdateTick;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
@@ -30,9 +28,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public final InvSlotMultiRecipes inputSlots;
     public final double defaultEnergyConsume;
     public final int defaultOperationLength;
-    private final RFComponent energy2;
     private final int sizeWorkingSlot;
     private final short[] progress;
+    private final double[] previousProgress;
     private final double[] guiProgress;
     private final TileEntityMultiMachine multimachine;
     private final int defaultTier;
@@ -73,12 +71,12 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.upgradeSlot = new InvSlotUpgrade(parent, "upgrade", 4);
         this.energy = parent.getComp(AdvEnergy.class);
         this.enumMultiMachine = enumMultiMachine;
-        this.energy2 = parent.getComp(RFComponent.class);
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
         this.progress = new short[sizeWorkingSlot];
         this.guiProgress = new double[sizeWorkingSlot];
         double coefenergy = getcoef();
         double speed = getspeed();
+        this.previousProgress = new double[sizeWorkingSlot];
         this.mode = 0;
         this.defaultEnergyConsume = this.energyConsume = Math.max((int) (enumMultiMachine.usagePerTick * coefenergy), 1);
         this.defaultOperationLength = this.operationLength = Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
@@ -228,7 +226,6 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
 
-
     @Override
     public void updateEntityServer() {
         if (this.parent.getWorld().isRemote) {
@@ -335,7 +332,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
             if (output != null && this.inputSlots.continue_proccess(
                     this.outputSlot,
                     i
-            ) && (this.energy.canUseEnergy(this.energyConsume * quickly * size) || this.energy2.getEnergy() >= Math.abs(this.energyConsume * 4 * quickly * size))) {
+            ) && (this.energy.canUseEnergy(this.energyConsume * quickly * size))) {
                 active = true;
                 if (this.progress[i] == 0) {
                     if (this.operationLength > this.defaultOperationLength * 0.1) {
@@ -354,8 +351,6 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 }
                 if (this.energy.getEnergy() >= this.energyConsume * quickly * size) {
                     this.energy.useEnergy(this.energyConsume * quickly * size);
-                } else if (this.energy2.getEnergy() >= Math.abs(this.energyConsume * 4 * quickly * size)) {
-                    this.energy2.useEnergy(Math.abs(this.energyConsume * 4 * quickly * size));
                 } else {
                     return;
                 }
@@ -459,6 +454,11 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
     public void setOverclockRates() {
+
+        for (int i = 0; i < this.previousProgress.length; i++) {
+            this.previousProgress[i] = this.progress[i] * 1D / this.operationLength;
+
+        }
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
 
@@ -480,10 +480,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
-        this.energy2.setCapacity(this.upgradeSlot.getEnergyStorage(
-                this.defaultEnergyStorage
-        ) * Config.coefficientrf);
-
+        for (int i = 0; i < this.previousProgress.length; i++) {
+            this.progress[i] = (short) (this.previousProgress[i] * this.operationLength);
+        }
     }
 
     public double getProgress(int slotId) {
@@ -559,15 +558,6 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
     public boolean onActivated(ItemStack heldItem) {
-        if (heldItem.getItem() instanceof ItemAdditionModule && heldItem
-                .getItemDamage() == 4) {
-            if (!this.energy2.isRf() && this.module < 2) {
-                this.energy2.setRf(true);
-                this.module++;
-                heldItem.shrink(1);
-                return true;
-            }
-        }
         if (heldItem.getItem().equals(IUItem.module_quickly)) {
             if (!this.quickly && this.module < 2) {
                 this.quickly = true;

@@ -14,6 +14,7 @@ import ic2.core.util.Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
@@ -123,8 +124,25 @@ public class TileEntityNuclearReactorElectric extends TileEntityBaseNuclearReact
                 TileEntity target = this.getWorld().getTileEntity(pos.offset(direction));
                 if (target instanceof TileEntityReactorChamberElectric) {
                     cols++;
+                    this.blockPos.add(target.getPos());
                 }
             }
+            if (cols != 9) {
+                this.blockPos.add(this.getPos());
+            }
+            List<BlockPos> blockPos1 = new ArrayList<>();
+            for (BlockPos pos : this.blockPos) {
+                for (EnumFacing facing : var2) {
+                    final BlockPos pos1 = pos.offset(facing);
+                    if (!blockPos1.contains(pos1)) {
+                        blockPos1.add(pos1);
+                    }
+
+                }
+            }
+            this.blockPos.clear();
+            this.blockPos.addAll(blockPos1);
+            this.redstone.setBlockPosList(this.blockPos);
             this.size = cols;
             this.change = false;
             this.reactorSlot.update();

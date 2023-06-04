@@ -21,7 +21,7 @@ public class CTRolling {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "rolling",
                 new BaseMachineRecipe(
                         new Input(
@@ -51,7 +51,8 @@ public class CTRolling {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("rolling", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("rolling", CraftTweakerMC.getItemStack(output));
+
         }
 
         protected String getRecipeInfo() {

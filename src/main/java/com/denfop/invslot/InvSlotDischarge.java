@@ -18,6 +18,10 @@ public class InvSlotDischarge extends InvSlot implements IDischargingSlot {
         this(base, access, tier, InvSide.ANY);
     }
 
+    public InvSlotDischarge(IInventorySlotHolder<?> base, int tier) {
+        this(base, Access.I, tier, InvSide.ANY);
+    }
+
     public InvSlotDischarge(IInventorySlotHolder<?> base, Access access, int tier, InvSide preferredSide) {
         this(base, access, tier, true, preferredSide);
     }
@@ -30,13 +34,12 @@ public class InvSlotDischarge extends InvSlot implements IDischargingSlot {
             InvSide preferredSide
     ) {
         super(base, "discharge", access, 1, preferredSide);
-        this.allowRedstoneDust = true;
         this.tier = tier;
         this.allowRedstoneDust = allowRedstoneDust;
     }
 
     public boolean accepts(ItemStack stack, final int index) {
-        if (stack.getItem() == Items.REDSTONE) {
+        if (this.allowRedstoneDust && stack.getItem() == Items.REDSTONE) {
             return true;
         } else if (stack.getItem() instanceof IElectricItem) {
             return ElectricItem.manager.discharge(stack, Integer.MAX_VALUE,
@@ -45,6 +48,10 @@ public class InvSlotDischarge extends InvSlot implements IDischargingSlot {
             ) > 0.0D;
         }
         return false;
+    }
+
+    public void setAllowRedstoneDust(final boolean allowRedstoneDust) {
+        this.allowRedstoneDust = allowRedstoneDust;
     }
 
     public double discharge(double amount, boolean ignoreLimit) {

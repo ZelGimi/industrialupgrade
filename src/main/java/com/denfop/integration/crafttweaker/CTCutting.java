@@ -11,15 +11,8 @@ import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipe;
-import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 @ZenClass("mods.industrialupgrade.cutting")
 @ModOnly("industrialupgrade")
@@ -28,7 +21,7 @@ public class CTCutting {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "cutting",
                 new BaseMachineRecipe(
                         new Input(
@@ -58,19 +51,8 @@ public class CTCutting {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("cutting", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
-            final Iterable<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> recipe =
-                    ic2.api.recipe.Recipes.metalformerCutting.getRecipes();
-            final ItemStack[] output1 = CraftTweakerMC.getItemStacks(output);
-            final Iterator<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> iter = recipe.iterator();
-            while (iter.hasNext()) {
-                MachineRecipe<IRecipeInput, Collection<ItemStack>> recipe1 = iter.next();
-                List<ItemStack> list = (List<ItemStack>) recipe1.getOutput();
-                if (list.get(0).isItemEqual(output1[0])) {
-                    iter.remove();
-                    break;
-                }
-            }
+            Recipes.recipes.addRemoveRecipe("cutting", CraftTweakerMC.getItemStack(output));
+
         }
 
         protected String getRecipeInfo() {

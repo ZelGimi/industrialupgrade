@@ -2,7 +2,13 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.*;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IHasRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiPainting;
 import com.denfop.utils.ModUtils;
@@ -29,8 +35,44 @@ import java.util.Set;
 public class TileEntityPainting extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
     public TileEntityPainting() {
-        super(1, 300, 1, EnumDoubleElectricMachine.PAINTING);
+        super(1, 300, 1, EnumDoubleElectricMachine.PAINTING, false);
         Recipes.recipes.addInitRecipes(this);
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
+            @Override
+            public void onLoaded() {
+                super.onLoaded();
+                this.componentProcess = ((TileEntityPainting) this.getParent()).componentProcess;
+            }
+        });
+        this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                (short) 300
+        ));
+        this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1) {
+            public void operateOnce(List<ItemStack> processResult) {
+                ItemStack stack1 = this.invSlotRecipes.get(1).getItem() instanceof IElectricItem
+                        ? this.invSlotRecipes.get(1)
+                        : this.invSlotRecipes.get(0);
+                NBTTagCompound tNBT = StackUtil.getOrCreateNbtData(stack1);
+                int damage = stack1.getItemDamage();
+                final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
+                double newCharge = ElectricItem.manager.getCharge(stack1);
+                this.invSlotRecipes.consume();
+                this.outputSlot.add(processResult);
+                ItemStack stack = this.outputSlot.get();
+                stack.setTagCompound(tNBT);
+                NBTTagCompound nbt = ModUtils.nbt(stack);
+                String mode = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("mode");
+                nbt.setString("mode", mode);
+                ElectricItem.manager.use(stack, 1, null);
+                ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
+                EnchantmentHelper.setEnchantments(enchantmentMap, stack);
+                stack.setItemDamage(damage);
+
+            }
+        });
+        this.componentProcess.setHasAudio(true);
+        this.componentProcess.setSlotOutput(outputSlot);
+        this.componentProcess.setInvSlotRecipes(this.inputSlotA);
     }
 
     public static void addpainting(ItemStack container) {
@@ -207,27 +249,6 @@ public class TileEntityPainting extends TileEntityDoubleElectricMachine implemen
 
     }
 
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        ItemStack stack1 = this.inputSlotA.get(1).getItem() instanceof IElectricItem
-                ? this.inputSlotA.get(1)
-                : this.inputSlotA.get(0);
-        NBTTagCompound tNBT = StackUtil.getOrCreateNbtData(stack1);
-        int damage = stack1.getItemDamage();
-        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
-        double newCharge = ElectricItem.manager.getCharge(stack1);
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
-        ItemStack stack = this.outputSlot.get();
-        stack.setTagCompound(tNBT);
-        NBTTagCompound nbt = ModUtils.nbt(stack);
-        String mode = output.getRecipe().output.metadata.getString("mode");
-        nbt.setString("mode", mode);
-        ElectricItem.manager.use(stack, 1, null);
-        ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
-        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-        stack.setItemDamage(damage);
-
-    }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

@@ -4,4 +4,6 @@ public interface IHasRecipe {
 
     void init();
 
+    String getName();
+
 }

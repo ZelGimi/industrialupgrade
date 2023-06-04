@@ -56,9 +56,8 @@ public class ContainerSunnariumMaker extends ContainerFullInv<TileEntityBaseSunn
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("guiChargeLevel");
         ret.add("tier");
+        ret.add("guiChargeLevel");
         ret.add("sunenergy");
         ret.add("energy");
         ret.add("sound");

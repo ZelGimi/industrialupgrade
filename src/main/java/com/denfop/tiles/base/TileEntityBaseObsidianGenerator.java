@@ -138,7 +138,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         super.updateEntityServer();
         MutableObject<ItemStack> output1 = new MutableObject<>();
         boolean check = false;
-        if (this.fluidSlot1.transferToTank(
+        if (this.fluidTank1.getFluidAmount() + 1000 <= this.fluidTank1.getCapacity() && this.fluidSlot1.transferToTank(
                 this.fluidTank1,
                 output1,
                 true
@@ -149,7 +149,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
             }
             check = true;
         }
-        if (this.fluidSlot2.transferToTank(
+        if (this.fluidTank2.getFluidAmount() + 1000 <= this.fluidTank2.getCapacity() && this.fluidSlot2.transferToTank(
                 this.fluidTank2,
                 output1,
                 true

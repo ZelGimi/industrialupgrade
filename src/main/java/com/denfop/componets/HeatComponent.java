@@ -1,5 +1,6 @@
 package com.denfop.componets;
 
+import com.denfop.IUItem;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatSink;
@@ -13,10 +14,13 @@ import ic2.core.IC2;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,6 +52,7 @@ public class HeatComponent extends AbstractComponent {
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public boolean need;
+    public boolean auto;
     public boolean allow;
     Random rand = new Random();
     private double coef;
@@ -108,7 +113,7 @@ public class HeatComponent extends AbstractComponent {
 
     @Override
     public boolean isServer() {
-        return false;
+        return true;
     }
 
     public void readFromNbt(NBTTagCompound nbt) {
@@ -116,6 +121,9 @@ public class HeatComponent extends AbstractComponent {
         this.capacity = nbt.getDouble("capacity");
         this.need = nbt.getBoolean("need");
         this.allow = nbt.getBoolean("allow");
+        this.auto = nbt.getBoolean("auto");
+
+
     }
 
     public NBTTagCompound writeToNbt() {
@@ -124,6 +132,7 @@ public class HeatComponent extends AbstractComponent {
         ret.setDouble("capacity", this.capacity);
         ret.setBoolean("need", this.need);
         ret.setBoolean("allow", this.allow);
+        ret.setBoolean("auto", this.auto);
         return ret;
     }
 
@@ -167,6 +176,19 @@ public class HeatComponent extends AbstractComponent {
 
     }
 
+    public TypePurifierJob getPurifierJob() {
+        return TypePurifierJob.ItemStack;
+    }
+
+    public boolean canUsePurifier(EntityPlayer player) {
+        return this.auto;
+    }
+
+    public ItemStack getItemStackUpgrade() {
+        this.auto = false;
+        return new ItemStack(IUItem.autoheater);
+    }
+
     private void createDelegate() {
         if (this.delegate != null) {
             throw new IllegalStateException();
@@ -184,6 +206,27 @@ public class HeatComponent extends AbstractComponent {
             this.delegate.setWorld(this.parent.getWorld());
             this.delegate.setPos(this.parent.getPos());
         }
+    }
+
+    @Override
+    public List<ItemStack> getDrops() {
+        final List<ItemStack> ret = super.getDrops();
+        if (this.auto) {
+            ret.add(new ItemStack(IUItem.autoheater));
+        }
+        return ret;
+    }
+
+    @Override
+    public boolean onBlockActivated(EntityPlayer player, EnumHand hand) {
+        super.onBlockActivated(player, hand);
+        final ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
+            this.auto = true;
+            stack.shrink(1);
+            return true;
+        }
+        return false;
     }
 
     public void onUnloaded() {
@@ -221,7 +264,6 @@ public class HeatComponent extends AbstractComponent {
         this.storage = is.readDouble();
         this.need = is.readBoolean();
     }
-
 
 
     public double getCapacity() {
@@ -279,6 +321,16 @@ public class HeatComponent extends AbstractComponent {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.auto) {
+            if (this.getEnergy() + 1 <= this.getCapacity()) {
+                this.addEnergy(2);
+            }
         }
     }
 

@@ -161,6 +161,9 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
     }
 
     public boolean transferFromTank(IFluidTank tank, MutableObject<ItemStack> output, boolean simulate) {
+        if (this.isEmpty()) {
+            return false;
+        }
         FluidStack tankFluid = tank.drain(tank.getFluidAmount(), false);
         if (tankFluid != null && tankFluid.amount > 0) {
             int amount = this.fill(tankFluid, output, simulate);

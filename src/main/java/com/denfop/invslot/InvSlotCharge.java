@@ -10,10 +10,16 @@ import net.minecraft.item.ItemStack;
 public class InvSlotCharge extends InvSlot implements IChargingSlot {
 
     public int tier;
+    private boolean ignore;
 
     public InvSlotCharge(IInventorySlotHolder<?> base1, int tier) {
         super(base1, "charge", Access.IO, 1, InvSide.ANY);
         this.tier = tier;
+        this.ignore = false;
+    }
+
+    public void setIgnore(final boolean ignore) {
+        this.ignore = ignore;
     }
 
     public boolean accepts(ItemStack stack, int index) {
@@ -27,7 +33,7 @@ public class InvSlotCharge extends InvSlot implements IChargingSlot {
             return 0;
         } else {
             ItemStack stack = this.get(0);
-            return StackUtil.isEmpty(stack) ? 0.0D : ElectricItem.manager.charge(stack, amount, this.tier, false, false);
+            return StackUtil.isEmpty(stack) ? 0.0D : ElectricItem.manager.charge(stack, amount, this.tier, this.ignore, false);
         }
     }
 

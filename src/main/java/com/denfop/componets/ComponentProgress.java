@@ -18,12 +18,12 @@ public class ComponentProgress extends AbstractComponent {
         this.maxValue = max;
     }
 
-    public void setMaxValue(final short maxValue) {
-        this.maxValue = maxValue;
-    }
-
     public short getMaxValue() {
         return maxValue;
+    }
+
+    public void setMaxValue(final short maxValue) {
+        this.maxValue = maxValue;
     }
 
     public void addProgress() {
@@ -45,16 +45,27 @@ public class ComponentProgress extends AbstractComponent {
     public short getProgress(int index) {
         return progress[index];
     }
+
     public short getProgress() {
         return getProgress(0);
     }
-    public void cancellationProgress(){
+
+    public void setProgress(short col) {
+        this.progress[0] = col;
+    }
+
+    public void cancellationProgress() {
         cancellationProgress(0);
     }
 
-    public void cancellationProgress(int index){
+    public void setProgress(int index, short col) {
+        this.progress[index] = col;
+    }
+
+    public void cancellationProgress(int index) {
         this.progress[index] = 0;
     }
+
     public double getBar() {
         return this.getBar(0);
     }

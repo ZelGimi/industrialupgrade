@@ -36,7 +36,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class TileEntityTeleporter extends TileEntityInventory implements INetworkTileEntityEventListener {
 
@@ -356,9 +360,6 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
         this.cooldown = 20;
     }
 
-    protected boolean canEntityDestroy(Entity entity) {
-        return !(entity instanceof EntityDragon) && !(entity instanceof EntityWither);
-    }
 
     public boolean hasTarget() {
         return this.target != null;

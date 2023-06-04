@@ -11,6 +11,9 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlot;
@@ -38,24 +41,18 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
     public final AdvEnergy energy;
     public final InvSlotDischarge dischargeSlot;
-    public final double defaultEnergyConsume;
-    public final int defaultOperationLength;
-    public final int defaultTier;
-    public final double defaultEnergyStorage;
     public final InvSlotRecipes inputSlotA;
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final HeatComponent heat;
     protected final EnumDoubleElectricMachine type;
-    public double energyConsume;
-    public int operationLength;
-    public int operationsPerTick;
     public AudioSource audioSource;
     public MachineRecipe output;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
-    protected short progress;
-    protected double guiProgress;
+    public ComponentUpgradeSlots componentUpgrade;
+    public ComponentProgress componentProgress;
+    public ComponentProcess componentProcess;
     private boolean sound = true;
 
     public TileEntityDoubleElectricMachine(
@@ -64,7 +61,16 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
             int outputSlots,
             EnumDoubleElectricMachine type
     ) {
-        this(energyPerTick, length, outputSlots, 1, type);
+        this(energyPerTick, length, outputSlots, 1, type, true);
+    }
+
+    public TileEntityDoubleElectricMachine(
+            int energyPerTick,
+            int length,
+            int outputSlots,
+            EnumDoubleElectricMachine type, boolean register
+    ) {
+        this(energyPerTick, length, outputSlots, 1, type, register);
     }
 
     public TileEntityDoubleElectricMachine(
@@ -72,13 +78,8 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
             int length,
             int outputSlots,
             int aDefaultTier,
-            EnumDoubleElectricMachine type
+            EnumDoubleElectricMachine type, boolean register
     ) {
-        this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = energyPerTick;
-        this.defaultOperationLength = this.operationLength = length;
-        this.defaultTier = aDefaultTier;
-        this.defaultEnergyStorage = energyPerTick * length;
         this.outputSlot = new InvSlotOutput(this, "output", outputSlots);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.Access.NONE, aDefaultTier, false, InvSlot.InvSide.ANY);
@@ -93,6 +94,16 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
                     .asBasicSink(this, 5000));
         } else {
             this.heat = null;
+        }
+        if (register) {
+            this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
+            this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                    (short) length
+            ));
+            this.componentProcess = this.addComponent(new ComponentProcess(this, length, energyPerTick));
+            this.componentProcess.setHasAudio(true);
+            this.componentProcess.setSlotOutput(outputSlot);
+            this.componentProcess.setInvSlotRecipes(this.inputSlotA);
         }
     }
 
@@ -130,9 +141,9 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultEnergyConsume + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
             }
         } else if (stack.getItemDamage() == 0 && EnumDoubleElectricMachine.SUNNARIUM_PANEL == type) {
@@ -141,11 +152,11 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("iu.solarium_energy_sink.info"));
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultEnergyConsume + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
                 tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                         ".machines_work_energy_type_se"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
             }
         } else {
@@ -153,9 +164,9 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
                 tooltip.add(Localization.translate("press.lshift"));
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultEnergyConsume + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
             }
         }
         if (this.getComp(AdvEnergy.class) != null) {
@@ -204,14 +215,12 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getShort("progress");
         this.sound = nbttagcompound.getBoolean("sound");
 
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
         nbttagcompound.setBoolean("sound", this.sound);
         return nbttagcompound;
     }
@@ -220,16 +229,8 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     protected void onLoaded() {
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
-            this.setOverclockRates();
             inputSlotA.load();
             this.getOutput();
-            if (this.type.equals(EnumDoubleElectricMachine.ALLOY_SMELTER)) {
-                if (output == null) {
-                    if (this.heat != null) {
-                        this.heat.need = false;
-                    }
-                }
-            }
         }
 
 
@@ -243,108 +244,6 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
         }
 
     }
-
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setOverclockRates();
-        }
-
-    }
-
-    protected void updateEntityServer() {
-        super.updateEntityServer();
-
-
-        MachineRecipe output = this.output;
-        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
-            if (this.type.heat) {
-                if (output.getRecipe().output.metadata.getShort("temperature") == 0 || output.getRecipe().output.metadata.getInteger(
-                        "temperature") > this.heat.getEnergy()) {
-                    if (!this.heat.need) {
-                        this.heat.need = true;
-                    }
-                    return;
-                } else if (this.heat.need) {
-                    this.heat.need = false;
-                }
-                this.heat.storage--;
-            }
-            if (!this.getActive()) {
-                setActive(true);
-            }
-            if (this.progress == 0) {
-                if (this.operationLength > this.defaultOperationLength * 0.1) {
-                    initiate(0);
-                }
-            }
-            this.progress = (short) (this.progress + 1);
-            this.energy.useEnergy(this.energyConsume);
-            double k = this.progress;
-
-            this.guiProgress = (k / this.operationLength);
-            if (this.progress >= this.operationLength) {
-                this.guiProgress = 0;
-                operate(output);
-                this.progress = 0;
-                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[2 % valuesAudio.length])) {
-                    initiate(2);
-                }
-            }
-        } else {
-            if (this.progress != 0 && getActive()) {
-                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[1 % valuesAudio.length])) {
-                    initiate(1);
-                }
-            }
-            if (output == null) {
-                this.progress = 0;
-            }
-            if (this.getActive()) {
-                setActive(false);
-            }
-        }
-        if (this.type.heat) {
-            if (output == null) {
-                this.heat.useEnergy(1);
-            }
-        }
-
-
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
-
-
-    }
-
-    public void setOverclockRates() {
-        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
-        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
-        this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
-        int tier = this.upgradeSlot.getTier(this.defaultTier);
-        this.energy.setSinkTier(tier);
-        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
-                this.defaultEnergyStorage
-        ));
-        dischargeSlot.setTier(tier);
-    }
-
-    public void operate(MachineRecipe output) {
-        for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.getRecipe().output.items;
-            operateOnce(output, processResult);
-            if (!this.inputSlotA.continue_process(this.output) || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
-                getOutput();
-                break;
-            }
-            if (this.output == null) {
-                break;
-            }
-        }
-    }
-
-    public abstract void operateOnce(MachineRecipe output, List<ItemStack> processResult);
 
 
     public MachineRecipe getOutput() {
@@ -427,7 +326,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     }
 
     public double getProgress() {
-        return this.guiProgress;
+        return componentProgress.getBar();
     }
 
     public int getMode() {

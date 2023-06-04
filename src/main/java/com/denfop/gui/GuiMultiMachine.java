@@ -2,11 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.*;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentSoundButton;
@@ -42,11 +38,8 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
-        this.addComponent(new GuiComponent(this, 8, 48, EnumTypeComponent.ENERGY_CLASSIC,
+        this.addComponent(new GuiComponent(this, 12, 48, EnumTypeComponent.ENERGY_CLASSIC,
                 new Component<>(this.container.base.energy)
-        ));
-        this.addComponent(new GuiComponent(this, 17, 48, EnumTypeComponent.ENERGY_RF_CLASSIC,
-                new Component<>(this.container.base.energy2)
         ));
         if (this.container.base.getMachine().type != EnumTypeMachines.Centrifuge) {
             this.addComponent(new GuiComponent(this, 27, 47, EnumTypeComponent.COLD,
@@ -67,9 +60,6 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         ));
         isBlack = false;
 
-        if (this.container.base.energy2.isRf()) {
-            itemStackList.add(new ItemStack(IUItem.module7, 1, 4));
-        }
         if (this.container.base.multi_process.quickly) {
             itemStackList.add(new ItemStack(IUItem.module_quickly));
         }

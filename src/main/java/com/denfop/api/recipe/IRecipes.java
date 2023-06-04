@@ -100,6 +100,16 @@ public interface IRecipes {
 
     IBaseRecipe getRecipe(String name);
 
+    void addRemoveRecipe(String name, ItemStack stack, boolean allRemove);
+
+    void addRemoveRecipe(String name, ItemStack stack);
+
+    void removeAllRecipesFromList();
+
+    void addAdderRecipe(String name, BaseMachineRecipe stack);
+
+    void addAllRecipesFromList();
+
     void removeRecipe(String name, RecipeOutput output);
 
     void removeAllRecipe(String name, RecipeOutput output);

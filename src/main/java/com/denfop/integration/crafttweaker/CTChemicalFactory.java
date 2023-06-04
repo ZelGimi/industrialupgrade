@@ -22,7 +22,7 @@ public class CTChemicalFactory {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container, IIngredient container1, ILiquidStack liquidStack) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "plastic",
                 new BaseMachineRecipe(
                         new Input(new IC2FluidRecipeInput(liquidStack).getInputs(),
@@ -52,7 +52,8 @@ public class CTChemicalFactory {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("plastic", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("plastic", CraftTweakerMC.getItemStack(output));
+
 
         }
 

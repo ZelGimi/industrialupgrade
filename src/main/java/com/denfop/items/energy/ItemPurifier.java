@@ -8,13 +8,12 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.componets.AbstractComponent;
 import com.denfop.items.BaseElectricItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.tiles.base.IManufacturerBlock;
-import com.denfop.tiles.base.TileEntityDoubleMolecular;
-import com.denfop.tiles.base.TileEntityMolecularTransformer;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityMultiMachine;
-import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
 import ic2.core.IC2;
@@ -128,61 +127,38 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
 
         TileEntity tile = world.getTileEntity(pos);
         ItemStack itemstack = player.getHeldItem(hand);
-        if (!(tile instanceof TileEntitySolarPanel) && !(tile instanceof TileEntityMultiMachine) && !(tile instanceof TileEntityMolecularTransformer) && !(tile instanceof TileEntityDoubleMolecular) && !(tile instanceof IManufacturerBlock)) {
+        if (!(tile instanceof TileEntityInventory) && !(tile instanceof IManufacturerBlock)) {
             return EnumActionResult.PASS;
         }
         double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)).number * 0.25D : 0);
 
-        if (tile instanceof TileEntitySolarPanel) {
-            TileEntitySolarPanel base = (TileEntitySolarPanel) tile;
+        if (tile instanceof TileEntityInventory) {
+            TileEntityInventory base = (TileEntityInventory) tile;
             double energy = 10000;
-            if (base.time > 0) {
-                energy = (double) 10000 / (double) (base.time / 20);
-            }
-            if (base.time1 > 0 && base.time <= 0) {
-                energy += (double) 10000 / (double) (base.time1 / 20);
-            }
-            if (base.time2 > 0 && base.time <= 0 && base.time1 <= 0) {
-                energy += ((double) 10000 / (double) (base.time2 / 20)) + 10000;
-            }
             if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PURIFIER, itemstack)) {
                 energy = 0;
             }
-            if (ElectricItem.manager.canUse(itemstack, energy * coef)) {
-                base.time = 28800;
-                base.time1 = 14400;
-                base.time2 = 14400;
-                base.work = true;
-                base.work1 = true;
-                base.work2 = true;
-                ElectricItem.manager.use(itemstack, energy * coef, player);
-                if (IC2.platform.isRendering()) {
-                    IUCore.audioManager.playOnce(
-                            player,
-                            com.denfop.audio.PositionSpec.Hand,
-                            "Tools/purifier.ogg",
-                            true,
-                            IC2.audioManager.getDefaultVolume()
-                    );
-                }
-                return EnumActionResult.SUCCESS;
+            if (!base.canEntityDestroy(player)) {
+                return EnumActionResult.FAIL;
             }
-            return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
-        } else if (tile instanceof TileEntityMultiMachine) {
+            for (AbstractComponent component : base.getComponentList()) {
+                if (component.canUsePurifier(player) && ElectricItem.manager.canUse(itemstack, energy * coef)) {
+                    component.workPurifier();
+                    return EnumActionResult.SUCCESS;
+                }
+            }
+        }
+        if (tile instanceof TileEntityMultiMachine) {
             if (!ElectricItem.manager.canUse(itemstack, 500 * coef)) {
                 return EnumActionResult.PASS;
             }
             if (!player.isSneaking()) {
                 TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
-                ItemStack stack_rf = ItemStack.EMPTY;
                 ItemStack stack_quickly = ItemStack.EMPTY;
                 ItemStack stack_modulesize = ItemStack.EMPTY;
                 ItemStack stack_modulestorage = ItemStack.EMPTY;
                 ItemStack panel = ItemStack.EMPTY;
-                if (base.energy2.isRf()) {
-                    stack_rf = new ItemStack(IUItem.module7, 1, 4);
-                }
                 if (base.multi_process.quickly) {
                     stack_quickly = new ItemStack(IUItem.module_quickly);
                 }
@@ -195,13 +171,9 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                 if (base.solartype != null) {
                     panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
                 }
-                if (!stack_rf.isEmpty() || !stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
+                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
                     final EntityItem item = new EntityItem(world);
-                    if (!stack_rf.isEmpty()) {
-                        item.setItem(stack_rf);
-                        base.multi_process.shrinkModule(1);
-                        base.energy2.setRf(false);
-                    } else if (!stack_quickly.isEmpty()) {
+                    if (!stack_quickly.isEmpty()) {
                         item.setItem(stack_quickly);
                         base.multi_process.shrinkModule(1);
                         base.multi_process.setQuickly(false);
@@ -237,11 +209,6 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
             } else {
                 TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
                 List<ItemStack> stack_list = new ArrayList<>();
-                if (base.energy2.isRf()) {
-                    stack_list.add(new ItemStack(IUItem.module7, 1, 4));
-                    base.energy2.setRf(false);
-                    base.multi_process.shrinkModule(1);
-                }
                 if (base.multi_process.quickly) {
                     stack_list.add(new ItemStack(IUItem.module_quickly));
                     base.multi_process.setQuickly(false);
@@ -284,61 +251,7 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                 ElectricItem.manager.use(itemstack, 500 * coef, player);
                 return EnumActionResult.SUCCESS;
             }
-        } else if (tile instanceof TileEntityMolecularTransformer) {
-            TileEntityMolecularTransformer base = (TileEntityMolecularTransformer) tile;
-            if (!ElectricItem.manager.canUse(itemstack, 500 * coef)) {
-                return EnumActionResult.PASS;
-            }
-            if (base.rf) {
-                final ItemStack stack_rf = new ItemStack(IUItem.module7, 1, 4);
-                base.rf = false;
-                final EntityItem item = new EntityItem(world);
-                item.setItem(stack_rf);
-                if (!player.getEntityWorld().isRemote) {
-                    item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                    item.setPickupDelay(0);
-                    world.spawnEntity(item);
-                    ElectricItem.manager.use(itemstack, 500 * coef, player);
-                    if (IC2.platform.isRendering()) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                com.denfop.audio.PositionSpec.Hand,
-                                "Tools/purifier.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
-                    }
-                    return EnumActionResult.SUCCESS;
-                }
-            }
-        } else if (tile instanceof TileEntityDoubleMolecular) {
-            TileEntityDoubleMolecular base = (TileEntityDoubleMolecular) tile;
-            if (!ElectricItem.manager.canUse(itemstack, 500)) {
-                return EnumActionResult.PASS;
-            }
-            if (base.rf) {
-                final ItemStack stack_rf = new ItemStack(IUItem.module7, 1, 4);
-                base.rf = false;
-                final EntityItem item = new EntityItem(world);
-                item.setItem(stack_rf);
-                if (!player.getEntityWorld().isRemote) {
-                    item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                    item.setPickupDelay(0);
-                    world.spawnEntity(item);
-                    ElectricItem.manager.use(itemstack, 500, player);
-                    if (IC2.platform.isRendering()) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                com.denfop.audio.PositionSpec.Hand,
-                                "Tools/purifier.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
-                    }
-                    return EnumActionResult.SUCCESS;
-                }
-            }
-        } else {
+        } else if (tile instanceof IManufacturerBlock) {
             IManufacturerBlock base = (IManufacturerBlock) tile;
             if (player.isSneaking()) {
                 int level = base.getLevel();

@@ -22,25 +22,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicrochip implements IUpdateTick, IHasRecipe {
 
-    private boolean auto;
 
     public TileEntityGenerationMicrochip() {
         super(1, 300, 1);
         this.inputSlotA = new InvSlotRecipes(this, "microchip", this);
-        this.auto = false;
         Recipes.recipes.addInitRecipes(this);
+        this.componentProcess.setInvSlotRecipes(inputSlotA);
     }
 
     private static void add(
@@ -501,31 +497,6 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
 
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.auto) {
-            ret.add(new ItemStack(IUItem.autoheater));
-            this.auto = false;
-        }
-        return ret;
-    }
-
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
-            this.auto = true;
-            stack.shrink(1);
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     @Override
     public void onUpdate() {
@@ -569,29 +540,5 @@ public class TileEntityGenerationMicrochip extends TileEntityBaseGenerationMicro
                 UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
         );
     }
-
-
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.auto = nbttagcompound.getBoolean("auto");
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("auto", this.auto);
-        return nbttagcompound;
-    }
-
-
-    @Override
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (this.auto) {
-            if (this.heat.getEnergy() + 1 <= this.heat.getCapacity()) {
-                this.heat.addEnergy(2);
-            }
-        }
-    }
-
 
 }

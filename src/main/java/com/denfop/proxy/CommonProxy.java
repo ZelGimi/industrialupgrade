@@ -286,7 +286,8 @@ public class CommonProxy implements IGuiHandler {
             Recipes.recipes.removeAll("comb_macerator");
             Recipes.recipes.reloadRecipes("com.denfop.tiles.mechanism.multimechanism.simple.TileEntityCombMacerator");
         }
-
+        Recipes.recipes.removeAllRecipesFromList();
+        Recipes.recipes.addAllRecipesFromList();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
@@ -517,6 +518,10 @@ public class CommonProxy implements IGuiHandler {
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.canner));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.solidcanner));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.patternstorage));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.glassFiberCableItem));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.copperCableItem));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tinCableItem));
+        CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.goldCableItem));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.glassFiberCableItem));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.copperCableItem));
         CraftManagerUtils.removeCrafting(CraftManagerUtils.getRecipe(Ic2Items.tinCableItem));

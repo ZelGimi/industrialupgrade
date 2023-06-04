@@ -56,10 +56,11 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
         this.fluidSlot = new InvSlotConsumableLiquidByList(this, "fluidSlot", 1, FluidRegistry.WATER);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.output = null;
-        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this,upgradeSlot));
-        this.componentProgress = this.addComponent(new ComponentProgress(this,1,
-                (short) length));
-        this.componentProcess = this.addComponent(new ComponentProcess(this,length,energyPerTick));
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
+        this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                (short) length
+        ));
+        this.componentProcess = this.addComponent(new ComponentProcess(this, length, energyPerTick));
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setHasTank(true);
         this.componentProcess.setSlotOutput(outputSlot);
@@ -95,10 +96,9 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
     }
 
 
-
     public void onLoaded() {
         super.onLoaded();
-      
+
 
         inputSlotA.load();
         this.getOutput();
@@ -112,16 +112,6 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
         }
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            componentUpgrade.setOverclockRates(this.upgradeSlot);
-        }
-    }
-
- 
-
- 
 
     public void updateEntityServer() {
         super.updateEntityServer();

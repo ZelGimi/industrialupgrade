@@ -18,14 +18,15 @@ public class AEIntegration {
                 new ItemStack(Items.QUARTZ),
                 Api.INSTANCE.definitions().materials().netherQuartzDust().maybeStack(1).get()
         );
-        if(Api.INSTANCE.definitions().materials().purifiedNetherQuartzCrystal().maybeStack(1).isPresent())
-        TileEntitySunnariumMaker.addSunnariumMaker(
-                new ItemStack(IUItem.sunnarium, 4, 4),
-                new ItemStack(Items.GLOWSTONE_DUST),
-                Api.INSTANCE.definitions().materials().purifiedNetherQuartzCrystal().maybeStack(1).get(),
-                new ItemStack(IUItem.iuingot, 1, 3),
-                new ItemStack(IUItem.sunnarium, 1, 3)
-        );
+        if (Api.INSTANCE.definitions().materials().purifiedNetherQuartzCrystal().maybeStack(1).isPresent()) {
+            TileEntitySunnariumMaker.addSunnariumMaker(
+                    new ItemStack(IUItem.sunnarium, 4, 4),
+                    new ItemStack(Items.GLOWSTONE_DUST),
+                    Api.INSTANCE.definitions().materials().purifiedNetherQuartzCrystal().maybeStack(1).get(),
+                    new ItemStack(IUItem.iuingot, 1, 3),
+                    new ItemStack(IUItem.sunnarium, 1, 3)
+            );
+        }
         MaceratorRecipe.addmacerator(
                 Api.INSTANCE.definitions().materials().certusQuartzCrystal().maybeStack(1).get(),
                 Api.INSTANCE.definitions().materials().certusQuartzDust().maybeStack(1).get()

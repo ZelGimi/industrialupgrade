@@ -5,6 +5,12 @@ import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
+import com.denfop.componets.Action;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.TypeAction;
+import com.denfop.componets.TypeLoad;
 import com.denfop.container.ContainerBaseWitherMaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -16,7 +22,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -27,20 +32,14 @@ import java.util.Random;
 public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachine
         implements IUpgradableBlock, IUpdateTick {
 
-    public final double defaultEnergyConsume;
-    public final int defaultOperationLength;
-    public final int defaultTier;
-    public final double defaultEnergyStorage;
+
     public final InvSlotUpgrade upgradeSlot;
-    public double energyConsume;
-    public int operationLength;
-    public int operationsPerTick;
+    public final ComponentUpgradeSlots componentUpgrade;
+    public final ComponentProgress componentProgress;
+    public final ComponentProcess componentProcess;
     public AudioSource audioSource;
     public MachineRecipe output;
-
     public InvSlotRecipes inputSlotA;
-    protected short progress;
-    protected double guiProgress;
 
     public TileEntityBaseWitherMaker(int energyPerTick, int length, int outputSlots) {
         this(energyPerTick, length, outputSlots, 1);
@@ -48,14 +47,16 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
 
     public TileEntityBaseWitherMaker(int energyPerTick, int length, int outputSlots, int aDefaultTier) {
         super(energyPerTick * length, 1, outputSlots);
-        this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = energyPerTick;
-        this.defaultOperationLength = this.operationLength = length;
-        this.defaultTier = aDefaultTier;
-        this.defaultEnergyStorage = energyPerTick * length;
-
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.output = null;
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
+        this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                (short) length
+        ));
+        this.componentProcess = this.addComponent(new ComponentProcess(this, length, energyPerTick));
+        this.componentProcess.setHasAudio(true);
+        this.componentProcess.setSlotOutput(outputSlot);
+        this.componentProcess.setAction(new Action(this, 20, TypeAction.AUDIO, TypeLoad.PROGRESS, Boolean.FALSE, 3));
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -69,34 +70,19 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultEnergyConsume + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip, advanced);
 
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getShort("progress");
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
-        return nbttagcompound;
-    }
-
-    public double getProgress() {
-        return this.guiProgress;
-    }
 
     public void onLoaded() {
         super.onLoaded();
         inputSlotA.load();
         if (IC2.platform.isSimulating()) {
-            setOverclockRates();
             this.output = this.getOutput();
         }
 
@@ -110,16 +96,9 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         }
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-        }
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        MachineRecipe output = this.output;
         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
             if (!this.inputSlotA.isEmpty()) {
                 for (int i = 0; i < 3; i++) {
@@ -158,77 +137,6 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
                 }
             }
         }
-        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.canUseEnergy(energyConsume)) {
-            if (!this.getActive()) {
-                setActive(true);
-            }
-            if (this.progress == 0) {
-                initiate(0);
-            }
-            this.progress = (short) (this.progress + 1);
-            this.energy.useEnergy(energyConsume);
-            double k = this.progress;
-
-            this.guiProgress = (k / this.operationLength);
-            if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-                if (sound) {
-                    IUCore.network.get(true).initiateTileEntityEvent(this, 3, true);
-                }
-            }
-            if (this.progress >= this.operationLength) {
-                this.guiProgress = 0;
-                operate(output);
-                this.progress = 0;
-                initiate(2);
-            }
-        } else {
-            if (this.progress != 0 && getActive()) {
-                initiate(1);
-            }
-            if (output == null) {
-                this.progress = 0;
-            }
-            if (this.getActive()) {
-                setActive(false);
-            }
-        }
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
-    }
-
-    public void setOverclockRates() {
-        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
-        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
-        this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
-        int tier = this.upgradeSlot.getTier(this.defaultTier);
-        this.energy.setSinkTier(tier);
-        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
-                this.defaultEnergyStorage
-        ));
-        if (this.operationLength < 1) {
-            this.operationLength = 1;
-        }
-    }
-
-    public void operate(MachineRecipe output) {
-        for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.getRecipe().output.items;
-            operateOnce(processResult);
-            if (!this.inputSlotA.continue_process(this.output) || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
-                getOutput();
-                break;
-            }
-            if (this.output == null) {
-                break;
-            }
-        }
-    }
-
-    public void operateOnce(List<ItemStack> processResult) {
-
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
     }
 
     public MachineRecipe getOutput() {
@@ -239,7 +147,6 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         return this.output;
     }
 
-    public abstract String getInventoryName();
 
     public ContainerBaseWitherMaker getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseWitherMaker(
@@ -284,8 +191,10 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
                 if (this.audioSource != null) {
                     this.audioSource.stop();
                     final Random rand = this.getWorld().rand;
-                    IUCore.audioManager.playOnce(this, rand.nextInt(2) == 0 ? getInterruptSoundFile2() :
-                            getInterruptSoundFile3());
+                    if (this.sound) {
+                        IUCore.audioManager.playOnce(this, rand.nextInt(2) == 0 ? getInterruptSoundFile2() :
+                                getInterruptSoundFile3());
+                    }
 
                 }
                 break;

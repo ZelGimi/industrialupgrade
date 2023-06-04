@@ -11,6 +11,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -72,7 +73,7 @@ public class CTNetherTransformer {
             nbt.setDouble("need", this.matter);
             final IC2RecipeInput stack = new IC2RecipeInput(this.container);
 
-            Recipes.recipes.addRecipe("nethercollector", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("nethercollector", new BaseMachineRecipe(
                     new Input(
                             stack
                     ),
@@ -137,7 +138,8 @@ public class CTNetherTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("nethercollector", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("nethercollector", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {

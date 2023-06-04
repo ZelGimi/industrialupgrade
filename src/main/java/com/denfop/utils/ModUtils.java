@@ -560,7 +560,7 @@ public class ModUtils {
         if (dest == null || stack.isEmpty()) {
             return stack;
         }
-
+        slot = Math.min(slot, dest.getSlots());
         for (int i = 0; i < slot; i++) {
             stack = insertItem2(dest, i, stack, simulate);
             if (stack.isEmpty()) {
@@ -642,11 +642,11 @@ public class ModUtils {
     }
 
     @Nonnull
-    public static ItemStack insertItem(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, final int slots) {
+    public static ItemStack insertItem(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, int slots) {
         if (dest == null || stack.isEmpty()) {
             return stack;
         }
-
+        slots = Math.min(slots, dest.getSlots());
         for (int i = 0; i < slots; i++) {
             stack = dest.insertItem(i, stack, simulate);
             if (stack.isEmpty()) {

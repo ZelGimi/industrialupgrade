@@ -122,7 +122,9 @@ public class CoolComponent extends AbstractComponent {
 
     public void onLoaded() {
         assert this.delegate == null;
-
+        if (this.storage > this.capacity) {
+            this.storage = this.capacity;
+        }
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
                 if (debugLoad) {
@@ -214,12 +216,10 @@ public class CoolComponent extends AbstractComponent {
     }
 
 
-
     @Override
     public boolean isServer() {
         return false;
     }
-
 
 
     public double getCapacity() {

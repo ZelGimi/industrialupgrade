@@ -10,6 +10,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -60,7 +61,8 @@ public class CTSynthesis {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("synthesis", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("synthesis", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
@@ -122,7 +124,7 @@ public class CTSynthesis {
         }
 
         public void apply() {
-            Recipes.recipes.addRecipe("synthesis", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("synthesis", new BaseMachineRecipe(
                     new Input(
                             new IC2RecipeInput(this.container),
                             new IC2RecipeInput(this.fill)

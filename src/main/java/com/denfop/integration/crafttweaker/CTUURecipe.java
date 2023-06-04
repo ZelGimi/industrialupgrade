@@ -73,7 +73,7 @@ public class CTUURecipe {
             final NBTTagCompound nbt = ModUtils.nbt();
             nbt.setDouble("matter", number);
 
-            Recipes.recipes.addRecipe(
+            Recipes.recipes.addAdderRecipe(
                     "replicator",
                     new BaseMachineRecipe(
                             new Input(

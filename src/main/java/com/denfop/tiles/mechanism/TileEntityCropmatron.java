@@ -76,16 +76,20 @@ public class TileEntityCropmatron extends TileEntityElectricMachine implements I
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
     }
 
+    private static int applyModifier(int extra) {
+        double ret = (double) Math.round(((double) 1 + (double) extra));
+        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
+    }
+
     protected void updateEntityServer() {
         super.updateEntityServer();
-        this.upgradeSlot.tickNoMark();
+
         this.wasserinputSlot.processIntoTank(this.waterTank, this.wasseroutputSlot);
         this.exInputSlot.processIntoTank(this.exTank, this.exOutputSlot);
         this.fertilizerSlot.organize();
         if (this.world.getTotalWorldTime() % 10L == 0L && this.energy.getEnergy() >= 31.0) {
             this.scan();
         }
-
     }
 
     public void scan() {
@@ -123,7 +127,14 @@ public class TileEntityCropmatron extends TileEntityElectricMachine implements I
         } else if (this.waterTank.getFluidAmount() > 0 && this.tryHydrateFarmland(scan)) {
             this.energy.useEnergy(10.0);
         }
+        if (this.upgradeSlot.tickNoMark()) {
+            this.setUpgradestat();
+        }
 
+    }
+
+    public void setUpgradestat() {
+        this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
     }
 
     private boolean tryHydrateFarmland(BlockPos pos) {

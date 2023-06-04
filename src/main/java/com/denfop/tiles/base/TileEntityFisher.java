@@ -4,11 +4,11 @@ import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
 import com.denfop.container.ContainerFisher;
 import com.denfop.gui.GuiFisher;
 import com.denfop.invslot.InvSlotFisher;
 import com.denfop.utils.ModUtils;
+import com.google.common.collect.Lists;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -27,6 +27,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -61,6 +63,11 @@ public class TileEntityFisher extends TileEntityElectricMachine
     protected float _next = (float) (Double.NaN);
     private boolean checkwater;
     private int level = 1;
+    private FakePlayerSpawner player;
+    private EntityFishHook energyFishHook;
+    private LootContext.Builder lootcontext$builder;
+    private LootTable table;
+    private LootPool listPool;
 
     public TileEntityFisher() {
         super(1E4, 14, 9);
@@ -119,7 +126,15 @@ public class TileEntityFisher extends TileEntityElectricMachine
     @Override
     protected void onLoaded() {
         super.onLoaded();
+        if (this.getWorld().isRemote) {
+            return;
+        }
         checkwater = checkwater();
+        this.player = new FakePlayerSpawner(getWorld());
+        this.energyFishHook = new EntityFishHook(getWorld(), player);
+        this.lootcontext$builder = new LootContext.Builder((WorldServer) this.world);
+        this.table = this.world.getLootTableManager().getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING);
+        this.listPool = this.table.getPool("main");
     }
 
     public void updateEntityServer() {
@@ -149,11 +164,15 @@ public class TileEntityFisher extends TileEntityElectricMachine
             }
             if (progress < 100) {
                 if (this.energy.getEnergy() >= this.energyconsume) {
-                    progress += this.level;
                     if (!this.getActive()) {
-                        initiate(0);
                         this.setActive(true);
                     }
+                    if (this.getActive() && this.progress == 0) {
+                        initiate(0);
+                    }
+                    progress += this.level;
+
+
                 } else {
                     if (this.getActive()) {
                         initiate(2);
@@ -169,31 +188,30 @@ public class TileEntityFisher extends TileEntityElectricMachine
         }
 
         if (checkwater && progress >= 100) {
+            if (this.getActive()) {
+                initiate(2);
+            }
             if (!this.inputslot.isEmpty()) {
                 ItemStack stack = this.inputslot.get();
-                final FakePlayerSpawner player = new FakePlayerSpawner(getWorld());
-                EntityFishHook var2 = new EntityFishHook(getWorld(), player);
                 int j = EnchantmentHelper.getFishingSpeedBonus(stack);
 
                 if (j > 0) {
-                    var2.setLureSpeed(j);
+                    this.energyFishHook.setLureSpeed(j);
                 }
 
                 int k = EnchantmentHelper.getFishingLuckBonus(stack);
 
                 if (k > 0) {
-                    var2.setLuck(k);
+                    this.energyFishHook.setLuck(k);
                 }
-                LootContext.Builder lootcontext$builder = new LootContext.Builder((WorldServer) this.world);
-                lootcontext$builder.withLuck((float) k + var2.angler.getLuck()).withPlayer(var2.angler).withLootedEntity(var2);
+                lootcontext$builder
+                        .withLuck((float) k + this.energyFishHook.angler.getLuck())
+                        .withPlayer(this.energyFishHook.angler)
+                        .withLootedEntity(this.energyFishHook);
+                List<ItemStack> list = Lists.newArrayList();
+                this.listPool.generateLoot(list, this._rand, lootcontext$builder.build());
 
-                List<ItemStack> var3 =
-                        this.world
-                                .getLootTableManager()
-                                .getLootTableFromLocation(LootTableList.GAMEPLAY_FISHING)
-                                .generateLootForPools(this._rand, lootcontext$builder.build());
-
-                for (ItemStack var1 : var3) {
+                for (ItemStack var1 : list) {
                     if (this.outputSlot.add(var1)) {
                         this.energy.useEnergy(this.energyconsume);
                     }
@@ -233,7 +251,6 @@ public class TileEntityFisher extends TileEntityElectricMachine
         }
         if (getActive()) {
             if (this.world.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
-                ItemStack stack3 = Ic2Items.ejectorUpgrade;
                 ModUtils.tick(this.outputSlot, this);
             }
         }

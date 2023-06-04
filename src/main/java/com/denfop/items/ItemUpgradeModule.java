@@ -6,7 +6,13 @@ import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.IIdProvider;
 import ic2.api.item.IItemHudInfo;
-import ic2.api.upgrade.*;
+import ic2.api.upgrade.IEnergyStorageUpgrade;
+import ic2.api.upgrade.IProcessingUpgrade;
+import ic2.api.upgrade.ITransformerUpgrade;
+import ic2.api.upgrade.IUpgradableBlock;
+import ic2.api.upgrade.IUpgradeItem;
+import ic2.api.upgrade.UpgradableProperty;
+import ic2.api.upgrade.UpgradeRegistry;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
@@ -24,7 +30,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implements IModelRegister, IProcessingUpgrade,
         IUpgradeItem, IEnergyStorageUpgrade,

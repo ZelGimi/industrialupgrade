@@ -22,7 +22,7 @@ public class CTFermer {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
@@ -38,7 +38,7 @@ public class CTFermer {
     public static void addRecipe(IItemStack output, IIngredient container, int time) {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("operationLength", time);
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
@@ -55,7 +55,7 @@ public class CTFermer {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("operationLength", time);
         nbt.setBoolean("consume", consume);
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
@@ -83,7 +83,8 @@ public class CTFermer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("farmer", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("farmer", CraftTweakerMC.getItemStack(output));
+
         }
 
         protected String getRecipeInfo() {

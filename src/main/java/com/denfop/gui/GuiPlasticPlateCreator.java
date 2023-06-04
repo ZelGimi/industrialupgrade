@@ -41,7 +41,7 @@ public class GuiPlasticPlateCreator extends GuiIU<ContainerPlasticPlateCreator> 
                 .drawForeground(par1, par2);
         new AdvArea(this, 80, 35, 101, 49)
                 .withTooltip(Localization.translate("gui.MolecularTransformer.progress") + ": " + (int) (Math.min(
-                        this.container.base.getProgress(),
+                        this.container.base.componentProgress.getBar(),
                         1D
                 ) * 100) + "%")
                 .drawForeground(par1, par2);
@@ -52,7 +52,7 @@ public class GuiPlasticPlateCreator extends GuiIU<ContainerPlasticPlateCreator> 
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (24.0F * this.container.base.getProgress());
+        int progress = (int) (24.0F * this.container.base.componentProgress.getBar());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         if (chargeLevel > 0) {

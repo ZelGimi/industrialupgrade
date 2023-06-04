@@ -1,11 +1,9 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.energy.IAdvEnergySink;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -17,10 +15,8 @@ import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBaseMolecular;
 import com.denfop.gui.GuiMolecularTransformer;
-import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.core.IC2;
@@ -45,12 +41,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class TileEntityMolecularTransformer extends TileEntityElectricMachine implements
-        IEnergyReceiver, INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
+        INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
 
     public boolean queue;
     public byte redstoneMode;
     public int operationLength;
-    public boolean rf = false;
     public int operationsPerTick;
     public AudioSource audioSource;
     public InvSlotRecipes inputSlot;
@@ -174,14 +169,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.rf) {
-            ret.add(new ItemStack(IUItem.module7, 1, 4));
-            this.rf = false;
-        }
-        return ret;
-    }
 
     public List<Double> getTime(final double energy) {
         final double dif = this.differenceenergy;
@@ -223,13 +210,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             final float hitY,
             final float hitZ
     ) {
-        if (player.getHeldItem(hand).getItem() instanceof ItemAdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
-            if (!this.rf) {
-                this.rf = true;
-                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
-                return true;
-            }
-        }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
@@ -259,7 +239,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         this.redstoneMode = nbttagcompound.getByte("redstoneMode");
 
         this.progress = nbttagcompound.getDouble("progress");
-        this.rf = nbttagcompound.getBoolean("rf");
 
     }
 
@@ -268,7 +247,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         nbttagcompound.setByte("redstoneMode", this.redstoneMode);
         nbttagcompound.setBoolean("queue", this.queue);
         nbttagcompound.setDouble("progress", this.progress);
-        nbttagcompound.setBoolean("rf", this.rf);
         return nbttagcompound;
 
     }
@@ -520,43 +498,8 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     }
 
 
-    @Override
-    public int receiveEnergy(final EnumFacing enumFacing, final int i, final boolean b) {
-        if (this.rf) {
-            return receiveEnergy(i, b);
-        } else {
-            return 0;
-        }
-    }
-
-    public int receiveEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(
-                ((IAdvEnergySink) this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
-                Math.min(EnergyNet.instance.getPowerFromTier(14) * Config.coefficientrf, paramInt)
-        );
-        if (!paramBoolean) {
-            this.energy.addEnergy(i * 1F / Config.coefficientrf);
-        }
-        return i;
-    }
-
     public String getStartSoundFile() {
         return "Machines/molecular.ogg";
-    }
-
-    @Override
-    public int getEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.energy.getEnergy();
-    }
-
-    @Override
-    public int getMaxEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.energy.getCapacity();
-    }
-
-    @Override
-    public boolean canConnectEnergy(final EnumFacing enumFacing) {
-        return this.rf;
     }
 
     @Override

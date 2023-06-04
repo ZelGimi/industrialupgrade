@@ -43,7 +43,7 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         this.defaultTier = tier;
         this.energy = this.addComponent(new AdvEnergy(
                 this,
-                EnergyNet.instance.getPowerFromTier(tier) * 8.0D,
+                EnergyNet.instance.getPowerFromTier(tier) * 4.0D,
                 Collections.emptySet(),
                 Collections.emptySet(),
                 tier,

@@ -45,7 +45,7 @@ public class GuiHandlerHeavyOre extends GuiIU<ContainerHandlerHeavyOre> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.bindTexture();
 
-        int progress = (int) (44 * this.container.base.getProgress());
+        int progress = (int) (44 * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
             drawTexturedModalRect(this.guiLeft + 48, this.guiTop + 31, 177, 32, progress + 1, 14);

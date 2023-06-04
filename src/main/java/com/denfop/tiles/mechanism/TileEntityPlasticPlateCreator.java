@@ -31,6 +31,8 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     public TileEntityPlasticPlateCreator() {
         super(1, 300, 1);
         this.inputSlotA = new InvSlotRecipes(this, "plasticplate", this, this.fluidTank);
+        this.componentProcess.setInvSlotRecipes(inputSlotA);
+        this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
         Recipes.recipes.addInitRecipes(this);
     }
 

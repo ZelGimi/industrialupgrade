@@ -28,7 +28,7 @@ public class GuiAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
         drawTexturedModalRect(xoffset, yoffset, 0, 0, this.xSize, this.ySize);
 
         for (int i = 0; i < 4; i++) {
-            progress[i] = 29 * this.container.base.progress[i] / this.container.base.tempprogress;
+            progress[i] = 29 * this.container.base.progress[i] / this.container.base.tempprogress[i];
             progress[i] = Math.min(progress[i], 29);
             if (progress[i] > 0) {
                 drawTexturedModalRect(
@@ -64,7 +64,7 @@ public class GuiAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString(ModUtils.getString(ExperienceUtils.getLevelForExperience((int) this.container.base.exp.getEnergy())),
-                106, 70, ModUtils.convertRGBcolorToInt(13, 229, 34)
+                66, 77, ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
         new Area(
                 this,
@@ -82,18 +82,18 @@ public class GuiAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
                 90 - 87
         ).withTooltip("RF: " + ModUtils.getString(this.container.base.energy2) + "/" + ModUtils.getString(
                 this.container.base.maxEnergy2)).drawForeground(par1, par2);
-        this.addElement(new Area(
+        new Area(
                 this,
                 93,
                 79,
                 128 - 93,
                 82 - 79
         ).withTooltip("XP: " + ModUtils.getString(this.container.base.exp.getEnergy()) + "/" + ModUtils.getString(
-                this.container.base.exp.getCapacity())));
+                this.container.base.exp.getCapacity())).drawForeground(par1, par2);
 
         for (int i = 0; i < 4; i++) {
             int progress1 = Math.min(
-                    (100 * this.container.base.progress[i] / this.container.base.tempprogress),
+                    (100 * this.container.base.progress[i] / this.container.base.tempprogress[i]),
                     100
             );
             new Area(this, 177,

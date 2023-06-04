@@ -22,10 +22,12 @@ public class ComponentsForgeEnergy implements IEnergyStorage {
     @Override
     public int receiveEnergy(final int maxReceive, final boolean simulate) {
         double demand = ((IAdvEnergySink) tile).getDemandedEnergy() * 4;
-        if (!simulate) {
-            ((IAdvEnergySink) tile).injectEnergy(null, maxReceive / 4D, 0);
-        }
+        demand = Math.max(demand, 0);
         demand = Math.min(demand, maxReceive);
+        if (!simulate) {
+            ((IAdvEnergySink) tile).injectEnergy(null, demand / 4, 0);
+        }
+
         if (demand > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE - 1;
         } else {
@@ -36,11 +38,11 @@ public class ComponentsForgeEnergy implements IEnergyStorage {
     @Override
     public int extractEnergy(final int maxExtract, final boolean simulate) {
         double offeredEnergy = ((IAdvEnergySource) tile).getOfferedEnergy() * 4;
-
-        if (!simulate) {
-            ((IAdvEnergySource) tile).drawEnergy(maxExtract / 4D);
-        }
+        offeredEnergy = Math.max(offeredEnergy, 0);
         offeredEnergy = Math.min(offeredEnergy, maxExtract);
+        if (!simulate) {
+            ((IAdvEnergySource) tile).drawEnergy(offeredEnergy / 4);
+        }
         if (offeredEnergy > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE - 1;
         } else {

@@ -40,7 +40,7 @@ public class ReactorRedstone extends Redstone {
                     }
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception i) {
         }
     }
 

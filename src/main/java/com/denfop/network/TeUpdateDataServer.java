@@ -2,7 +2,12 @@ package com.denfop.network;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class TeUpdateDataServer {
 

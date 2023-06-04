@@ -26,8 +26,6 @@ public class MultiMachineAdapter extends AbstractManagedEnvironment implements M
                 "getHeatMachine",
                 "getCapacity",
                 "getEnergy",
-                "getRFCapacity",
-                "getRFEnergy",
                 "getTier",
                 "getEnergyConsume",
                 "getOperationLength"
@@ -61,10 +59,6 @@ public class MultiMachineAdapter extends AbstractManagedEnvironment implements M
                 return new Object[]{multiMachine.energy.getCapacity()};
             case "getEnergy":
                 return new Object[]{multiMachine.energy.getEnergy()};
-            case "getRFCapacity":
-                return new Object[]{multiMachine.energy2.getCapacity()};
-            case "getRFEnergy":
-                return new Object[]{multiMachine.energy2.getEnergy()};
             case "getTier":
                 return new Object[]{multiMachine.energy.getSinkTier()};
             case "getEnergyConsume":

@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.render.IModelCustom;
 import com.denfop.render.base.AdvancedModelLoader;
 import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
-import com.denfop.tiles.mechanism.TileEntityOilRefiner;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -37,24 +36,24 @@ public class TileEntityAdvOilRefinerRender extends TileEntitySpecialRenderer<Til
     static final IModelCustom model3 = AdvancedModelLoader
             .loadModel(new ResourceLocation(Constants.TEXTURES, "models/oil2.obj"));
 
-    public void getRotate( TileEntityAdvOilRefiner tile){
+    public void getRotate(TileEntityAdvOilRefiner tile) {
 
-        if(tile.getFacing() == EnumFacing.SOUTH){
+        if (tile.getFacing() == EnumFacing.SOUTH) {
             GL11.glRotatef(180F, 0.0F, 1F, 0F);
-            GL11.glTranslatef(0.19F, 0,-0.05f);
+            GL11.glTranslatef(0.19F, 0, -0.05f);
             return;
         }
-        if(tile.getFacing() == EnumFacing.WEST){
+        if (tile.getFacing() == EnumFacing.WEST) {
             GL11.glRotatef(90F, 0.0F, 1F, 0F);
-            GL11.glTranslatef(0.08F, 0,-0.15f);
+            GL11.glTranslatef(0.08F, 0, -0.15f);
             return;
         }
-        if(tile.getFacing() == EnumFacing.EAST){
+        if (tile.getFacing() == EnumFacing.EAST) {
             GL11.glRotatef(-90F, 0.0F, 1F, 0F);
-            GL11.glTranslatef(0.1F, 0,0.13f);
-            return;
+            GL11.glTranslatef(0.1F, 0, 0.13f);
         }
     }
+
     public void render(
             TileEntityAdvOilRefiner tile,
             double x,

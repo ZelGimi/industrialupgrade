@@ -6,7 +6,6 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiAlloySmelter;
@@ -20,18 +19,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.List;
-
 public class TileEntityAlloySmelter extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
-
-    private boolean auto;
 
     public TileEntityAlloySmelter() {
         super(1, 300, 1, EnumDoubleElectricMachine.ALLOY_SMELTER);
@@ -118,69 +111,15 @@ public class TileEntityAlloySmelter extends TileEntityDoubleElectricMachine impl
 
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.auto) {
-            ret.add(new ItemStack(IUItem.autoheater));
-            this.auto = false;
-        }
-        return ret;
-    }
-
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.auto = nbttagcompound.getBoolean("auto");
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("auto", this.auto);
-        return nbttagcompound;
-    }
-
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
-            this.auto = true;
-            stack.shrink(1);
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
-
-
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiAlloySmelter(new ContainerDoubleElectricMachine(entityPlayer, this, this.type));
-    }
-
-    @Override
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
     }
 
     public String getStartSoundFile() {
         return "Machines/alloysmelter.ogg";
     }
 
-    @Override
-    protected void updateEntityServer() {
-        super.updateEntityServer();
-
-        if (this.auto) {
-            if (this.heat.getEnergy() + 1 <= this.heat.getCapacity()) {
-                this.heat.addEnergy(2);
-            }
-        }
-    }
 
     public String getInterruptSoundFile() {
         return "Machines/InterruptOne.ogg";

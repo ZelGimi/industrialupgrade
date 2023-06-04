@@ -67,7 +67,7 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
         if (output != null) {
             this.fontRenderer.drawString(
                     TextFormatting.GREEN + Localization.translate("chance") + output.getRecipe().output.metadata.getInteger(
-                            "percent") + "%", xoffset + 69,
+                            "percent") + "%", xoffset + 60,
                     yoffset + 67, ModUtils.convertRGBcolorToInt(217, 217, 217)
             );
         }

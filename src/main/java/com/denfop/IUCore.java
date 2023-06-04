@@ -232,10 +232,6 @@ public final class IUCore {
                                     "energy",
                                     ((IStorage) (((IElectricBlock) type).getDummyElec())).getEUCapacity()
                             );
-                            ModUtils.nbt(filled).setDouble(
-                                    "energy2",
-                                    ((IStorage) (((IElectricBlock) type).getDummyElec())).getRFCapacity()
-                            );
                             list.add(filled);
                         }
                     }
@@ -356,12 +352,12 @@ public final class IUCore {
     @Mod.EventHandler
     public void load(final FMLPreInitializationEvent event) throws Exception {
         MinecraftForge.EVENT_BUS.register(this);
-        EnergyNetGlobal.initialize();
         ModUtils.log = event.getModLog();
         IUCore.log = event.getModLog();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
         Config.loadNormalConfig(event.getSuggestedConfigurationFile());
+        EnergyNetGlobal.initialize();
         UpgradeSystem.system = new BaseUpgradeSystem();
         new RotorUpgradeSystem();
         new com.denfop.api.water.upgrade.RotorUpgradeSystem();
@@ -374,6 +370,7 @@ public final class IUCore {
 
         proxy.preInit(event);
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+
     }
 
     @Mod.EventHandler
@@ -456,7 +453,9 @@ public final class IUCore {
             }
 
             lootTables.put(builder.toString(), event.getTable());
-
+            if (builder.toString().equals("minecraft:iron_golem")) {
+                lootTables.put("minecraft:villager_golem", event.getTable());
+            }
         }
 
     }

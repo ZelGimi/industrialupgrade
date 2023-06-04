@@ -44,7 +44,6 @@ public class ContainerMultiMachine extends ContainerFullInv<TileEntityMultiMachi
         List<String> ret = super.getNetworkedFields();
         ret.add("cold");
         ret.add("solartype");
-        ret.add("energy2");
         if (this.base.exp != null) {
             ret.add("exp");
         }

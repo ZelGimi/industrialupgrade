@@ -86,7 +86,7 @@ public class CTAlloySmelter {
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore1 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            Recipes.recipes.addRecipe("alloysmelter", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("alloysmelter", new BaseMachineRecipe(
                     new Input(
                             OreDictionary.getOres(ore).isEmpty()
                                     ? new IC2RecipeInput(this.container)
@@ -164,7 +164,7 @@ public class CTAlloySmelter {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("alloysmelter", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("alloysmelter", getItemStack(this.output));
         }
 
         public String describe() {

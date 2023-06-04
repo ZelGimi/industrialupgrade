@@ -75,9 +75,12 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.aircollector.info",20) +new FluidStack(FluidName.fluidazot.getInstance(),1).getLocalizedName());
-            tooltip.add(Localization.translate("iu.aircollector.info",60) +new FluidStack(FluidName.fluidoxy.getInstance(),1).getLocalizedName());
-            tooltip.add(Localization.translate("iu.aircollector.info",120) +new FluidStack(FluidName.fluidco2.getInstance(),1).getLocalizedName());
+            tooltip.add(Localization.translate("iu.aircollector.info", 20) + new FluidStack(FluidName.fluidazot.getInstance(),
+                    1).getLocalizedName());
+            tooltip.add(Localization.translate("iu.aircollector.info", 60) + new FluidStack(FluidName.fluidoxy.getInstance(),
+                    1).getLocalizedName());
+            tooltip.add(Localization.translate("iu.aircollector.info", 120) + new FluidStack(FluidName.fluidco2.getInstance(),
+                    1).getLocalizedName());
 
         }
         super.addInformation(stack, tooltip, advanced);

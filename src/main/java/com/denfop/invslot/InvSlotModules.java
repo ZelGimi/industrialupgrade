@@ -66,6 +66,8 @@ public class InvSlotModules extends InvSlot {
                 this.tile.mobUtils[i] = entityLiving;
                 this.tile.maxprogress[i] = 100 * captured.getCoefficient();
                 this.tile.loot_Tables[i] = IUCore.lootTables.get(captured.getResource());
+                System.out.println(this.tile.loot_Tables[i] + " " + captured.getResource());
+
                 this.tile.description_mobs[i] =
                         entityLiving.getName() + "\n" + Localization.translate("iu.show.health") + (int) entityLiving.getHealth() + "/" + (int) entityLiving.getMaxHealth()
                                 + "\n" + Localization.translate("iu.show.speed") + (int) this.tile.maxprogress[i];

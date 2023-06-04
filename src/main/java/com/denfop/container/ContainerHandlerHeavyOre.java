@@ -42,9 +42,6 @@ public class ContainerHandlerHeavyOre extends ContainerFullInv<TileEntityBaseHan
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("heat");
-        ret.add("energy");
         ret.add("sound");
         return ret;
     }

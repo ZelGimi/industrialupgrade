@@ -44,7 +44,7 @@ public class GuiWitherMaker extends GuiIU<ContainerBaseWitherMaker> {
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (40 * this.container.base.getProgress());
+        int progress = (int) (40 * this.container.base.componentProgress.getBar());
         this.mc.getTextureManager().bindTexture(getTexture());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;

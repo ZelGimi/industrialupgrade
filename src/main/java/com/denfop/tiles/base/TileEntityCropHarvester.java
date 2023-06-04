@@ -15,11 +15,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -39,13 +39,24 @@ public class TileEntityCropHarvester extends TileEntityElectricMachine implement
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
     }
 
+    private static int applyModifier(int extra) {
+        double ret = (double) Math.round(((double) 1 + (double) extra));
+        return ret > 2.147483647E9D ? 2147483647 : (int) ret;
+    }
+
     protected void updateEntityServer() {
         super.updateEntityServer();
-        this.upgradeSlot.tickNoMark();
         if (this.world.getTotalWorldTime() % 10L == 0L && this.energy.getEnergy() >= 21.0) {
             this.scan();
         }
+        if (this.upgradeSlot.tickNoMark()) {
+            this.setUpgradestat();
+        }
 
+    }
+
+    public void setUpgradestat() {
+        this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
     }
 
     public void scan() {
@@ -68,23 +79,17 @@ public class TileEntityCropHarvester extends TileEntityElectricMachine implement
         if (tileEntity instanceof TileEntityCrop && !this.isInvFull()) {
             TileEntityCrop crop = (TileEntityCrop) tileEntity;
             if (crop.getCrop() != null) {
-                List<ItemStack> drops = null;
+                List<ItemStack> drops = new ArrayList<>();
                 if (crop.getCurrentSize() == crop.getCrop().getOptimalHarvestSize(crop)) {
                     drops = crop.performHarvest();
                 } else if (crop.getCurrentSize() == crop.getCrop().getMaxSize()) {
                     drops = crop.performHarvest();
                 }
+                for (ItemStack drop : drops) {
+                    if (!this.contentSlot.canAdd(drop)) {
+                        StackUtil.dropAsEntity(world, this.pos, drop);
+                    }
 
-                if (drops != null) {
-                    drops.forEach((drop) -> {
-                        if (StackUtil.putInInventory(this, EnumFacing.WEST, drop, true) == 0) {
-                            StackUtil.dropAsEntity(world, this.pos, drop);
-                        } else {
-                            StackUtil.putInInventory(this, EnumFacing.WEST, drop, false);
-                        }
-
-                        this.energy.useEnergy(20.0);
-                    });
                 }
             }
         }

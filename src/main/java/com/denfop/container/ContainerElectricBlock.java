@@ -23,11 +23,7 @@ public class ContainerElectricBlock extends ContainerFullInv<TileEntityElectricB
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("energy2");
         ret.add("energy");
-        ret.add("personality");
-        ret.add("rfeu");
-        ret.add("rf");
         ret.add("inputslotA");
         ret.add("inputslotB");
         ret.add("inputslotC");

@@ -241,7 +241,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
     public void onLoaded() {
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(),this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = true;
         }
         intialize();
@@ -251,7 +251,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
 
     public void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(),this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
         }
 
@@ -293,7 +293,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
     }
 
     public int getSourceTier() {
-        return this.machineTire1;
+        return this.machineTire;
     }
 
     public double gaugeEnergyScaled1(int i) {
@@ -316,7 +316,6 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
     public boolean canConnectEnergy(final EnumFacing enumFacing) {
         return true;
     }
-
 
 
     @Override

@@ -239,7 +239,6 @@ public class InvSlotSintezator extends InvSlot {
 
     public void checkmodule() {
         TileEntitySintezator tile = (TileEntitySintezator) base;
-        tile.machineTire1 = tile.machineTire;
         double temp_day = tile.genDay;
         double temp_night = tile.genNight;
         double temp_storage = tile.maxStorage;
@@ -271,10 +270,10 @@ public class InvSlotSintezator extends InvSlot {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule) {
                 int damage = this.get(i).getItemDamage();
                 if (damage == 1) {
-                    tile.machineTire1++;
+                    tile.machineTire++;
                 }
                 if (damage == 2) {
-                    tile.machineTire1--;
+                    tile.machineTire--;
                 }
             }
         }

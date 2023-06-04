@@ -168,7 +168,7 @@ public class TileEntityBaseHeatMachine extends TileEntityElectricMachine impleme
         super.updateEntityServer();
         if (this.hasFluid) {
             MutableObject<ItemStack> output = new MutableObject<>();
-            if (this.fluidSlot.transferToTank(
+            if (this.fluidTank.getFluidAmount() + 1000 <= this.fluidTank.getCapacity() && this.fluidSlot.transferToTank(
                     this.fluidTank,
                     output,
                     true

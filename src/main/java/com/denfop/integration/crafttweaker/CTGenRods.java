@@ -10,6 +10,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -73,7 +74,8 @@ public class CTGenRods {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("rod_assembler", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("rod_assembler", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
@@ -149,7 +151,7 @@ public class CTGenRods {
         }
 
         public void apply() {
-            Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("rod_assembler", new BaseMachineRecipe(
                     new Input(
                             new IC2RecipeInput(this.container),
                             new IC2RecipeInput(this.fill),

@@ -10,6 +10,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -95,7 +96,8 @@ public class CTMatterRecipe {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("converter", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("converter", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
@@ -155,7 +157,7 @@ public class CTMatterRecipe {
         public void apply() {
             final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
             if (!this.delete) {
-                Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(
+                Recipes.recipes.addAdderRecipe("converter", new BaseMachineRecipe(
                                 new Input(input.forStack((ItemStack) output.getInternal())), new RecipeOutput(
                                 this.nbt,
                                 getItemStack(this.output)

@@ -31,6 +31,7 @@ public class SlotInvSlot extends Slot {
         this.onSlotChanged();
     }
 
+
     public ItemStack decrStackSize(int amount) {
         if (amount <= 0) {
             return StackUtil.emptyStack;

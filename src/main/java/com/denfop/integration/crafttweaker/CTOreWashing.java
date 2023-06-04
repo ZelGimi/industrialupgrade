@@ -22,7 +22,7 @@ public class CTOreWashing {
     @ZenMethod
     public static void addRecipe(IIngredient container, IItemStack... output) {
 
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "orewashing",
                 new BaseMachineRecipe(
                         new Input(
@@ -52,7 +52,8 @@ public class CTOreWashing {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("orewashing", CraftTweakerMC.getItemStacks(input)[0]);
+            Recipes.recipes.addRemoveRecipe("orewashing", CraftTweakerMC.getItemStack(input));
+
         }
 
         protected String getRecipeInfo() {

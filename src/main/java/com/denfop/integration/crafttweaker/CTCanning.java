@@ -60,7 +60,8 @@ public class CTCanning {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("cannerenrich", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("cannerenrich", getItemStack(this.output));
+
         }
 
         public String describe() {
@@ -120,14 +121,14 @@ public class CTCanning {
         }
 
         public void apply() {
-            Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("cannerenrich", new BaseMachineRecipe(
                     new Input(
                             ic2.api.recipe.Recipes.inputFactory.forStack(ModUtils.getCellFromFluid(((FluidStack) this.container.getInternal()).getFluid())),
                             new IC2RecipeInput(this.fill)
                     ),
                     new RecipeOutput(null, ModUtils.getCellFromFluid(((FluidStack) this.container.getInternal()).getFluid()))
             ));
-            Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("cannerenrich", new BaseMachineRecipe(
                     new Input(
                             (FluidStack) this.container.getInternal(),
                             ic2.api.recipe.Recipes.inputFactory.forStack(Ic2Items.FluidCell),

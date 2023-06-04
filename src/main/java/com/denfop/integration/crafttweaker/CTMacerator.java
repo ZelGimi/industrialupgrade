@@ -21,7 +21,7 @@ public class CTMacerator {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
@@ -51,7 +51,8 @@ public class CTMacerator {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("macerator", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("macerator", CraftTweakerMC.getItemStack(output));
+
         }
 
         protected String getRecipeInfo() {

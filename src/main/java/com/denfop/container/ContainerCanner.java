@@ -3,7 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.mechanism.TileEntityCanner;
 import net.minecraft.entity.player.EntityPlayer;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ContainerCanner extends ContainerFullInv<TileEntityCanner> {
@@ -24,18 +23,10 @@ public class ContainerCanner extends ContainerFullInv<TileEntityCanner> {
     }
 
 
-    @Override
-    public void onContainerClosed(@Nonnull final EntityPlayer playerIn) {
-        super.onContainerClosed(playerIn);
-        this.base.entityPlayerList.remove(playerIn);
-    }
-
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("mode");
         ret.add("fluidTank");
         ret.add("outputTank");
-        ret.add("guiProgress");
         ret.add("inputSlotA");
         return ret;
     }

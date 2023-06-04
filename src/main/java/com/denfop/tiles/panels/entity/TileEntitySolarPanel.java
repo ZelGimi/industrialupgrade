@@ -1,8 +1,6 @@
 package com.denfop.tiles.panels.entity;
 
 
-import cofh.redstoneflux.api.IEnergyProvider;
-import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.api.IAdvEnergyNet;
@@ -15,14 +13,15 @@ import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.audio.AudioSource;
+import com.denfop.componets.ComponentPollution;
+import com.denfop.componets.ComponentTimer;
 import com.denfop.container.ContainerSolarPanels;
 import com.denfop.gui.GuiSolarPanels;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotPanel;
-import com.denfop.items.modules.ItemAdditionModule;
-import com.denfop.proxy.CommonProxy;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.Timer;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -38,18 +37,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -62,26 +59,22 @@ import java.util.List;
 import java.util.Map;
 
 public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEnergySource, IHasGui,
-        IWrenchable, IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
+        IWrenchable, INetworkDataProvider, INetworkClientTileEntityEventListener,
         INetworkUpdateListener, INetworkTileEntityEventListener {
 
 
-    private final List<String> list_player = new ArrayList<>();
+    public final ComponentTimer timer;
+    private final ComponentPollution pollution;
     public double coef;
     public List<IAdvEnergyTile> list;
     public EnumSolarPanels solarpanels;
     public int tier;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     public InvSlotPanel inputslot;
-    public boolean getmodulerf = false;
     public Biome biome;
-    public boolean personality = false;
     public int solarType;
-    public String player = null;
     public EnumType type;
-    public boolean work = true;
-    public boolean work1 = true;
-    public boolean work2 = true;
+
     public boolean charge;
     public boolean wireless = false;
     public GenerationState active = GenerationState.NONE;
@@ -100,13 +93,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     public double k;
     public double m;
     public double u;
-    public int time;
-    public int time1;
-    public int time2;
     public double o;
-    public double maxStorage2;
-    public double storage2;
-    public boolean rf = true;
     public double moonPhase = 1;
     public double tick;
     public SunCoef sunCoef;
@@ -116,7 +103,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected boolean addedToEnet;
     protected double pastEnergy;
     protected double perenergy;
-    List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
     Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
     private AudioSource audioSource;
 
@@ -133,10 +119,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this.p = gmaxStorage;
         this.k = gDay;
         this.m = gDay / 2;
-        this.time = 28800;
-        this.time1 = 14400;
-        this.time2 = 14400;
-        this.maxStorage2 = this.maxStorage * 4;
         this.production = gOutput;
         this.u = gOutput;
         this.tier = tier;
@@ -150,6 +132,14 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this.pastEnergy = 0;
         this.perenergy = 0;
         this.tick = 0;
+        this.pollution = this.addComponent(new ComponentPollution(this));
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(8, 0, 0), new Timer(4, 0, 0), new Timer(4, 0, 0)) {
+            @Override
+            public boolean needWriteNBTToDrops() {
+                return true;
+            }
+        });
+        this.pollution.setTimer(timer);
     }
 
     public TileEntitySolarPanel(EnumSolarPanels solarpanels) {
@@ -217,15 +207,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         return 1;
     }
 
-    protected boolean canEntityDestroy(Entity entity) {
-        return !this.personality || (entity instanceof EntityPlayer && this.list_player.contains(entity.getName()));
-    }
-
-    @Override
-    protected boolean wrenchCanRemove(final EntityPlayer player) {
-        return !this.personality || (this.list_player.contains(player.getName()));
-
-    }
 
     public List<ItemStack> getDrop() {
         List<ItemStack> list = new ArrayList<>();
@@ -269,17 +250,17 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     public void gainFuel() {
         double coefpollution = 1;
-        if (!this.work) {
-            coefpollution = 0.75;
+        switch (this.timer.getIndexWork()) {
+            case -1:
+                coefpollution = 0.25;
+                break;
+            case 1:
+                coefpollution = 0.75;
+                break;
+            case 2:
+                coefpollution = 0.5;
+                break;
         }
-        if (!this.work1) {
-            coefpollution = 0.5;
-        }
-        if (!this.work2) {
-            coefpollution = 0.25;
-        }
-
-
         switch (this.active) {
             case DAY:
                 this.generating = type.coefficient_day * this.genDay;
@@ -313,41 +294,19 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         this.generating *= coefpollution * coefficient_phase * coef;
     }
 
-    @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
-        super.onPlaced(stack, placer, facing);
-        if (placer != null) {
-            this.player = placer.getName();
-        }
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-        if (nbt.getBoolean("hasPollution")) {
-            this.time = nbt.getInteger("time");
-            this.time1 = nbt.getInteger("time1");
-            this.time2 = nbt.getInteger("time2");
-            this.work = nbt.getBoolean("work");
-            this.work1 = nbt.getBoolean("work1");
-            this.work2 = nbt.getBoolean("work2");
-        }
-    }
 
     protected List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
-        ItemStack drop = this.getPickBlock(null, null);
-        drop = this.adjustDrop(drop, wrench, fortune);
-        return drop == null ? Collections.emptyList() : Collections.singletonList(drop);
+        List<ItemStack> drop = super.getSelfDrops(fortune, wrench);
+        drop = Collections.singletonList(this.adjustDrop(drop.get(0), wrench, fortune));
+        return drop;
     }
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
         drop = super.adjustDrop(drop, wrench);
         if (wrench || this.teBlock.getDefaultDrop() == TeBlock.DefaultDrop.Self) {
             NBTTagCompound nbt = StackUtil.getOrCreateNbtData(drop);
-            if (fortune != 100) {
-                nbt.setInteger("time", this.time);
-                nbt.setInteger("time1", this.time1);
-                nbt.setInteger("time2", this.time2);
-                nbt.setBoolean("work", this.work);
-                nbt.setBoolean("work1", this.work1);
-                nbt.setBoolean("work2", this.work2);
-                nbt.setBoolean("hasPollution", true);
+            if (fortune == 100) {
+                nbt.removeTag(this.timer.toString());
             }
         }
         return drop;
@@ -385,28 +344,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
             this.biome = this.world.getBiome(this.pos);
             updateVisibility();
             this.inputslot.checkmodule();
-            this.inputslot.getrfmodule();
-            this.inputslot.personality();
             this.solarType = this.inputslot.solartype();
             IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
             this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
-            if (this.personality) {
-                for (int h = 0; h < this.inputslot.size(); h++) {
-                    if (!this.inputslot.get(h).isEmpty() && this.inputslot.get(h).getItem() instanceof ItemAdditionModule
-                            && this.inputslot.get(h).getItemDamage() == 0) {
-                        NBTTagCompound nbt = ModUtils.nbt(this.inputslot.get(h));
-                        int size = nbt.getInteger("size");
-                        for (int m = 0; m < size; m++) {
-                            this.list_player.add(nbt.getString("player_" + m));
-                        }
-                        break;
-                    }
-
-                }
-                if (player != null) {
-                    this.list_player.add(this.player);
-                }
-            }
         }
     }
 
@@ -423,71 +363,15 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         super.readFromNBT(nbttagcompound);
 
         this.storage = nbttagcompound.getDouble("storage");
-        this.time = nbttagcompound.getInteger("time");
-        this.time1 = nbttagcompound.getInteger("time1");
-        this.time2 = nbttagcompound.getInteger("time2");
-        if (nbttagcompound.hasKey("player")) {
-            this.player = nbttagcompound.getString("player");
-        }
-        this.storage2 = nbttagcompound.getDouble("storage2");
+
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("time", this.time);
-        nbttagcompound.setInteger("time1", this.time1);
-        nbttagcompound.setInteger("time2", this.time2);
-        if (player != null) {
-            nbttagcompound.setString("player", player);
-        }
         nbttagcompound.setDouble("storage", this.storage);
-        nbttagcompound.setDouble("storage2", this.storage2);
         return nbttagcompound;
     }
 
-    public double extractEnergy1(double maxExtract, boolean simulate) {
-        double temp;
-
-        temp = this.storage2;
-
-        if (temp > 0) {
-            double energyExtracted = Math.min(temp, maxExtract);
-            if (!simulate &&
-                    this.storage2 - temp >= 0.0D) {
-                this.storage2 -= temp;
-                if (energyExtracted > 0) {
-                    temp -= energyExtracted;
-                    this.storage2 += temp;
-                }
-                return energyExtracted;
-            }
-        }
-        return 0;
-    }
-
-    public boolean canConnectEnergy(EnumFacing arg0) {
-        return true;
-    }
-
-    public int getEnergyStored(EnumFacing from) {
-        return (int) this.storage2;
-    }
-
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) this.maxStorage2;
-    }
-
-    public int extractEnergy(EnumFacing facing, int maxExtract, boolean simulate) {
-        return extractEnergy((int) Math.min(this.production * 4, maxExtract), simulate);
-    }
-
-    public int extractEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(this.storage2, Math.min(this.production * 4, paramInt));
-        if (!paramBoolean) {
-            this.storage2 -= i;
-        }
-        return i;
-    }
 
     protected void onUnloaded() {
         super.onUnloaded();
@@ -526,64 +410,9 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         if (this.charge) {
             this.inputslot.charge();
         }
-        if (this.charge && this.getmodulerf) {
-            this.inputslot.rfcharge();
-        }
-        if (this.getmodulerf) {
-
-            if (this.getWorld().getWorldTime() % 60 == 0) {
-                transferRFEnergyList.clear();
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    BlockPos pos = new BlockPos(
-                            this.pos.getX() + facing.getFrontOffsetX(),
-                            this.pos.getY() + facing.getFrontOffsetY(),
-                            this.pos.getZ() + facing.getFrontOffsetZ()
-                    );
-                    TileEntity tile = this.getWorld().getTileEntity(pos);
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile instanceof IEnergyReceiver) {
-                        transferRFEnergyList.add(new TransferRFEnergy(tile, ((IEnergyReceiver) tile), facing));
-                    }
-                }
-
-            }
-            boolean refresh = false;
-            for (TransferRFEnergy rfEnergy : this.transferRFEnergyList) {
-                if (rfEnergy.getTile().isInvalid()) {
-                    refresh = true;
-                    continue;
-                }
-                extractEnergy(rfEnergy.getFacing(), rfEnergy.getSink().receiveEnergy(rfEnergy.getFacing().getOpposite(),
-                        extractEnergy(rfEnergy.getFacing(), (int) this.storage2, true), false
-                ), false);
-            }
-            if (refresh) {
-                transferRFEnergyList.clear();
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    BlockPos pos = new BlockPos(
-                            this.pos.getX() + facing.getFrontOffsetX(),
-                            this.pos.getY() + facing.getFrontOffsetY(),
-                            this.pos.getZ() + facing.getFrontOffsetZ()
-                    );
-                    TileEntity tile = this.getWorld().getTileEntity(pos);
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile instanceof IEnergyReceiver) {
-                        transferRFEnergyList.add(new TransferRFEnergy(tile, ((IEnergyReceiver) tile), facing));
-                    }
-                }
-            }
-        }
-
         if (this.active == GenerationState.NONE) {
             this.generating = 0;
             return;
-        }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-            this.inputslot.time();
         }
         if (this.wireless) {
             boolean refresh = false;
@@ -606,37 +435,12 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         }
         gainFuel();
 
-        if (this.storage2 >= this.maxStorage2) {
-            this.storage2 = this.maxStorage2;
-        } else if (this.storage2 < 0) {
-            this.storage2 = 0;
-        }
-
 
         if (this.generating > 0) {
-            if (getmodulerf) {
-                if (!rf) {
-                    if (this.storage + this.generating <= this.maxStorage) {
-                        this.storage += this.generating;
-                    } else {
-                        this.storage = this.maxStorage;
-                    }
-                } else {
-
-                    if ((this.storage2 + (this.generating * 4)) <= this.maxStorage2) {
-                        this.storage2 += (this.generating * 4);
-                    } else {
-                        this.storage2 = this.maxStorage2;
-
-                    }
-                }
-
+            if (this.storage + this.generating <= this.maxStorage) {
+                this.storage += this.generating;
             } else {
-                if (this.storage + this.generating <= this.maxStorage) {
-                    this.storage += this.generating;
-                } else {
-                    this.storage = this.maxStorage;
-                }
+                this.storage = this.maxStorage;
             }
         }
 
@@ -690,24 +494,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         return this.tier;
     }
 
-
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        if (personality) {
-            if (!(this.list_player.contains(player.getName()) || player.capabilities.isCreativeMode)) {
-                CommonProxy.sendPlayerMessage(player, Localization.translate("iu.error"));
-                return false;
-            }
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
 
     @Override
     public List<ItemStack> getWrenchDrops(
@@ -766,15 +552,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     }
 
-    public float gaugeEnergyScaled2(final float i) {
-        if ((this.storage2 * i / this.maxStorage2) > 24) {
-            return 24;
-        }
-
-        return (float) (this.storage2 * i / (this.maxStorage2));
-
-    }
-
     public List<String> getNetworkFields() {
         List<String> ret = super.getNetworkFields();
         ret.add("generating");
@@ -789,10 +566,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     @Override
     public void onNetworkEvent(EntityPlayer player, int event) {
-        if (getmodulerf) {
-            this.rf = !this.rf;
-            initiate(0);
-        }
+
     }
 
     public EnumType getType() {
@@ -881,6 +655,23 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         return this;
     }
 
+    @Override
+    public boolean hasCapability(final Capability<?> capability, final EnumFacing facing) {
+        if (capability == CapabilityEnergy.ENERGY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(final Capability<T> capability, final EnumFacing facing) {
+        if (capability == CapabilityEnergy.ENERGY) {
+            return CapabilityEnergy.ENERGY.cast(new ComponentsSolarForgeEnergy(this, true, true,
+                    this
+            ));
+        }
+        return super.getCapability(capability, facing);
+    }
 
     public enum GenerationState {
         DAY,

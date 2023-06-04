@@ -1,13 +1,15 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerHandlerHeavyOre;
@@ -21,9 +23,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -36,23 +35,18 @@ import java.util.Set;
 public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMachine
         implements IUpgradableBlock, IUpdateTick, IType {
 
-    public final double defaultEnergyConsume;
-    public final int defaultOperationLength;
-    public final int defaultTier;
-    public final double defaultEnergyStorage;
+
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final HeatComponent heat;
+    public final ComponentUpgradeSlots componentUpgrade;
+    public final ComponentProcess componentProcess;
+    public final ComponentProgress componentProgress;
     private final EnumTypeStyle enumTypeSlot;
     private final double coef;
-    public double energyConsume;
-    public int operationLength;
-    public int operationsPerTick;
     public AudioSource audioSource;
     public InvSlotRecipes inputSlotA;
     public MachineRecipe output;
-    protected short progress;
-    protected double guiProgress;
     private boolean auto;
     private int[] col;
 
@@ -68,20 +62,41 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
             EnumTypeStyle enumTypeSlot
     ) {
         super(energyPerTick * length, 1, 1);
-        this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = energyPerTick;
         this.enumTypeSlot = enumTypeSlot;
-        this.defaultOperationLength = this.operationLength = (int) (length / getSpeed());
-        this.defaultTier = aDefaultTier;
-        this.defaultEnergyStorage = energyPerTick * length;
         this.outputSlot = new InvSlotOutput(this, "output", outputSlots + 2 * enumTypeSlot.ordinal());
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
         this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
         this.heat = this.addComponent(HeatComponent
                 .asBasicSink(this, 5000));
         this.col = new int[0];
-
         this.coef = getCoef();
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
+            @Override
+            public void onLoaded() {
+                super.onLoaded();
+                this.componentProcess = ((TileEntityBaseHandlerHeavyOre) this.getParent()).componentProcess;
+
+            }
+        });
+        this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                (short) length
+        ));
+        this.componentProcess = this.addComponent(new ComponentProcess(this, (int) (length / this.getSpeed()), energyPerTick) {
+            @Override
+            public void operateOnce(final List<ItemStack> processResult) {
+                for (int i = 0; i < col.length; i++) {
+                    final Random rand = world.rand;
+                    if ((100 - col[i]) <= rand.nextInt(100)) {
+                        this.outputSlot.add(processResult.get(i));
+                    }
+                }
+                this.invSlotRecipes.consume();
+            }
+        });
+        this.componentProcess.setHasAudio(true);
+        this.componentProcess.setSlotOutput(outputSlot);
+        this.componentProcess.setInvSlotRecipes(this.inputSlotA);
+
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -89,9 +104,6 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    public EnumTypeStyle getEnumTypeSlot() {
-        return enumTypeSlot;
-    }
 
     protected double getCoef() {
         switch (this.enumTypeSlot) {
@@ -111,107 +123,6 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
         return this.enumTypeSlot;
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.auto) {
-            ret.add(new ItemStack(IUItem.autoheater));
-            this.auto = false;
-        }
-        return ret;
-    }
-
-    @Override
-    public boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
-            this.auto = true;
-            stack.shrink(1);
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("auto", this.auto);
-        nbttagcompound.setShort("progress", this.progress);
-        return nbttagcompound;
-    }
-
-    @Override
-    public void readFromNBT(final NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.auto = nbttagcompound.getBoolean("auto");
-        this.progress = nbttagcompound.getShort("progress");
-    }
-
-    public void updateEntityServer() {
-        super.updateEntityServer();
-        if (!this.inputSlotA.isEmpty() && output != null && this.outputSlot.canAdd(this.output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume && output.getRecipe().output.metadata != null) {
-
-            if (output.getRecipe().output.metadata.getShort("temperature") == 0 || output.getRecipe().output.metadata.getInteger(
-                    "temperature") > this.heat.getEnergy()) {
-                if (!(this).heat.need) {
-                    (this).heat.need = true;
-                }
-                return;
-
-            } else if ((this).heat.need) {
-                (this).heat.need = false;
-            }
-            (this).heat.storage--;
-
-            if (!this.getActive()) {
-                setActive(true);
-            }
-            if (this.progress == 0) {
-                this.initiate(0);
-            }
-            this.progress = (short) (this.progress + 1);
-            this.energy.useEnergy(energyConsume);
-            double k = this.progress;
-
-            this.guiProgress = (k / this.operationLength);
-            if (this.progress >= this.operationLength) {
-                this.guiProgress = 0;
-                operate(output);
-                this.progress = 0;
-                this.initiate(2);
-            }
-        } else {
-            if (this.progress != 0 && getActive()) {
-                this.initiate(1);
-            }
-            if (output == null) {
-                this.progress = 0;
-            }
-            if (this.getActive()) {
-                setActive(false);
-            }
-            if (this.heat.getEnergy() > 0) {
-                this.heat.useEnergy(1);
-            }
-
-        }
-
-
-        if (this.auto) {
-            if (this.heat.getEnergy() + 1 <= this.heat.getCapacity()) {
-                this.heat.addEnergy(2);
-            }
-        }
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
-
-    }
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -222,49 +133,14 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.heatmachine.info"));
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultEnergyConsume + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
         super.addInformation(stack, tooltip, advanced);
     }
 
-
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-        }
-    }
-
-    public void setOverclockRates() {
-        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
-        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
-        this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
-        int tier = this.upgradeSlot.getTier(this.defaultTier);
-        this.energy.setSinkTier(tier);
-        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
-                this.defaultEnergyStorage
-        ));
-        if (this.operationLength < 1) {
-            this.operationLength = 1;
-        }
-    }
-
-    public void operate(MachineRecipe output) {
-        for (int i = 0; i < this.operationsPerTick; i++) {
-            List<ItemStack> processResult = output.getRecipe().output.items;
-            operateOnce(processResult);
-            if (!this.inputSlotA.continue_process(this.output) || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
-                getOutput();
-                break;
-            }
-            if (this.output == null) {
-                break;
-            }
-        }
-    }
 
     public String getStartSoundFile() {
         return "Machines/handlerho.ogg";
@@ -286,14 +162,8 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
 
     protected void onLoaded() {
         super.onLoaded();
-        if (IC2.platform.isSimulating()) {
-            this.setOverclockRates();
-        }
         inputSlotA.load();
         this.getOutput();
-        if (this.output == null) {
-            (this).heat.need = false;
-        }
     }
 
     protected void onUnloaded() {
@@ -347,10 +217,6 @@ public abstract class TileEntityBaseHandlerHeavyOre extends TileEntityElectricMa
         return false;
     }
 
-
-    public double getProgress() {
-        return this.guiProgress;
-    }
 
     @Override
     public void onUpdate() {

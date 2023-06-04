@@ -72,7 +72,7 @@ public class CTAquaTransformer {
             nbt.setDouble("need", this.matter);
             final IC2RecipeInput stack = new IC2RecipeInput(this.container);
 
-            Recipes.recipes.addRecipe("aquacollector", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("aquacollector", new BaseMachineRecipe(
                     new Input(
                             stack
                     ),
@@ -137,7 +137,8 @@ public class CTAquaTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("aquacollector", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("aquacollector", getItemStack(this.output));
+
         }
 
         public String describe() {

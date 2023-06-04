@@ -139,11 +139,11 @@ public class MaceratorRecipe {
         addmacerator("oreTin", "crushedTin", 2);
         addmacerator("oreCopper", "crushedCopper", 2);
         addmacerator("oreLead", "crushedLead", 2);
-        addmacerator("crushedPurifiedGold", "dustGold", 2);
-        addmacerator("crushedPurifiedIron", "dustIron", 2);
-        addmacerator("crushedPurifiedTin", "dustTin", 2);
-        addmacerator("crushedPurifiedCopper", "dustCopper", 2);
-        addmacerator("crushedPurifiedLead", "dustLead", 2);
+        addmacerator("crushedPurifiedGold", "dustGold", 1);
+        addmacerator("crushedPurifiedIron", "dustIron", 1);
+        addmacerator("crushedPurifiedTin", "dustTin", 1);
+        addmacerator("crushedPurifiedCopper", "dustCopper", 1);
+        addmacerator("crushedPurifiedLead", "dustLead", 1);
         addmacerator(new ItemStack(Blocks.GRAVEL), new ItemStack(Items.FLINT));
         addmacerator(new ItemStack(Blocks.GLOWSTONE), new ItemStack(Items.GLOWSTONE_DUST, 4));
         addmacerator(new ItemStack(Blocks.REDSTONE_BLOCK), new ItemStack(Items.REDSTONE, 9));

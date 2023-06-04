@@ -5,7 +5,6 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.ComponentBaseEnergy;
@@ -26,7 +25,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachine implements IHasRecipe {
@@ -37,6 +35,7 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
         super(1, 300, 1, EnumDoubleElectricMachine.SUNNARIUM_PANEL);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));
+        this.componentProcess.setHasAudio(false);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -144,44 +143,6 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
 
     }
 
-    protected void updateEntityServer() {
-
-        MachineRecipe output = this.output;
-        if (output != null && this.energy.getEnergy() >= this.energyConsume && this.sunenergy.getEnergy() >= 5) {
-            if (!this.getActive()) {
-                setActive(true);
-            }
-            if (this.progress == 0) {
-                initiate(0);
-            }
-            this.progress = (short) (this.progress + 1);
-            this.energy.useEnergy(this.energyConsume);
-            this.sunenergy.useEnergy(5);
-            double k = this.progress;
-
-            this.guiProgress = (k / this.operationLength);
-            if (this.progress >= this.operationLength) {
-                this.guiProgress = 0;
-                operate(output);
-                this.progress = 0;
-                initiate(2);
-            }
-        } else {
-            if (this.progress != 0 && getActive()) {
-                initiate(1);
-            }
-            if (output == null) {
-                this.progress = 0;
-            }
-            if (this.getActive()) {
-                setActive(false);
-            }
-        }
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
-
-    }
 
     @Override
     protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
@@ -220,11 +181,6 @@ public class TileEntitySunnariumPanelMaker extends TileEntityDoubleElectricMachi
 
     }
 
-    @Override
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
-    }
 
     public String getStartSoundFile() {
         return null;

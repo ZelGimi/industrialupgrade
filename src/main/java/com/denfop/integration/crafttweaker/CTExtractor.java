@@ -21,7 +21,7 @@ public class CTExtractor {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "extractor",
                 new BaseMachineRecipe(
                         new Input(
@@ -51,7 +51,8 @@ public class CTExtractor {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("extractor", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("extractor", CraftTweakerMC.getItemStack(output));
+
         }
 
         protected String getRecipeInfo() {

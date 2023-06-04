@@ -106,7 +106,7 @@ public class CTMineralSeparator {
             } else {
                 second1 = input.forStack(stack);
             }
-            Recipes.recipes.addRecipe(
+            Recipes.recipes.addAdderRecipe(
                     "handlerho",
                     new BaseMachineRecipe(
                             new Input(
@@ -183,9 +183,11 @@ public class CTMineralSeparator {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("handlerho", Recipes.recipes.getRecipeOutput("handlerho", false,
+            Recipes.recipes.addRemoveRecipe("converter", Recipes.recipes.getRecipeOutput("handlerho", false,
                     getItemStack(this.input)
-            ).getOutput());
+            ).getOutput().items.get(0));
+
+
         }
 
         public String describe() {

@@ -34,12 +34,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @NotClassic
 public class TileEntityBaseReplicator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock, IType,

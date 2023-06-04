@@ -2,7 +2,14 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.base.*;
+import com.denfop.tiles.base.TileEntityAdvPump;
+import com.denfop.tiles.base.TileEntityAnalyzer;
+import com.denfop.tiles.base.TileEntityCombinerMatter;
+import com.denfop.tiles.base.TileEntityElectrolyzer;
+import com.denfop.tiles.base.TileEntityFisher;
+import com.denfop.tiles.base.TileEntityImpPump;
+import com.denfop.tiles.base.TileEntityObsidianGenerator;
+import com.denfop.tiles.base.TileEntityPainting;
 import com.denfop.tiles.mechanism.TileEntityPlasticCreator;
 import com.denfop.tiles.mechanism.TileEntityPlasticPlateCreator;
 import com.denfop.tiles.mechanism.exp.TileEntityStorageExp;

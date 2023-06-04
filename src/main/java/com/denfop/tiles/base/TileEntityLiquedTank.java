@@ -202,7 +202,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         }
         if (this.needsFluid()) {
             output = new MutableObject<>();
-            if (this.containerslot1.transferToTank(
+            if (this.fluidTank.getFluidAmount() + 1000 <= this.fluidTank.getCapacity() && this.containerslot1.transferToTank(
                     this.fluidTank,
                     output,
                     true

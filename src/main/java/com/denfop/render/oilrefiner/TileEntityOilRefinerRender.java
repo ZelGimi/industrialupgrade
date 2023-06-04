@@ -36,24 +36,24 @@ public class TileEntityOilRefinerRender extends TileEntitySpecialRenderer<TileEn
     static final IModelCustom model3 = AdvancedModelLoader
             .loadModel(new ResourceLocation(Constants.TEXTURES, "models/oil2.obj"));
 
-    public void getRotate( TileEntityOilRefiner tile){
+    public void getRotate(TileEntityOilRefiner tile) {
 
-        if(tile.getFacing() == EnumFacing.SOUTH){
+        if (tile.getFacing() == EnumFacing.SOUTH) {
             GL11.glRotatef(180F, 0.0F, 1F, 0F);
-            GL11.glTranslatef(0.19F, 0,-0.05f);
+            GL11.glTranslatef(0.19F, 0, -0.05f);
             return;
         }
-        if(tile.getFacing() == EnumFacing.WEST){
+        if (tile.getFacing() == EnumFacing.WEST) {
             GL11.glRotatef(90F, 0.0F, 1F, 0F);
-            GL11.glTranslatef(0.08F, 0,-0.15f);
+            GL11.glTranslatef(0.08F, 0, -0.15f);
             return;
         }
-        if(tile.getFacing() == EnumFacing.EAST){
+        if (tile.getFacing() == EnumFacing.EAST) {
             GL11.glRotatef(-90F, 0.0F, 1F, 0F);
-            GL11.glTranslatef(0.1F, 0,0.13f);
-            return;
+            GL11.glTranslatef(0.1F, 0, 0.13f);
         }
     }
+
     public void render(
             TileEntityOilRefiner tile,
             double x,

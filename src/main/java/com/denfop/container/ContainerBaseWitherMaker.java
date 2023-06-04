@@ -53,7 +53,6 @@ public class ContainerBaseWitherMaker
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
         ret.add("guiChargeLevel");
         ret.add("tier");
         return ret;

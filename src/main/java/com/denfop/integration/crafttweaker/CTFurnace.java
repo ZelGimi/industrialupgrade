@@ -29,7 +29,7 @@ public class CTFurnace {
 
         nbt.setFloat("experience", experience);
 
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "furnace",
                 new BaseMachineRecipe(
                         new Input(
