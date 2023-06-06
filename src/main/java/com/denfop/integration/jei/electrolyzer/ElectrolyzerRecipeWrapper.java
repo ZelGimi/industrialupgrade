@@ -1,9 +1,11 @@
 package com.denfop.integration.jei.electrolyzer;
 
+import com.denfop.IUItem;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -40,7 +42,12 @@ public class ElectrolyzerRecipeWrapper implements IRecipeWrapper {
         stack.add(this.inputstack);
         return Collections.singletonList(stack);
     }
-
+    public List<ItemStack> getItemInputs() {
+        List<ItemStack> stack = new ArrayList<>();
+        stack.add(new ItemStack(IUItem.cathode));
+        stack.add(new ItemStack(IUItem.anode));
+        return stack;
+    }
     public List<FluidStack> getOutputs() {
         List<FluidStack> lst = new ArrayList<>();
         lst.add(this.outputstack);
@@ -52,6 +59,7 @@ public class ElectrolyzerRecipeWrapper implements IRecipeWrapper {
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputLists(VanillaTypes.FLUID, this.getInputs());
         ingredients.setOutputs(VanillaTypes.FLUID, this.getOutputs());
+        ingredients.setInputs(VanillaTypes.ITEM, this.getItemInputs());
     }
 
 

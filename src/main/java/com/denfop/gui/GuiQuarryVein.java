@@ -162,7 +162,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        String name = Localization.translate("iu.quarry_vein_item.quarry_vein_item");
+        String name = Localization.translate(this.container.base.getName());
         switch (this.container.base.level) {
             case 2:
                 name = TextFormatting.GOLD + Localization.translate("iu.advanced_name") + " " + name.toLowerCase();

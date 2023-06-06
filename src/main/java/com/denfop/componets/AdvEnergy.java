@@ -160,24 +160,7 @@ public class AdvEnergy extends AbstractComponent {
         }
     }
 
-    public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
-        return Collections.singleton(CapabilityEnergy.ENERGY);
-    }
 
-    public <T> T getCapability(Capability<T> cap, EnumFacing side) {
-
-        boolean isSource = this.sourceDirections.contains(side);
-        boolean isSink = this.sinkDirections.contains(side);
-
-        if (this.delegate == null) {
-            this.createDelegate();
-        }
-
-        return cap == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(new ComponentsForgeEnergy(this, isSink, isSource,
-                this.delegate
-        )) : super.getCapability(cap, side);
-
-    }
 
     @Override
     public void updateEntityServer() {
@@ -511,26 +494,6 @@ public class AdvEnergy extends AbstractComponent {
         }
 
 
-    }
-
-    public void loadFast() {
-        if (this.delegate != null) {
-
-
-            assert !this.parent.getWorld().isRemote;
-
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
-        }
-    }
-
-    public void unloadFast() {
-        if (this.delegate != null) {
-
-
-            assert !this.parent.getWorld().isRemote;
-
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.parent.getWorld(), this.delegate));
-        }
     }
 
     public Set<EnumFacing> getSourceDirs() {

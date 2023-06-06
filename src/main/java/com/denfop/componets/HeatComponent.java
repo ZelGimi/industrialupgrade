@@ -38,6 +38,7 @@ public class HeatComponent extends AbstractComponent {
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
     public final boolean fullEnergy;
+    private final double defaultCapacity;
     public double capacity;
     public double storage;
     public int sinkTier;
@@ -90,6 +91,7 @@ public class HeatComponent extends AbstractComponent {
         this.sourceDirections = sourceDirections;
         this.fullEnergy = fullEnergy;
         this.world = parent.getWorld();
+        this.defaultCapacity = capacity;
         this.need = true;
         this.allow = false;
         this.coef = 0;
@@ -138,7 +140,8 @@ public class HeatComponent extends AbstractComponent {
 
     public void onLoaded() {
         assert this.delegate == null;
-
+        if(this.capacity < this.defaultCapacity)
+            this.capacity = this.defaultCapacity;
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
                 if (debugLoad) {

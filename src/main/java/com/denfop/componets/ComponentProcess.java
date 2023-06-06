@@ -47,8 +47,6 @@ public class ComponentProcess extends AbstractComponent {
 
     public void setOverclockRates(InvSlotUpgrade invSlotUpgrade) {
 
-        final int previousProgress = this.componentProgress != null ?
-                this.componentProgress.getProgress() / this.operationLength : 0;
         this.operationsPerTick = invSlotUpgrade.getOperationsPerTick1(this.defaultOperationLength);
         this.operationLength = invSlotUpgrade.getOperationLength1(this.defaultOperationLength);
         this.energyConsume = invSlotUpgrade.getEnergyDemand1(this.defaultEnergyConsume);
@@ -56,9 +54,7 @@ public class ComponentProcess extends AbstractComponent {
         if (this.operationLength < 1) {
             this.operationLength = 1;
         }
-        if (this.componentProgress != null) {
-            this.componentProgress.setProgress((short) ((int) Math.floor(previousProgress * (double) this.operationLength)));
-        }
+
     }
 
     @Override

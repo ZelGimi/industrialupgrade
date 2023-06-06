@@ -30,7 +30,6 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public final int defaultOperationLength;
     private final int sizeWorkingSlot;
     private final short[] progress;
-    private final double[] previousProgress;
     private final double[] guiProgress;
     private final TileEntityMultiMachine multimachine;
     private final int defaultTier;
@@ -76,7 +75,6 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.guiProgress = new double[sizeWorkingSlot];
         double coefenergy = getcoef();
         double speed = getspeed();
-        this.previousProgress = new double[sizeWorkingSlot];
         this.mode = 0;
         this.defaultEnergyConsume = this.energyConsume = Math.max((int) (enumMultiMachine.usagePerTick * coefenergy), 1);
         this.defaultOperationLength = this.operationLength = Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
@@ -92,10 +90,6 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.exp = parent.getComp(ComponentBaseEnergy.class);
         this.heat = parent.getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
-    }
-
-    public EnumMultiMachine getEnumMultiMachine() {
-        return enumMultiMachine;
     }
 
     public MachineRecipe getRecipeOutput(int slotId) {
@@ -455,10 +449,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
     public void setOverclockRates() {
 
-        for (int i = 0; i < this.previousProgress.length; i++) {
-            this.previousProgress[i] = this.progress[i] * 1D / this.operationLength;
 
-        }
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
 
@@ -480,9 +471,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
-        for (int i = 0; i < this.previousProgress.length; i++) {
-            this.progress[i] = (short) (this.previousProgress[i] * this.operationLength);
-        }
+
     }
 
     public double getProgress(int slotId) {

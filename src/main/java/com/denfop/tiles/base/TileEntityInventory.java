@@ -118,7 +118,13 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         this.updateClientList.forEach(AbstractComponent::updateEntityClient);
 
     }
-
+    public boolean canUpgradeBlock(){
+        for(AbstractComponent abstractComponent : this.componentList){
+            if(abstractComponent.canUpgradeBlock())
+                return true;
+        }
+        return false;
+    }
     @Override
     protected void onUnloaded() {
         this.componentList.forEach(AbstractComponent::onUnloaded);

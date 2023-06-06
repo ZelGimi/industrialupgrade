@@ -1,7 +1,7 @@
 {
   "display" : {
     "icon" : {
-      "item" : "industrialupgrade:refiner_item"
+      "item" : "industrialupgrade:refiner"
     },
     "title" : {
       "translate" : "achievement.oil_refinery"
@@ -17,7 +17,7 @@
       "conditions" : {
         "items" : [
           {
-            "item" : "industrialupgrade:refiner_item"
+            "item" : "industrialupgrade:refiner"
           }
         ]
       }

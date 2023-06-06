@@ -34,12 +34,12 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         IUpgradableBlock {
 
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(
-            -0.28125,
+            -0.5625,
             0.0D,
-            -0.28125,
-            1.28125,
+            -0.5625,
+            1.5625,
             1.5D,
-            1.28125
+            1.5625
     ));
     public final InvSlotSolidMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;

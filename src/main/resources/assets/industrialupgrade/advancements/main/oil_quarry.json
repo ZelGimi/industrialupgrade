@@ -1,7 +1,7 @@
 {
   "display" : {
     "icon" : {
-      "item" : "industrialupgrade:quarry_vein_item"
+      "item" : "industrialupgrade:quarry_vein"
     },
     "title" : {
       "translate" : "achievement.oil_quarry"
@@ -17,7 +17,7 @@
       "conditions" : {
         "items" : [
           {
-            "item" : "industrialupgrade:quarry_vein_item"
+            "item" : "industrialupgrade:quarry_vein"
           }
         ]
       }

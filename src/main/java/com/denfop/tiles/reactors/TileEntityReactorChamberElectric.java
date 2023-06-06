@@ -32,22 +32,30 @@ public class TileEntityReactorChamberElectric extends TileEntityBlock implements
 
     private TileEntityNuclearReactorElectric reactor;
     private long lastReactorUpdate;
+    private boolean load = false;
 
 
     public TileEntityReactorChamberElectric() {
 
     }
 
-    protected void onLoaded() {
-        super.onLoaded();
-        this.onNeighborChange(this.getBlockType().getBlockState().getBlock(), this.getPos());
-        if (this.reactor != null) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this.reactor, this));
+    @Override
+    protected void updateEntityServer() {
+        super.updateEntityServer();
+        if(!load){
+            load = true;
+            this.onNeighborChange(this.getBlockType().getBlockState().getBlock(), this.getPos());
+            if (this.reactor != null) {
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this.reactor, this));
 
+            }
         }
     }
-
-
+    @Override
+    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
+        super.onPlaced(stack, placer, facing);
+        this.onNeighborChange(this.getBlockType().getBlockState().getBlock(), this.getPos());
+    }
     @SideOnly(Side.CLIENT)
     protected void updateEntityClient() {
         super.updateEntityClient();
@@ -78,11 +86,7 @@ public class TileEntityReactorChamberElectric extends TileEntityBlock implements
         }
     }
 
-    @Override
-    public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
-        super.onPlaced(stack, placer, facing);
 
-    }
 
 
     @Nonnull

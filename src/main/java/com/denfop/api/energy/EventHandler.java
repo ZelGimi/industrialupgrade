@@ -80,7 +80,7 @@ public class EventHandler {
             final BlockPos pos = ((BasicSink) tile).getPosition();
             energyTile = EnergyNetGlobal.instance.getSubTile(event.getWorld(), pos);
         }
-        if (energyTile != EnergyNetGlobal.EMPTY && tile != null) {
+        if (energyTile != EnergyNetGlobal.EMPTY && energyTile != null) {
             EnergyNetLocal local = EnergyNetGlobal.getForWorld(event.getWorld());
             if (local != null) {
                 local.removeTile(energyTile);

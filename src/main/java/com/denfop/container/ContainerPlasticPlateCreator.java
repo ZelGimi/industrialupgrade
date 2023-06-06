@@ -43,7 +43,6 @@ public class ContainerPlasticPlateCreator extends ContainerFullInv<TileEntityPla
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
         ret.add("fluidTank");
         ret.add("energy");
         ret.add("sound");

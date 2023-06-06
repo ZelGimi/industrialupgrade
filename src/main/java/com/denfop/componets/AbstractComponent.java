@@ -69,7 +69,9 @@ public abstract class AbstractComponent {
     public void ActionPurifier() {
 
     }
-
+    public boolean canUpgradeBlock(){
+        return false;
+    }
     public void markDirty() {
 
     }

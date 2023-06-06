@@ -655,23 +655,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         return this;
     }
 
-    @Override
-    public boolean hasCapability(final Capability<?> capability, final EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
 
-    @Override
-    public <T> T getCapability(final Capability<T> capability, final EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(new ComponentsSolarForgeEnergy(this, true, true,
-                    this
-            ));
-        }
-        return super.getCapability(capability, facing);
-    }
 
     public enum GenerationState {
         DAY,
