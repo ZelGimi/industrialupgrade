@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/mov_charge_eu"
-	}
+  "parent" : "ic2:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/mov_charge_eu"
+  }
 }

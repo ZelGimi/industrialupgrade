@@ -1,23 +1,21 @@
 package com.denfop.tiles.mechanism.generator.things.fluid;
 
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerHeliumGenerator;
 import com.denfop.gui.GuiHeliumGenerator;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
 import ic2.core.profile.NotClassic;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,14 +49,14 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
         this.containerslot = new InvSlotConsumableLiquidByList(
                 this,
                 "container",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.TOP,
+                InvSlot.InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidHelium.getInstance()
         );
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.Access.O, InvSide.ANY,
+        this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.Access.O, InvSlot.InvSide.ANY,
                 Fluids.fluidPredicate(FluidName.fluidHelium.getInstance())
         );
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
@@ -91,7 +89,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
 
     protected void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -113,7 +111,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
             }
 
             this.lastEnergy = this.energy.getEnergy();
-            if (needsInvUpdate && this.upgradeSlot.tickNoMark()) {
+            if (this.upgradeSlot.tickNoMark() && needsInvUpdate) {
                 setUpgradestat();
             }
         } else {
@@ -147,7 +145,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
         return "" + p + "%";
     }
 
-    public ContainerBase<TileEntityHeliumGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerHeliumGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerHeliumGenerator(entityPlayer, this);
     }
 
@@ -159,9 +157,9 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
     public void onGuiClosed(EntityPlayer player) {
     }
 
-    public List<String> getNetworkedFields() {
+    public List<String> getNetworkFields() {
 
-        return super.getNetworkedFields();
+        return super.getNetworkFields();
     }
 
     public void onNetworkUpdate(String field) {

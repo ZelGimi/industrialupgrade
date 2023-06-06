@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/heat_limiter_side",
+    "down" : "industrialupgrade:blocks/welding_button",
+    "up" : "industrialupgrade:blocks/heat_limiter_top",
+    "north" : "industrialupgrade:blocks/heat_limiter_main",
+    "east" : "industrialupgrade:blocks/heat_limiter_side",
+    "south" : "industrialupgrade:blocks/heat_limiter_south",
+    "west" : "industrialupgrade:blocks/heat_limiter_side"
+  }
+}

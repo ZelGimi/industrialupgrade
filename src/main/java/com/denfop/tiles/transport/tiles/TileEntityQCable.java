@@ -1,15 +1,16 @@
 package com.denfop.tiles.transport.tiles;
 
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.qe.IQEAcceptor;
-import com.denfop.api.qe.IQEConductor;
-import com.denfop.api.qe.IQEEmitter;
-import com.denfop.api.qe.IQETile;
-import com.denfop.api.qe.QENet;
-import com.denfop.api.qe.event.QETileLoadEvent;
-import com.denfop.api.qe.event.QETileUnloadEvent;
-import com.denfop.componets.QEComponent;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.sytem.ITile;
 import com.denfop.tiles.transport.CableFoam;
 import com.denfop.tiles.transport.types.QEType;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -31,6 +32,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -49,9 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TileEntityQCable extends TileEntityBlock implements IQEConductor, INetworkTileEntityEventListener {
+public class TileEntityQCable extends TileEntityBlock implements IConductor, INetworkTileEntityEventListener {
 
-    public static final float insulationThickness = 0.0625F;
     public static final IUnlistedProperty<TileEntityQCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
             "renderstate",
             TileEntityQCable.CableRenderState.class
@@ -79,12 +80,17 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
         this.continuousUpdate = null;
         this.obscuration = this.addComponent(new Obscuration(
                 this,
-                () -> IC2.network.get(true).updateTileEntityField(TileEntityQCable.this, "obscuration")
+                () -> IUCore.network.get(true).updateTileEntityField(TileEntityQCable.this, "obscuration")
         ));
     }
 
     public static TileEntityQCable delegate(QEType cableType, int insulation) {
         return new TileEntityQCable(cableType, insulation);
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -109,7 +115,7 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new QETileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
             if (this.foam == CableFoam.Soft) {
@@ -121,7 +127,7 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new QETileUnloadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
             this.addedToEnergyNet = false;
         }
 
@@ -261,16 +267,15 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            IQETile tile = QENet.instance.getSubTile(world, this.pos.offset(dir));
+            ITile tile = EnergyBase.QE.getSubTile(world, this.pos.offset(dir));
 
-            if ((tile instanceof IQEAcceptor && ((IQEAcceptor) tile).acceptsQEFrom(
+            if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof IQEEmitter && ((IQEEmitter) tile).emitsQETo(
+            ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof TileEntityBlock && ((TileEntityBlock) tile).hasComponent(QEComponent.class)) && this.canInteractWith(
-            )) {
+            ))) {
                 newConnectivity = (byte) (newConnectivity | mask);
             }
 
@@ -279,7 +284,7 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -333,7 +338,7 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
 
             --this.insulation;
             if (!this.getWorld().isRemote) {
-                IC2.network.get(true).updateTileEntityField(this, "insulation");
+                IUCore.network.get(true).updateTileEntityField(this, "insulation");
             }
 
         }
@@ -343,11 +348,11 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
         return false;
     }
 
-    public boolean acceptsQEFrom(IQEEmitter emitter, EnumFacing direction) {
+    public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
         return this.canInteractWith();
     }
 
-    public boolean emitsQETo(IQEAcceptor receiver, EnumFacing direction) {
+    public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
         return this.canInteractWith();
     }
 
@@ -356,31 +361,31 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
         return true;
     }
 
-    public double getConductionLoss() {
+    public double getConductionLoss(EnergyType type) {
         return this.cableType.loss;
     }
 
-    public double getInsulationEnergyAbsorption() {
+    public double getInsulationEnergyAbsorption(EnergyType type) {
 
         return 2.147483647E9D;
 
     }
 
-    public double getInsulationBreakdownEnergy() {
+    public double getInsulationBreakdownEnergy(EnergyType type) {
         return 9001.0D;
     }
 
-    public double getConductorBreakdownQuantumEnergy() {
+    public double getConductorBreakdownEnergy(EnergyType type) {
         return this.cableType.capacity + 1;
     }
 
-    public void removeInsulation() {
+    public void removeInsulation(EnergyType type) {
         this.tryRemoveInsulation(false);
     }
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
     @Override
@@ -388,6 +393,20 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
         this.updateConnectivity();
     }
 
+    @Override
+    public EnergyType getEnergyType() {
+        return EnergyType.QUANTUM;
+    }
+
+    @Override
+    public boolean hasEnergies() {
+        return false;
+    }
+
+    @Override
+    public List<EnergyType> getEnergies() {
+        return null;
+    }
 
     public List<String> getNetworkedFields() {
         List<String> ret = new ArrayList<>();
@@ -477,7 +496,7 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
                 }
 
                 if (!duringLoad) {
-                    IC2.network.get(true).updateTileEntityField(this, "foam");
+                    IUCore.network.get(true).updateTileEntityField(this, "foam");
                     world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
                     this.markDirty();
                 }
@@ -496,6 +515,11 @@ public class TileEntityQCable extends TileEntityBlock implements IQEConductor, I
                 this.connectivity,
                 this.getActive()
         );
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

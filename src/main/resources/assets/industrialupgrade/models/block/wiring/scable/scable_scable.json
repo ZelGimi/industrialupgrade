@@ -1,6 +1,6 @@
 {
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "industrialupgrade:blocks/wiring/scable/scable_scable"
-	}
+  "parent" : "block/cube_all",
+  "textures" : {
+    "all" : "industrialupgrade:blocks/wiring/scable/scable_scable"
+  }
 }

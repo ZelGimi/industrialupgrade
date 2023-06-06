@@ -1,7 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.solarium_storage.TileEntitySolariumStorage;
-import ic2.core.ContainerFullInv;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerSolariumStorage extends ContainerFullInv<TileEntitySolariumStorage> {

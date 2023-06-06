@@ -1,5 +1,6 @@
 package com.denfop.tiles.base;
 
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.AdvEnergy;
@@ -7,7 +8,7 @@ import com.denfop.container.ContainerDigger;
 import com.denfop.gui.GuiDigger;
 import com.denfop.invslot.InvSlotDigger;
 import com.denfop.invslot.InvSlotInput;
-import ic2.core.IHasGui;
+import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,13 +73,18 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
                 }
                 if (this.energy.canUseEnergy(this.consume) && this.outputSlot.canAdd(baseMachineRecipe1.getOutput().items)) {
                     this.energy.useEnergy(this.consume);
-                    this.outputSlot.add(baseMachineRecipe1.getOutput().items);
+                    for (ItemStack stack : baseMachineRecipe1.getOutput().items) {
+                        this.outputSlot.add(stack);
+                    }
                     this.inputslot.get(i).shrink(1);
                     if (this.inputslot.get(i).isEmpty()) {
                         baseMachineRecipe[i] = null;
                     }
                 }
             }
+        }
+        if (this.world.getWorldTime() % 20 == 0 && !this.outputSlot.isEmpty()) {
+            ModUtils.tick(this.outputSlot, this);
         }
     }
 

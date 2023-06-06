@@ -1,7 +1,7 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -11,18 +11,15 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBaseMolecular;
 import com.denfop.gui.GuiMolecularTransformer;
-import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.item.type.MiscResourceType;
 import ic2.core.item.type.NuclearResourceType;
@@ -44,12 +41,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class TileEntityMolecularTransformer extends TileEntityElectricMachine implements
-        IEnergyReceiver, INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
+        INetworkClientTileEntityEventListener, IUpdateTick, IHasRecipe, IIsMolecular {
 
     public boolean queue;
     public byte redstoneMode;
     public int operationLength;
-    public boolean rf = false;
     public int operationsPerTick;
     public AudioSource audioSource;
     public InvSlotRecipes inputSlot;
@@ -60,8 +56,8 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     protected double progress;
     protected double guiProgress;
     protected double size_recipe = 0;
+    protected ItemStack output_stack = new ItemStack(Items.AIR);
     private boolean need = false;
-    protected ItemStack output_stack = new ItemStack( Items.AIR);
 
     public TileEntityMolecularTransformer() {
         super(0, 14, 1);
@@ -72,10 +68,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         this.inputSlot = new InvSlotRecipes(this, "molecular", this);
         this.output = null;
         Recipes.recipes.addInitRecipes(this);
-    }
-
-    public ItemStack getOutput_stack() {
-        return output_stack;
     }
 
     public static void addrecipe(ItemStack stack, ItemStack stack1, double energy) {
@@ -97,6 +89,10 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 new BaseMachineRecipe(new Input(input.forOreDict(stack)), new RecipeOutput(nbt, stack1))
         );
 
+    }
+
+    public ItemStack getOutput_stack() {
+        return output_stack;
     }
 
     public void init() {
@@ -173,14 +169,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.rf) {
-            ret.add(new ItemStack(IUItem.module7, 1, 4));
-            this.rf = false;
-        }
-        return ret;
-    }
 
     public List<Double> getTime(final double energy) {
         final double dif = this.differenceenergy;
@@ -194,7 +182,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     }
 
     @Override
-    public ContainerBase<? extends TileEntityMolecularTransformer> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseMolecular getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseMolecular(entityPlayer, this);
     }
 
@@ -214,7 +202,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
 
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -222,18 +210,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             final float hitY,
             final float hitZ
     ) {
-        if (player.getHeldItem(hand).getItem() instanceof ItemAdditionModule && player.getHeldItem(hand).getItemDamage() == 4) {
-            if (!this.rf) {
-                this.rf = true;
-                player.getHeldItem(hand).setCount(player.getHeldItem(hand).getCount() - 1);
-                return true;
-            }
-        }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("guiProgress");
         ret.add("queue");
         ret.add("redstoneMode");
@@ -258,7 +239,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         this.redstoneMode = nbttagcompound.getByte("redstoneMode");
 
         this.progress = nbttagcompound.getDouble("progress");
-        this.rf = nbttagcompound.getBoolean("rf");
 
     }
 
@@ -267,7 +247,6 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         nbttagcompound.setByte("redstoneMode", this.redstoneMode);
         nbttagcompound.setBoolean("queue", this.queue);
         nbttagcompound.setDouble("progress", this.progress);
-        nbttagcompound.setBoolean("rf", this.rf);
         return nbttagcompound;
 
     }
@@ -287,7 +266,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             if (this.redstoneMode >= 8) {
                 this.redstoneMode = 0;
             }
-            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
+            IUCore.network.get(true).updateTileEntityField(this, "redstoneMode");
         }
         if (event == 1) {
             this.queue = !this.queue;
@@ -355,7 +334,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         if (IC2.platform.isSimulating()) {
             inputSlot.load();
             this.setOverclockRates();
-            IC2.network.get(true).updateTileEntityField(this, "redstoneMode");
+            IUCore.network.get(true).updateTileEntityField(this, "redstoneMode");
 
         }
 
@@ -408,7 +387,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 this.perenergy = this.energy.getEnergy();
                 if (!this.getActive()) {
                     if (this.world.provider.getWorldTime() % 2 == 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                     }
                     setActive(true);
                     setOverclockRates();
@@ -433,7 +412,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
             } else {
                 if (this.energy.getEnergy() != 0 && getActive()) {
                     if (this.world.provider.getWorldTime() % 2 == 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                        IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                     }
                 }
                 this.energy.useEnergy(this.energy.getEnergy());
@@ -447,7 +426,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
                 this.perenergy = this.energy.getEnergy();
                 if (!this.getActive()) {
                     if (this.world.provider.getWorldTime() % 2 == 0) {
-                        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                     }
                     setActive(true);
                     setOverclockRates();
@@ -505,10 +484,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     public MachineRecipe getOutput() {
 
         this.output = this.inputSlot.process();
-        if(this.output != null){
+        if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         return this.output;
     }
@@ -518,43 +498,8 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     }
 
 
-    @Override
-    public int receiveEnergy(final EnumFacing enumFacing, final int i, final boolean b) {
-        if (this.rf) {
-            return receiveEnergy(i, b);
-        } else {
-            return 0;
-        }
-    }
-
-    public int receiveEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(
-                ((IEnergySink) this.energy.getDelegate()).getDemandedEnergy() * Config.coefficientrf,
-                Math.min(EnergyNet.instance.getPowerFromTier(14) * Config.coefficientrf, paramInt)
-        );
-        if (!paramBoolean) {
-            this.energy.addEnergy(i * 1F / Config.coefficientrf);
-        }
-        return i;
-    }
-
     public String getStartSoundFile() {
         return "Machines/molecular.ogg";
-    }
-
-    @Override
-    public int getEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.energy.getEnergy();
-    }
-
-    @Override
-    public int getMaxEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.energy.getCapacity();
-    }
-
-    @Override
-    public boolean canConnectEnergy(final EnumFacing enumFacing) {
-        return this.rf;
     }
 
     @Override
@@ -580,10 +525,11 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.output = output;
-        if(this.output != null){
+        if (this.output != null) {
             output_stack = this.output.getRecipe().output.items.get(0);
-         }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
 
         this.setOverclockRates();

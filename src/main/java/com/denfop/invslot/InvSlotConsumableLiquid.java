@@ -1,9 +1,8 @@
 package com.denfop.invslot;
 
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.tiles.base.IInventorySlotHolder;
 import ic2.api.util.FluidContainerOutputMode;
-import ic2.core.block.IInventorySlotHolder;
-import ic2.core.block.invslot.InvSlotConsumable;
 import ic2.core.util.LiquidUtil;
 import ic2.core.util.LiquidUtil.FluidOperationResult;
 import ic2.core.util.StackUtil;
@@ -20,7 +19,7 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
     private InvSlotConsumableLiquid.OpType opType;
 
     public InvSlotConsumableLiquid(IInventorySlotHolder<?> base1, String name1, int count) {
-        this(base1, name1, Access.I, count, InvSide.TOP, InvSlotConsumableLiquid.OpType.Drain);
+        this(base1, name1, Access.I, count, InvSide.ANY, InvSlotConsumableLiquid.OpType.Drain);
     }
 
     public InvSlotConsumableLiquid(
@@ -35,7 +34,7 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
         this.opType = opType1;
     }
 
-    public boolean accepts(ItemStack stack) {
+    public boolean accepts(ItemStack stack, final int index) {
         if (StackUtil.isEmpty(stack)) {
             return false;
         } else if (!LiquidUtil.isFluidContainer(stack)) {
@@ -64,6 +63,14 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
                     this.getPossibleFluids()
             );
         }
+    }
+
+    public OpType getOpType() {
+        return opType;
+    }
+
+    public void setOpType(InvSlotConsumableLiquid.OpType opType1) {
+        this.opType = opType1;
     }
 
     public FluidStack drain(Fluid fluid, int maxAmount, MutableObject<ItemStack> output, boolean simulate) {
@@ -154,6 +161,9 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
     }
 
     public boolean transferFromTank(IFluidTank tank, MutableObject<ItemStack> output, boolean simulate) {
+        if (this.isEmpty()) {
+            return false;
+        }
         FluidStack tankFluid = tank.drain(tank.getFluidAmount(), false);
         if (tankFluid != null && tankFluid.amount > 0) {
             int amount = this.fill(tankFluid, output, simulate);
@@ -208,10 +218,6 @@ public class InvSlotConsumableLiquid extends InvSlotConsumable {
         } else {
             return false;
         }
-    }
-
-    public void setOpType(InvSlotConsumableLiquid.OpType opType1) {
-        this.opType = opType1;
     }
 
     protected boolean acceptsLiquid(Fluid fluid) {

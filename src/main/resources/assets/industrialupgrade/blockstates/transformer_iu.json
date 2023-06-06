@@ -1,77 +1,83 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "type": {
-	  "umv": {
-        "model": "industrialupgrade:basemachine/umv"
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "umv" : {
+        "model" : "industrialupgrade:basemachine/umv"
       },
-	  "umv_active": {
-        "model": "industrialupgrade:basemachine/umv_active"
+      "umv_active" : {
+        "model" : "industrialupgrade:basemachine/umv_active"
       },
-	  "uhv": {
-        "model": "industrialupgrade:basemachine/uhv"
+      "uhv" : {
+        "model" : "industrialupgrade:basemachine/uhv"
       },
-	  "uhv_active": {
-        "model": "industrialupgrade:basemachine/uhv_active"
+      "uhv_active" : {
+        "model" : "industrialupgrade:basemachine/uhv_active"
       },
-	  "uev": {
-        "model": "industrialupgrade:basemachine/uev"
+      "uev" : {
+        "model" : "industrialupgrade:basemachine/uev"
       },
-	  "uev_active": {
-        "model": "industrialupgrade:basemachine/uev_active"
+      "uev_active" : {
+        "model" : "industrialupgrade:basemachine/uev_active"
       },
-	   "umhv": {
-        "model": "industrialupgrade:basemachine/umhv"
+      "umhv" : {
+        "model" : "industrialupgrade:basemachine/umhv"
       },
-	  "umhv_active": {
-        "model": "industrialupgrade:basemachine/umhv_active"
+      "umhv_active" : {
+        "model" : "industrialupgrade:basemachine/umhv_active"
       },
-	   "umev_active": {
-        "model": "industrialupgrade:basemachine/umev_active"
+      "umev_active" : {
+        "model" : "industrialupgrade:basemachine/umev_active"
       },
-	  "umev": {
-        "model": "industrialupgrade:basemachine/umev"
+      "umev" : {
+        "model" : "industrialupgrade:basemachine/umev"
       },
-	  "uhev": {
-        "model": "industrialupgrade:basemachine/uhev"
+      "uhev" : {
+        "model" : "industrialupgrade:basemachine/uhev"
       },
-	  "uhev_active": {
-        "model": "industrialupgrade:basemachine/uhev_active"
+      "uhev_active" : {
+        "model" : "industrialupgrade:basemachine/uhev_active"
       },
-	  "heev": {
-        "model": "industrialupgrade:basemachine/heev"
+      "heev" : {
+        "model" : "industrialupgrade:basemachine/heev"
       },
-	  "heev_active": {
-        "model": "industrialupgrade:basemachine/heev_active"
+      "heev_active" : {
+        "model" : "industrialupgrade:basemachine/heev_active"
       },
-	  "lv": { "model": "ic2:wiring/transformer/lv_transformer" },
-			"mv": { "model": "ic2:wiring/transformer/mv_transformer" },
-			"hv": { "model": "ic2:wiring/transformer/hv_transformer" },
-			"ev": { "model": "ic2:wiring/transformer/ev_transformer" }
-	  
-	  
-    },
-    "facing": {
-      "down": {
-        "x": 90
+      "lv" : {
+        "model" : "ic2:wiring/transformer/lv_transformer"
       },
-      "up": {
-        "x": 270
+      "mv" : {
+        "model" : "ic2:wiring/transformer/mv_transformer"
       },
-      "north": {
-        "transform": "forge:default-block"
+      "hv" : {
+        "model" : "ic2:wiring/transformer/hv_transformer"
       },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      },
-      "east": {
-        "y": 90
+      "ev" : {
+        "model" : "ic2:wiring/transformer/ev_transformer"
       }
     },
-    "inventory": [
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
       {}
     ]
   }

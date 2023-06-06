@@ -39,7 +39,7 @@ public class GuiSunnariumMaker extends GuiIU<ContainerSunnariumMaker> {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (17 * this.container.base.getProgress());
+        int progress = (int) (17 * this.container.base.componentProgress.getBar());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         if (chargeLevel > 0) {

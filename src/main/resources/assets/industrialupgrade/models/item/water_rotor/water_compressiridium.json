@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/water_compressiridium"
-	}
+  "parent" : "ic2:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/water_compressiridium"
+  }
 }

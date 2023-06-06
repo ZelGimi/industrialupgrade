@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -72,7 +72,7 @@ public class CTAquaTransformer {
             nbt.setDouble("need", this.matter);
             final IC2RecipeInput stack = new IC2RecipeInput(this.container);
 
-            Recipes.recipes.addRecipe("aquacollector", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("aquacollector", new BaseMachineRecipe(
                     new Input(
                             stack
                     ),
@@ -137,11 +137,12 @@ public class CTAquaTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("aquaassembler", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("aquacollector", getItemStack(this.output));
+
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing aqua transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

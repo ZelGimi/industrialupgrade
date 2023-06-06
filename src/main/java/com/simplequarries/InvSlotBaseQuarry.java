@@ -1,10 +1,10 @@
 package com.simplequarries;
 
+import com.denfop.invslot.InvSlot;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotBaseQuarry extends InvSlot {
@@ -14,7 +14,7 @@ public class InvSlotBaseQuarry extends InvSlot {
     public int stackSizeLimit;
 
     public InvSlotBaseQuarry(TileEntityBaseQuarry base1, int oldStartIndex1) {
-        super(base1, "input", Access.I, oldStartIndex1, InvSlot.InvSide.TOP);
+        super(base1, "input", Access.I, oldStartIndex1, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }
@@ -80,6 +80,14 @@ public class InvSlotBaseQuarry extends InvSlot {
                 }
             }
         }
+        tile.chunkx1 = tile.chunkx;
+        tile.chunkz1 = tile.chunkz;
+        tile.chunkx2 = tile.chunkx + 15;
+        tile.chunkz2 = tile.chunkz + 15;
+        if (tile.col != 1) {
+            tile.chunkx1 = tile.chunkx - 16 * (tile.col - 1);
+            tile.chunkz1 = tile.chunkz - 16 * (tile.col - 1);
+        }
     }
 
     public void update() {
@@ -106,6 +114,7 @@ public class InvSlotBaseQuarry extends InvSlot {
                         if (tile.col == 1) {
                             tile.col = module.efficiency;
                             tile.energyconsume += tile.consume * (module.cost);
+
                         }
                         break;
                     case LUCKY:
@@ -141,9 +150,17 @@ public class InvSlotBaseQuarry extends InvSlot {
                 }
             }
         }
+        tile.chunkx1 = tile.chunkx;
+        tile.chunkz1 = tile.chunkz;
+        tile.chunkx2 = tile.chunkx + 15;
+        tile.chunkz2 = tile.chunkz + 15;
+        if (tile.col != 1) {
+            tile.chunkx1 = tile.chunkx - 16 * (tile.col - 1);
+            tile.chunkz1 = tile.chunkz - 16 * (tile.col - 1);
+        }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
 
 
         if (itemStack.getItem() instanceof ItemQuarryModule) {

@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:basemachine2",
-      "data": 9
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine2",
+      "data" : 9
     },
-    "title": {
-      "translate": "achievement.hydrogen_generator"
+    "title" : {
+      "translate" : "achievement.hydrogen_generator"
     },
-    "description": {
-      "translate": "achievement.hydrogen_generator.desc"
+    "description" : {
+      "translate" : "achievement.hydrogen_generator.desc"
     }
   },
-  "parent": "industrialupgrade:main/hydrogen",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/hydrogen",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:basemachine2",
-            "data": 9
+            "item" : "industrialupgrade:basemachine2",
+            "data" : 9
           }
         ]
       }

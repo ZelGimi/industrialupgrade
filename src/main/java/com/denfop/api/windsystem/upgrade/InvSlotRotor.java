@@ -1,8 +1,8 @@
 package com.denfop.api.windsystem.upgrade;
 
 import com.denfop.api.windsystem.InvSlotUpgrade;
+import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemAdvancedWindRotor;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotor extends InvSlot {
@@ -16,7 +16,7 @@ public class InvSlotRotor extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         return stack.getItem() instanceof ItemAdvancedWindRotor;
     }
 

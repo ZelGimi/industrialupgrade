@@ -49,7 +49,7 @@ public class GuiAdvAlloySmelter extends GuiIU<ContainerTripleElectricMachine> {
 
         new AdvArea(this, 80, 35, 101, 49)
                 .withTooltip(Localization.translate("gui.MolecularTransformer.progress") + ": " + (int) (Math.min(
-                        this.container.base.getProgress(),
+                        this.container.base.componentProgress.getBar(),
                         1D
                 ) * 100) + "%")
                 .drawForeground(mouseX, mouseY);
@@ -60,7 +60,7 @@ public class GuiAdvAlloySmelter extends GuiIU<ContainerTripleElectricMachine> {
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         this.mc.getTextureManager().bindTexture(getTexture());
-        int progress = (int) (24.0F * this.container.base.getProgress());
+        int progress = (int) (24.0F * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
             drawTexturedModalRect(xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);

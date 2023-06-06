@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:cathode"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:cathode"
     },
-    "title": {
-      "translate": "achievement.cathode"
+    "title" : {
+      "translate" : "achievement.cathode"
     },
-    "description": {
-      "translate": "achievement.cathode.desc"
+    "description" : {
+      "translate" : "achievement.cathode.desc"
     }
   },
-  "parent": "industrialupgrade:main/elecrolyzer",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/elecrolyzer",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:cathode"
+            "item" : "industrialupgrade:cathode"
           }
         ]
       }

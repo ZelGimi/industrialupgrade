@@ -1,5 +1,6 @@
 package com.denfop.componets;
 
+import com.denfop.IUItem;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatSink;
@@ -7,20 +8,23 @@ import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
-import ic2.api.energy.EnergyNet;
+import com.denfop.invslot.InvSlot;
+import com.denfop.tiles.base.TileEntityInventory;
 import ic2.core.IC2;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.Util;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -29,11 +33,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class HeatComponent extends TileEntityComponent {
+public class HeatComponent extends AbstractComponent {
 
     public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
     public final boolean fullEnergy;
+    private final double defaultCapacity;
     public double capacity;
     public double storage;
     public int sinkTier;
@@ -48,16 +53,17 @@ public class HeatComponent extends TileEntityComponent {
     public boolean receivingDisabled;
     public boolean sendingSidabled;
     public boolean need;
+    public boolean auto;
     public boolean allow;
     Random rand = new Random();
     private double coef;
 
-    public HeatComponent(TileEntityBlock parent, double capacity) {
+    public HeatComponent(TileEntityInventory parent, double capacity) {
         this(parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }
 
     public HeatComponent(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -67,7 +73,7 @@ public class HeatComponent extends TileEntityComponent {
     }
 
     public HeatComponent(
-            TileEntityBlock parent,
+            TileEntityInventory parent,
             double capacity,
             Set<EnumFacing> sinkDirections,
             Set<EnumFacing> sourceDirections,
@@ -85,25 +91,31 @@ public class HeatComponent extends TileEntityComponent {
         this.sourceDirections = sourceDirections;
         this.fullEnergy = fullEnergy;
         this.world = parent.getWorld();
+        this.defaultCapacity = capacity;
         this.need = true;
         this.allow = false;
         this.coef = 0;
     }
 
-    public static HeatComponent asBasicSink(TileEntityBlock parent, double capacity) {
+    public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity) {
         return asBasicSink(parent, capacity, 1);
     }
 
-    public static HeatComponent asBasicSink(TileEntityBlock parent, double capacity, int tier) {
+    public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Util.allFacings, Collections.emptySet(), tier);
     }
 
-    public static HeatComponent asBasicSource(TileEntityBlock parent, double capacity) {
+    public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity) {
         return asBasicSource(parent, capacity, 1);
     }
 
-    public static HeatComponent asBasicSource(TileEntityBlock parent, double capacity, int tier) {
+    public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
+    }
+
+    @Override
+    public boolean isServer() {
+        return true;
     }
 
     public void readFromNbt(NBTTagCompound nbt) {
@@ -111,6 +123,9 @@ public class HeatComponent extends TileEntityComponent {
         this.capacity = nbt.getDouble("capacity");
         this.need = nbt.getBoolean("need");
         this.allow = nbt.getBoolean("allow");
+        this.auto = nbt.getBoolean("auto");
+
+
     }
 
     public NBTTagCompound writeToNbt() {
@@ -119,12 +134,14 @@ public class HeatComponent extends TileEntityComponent {
         ret.setDouble("capacity", this.capacity);
         ret.setBoolean("need", this.need);
         ret.setBoolean("allow", this.allow);
+        ret.setBoolean("auto", this.auto);
         return ret;
     }
 
     public void onLoaded() {
         assert this.delegate == null;
-
+        if(this.capacity < this.defaultCapacity)
+            this.capacity = this.defaultCapacity;
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
                 if (debugLoad) {
@@ -162,6 +179,19 @@ public class HeatComponent extends TileEntityComponent {
 
     }
 
+    public TypePurifierJob getPurifierJob() {
+        return TypePurifierJob.ItemStack;
+    }
+
+    public boolean canUsePurifier(EntityPlayer player) {
+        return this.auto;
+    }
+
+    public ItemStack getItemStackUpgrade() {
+        this.auto = false;
+        return new ItemStack(IUItem.autoheater);
+    }
+
     private void createDelegate() {
         if (this.delegate != null) {
             throw new IllegalStateException();
@@ -179,6 +209,27 @@ public class HeatComponent extends TileEntityComponent {
             this.delegate.setWorld(this.parent.getWorld());
             this.delegate.setPos(this.parent.getPos());
         }
+    }
+
+    @Override
+    public List<ItemStack> getDrops() {
+        final List<ItemStack> ret = super.getDrops();
+        if (this.auto) {
+            ret.add(new ItemStack(IUItem.autoheater));
+        }
+        return ret;
+    }
+
+    @Override
+    public boolean onBlockActivated(EntityPlayer player, EnumHand hand) {
+        super.onBlockActivated(player, hand);
+        final ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
+            this.auto = true;
+            stack.shrink(1);
+            return true;
+        }
+        return false;
     }
 
     public void onUnloaded() {
@@ -217,13 +268,6 @@ public class HeatComponent extends TileEntityComponent {
         this.need = is.readBoolean();
     }
 
-    public boolean enableWorldTick() {
-        return !this.parent.getWorld().isRemote;
-    }
-
-    public void onWorldTick() {
-
-    }
 
     public double getCapacity() {
         return this.capacity;
@@ -240,17 +284,11 @@ public class HeatComponent extends TileEntityComponent {
         return this.storage;
     }
 
-    public double getFreeEnergy() {
-        return Math.max(0.0D, this.capacity - this.storage);
-    }
 
     public double getFillRatio() {
         return this.storage / this.capacity;
     }
 
-    public int getComparatorValue() {
-        return Math.min((int) (this.storage * 15.0D / this.capacity), 15);
-    }
 
     public double addEnergy(double amount) {
 
@@ -267,9 +305,6 @@ public class HeatComponent extends TileEntityComponent {
         return amount;
     }
 
-    public void forceAddEnergy(double amount) {
-        this.storage += amount;
-    }
 
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
@@ -289,6 +324,16 @@ public class HeatComponent extends TileEntityComponent {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.auto) {
+            if (this.getEnergy() + 1 <= this.getCapacity()) {
+                this.addEnergy(2);
+            }
         }
     }
 
@@ -336,20 +381,6 @@ public class HeatComponent extends TileEntityComponent {
         this.sendingSidabled = !enabled;
     }
 
-    public boolean isMultiSource() {
-        return this.multiSource;
-    }
-
-    public int getPacketOutput() {
-        return this.sourcePackets;
-    }
-
-    public void setPacketOutput(int number) {
-        if (this.multiSource) {
-            this.sourcePackets = number;
-        }
-
-    }
 
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
@@ -410,25 +441,15 @@ public class HeatComponent extends TileEntityComponent {
         return this.delegate;
     }
 
-    private double getSourceEnergy() {
-        return this.storage;
-    }
 
-    private int getPacketCount() {
-        return this.fullEnergy ? Math.min(
-                this.sourcePackets,
-                (int) Math.floor(this.storage / EnergyNet.instance.getPowerFromTier(this.sourceTier))
-        ) : this.sourcePackets;
-    }
-
-    private abstract static class EnergyNetDelegate<T extends IHeatTile> extends TileEntity implements IHeatTile {
+    private abstract static class EnergyNetDelegate extends TileEntity implements IHeatTile {
 
         private EnergyNetDelegate() {
         }
 
     }
 
-    private class EnergyNetDelegateSink extends HeatComponent.EnergyNetDelegate<IHeatSink> implements IHeatSink {
+    private class EnergyNetDelegateSink extends HeatComponent.EnergyNetDelegate implements IHeatSink {
 
         private EnergyNetDelegateSink() {
             super();
@@ -440,6 +461,11 @@ public class HeatComponent extends TileEntityComponent {
 
         public boolean acceptsHeatFrom(IHeatEmitter emitter, EnumFacing dir) {
             return HeatComponent.this.sinkDirections.contains(dir);
+        }
+
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return HeatComponent.this.parent.getPos();
         }
 
         public double getDemandedHeat() {
@@ -469,9 +495,14 @@ public class HeatComponent extends TileEntityComponent {
             }
         }
 
+        @Override
+        public TileEntity getTile() {
+            return HeatComponent.this.parent;
+        }
+
     }
 
-    private class EnergyNetDelegateSource extends HeatComponent.EnergyNetDelegate<IHeatSource> implements IHeatSource {
+    private class EnergyNetDelegateSource extends HeatComponent.EnergyNetDelegate implements IHeatSource {
 
         private EnergyNetDelegateSource() {
             super();
@@ -490,6 +521,11 @@ public class HeatComponent extends TileEntityComponent {
             return HeatComponent.this.storage;
         }
 
+        @Override
+        public @NotNull BlockPos getBlockPos() {
+            return HeatComponent.this.parent.getPos();
+        }
+
         public void drawHeat(double amount) {
         }
 
@@ -501,6 +537,11 @@ public class HeatComponent extends TileEntityComponent {
         @Override
         public boolean setAllowed(final boolean allowed) {
             return HeatComponent.this.allow = allowed;
+        }
+
+        @Override
+        public TileEntity getTile() {
+            return HeatComponent.this.parent;
         }
 
     }

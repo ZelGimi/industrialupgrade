@@ -5,14 +5,12 @@ import com.denfop.api.IStorage;
 import com.denfop.api.Recipes;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.exp.EXPNet;
 import com.denfop.api.heat.HeatNet;
-import com.denfop.api.qe.QENet;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeInputStack;
 import com.denfop.api.recipe.RecipesCore;
-import com.denfop.api.se.SENet;
+import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.upgrade.BaseUpgradeSystem;
 import com.denfop.api.upgrade.UpgradeSystem;
@@ -67,7 +65,6 @@ import com.denfop.blocks.mechanism.BlockUniversalCable;
 import com.denfop.blocks.mechanism.BlockUpgradeBlock;
 import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
-import com.denfop.exp.EXPNetGlobal;
 import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.avaritia.BlockAvaritiaSolarPanel;
 import com.denfop.integration.botania.BlockBotSolarPanel;
@@ -80,17 +77,13 @@ import com.denfop.items.modules.EnumModule;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.network.NetworkManager;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.qe.QENetGlobal;
 import com.denfop.register.RegisterOreDictionary;
-import com.denfop.se.SENetGlobal;
 import com.denfop.tabs.TabCore;
-import com.denfop.tiles.mechanism.blastfurnace.api.BlastSystem;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.Keys;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
 import ic2.api.event.TeBlockFinalCallEvent;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipe;
@@ -122,6 +115,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -176,13 +170,17 @@ public final class IUCore {
     public static final List<ItemStack> list_furnace_adding = new ArrayList<>();
     public static final List<ItemStack> list_furnace_removing = new ArrayList<>();
 
+    public static final List<ItemStack> list_crushed_adding = new ArrayList<>();
+    public static final List<ItemStack> list_crushed_removing = new ArrayList<>();
 
+    public static final List<ItemStack> list_comb_crushed_adding = new ArrayList<>();
+    public static final List<ItemStack> list_comb_crushed_removing = new ArrayList<>();
     public static final List<QuarryItem> list_quarry = new ArrayList<>();
 
     public static final List<QuarryItem> get_ingot_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_crushed_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_comb_crushed_quarry = new ArrayList<>();
-
+    public static final List<List<ItemStack>> removing_list = new ArrayList<>();
     public static boolean dynamicTrees = false;
     public static Logger log;
     @SidedProxy(clientSide = "com.denfop.proxy.ClientProxy", serverSide = "com.denfop.proxy.CommonProxy")
@@ -233,10 +231,6 @@ public final class IUCore {
                             ModUtils.nbt(filled).setDouble(
                                     "energy",
                                     ((IStorage) (((IElectricBlock) type).getDummyElec())).getEUCapacity()
-                            );
-                            ModUtils.nbt(filled).setDouble(
-                                    "energy2",
-                                    ((IStorage) (((IElectricBlock) type).getDummyElec())).getRFCapacity()
                             );
                             list.add(filled);
                         }
@@ -322,18 +316,29 @@ public final class IUCore {
 
     public static void initENet() {
 
-        EnergyNet.instance = EnergyNetGlobal.initialize();
+
         HeatNet.instance = HeatNetGlobal.initialize();
         CoolNet.instance = CoolNetGlobal.initialize();
-        QENet.instance = QENetGlobal.initialize();
-        SENet.instance = SENetGlobal.initialize();
-        EXPNet.instance = EXPNetGlobal.initialize();
+        EnergyBase.init();
         TransportNetGlobal.initialize();
-        BlastSystem.instance = new BlastSystem();
         new VeinSystem();
         new RadiationSystem();
         new WindSystem();
 
+    }
+
+    public static boolean isHasVersion(String modid, String version) {
+        final Map<String, ModContainer> map = Loader.instance().getIndexedModList();
+        ModContainer container = map.get(modid);
+        if (container != null) {
+            String version_this = container.getVersion();
+            final StringBuilder string_builder = new StringBuilder(version_this);
+            version_this = version_this.replace("2.8.", "").replace("-ex112", "");
+            if (Integer.parseInt(version_this) >= Integer.parseInt(version)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SubscribeEvent
@@ -345,18 +350,18 @@ public final class IUCore {
     }
 
     @Mod.EventHandler
-    public void load(final FMLPreInitializationEvent event) {
+    public void load(final FMLPreInitializationEvent event) throws Exception {
         MinecraftForge.EVENT_BUS.register(this);
         ModUtils.log = event.getModLog();
         IUCore.log = event.getModLog();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
         Config.loadNormalConfig(event.getSuggestedConfigurationFile());
+        EnergyNetGlobal.initialize();
         UpgradeSystem.system = new BaseUpgradeSystem();
         new RotorUpgradeSystem();
         new com.denfop.api.water.upgrade.RotorUpgradeSystem();
         Recipes.recipes = new RecipesCore();
-        proxy.regrecipemanager();
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
 
 
@@ -365,6 +370,7 @@ public final class IUCore {
 
         proxy.preInit(event);
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+
     }
 
     @Mod.EventHandler
@@ -372,6 +378,7 @@ public final class IUCore {
         proxy.init(event);
         proxy.registerRecipe();
         initENet();
+
 
     }
 
@@ -446,7 +453,9 @@ public final class IUCore {
             }
 
             lootTables.put(builder.toString(), event.getTable());
-
+            if (builder.toString().equals("minecraft:iron_golem")) {
+                lootTables.put("minecraft:villager_golem", event.getTable());
+            }
         }
 
     }
@@ -547,6 +556,7 @@ public final class IUCore {
                 this.get_ingot.add(stack);
             }
         }
+
         IUCore.list_adding.forEach(stack -> addOre1(stack));
         IUCore.list_removing.forEach(stack -> removeOre(stack));
         IUCore.list.forEach(stack -> {
@@ -554,38 +564,51 @@ public final class IUCore {
             get_all_list.add(new RecipeInputStack(stack));
         });
         get_all_list.removeIf(stack -> IUCore.get_ingot.contains(stack));
+        IUCore.list_furnace_adding.forEach(stack -> addOre2(stack));
+        IUCore.list_furnace_removing.forEach(stack -> removeOre2(stack));
         IUCore.get_ingot.forEach(stack -> {
 
             get_all_list.add(new RecipeInputStack(stack));
         });
-        IUCore.list_furnace_adding.forEach(stack -> addOre2(stack));
-        IUCore.list_furnace_removing.forEach(stack -> removeOre2(stack));
+
         get_all_list.removeIf(stack -> IUCore.get_comb_crushed.contains(stack));
+        IUCore.list_comb_crushed_adding.forEach(stack -> addOre4(stack));
+        IUCore.list_comb_crushed_removing.forEach(stack -> removeOre4(stack));
         IUCore.get_comb_crushed.forEach(stack -> {
 
             get_all_list.add(new RecipeInputStack(stack));
         });
         get_all_list.removeIf(stack -> IUCore.get_crushed.contains(stack));
+        IUCore.list_crushed_adding.forEach(stack -> addOre3(stack));
+        IUCore.list_crushed_removing.forEach(stack -> removeOre3(stack));
         IUCore.get_crushed.forEach(stack -> {
 
             get_all_list.add(new RecipeInputStack(stack));
         });
 
         IUCore.get_crushed.forEach(stack -> {
-            this.
-                    get_crushed_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        get_crushed_quarry.add(new QuarryItem(stack));
+            }
         });
         IUCore.list.forEach(stack -> {
-            this.
-                    list_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        list_quarry.add(new QuarryItem(stack));
+            }
         });
         IUCore.get_ingot.forEach(stack -> {
-            this.
-                    get_ingot_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        get_ingot_quarry.add(new QuarryItem(stack));
+            }
         });
         IUCore.get_comb_crushed.forEach(stack -> {
-            this.
-                    get_comb_crushed_quarry.add(new QuarryItem(stack));
+            if (!stack.isEmpty()) {
+                this.
+                        get_comb_crushed_quarry.add(new QuarryItem(stack));
+            }
         });
         fish_rodding.add(new ItemStack(Items.FISH));
         fish_rodding.add(new ItemStack(Items.FISH, 1, 1));
@@ -628,11 +651,7 @@ public final class IUCore {
                 .getEntityLiving()
                 .getEntityWorld().rand.nextFloat() < 0.1F) {
             EntityLiving entity = (EntityLiving) event.getEntityLiving();
-            EntityEquipmentSlot[] var3 = EntityEquipmentSlot.values();
-            int var4 = var3.length;
-
-            for (int var5 = 0; var5 < var4; ++var5) {
-                EntityEquipmentSlot slot = var3[var5];
+            for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
                 entity.setDropChance(slot, (float) (-1.0F / 0.0));
             }
 
@@ -749,8 +768,24 @@ public final class IUCore {
         get_ingot.add(name);
     }
 
+    public void addOre3(ItemStack name) {
+        get_crushed.add(name);
+    }
+
+    public void addOre4(ItemStack name) {
+        get_comb_crushed.add(name);
+    }
+
     public void removeOre2(ItemStack name) {
         get_ingot.removeIf(stack -> stack.isItemEqual(name));
+    }
+
+    public void removeOre3(ItemStack name) {
+        get_crushed.removeIf(stack -> stack.isItemEqual(name));
+    }
+
+    public void removeOre4(ItemStack name) {
+        get_comb_crushed.removeIf(stack -> stack.isItemEqual(name));
     }
 
     public void removeOre(String name) {

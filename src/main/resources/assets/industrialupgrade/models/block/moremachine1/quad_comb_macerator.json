@@ -1,12 +1,12 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "particle": "industrialupgrade:blocks/blockcombmacerator3_side",
-    "down": "industrialupgrade:blocks/blockcombmacerator3_side",
-    "up": "industrialupgrade:blocks/blockcombmacerator3_side",
-    "north": "industrialupgrade:blocks/blockcombmacerator3_main",
-    "east": "industrialupgrade:blocks/blockcombmacerator3_side2",
-    "south": "industrialupgrade:blocks/blockcombmacerator3_side",
-    "west": "industrialupgrade:blocks/blockcombmacerator3_side2"
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "down" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "up" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "north" : "industrialupgrade:blocks/blockcombmacerator3_main",
+    "east" : "industrialupgrade:blocks/blockcombmacerator3_side2",
+    "south" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "west" : "industrialupgrade:blocks/blockcombmacerator3_side2"
   }
 }

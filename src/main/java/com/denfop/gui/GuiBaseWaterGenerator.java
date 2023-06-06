@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -64,7 +65,7 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 12 && x <= 25 && y >= 45 && y <= 68) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
 
 
@@ -129,7 +130,7 @@ public class GuiBaseWaterGenerator extends GuiIU<ContainerBaseWaterGenerator> {
                 this.fontRenderer.drawString(Localization.translate("iu.water_meter.info") + String.format(
                                 "%.1f",
                                 Math.min(24.7 + this.container.base.mind_speed, WindSystem.windSystem.getSpeedFromWaterPower(
-                                                this.container.base.getPos(),
+                                                this.container.base.getBlockPos(),
                                                 this.container.base,
                                                 this.container.base.generation
                                         ) / this.container.base.getCoefficient()

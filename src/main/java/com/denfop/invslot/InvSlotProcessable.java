@@ -1,8 +1,7 @@
 package com.denfop.invslot;
 
 import com.denfop.api.inv.IInvSlotProcessable;
-import ic2.core.block.IInventorySlotHolder;
-import ic2.core.block.invslot.InvSlot;
+import com.denfop.tiles.base.IInventorySlotHolder;
 import net.minecraft.item.ItemStack;
 
 public abstract class InvSlotProcessable extends InvSlot implements IInvSlotProcessable {

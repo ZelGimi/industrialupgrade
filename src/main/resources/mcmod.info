@@ -1,25 +1,25 @@
 [
-	{
-		"authorList": [
-			"Denfop"
-		],
-		"credits": "Artists of mods: AlexTM, Christmas, igorek181, theBr1z1k, Aslan, -frei, FiXrD, texnounit. Translator: Makandlv, VanFek. Support of projects: SimpleMinecraft, MythicalWorld, VictoryCraft ",
-		"dependants": [],
-		"dependencies": [
-			"ic2@[2.8.221-ex112,2.8.222-ex112]"
-		],
-		"description": "IC2 221+",
-		"logoFile": "",
-		"mcversion": "1.12.2",
-		"modid": "industrialupgrade",
-		"name": "Industrial Upgrade",
-		"parent": "",
-		"requiredMods": [
-			"ic2@[2.8.221-ex112,2.8.222-ex112]"
-		],
-		"screenshots": [],
-		"updateUrl": "https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade",
-		"url": "https://forum.industrial-craft.net/thread/16121-supersolarpanels-remastred-1-7-10-1-12-2/?postID=218762#post218762",
-		"version": "2.4.0.8"
-	}
+  {
+    "authorList" : [
+      "Denfop"
+    ],
+    "credits" : "Artists of mods: AlexTM, Christmas, igorek181, theBr1z1k, Aslan, -frei, FiXrD, texnounit. Translator: Makandlv, VanFek. Support of projects: SimpleMinecraft, MythicalWorld, VictoryCraft ",
+    "dependants" : [],
+    "dependencies" : [
+      "ic2@[2.8.120-ex112,2.8.222-ex112]"
+    ],
+    "description" : "IC2 120+",
+    "logoFile" : "",
+    "mcversion" : "1.12.2",
+    "modid" : "industrialupgrade",
+    "name" : "Industrial Upgrade",
+    "parent" : "",
+    "requiredMods" : [
+      "ic2@[2.8.120-ex112,2.8.222-ex112]"
+    ],
+    "screenshots" : [],
+    "updateUrl" : "https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade",
+    "url" : "https://forum.industrial-craft.net/thread/16121-supersolarpanels-remastred-1-7-10-1-12-2/?postID=218762#post218762",
+    "version" : "2.5.0.17"
+  }
 ]

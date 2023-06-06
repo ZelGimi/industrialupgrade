@@ -3,6 +3,7 @@ package com.denfop.utils;
 import com.denfop.IUCore;
 import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.items.bags.HandHeldBags;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.init.Localization;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -67,6 +69,16 @@ public class ModUtils {
         final NBTTagCompound nbt = ModUtils.nbt(cell);
         final NBTTagCompound nbt1 = ModUtils.nbt();
         nbt1.setString("FluidName", name);
+        nbt1.setInteger("Amount", 1000);
+        nbt.setTag("Fluid", nbt1);
+        return cell;
+    }
+
+    public static ItemStack getCellFromFluid(Fluid name) {
+        final ItemStack cell = Ic2Items.FluidCell.copy();
+        final NBTTagCompound nbt = ModUtils.nbt(cell);
+        final NBTTagCompound nbt1 = ModUtils.nbt();
+        nbt1.setString("FluidName", name.getName());
         nbt1.setInteger("Amount", 1000);
         nbt.setTag("Fluid", nbt1);
         return cell;
@@ -513,12 +525,42 @@ public class ModUtils {
 
     }
 
+    public static void tick(ItemStack[] slot, IItemHandler tile, HandHeldBags handHeldBags) {
+        if (tile == null) {
+            return;
+        }
+        final int slots = tile.getSlots();
+        for (int i = 0; i < slot.length; i++) {
+            ItemStack took = slot[i];
+            if (took.isEmpty()) {
+                continue;
+            }
+
+            if (!(tile instanceof ISidedInventory)) {
+                took = took.copy();
+                if (insertItem(tile, took, true, slots).isEmpty()) {
+                    handHeldBags.put(i, ItemStack.EMPTY);
+                    insertItem(tile, took, false, slots);
+                }
+            } else {
+                if (insertItem1(tile, took, true, slots).isEmpty()) {
+                    handHeldBags.put(i, ItemStack.EMPTY);
+                    insertItem1(tile, took, false, slots);
+
+                }
+            }
+
+
+        }
+
+    }
+
     @Nonnull
     public static ItemStack insertItem1(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, int slot) {
         if (dest == null || stack.isEmpty()) {
             return stack;
         }
-
+        slot = Math.min(slot, dest.getSlots());
         for (int i = 0; i < slot; i++) {
             stack = insertItem2(dest, i, stack, simulate);
             if (stack.isEmpty()) {
@@ -600,11 +642,11 @@ public class ModUtils {
     }
 
     @Nonnull
-    public static ItemStack insertItem(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, final int slots) {
+    public static ItemStack insertItem(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, int slots) {
         if (dest == null || stack.isEmpty()) {
             return stack;
         }
-
+        slots = Math.min(slots, dest.getSlots());
         for (int i = 0; i < slots; i++) {
             stack = dest.insertItem(i, stack, simulate);
             if (stack.isEmpty()) {
@@ -615,5 +657,11 @@ public class ModUtils {
         return stack;
     }
 
+
+    public static ItemStack setSize(ItemStack stack, int col) {
+        stack = stack.copy();
+        stack.setCount(col);
+        return stack;
+    }
 
 }

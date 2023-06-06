@@ -3,17 +3,23 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.vein.Type;
+import com.denfop.api.vein.VeinSystem;
 import com.denfop.container.ContainerQuarryVein;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -27,11 +33,20 @@ import java.util.List;
 public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     public final ContainerQuarryVein container;
+    public int[][] colors = new int[39][66];
 
     public GuiQuarryVein(ContainerQuarryVein container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-
+        for (int x1 = 74; x1 <= 112; x1++) {
+            for (int y1 = 14; y1 <= 79; y1++) {
+                int y2 = getCoord(y1, this.container.base.getBlockPos().getY());
+                int x2 = getCoordX(x1, this.container.base.getBlockPos().getX(), 88);
+                final BlockPos pos = new BlockPos(x2, y2, this.container.base.getBlockPos().getZ());
+                IBlockState state = this.container.base.getWorld().getBlockState(pos);
+                colors[x1 - 74][y1 - 14] = this.getColor(state, this.container.base.getWorld(), pos);
+            }
+        }
     }
 
     int getChance(Biome biome) {
@@ -56,7 +71,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     List<String> getList() {
         List<String> lst = new ArrayList<>();
-        final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getPos());
+        final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getBlockPos());
         lst.add(Localization.translate("iu.biome") + biome.getBiomeName());
         lst.add(Localization.translate("iu.gettingvein") + getChance(biome) + "%");
         lst.add(Localization.translate("iu.gettingvein1") + 15 + "%");
@@ -66,7 +81,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 73 && mouseX <= 113 && mouseY >= 13 && mouseY < 80) {
-            int y = getCoord(mouseY, this.container.base.getPos().getY());
+            int y = getCoord(mouseY, this.container.base.getBlockPos().getY());
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.quarryveininformation"));
             List<String> compatibleUpgrades = getList();
@@ -99,6 +114,17 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         double m1 = mouseY - 21;
         m *= m1;
         return (int) Math.min(Math.max(y - m, 0D), 256);
+    }
+
+    private int getCoordX(final int mouseX, int x, int center) {
+        // center = x
+        int x1 = x;
+        if (mouseX < center) {
+            x1 -= (center - mouseX) * 2;
+        } else {
+            x1 += (center - mouseX) * 2;
+        }
+        return x1;
     }
 
     private void handleUpgradeTooltip1(int mouseX, int mouseY) {
@@ -136,7 +162,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        String name = Localization.translate("iu.quarry_vein_item.quarry_vein_item");
+        String name = Localization.translate(this.container.base.getName());
         switch (this.container.base.level) {
             case 2:
                 name = TextFormatting.GOLD + Localization.translate("iu.advanced_name") + " " + name.toLowerCase();
@@ -182,7 +208,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         }
         handleUpgradeTooltip(par1, par2);
 
-        if (this.container.base.vein != null && this.container.base.vein.get()) {
+        if (this.container.base.vein != VeinSystem.system.getEMPTY() && this.container.base.vein.get()) {
             if (this.container.base.vein.getType() == Type.EMPTY || this.container.base.vein.getMaxCol() == 0) {
                 this.fontRenderer.drawString(
                         Localization.translate("iu.empty"),
@@ -225,6 +251,14 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 .drawForeground(par1, par2);
     }
 
+    private int getColor(IBlockState state, World world, BlockPos pos) {
+        if (state.getMaterial() == Material.AIR) {
+            return (int) this.container.base.getWorld().provider.getCloudColor(0).x;
+        }
+        MapColor color = state.getMapColor(world, pos);
+        return color.colorValue | -16777216;
+    }
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         int h = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
@@ -233,7 +267,19 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         this.drawBackground();
         this.mc.getTextureManager().bindTexture(getTexture());
         int m = this.container.base.progress * 34 / 1200;
-        drawTexturedModalRect(h + 88, k + 23, 183, 50, 1, m);
+
+
+        for (int x1 = 74; x1 <= 112; x1++) {
+            for (int y1 = 14; y1 <= 79; y1++) {
+
+                this.drawColoredRect(x1, y1, 1, 1, colors[x1 - 74][y1 - 14]);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+            }
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        drawTexturedModalRect(h + 88, k + 22, 183, 50, 1, m);
         switch (this.container.base.level) {
             case 2:
                 drawTexturedModalRect(h + 88, k + 21, 184, 48, 1, 1);

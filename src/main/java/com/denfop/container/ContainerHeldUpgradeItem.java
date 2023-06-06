@@ -2,7 +2,6 @@ package com.denfop.container;
 
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.items.energy.HandHeldUpgradeItem;
-import ic2.core.item.ContainerHandHeldInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

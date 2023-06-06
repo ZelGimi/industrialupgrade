@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.container.ContainerModuleMachine;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
@@ -92,7 +93,7 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
     protected void actionPerformed(GuiButton guibutton) {
 
         if (guibutton.id == 0) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
 
         }
     }

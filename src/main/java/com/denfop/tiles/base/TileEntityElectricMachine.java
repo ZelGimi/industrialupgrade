@@ -3,16 +3,16 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotDischarge;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
@@ -65,12 +65,12 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final AdvEnergy component = this.getComponent(AdvEnergy.class);
-                    if(component != null){
-                        if(component.getEnergy() != 0) {
+                    final AdvEnergy component = this.getComp(AdvEnergy.class);
+                    if (component != null) {
+                        if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component.getEnergy());
                         }
@@ -86,9 +86,9 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
                     return BlockName.resource.getItemStack(ResourceBlock.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComponent(AdvEnergy.class);
-        if(component != null){
-            if(component.getEnergy() != 0) {
+        final AdvEnergy component = this.getComp(AdvEnergy.class);
+        if (component != null) {
+            if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component.getEnergy());
             }
@@ -100,7 +100,7 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
     protected void onLoaded() {
         super.onLoaded();
 
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
     }
 
@@ -108,12 +108,12 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
 
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }
@@ -125,15 +125,15 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -141,12 +141,13 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
             }
             final NBTTagCompound nbt = ModUtils.nbt(stack);
             final double energy1 = nbt.getDouble("energy");
-            if(energy1 != 0){
-                tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+            if (energy1 != 0) {
+                tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                        energy.getCapacity())
                         + " EU ");
             }
-        }
 
+        }
     }
 
     public EnumTypeAudio getType() {
@@ -168,7 +169,7 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
@@ -261,12 +262,12 @@ public abstract class TileEntityElectricMachine extends TileEntityInventory impl
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }

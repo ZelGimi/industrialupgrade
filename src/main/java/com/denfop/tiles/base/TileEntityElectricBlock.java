@@ -1,36 +1,36 @@
 package com.denfop.tiles.base;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
-import cofh.redstoneflux.api.IEnergyHandler;
-import cofh.redstoneflux.api.IEnergyProvider;
-import cofh.redstoneflux.api.IEnergyReceiver;
-import com.denfop.Config;
+import com.denfop.IUCore;
 import com.denfop.api.IStorage;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComparatorEmitter;
+import com.denfop.componets.Redstone;
+import com.denfop.componets.RedstoneEmitter;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.gui.GuiElectricBlock;
+import com.denfop.invslot.InvSlotCharge;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotElectricBlock;
-import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.tiles.panels.entity.TransferRFEnergy;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
+import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import ic2.core.init.MainConfig;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.ConfigUtil;
 import ic2.core.util.EntityIC2FX;
 import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.util.ITooltipFlag;
@@ -39,25 +39,19 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class TileEntityElectricBlock extends TileEntityInventory implements IHasGui,
-        INetworkClientTileEntityEventListener, IEnergyHandler, IEnergyReceiver,
-        IEnergyProvider, IStorage {
+        INetworkClientTileEntityEventListener,
+        IStorage, INetworkTileEntityEventListener {
 
     public static EnumElectricBlock electricblock;
     public final double tier;
@@ -66,51 +60,54 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public final AdvEnergy energy;
     public final double maxStorage2;
     public final double l;
-    public final InvSlotElectricBlock inputslotA;
-    public final InvSlotElectricBlock inputslotB;
+    public final InvSlotCharge inputslotA;
+    public final InvSlotDischarge inputslotB;
     public final InvSlotElectricBlock inputslotC;
-    public final List<String> list_player;
+    private final RedstoneEmitter rsEmitter;
+    private final Redstone redstone;
+    private final ComparatorEmitter comparator;
     public boolean wireless;
-    public EntityPlayer player;
     public double output;
-    public String UUID = "";
-    public double energy2;
-    public boolean rf;
     public boolean rfeu = false;
     public boolean needsInvUpdate = false;
     public boolean movementcharge = false;
-    public boolean movementchargerf = false;
-    public boolean movementchargeitemrf = false;
     public double output_plus;
     public short temp;
+    public boolean load = false;
     public boolean movementchargeitem = false;
-    public boolean personality = false;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
-    List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
+    private AudioSource audioSource;
+    private byte redstoneMode = 0;
+    private EntityPlayer player;
 
     public TileEntityElectricBlock(double tier1, double output1, double maxStorage1, boolean chargepad, String name) {
 
-        this.energy2 = 0.0D;
         this.tier = tier1;
-        this.output = EnergyNet.instance.getPowerFromTier((int) tier);
-        this.player = null;
+        this.output = EnergyNetGlobal.instance.getPowerFromTier((int) tier);
         this.maxStorage2 = maxStorage1 * 4;
         this.chargepad = chargepad;
-        this.rf = false;
         this.name = name;
-        this.inputslotA = new InvSlotElectricBlock(this, 1, "input", 1);
-        this.inputslotB = new InvSlotElectricBlock(this, 2, "input1", 1);
+        this.inputslotA = new InvSlotCharge(this, (int) tier);
+
+        this.inputslotB = new InvSlotDischarge(this, (int) tier);
+        this.inputslotB.setAllowRedstoneDust(false);
         this.inputslotC = new InvSlotElectricBlock(this, 3, "input2", 2);
         this.output_plus = 0;
         this.temp = 0;
         this.wireless = false;
         this.l = output1;
+        this.player = null;
         this.energy = this.addComponent((new AdvEnergy(this, maxStorage1,
                 EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()),
-                EnergyNet.instance.getTierFromPower(this.output),
-                EnergyNet.instance.getTierFromPower(this.output), false
+                EnergyNetGlobal.instance.getTierFromPower(this.output),
+                EnergyNetGlobal.instance.getTierFromPower(this.output), false
         )));
-        this.list_player = new ArrayList<>();
+        this.energy.addManagedSlot(this.inputslotA);
+        this.energy.addManagedSlot(this.inputslotB);
+        this.rsEmitter = this.addComponent(new RedstoneEmitter(this));
+        this.redstone = this.addComponent(new Redstone(this));
+        this.comparator = this.addComponent(new ComparatorEmitter(this));
+        this.comparator.setUpdate(this.energy::getComparatorValue);
     }
 
     public TileEntityElectricBlock(EnumElectricBlock electricBlock) {
@@ -123,13 +120,38 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return electricblock;
     }
 
-    protected boolean canEntityDestroy(Entity entity) {
-        return !this.personality || (entity instanceof EntityPlayer && this.list_player.contains(entity.getName()));
+    protected void onUnloaded() {
+        super.onUnloaded();
+        if (IC2.platform.isRendering() && this.audioSource != null) {
+            IUCore.audioManager.removeSources(this);
+            this.audioSource = null;
+        }
+
     }
 
-    @Override
-    protected boolean wrenchCanRemove(final EntityPlayer player) {
-        return !this.personality || (this.list_player.contains(player.getName()));
+
+    public void initiate(int soundEvent) {
+
+        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+
+    }
+
+    public String getStartSoundFile() {
+        return "Machines/pen.ogg";
+    }
+
+
+    public void onNetworkEvent(int event) {
+        if (this.audioSource == null && this.getStartSoundFile() != null) {
+            this.audioSource = IUCore.audioManager.createSource(this, this.getStartSoundFile());
+        }
+
+        if (event == 0) {
+            if (this.audioSource != null) {
+                this.audioSource.stop();
+                this.audioSource.play();
+            }
+        }
 
     }
 
@@ -142,7 +164,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
 
 
-        info.add(Localization.translate("ic2.item.tooltip.Output") + " " + ModUtils.getString(EnergyNet.instance.getPowerFromTier(
+        info.add(Localization.translate("ic2.item.tooltip.Output") + " " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(
                 this.energy.getSourceTier())) + " EU/t ");
         info.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.energy.getCapacity()) + " EU ");
         info.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.maxStorage2) + " RF ");
@@ -156,7 +178,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     }
 
-    public ContainerBase<TileEntityElectricBlock> getGuiContainer(EntityPlayer player) {
+    public ContainerElectricBlock getGuiContainer(EntityPlayer player) {
         return new ContainerElectricBlock(player, this);
     }
 
@@ -165,79 +187,60 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return new GuiElectricBlock(new ContainerElectricBlock(entityPlayer, this));
     }
 
-    protected boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
-        if (personality) {
-            if (!(this.list_player.contains(player.getName()) || player.capabilities.isCreativeMode)) {
-                CommonProxy.sendPlayerMessage(player, Localization.translate("iu.error"));
-                return false;
-            }
-        }
+
         module_charge(player);
-        return this.getWorld().isRemote || IC2.platform.launchGui(player, this);
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
 
     }
 
     @Override
     protected void onLoaded() {
         super.onLoaded();
-        this.list_player.add(UUID);
-        for (int h = 0; h < 2; h++) {
-            if (!inputslotC.get(h).isEmpty() && inputslotC.get(h).getItem() instanceof ItemAdditionModule
-                    && inputslotC.get(h).getItemDamage() == 0) {
-                NBTTagCompound nbt = ModUtils.nbt(inputslotC.get(h));
-                int size = nbt.getInteger("size");
-                for (int m = 0; m < size; m++) {
-                    this.list_player.add(nbt.getString("player_" + m));
+    }
 
-                }
-                break;
-            }
-
+    public boolean shouldEmitEnergy() {
+        boolean redstone = this.redstone.hasRedstoneInput();
+        if (this.redstoneMode == 5) {
+            return !redstone;
+        } else if (this.redstoneMode != 6) {
+            return true;
+        } else {
+            return !redstone || this.energy.getEnergy() > this.energy.getCapacity() - this.output * 20.0;
         }
-        this.wirelessTransferList.clear();
-        this.inputslotC.wirelessmodule();
+    }
+
+    @Override
+    public double getEUStored() {
+        return this.energy.getEnergy();
+    }
+
+
+    @Override
+    public double getOutput() {
+        return this.output;
     }
 
     protected void getItems(EntityPlayer player) {
-        List<String> list = new ArrayList<>();
-        list.add(UUID);
-        for (int h = 0; h < 2; h++) {
-            if (inputslotC.get(h) != null && inputslotC.get(h).getItem() instanceof ItemAdditionModule
-                    && inputslotC.get(h).getItemDamage() == 0) {
-                for (int m = 0; m < 9; m++) {
-                    NBTTagCompound nbt = ModUtils.nbt(inputslotC.get(h));
-                    String name = "player_" + m;
-                    if (!nbt.getString(name).isEmpty()) {
-                        list.add(nbt.getString(name));
-                    }
-                }
-                break;
-            }
-
+        if (!this.canEntityDestroy(player)) {
+            IC2.platform.messagePlayer(player, Localization.translate("iu.error"));
+            return;
         }
 
 
-        if (player != null) {
-            if (personality) {
-                if (!(list.contains(player.getDisplayName().getFormattedText()) || player.capabilities.isCreativeMode)) {
-                    IC2.platform.messagePlayer(player, Localization.translate("iu.error"));
-                    return;
-                }
+        for (ItemStack current : player.inventory.armorInventory) {
+            if (current != null) {
+                chargeitems(current, this.output);
             }
-            for (ItemStack current : player.inventory.armorInventory) {
-                if (current != null) {
-                    chargeitems(current, this.output);
-                }
-            }
-            for (ItemStack current : player.inventory.mainInventory) {
-                if (current != null) {
-                    chargeitems(current, this.output);
-                }
-            }
-            player.inventoryContainer.detectAndSendChanges();
-
         }
+        for (ItemStack current : player.inventory.mainInventory) {
+            if (current != null) {
+                chargeitems(current, this.output);
+            }
+        }
+        player.inventoryContainer.detectAndSendChanges();
+
     }
 
     @SideOnly(Side.CLIENT)
@@ -272,22 +275,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         if (!(itemstack.getItem() instanceof ic2.api.item.IElectricItem || itemstack.getItem() instanceof IEnergyContainerItem)) {
             return;
         }
-        if (this.energy2 > 0 && itemstack.getItem() instanceof IEnergyContainerItem) {
-            double sent = 0;
-
-            IEnergyContainerItem item = (IEnergyContainerItem) itemstack.getItem();
-            double energy_temp = this.energy2;
-            if (item.getEnergyStored(itemstack) < item.getMaxEnergyStored(itemstack)
-                    && this.energy2 > 0) {
-                sent = (sent + this.extractEnergy1(
-                        item.receiveEnergy(itemstack, (int) this.energy2, false), false));
-
-            }
-            energy_temp -= (sent * 2);
-            this.energy2 = energy_temp;
-
-
-        }
         double freeamount = ElectricItem.manager.charge(itemstack, Double.POSITIVE_INFINITY, Integer.MAX_VALUE, true, true);
         double charge;
         if (freeamount > 0.0D) {
@@ -300,32 +287,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     }
 
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-
-        return receiveEnergy(maxReceive, simulate);
-
-    }
-
-    public int receiveEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(this.maxStorage2 - this.energy2, Math.min(this.output * 4, paramInt));
-        if (!paramBoolean) {
-            this.energy2 += i;
-        }
-        return i;
-    }
-
-    public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-        return extractEnergy((int) Math.min(this.output * 4, maxExtract), simulate);
-    }
-
-    public int extractEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(this.energy2, Math.min(this.output * 4, paramInt));
-        if (!paramBoolean) {
-            this.energy2 -= i;
-        }
-        return i;
-    }
-
     public float getChargeLevel() {
 
         float ret = (float) ((float) this.energy.getEnergy() / (this.energy.getCapacity()));
@@ -336,27 +297,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return ret;
     }
 
-    public float getChargeLevel1() {
-
-        float ret = (float) ((float) this.energy2 / (this.maxStorage2));
-
-        if (ret > 1.0F) {
-            ret = 1.0F;
-        }
-        return ret;
-    }
-
-    public boolean canConnectEnergy(EnumFacing arg0) {
-        return true;
-    }
-
-    public int getEnergyStored(EnumFacing from) {
-        return (int) this.energy2;
-    }
-
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) this.maxStorage2;
-    }
 
     public void module_charge(EntityPlayer entityPlayer) {
 
@@ -389,40 +329,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             }
 
         }
-        if (this.movementchargerf) {
 
-            for (ItemStack charged : entityPlayer.inventory.armorInventory) {
-                if (charged != null) {
-
-                    if (charged.getItem() instanceof IEnergyContainerItem && this.energy2 > 0) {
-                        double sent = 0;
-
-                        IEnergyContainerItem item = (IEnergyContainerItem) charged.getItem();
-                        double energy_temp = this.energy2;
-                        while (item.getEnergyStored(charged) < item.getMaxEnergyStored(charged)
-                                && this.energy2 > 0) {
-                            sent = (sent + this.extractEnergy1(
-                                    item.receiveEnergy(charged, (int) this.energy2, false), false));
-
-                        }
-                        energy_temp -= (sent);
-                        this.energy2 = energy_temp;
-                        if (sent > 0) {
-                            CommonProxy.sendPlayerMessage(
-                                    entityPlayer,
-                                    Localization.translate("successfully.charged")
-                                            + charged.getDisplayName()
-                                            + Localization.translate("iu.sendenergy")
-                                            + ModUtils.getString(sent) + " RF"
-                            );
-                        }
-                        entityPlayer.inventoryContainer.detectAndSendChanges();
-
-                    }
-
-                }
-            }
-        }
         if (this.movementchargeitem) {
             for (ItemStack charged : entityPlayer.inventory.mainInventory) {
                 if (charged != null) {
@@ -449,39 +356,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             }
 
         }
-        if (this.movementchargeitemrf) {
-            for (ItemStack charged : entityPlayer.inventory.mainInventory) {
-                if (charged != null) {
-
-                    if (charged.getItem() instanceof IEnergyContainerItem && this.energy2 > 0) {
-                        double sent = 0;
-
-                        IEnergyContainerItem item = (IEnergyContainerItem) charged.getItem();
-                        double energy_temp = this.energy2;
-                        while (item.getEnergyStored(charged) < item.getMaxEnergyStored(charged)
-                                && this.energy2 > 0) {
-                            sent = (sent + this.extractEnergy1(
-                                    item.receiveEnergy(charged, (int) this.energy2, false), false));
-
-                        }
-                        energy_temp -= (sent);
-                        this.energy2 = energy_temp;
-                        if (sent > 0) {
-                            CommonProxy.sendPlayerMessage(
-                                    entityPlayer,
-                                    Localization.translate("successfully.charged")
-                                            + charged.getDisplayName()
-                                            + Localization.translate("iu.sendenergy")
-                                            + ModUtils.getString(sent) + " RF"
-                            );
-                        }
-                        entityPlayer.inventoryContainer.detectAndSendChanges();
-
-                    }
-
-                }
-            }
-        }
     }
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
@@ -492,37 +366,33 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         }
     }
 
+    protected void updatePlayer(EntityPlayer entity) {
+        this.player = entity;
+    }
+
     protected void onEntityCollision(Entity entity) {
         super.onEntityCollision(entity);
         if (!this.getWorld().isRemote && entity instanceof EntityPlayer) {
-            if (this.chargepad) {
-                this.playerstandsat((EntityPlayer) entity);
+            if (this.chargepad && this.canEntityDestroy(entity)) {
+                this.updatePlayer((EntityPlayer) entity);
             }
-            if (player != null) {
-                module_charge(player);
-            }
+
         }
 
     }
 
-    public void playerstandsat(EntityPlayer entity) {
-        if (this.player == null) {
-            this.player = entity;
-        } else if (this.player.getUniqueID() != entity.getUniqueID()) {
-            this.player = entity;
-        }
-    }
-
-    protected boolean shouldEmitEnergy() {
-
-        return true;
-
-    }
 
     protected void updateEntityServer() {
         super.updateEntityServer();
+        if (!load) {
+            this.wirelessTransferList.clear();
+            this.inputslotC.wirelessmodule();
+            this.wireless = !this.wirelessTransferList.isEmpty();
+            this.load = true;
+        }
         this.needsInvUpdate = false;
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
+        this.rsEmitter.setLevel(this.shouldEmitRedstone() ? 15 : 0);
         if (this.wireless) {
             boolean refresh = false;
             try {
@@ -551,6 +421,7 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                     setActive(true);
                 }
                 getItems(this.player);
+                module_charge(this.player);
                 this.player = null;
                 needsInvUpdate = true;
             } else if (getActive()) {
@@ -558,119 +429,8 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                 needsInvUpdate = true;
             }
         }
-
-        if (this.rf) {
-            if (!this.rfeu) {
-                if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
-
-                    energy2 += energy.getEnergy() * Config.coefficientrf;
-                    energy.useEnergy(energy.getEnergy());
-
-                }
-                if (energy2 > maxStorage2) {
-                    double rf = (energy2 - maxStorage2);
-                    energy.addEnergy(rf / Config.coefficientrf);
-                    energy2 = maxStorage2;
-                }
-            } else {
-
-                if (energy2 > 0 && energy.getEnergy() < energy.getCapacity()) {
-                    energy2 -= energy.addEnergy(energy2 / Config.coefficientrf) * Config.coefficientrf;
-
-                }
-
-            }
-        }
-        IEnergyContainerItem item;
-        if (this.energy2 >= 1.0D && this.inputslotA.get(0) != null
-                && this.inputslotA.get(0).getItem() instanceof IEnergyContainerItem) {
-            item = (IEnergyContainerItem) this.inputslotA.get(0).getItem();
-            if (item.getEnergyStored(this.inputslotA.get(0)) < item.getMaxEnergyStored(this.inputslotA.get(0))) {
-                extractEnergy1(
-                        item.receiveEnergy(this.inputslotA.get(0), (int) this.energy2, false),
-                        false
-                );
-            }
-        }
-        if (this.energy2 < 0) {
-            this.energy2 = 0;
-        }
-        if (this.energy2 >= this.maxStorage2) {
-            this.energy2 = this.maxStorage2;
-        }
-        if (!this.inputslotA.isEmpty()) {
-            boolean ignore = this.inputslotC.checkignore();
-            if (this.inputslotA.charge(
-                    this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0,
-                    this.inputslotA.get(0),
-                    true, ignore
-            ) != 0) {
-                this.energy.useEnergy(this.inputslotA.charge(this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0,
-                        this.inputslotA.get(0), false, ignore
-                ));
-                needsInvUpdate = ((this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0) > 0.0D);
-            }
-        }
-        if (!this.inputslotB.get(0).isEmpty()) {
-            if (this.inputslotB.discharge(
-                    this.energy.getEnergy() < this.energy.getCapacity() ? this.energy.getEnergy() : 0,
-                    this.inputslotB.get(0),
-                    true
-            ) != 0) {
-
-                this.energy.addEnergy(this.inputslotB.discharge(this.energy.getEnergy() < this.energy.getCapacity() ?
-                        this.energy.getEnergy() : 0, this.inputslotB.get(0), false));
-                needsInvUpdate = ((this.energy.getEnergy() > 1D ? this.energy.getEnergy() : 0) > 0.0D);
-            }
-        }
-        if (this.energy2 > 0) {
-            if (this.getWorld().getWorldTime() % 60 == 0) {
-                transferRFEnergyList.clear();
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    BlockPos pos = new BlockPos(
-                            this.pos.getX() + facing.getFrontOffsetX(),
-                            this.pos.getY() + facing.getFrontOffsetY(),
-                            this.pos.getZ() + facing.getFrontOffsetZ()
-                    );
-                    TileEntity tile = this.getWorld().getTileEntity(pos);
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile instanceof IEnergyReceiver) {
-                        transferRFEnergyList.add(new TransferRFEnergy(tile, ((IEnergyReceiver) tile), facing));
-                    }
-                }
-            }
-        }
-        boolean refresh = false;
-        for (TransferRFEnergy rfEnergy : this.transferRFEnergyList) {
-            if (rfEnergy.getTile().isInvalid()) {
-                refresh = true;
-                continue;
-            }
-            extractEnergy(rfEnergy.getFacing(), rfEnergy.getSink().receiveEnergy(rfEnergy.getFacing().getOpposite(),
-                    extractEnergy(rfEnergy.getFacing(), (int) this.energy2, true), false
-            ), false);
-        }
-        if (refresh) {
-            transferRFEnergyList.clear();
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                BlockPos pos = new BlockPos(
-                        this.pos.getX() + facing.getFrontOffsetX(),
-                        this.pos.getY() + facing.getFrontOffsetY(),
-                        this.pos.getZ() + facing.getFrontOffsetZ()
-                );
-                TileEntity tile = this.getWorld().getTileEntity(pos);
-                if (tile == null) {
-                    continue;
-                }
-                if (tile instanceof IEnergyReceiver) {
-                    transferRFEnergyList.add(new TransferRFEnergy(tile, ((IEnergyReceiver) tile), facing));
-                }
-            }
-        }
-
-
+        boolean ignore = this.inputslotC.checkignore();
+        this.inputslotA.setIgnore(ignore);
     }
 
     public int getCapacity() {
@@ -682,54 +442,23 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
         return this.energy.getCapacity();
     }
 
-    @Override
-    public double getRFCapacity() {
-        return this.maxStorage2;
-    }
-
 
     public int addEnergy(int amount) {
         this.energy.addEnergy(amount);
         return amount;
     }
 
-    public double extractEnergy1(double maxExtract, boolean simulate) {
-        double temp;
-
-        temp = this.energy2;
-
-        if (temp > 0) {
-            double energyExtracted = Math.min(temp, maxExtract);
-            if (!simulate &&
-                    this.energy2 - temp >= 0.0D) {
-                this.energy2 -= temp;
-                if (energyExtracted > 0) {
-                    temp -= energyExtracted;
-                    this.energy2 += temp;
-                }
-                return energyExtracted;
-            }
-        }
-        return 0;
+    @Override
+    public int getTier() {
+        return this.energy.getSinkTier();
     }
+
 
     public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
         if (!(getWorld()).isRemote) {
             NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
             this.energy.addEnergy(nbt.getDouble("energy"));
-            this.energy2 = nbt.getDouble("energy2");
-            this.UUID = placer.getName();
-        }
-    }
-
-
-    public void onPlaced(double eustored, double eustored1, EntityPlayer player, EnumFacing side) {
-        super.onPlaced(null, player, side);
-        if (!(getWorld()).isRemote) {
-            this.energy.addEnergy(eustored);
-            this.energy2 = eustored1;
-
         }
     }
 
@@ -757,7 +486,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             if (retainedRatio > 0.0D && totalEnergy > 0.0D) {
                 NBTTagCompound nbt = StackUtil.getOrCreateNbtData(drop);
                 nbt.setDouble("energy", Math.round(totalEnergy * retainedRatio));
-                nbt.setDouble("energy2", Math.round(this.energy2 * retainedRatio));
 
             }
         }
@@ -772,7 +500,6 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
             if (retainedRatio > 0.0D && totalEnergy > 0.0D) {
                 NBTTagCompound nbt = StackUtil.getOrCreateNbtData(drop);
                 nbt.setDouble("energy", Math.round(totalEnergy * retainedRatio));
-                nbt.setDouble("energy2", Math.round(this.energy2 * retainedRatio));
 
             }
         }
@@ -790,12 +517,8 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
                     EnumSet.of(this.getFacing())
             );
         }
-        this.UUID = nbttagcompound.getString("UUID");
-        this.energy2 = Util.limit(nbttagcompound.getDouble("energy2"), 0.0D,
-                this.maxStorage2
-        );
         this.rfeu = nbttagcompound.getBoolean("rfeu");
-
+        this.redstoneMode = nbttagcompound.getByte("redstoneMode");
     }
 
     public void setFacing(EnumFacing facing) {
@@ -810,10 +533,8 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setDouble("energy2", this.energy2);
-        nbttagcompound.setString("UUID", this.UUID);
         nbttagcompound.setBoolean("rfeu", this.rfeu);
-
+        nbttagcompound.setByte("redstoneMode", this.redstoneMode);
         return nbttagcompound;
     }
 
@@ -821,10 +542,40 @@ public class TileEntityElectricBlock extends TileEntityInventory implements IHas
     public void onGuiClosed(EntityPlayer player) {
     }
 
+    public boolean shouldEmitRedstone() {
+        switch (this.redstoneMode) {
+            case 1:
+                return this.energy.getEnergy() >= this.energy.getCapacity() - this.output * 20.0;
+            case 2:
+                return this.energy.getEnergy() > this.output && this.energy.getEnergy() < this.energy.getCapacity() - this.output;
+            case 3:
+                return this.energy.getEnergy() < this.energy.getCapacity() - this.output;
+            case 4:
+                return this.energy.getEnergy() < this.output;
+            default:
+                return false;
+        }
+    }
 
     public void onNetworkEvent(EntityPlayer player, int event) {
-        this.rfeu = !this.rfeu;
 
+        ++this.redstoneMode;
+        if (this.redstoneMode >= 7) {
+            this.redstoneMode = 0;
+        }
+
+        IC2.platform.messagePlayer(player, this.getStringRedstoneMode());
+
+
+    }
+
+    public byte getRedstoneMode() {
+        return redstoneMode;
+    }
+
+    public String getStringRedstoneMode() {
+        return this.redstoneMode < 7 && this.redstoneMode >= 0 ?
+                Localization.translate("ic2.EUStorage.gui.mod.redstone" + this.redstoneMode) : "";
     }
 
 

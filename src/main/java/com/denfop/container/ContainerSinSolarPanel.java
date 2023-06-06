@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntitySintezator;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -37,6 +35,7 @@ public class ContainerSinSolarPanel extends ContainerFullInv<TileEntitySintezato
         ret.add("production");
         ret.add("rain");
         ret.add("machineTire");
+        ret.add("machineTire1");
         ret.add("progress");
         ret.add("getmodulerf");
         ret.add("storage2");

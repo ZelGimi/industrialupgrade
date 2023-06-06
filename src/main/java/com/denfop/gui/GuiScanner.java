@@ -1,14 +1,13 @@
 package com.denfop.gui;
 
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerScanner;
 import com.denfop.tiles.base.TileEntityScanner;
-import ic2.core.gui.CustomButton;
-import ic2.core.gui.IEnableHandler;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,18 +38,10 @@ public class GuiScanner extends GuiIU<ContainerScanner> {
                 new Component<>(this.container.base.energy)
         ));
         this.addElement((new CustomButton(this, 102, 49, 12, 12, 176, 57, background, this.createEventSender(0)))
-                .withEnableHandler(new IEnableHandler() {
-                    public boolean isEnabled() {
-                        return container.base.getState() == TileEntityScanner.State.COMPLETED || container.base.getState() == TileEntityScanner.State.TRANSFER_ERROR || container.base.getState() == TileEntityScanner.State.FAILED;
-                    }
-                })
+                .withEnableHandler(() -> container.base.getState() == TileEntityScanner.State.COMPLETED || container.base.getState() == TileEntityScanner.State.TRANSFER_ERROR || container.base.getState() == TileEntityScanner.State.FAILED)
                 .withTooltip("ic2.Scanner.gui.button.delete"));
         this.addElement((new CustomButton(this, 143, 49, 24, 12, 176, 69, background, this.createEventSender(1)))
-                .withEnableHandler(new IEnableHandler() {
-                    public boolean isEnabled() {
-                        return container.base.getState() == TileEntityScanner.State.COMPLETED || container.base.getState() == TileEntityScanner.State.TRANSFER_ERROR;
-                    }
-                })
+                .withEnableHandler(() -> container.base.getState() == TileEntityScanner.State.COMPLETED || container.base.getState() == TileEntityScanner.State.TRANSFER_ERROR)
                 .withTooltip("ic2.Scanner.gui.button.save"));
         this.info[1] = Localization.translate("ic2.Scanner.gui.info1");
         this.info[2] = Localization.translate("ic2.Scanner.gui.info2");

@@ -60,6 +60,7 @@ public final class CapturedMobUtils {
         }
         this.resource = builder.toString();
         this.coefficient = entity.getMaxHealth() / 40;
+
     }
 
     private CapturedMobUtils(@Nonnull NBTTagCompound nbt) {

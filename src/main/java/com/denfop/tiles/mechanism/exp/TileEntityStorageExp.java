@@ -4,10 +4,10 @@ package com.denfop.tiles.mechanism.exp;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.audio.AudioSource;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.CoolComponent;
-import com.denfop.componets.EXPComponent;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerStorageExp;
 import com.denfop.gui.GuiStorageExp;
 import com.denfop.invslot.InvSlotExpStorage;
@@ -17,9 +17,7 @@ import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
@@ -40,7 +38,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         INetworkClientTileEntityEventListener, IAudioFixer {
 
     public final InvSlotExpStorage inputSlot;
-    public final EXPComponent energy;
+    public final ComponentBaseEnergy energy;
     public int expirencelevel;
     public int expirencelevel1;
     public AudioSource audioSource;
@@ -51,7 +49,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
 
     public TileEntityStorageExp() {
         this.inputSlot = new InvSlotExpStorage(this);
-        this.energy = this.addComponent(EXPComponent.asBasicSink(this, 2000000000, 14));
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
 
     }
 
@@ -82,13 +80,13 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
@@ -104,19 +102,21 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
     public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    energy.getCapacity())
                     + " EXP");
         }
     }
+
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final EXPComponent component2 = this.energy;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    final ComponentBaseEnergy component2 = this.energy;
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component2.getEnergy());
                         }
@@ -133,9 +133,9 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
             }
         }
 
-        final EXPComponent component2 = this.energy;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        final ComponentBaseEnergy component2 = this.energy;
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component2.getEnergy());
             }
@@ -143,14 +143,16 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
 
         return drop;
     }
+
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
     }
+
     @Override
     public boolean getEnable() {
         return this.sound;
@@ -170,7 +172,7 @@ public class TileEntityStorageExp extends TileEntityInventory implements IHasGui
         return new GuiStorageExp(new ContainerStorageExp(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityStorageExp> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerStorageExp getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerStorageExp(entityPlayer, this);
     }
 

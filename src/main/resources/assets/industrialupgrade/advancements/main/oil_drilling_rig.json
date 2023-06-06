@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:petrol_quarry"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:petrol_quarry"
     },
-    "title": {
-      "translate": "achievement.oil_drilling_rig"
+    "title" : {
+      "translate" : "achievement.oil_drilling_rig"
     },
-    "description": {
-      "translate": "achievement.oil_drilling_rig.desc"
+    "description" : {
+      "translate" : "achievement.oil_drilling_rig.desc"
     }
   },
-  "parent": "industrialupgrade:main/oil_cell",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/oil_cell",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:petrol_quarry"
+            "item" : "industrialupgrade:petrol_quarry"
           }
         ]
       }

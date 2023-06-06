@@ -1,12 +1,18 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
-import ic2.core.uu.UuIndex;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -18,11 +24,8 @@ import java.util.Objects;
 public class CTUURecipe {
 
     @ZenMethod
-    public static void addRecipe(IItemStack output, int col) {
-
-
+    public static void addRecipe(IItemStack output, double col) {
         CraftTweakerAPI.apply(new AddMolecularAction(output, col));
-
     }
 
     public static ItemStack getItemStack(IItemStack item) {
@@ -42,10 +45,10 @@ public class CTUURecipe {
     private static class AddMolecularAction extends BaseAction {
 
         private final IItemStack output;
-        private final int number;
+        private final double number;
 
 
-        public AddMolecularAction(IItemStack output, final int col) {
+        public AddMolecularAction(IItemStack output, final double col) {
             super("uu");
             this.output = output;
             this.number = col;
@@ -67,9 +70,18 @@ public class CTUURecipe {
         public void apply() {
 
 
-            UuIndex.instance.add(getItemStack(this.output), this.number);
+            final NBTTagCompound nbt = ModUtils.nbt();
+            nbt.setDouble("matter", number);
 
-
+            Recipes.recipes.addAdderRecipe(
+                    "replicator",
+                    new BaseMachineRecipe(
+                            new Input(
+                                    new IC2RecipeInput(output)
+                            ),
+                            new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
+                    )
+            );
         }
 
         public String describe() {

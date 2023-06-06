@@ -4,6 +4,17 @@ public interface IStorage {
 
     double getEUCapacity();
 
-    double getRFCapacity();
+
+    int getTier();
+
+    byte getRedstoneMode();
+
+    boolean shouldEmitRedstone();
+
+    boolean shouldEmitEnergy();
+
+    double getEUStored();
+
+    double getOutput();
 
 }

@@ -1,16 +1,13 @@
 package com.denfop.tiles.base;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
-import com.denfop.invslot.InvSlotConsumableLiquid;
-import com.denfop.invslot.InvSlotConsumableLiquidByListRemake;
-import com.denfop.invslot.InvSlotConsumableLiquidByTank;
-import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.componets.Fluids;
+import com.denfop.invslot.*;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.LiquidUtil;
@@ -22,11 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -87,7 +80,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         this.containerslot = new InvSlotConsumableLiquidByListRemake[fluid.length];
         for (int i = 0; i < fluid.length; i++) {
             this.containerslot[i] = new InvSlotConsumableLiquidByListRemake(this, "container" + i, InvSlot.Access.I, 1,
-                    InvSlot.InvSide.TOP,
+                    InvSlot.InvSide.ANY,
                     InvSlotConsumableLiquid.OpType.Fill, fluid[i]
             );
         }
@@ -152,7 +145,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
                     this.fluidTank[i].fill(fluidStack, true);
                 }
             }
-            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
         }
     }
 
@@ -233,7 +226,9 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
         for (final InvSlotConsumableLiquidByTank itemStacks : fluidSlot) {
             for (final FluidTank tank : fluidTank) {
-                if (tank.equals(fluidTank[0]) && !itemStacks.get().isEmpty()) {
+                if (tank.equals(fluidTank[0]) && tank.getFluidAmount() + 1000 <= tank.getCapacity() && !itemStacks
+                        .get()
+                        .isEmpty()) {
                     if (itemStacks.processIntoTank(tank, this.outputSlot)) {
                         needsInvUpdate = true;
 
@@ -242,7 +237,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
             }
         }
         if (needsInvUpdate) {
-            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
         }
 
         if (this.upgradeSlot.tickNoMark()) {
@@ -286,7 +281,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -297,7 +292,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
         if (!this.getWorld().isRemote && LiquidUtil.isFluidContainer(player.getHeldItem(hand))) {
 
             return FluidUtil.interactWithFluidHandler(player, hand,
-                    this.getComponent(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
         if (level < 10) {
@@ -361,8 +356,13 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
     @Override
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+        return EnumSet.of(
+                UpgradableProperty.RedstoneSensitive,
+                UpgradableProperty.Transformer,
+                UpgradableProperty.ItemConsuming,
+                UpgradableProperty.ItemProducing,
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

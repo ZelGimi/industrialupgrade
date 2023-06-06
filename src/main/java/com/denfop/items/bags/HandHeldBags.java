@@ -2,12 +2,12 @@ package com.denfop.items.bags;
 
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.container.ContainerBags;
+import com.denfop.container.ContainerBase;
 import com.denfop.gui.GuiBags;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.items.HandHeldInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.item.ElectricItem;
-import ic2.core.ContainerBase;
-import ic2.core.item.tool.HandHeldInventory;
 import ic2.core.util.StackUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -102,6 +102,10 @@ public class HandHeldBags extends HandHeldInventory {
 
     public ItemStack get(int index) {
         return this.inventory[index];
+    }
+
+    public ItemStack[] getAll() {
+        return this.inventory;
     }
 
     public void put(ItemStack content) {

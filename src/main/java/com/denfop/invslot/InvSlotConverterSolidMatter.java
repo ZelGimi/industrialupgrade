@@ -1,16 +1,16 @@
 package com.denfop.invslot;
 
 
+import com.denfop.api.recipe.ISlotInv;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileEntityConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotConverterSolidMatter extends InvSlot {
+public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
     public InvSlotConverterSolidMatter(TileEntityInventory base1, String string) {
-        super(base1, string, InvSlot.Access.I, 7, InvSlot.InvSide.TOP);
+        super(base1, string, InvSlot.Access.I, 8, InvSlot.InvSide.ANY);
 
     }
 
@@ -30,7 +30,7 @@ public class InvSlotConverterSolidMatter extends InvSlot {
             if (!get(i).isEmpty()) {
                 TileEntityConverterSolidMatter tile = (TileEntityConverterSolidMatter) base;
                 int meta = get(i).getItemDamage();
-                while (!this.get(i).isEmpty() && tile.quantitysolid[meta % tile.quantitysolid.length] <= 98000) {
+                while (!this.get(i).isEmpty() && tile.quantitysolid[meta % tile.quantitysolid.length] <= 99800) {
                     tile.quantitysolid[meta % tile.quantitysolid.length] += 200;
                     this.consume(i, 1);
 
@@ -42,7 +42,7 @@ public class InvSlotConverterSolidMatter extends InvSlot {
 
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem() instanceof ItemSolidMatter;
     }
 
@@ -60,6 +60,11 @@ public class InvSlotConverterSolidMatter extends InvSlot {
             }
         }
 
+    }
+
+    @Override
+    public boolean accepts(final int index, final ItemStack stack) {
+        return index == stack.getItemDamage();
     }
 
 }

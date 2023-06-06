@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -11,6 +11,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -72,7 +73,7 @@ public class CTEndTransformer {
             nbt.setDouble("need", this.matter);
             final IC2RecipeInput stack = new IC2RecipeInput(this.container);
 
-            Recipes.recipes.addRecipe("endcollector", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("endcollector", new BaseMachineRecipe(
                     new Input(
                             stack
                     ),
@@ -137,11 +138,12 @@ public class CTEndTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("endassembler", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("endcollector", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing ender transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:se_gen"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:se_gen"
     },
-    "title": {
-      "translate": "achievement.SE_generator"
+    "title" : {
+      "translate" : "achievement.SE_generator"
     },
-    "description": {
-      "translate": "achievement.SE_generator.desc"
+    "description" : {
+      "translate" : "achievement.SE_generator.desc"
     }
   },
-  "parent": "industrialupgrade:main/thorium_ore",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/thorium_ore",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:se_gen"
+            "item" : "industrialupgrade:se_gen"
           }
         ]
       }

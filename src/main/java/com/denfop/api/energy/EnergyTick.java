@@ -1,6 +1,5 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.tile.IEnergySource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,23 +7,23 @@ import java.util.Objects;
 
 public class EnergyTick {
 
-    private final IEnergySource source;
+    private final IAdvEnergySource source;
     private final boolean isAdv;
     private final boolean isDual;
     private IAdvEnergySource advSource = null;
     private List<EnergyNetLocal.EnergyPath> energyPaths;
 
-    public EnergyTick(IEnergySource source, List<EnergyNetLocal.EnergyPath> list) {
+    public EnergyTick(IAdvEnergySource source, List<EnergyNetLocal.EnergyPath> list) {
         this.source = source;
         this.energyPaths = list;
-        this.isAdv = source instanceof IAdvEnergySource;
+        this.isAdv = source != null;
         this.isDual = source instanceof IAdvDual;
         if (this.isAdv) {
-            this.advSource = (IAdvEnergySource) source;
+            this.advSource = source;
         }
     }
 
-    public IEnergySource getSource() {
+    public IAdvEnergySource getSource() {
         return source;
     }
 

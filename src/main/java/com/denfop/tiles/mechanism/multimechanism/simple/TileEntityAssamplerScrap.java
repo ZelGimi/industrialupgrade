@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism.multimechanism.simple;
 
 import com.denfop.IUItem;
+import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -9,8 +10,6 @@ import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.core.init.Localization;
-import ic2.core.item.type.CraftingItemType;
-import ic2.core.ref.ItemName;
 import net.minecraft.item.ItemStack;
 
 public class TileEntityAssamplerScrap extends TileEntityMultiMachine {
@@ -39,11 +38,11 @@ public class TileEntityAssamplerScrap extends TileEntityMultiMachine {
 
     public void init() {
         addrecipe(
-                new ItemStack(ItemName.crafting.getItemStack(CraftingItemType.rubber).getItem(), 9, 23),
-                new ItemStack(ItemName.crafting.getItemStack(CraftingItemType.rubber).getItem(), 1, 24)
+                new ItemStack(Ic2Items.scrap.getItem(), 9, 23),
+                new ItemStack(Ic2Items.scrapBox.getItem(), 1, 24)
         );
         addrecipe(
-                new ItemStack(ItemName.crafting.getItemStack(CraftingItemType.rubber).getItem(), 9, 24),
+                new ItemStack(Ic2Items.scrapBox.getItem(), 9, 24),
                 new ItemStack(IUItem.doublescrapBox, 1)
         );
     }

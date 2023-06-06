@@ -5,7 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemIC2;
-import ic2.core.item.type.IRadioactiveItemType;
 import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -13,7 +12,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemRadioactive extends ItemIC2 implements IRadioactiveItemType, IModelRegister {
+public class ItemRadioactive extends ItemIC2 implements IModelRegister {
 
     protected final int radiationLength;
     protected final int amplifier;
@@ -52,14 +51,5 @@ public class ItemRadioactive extends ItemIC2 implements IRadioactiveItemType, IM
         );
     }
 
-    @Override
-    public int getRadiationDuration() {
-        return this.radiationLength;
-    }
-
-    @Override
-    public int getRadiationAmplifier() {
-        return this.amplifier;
-    }
 
 }

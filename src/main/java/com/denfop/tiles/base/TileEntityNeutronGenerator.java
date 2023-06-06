@@ -1,28 +1,24 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Config;
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerNeutronGenerator;
 import com.denfop.gui.GuiNeutronGenerator;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
-import ic2.core.init.MainConfig;
 import ic2.core.network.GuiSynced;
 import ic2.core.profile.NotClassic;
-import ic2.core.util.ConfigUtil;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -37,7 +33,6 @@ import java.util.Set;
 public class TileEntityNeutronGenerator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock,
         INetworkClientTileEntityEventListener {
 
-    private static final int DEFAULT_TIER = ConfigUtil.getInt(MainConfig.get(), "balance/matterFabricatorTier");
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
@@ -56,9 +51,9 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
         this.containerslot = new InvSlotConsumableLiquidByList(
                 this,
                 "container",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.TOP,
+                InvSlot.InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidNeutron.getInstance()
         );
@@ -71,7 +66,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
     }
 
     private static int applyModifier(int extra) {
-        double ret = (double) Math.round(((double) DEFAULT_TIER + (double) extra));
+        double ret = (double) Math.round(((double) 14 + (double) extra));
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
@@ -86,7 +81,7 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
 
     protected void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -150,12 +145,12 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
         return "" + p + "%";
     }
 
-    public ContainerBase<TileEntityNeutronGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerNeutronGenerator getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerNeutronGenerator(entityPlayer, this);
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiNeutronGenerator getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiNeutronGenerator(new ContainerNeutronGenerator(entityPlayer, this));
     }
 
@@ -201,7 +196,11 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
-        this.work = !this.work;
+        if (i != 10) {
+            this.work = !this.work;
+        } else {
+            super.onNetworkEvent(entityPlayer, i);
+        }
     }
 
 }

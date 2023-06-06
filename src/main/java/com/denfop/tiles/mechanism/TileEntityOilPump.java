@@ -1,27 +1,26 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerOilPump;
 import com.denfop.gui.GuiOilPump;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotConsumableLiquid;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityElectricLiquidTankInventory;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.StackUtil;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +60,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
     public TileEntityOilPump() {
         super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance()));
         this.containerslot = new InvSlotConsumableLiquidByList(this,
-                "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill,
+                "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill,
                 FluidName.fluidneft.getInstance()
         );
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
@@ -129,7 +128,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -162,11 +161,11 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
     }
 
     private void updateTileEntityField() {
-        IC2.network.get(true).updateTileEntityField(this, "level");
-        IC2.network.get(true).updateTileEntityField(this, "count");
-        IC2.network.get(true).updateTileEntityField(this, "find");
-        IC2.network.get(true).updateTileEntityField(this, "maxcount");
-        IC2.network.get(true).updateTileEntityField(this, "type");
+        IUCore.network.get(true).updateTileEntityField(this, "level");
+        IUCore.network.get(true).updateTileEntityField(this, "count");
+        IUCore.network.get(true).updateTileEntityField(this, "find");
+        IUCore.network.get(true).updateTileEntityField(this, "maxcount");
+        IUCore.network.get(true).updateTileEntityField(this, "type");
     }
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
@@ -187,7 +186,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
             return;
         }
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             this.find = this.vein.get();
             this.count = this.vein.getCol();
             this.maxcount = this.vein.getMaxCol();
@@ -198,7 +197,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
             if (fluidStack != null) {
                 this.fluidTank.fill(fluidStack, true);
             }
-            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
         }
         updateTileEntityField();
     }
@@ -210,7 +209,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
             return;
         }
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             boolean find = this.vein.get();
             if (this.find != find) {
                 this.vein.setFind(this.find);
@@ -343,12 +342,12 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
 
 
     @Override
-    public ContainerBase<TileEntityOilPump> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerOilPump getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerOilPump(entityPlayer, this);
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiOilPump getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiOilPump(new ContainerOilPump(entityPlayer, this));
     }
 

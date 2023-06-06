@@ -28,10 +28,10 @@ public class WorldGenOil extends WorldGenerator {
         int z = pos.getZ() - 8;
         int y = pos.getY();
         final IBlockState block_state = world.getBlockState(pos);
-        while (y > 5 && block_state.getMaterial() == Material.AIR) {
+        while (y > 40 && block_state.getMaterial() == Material.AIR) {
             y--;
         }
-        if (y <= 4) {
+        if (y <= 40) {
             return false;
         }
 
@@ -97,53 +97,23 @@ public class WorldGenOil extends WorldGenerator {
         for (int j = 0; j < 16; j++) {
             for (k = 0; k < 16; k++) {
                 for (m = 0; m < 8; m++) {
-                    if (arrayOfBoolean[(j * 16 + k) * 8 + m]) {
+                    boolean need = arrayOfBoolean[(j * 16 + k) * 8 + m];
+                    if (need) {
 
                         world.setBlockState(new BlockPos(x + j, y + m, z + k), m >= 4 ? Blocks.AIR.getDefaultState() :
                                 this.block.getDefaultState(), 2);
 
                     }
-                }
-            }
-        }
-        for (int j = 0; j < 16; j++) {
-            for (k = 0; k < 16; k++) {
-                for (m = 4; m < 8; m++) {
-                    IBlockState block_states = null;
-                    boolean need = arrayOfBoolean[(j * 16 + k) * 8 + m];
-                    if (need) {
-                        block_states = world.getBlockState(new BlockPos(x + j, y + m - 1, z + k));
-                    }
-                    if (need
-                            && (block_states.getBlock() == Blocks.DIRT || block_states
-                            .getBlock() == Blocks.WATER)
-                            && world.getSkylightSubtracted() > 0) {
-                        world.setBlockState(new BlockPos(x + j, y + m - 1, z + k), Blocks.GRASS.getDefaultState());
-                    }
-
-                }
-            }
-        }
-        if (this.block.getDefaultState().getMaterial() == Material.WATER) {
-            for (int j = 0; j < 16; j++) {
-                for (k = 0; k < 16; k++) {
-                    for (m = 0; m < 8; m++) {
-                        int i2 = (j * 16 + k) * 8 + m;
-                        int i1 = arrayOfBoolean[i2]
-                                && (j < 15 && arrayOfBoolean[((j + 1) * 16 + k) * 8 + m]
-                                || j > 0 && arrayOfBoolean[((j - 1) * 16 + k) * 8 + m]
-                                || k < 15 && arrayOfBoolean[(j * 16 + k + 1) * 8 + m]
-                                || k > 0 && arrayOfBoolean[(j * 16 + k - 1) * 8 + m]
-                                || m < 7 && arrayOfBoolean[(j * 16 + k) * 8 + m + 1]
-                                || m > 0 && arrayOfBoolean[i2 - 1]) ? 1 : 0;
-
-                        if (i1 != 0 && (m < 4 || rand.nextInt(2) != 0)
-                                && world.getBlockState(new BlockPos(x + j, y + m, z + k)).getMaterial().isSolid()) {
-                            world.setBlockState(
-                                    new BlockPos(x + j, y + m, z + k),
-                                    this.spreadBlock.getDefaultState()
-                            );
-
+                    if (m >= 4) {
+                        IBlockState block_states = null;
+                        if (need) {
+                            block_states = world.getBlockState(new BlockPos(x + j, y + m - 1, z + k));
+                        }
+                        if (need
+                                && (block_states.getBlock() == Blocks.DIRT || block_states
+                                .getBlock() == Blocks.WATER)
+                                && world.getSkylightSubtracted() > 0) {
+                            world.setBlockState(new BlockPos(x + j, y + m - 1, z + k), Blocks.GRASS.getDefaultState());
                         }
                     }
                 }

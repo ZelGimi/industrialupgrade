@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemiucrafring",
-      "data": 0
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemiucrafring",
+      "data" : 0
     },
-    "title": {
-      "translate": "achievement.uranium_enrich"
+    "title" : {
+      "translate" : "achievement.uranium_enrich"
     },
-    "description": {
-      "translate": "achievement.uranium_enrich.desc"
+    "description" : {
+      "translate" : "achievement.uranium_enrich.desc"
     }
   },
-  "parent": "industrialupgrade:main/enrichment",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/enrichment",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemiucrafring",
-            "data": 0
+            "item" : "industrialupgrade:itemiucrafring",
+            "data" : 0
           }
         ]
       }

@@ -3,10 +3,14 @@ package com.denfop.integration.botania;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.items.IUItemBase;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.items.energy.instruments.EnumVarietyInstruments;
 import com.denfop.items.energy.instruments.ItemEnergyInstruments;
+import com.denfop.tiles.mechanism.dual.TileEntitySolidCanner;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
 import ic2.core.block.TeBlockRegistry;
@@ -58,12 +62,12 @@ public class BotaniaIntegration {
 
         BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_energy, 1, 0), 12000,
                 LibOreDict.RUNE[0], LibOreDict.RUNE[1], new ItemStack(IUItem.photoniy),
-                new ItemStack(IUItem.itemiu, 1, 0), new ItemStack(IUItem.iuingot, 1, 17),
+                new ItemStack(IUItem.itemiu, 1, 0), "ingotIridium",
                 new ItemStack(elementium_plate), new ItemStack(IUItem.compresscarbonultra)
         );
         BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_sun, 1, 0), 12000,
                 LibOreDict.RUNE[4], LibOreDict.RUNE[3], new ItemStack(IUItem.photoniy_ingot),
-                new ItemStack(IUItem.itemiu, 1, 0), new ItemStack(IUItem.iuingot, 1, 17),
+                new ItemStack(IUItem.itemiu, 1, 0), "ingotIridium",
                 new ItemStack(elementium_plate), new ItemStack(IUItem.compresscarbon)
         );
         BotaniaAPI.registerRuneAltarRecipe(
@@ -81,21 +85,18 @@ public class BotaniaIntegration {
                 new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
                 new ItemStack(Ic2Items.energiumDust.getItem(), 1, Ic2Items.energiumDust.getItemDamage()),
                 new ItemStack(IUItem.itemiu, 1, 0),
-                new ItemStack(IUItem.iuingot, 1, 17),
+                "ingotIridium",
                 new ItemStack(manasteel_plate),
                 new ItemStack(IUItem.coal_chunk1)
         );
-        Recipes.compressor.addRecipe(
-                input.forStack(new ItemStack(ModItems.manaResource, 1, 0), 1),
-                null, false, new ItemStack(manasteel_plate)
+        addcompressor(
+                new ItemStack(ModItems.manaResource, 1, 0), new ItemStack(manasteel_plate)
         );
-        Recipes.compressor.addRecipe(
-                input.forStack(new ItemStack(ModItems.manaResource, 1, 7), 1),
-                null, false, new ItemStack(elementium_plate)
+        addcompressor(
+                new ItemStack(ModItems.manaResource, 1, 7), new ItemStack(elementium_plate)
         );
-        Recipes.compressor.addRecipe(
-                input.forStack(new ItemStack(ModItems.manaResource, 1, 4), 1),
-                null, false, new ItemStack(terrasteel_plate)
+        addcompressor(
+                new ItemStack(ModItems.manaResource, 1, 4), new ItemStack(terrasteel_plate)
         );
         Recipes.advRecipes.addRecipe(new ItemStack(teraDDrill, 1, OreDictionary.WILDCARD_VALUE),
                 " L ", "ODO", "COC", 'O', IUItem.overclockerUpgrade, 'D',
@@ -138,19 +139,16 @@ public class BotaniaIntegration {
                 reactorterastrellDual, 'Q', "plateIron", 'C', "plateCopper"
         );
 
-        Recipes.cannerBottle.addRecipe(
-                input.forStack(Ic2Items.fuelRod, 1),
-                input.forStack(new ItemStack(ModItems.manaResource, 1, 4), 1),
-                reactorterastrellSimple, false
+        TileEntitySolidCanner.addBottleRecipe(
+                Ic2Items.fuelRod,
+                new ItemStack(ModItems.manaResource, 1, 4),
+                reactorterastrellSimple
         );
-        Recipes.compressor.addRecipe(input.forStack(reactorDepletedterastrellSimple, 1),
-                null, false, new ItemStack(ModItems.manaResource, 1, 4)
+        addcompressor(reactorDepletedterastrellSimple, new ItemStack(ModItems.manaResource, 1, 4)
         );
-        Recipes.compressor.addRecipe(input.forStack(reactorDepletedterastrellDual, 1),
-                null, false, new ItemStack(ModItems.manaResource, 2, 4)
+        addcompressor(reactorDepletedterastrellDual, new ItemStack(ModItems.manaResource, 2, 4)
         );
-        Recipes.compressor.addRecipe(input.forStack(reactorDepletedterastrellQuad, 1),
-                null, false, new ItemStack(ModItems.manaResource, 4, 4)
+        addcompressor(reactorDepletedterastrellQuad, new ItemStack(ModItems.manaResource, 4, 4)
         );
         //
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.upgradepanelkit, 1, 17), "   ", "BAB", " B ", 'A',
@@ -165,5 +163,20 @@ public class BotaniaIntegration {
 
     }
 
+    public static void addcompressor(ItemStack input, ItemStack output) {
+
+        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "compressor",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.forStack(input)
+                        ),
+                        new RecipeOutput(null, output)
+                )
+        );
+
+
+    }
 
 }

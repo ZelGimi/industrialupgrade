@@ -64,7 +64,7 @@ industrialupgrade.machines.hadron_solar_panel=§d強子太陽能板
 industrialupgrade.machines.graviton_solar_panel=§d引力太陽能板
 industrialupgrade.machines.quark_solar_panel=§d夸克太陽能板
 blockAdministatorSolarPanel.name=§8管理員太陽能板
-iu.adminpanel_item.adminpanel_item=§8管理員太陽能板
+industrialupgrade.admpanel.admpanel=§8管理員太陽能板
 
 # 《龍之進化》太陽能板
 industrialupgrade.draconicpanel.draconium_solar_panel=§d飛龍太陽能板
@@ -383,8 +383,8 @@ iu.spawnermodules.spawner_module7=獵人模塊：三種生物
 iu.spawnermodules.spawner_module8=獵人模塊：點燃
 
 iu.itemcoolupgrade.azote=氮氣冷卻模塊
-iu.itemcoolupgrade.hydrogen=氫氣冷卻模塊
-iu.itemcoolupgrade.helium=氦氣冷卻模塊
+iu.itemcoolupgrade.hydrogen=氫冷卻模塊
+iu.itemcoolupgrade.helium=氦冷卻模塊
 
 iu.rotorupgrade_schemes.name=扇葉模塊模板
 iu.rotors_upgrade.rotorupgrade=扇葉模塊：耐久I
@@ -434,7 +434,7 @@ ic2.item.tooltip.Store=儲存：
 wirelles=§e允許無線輸電
 transformator=升高太陽能板等級
 transformator1=降低太陽能板等級
-iu.sintezator_item.sintezator_item=太陽能板合路器
+industrialupgrade.sintezator.sintezator=太陽能板合路器
 iu.sintezator=太陽能板在其中折疊。插槽限制：2
 supsolpans.SpecSP.Output=輸出：
 supsolpans.SpecSP.Storage=容量：
@@ -708,30 +708,30 @@ fluid.luidpolyeth=聚乙烯
 fluid.luidazot=氮
 fluid.luidco2=二氧化碳
 
-#Bucket. The following lines are aligned with other localizations.
-#item.forge.bucketFilled.iufluidneutron
-#item.forge.bucketFilled.iufluidhelium
-#item.forge.bucketFilled.iufluidbenz
-#item.forge.bucketFilled.iufluiddizel
-#item.forge.bucketFilled.iufluidneft
-#item.forge.bucketFilled.iufluidpolyprop
-#item.forge.bucketFilled.iufluidhyd
-#item.forge.bucketFilled.iufluidoxy
-#item.forge.bucketFilled.iufluidpolyeth
-#item.forge.bucketFilled.iufluidazot
-#item.forge.bucketFilled.iufluidco2
+#桶
+item.forge.bucketFilled.iufluidneutron=中子桶
+item.forge.bucketFilled.iufluidhelium=氦桶
+item.forge.bucketFilled.iufluidbenz=汽油桶
+item.forge.bucketFilled.iufluiddizel=柴油桶
+item.forge.bucketFilled.iufluidneft=油桶
+item.forge.bucketFilled.iufluidpolyprop=聚丙烯桶
+item.forge.bucketFilled.iufluidhyd=氫桶
+item.forge.bucketFilled.iufluidoxy=氧桶
+item.forge.bucketFilled.iufluidpolyeth=聚乙烯桶
+item.forge.bucketFilled.iufluidazot=氮桶
+item.forge.bucketFilled.iufluidco2=二氧化碳桶
 
 # 單元罐
 iu.itemcell.empty=空單元罐
 iu.itemcell.neutron=中子單元罐
-iu.itemcell.helium=氦氣單元罐
+iu.itemcell.helium=氦單元罐
 iu.itemcell.benz=汽油單元罐
 iu.itemcell.dizel=柴油單元罐
 iu.itemcell.neft=石油單元罐
 iu.itemcell.polyeth=聚乙烯單元罐
 iu.itemcell.polyprop=聚丙烯單元罐
-iu.itemcell.oxy=氧氣單元罐
-iu.itemcell.hyd=氫氣單元罐
+iu.itemcell.oxy=氧單元罐
+iu.itemcell.hyd=氫單元罐
 
 iu.ruby_block.name=紅寶石磚
 iu.sapphire_block.name=藍寶石磚
@@ -1534,7 +1534,6 @@ industrialupgrade.basemachine1.per_geo=完美地熱發電機
 industrialupgrade.basemachine2.adv_pump=改良幫浦
 industrialupgrade.basemachine2.imp_pump=進階幫浦
 
-
 industrialupgrade.basemachine3.simple_wind_generator=風力渦輪機
 industrialupgrade.basemachine3.adv_wind_generator=改良風力渦輪機
 industrialupgrade.basemachine3.imp_wind_generator=進階風力渦輪機
@@ -1543,13 +1542,13 @@ industrialupgrade.basemachine3.per_wind_generator=完美風力渦輪機
 # 內燃機發電機
 industrialupgrade.basemachine2.gen_disel=柴油發電機
 industrialupgrade.basemachine2.gen_pet=汽油發電機
-industrialupgrade.basemachine2.gen_hyd=氫氣發電機
+industrialupgrade.basemachine2.gen_hyd=氫發電機
 
 # 更多物質和能量生成機
 industrialupgrade.basemachine.gen_stone=鵝卵石生成機
 industrialupgrade.basemachine2.gen_obsidian=黑曜石生成機
 industrialupgrade.basemachine2.lava_gen=岩漿生成機
-industrialupgrade.basemachine2.helium_generator=氦氣生成機
+industrialupgrade.basemachine2.helium_generator=氦生成機
 
 industrialupgrade.basemachine.generator_microchip=電子元件製造機
 industrialupgrade.converter_matter.converter_matter=物品複製機
@@ -1563,7 +1562,7 @@ industrialupgrade.basemachine1.magnet_generator=電磁發電機
 industrialupgrade.basemachine2.fisher=釣魚機
 industrialupgrade.basemachine2.painter=印染機
 industrialupgrade.upgrade_block.upgrade_block=改裝站
-iu.quarry_vein_item.quarry_vein_item=核心搜尋鑽機
+industrialupgrade.quarry_vein.quarry_vein=核心搜尋鑽機
 industrialupgrade.petrol_quarry.petrol_quarry=抽油機
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=固體物質生成機合路器
 industrialupgrade.basemachine2.expierence_block=經驗儲存裝置
@@ -1878,6 +1877,7 @@ item.adv_iu_bags.name=改良背包
 item.imp_iu_bags.name=進階背包
 
 iu.vertical=要啟用垂直模式，請按
+iu.streak=要更改玩家後面線條的顏色，請按
 iu.magnet_mode=要激活磁鐵，請按
 iu.notfindoil=未發現石油，請放置核心搜尋鑽機來分析區塊
 iu.create_sunnarium=在日光精華生成機中製造
@@ -2072,11 +2072,11 @@ achievement.anode.desc=獲得正極
 achievement.cathode=電極-
 achievement.cathode.desc=獲得負極
 achievement.oxygen=我們呼吸的氧化劑
-achievement.oxygen.desc=獲得氧氣單元罐
+achievement.oxygen.desc=獲得氧單元罐
 achievement.hydrogen=移除水中的氧
-achievement.hydrogen.desc=獲得氫氣單元罐
+achievement.hydrogen.desc=獲得氫單元罐
 achievement.hydrogen_generator=無尾氣發電機
-achievement.hydrogen_generator.desc=製造氫氣發電機
+achievement.hydrogen_generator.desc=製造氫發電機
 achievement.plastic_plate_creator=塑膠板生產
 achievement.plastic_plate_creator.desc=製造塑膠製板機
 achievement.plastic_plate=塑膠板
@@ -2400,12 +2400,15 @@ iu.solarium_energy_sink.info=需要SE來工作
 iu.vein.info=使用核心搜尋鑽機分析區塊
 iu.vein.info1=你可以用它找到礦脈或石油脈
 iu.vein.info2=石油脈位置取決於生態域
-iu.vein.info3=獲取礦脈的百分比為20%
+iu.vein.info3=獲取礦脈的百分比為15%
 iu.oilpump.info=需要石油脈
 iu.blastfurnace.info=操作說明
 iu.blastfurnace.info1=建造3х3х3
 iu.blastfurnace.info2=從上到下的方案
 iu.blastfurnace.info3=放在最後：
+iu.blastfurnace.info4=若結構未工作
+iu.blastfurnace.info5=滑鼠右擊控制器以
+iu.blastfurnace.info6=在方塊上按U鍵以檢視JEI中的詳述
 iu.flymode_armor.info=飛行已啟用
 iu.flymode_armor.info1=飛行已停用
 iu.flymode_armor.info2=垂直模式已啟用
@@ -2502,78 +2505,76 @@ iu.simplyquarries_info2=用於量子採石場的模塊可用
 iu.simplyquarries_info3=使用QE，額外掉落機率爲15%
 iu.simplyquarries_info4=採石機已加熱
 iu.simplyquarries_info5=要挖掘一個礦脈，點擊礦石形式的按鈕，
-iu.simplyquarries_info6它會寫入“模式:礦石和礦脈”
-iu.simplyquarries_info7=Top right buttons to change the lower dig heigh右上角按鈕可修改最低挖掘高度
-iu.simplyquarries_info7=From the bottom of these buttons, setting the upper dig height在這些按鈕底部，設定最高挖掘高度
-iu.quarryvein_info=Information about the Core Search Drilling Ri核心搜尋鑽機的資訊
-iu.quarryvein_info1=The speed changes depending on the tier.速度根據等級而變化。
-iu.quarryvein_info2=To extract oi要提取石油，請使用抽油雞
-iu.quarryvein_info3=To mine a vein, use a Quarry or an Analyzer要採掘礦脈，請使用採石場或分析儀
+iu.simplyquarries_info6=它會寫入“模式:礦石和礦脈”
+iu.simplyquarries_info7=右上角按鈕可修改最低挖掘高度
+iu.simplyquarries_info7=在這些按鈕底部，設定最高挖掘高度
+iu.quarryvein_info=核心搜尋鑽機的資訊
+iu.quarryvein_info1=速度根據等級而變化。
+iu.quarryvein_info2=要提取石油，請使用抽油雞
+iu.quarryvein_info3=要採掘礦脈，請使用採石場或分析儀
 
-iu.solar_generator_info=You can use the following modules: 您可使用以下模塊：
-wind.wind_speed_info=Increases the wind speed in the wind generator by  提升風力發電機中的風速
-wind.wind_power_info=Increases the level of wind in the wind generator by 提升風力發電機中的風力等級
-wind.rotor_repair_info=Repairs a rotor every 每修復一個扇葉
-wind.limit_upgrades.info=Only one type of this upgrade is available這些升級僅一種類型可用
-button.find_energypaths=Find power grids查找電網
-button.set_value_energypaths=Update power grids更新電網
-iu.energy_controller_info=Power grids: 電網：
-iu.need_info=Need: 需要：
-iu.need_info_matter= matter固體物質
-iu.excavator.info=Put the ore there so that it breaks ores放置礦石以便它破壞
-iu.excavator.info1=You can use quarry modules你可使用採石場模塊
-iu.controller.info=Controls the network from explosions控制電網以免爆炸
-iu.controller.info1=First find and update the network grids for the controller to work首先找到並更新控制器工作的電網
-iu.controller_cables.info=Replaces independently in the network with new (better) wires in networks使用新的(更好的)電纜替換電網中的電纜
-iu.controller_cables.info1=Put the wire inside, find and upgrade the network grids放置電纜於其中，找到並升級電網
+iu.solar_generator_info=您可使用以下模塊：
+wind.wind_speed_info=提升風力發電機中的風速
+wind.wind_power_info=提升風力發電機中的風力等級
+wind.rotor_repair_info=每修復一個扇葉
+wind.limit_upgrades.info=這些升級僅一種類型可用
+button.find_energypaths=查找電網
+button.set_value_energypaths=更新電網
+iu.energy_controller_info=電網：
+iu.need_info=需要：
+iu.need_info_matter=固體物質
+iu.excavator.info=放置礦石以便它破壞
+iu.excavator.info1=你可使用採石場模塊
+iu.controller.info=控制電網以免爆炸
+iu.controller.info1=首先找到並更新控制器工作的電網
+iu.controller_cables.info=使用新的(更好的)電纜替換電網中的電纜
+iu.controller_cables.info1=放置電纜於其中，找到並升級電網
 
-
-
-iu.not.found=Not found at coordinates:在該座標未找到：
-iu.found.but.no_main=Refers to another furnace at coordinates: 指向該座標的另一個熔爐：
-iu.reactorvent=Receives 接收
-iu.reactorvent1=away from the reactor and cooled down by遠離反應堆並冷卻
-iu.reactorventspread=Chills four nearby cooling elements for 冷卻鄰近的四個冷卻元件
-iu.reactorheatswitch=Hull Exchange 外殼交換
-iu.reactorheatswitch1=Swap with neighboring components與相鄰組件交換
-message.text.mode_no_instrument=Mode模式
-message.leadbox.enable=Places nuclear rods in a box燃料棒放入箱子
-message.leadbox.disable=Does not place nuclear rods in a crate燃料棒不放入箱子
-iu.show.health=Health: 健康度：
-iu.show.speed=Tick speed:遊戲刻速度： 
-iu.molecular_info=Change molecular transducer mode 更改分子重組儀模式
-iu.molecular_info1=Change GUI color改變介面色彩
-iu.molecular_info2=and transducer plasma color以及transducer plasma色彩
-iu.molecular_info3=stack mode to single mode and vice versa堆疊模式為單模式，反之亦然
-iu.bow.maxdamage=Max bow damage(hp): 弓最大傷害(hp)：
-iu.need_colling=Cool the mechanism with a refrigerator用製冷機冷卻機器
-iu.need_colling1=Urgently cool the mechanism with a refrigerator用製冷機緊急冷卻機器
-iu.need_colling2=Mechanism stopped, waiting for cooling機器已停止，等待冷卻
-iu.need_heat=Heat the mechanism with the IU Heater使用IU的加熱機加熱機器
-iu.sound.enable=Mechanism sound enable啟用機器聲音
-iu.sound.disable=Mechanism Sound Disabled禁用機器聲音
-iu.info.module.sorting=Sorts the items in the mechanism by slots按插槽整理機器中的物品
-iu.info.module.speed=Speeds up the process up to 100%, consuming more power加速進程至100%，消耗更多能量
-iu.info.module.stack=Processes the maximum number of items in one process在同一進程中處理最大數量的物品
-iu.water_level_info=Water level:水力等級：
-iu.water_change_time=The water will change in:  
-iu.water_generator.info_main=Hydro generator basic information水力發電機基礎資訊
-iu.water_generator.info1=Depends on the speed of the current and the direction of the rotor to the direction of the current取決於水流速度和扇葉相對於水流的方向
-iu.water_generator.info2=The smaller the angle from the direction of the rotor to the perpendicular to the direction of the current, 扇葉方向與垂直於水流方向的夾角越小，
-iu.water_generator.info3=the greater the current coefficient水流係數越大
-iu.water_generator.info4=Power generation depends on current coefficient, current speed and heigh產能取決於水流係數、水流速度和高度
-iu.water_generator.info5=After exhausting all its durability, the rotor stops producing power, 耐久度耗盡後，扇葉停止產能
-iu.water_generator.info6=You can repair the rotor by using the appropriate blade on the hydro generator您可在水力發電機中用相應的扇葉片修復扇葉
-iu.water_generator.info7=Rotors can be upgraded at the Hydrorotor Upgrade Station扇葉可在水力扇葉升級站中升級
-iu.water_meter.info=Current speed: 水流速度：
-iu.water_side=Water direction: 水流方向：
-iu.water_coef=Current coefficient: 水流係數：
-water.auto_info=Allows the hydro generator to turn automatically允許水力發電機轉為自動
-water.need_level3=Right click on a water generator to restore the health of the corresponding rotor使用相應的扇葉右擊水力發電機以恢復耐久度
-water.water_speed_info=Increases the water speed in the water generator by 提升水力發電機中的水流速度
-water.water_power_info=Increases the water level in the hydro generator by 提升水力發電機中的水力等級
-iu.water_level_info=Water level: 水力等級
-iu.radiation.warning=This item gives you radiation!此物品對你有輻射！
+iu.not.found=在該座標未找到：
+iu.found.but.no_main=指向該座標的另一個熔爐：
+iu.reactorvent=接收
+iu.reactorvent1=遠離反應堆並冷卻
+iu.reactorventspread=冷卻鄰近的四個冷卻元件
+iu.reactorheatswitch=外殼交換
+iu.reactorheatswitch1=與相鄰組件交換
+message.text.mode_no_instrument=模式
+message.leadbox.enable=燃料棒放入箱子
+message.leadbox.disable=燃料棒不放入箱子
+iu.show.health=健康度：
+iu.show.speed=遊戲刻速度： 
+iu.molecular_info=更改分子重組儀模式
+iu.molecular_info1=改變介面色彩
+iu.molecular_info2=以及分子重組儀進度條色彩
+iu.molecular_info3=堆疊模式為單模式，反之亦然
+iu.bow.maxdamage=弓最大傷害(hp)：
+iu.need_colling=用製冷機冷卻機器
+iu.need_colling1=用製冷機緊急冷卻機器
+iu.need_colling2=機器已停止，等待冷卻
+iu.need_heat=使用IU的加熱機加熱機器
+iu.sound.enable=啟用機器聲音
+iu.sound.disable=禁用機器聲音
+iu.info.module.sorting=按插槽整理機器中的物品
+iu.info.module.speed=加速進程至100%，消耗更多能量
+iu.info.module.stack=在同一進程中處理最大數量的物品
+iu.water_level_info=水力等級：
+iu.water_change_time=水流將在以下時間後改變：
+iu.water_generator.info_main=水力發電機基礎資訊
+iu.water_generator.info1=取決於水流速度和扇葉相對於水流的方向
+iu.water_generator.info2=扇葉方向與垂直於水流方向的夾角越小，
+iu.water_generator.info3=水流係數越大
+iu.water_generator.info4=產能取決於水流係數、水流速度和高度
+iu.water_generator.info5=耐久度耗盡後，扇葉停止產能
+iu.water_generator.info6=您可在水力發電機中用相應的扇葉片修復扇葉
+iu.water_generator.info7=扇葉可在水力扇葉升級站中升級
+iu.water_meter.info=水流速度：
+iu.water_side=水流方向：
+iu.water_coef=水流係數：
+water.auto_info=允許水力發電機轉為自動
+water.need_level3=使用相應的扇葉右擊水力發電機以恢復耐久度
+water.water_speed_info=提升水力發電機中的水流速度
+water.water_power_info=提升水力發電機中的水力等級
+iu.water_level_info=水力等級
+iu.radiation.warning=此物品對你有輻射！
 iu.crafting_elements.crafting_0_element=防輻射布
 iu.crafting_elements.crafting_1_element=改良感測器：壓縮
 iu.crafting_elements.crafting_2_element=改良感測器：破碎
@@ -2800,7 +2801,6 @@ iu.crafting_elements.crafting_222_element=完美感測器：壓製
 iu.crafting_elements.crafting_223_element=完美感測器：電爐
 iu.crafting_elements.crafting_224_element=改良感測器：壓製
 iu.crafting_elements.crafting_225_element=改良感測器：電爐
-
 iu.crafting_elements.crafting_226_element=感測器：分析
 iu.crafting_elements.crafting_227_element=感測器：鵝卵石
 iu.crafting_elements.crafting_228_element=感測器：岩漿
@@ -2812,8 +2812,8 @@ iu.crafting_elements.crafting_233_element=完美感測器：發電機
 iu.crafting_elements.crafting_234_element=改良感測器：發電機
 iu.crafting_elements.crafting_235_element=改良感測器：合金
 iu.crafting_elements.crafting_236_element=感測器：汽油
-iu.crafting_elements.crafting_237_element=感測器：氫氣
-iu.crafting_elements.crafting_238_element=感測器：氦氣
+iu.crafting_elements.crafting_237_element=感測器：氫
+iu.crafting_elements.crafting_238_element=感測器：氦
 iu.crafting_elements.crafting_239_element=感測器：柴油
 iu.crafting_elements.crafting_240_element=感測器：液體物質
 iu.crafting_elements.crafting_241_element=感測器：幫浦
@@ -2833,6 +2833,10 @@ iu.crafting_elements.crafting_254_element=完美感測器：採石
 iu.crafting_elements.crafting_255_element=完美感測器：
 iu.crafting_elements.crafting_256_element=改良感測器：採石
 iu.crafting_elements.crafting_257_element=改良感測器：
+iu.crafting_elements.crafting_258_element=感測器：紅石發電機
+iu.crafting_elements.crafting_259_element=進階感測器紅石發電機
+iu.crafting_elements.crafting_260_element=完美感測器：紅石發電機
+iu.crafting_elements.crafting_261_element=改良感測器：紅石發電機
 iu.transport.heat=運輸熱量：
 iu.transport.cold=運輸冷量： 
 iu.transport.energy=傳輸EU/RF/FE/TE
@@ -2878,7 +2882,11 @@ industrialupgrade.moremachine3.gearing=§e壓製機
 industrialupgrade.moremachine3.doublegearing=§e改良壓製機
 industrialupgrade.moremachine3.triplegearing=§e進階壓製機
 industrialupgrade.moremachine3.quadgearing=§e完美壓製機
-
+industrialupgrade.basemachine3.limiter=§e能量限制器
+industrialupgrade.basemachine3.redstone_generator=§e紅石發電機
+industrialupgrade.basemachine3.adv_redstone_generator=§e改良紅石發電機
+industrialupgrade.basemachine3.imp_redstone_generator=§e進階紅石發電機
+industrialupgrade.basemachine3.per_redstone_generator=§e完美紅石發電機
 
 iu.gear.mikhail=米哈洛夫齒輪
 iu.gear.aluminum=鋁齒輪
@@ -2931,6 +2939,8 @@ iu.water_rotors_upgrade.water_rotorupgrade12=水力扇葉模塊：Current Speed 
 iu.water_rotors_upgrade.water_rotorupgrade13=水力扇葉模塊：Auto Repair I
 iu.water_rotors_upgrade.water_rotorupgrade14=水力扇葉模塊：Auto Repair II
 iu.water_rotors_upgrade.water_rotorupgrade15=水力扇葉模塊：Auto Repair III
+
+iu.water_rotors_upgrade.water_rotorupgrade16=水力扇葉模塊：海洋
 
 iu.itempipes_transport=物品輸出管道
 iu.itempipes1_transport=物品輸入管道
@@ -3005,3 +3015,32 @@ itemGroup.CraftingElementsTab=合成物品
 
 iu.watergenerator=隨著水流的強度： 
 iu.watergenerator1=產能取決於生態域(使用河流或海洋生態域)
+
+iu.vein_info=礦脈：
+iu.oil_vein=石油
+iu.quarry_energy=提高採石場消耗
+iu.quarry_energy1=降低採石場消耗
+iu.sensor.sensor=感測器
+iu.sensor.info=要儲存礦脈資訊，在鑽機上右擊
+iu.limiter.info=關於能量限制的資訊
+iu.limiter.info1=感測器：變壓器(任意)必須安裝到插槽中
+iu.limiter.info2=最高值取決於感測器等級
+iu.limiter.info3=您可指定您需要的值，最小為0，
+iu.limiter.info4=點擊“記錄”按鈕
+iu.limiter.info5=通過主側傳輸能量，其他面接受能量
+iu.limiter.info6=簡化變壓器系統是更緊湊的解決方案
+iu.limiter.info7=您可將此機器與感測器結合以代替三個以上的變壓器
+iu.limiter.info8=並指出您需要通過電纜傳輸的功率
+iu.limiter.info9=最大功率傳輸數：
+
+water.ocean_info=移除海洋和河流生態域依存
+button.update_info=更新
+button.delete_info=刪除
+industrialupgrade.basemachine3.welding=焊接機
+industrialupgrade.basemachine3.heat_limiter=反應堆溫度控制器
+iu.heat_limiter.main_info=反應堆溫度控制器資訊
+iu.heat_limiter.info=靠近核反應室或反應堆放置
+iu.heat_limiter.info1=點擊“刷新”以獲取反應堆資料
+iu.heat_limiter.info2=(100%)輸入的溫度最高為10000(100%)
+iu.heat_limiter.info3=點擊“寫入”以寫入資料至反應堆
+iu.heat_limiter.info4=點擊“刪除”以刪除反應堆資料

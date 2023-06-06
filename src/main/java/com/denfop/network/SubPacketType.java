@@ -5,7 +5,6 @@ import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 
 public enum SubPacketType {
-    Rpc(true, true),
     TileEntityEvent(true, true),
     ItemEvent(true, true),
     PlayerItemData(true, true),

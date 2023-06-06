@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/upgrade_speed_creation"
-	}
+  "parent" : "ic2:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/upgrade_speed_creation"
+  }
 }

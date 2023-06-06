@@ -3,13 +3,12 @@ package com.denfop.items.modules;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.blocks.IIdProvider;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.tiles.base.TileEntityElectricBlock;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Energy;
-import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
@@ -75,10 +74,10 @@ public class ItemAdditionModule extends ItemMulti<ItemAdditionModule.CraftingTyp
 
 
         if (player.getHeldItem(hand).getItemDamage() == 10) {
-            if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBlock) {
-                TileEntityBlock tile = (TileEntityBlock) world.getTileEntity(pos);
+            if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityInventory) {
+                TileEntityInventory tile = (TileEntityInventory) world.getTileEntity(pos);
                 assert tile != null;
-                if (tile.getComponent(Energy.class) != null) {
+                if (tile.getComp(AdvEnergy.class) != null) {
                     NBTTagCompound nbttagcompound = ModUtils.nbt(player.getHeldItem(hand));
                     boolean charge = nbttagcompound.getBoolean("change");
                     if (tile instanceof TileEntityElectricBlock && charge) {
@@ -87,24 +86,7 @@ public class ItemAdditionModule extends ItemMulti<ItemAdditionModule.CraftingTyp
                     nbttagcompound.setInteger("Xcoord", tile.getPos().getX());
                     nbttagcompound.setInteger("Ycoord", tile.getPos().getY());
                     nbttagcompound.setInteger("Zcoord", tile.getPos().getZ());
-                    nbttagcompound.setInteger("tier", tile.getComponent(Energy.class).getSinkTier());
-                    nbttagcompound.setInteger("World1", tile.getWorld().provider.getDimension());
-                    nbttagcompound.setString("World", tile.getWorld().provider.getDimensionType().getName());
-                    nbttagcompound.setString(
-                            "Name",
-                            Localization.translate(Objects.requireNonNull(tile.getDisplayName()).getFormattedText())
-                    );
-                    return EnumActionResult.SUCCESS;
-                } else if (tile.getComponent(AdvEnergy.class) != null) {
-                    NBTTagCompound nbttagcompound = ModUtils.nbt(player.getHeldItem(hand));
-                    boolean charge = nbttagcompound.getBoolean("change");
-                    if (tile instanceof TileEntityElectricBlock && charge) {
-                        return EnumActionResult.PASS;
-                    }
-                    nbttagcompound.setInteger("Xcoord", tile.getPos().getX());
-                    nbttagcompound.setInteger("Ycoord", tile.getPos().getY());
-                    nbttagcompound.setInteger("Zcoord", tile.getPos().getZ());
-                    nbttagcompound.setInteger("tier", tile.getComponent(AdvEnergy.class).getSinkTier());
+                    nbttagcompound.setInteger("tier", tile.getComp(AdvEnergy.class).getSinkTier());
                     nbttagcompound.setInteger("World1", tile.getWorld().provider.getDimension());
                     nbttagcompound.setString("World", tile.getWorld().provider.getDimensionType().getName());
                     nbttagcompound.setString(

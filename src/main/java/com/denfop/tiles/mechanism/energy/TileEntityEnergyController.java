@@ -5,17 +5,18 @@ import com.denfop.api.energy.EnergyNetLocal;
 import com.denfop.api.energy.IEnergyController;
 import com.denfop.api.energy.event.EventLoadController;
 import com.denfop.api.energy.event.EventUnloadController;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.container.ContainerController;
 import com.denfop.gui.GuiEnergyController;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
@@ -129,7 +130,7 @@ public class TileEntityEnergyController extends TileEntityInventory implements I
             for (EnumFacing facing : EnumFacing.values()) {
                 final List<EnergyNetLocal.EnergyPath> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getPos().offset(facing)
+                        this.getBlockPos().offset(facing)
                 );
 
                 for (EnergyNetLocal.EnergyPath path : energyPathList1) {
@@ -157,7 +158,7 @@ public class TileEntityEnergyController extends TileEntityInventory implements I
             for (EnumFacing facing : EnumFacing.values()) {
                 final List<EnergyNetLocal.EnergyPath> energyPathList1 = EnergyNetGlobal.instance.getEnergyPaths(
                         this.getWorld(),
-                        this.getPos().offset(facing)
+                        this.getBlockPos().offset(facing)
                 );
 
                 for (EnergyNetLocal.EnergyPath path : energyPathList1) {
@@ -177,5 +178,10 @@ public class TileEntityEnergyController extends TileEntityInventory implements I
 
     }
 
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
 
 }

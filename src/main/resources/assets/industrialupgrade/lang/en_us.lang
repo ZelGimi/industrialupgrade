@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§dHadron Solar Panel
 industrialupgrade.machines.graviton_solar_panel=§dGraviton Solar Panel
 industrialupgrade.machines.quark_solar_panel=§dQuark Solar Panel
 blockAdministatorSolarPanel.name=§8Administrative Solar Panel
-iu.adminpanel_item.adminpanel_item=§8Administrative Solar Panel
+industrialupgrade.admpanel.admpanel=§8Administrative Solar Panel
 
 # Draconic Evolution Panels
 industrialupgrade.draconicpanel.draconium_solar_panel=§dDraconic Solar Panel
@@ -92,6 +92,7 @@ item.singular_solar_helmet.name=§8Singular Solar Helmet
 iu.katana=Katana
 
 # Sabers
+iu.nano_saber=Nano Saber
 iu.itemNanoSaber1=Quantum Saber
 iu.itemNanoSaber=Spectral Saber
 
@@ -224,6 +225,8 @@ iu.rune_energy.name=Rune of Energy
 iu.rune_night.name=Rune of Night
 iu.rune_sun.name=Rune of the Sun
 
+item.drill.name=Mining Drill
+item.diamond_drill.name=Diamond Drill
 item.teraDDrill.name=Terrasteel Drill
 item.ultDDrill.name=Perfect Drill
 item.spectraldrill.name=Spectral Drill
@@ -232,6 +235,20 @@ item.quantumdrill.name=Quantum Drill
 
 item.GraviTool=GraviTool
 item.purifier.name=Purifier
+iu.electric_hoe=Electric Hoe
+iu.electri_treetap=Electric Treetap
+item.electric_wrench.name=Electric Wrench
+item.chainsaw.name=Chainsaw
+item.frequency_transmitter.name=Frequency Transmitter
+item.re_battery.name=RE-Battery
+item.advanced_re_battery.name=Advanced RE-Battery
+item.energy_crystal.name=Energy Crystal
+item.lapotron_crystal.name=Lapotron Crystal
+
+item.charging_re_battery.name=Charging RE Battery
+item.advanced_charging_re_battery.name=Advanced Charging Battery
+item.charging_energy_crystal.name=Charging Energy Crystal
+item.charging_lapotron_crystal.name=Charging Lapotron Crystal
 
 iu.upgrades.overclockerupgrade1=Improved Overclocker Upgrade
 iu.upgrades.overclockerupgrade2=Advanced Overclocker Upgrade
@@ -431,7 +448,7 @@ ic2.item.tooltip.Store=Store:
 wirelles=§eAllows you to transfer power wirelessly
 transformator=Increases the panel level
 transformator1=Decreases the panel level
-iu.sintezator_item.sintezator_item=Panel Combiner
+industrialupgrade.sintezator.sintezator=Panel Combiner
 iu.sintezator=The panels are folded inside. Slot limit: 2
 supsolpans.SpecSP.Output=Output:
 supsolpans.SpecSP.Storage=Capacity:
@@ -552,7 +569,7 @@ aer_matter.name=Air Solid Matter
 
 personality=§cPrevents other players from opening the panel interface.
 personality1=§cA player who does not own the panel cannot dismantle the panel.
-iu.error=§cError! The module: Privacy has been triggered. You are not the owner of the panel!
+iu.error=§cError! The module: Privacy has been triggered. You are not the owner!
 iu.miny=Minimum Height:
 iu.maxy=Maximum Height:
 iu.storage.helmet=Panel Energy Capacity: 
@@ -693,17 +710,27 @@ iu.fluidoxy=Oxygen
 iu.fluidpolyeth=Polyethylene
 iu.fluidazot=Nitrogen
 iu.fluidco2=Carbon Dioxide
-fluid.luidNeutron=Neutron
-fluid.luidHelium=Helium
-fluid.luidbenz=Gasoline
-fluid.luiddizel=Diesel
-fluid.luidneft=Oil
-fluid.luidpolyprop=Polypropylene
-fluid.luidhyd=Hydrogen
-fluid.luidoxy=Oxygen
-fluid.luidpolyeth=Polyethylene
-fluid.luidazot=Nitrogen
-fluid.luidco2=Carbon Dioxide
+iu.fluidgas=Natural Gas
+iu.fluidchlorum=Chlorine
+iu.fluidbromine=Bromine
+iu.fluidiodine=Iodine
+
+#Fluids and Gases (in containers)
+fluid.fluidNeutron=Neutron
+fluid.fluidHelium=Helium
+fluid.fluidbenz=Gasoline
+fluid.fluiddizel=Diesel
+fluid.fluidneft=Oil
+fluid.fluidpolyprop=Polypropylene
+fluid.fluidhyd=Hydrogen
+fluid.fluidoxy=Oxygen
+fluid.fluidpolyeth=Polyethylene
+fluid.fluidazot=Nitrogen
+fluid.fluidco2=Carbon Dioxide
+fluid.fluidgas=Natural Gas
+fluid.fluidchlorum=Chlorine
+fluid.fluidbromine=Bromine
+fluid.fluidiodine=Iodine
 
 #Bucket. The following lines are aligned with other localizations.
 #item.forge.bucketFilled.iufluidneutron
@@ -717,6 +744,10 @@ fluid.luidco2=Carbon Dioxide
 #item.forge.bucketFilled.iufluidpolyeth
 #item.forge.bucketFilled.iufluidazot
 #item.forge.bucketFilled.iufluidco2
+#item.forge.bucketFilled.iufluidgas
+#item.forge.bucketFilled.iufluidchlorum
+#item.forge.bucketFilled.iufluidbromine
+#item.forge.bucketFilled.iufluidiodine
 
 #Cells
 iu.itemcell.empty=Cell
@@ -790,80 +821,94 @@ iu.reactordepletedprotondual=Depleted Dual Proton Rod
 iu.reactordepletedprotonquad=Depleted Quad Proton Rod
 iu.reactordepletedprotonsimple=Depleted Proton Rod
 iu.reactordepletedprotoneit=Depleted Eight Proton Rod
-iu.actorprotondual=Dual Proton Rod
-iu.actorprotonquad=Quad Proton Rod
-iu.actorprotonsimple=Proton Rod
-iu.actorprotoneit=Eight Proton Rod
+iu.reactorprotondual=Dual Proton Rod
+iu.reactorprotonquad=Quad Proton Rod
+iu.reactorprotonsimple=Proton Rod
+iu.reactorprotoneit=Eight Proton Rod
 
 iu.reactorDepletedterastrellDual=Depleted Dual Terrasteel Rod
 iu.reactorDepletedterastrellQuad=Depleted Quad Terrasteel Rod
 iu.reactorDepletedterastrellSimple=Depleted Terrasteel Rod
-iu.actorterastrellDual=Dual Terrasteel Rod
-iu.actorterastrellQuad=Quad Terrasteel Rod
-iu.actorterastrellSimple=Terrasteel Rod
+iu.reactorterastrellDual=Dual Terrasteel Rod
+iu.reactorterastrellQuad=Quad Terrasteel Rod
+iu.reactorterastrellSimple=Terrasteel Rod
 
 iu.reactordepletedtoriydual=Depleted Dual Thorium Rod
 iu.reactordepletedtoriyquad=Depleted Quad Thorium Rod
 iu.reactordepletedtoriysimple=Depleted Thorium Rod
-iu.actortoriydual=Dual Thorium Rod
-iu.actortoriyquad=Quad Thorium Rod
-iu.actortoriysimple=Thorium Rod
+iu.reactortoriydual=Dual Thorium Rod
+iu.reactortoriyquad=Quad Thorium Rod
+iu.reactortoriysimple=Thorium Rod
 
 iu.reactordepletedamericiumdual=Depleted Dual Americium Rod
 iu.reactordepletedamericiumquad=Depleted Quad Americium Rod
 iu.reactordepletedamericiumsimple=Depleted Americium Rod
-iu.actoramericiumdual=Dual Americium Rod
-iu.actoramericiumquad=Quad Americium Rod
-iu.actoramericiumsimple=Americium Rod
+iu.reactoramericiumdual=Dual Americium Rod
+iu.reactoramericiumquad=Quad Americium Rod
+iu.reactoramericiumsimple=Americium Rod
 
 iu.reactordepletedneptuniumdual=Depleted Dual Neptunium Rod
 iu.reactordepletedneptuniumquad=Depleted Quad Neptunium Rod
 iu.reactordepletedneptuniumsimple=Depleted Neptunium Rod
-iu.actorneptuniumdual=Dual Neptunium Rod
-iu.actorneptuniumquad=Quad Neptunium Rod
-iu.actorneptuniumsimple=Neptunium Rod
+iu.reactorneptuniumdual=Dual Neptunium Rod
+iu.reactorneptuniumquad=Quad Neptunium Rod
+iu.reactorneptuniumsimple=Neptunium Rod
 
 iu.reactordepletedcuriumdual=Depleted Dual Curium Rod
 iu.reactordepletedcuriumquad=Depleted Quad Curium Rod
 iu.reactordepletedcuriumsimple=Depleted Curium Rod
-iu.actorcuriumdual=Dual Curium Rod
-iu.actorcuriumquad=Quad Curium Rod
-iu.actorcuriumsimple=Curium Rod
+iu.reactorcuriumdual=Dual Curium Rod
+iu.reactorcuriumquad=Quad Curium Rod
+iu.reactorcuriumsimple=Curium Rod
 
 iu.reactordepletedcaliforniadual=Depleted Dual Californium Rod
 iu.reactordepletedcaliforniaquad=Depleted Quad Californium Rod
 iu.reactordepletedcaliforniasimple=Depleted Californium Rod
-iu.actorcaliforniadual=Dual Californium Rod
-iu.actorcaliforniaquad=Quad Californium Rod
-iu.actorcaliforniasimple=Californium Rod
+iu.reactorcaliforniadual=Dual Californium Rod
+iu.reactorcaliforniaquad=Quad Californium Rod
+iu.reactorcaliforniasimple=Californium Rod
 
 iu.reactordepletedeinsteiniumdual=Depleted Dual Einsteinium Rod
 iu.reactordepletedeinsteiniumquad=Depleted Quad Einsteinium Rod
 iu.reactordepletedeinsteiniumsimple=Depleted Einsteinium Rod
-iu.actoreinsteiniumdual=Dual Einsteinium Rod
-iu.actoreinsteiniumquad=Quad Einsteinium Rod
-iu.actoreinsteiniumsimple=Einsteinium Rod
+iu.reactoreinsteiniumdual=Dual Einsteinium Rod
+iu.reactoreinsteiniumquad=Quad Einsteinium Rod
+iu.reactoreinsteiniumsimple=Einsteinium Rod
 
 iu.reactordepletedmendeleviumdual=Depleted Dual Mendelevium Rod
 iu.reactordepletedmendeleviumquad=Depleted Quad Mendelevium Rod
 iu.reactordepletedmendeleviumsimple=Depleted Mendelevium Rod
-iu.actormendeleviumdual=Dual Mendelevium Rod
-iu.actormendeleviumquad=Quad Mendelevium Rod
-iu.actormendeleviumsimple=Mendelevium Rod
+iu.reactormendeleviumdual=Dual Mendelevium Rod
+iu.reactormendeleviumquad=Quad Mendelevium Rod
+iu.reactormendeleviumsimple=Mendelevium Rod
 
 iu.reactordepleteduran233dual=Depleted Dual Uranium-233 Rod
 iu.reactordepleteduran233quad=Depleted Quad Uranium-233 Rod
 iu.reactordepleteduran233simple=Depleted Uranium-233 Rod
-iu.actoruran233dual=Dual Uranium-233 Rod
-iu.actoruran233quad=Quad Uranium-233 Rod
-iu.actoruran233simple=Uranium-233 Rod
+iu.reactoruran233dual=Dual Uranium-233 Rod
+iu.reactoruran233quad=Quad Uranium-233 Rod
+iu.reactoruran233simple=Uranium-233 Rod
 
 iu.reactordepletedberkeliumdual=Depleted Dual Berkelium Rod
 iu.reactordepletedberkeliumquad=Depleted Quad Berkelium Rod
 iu.reactordepletedberkeliumsimple=Depleted Berkelium Rod
-iu.actorberkeliumdual=Dual Berkelium Rod
-iu.actorberkeliumquad=Quad Berkelium Rod
-iu.actorberkeliumsimple=Berkelium Rod
+iu.reactorberkeliumdual=Dual Berkelium Rod
+iu.reactorberkeliumquad=Quad Berkelium Rod
+iu.reactorberkeliumsimple=Berkelium Rod
+
+iu.depleted_dual_uranium=Depleted Dual Uranuium Rod
+iu.depleted_quad_uranium=Depleted Quad Uranuium Rod
+iu.depleted_uranium=Depleted Uranuium Rod
+iu.dual_uranium_fuel_rod=Dual Uranuium Rod
+iu.quad_uranium_fuel_rod=Quad Uranuium Rod
+iu.uranium_fuel_rod=Uranuium Rod
+
+iu.depleted_dual_mox=Depleted Dual MOX Fuel Rod
+iu.depleted_quad_mox=Depleted Quad MOX Fuel Rod
+iu.depleted_mox=Depleted MOX Fuel Rod
+iu.dual_mox_fuel_rod=Dual MOX Fuel Rod
+iu.quad_mox_fuel_rod=Quad MOX Fuel Rod
+iu.mox_fuel_rod=MOX Fuel Rod
 
 #Alloy Blocks
 iu.aluminum_bronze_block.name=Block of Aluminium Bronze
@@ -873,7 +918,7 @@ iu.muntsa_block.name=Block of Muntz Metal
 iu.nichrome_block.name=Block of Nichrome
 iu.alcled_block.name=Block of Alclad
 iu.vanadoalumite_block.name=Block of Vanadium Aluminium
-iu.vitalium_block.name=Block of Vitalium
+iu.vitalium_block.name=Block of Vitallium
 iu.duralumin_block.name=Block of Duralumin
 iu.ferromanganese_block.name=Block of Ferromanganese
 
@@ -906,7 +951,7 @@ iu.alloysingot.muntsa=Muntz Metal Ingot
 iu.alloysingot.nichrome=Nichrome Ingot
 iu.alloysingot.alcled=Alclad Ingot
 iu.alloysingot.vanadoalumite=Vanadium Aluminium Ingot
-iu.alloysingot.vitalium=Vitalium Ingot
+iu.alloysingot.vitalium=Vitallium Ingot
 iu.alloysingot.duralumin=Duralumin Ingot
 iu.alloysingot.ferromanganese=Ferromanganese Ingot
 
@@ -939,7 +984,7 @@ iu.alloysplate.muntsa=Muntz Metal Plate
 iu.alloysplate.nichrome=Nichrome Plate
 iu.alloysplate.alcled=Alclad Plate
 iu.alloysplate.vanadoalumite=Vanadium Aluminium Plate
-iu.alloysplate.vitalium=Vitalium Plate
+iu.alloysplate.vitalium=Vitallium Plate
 iu.alloysplate.duralumin=Duralumin Plate
 iu.alloysplate.ferromanganese=Ferromanganese Plate
 
@@ -977,7 +1022,7 @@ iu.alloysdoubleplate.muntsa=Dense Muntz Metal Plate
 iu.alloysdoubleplate.nichrome=Dense Nichrome Plate
 iu.alloysdoubleplate.alcled=Dense Alclad Plate
 iu.alloysdoubleplate.vanadoalumite=Dense Vanadium Aluminium Plate
-iu.alloysdoubleplate.vitalium=Dense Vitalium Plate
+iu.alloysdoubleplate.vitalium=Dense Vitallium Plate
 iu.alloysdoubleplate.duralumin=Dense Duralumin Plate
 iu.alloysdoubleplate.ferromanganese=Dense Ferromanganese Plate
 
@@ -1010,7 +1055,7 @@ iu.alloyscasing.muntsa=Muntz Metal Item Casing
 iu.alloyscasing.nichrome=Nichrome Item Casing
 iu.alloyscasing.alcled=Alclad Item Casing
 iu.alloyscasing.vanadoalumite=Vanadium Aluminium Item Casing
-iu.alloyscasing.vitalium=Vitalium Item Casing
+iu.alloyscasing.vitalium=Vitallium Item Casing
 iu.alloyscasing.duralumin=Duralumin Item Casing
 iu.alloyscasing.ferromanganese=Ferromanganese Item Casing
 
@@ -1043,7 +1088,7 @@ iu.alloysstik.muntsa=Muntz Metal Stick
 iu.alloysstik.nichrome=Nichrome Stick
 iu.alloysstik.alcled=Alclad Stick
 iu.alloysstik.vanadoalumite=Vanadium Aluminium Stick
-iu.alloysstik.vitalium=Vitalium Stick
+iu.alloysstik.vitalium=Vitallium Stick
 iu.alloysstik.duralumin=Duralumin Stick
 iu.alloysstik.ferromanganese=Ferromanganese Stick
 
@@ -1076,7 +1121,7 @@ iu.alloysnugget.muntsa=Muntz Metal Nugget
 iu.alloysnugget.nichrome=Nichrome Nugget
 iu.alloysnugget.alcled=Alclad Nugget
 iu.alloysnugget.vanadoalumite=Vanadium Aluminium Nugget
-iu.alloysnugget.vitalium=Vitalium Nugget
+iu.alloysnugget.vitalium=Vitallium Nugget
 iu.alloysnugget.duralumin=Duralumin Nugget
 iu.alloysnugget.ferromanganese=Ferromanganese Nugget
 
@@ -1109,7 +1154,7 @@ iu.alloysdust.muntsa=Muntz Metal Dust
 iu.alloysdust.nichrome=Nichrome Dust
 iu.alloysdust.alcled=Alclad Dust
 iu.alloysdust.vanadoalumite=Vanadium Aluminium Dust
-iu.alloysdust.vitalium=Vitalium Dust
+iu.alloysdust.vitalium=Vitallium Dust
 iu.alloysdust.duralumin=Duralumin Dust
 iu.alloysdust.ferromanganese=Ferromanganese Dust
 
@@ -1559,7 +1604,7 @@ industrialupgrade.basemachine1.magnet_generator=Magnetic Generator
 industrialupgrade.basemachine2.fisher=Fishing Machine
 industrialupgrade.basemachine2.painter=Dyeing Machine
 industrialupgrade.upgrade_block.upgrade_block=Modification Station
-iu.quarry_vein_item.quarry_vein_item=Core Search Drilling Rig
+industrialupgrade.quarry_vein.quarry_vein=Core Search Drilling Rig
 industrialupgrade.petrol_quarry.petrol_quarry=Pumpjack
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=Solid Matter Generator Combiner
 industrialupgrade.basemachine2.expierence_block=Experience Storage
@@ -2397,7 +2442,7 @@ iu.solarium_energy_sink.info=Need SE to work
 iu.vein.info=Analyze chunks with a Core Search Drilling Rig
 iu.vein.info1=With it, you can find veins of minerals or oil
 iu.vein.info2=The location of the oil vein depends on the biomes
-iu.vein.info3=The percentage of obtaining a vein of a mineral is 20%
+iu.vein.info3=The percentage of obtaining a vein of a mineral is 15%
 iu.oilpump.info=Need an oil vein
 iu.blastfurnace.info=Instruction
 iu.blastfurnace.info1=Construction 3х3х3
@@ -2451,7 +2496,7 @@ wind.need_level=Rotor level required
 wind.need_level1=to 
 wind.need_level2=tiers
 wind.need_level3=Right-click on the Wind Turbine to restore the durability of the corresponding rotor
-iu.heat_storage.info_main=Basic information about the heater 
+iu.heat_storage.info_main=Basic information about the Heater 
 iu.heat_storage.info=Works only when the mechanisms need heat
 iu.heat_storage.info1=Consumes energy or fluid depending on temperature
 iu.heat_storage.info2=Heats up faster in warm biomes and slower in cold biomes
@@ -2459,7 +2504,7 @@ iu.cool_storage.info_main=Basic information about the refrigerator
 iu.cool_storage.info=Works only when the mechanisms need cooling
 iu.cool_storage.info1=Consumes energy depending on temperature
 iu.cool_storage.info2=Cools slower in warm biomes and faster in cold biomes
-iu.wind_generator.info_main=Basic information about the wind turbine 
+iu.wind_generator.info_main=Basic information about the Wind Turbine 
 iu.wind_generator.info1=Depends on wind speed and rotor direction to wind direction
 iu.wind_generator.info2=The smaller the angle from the direction of the rotor to the perpendicular to the direction of the wind,
 iu.wind_generator.info3=the greater the wind coefficient
@@ -2822,6 +2867,27 @@ iu.crafting_elements.crafting_246_element=Advanced Sensor: Reactor Chamber
 iu.crafting_elements.crafting_247_element=Perfect Sensor: Reactor Chamber
 iu.crafting_elements.crafting_248_element=Improved Sensor: Pump
 iu.crafting_elements.crafting_249_element=Improved Sensor: Reactor Chamber
+iu.crafting_elements.crafting_250_element=Sensor: Quantum Quarry
+iu.crafting_elements.crafting_251_element=Sensor: Oil
+iu.crafting_elements.crafting_252_element=Advanced Sensor: Quarry
+iu.crafting_elements.crafting_253_element=Advanced Sensor: Quantum Quarry
+iu.crafting_elements.crafting_254_element=Perfect Sensor: Quarry
+iu.crafting_elements.crafting_255_element=Perfect Sensor: Quantum Quarry
+iu.crafting_elements.crafting_256_element=Improved Sensor: Quarry
+iu.crafting_elements.crafting_257_element=Improved Sensor: Quantum Quarry
+iu.crafting_elements.crafting_258_element=Sensor: Redstone Generator
+iu.crafting_elements.crafting_259_element=Advanced Sensor: Redstone Generator
+iu.crafting_elements.crafting_260_element=Perfect Sensor: Redstone Generator
+iu.crafting_elements.crafting_261_element=Improved Sensor: Redstone Generator
+iu.crafting_elements.crafting_262_element=Sensor: Welder
+iu.crafting_elements.crafting_263_element=Sensor: Gas Generator
+iu.crafting_elements.crafting_264_element=Sensor: Canning
+iu.crafting_elements.crafting_265_element=Sensor: Filler
+iu.crafting_elements.crafting_266_element=Sensor: RedStone
+iu.crafting_elements.crafting_267_element=Sensor: Mixer
+iu.crafting_elements.crafting_268_element=Sensor: Teleportation
+iu.crafting_elements.crafting_269_element=Teleport Crystal
+iu.crafting_elements.crafting_270_element=Teleporter Core
 iu.transport.heat=Transports Heat: 
 iu.transport.cold=Transfers Cold: 
 iu.transport.energy=Transmits EU/RF/FE/TE
@@ -2848,7 +2914,7 @@ industrialupgrade.basemachine3.adv_solar_destiller=§eImproved Solar Destiller
 industrialupgrade.basemachine3.imp_solar_destiller=§eAdvanced Solar Destiller
 industrialupgrade.basemachine3.per_solar_destiller=§ePerfect Solar Destiller
 industrialupgrade.moremachine3.orewashing=§eOre Washing Machine
-industrialupgrade.moremachine3.doubleorewashing=§eImproved orewashing mechanism
+industrialupgrade.moremachine3.doubleorewashing=§eImproved Ore Washing mechanism
 industrialupgrade.moremachine3.tripleorewashing=§eAdvanced Ore Washing Machine
 industrialupgrade.moremachine3.quadorewashing=§ePerfect Ore Washing Machine
 industrialupgrade.moremachine3.centrifuge_iu=§eHeat centrifuge
@@ -2867,6 +2933,11 @@ industrialupgrade.moremachine3.gearing=§eMechanical Stamp
 industrialupgrade.moremachine3.doublegearing=§eImproved Mechanical Stamp
 industrialupgrade.moremachine3.triplegearing=§eAdvanced Mechanical Stamp
 industrialupgrade.moremachine3.quadgearing=§ePerfect Mechanical Stamp
+industrialupgrade.basemachine3.limiter=§eEnergy Limiter
+industrialupgrade.basemachine3.redstone_generator=§eRedstone Generator
+industrialupgrade.basemachine3.adv_redstone_generator=§eImproved Redstone Generator
+industrialupgrade.basemachine3.imp_redstone_generator=§eAdvanced Redstone Generator
+industrialupgrade.basemachine3.per_redstone_generator=§ePerfect Redstone Generator
 
 iu.gear.mikhail=Mikhail Gear
 iu.gear.aluminum=Aluminum Gear
@@ -2894,7 +2965,7 @@ iu.alloysgear.muntsa=Muntz Metal Gear
 iu.alloysgear.nichrome=Nichrome Gear
 iu.alloysgear.alcled=Alclad Gear
 iu.alloysgear.vanadoalumite=Vanadium Aluminium Alloy Gear
-iu.alloysgear.vitalium=Vitalium Gear
+iu.alloysgear.vitalium=Vitallium Gear
 iu.alloysgear.duralumin=Duralumin Gear
 iu.alloysgear.ferromanganese=Ferromanganese Gear
 
@@ -2919,6 +2990,8 @@ iu.water_rotors_upgrade.water_rotorupgrade12=Water Rotor Module: Current Speed I
 iu.water_rotors_upgrade.water_rotorupgrade13=Water Rotor Module: Auto Repair I
 iu.water_rotors_upgrade.water_rotorupgrade14=Water Rotor Module: Auto Repair II
 iu.water_rotors_upgrade.water_rotorupgrade15=Water Rotor Module: Auto Repair III
+
+iu.water_rotors_upgrade.water_rotorupgrade15=Water Rotor Module: Ocean
 
 iu.itempipes_transport=Output Item Tube
 iu.itempipes1_transport=Input Item Tube
@@ -2993,3 +3066,97 @@ itemGroup.CraftingElementsTab=Crafting Items
 
 iu.watergenerator=With the strength of the current: 
 iu.watergenerator1=Generation dependent on biomes (use "River" or "Ocean" biomes)
+
+iu.vein_info=Vein: 
+iu.oil_vein=Oil
+iu.quarry_energy=Increases the consumption of the quarry by 
+iu.quarry_energy1=Decreases the consumption of the quarry by 
+iu.sensor.sensor=Sensor
+iu.sensor.info=Saves information about the vein, Right-click on the drilling rig
+iu.limiter.info=Information about the Energy Limiter
+iu.limiter.info1=Sensor: Transformer (any) must be installed in the slot 
+iu.limiter.info2=The maximum value depend on the level of the sensor
+iu.limiter.info3=You specify the number you need, the minimum is 0, 
+iu.limiter.info4=Click the "Write" button
+iu.limiter.info5=It transmits energy through the main side and receives through the rest
+iu.limiter.info6=Simplifies transformer systems and is a more compact solution
+iu.limiter.info7=Instead of 3+ transformers, you can put this machine and a sensor to it
+iu.limiter.info8=And indicate the number that you need to transmit over the cable
+iu.limiter.info9=Maximum power transfer number: 
+
+water.ocean_info=Removes dependence on ocean and river biomes
+button.update_info=Update
+button.delete_info=Delete
+industrialupgrade.basemachine3.welding=Welding Machine
+industrialupgrade.basemachine3.heat_limiter=Reactor Controller
+iu.heat_limiter.main_info=Information about Reactor Controller
+iu.heat_limiter.info=Place closely with the back to Reactor Chamber or Nuclear Reactor
+iu.heat_limiter.info1=Click "Update" to get reactor data
+iu.heat_limiter.info2=Enter temperature up to 10000 (100%)
+iu.heat_limiter.info3=Click "Write" to set limits for the reactor
+iu.heat_limiter.info4=Click "Delete" to reset limits for the reactor
+
+iu.heat_storage=10k Coolant Cell
+iu.tri_heat_storage=30k Coolant Cell
+iu.hex_heat_storage=60k Coolant Cell
+iu.plating=Reactor Plating
+iu.heat_plating=Heat-Capacity Reactor Plating
+iu.containment_plating=Containment Reactor Plating
+iu.heat_exchanger=Heat Exchanger
+iu.reactor_heat_exchanger=Reactor Heat Exchanger
+iu.component_heat_exchanger=Component Heat Exchanger
+iu.advanced_heat_exchanger=Advanced Heat Exchanger
+iu.heat_vent=Heat Vent
+iu.reactor_heat_vent=Reactor Heat Vent
+iu.overclocked_heat_vent=Overclocked Heat Vent
+iu.component_heat_vent=Component Heat Vent
+iu.advanced_heat_vent=Advanced Heat Vent
+iu.neutron_reflector=Neutron Reflector
+iu.iridium_reflector=Iridium Neutron Reflector
+iu.thick_neutron_reflector=Thick Neutron Reflector
+iu.rsh_condensator=RSH-Condensator
+iu.lzh_condensator=LZH-Condensator
+iu.heatpack=Heating Cell
+
+iu.activate_multiblock=Activate a multiblock structure using
+
+industrialupgrade.basemachine3.gas_generator=Gas Generator
+industrialupgrade.basemachine3.canner_iu=Fluid/Solid Canning Machine
+industrialupgrade.basemachine3.pattern_storage_iu=Pattern Storage
+industrialupgrade.basemachine3.pump_iu=Pump
+industrialupgrade.basemachine3.solid_canner_iu=Solid Canning Machine
+industrialupgrade.basemachine3.generator_iu=Generator
+industrialupgrade.basemachine3.geogenerator_iu=Geothermal Generator
+industrialupgrade.basemachine3.reactor_iu=Nuclear Reactor
+industrialupgrade.basemachine3.teleporter_iu=Teleporter
+industrialupgrade.basemachine3.chamber_iu=Reactor Chamber
+industrialupgrade.basemachine3.solar_iu=Solar Panel
+industrialupgrade.basemachine3.crop_harvester_iu=Crop Harvester
+industrialupgrade.basemachine3.crop_matron=Crop-Matron
+iu.meter=EU-Reader
+
+iu.upgrades.storageupgrade=Lapotron Energy Storage Upgrade
+iu.upgrades.adv_storageupgrade=Improved Lapotron Energy Storage Upgrade
+iu.upgrades.imp_storageupgrade=Advanced Lapotron Energy Storage Upgrade
+iu.upgrades.per_storageupgrade=Perfect Lapotron Energy Storage Upgrade
+
+iu.itemcoppercable=Copper Cable
+iu.itemcoppercable1=Insulated Copper Cable
+iu.itemglasscable1=Glass Fibre Cable
+iu.itemgold_cable=Gold Cable
+iu.itemgold_cable1=Insulated Gold Cable
+iu.itemgold_cable2=2x Ins. Gold Cable
+iu.itemiron_cable=HV Cable
+iu.itemiron_cable1=Insulated HV Cable
+iu.itemiron_cable2=2x Ins. HV Cable
+iu.itemiron_cable3=3x Ins. HV Cable
+iu.itemtin_cable=Tin Cable
+iu.itemtin1_cable=Insulated Tin Cable
+
+find.gas_vein=Gas is generated in large quantities underground
+find.oil_vein=Oil is generated in huge quantities in the desert
+iu.replicator_using_matter=To create an item in a replicator, you need: 
+
+iu.cooling_sensor=Mechanism Heating Sensor
+iu.heat_sensor=Mechanism Heat Sensor
+iu.aircollector.info=Generates in %d tick: 

@@ -1,6 +1,8 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -8,8 +10,6 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.tiles.mechanism.TileEntityBaseGenStone;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.gui.Area;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -45,7 +45,7 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 62 && x <= 79 && y >= 63 && y <= 80) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
     }
 

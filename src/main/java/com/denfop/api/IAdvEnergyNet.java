@@ -1,18 +1,16 @@
 package com.denfop.api;
 
 import com.denfop.api.energy.EnergyNetLocal;
-import com.denfop.api.energy.LimitInfo;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.NodeStats;
 import com.denfop.api.energy.SunCoef;
-import ic2.api.energy.IEnergyNet;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public interface IAdvEnergyNet extends IEnergyNet {
+public interface IAdvEnergyNet {
 
 
     double getPowerFromTier(int var1);
@@ -21,6 +19,7 @@ public interface IAdvEnergyNet extends IEnergyNet {
 
     double getRFFromEU(int amount);
 
+    EnergyNetLocal getEnergyLocal(World world);
 
     SunCoef getSunCoefficient(World world);
 
@@ -34,16 +33,21 @@ public interface IAdvEnergyNet extends IEnergyNet {
 
     boolean hasRestrictions();
 
-    TileEntity getBlockPosFromEnergyTile(IEnergyTile tile);
+    TileEntity getBlockPosFromEnergyTile(IAdvEnergyTile tile);
 
     List<EnergyNetLocal.EnergyPath> getEnergyPaths(World world, BlockPos pos);
 
     void update();
 
-    LimitInfo getLimitInfo(World world, BlockPos pos);
+    IAdvEnergyTile getTile(World var1, BlockPos var2);
 
-    void deleteLimit(final World world, final IEnergySink energySink);
+    IAdvEnergyTile getSubTile(World var1, BlockPos var2);
 
-    void setLimit(final World world, final IEnergySink energySink, double amount);
+
+    World getWorld(IAdvEnergyTile var1);
+
+    BlockPos getPos(IAdvEnergyTile var1);
+
+    NodeStats getNodeStats(IAdvEnergyTile var1);
 
 }

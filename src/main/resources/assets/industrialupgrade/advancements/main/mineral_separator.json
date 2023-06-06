@@ -1,26 +1,26 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:basemachine1",
-	  "data": 12
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine1",
+      "data" : 12
     },
-    "title": {
-      "translate": "achievement.mineral_separator"
+    "title" : {
+      "translate" : "achievement.mineral_separator"
     },
-    "description": {
-      "translate": "achievement.mineral_separator.desc"
+    "description" : {
+      "translate" : "achievement.mineral_separator.desc"
     }
   },
-  "parent": "industrialupgrade:main/minerals",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/minerals",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-			  "item": "industrialupgrade:basemachine1",
-			  "data": 12
-		  }
+            "item" : "industrialupgrade:basemachine1",
+            "data" : 12
+          }
         ]
       }
     }

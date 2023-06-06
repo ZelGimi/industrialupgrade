@@ -50,9 +50,9 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         this.mc.getTextureManager().bindTexture(getTexture());
-        int progress = (int) (15.0F * this.container.base.getProgress());
-        int progress1 = (int) (10.0F * this.container.base.getProgress());
-        int progress2 = (int) (19.0F * this.container.base.getProgress());
+        int progress = (int) (15.0F * this.container.base.componentProgress.getBar());
+        int progress1 = (int) (10.0F * this.container.base.componentProgress.getBar());
+        int progress2 = (int) (19.0F * this.container.base.componentProgress.getBar());
 
         if (progress > 0) {
             drawTexturedModalRect(xoffset + 27, yoffset + 13, 176, 34, progress + 1, 28);

@@ -1,8 +1,8 @@
 package com.denfop.api.energy;
 
-import ic2.api.energy.tile.IEnergySink;
+import net.minecraft.util.EnumFacing;
 
-public interface IAdvEnergySink extends IEnergySink {
+public interface IAdvEnergySink extends IEnergyAcceptor {
 
     double getPerEnergy();
 
@@ -17,5 +17,11 @@ public interface IAdvEnergySink extends IEnergySink {
     double getTick();
 
     boolean isSink();
+
+    double getDemandedEnergy();
+
+    int getSinkTier();
+
+    double injectEnergy(EnumFacing var1, double var2, double var4);
 
 }

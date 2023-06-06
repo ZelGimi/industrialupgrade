@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -10,6 +10,7 @@ import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -57,7 +58,8 @@ public class CTEnrich {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("enrichment", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("enrichment", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
@@ -117,7 +119,7 @@ public class CTEnrich {
         }
 
         public void apply() {
-            Recipes.recipes.addRecipe(
+            Recipes.recipes.addAdderRecipe(
                     "enrichment",
                     new BaseMachineRecipe(
                             new Input(
@@ -132,7 +134,7 @@ public class CTEnrich {
         }
 
         public String describe() {
-            return "Adding enrich bottle recipe " + this.container + " + " + this.fill + " => " + this.output;
+            return "Adding enrich recipe " + this.container + " + " + this.fill + " => " + this.output;
         }
 
         public Object getOverrideKey() {

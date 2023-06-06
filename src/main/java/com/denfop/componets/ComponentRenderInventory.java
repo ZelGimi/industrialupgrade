@@ -1,6 +1,6 @@
 package com.denfop.componets;
 
-import ic2.core.block.invslot.InvSlot;
+import com.denfop.invslot.InvSlot;
 
 import java.util.ArrayList;
 import java.util.List;

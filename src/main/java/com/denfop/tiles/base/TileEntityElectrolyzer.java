@@ -5,7 +5,6 @@ import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerElectrolyzer;
 import com.denfop.gui.GuiElectrolyzer;
 import com.denfop.invslot.InvSlotElectrolyzer;
-import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -37,7 +36,7 @@ public class TileEntityElectrolyzer extends TileEntityBaseLiquedMachine implemen
 
 
     @Override
-    public ContainerBase<TileEntityElectrolyzer> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerElectrolyzer getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerElectrolyzer(entityPlayer, this);
 
     }

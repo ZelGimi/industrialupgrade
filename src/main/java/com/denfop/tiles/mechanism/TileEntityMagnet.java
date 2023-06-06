@@ -7,7 +7,6 @@ import com.denfop.container.ContainerMagnet;
 import com.denfop.gui.GuiMagnet;
 import com.denfop.tiles.base.TileEntityAntiMagnet;
 import com.denfop.tiles.base.TileEntityElectricMachine;
-import ic2.core.ContainerBase;
 import ic2.core.ExplosionIC2;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
@@ -45,14 +44,15 @@ public class TileEntityMagnet extends TileEntityElectricMachine {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
         tooltip.add(Localization.translate("iu.magnet_work_info"));
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
+
 
     }
 
@@ -172,7 +172,7 @@ public class TileEntityMagnet extends TileEntityElectricMachine {
         return new GuiMagnet(new ContainerMagnet(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityMagnet> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerMagnet getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerMagnet(entityPlayer, this);
     }
 

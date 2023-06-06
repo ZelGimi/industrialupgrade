@@ -3,7 +3,7 @@ package com.denfop.items.resource.alloys;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import ic2.core.block.state.IIdProvider;
+import com.denfop.blocks.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
@@ -32,7 +32,7 @@ public class ItemAlloysCasing extends ItemMulti<ItemAlloysCasing.Types> implemen
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu.alloyscasing" + super.getUnlocalizedName().substring(15);
     }
 
     @SideOnly(Side.CLIENT)

@@ -3,8 +3,8 @@ package com.denfop.items.modules;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.blocks.IIdProvider;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
@@ -104,6 +104,14 @@ public class ItemQuarryModule extends ItemMulti<ItemQuarryModule.CraftingTypes> 
                 info.add(TextFormatting.DARK_PURPLE + Localization.translate("iu.comb_macerator"));
                 break;
         }
+        EnumQuarryModules enumQuarryModules = EnumQuarryModules.values()[meta];
+        if (enumQuarryModules.cost < 0) {
+            info.add(TextFormatting.GREEN + Localization.translate("iu.quarry_energy1") + (int) (Math.abs(enumQuarryModules.cost) * 100) +
+                    "%");
+        } else if (enumQuarryModules.cost > 0) {
+            info.add(TextFormatting.RED + Localization.translate("iu.quarry_energy") + (int) (enumQuarryModules.cost * 100) + "%");
+        }
+
     }
 
 

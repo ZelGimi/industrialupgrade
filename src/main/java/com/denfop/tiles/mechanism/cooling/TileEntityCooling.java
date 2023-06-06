@@ -1,6 +1,8 @@
 package com.denfop.tiles.mechanism.cooling;
 
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.client.ComponentClientEffectRender;
+import com.denfop.componets.client.EffectType;
 import com.denfop.container.ContainerCoolMachine;
 import com.denfop.gui.GuiCoolMachine;
 import com.denfop.tiles.base.TileEntityElectricMachine;
@@ -29,6 +31,14 @@ public class TileEntityCooling extends TileEntityElectricMachine implements INet
         super(10000D, 14, 1);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, tier));
         this.max = 4;
+        this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
+
+    }
+
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
+        ret.add("cold");
+        return ret;
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

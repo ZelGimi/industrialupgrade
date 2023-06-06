@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:machines",
-      "data": 3
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:machines",
+      "data" : 3
     },
-    "title": {
-      "translate": "achievement.qua_panel"
+    "title" : {
+      "translate" : "achievement.qua_panel"
     },
-    "description": {
-      "translate": "achievement.qua_panel.desc"
+    "description" : {
+      "translate" : "achievement.qua_panel.desc"
     }
   },
-  "parent": "industrialupgrade:main/qua_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/qua_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:machines",
-            "data": 3
+            "item" : "industrialupgrade:machines",
+            "data" : 3
           }
         ]
       }

@@ -1,29 +1,29 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "cube_all",
-		"transform": "forge:default-block"
-	},
-	"variants": {
-		"type": {
-			"ruby_block": {
-				"textures": {
-					"all": "industrialupgrade:blocks/ruby_block"
-				}
-			},
-			"sapphire_block": {
-				"textures": {
-					"all": "industrialupgrade:blocks/sapphire_block"
-				}
-			},
-			"topaz_block": {
-				"textures": {
-					"all": "industrialupgrade:blocks/topaz_block"
-				}
-			}
-		},
-		"inventory": [
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "ruby_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/ruby_block"
+        }
+      },
+      "sapphire_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/sapphire_block"
+        }
+      },
+      "topaz_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/topaz_block"
+        }
+      }
+    },
+    "inventory" : [
       {}
     ]
-	}
+  }
 }

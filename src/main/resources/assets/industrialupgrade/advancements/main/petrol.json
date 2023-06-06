@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemcell",
-      "data": 3
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcell",
+      "data" : 3
     },
-    "title": {
-      "translate": "achievement.petrol"
+    "title" : {
+      "translate" : "achievement.petrol"
     },
-    "description": {
-      "translate": "achievement.petrol.desc"
+    "description" : {
+      "translate" : "achievement.petrol.desc"
     }
   },
-  "parent": "industrialupgrade:main/oil_refinery",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/oil_refinery",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemcell",
-            "data": 3
+            "item" : "industrialupgrade:itemcell",
+            "data" : 3
           }
         ]
       }

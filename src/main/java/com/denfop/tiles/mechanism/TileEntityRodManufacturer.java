@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -20,7 +21,6 @@ import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -41,15 +41,15 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
     public final InvSlotRecipes inputSlotA;
     public final AdvEnergy energy;
     public final InvSlotUpgrade upgradeSlot;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotOutput outputSlot;
     public MachineRecipe output;
     public short progress;
     public double guiProgress;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public int operationsPerTick = 1;
 
@@ -57,7 +57,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
 
         this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 300;
-        this.defaultTier = 14;
+        this.defaultTier = 1;
         this.defaultEnergyStorage = 2 * 300;
         this.output = null;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
@@ -306,8 +306,8 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -346,7 +346,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
                 setActive(false);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 

@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -61,6 +59,9 @@ public class ContainerQuantumQuarry extends ContainerFullInv<TileEntityBaseQuant
         ret.add("getblock");
         ret.add("inputslot");
         ret.add("outputSlot");
+        ret.add("consume");
+        ret.add("col_tick");
+
         return ret;
     }
 

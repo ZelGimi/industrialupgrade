@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:baseore",
-      "data": 15
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 15
     },
-    "title": {
-      "translate": "achievement.germaniumore"
+    "title" : {
+      "translate" : "achievement.germaniumore"
     },
-    "description": {
-      "translate": "achievement.germaniumore.desc"
+    "description" : {
+      "translate" : "achievement.germaniumore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:baseore",
-            "data": 15
+            "item" : "industrialupgrade:baseore",
+            "data" : 15
           }
         ]
       }

@@ -1,18 +1,11 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.cool.CoolNet;
-import com.denfop.api.cool.ICoolAcceptor;
-import com.denfop.api.cool.ICoolConductor;
-import com.denfop.api.cool.ICoolEmitter;
-import com.denfop.api.cool.ICoolTile;
+import com.denfop.api.cool.*;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
-import com.denfop.api.heat.HeatNet;
-import com.denfop.api.heat.IHeatAcceptor;
-import com.denfop.api.heat.IHeatConductor;
-import com.denfop.api.heat.IHeatEmitter;
-import com.denfop.api.heat.IHeatTile;
+import com.denfop.api.heat.*;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.tiles.transport.CableFoam;
@@ -36,6 +29,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -84,7 +78,7 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
         this.continuousUpdate = null;
         this.obscuration = this.addComponent(new Obscuration(
                 this,
-                () -> IC2.network.get(true).updateTileEntityField(TileEntityHeatColdPipes.this, "obscuration")
+                () -> IUCore.network.get(true).updateTileEntityField(TileEntityHeatColdPipes.this, "obscuration")
         ));
     }
 
@@ -94,6 +88,11 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
 
     public static TileEntityHeatColdPipes delegate() {
         return new TileEntityHeatColdPipes();
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -304,7 +303,7 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -356,7 +355,7 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
 
             --this.insulation;
             if (!this.getWorld().isRemote) {
-                IC2.network.get(true).updateTileEntityField(this, "insulation");
+                IUCore.network.get(true).updateTileEntityField(this, "insulation");
             }
 
         }
@@ -401,7 +400,7 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
     @Override
@@ -498,7 +497,7 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
                 }
 
                 if (!duringLoad) {
-                    IC2.network.get(true).updateTileEntityField(this, "foam");
+                    IUCore.network.get(true).updateTileEntityField(this, "foam");
                     world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
                     this.markDirty();
                 }
@@ -537,6 +536,11 @@ public class TileEntityHeatColdPipes extends TileEntityBlock implements ICoolCon
     @Override
     public boolean emitsHeatTo(final IHeatAcceptor var1, final EnumFacing var2) {
         return true;
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

@@ -1,29 +1,29 @@
 package com.denfop.tiles.reactors;
 
 import com.denfop.Config;
+import com.denfop.IUCore;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IAdvEnergySource;
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.gui.IGuiValueProvider;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
+import com.denfop.componets.ReactorRedstone;
 import com.denfop.container.ContainerBaseNuclearReactor;
 import com.denfop.gui.GuiNuclearReactor;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotReactor;
 import com.denfop.tiles.base.InfoInvSlots;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
-import ic2.api.energy.tile.IMetaDelegate;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.IC2DamageSource;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.gui.dynamic.IGuiValueProvider;
 import ic2.core.init.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -50,19 +50,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInventory implements IHasGui, IAdvReactor,
-        IEnergySource, IMetaDelegate, IGuiValueProvider, INetworkClientTileEntityEventListener, IType {
+public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInventory implements IHasGui,
+        IAdvReactor,
+        IAdvEnergySource, IGuiValueProvider, INetworkClientTileEntityEventListener, IType {
 
     public final int sizeX;
     public final int sizeY;
     public final double coef;
     public final InvSlotReactor reactorSlot;
+    protected final ReactorRedstone redstone;
+    public short size;
     public boolean getblock;
     public boolean work;
+    public long tick = 0;
+    public double add_heat = 0;
     public float output = 0.0F;
+    public double storage = 0;
     public int updateTicker;
     public int heat = 0;
     public int maxHeat = 10000;
+    public int limit = 10000;
+    public boolean isLimit = false;
     public float hem = 1.0F;
     public String background;
     public AudioSource audioSourceMain;
@@ -70,10 +78,12 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     public boolean addedToEnergyNet = false;
     public List<ReactorsItem> reactorsItemList = new ArrayList<>();
     public boolean change = true;
-    public int size;
+    public List<BlockPos> blockPos = new ArrayList<>();
     protected float lastOutput = 0.0F;
-    protected List<IEnergyTile> subTiles = new ArrayList<>();
+    protected List<IAdvEnergyTile> subTiles = new ArrayList<>();
     protected float coef1 = 1;
+    protected double pastEnergy;
+    protected double perenergy;
 
     public TileEntityBaseNuclearReactorElectric(int sizeX, int sizeY, String background, double coef) {
         this.updateTicker = IC2.random.nextInt(this.getTickRate());
@@ -83,7 +93,10 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         this.sizeY = sizeY;
         this.background = background;
         this.coef = coef;
-        this.size = sizeX;
+        this.redstone = this.addComponent(new ReactorRedstone(this));
+        this.redstone.subscribe((newlevel) -> {
+            this.work = newlevel != 0;
+        });
     }
 
     public static void showHeatEffects(World world, BlockPos pos, int heat) {
@@ -124,6 +137,48 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         }
     }
 
+    protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        if (this.addedToEnergyNet) {
+            this.refreshChambers();
+        }
+
+    }
+
+    public void onLoaded() {
+        super.onLoaded();
+        if (IC2.platform.isSimulating() && !this.isFluidCooled()) {
+            this.refreshChambers();
+            if (!this.addedToEnergyNet) {
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            }
+            this.addedToEnergyNet = true;
+            this.setActive(this.work);
+        }
+        this.reactorSlot.update();
+
+    }
+
+    abstract void getSubs();
+
+    public void refreshChambers() {
+        getSubs();
+        infoInvSlotsList.clear();
+        for (InvSlot slot : this.invSlots) {
+            for (int k = 0; k < slot.size(); k++) {
+                infoInvSlotsList.add(new InfoInvSlots(slot, k));
+            }
+
+        }
+        this.size_inventory = 0;
+
+        InvSlot invSlot;
+        for (Iterator<InvSlot> var2 = this.invSlots.iterator(); var2.hasNext(); size_inventory += invSlot.size()) {
+            invSlot = var2.next();
+        }
+
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
@@ -131,6 +186,36 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         tooltip.add(Localization.translate("iu.reactor_info1") + this.sizeX + "x" + this.sizeY);
         super.addInformation(stack, tooltip, advanced);
     }
+
+    public boolean isFull() {
+        return this.subTiles.size() == 6;
+    }
+
+    @Override
+    public double getPerEnergy() {
+        return this.perenergy;
+    }
+
+    @Override
+    public double getPastEnergy() {
+        return this.pastEnergy;
+    }
+
+    @Override
+    public void setPastEnergy(final double pastEnergy) {
+        this.pastEnergy = pastEnergy;
+    }
+
+    @Override
+    public void addPerEnergy(final double setEnergy) {
+        this.perenergy += setEnergy;
+    }
+
+    @Override
+    public boolean isSource() {
+        return true;
+    }
+
 
     public List<ReactorsItem> getReactorsItems() {
         return this.reactorsItemList;
@@ -146,29 +231,16 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
     abstract void setblock();
 
-    public void onLoaded() {
-        super.onLoaded();
-        if (IC2.platform.isSimulating() && !this.isFluidCooled()) {
-            this.refreshChambers();
-            if (!this.addedToEnergyNet) {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-            }
-            this.addedToEnergyNet = true;
-            this.setActive(this.work);
-        }
-        this.reactorSlot.update();
-
-    }
 
     public void onUnloaded() {
         if (IC2.platform.isRendering()) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSourceMain = null;
             this.audioSourceGeiger = null;
         }
 
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
         }
 
@@ -197,13 +269,13 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         return nbttagcompound;
     }
 
-
     public void drawEnergy(double amount) {
+        this.storage -= amount;
     }
 
 
     public double getOfferedEnergy() {
-        return this.getReactorEnergyOutput() * 5.0F * coef1;
+        return this.storage;
     }
 
 
@@ -212,27 +284,12 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     }
 
     public int getSourceTier() {
-        return Math.max(EnergyNet.instance.getTierFromPower(this.getOfferedEnergy()), 2);
+        return EnergyNetGlobal.instance.getTierFromPower(this.getOfferedEnergy());
     }
 
-    abstract void getSubs();
 
-    public void refreshChambers() {
-        getSubs();
-        infoInvSlotsList.clear();
-        for (InvSlot slot : this.invSlots) {
-            for (int k = 0; k < slot.size(); k++) {
-                infoInvSlotsList.add(new InfoInvSlots(slot, k));
-            }
-
-        }
-        this.size_inventory = 0;
-
-        InvSlot invSlot;
-        for (Iterator var2 = this.invSlots.iterator(); var2.hasNext(); size_inventory += invSlot.size()) {
-            invSlot = (InvSlot) var2.next();
-        }
-
+    public double getCoef() {
+        return coef;
     }
 
     @Override
@@ -252,27 +309,28 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        this.storage = this.getReactorEnergyOutput() * 5.0F * coef1;
+        if (isLimit) {
+            if (this.heat + this.add_heat >= Math.min(limit, 10000)) {
+                this.output = 0.0F;
+                return;
+            }
+        }
         if (this.updateTicker++ % this.getTickRate() == 0) {
-            if (!this.getWorld().isAreaLoaded(this.pos, 4)) {
-                this.output = 0.0F;
-            } else {
 
 
-                this.output = 0.0F;
-                this.maxHeat = 10000;
-                this.hem = 1.0F;
-                this.processChambers();
+            this.output = 0.0F;
+            this.maxHeat = 10000;
+            this.hem = 1.0F;
+            this.processChambers();
 
 
-                if (this.calculateHeatEffects()) {
-                    return;
-                }
-                boolean work = this.receiveredstone();
-                if (this.getActive() != work) {
-                    this.setActive(work);
-                }
-
+            if (this.calculateHeatEffects()) {
+                return;
+            }
+            boolean work = this.receiveredstone();
+            if (this.getActive() != work) {
+                this.setActive(work);
             }
 
         }
@@ -319,7 +377,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                     List<EntityLivingBase> list1 = this.getWorld().getEntitiesWithinAABB(
                             EntityLivingBase.class,
                             new AxisAlignedBB(
-                                    this.getPos().getX() - 3,
+                                    this.getBlockPos().getX() - 3,
                                     this.pos.getY() - 3,
                                     this.pos.getZ() - 3,
                                     this.pos.getX() + 4,
@@ -411,7 +469,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         return 20;
     }
 
-    public ContainerBase<TileEntityBaseNuclearReactorElectric> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerBaseNuclearReactor getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerBaseNuclearReactor(entityPlayer, this);
     }
 
@@ -428,7 +486,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
             if (this.output > 0.0F) {
                 if (this.lastOutput <= 0.0F) {
                     if (this.audioSourceMain == null) {
-                        this.audioSourceMain = IC2.audioManager.createSource(
+                        this.audioSourceMain = IUCore.audioManager.createSource(
                                 this,
                                 PositionSpec.Center,
                                 "Generators/NuclearReactor/NuclearReactorLoop.ogg",
@@ -449,7 +507,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                             this.audioSourceGeiger.remove();
                         }
 
-                        this.audioSourceGeiger = IC2.audioManager.createSource(
+                        this.audioSourceGeiger = IUCore.audioManager.createSource(
                                 this,
                                 PositionSpec.Center,
                                 "Generators/NuclearReactor/GeigerLowEU.ogg",
@@ -467,7 +525,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                             this.audioSourceGeiger.remove();
                         }
 
-                        this.audioSourceGeiger = IC2.audioManager.createSource(
+                        this.audioSourceGeiger = IUCore.audioManager.createSource(
                                 this,
                                 PositionSpec.Center,
                                 "Generators/NuclearReactor/GeigerMedEU.ogg",
@@ -484,7 +542,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
                         this.audioSourceGeiger.remove();
                     }
 
-                    this.audioSourceGeiger = IC2.audioManager.createSource(
+                    this.audioSourceGeiger = IUCore.audioManager.createSource(
                             this,
                             PositionSpec.Center,
                             "Generators/NuclearReactor/GeigerHighEU.ogg",
@@ -526,10 +584,29 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     }
 
     public void setHeat(int heat1) {
+        if (tick != this.getWorld().getWorldTime()) {
+            add_heat = 0;
+            tick = this.getWorld().getWorldTime();
+        }
+        double heat2 = this.heat - heat1;
+        add_heat += heat2;
         this.heat = heat1;
     }
 
+    public boolean isWork() {
+        return work;
+    }
+
+    public void setWork(final boolean work) {
+        this.work = work;
+    }
+
     public int addHeat(int amount) {
+        if (tick != this.getWorld().getWorldTime()) {
+            add_heat = 0;
+            tick = this.getWorld().getWorldTime();
+        }
+        add_heat += amount;
         this.heat += amount;
         return this.heat;
     }
@@ -544,15 +621,14 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
         }
     }
 
-    public abstract void explode();
-
-    protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
-        super.onNeighborChange(neighbor, neighborPos);
-        if (this.addedToEnergyNet) {
-            this.refreshChambers();
-        }
+    @Override
+    protected void onBlockBreak() {
+        super.onBlockBreak();
 
     }
+
+    public abstract void explode();
+
 
     public void addEmitHeat(int heat) {
 
@@ -596,6 +672,15 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
         this.work = !this.work;
         this.setActive(this.work);
+    }
+
+    protected void unloadFast() {
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+    }
+
+    protected void loadFast() {
+        MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+
     }
 
 }

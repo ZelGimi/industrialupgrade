@@ -44,12 +44,12 @@ public class DoubleMolecularTransformerRecipeWrapper implements IRecipeWrapper {
         this.inputstack = container.getInput();
         this.inputstack1 = container.getInput1();
         this.outputstack = container.getOutput();
-        this.input = Localization.translate("gui.MolecularTransformer.input") + ' ' + inputText;
-        this.input1 = Localization.translate("gui.MolecularTransformer.input") + ' ' + inputText1;
+        this.input = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText;
+        this.input1 = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText1;
 
         this.output =
-                Localization.translate("gui.MolecularTransformer.output") + ' ' + container.getOutput().getDisplayName();
-        this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation"),
+                Localization.translate("gui.MolecularTransformer.output") + ": " + container.getOutput().getDisplayName();
+        this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation") + ":",
                 ModUtils.getString(container.getEnergy()),
                 Localization.translate("ic2.generic.text.EU")
         );
@@ -100,12 +100,12 @@ public class DoubleMolecularTransformerRecipeWrapper implements IRecipeWrapper {
         int y = 5;
         int x = 49;
         minecraft.fontRenderer.drawSplitString(this.input, x, y, recipeWidth - x, 16777215);
-        y += minecraft.fontRenderer.getWordWrappedHeight(this.input, recipeWidth - x) + 5;
+        y += minecraft.fontRenderer.getWordWrappedHeight(this.input, recipeWidth - x) + 1;
         minecraft.fontRenderer.drawSplitString(this.input1, x, y, recipeWidth - x, 16777215);
-        y += minecraft.fontRenderer.getWordWrappedHeight(this.input1, recipeWidth - x) + 5;
+        y += minecraft.fontRenderer.getWordWrappedHeight(this.input1, recipeWidth - x) + 1;
 
         minecraft.fontRenderer.drawSplitString(this.output, x, y, recipeWidth - x, 16777215);
-        y += minecraft.fontRenderer.getWordWrappedHeight(this.output, recipeWidth - x) + 5;
+        y += minecraft.fontRenderer.getWordWrappedHeight(this.output, recipeWidth - x) + 1;
         minecraft.fontRenderer.drawString(this.totalEU, x, y, 16777215);
     }
 

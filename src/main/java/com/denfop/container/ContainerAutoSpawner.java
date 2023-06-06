@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityAutoSpawner;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -39,7 +37,6 @@ public class ContainerAutoSpawner extends ContainerFullInv<TileEntityAutoSpawner
         List<String> ret = super.getNetworkedFields();
         ret.add("progress");
         ret.add("energy2");
-        ret.add("energy");
         ret.add("tempprogress");
         ret.add("exp");
         ret.add("description_mobs");

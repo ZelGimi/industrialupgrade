@@ -1,10 +1,10 @@
 package com.denfop.tiles.mechanism;
 
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.container.ContainerAnalyzerChest;
 import com.denfop.gui.GuiAnalyzerChest;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.IHasGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

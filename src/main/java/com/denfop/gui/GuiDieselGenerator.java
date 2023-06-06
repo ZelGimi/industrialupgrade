@@ -1,12 +1,15 @@
 package com.denfop.gui;
 
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDieselGenerator;
 import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IUpgradableBlock;
-import ic2.core.GuiIC2;
 import ic2.core.IC2;
-import ic2.core.gui.GuiElement;
-import ic2.core.gui.TankGauge;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiDieselGenerator extends GuiIC2<ContainerDieselGenerator> {
+public class GuiDieselGenerator extends GuiIU<ContainerDieselGenerator> {
 
     public ContainerDieselGenerator container;
     public String name;
@@ -22,9 +25,12 @@ public class GuiDieselGenerator extends GuiIC2<ContainerDieselGenerator> {
     public GuiDieselGenerator(ContainerDieselGenerator container1) {
         super(container1);
         this.container = container1;
+        this.componentList.clear();
         this.name = Localization.translate((container.base).getName());
         this.addElement(TankGauge.createNormal(this, 70, 20, (container.base).fluidTank));
-
+        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+                new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
@@ -68,7 +74,7 @@ public class GuiDieselGenerator extends GuiIC2<ContainerDieselGenerator> {
                 guiElement.drawBackground(x, y);
             }
         }
-
+        this.drawBackground();
 
     }
 

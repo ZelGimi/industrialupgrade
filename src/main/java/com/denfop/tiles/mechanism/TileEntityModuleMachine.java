@@ -7,7 +7,6 @@ import com.denfop.invslot.InvSlotModule;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +49,7 @@ public class TileEntityModuleMachine extends TileEntityElectricMachine
         return new GuiModuleMachine(new ContainerModuleMachine(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityModuleMachine> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerModuleMachine getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerModuleMachine(entityPlayer, this);
     }
 

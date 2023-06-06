@@ -192,6 +192,15 @@ public class WindSystem implements IWindSystem {
     @SubscribeEvent
     public void windTick(TickEvent.WorldTickEvent event) {
         if (event.world.provider.getDimension() != 0) {
+            if (tick == 0) {
+                windSide = EnumWindSide.getValue(this.rand.nextInt(8));
+                for (IWindMechanism windMechanism : this.mechanismList) {
+                    windMechanism.setCoefficient(getCoefficient(windMechanism));
+                    if (windMechanism.getAuto()) {
+                        this.getNewPositionOfMechanism(windMechanism);
+                    }
+                }
+            }
             return;
         }
 
@@ -208,7 +217,7 @@ public class WindSystem implements IWindSystem {
         }
 
         World world = event.world;
-        if (world.getWorldTime() % 40 == 0) {
+        if (world.getWorldTime() % 20 == 0) {
             if (!world.isRaining()) {
                 if (!world.isThundering()) {
                     if (world.getWorldInfo().getCleanWeatherTime() > 0) {

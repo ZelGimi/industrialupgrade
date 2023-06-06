@@ -1,17 +1,17 @@
 package com.denfop.gui;
 
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ItemImage;
+import com.denfop.api.gui.TankGauge;
+import com.denfop.api.gui.Text;
+import com.denfop.api.gui.TextProvider;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerReplicator;
 import com.denfop.tiles.mechanism.TileEntityBaseReplicator;
-import ic2.core.gui.CustomButton;
-import ic2.core.gui.ItemImage;
-import ic2.core.gui.TankGauge;
-import ic2.core.gui.Text;
-import ic2.core.gui.dynamic.TextProvider;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
 import net.minecraft.util.ResourceLocation;
@@ -36,14 +36,16 @@ public class GuiReplicator extends GuiIU<ContainerReplicator> {
         componentList.add(inventory);
         componentList.add(slots);
         this.addElement(TankGauge.createNormal(this, 27, 30, (container.base).fluidTank));
-        this.addElement((new ItemImage(this, 91, 17, () -> container.base.pattern)).withTooltip(() -> {
+        this.addElement((new ItemImage(this, 91, 17,
+                () -> container.base.pattern != null ? container.base.pattern.getStack() : null
+        )).withTooltip(() -> {
             TileEntityBaseReplicator te = container.base;
             if (te.pattern == null) {
                 return null;
             } else {
                 String uuReq = Util.toSiString(te.patternUu, 4) + Localization.translate("ic2.generic.text.bucketUnit");
                 String euReq = Util.toSiString(te.patternEu, 4) + Localization.translate("ic2.generic.text.EU");
-                return te.pattern.getDisplayName() + " UU: " + uuReq + " EU: " + euReq;
+                return te.pattern.getStack().getDisplayName() + " UU: " + uuReq + " EU: " + euReq;
             }
         }));
         this.addComponent(new GuiComponent(this, 136, 84, EnumTypeComponent.ENERGY_CLASSIC,

@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -106,7 +106,7 @@ public class CTMineralSeparator {
             } else {
                 second1 = input.forStack(stack);
             }
-            Recipes.recipes.addRecipe(
+            Recipes.recipes.addAdderRecipe(
                     "handlerho",
                     new BaseMachineRecipe(
                             new Input(
@@ -183,13 +183,15 @@ public class CTMineralSeparator {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("handlerho", Recipes.recipes.getRecipeOutput("handlerho", false,
+            Recipes.recipes.addRemoveRecipe("converter", Recipes.recipes.getRecipeOutput("handlerho", false,
                     getItemStack(this.input)
-            ).getOutput());
+            ).getOutput().items.get(0));
+
+
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.input;
+            return "removing mineral separator recipe " + this.input;
         }
 
         public Object getOverrideKey() {

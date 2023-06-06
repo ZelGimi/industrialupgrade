@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.container.ContainerSolidMatter;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,7 +21,7 @@ public class GuiSolidMatter extends GuiIC2<ContainerSolidMatter> {
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
-        int progress = (int) (27.0D * (this.container.base).getProgress());
+        int progress = (int) (27.0D * (this.container.base).getChargeLevel());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         if (progress > 0) {

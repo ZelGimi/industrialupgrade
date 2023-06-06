@@ -58,7 +58,11 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
             "itemironcableii",
             "itemironcableiiii"
             , "itemglasscable"
-            , "itemglasscablei"};
+            , "itemglasscablei",
+            "itemcoppercable", "itemcoppercable1", "itemglasscable1",
+            "itemgold_cable", "itemgold_cable1", "itemgold_cable2",
+            "itemiron_cable", "itemiron_cable1", "itemiron_cable2", "itemiron_cable3", "itemtin_cable", "itemtin1_cable"
+    };
 
 
     public ItemCable() {
@@ -187,6 +191,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         }
     }
 
+
     public ItemStack getCable(CableType type) {
         return new ItemStack(this, 1, type.getId());
     }
@@ -271,8 +276,6 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> itemList) {
         if (this.isInCreativeTab(tab)) {
             List<ItemStack> variants = new ArrayList<>(ItemCable.variants);
-
-
             itemList.addAll(variants);
         }
     }

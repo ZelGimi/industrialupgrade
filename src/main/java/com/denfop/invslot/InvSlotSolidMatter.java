@@ -6,7 +6,6 @@ import com.denfop.IUItem;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileEntityCombinerSolidMatter;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +15,7 @@ public class InvSlotSolidMatter extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotSolidMatter(TileEntityCombinerSolidMatter base1) {
-        super(base1, "input5", InvSlot.Access.I, 9, InvSlot.InvSide.TOP);
+        super(base1, "input5", InvSlot.Access.I, 9, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 64;
     }
@@ -51,7 +50,7 @@ public class InvSlotSolidMatter extends InvSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem().equals(Item.getItemFromBlock(IUItem.solidmatter));
     }
 

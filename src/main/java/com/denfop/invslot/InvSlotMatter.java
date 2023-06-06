@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityCombinerMatter;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -12,7 +11,7 @@ public class InvSlotMatter extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotMatter(TileEntityCombinerMatter base1) {
-        super(base1, "input2", InvSlot.Access.I, 9, InvSlot.InvSide.TOP);
+        super(base1, "input2", InvSlot.Access.I, 9, InvSide.ANY);
         this.stackSizeLimit = 4;
         this.tile = base1;
     }
@@ -31,7 +30,7 @@ public class InvSlotMatter extends InvSlot {
         this.tile.energycost = this.getcostEnergy(this);
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return (itemStack
                 .getItem()
                 .equals(Item.getItemFromBlock(IUItem.machines)) && itemStack.getItemDamage() <= 3) || (itemStack.isItemEqual(

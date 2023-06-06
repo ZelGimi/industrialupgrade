@@ -1,6 +1,6 @@
 {
-	"parent": "ic2:item/default",
-	"textures": {
-		"layer0": "industrialupgrade:items/chromium_sandcrushed"
-	}
+  "parent" : "ic2:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/chromium_sandcrushed"
+  }
 }

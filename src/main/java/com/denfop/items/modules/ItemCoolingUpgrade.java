@@ -5,10 +5,10 @@ import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.cool.EnumCoolUpgrade;
 import com.denfop.api.cool.ICoolItem;
+import com.denfop.blocks.IIdProvider;
 import com.denfop.componets.CoolComponent;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityMultiMachine;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.state.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.item.ItemMulti;
 import ic2.core.ref.ItemName;
@@ -69,14 +69,14 @@ public class ItemCoolingUpgrade extends ItemMulti<ItemCoolingUpgrade.Types> impl
             final float hitZ,
             @Nonnull final EnumHand hand
     ) {
-        if (world.getTileEntity(pos) instanceof TileEntityBlock) {
-            TileEntityBlock block = (TileEntityBlock) world.getTileEntity(pos);
+        if (world.getTileEntity(pos) instanceof TileEntityInventory) {
+            TileEntityInventory block = (TileEntityInventory) world.getTileEntity(pos);
             assert block != null;
-            if (block.hasComponent(CoolComponent.class)) {
+            if (block.hasComp(CoolComponent.class)) {
                 if (block instanceof TileEntityMultiMachine) {
                     TileEntityMultiMachine multiMachine = (TileEntityMultiMachine) block;
                     final ItemStack stack = player.getHeldItem(hand);
-                    CoolComponent coolComponent = block.getComponent(CoolComponent.class);
+                    CoolComponent coolComponent = block.getComp(CoolComponent.class);
                     if (multiMachine.multi_process.getSizeWorkingSlot() <= this
                             .getTypeUpgrade(stack)
                             .getLevel() && !coolComponent.upgrade) {

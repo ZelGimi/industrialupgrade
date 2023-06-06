@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.oredict.OreDictionary;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
@@ -68,81 +67,79 @@ public final class SimplyQuarries {
     public void init(final FMLInitializationEvent event) {
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.machines, 1, 8),
-                "EDE",
-                "BAB",
-                "CCC",
-                'E',
-                (IUItem.cirsuitQuantum),
-                'D',
-                new ItemStack(quarry, 1),
-                'C',
-                new ItemStack(IUItem.compressIridiumplate),
-                'B',
-                new ItemStack(IUItem.advQuantumtool),
-                'A',
-                new ItemStack(IUItem.core, 1, 7)
+                "   ",
+                " A ",
+                " B ", 'A', new ItemStack(IUItem.crafting_elements, 1, 250),
+                'B', new ItemStack(quarry, 1)
+
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(quarry, 1),
-                "DED",
-                "ABA",
-                "CCC",
+                " D ",
+                "ABE",
+                " C ",
                 'A',
-                new ItemStack(IUItem.core, 1, 3),
+                new ItemStack(IUItem.crafting_elements, 1, 158),
                 'B',
                 Ic2Items.advancedMachine,
                 'C',
-                new ItemStack(IUItem.quantumtool),
+                Ic2Items.elemotor,
                 'D',
-                IUItem.cirsuitQuantum,
+                new ItemStack(IUItem.crafting_elements, 1, 72),
                 'E',
-                new ItemStack(IUItem.sunnarium, 1, 1)
+                new ItemStack(IUItem.crafting_elements, 1, 44)
 
         );
-
-        Recipes.advRecipes.addRecipe(new ItemStack(quarry, 1, 1),
-                "ABA",
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(quarry, 1, 1),
+                "D D",
+                "ABE",
                 "DCD",
-                "EEE",
-                'C', new ItemStack(quarry),
-                'E',
-                new ItemStack(IUItem.nanoBox),
-                'D',
-                (IUItem.circuitNano),
-                'B',
-                OreDictionary.getOres("doubleplateAluminium"),
                 'A',
-                OreDictionary.getOres("doubleplateAlumel")
+                new ItemStack(IUItem.crafting_elements, 1, 256),
+                'B',
+                new ItemStack(quarry, 1),
+                'C',
+                new ItemStack(IUItem.crafting_elements, 1, 20),
+                'D',
+                new ItemStack(IUItem.crafting_elements, 1, 138),
+                'E',
+                new ItemStack(IUItem.crafting_elements, 1, 47)
+
         );
-
-
-        Recipes.advRecipes.addRecipe(new ItemStack(quarry, 1, 2),
-                "ABA",
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(quarry, 1, 2),
+                "D D",
+                "ABE",
                 "DCD",
-                "EEE", 'C', new ItemStack(quarry, 1, 1),
-                'E',
-                new ItemStack(IUItem.quantumtool),
-                'D',
-                (IUItem.cirsuitQuantum),
-                'B',
-                OreDictionary.getOres("doubleplatePlatinum"),
                 'A',
-                OreDictionary.getOres("doubleplateVitalium")
+                new ItemStack(IUItem.crafting_elements, 1, 252),
+                'B',
+                new ItemStack(quarry, 1, 1),
+                'C',
+                new ItemStack(IUItem.crafting_elements, 1, 96),
+                'D',
+                new ItemStack(IUItem.crafting_elements, 1, 139),
+                'E',
+                new ItemStack(IUItem.crafting_elements, 1, 49)
+
         );
-
-
-        Recipes.advRecipes.addRecipe(new ItemStack(quarry, 1, 3),
-                "ABA",
+        Recipes.advRecipes.addRecipe(
+                new ItemStack(quarry, 1, 3),
+                "D D",
+                "ABE",
                 "DCD",
-                "EEE", 'C', new ItemStack(quarry, 1, 2),
-                'E',
-                new ItemStack(IUItem.advQuantumtool),
-                'D',
-                (IUItem.circuitSpectral),
-                'B',
-                OreDictionary.getOres("doubleplateSpinel"),
                 'A',
-                OreDictionary.getOres("doubleplateManganese")
+                new ItemStack(IUItem.crafting_elements, 1, 254),
+                'B',
+                new ItemStack(quarry, 1, 2),
+                'C',
+                new ItemStack(IUItem.crafting_elements, 1, 120),
+                'D',
+                new ItemStack(IUItem.crafting_elements, 1, 140),
+                'E',
+                new ItemStack(IUItem.crafting_elements, 1, 51)
+
         );
     }
 

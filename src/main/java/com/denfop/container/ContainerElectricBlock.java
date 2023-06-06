@@ -1,10 +1,8 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.TileEntityElectricBlock;
-import ic2.core.ContainerFullInv;
 import ic2.core.slot.ArmorSlot;
 import ic2.core.slot.SlotArmor;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -25,15 +23,11 @@ public class ContainerElectricBlock extends ContainerFullInv<TileEntityElectricB
 
     public List<String> getNetworkedFields() {
         List<String> ret = super.getNetworkedFields();
-        ret.add("energy2");
         ret.add("energy");
-        ret.add("personality");
-        ret.add("rfeu");
-        ret.add("rf");
         ret.add("inputslotA");
         ret.add("inputslotB");
         ret.add("inputslotC");
-
+        ret.add("redstoneMode");
         ret.add("output_plus");
         return ret;
     }

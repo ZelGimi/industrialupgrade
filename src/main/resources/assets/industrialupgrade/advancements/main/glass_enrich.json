@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemiucrafring",
-      "data": 1
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemiucrafring",
+      "data" : 1
     },
-    "title": {
-      "translate": "achievement.glass_enrich"
+    "title" : {
+      "translate" : "achievement.glass_enrich"
     },
-    "description": {
-      "translate": "achievement.glass_enrich.desc"
+    "description" : {
+      "translate" : "achievement.glass_enrich.desc"
     }
   },
-  "parent": "industrialupgrade:main/uranium_enrich",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/uranium_enrich",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemiucrafring",
-            "data": 1
+            "item" : "industrialupgrade:itemiucrafring",
+            "data" : 1
           }
         ]
       }

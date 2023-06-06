@@ -3,7 +3,6 @@ package com.denfop.invslot;
 
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileEntityBaseWorldCollector;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotWorldCollector extends InvSlot {
@@ -29,10 +28,11 @@ public class InvSlotWorldCollector extends InvSlot {
 
         for (int i = 0; i < this.size(); i++) {
             if (!get(i).isEmpty()) {
-                while (!this.get(i).isEmpty() && this.tile.matter_energy + 200 <= this.tile.max_matter_energy) {
-                    this.tile.matter_energy += 200;
-                    this.consume(i, 1);
-                }
+                int col = 5;
+                col -= Math.ceil(this.tile.matter_energy / 200);
+                this.tile.matter_energy += 200 * col;
+                this.consume(i, col);
+
 
             }
         }
@@ -40,7 +40,7 @@ public class InvSlotWorldCollector extends InvSlot {
 
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem() instanceof ItemSolidMatter && itemStack.getItemDamage() == this.tile.enumTypeCollector.getMeta();
     }
 

@@ -12,7 +12,6 @@ import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
@@ -31,14 +30,14 @@ import java.util.Set;
 public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine implements
         IUpgradableBlock, IUpdateTick, INetworkClientTileEntityEventListener {
 
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
     public final int defaultTier;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyStorage;
     public final InvSlotUpgrade upgradeSlot;
     private final ItemStack sand;
     private final ItemStack gravel;
-    public int energyConsume;
+    public double energyConsume;
     public Mode mode;
     public int operationLength;
 
@@ -180,13 +179,12 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
     protected void updateEntityServer() {
         super.updateEntityServer();
 
-
         MachineRecipe output = this.output;
         if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
             if (!this.getActive()) {
                 setActive(true);
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
                 }
             }
             this.progress = (short) (this.progress + 1);
@@ -199,21 +197,21 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
                 operate(output);
                 this.progress = 0;
                 if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[2 % valuesAudio.length])) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
                 }
             }
         } else {
             if (output == null && this.getActive()) {
                 this.progress = 0;
                 if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[1 % valuesAudio.length])) {
-                    IC2.network.get(true).initiateTileEntityEvent(this, 1, true);
+                    IUCore.network.get(true).initiateTileEntityEvent(this, 1, true);
                 }
             }
             if (this.getActive()) {
                 setActive(false);
             }
         }
-        if ((!this.inputSlotA.isEmpty() || !this.outputSlot.isEmpty()) && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setOverclockRates();
         }
 
@@ -243,13 +241,13 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
         switch (this.getMode()) {
             default:
                 this.outputSlot.add(processResult);
-                return;
+                break;
             case SAND:
                 this.outputSlot.add(this.sand);
-                return;
+                break;
             case GRAVEL:
                 this.outputSlot.add(this.gravel);
-                return;
+                break;
         }
     }
 
@@ -263,14 +261,10 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
         this.mode = Mode.values()[(this.mode.ordinal() + 1) % Mode.values().length];
     }
 
-    public ContainerBase<? extends TileEntityBaseGenStone> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerGenStone getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerGenStone(entityPlayer, this);
     }
 
-    @Override
-    public int getSizeInventory() {
-        return 1;
-    }
 
     public double getEnergy() {
         return this.energy.getEnergy();

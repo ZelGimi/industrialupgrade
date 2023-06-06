@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "ic2:crafting",
-	  "data": 2
+  "display" : {
+    "icon" : {
+      "item" : "ic2:crafting",
+      "data" : 2
     },
-    "title": {
-      "translate": "achievement.advanced_circuit"
+    "title" : {
+      "translate" : "achievement.advanced_circuit"
     },
-    "description": {
-      "translate": "achievement.advanced_circuit.desc"
+    "description" : {
+      "translate" : "achievement.advanced_circuit.desc"
     }
   },
-  "parent": "industrialupgrade:main/circuit_manufacturer",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/circuit_manufacturer",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "ic2:crafting",
-			"data": 2
+            "item" : "ic2:crafting",
+            "data" : 2
           }
         ]
       }

@@ -7,7 +7,6 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiEnriched;
@@ -21,8 +20,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class TileEntityEnrichment extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
@@ -57,6 +54,11 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine implem
                 new ItemStack(IUItem.radiationresources, 1, 4)
         );
         addenrichment(
+                new ItemStack(IUItem.preciousgem, 4, 1),
+                "blockCobalt",
+                new ItemStack(IUItem.crafting_elements, 1, 269)
+        );
+        addenrichment(
                 new ItemStack(Blocks.GLOWSTONE, 1),
                 "ingotUranium",
                 new ItemStack(IUItem.itemiu, 1, 0)
@@ -69,12 +71,6 @@ public class TileEntityEnrichment extends TileEntityDoubleElectricMachine implem
                 new ItemStack(IUItem.sunnarium, 1, 0)
         );
 
-    }
-
-    @Override
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
     }
 
     @SideOnly(Side.CLIENT)

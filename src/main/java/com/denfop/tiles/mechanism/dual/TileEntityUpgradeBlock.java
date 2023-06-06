@@ -10,6 +10,9 @@ import com.denfop.api.upgrade.UpgradeModificator;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiUpgradeBlock;
 import com.denfop.items.EnumInfoUpgradeModules;
@@ -43,8 +46,138 @@ import static com.denfop.events.IUEventHandler.getUpgradeItem;
 public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine implements IHasRecipe {
 
     public TileEntityUpgradeBlock() {
-        super(1, 300, 1, EnumDoubleElectricMachine.UPGRADE);
+        super(1, 300, 1, EnumDoubleElectricMachine.UPGRADE, false);
         Recipes.recipes.addInitRecipes(this);
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
+            @Override
+            public void onLoaded() {
+                super.onLoaded();
+                this.componentProcess = ((TileEntityUpgradeBlock) this.getParent()).componentProcess;
+            }
+        });
+        this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
+                (short) 300
+        ));
+        this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1) {
+            public void operateOnce(List<ItemStack> processResult) {
+                if (this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("type").isEmpty()) {
+
+                    ItemStack stack1 = getUpgradeItem(this.invSlotRecipes.get(0))
+                            ? this.invSlotRecipes.get(0)
+                            : this.invSlotRecipes.get(1);
+                    ItemStack module = getUpgradeItem(this.invSlotRecipes.get(0))
+                            ? this.invSlotRecipes.get(1)
+                            : this.invSlotRecipes.get(0);
+
+
+                    NBTTagCompound nbt1 = ModUtils.nbt(stack1);
+                    if (module.getItem() instanceof ItemUpgradeModule) {
+                        if (UpgradeSystem.system.getRemaining(stack1) == 0) {
+                            this.updateTick.setRecipeOutput(null);
+                            return;
+                        }
+                        EnumInfoUpgradeModules type = ItemUpgradeModule.getType(module.getItemDamage());
+                        boolean should = UpgradeSystem.system.shouldUpdate(type, stack1);
+                        if (!should) {
+                            this.updateTick.setRecipeOutput(null);
+                            return;
+                        }
+                        int Damage = stack1.getItemDamage();
+                        double newCharge = ElectricItem.manager.getCharge(stack1);
+                        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
+                        this.invSlotRecipes.consume();
+                        this.outputSlot.add(processResult);
+                        ItemStack stack = this.outputSlot.get();
+                        stack.setTagCompound(nbt1);
+                        NBTTagCompound nbt = ModUtils.nbt(stack);
+                        String mode = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("mode_module");
+                        final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
+                        int k = 0;
+                        for (int i = 0; i < 4 + list.size(); i++) {
+                            if (nbt.getString("mode_module" + i).isEmpty()) {
+                                k = i;
+                                break;
+                            }
+                        }
+                        nbt.setString("mode_module" + k, mode);
+                        stack.setItemDamage(Damage);
+                        ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
+                        ElectricItem.manager.use(stack, 1, null);
+
+                        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
+                        MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
+
+
+                    }
+
+                    if (module.getItem() instanceof ItemQuarryModule && module.getItemDamage() == 12) {
+                        int Damage = stack1.getItemDamage();
+                        NBTTagCompound nbt2 = ModUtils.nbt(module);
+                        double newCharge = ElectricItem.manager.getCharge(stack1);
+                        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
+
+                        this.invSlotRecipes.consume();
+                        this.outputSlot.add(processResult);
+                        ItemStack stack = this.outputSlot.get();
+                        stack.setTagCompound(nbt1);
+                        NBTTagCompound nbt = ModUtils.nbt(stack);
+                        int size = nbt2.getInteger("size");
+                        for (int j = 0; j < size; j++) {
+                            String l = "number_" + j;
+                            String temp = nbt2.getString(l);
+                            nbt.setString(l, temp);
+                        }
+                        nbt.setBoolean("list", true);
+                        nbt.setInteger("size", size);
+                        stack.setItemDamage(Damage);
+                        ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
+                        ElectricItem.manager.use(stack, 1, null);
+                        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
+
+                        MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(
+                                world,
+                                (IUpgradeWithBlackList) stack.getItem(),
+                                stack,
+                                nbt2
+                        ));
+
+                    }
+                } else {
+                    ItemStack stack1 = getUpgradeItem(this.invSlotRecipes.get(0))
+                            ? this.invSlotRecipes.get(0)
+                            : this.invSlotRecipes.get(1);
+                    ItemStack module = getUpgradeItem(this.invSlotRecipes.get(0))
+                            ? this.invSlotRecipes.get(1).copy()
+                            : this.invSlotRecipes.get(0).copy();
+                    boolean need = UpgradeSystem.system.needModificate(stack1, module);
+                    if (need) {
+                        NBTTagCompound nbt1 = ModUtils.nbt(stack1);
+                        int Damage = stack1.getItemDamage();
+                        double newCharge = ElectricItem.manager.getCharge(stack1);
+                        final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
+
+                        this.invSlotRecipes.consume();
+                        this.outputSlot.add(processResult);
+                        ItemStack stack = this.outputSlot.get();
+                        stack.setTagCompound(nbt1);
+                        UpgradeSystem.system.addModificate(
+                                stack,
+                                this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("type")
+                        );
+                        stack.setItemDamage(Damage);
+                        ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
+                        ElectricItem.manager.use(stack, 1, null);
+                        EnchantmentHelper.setEnchantments(enchantmentMap, stack);
+
+                        MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
+
+                    }
+                }
+            }
+        });
+        this.componentProcess.setHasAudio(true);
+        this.componentProcess.setSlotOutput(outputSlot);
+        this.componentProcess.setInvSlotRecipes(this.inputSlotA);
     }
 
     public void init() {
@@ -106,13 +239,13 @@ public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine impl
             if (module.getItem() instanceof ItemUpgradeModule) {
                 if (UpgradeSystem.system.getRemaining(stack1) == 0) {
                     this.output = null;
-                    this.energy.addEnergy(energyConsume * operationLength);
+                    this.energy.addEnergy(this.componentProcess.getDefaultEnergyConsume() * this.componentProcess.getDefaultOperationLength());
                     return null;
                 }
                 EnumInfoUpgradeModules type = ItemUpgradeModule.getType(module.getItemDamage());
                 boolean should = UpgradeSystem.system.shouldUpdate(type, stack1);
                 if (!should) {
-                    this.energy.addEnergy(energyConsume * operationLength);
+                    this.energy.addEnergy(this.componentProcess.getDefaultEnergyConsume() * this.componentProcess.getDefaultOperationLength());
                     this.output = null;
                     return null;
                 }
@@ -131,114 +264,6 @@ public class TileEntityUpgradeBlock extends TileEntityDoubleElectricMachine impl
         return output;
 
     }
-
-    public void operateOnce(MachineRecipe output, List<ItemStack> processResult) {
-        if (this.output.getRecipe().output.metadata.getString("type").isEmpty()) {
-
-            ItemStack stack1 = getUpgradeItem(this.inputSlotA.get(0)) ? this.inputSlotA.get(0) : this.inputSlotA.get(1);
-            ItemStack module = getUpgradeItem(this.inputSlotA.get(0)) ? this.inputSlotA.get(1) : this.inputSlotA.get(0);
-
-
-            NBTTagCompound nbt1 = ModUtils.nbt(stack1);
-            if (module.getItem() instanceof ItemUpgradeModule) {
-                if (UpgradeSystem.system.getRemaining(stack1) == 0) {
-                    this.output = null;
-                    return;
-                }
-                EnumInfoUpgradeModules type = ItemUpgradeModule.getType(module.getItemDamage());
-                boolean should = UpgradeSystem.system.shouldUpdate(type, stack1);
-                if (!should) {
-                    this.output = null;
-                    return;
-                }
-                int Damage = stack1.getItemDamage();
-                double newCharge = ElectricItem.manager.getCharge(stack1);
-                final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
-                this.inputSlotA.consume();
-                this.outputSlot.add(processResult);
-                ItemStack stack = this.outputSlot.get();
-                stack.setTagCompound(nbt1);
-                NBTTagCompound nbt = ModUtils.nbt(stack);
-                String mode = output.getRecipe().output.metadata.getString("mode_module");
-                final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
-                int k = 0;
-                for (int i = 0; i < 4 + list.size(); i++) {
-                    if (nbt.getString("mode_module" + i).isEmpty()) {
-                        k = i;
-                        break;
-                    }
-                }
-                nbt.setString("mode_module" + k, mode);
-                stack.setItemDamage(Damage);
-                ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
-                ElectricItem.manager.use(stack, 1, null);
-
-                EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-                MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
-
-
-            }
-
-            if (module.getItem() instanceof ItemQuarryModule && module.getItemDamage() == 12) {
-                int Damage = stack1.getItemDamage();
-                NBTTagCompound nbt2 = ModUtils.nbt(module);
-                double newCharge = ElectricItem.manager.getCharge(stack1);
-                final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
-
-                this.inputSlotA.consume();
-                this.outputSlot.add(processResult);
-                ItemStack stack = this.outputSlot.get();
-                stack.setTagCompound(nbt1);
-                NBTTagCompound nbt = ModUtils.nbt(stack);
-                int size = nbt2.getInteger("size");
-                for (int j = 0; j < size; j++) {
-                    String l = "number_" + j;
-                    String temp = nbt2.getString(l);
-                    nbt.setString(l, temp);
-                }
-                nbt.setBoolean("list", true);
-                nbt.setInteger("size", size);
-                stack.setItemDamage(Damage);
-                ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
-                ElectricItem.manager.use(stack, 1, null);
-                EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-
-                MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(
-                        world,
-                        (IUpgradeWithBlackList) stack.getItem(),
-                        stack,
-                        nbt2
-                ));
-
-            }
-        } else {
-            ItemStack stack1 = getUpgradeItem(this.inputSlotA.get(0)) ? this.inputSlotA.get(0) : this.inputSlotA.get(1);
-            ItemStack module = getUpgradeItem(this.inputSlotA.get(0))
-                    ? this.inputSlotA.get(1).copy()
-                    : this.inputSlotA.get(0).copy();
-            boolean need = UpgradeSystem.system.needModificate(stack1, module);
-            if (need) {
-                NBTTagCompound nbt1 = ModUtils.nbt(stack1);
-                int Damage = stack1.getItemDamage();
-                double newCharge = ElectricItem.manager.getCharge(stack1);
-                final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
-
-                this.inputSlotA.consume();
-                this.outputSlot.add(processResult);
-                ItemStack stack = this.outputSlot.get();
-                stack.setTagCompound(nbt1);
-                UpgradeSystem.system.addModificate(stack, this.output.getRecipe().output.metadata.getString("type"));
-                stack.setItemDamage(Damage);
-                ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
-                ElectricItem.manager.use(stack, 1, null);
-                EnchantmentHelper.setEnchantments(enchantmentMap, stack);
-
-                MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
-
-            }
-        }
-    }
-
 
     public String getStartSoundFile() {
         return "Machines/upgrade_block.ogg";

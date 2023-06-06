@@ -9,17 +9,15 @@ import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.items.modules.ItemModuleType;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntitySintezator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Energy;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class InvSlotSintezator extends InvSlot {
     public final TileEntitySintezator tile;
 
     public InvSlotSintezator(TileEntitySintezator base1, String name, int type, int count) {
-        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.TOP);
+        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
         this.type = type;
         if (type == 0) {
             this.setStackSizeLimit(Config.limit);
@@ -42,44 +40,38 @@ public class InvSlotSintezator extends InvSlot {
         this.tile = base1;
     }
 
+
     @Override
-    public void onChanged() {
-        super.onChanged();
+    public void put(final int index, final ItemStack content) {
+        super.put(index, content);
         if (this.type == 0) {
             double[] tire_massive = new double[9];
             double[] myArray1 = new double[4];
             for (int i = 0; i < this.size(); i++) {
-                if (!this.get(i).isEmpty() && IUItem.map3.get(this.get(i).getUnlocalizedName()) != null) {
+                EnumSolarPanels solar = IUItem.map3.get(this.get(i).getUnlocalizedName());
+                if (!this.get(i).isEmpty() && solar != null) {
                     int p = Math.min(this.get(i).getCount(), Config.limit);
-                    ItemStack stack = this.get(i);
-                    EnumSolarPanels solar;
-                    solar = IUItem.map3.get(stack.getUnlocalizedName());
-
-                    if (solar != null) {
-
-
-                        myArray1[0] += (solar.genday * p);
-                        myArray1[1] += (solar.gennight * p);
-                        myArray1[2] += (solar.maxstorage * p);
-                        myArray1[3] += (solar.producing * p);
-                        tire_massive[i] = solar.tier;
-                    }
+                    myArray1[0] += (solar.genday * p);
+                    myArray1[1] += (solar.gennight * p);
+                    myArray1[2] += (solar.maxstorage * p);
+                    myArray1[3] += (solar.producing * p);
+                    tire_massive[i] = solar.tier;
                 } else if (!this.get(i).isEmpty() && IUItem.panel_list.get(this
                         .get(i)
                         .getUnlocalizedName()) != null) {
                     int p = Math.min(this.get(i).getCount(), Config.limit);
                     ItemStack stack = this.get(i);
-                    List solar;
-                    solar = IUItem.panel_list.get(stack.getUnlocalizedName() + ".name");
+                    List solar1;
+                    solar1 = IUItem.panel_list.get(stack.getUnlocalizedName() + ".name");
 
-                    if (solar != null) {
+                    if (solar1 != null) {
 
 
-                        myArray1[0] += ((double) solar.get(0) * p);
-                        myArray1[1] += ((double) solar.get(1) * p);
-                        myArray1[2] += ((double) solar.get(2) * p);
-                        myArray1[3] += ((double) solar.get(3) * p);
-                        tire_massive[i] = (double) solar.get(4);
+                        myArray1[0] += ((double) solar1.get(0) * p);
+                        myArray1[1] += ((double) solar1.get(1) * p);
+                        myArray1[2] += ((double) solar1.get(2) * p);
+                        myArray1[3] += ((double) solar1.get(3) * p);
+                        tire_massive[i] = (double) solar1.get(4);
                     }
                 }
             }
@@ -91,21 +83,79 @@ public class InvSlotSintezator extends InvSlot {
             }
 
             tile.machineTire = (int) max;
-            int type = tile.solartype;
-            tile.solartype = this.solartype();
             tile.genDay = myArray1[0];
             tile.genNight = myArray1[1];
             tile.maxStorage = myArray1[2];
             tile.maxStorage2 = myArray1[2] * Config.coefficientrf;
             tile.production = myArray1[3];
-            if (type != tile.solartype) {
-                tile.updateTileEntityField();
-            }
+
         } else {
             this.checkmodule();
             this.getrfmodule();
-        }
+            int type = this.tile.solartype;
+            this.tile.solartype = this.solartype();
+            if (type != tile.solartype) {
 
+                tile.updateTileEntityField();
+            }
+        }
+    }
+
+    public void update() {
+        if (this.type == 0) {
+            double[] tire_massive = new double[9];
+            double[] myArray1 = new double[4];
+            for (int i = 0; i < this.size(); i++) {
+                EnumSolarPanels solar = IUItem.map3.get(this.get(i).getUnlocalizedName());
+                if (!this.get(i).isEmpty() && solar != null) {
+                    int p = Math.min(this.get(i).getCount(), Config.limit);
+                    myArray1[0] += (solar.genday * p);
+                    myArray1[1] += (solar.gennight * p);
+                    myArray1[2] += (solar.maxstorage * p);
+                    myArray1[3] += (solar.producing * p);
+                    tire_massive[i] = solar.tier;
+                } else if (!this.get(i).isEmpty() && IUItem.panel_list.get(this
+                        .get(i)
+                        .getUnlocalizedName()) != null) {
+                    int p = Math.min(this.get(i).getCount(), Config.limit);
+                    ItemStack stack = this.get(i);
+                    List solar1;
+                    solar1 = IUItem.panel_list.get(stack.getUnlocalizedName() + ".name");
+
+                    if (solar1 != null) {
+
+
+                        myArray1[0] += ((double) solar1.get(0) * p);
+                        myArray1[1] += ((double) solar1.get(1) * p);
+                        myArray1[2] += ((double) solar1.get(2) * p);
+                        myArray1[3] += ((double) solar1.get(3) * p);
+                        tire_massive[i] = (double) solar1.get(4);
+                    }
+                }
+            }
+            double max = tire_massive[0];
+            for (double v : tire_massive) {
+                if (v > max) {
+                    max = v;
+                }
+            }
+
+            tile.machineTire = (int) max;
+            tile.genDay = myArray1[0];
+            tile.genNight = myArray1[1];
+            tile.maxStorage = myArray1[2];
+            tile.maxStorage2 = myArray1[2] * Config.coefficientrf;
+            tile.production = myArray1[3];
+
+        } else {
+            this.checkmodule();
+            this.getrfmodule();
+            int type = this.tile.solartype;
+            this.tile.solartype = this.solartype();
+            if (type != tile.solartype) {
+                tile.updateTileEntityField();
+            }
+        }
     }
 
     public void wirelessmodule() {
@@ -124,21 +174,14 @@ public class InvSlotSintezator extends InvSlot {
                 y = nbttagcompound.getInteger("Ycoord");
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
-                if (tile.getWorld().getTileEntity(pos) != null
-                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityBlock && x != 0
+                final TileEntity tile2 = tile.getWorld().getTileEntity(pos);
+                if (tile2 instanceof TileEntityInventory && x != 0
                         && y != 0 && z != 0 && !nbttagcompound.getBoolean("change")) {
-                    TileEntityBlock tile1 = (TileEntityBlock) tile.getWorld().getTileEntity(pos);
-                    assert tile1 != null;
-                    if (tile1.getComponent(Energy.class) != null) {
-
-                        final Energy energy = tile1.getComponent(Energy.class);
-                        if (energy.getDelegate() instanceof IEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
-                        }
-                    } else if (tile1.getComponent(AdvEnergy.class) != null) {
-                        final AdvEnergy energy = tile1.getComponent(AdvEnergy.class);
+                    TileEntityInventory tile1 = (TileEntityInventory) tile2;
+                    if (tile1.getComp(AdvEnergy.class) != null) {
+                        final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
                         if (energy.getDelegate() instanceof IAdvEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
+                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IAdvEnergySink) energy.getDelegate()));
                         }
                     }
 
@@ -150,13 +193,15 @@ public class InvSlotSintezator extends InvSlot {
 
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (this.type == 0) {
             return IUItem.map3.containsKey(itemStack.getUnlocalizedName()) || IUItem.panel_list.containsKey(itemStack.getUnlocalizedName());
         } else {
             return itemStack.getItem() instanceof ItemBaseModules
                     || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 4)
                     || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 1)
+                    || (itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 2)
                     || (itemStack.getItem() instanceof ItemModuleType)
                     ;
         }
@@ -179,15 +224,16 @@ public class InvSlotSintezator extends InvSlot {
         TileEntitySintezator tile = (TileEntitySintezator) base;
 
         List<Integer> list1 = new ArrayList<>();
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 0; i < tile.inputslotA.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleType) {
+
                 list1.add(get(i).getItemDamage() + 1);
             } else {
                 list1.add(0);
             }
         }
-        EnumType type = EnumType.getFromID(ModUtils.slot(list1));
 
+        EnumType type = EnumType.getFromID(ModUtils.slot(list1));
         return tile.setSolarType(type);
     }
 
@@ -198,7 +244,9 @@ public class InvSlotSintezator extends InvSlot {
         double temp_storage = tile.maxStorage;
         double temp_producing = tile.production;
         for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null) {
+            if (!this.get(i).isEmpty() && EnumModule.getFromID(this.get(i).getItemDamage()) != null && this
+                    .get(i)
+                    .getItem() instanceof ItemBaseModules) {
                 EnumModule module = EnumModule.getFromID(this.get(i).getItemDamage());
                 EnumBaseType type = module.type;
                 double percent = module.percent;
@@ -216,6 +264,26 @@ public class InvSlotSintezator extends InvSlot {
                         temp_producing += tile.production * percent;
                         break;
                 }
+            }
+        }
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule) {
+                int damage = this.get(i).getItemDamage();
+                if (damage == 1) {
+                    tile.machineTire++;
+                }
+                if (damage == 2) {
+                    tile.machineTire--;
+                }
+            }
+        }
+        tile.wirelessTransferList.clear();
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
+                    .get(i)
+                    .getItemDamage() == 10) {
+                this.wirelessmodule();
+                break;
             }
         }
         tile.genDay = temp_day;

@@ -1,11 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.utils.ModUtils;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;

@@ -181,12 +181,15 @@ public class RegisterOreDictionary {
         deleteOre("dustTinySilver", Ic2Items.smallSilverDust);
         deleteOre("dustSilver", Ic2Items.silverDust);
         deleteOre("blockSilver", Ic2Items.silverBlock);
+        deleteOre("oreIridium", Ic2Items.iridiumOre);
+        deleteOre("gemIridium", Ic2Items.iridiumOre);
+        deleteOre("ingotIridium", Ic2Items.iridiumOre);
         for (int j = 0; j < list_item1.size(); j++) {
             for (int i = 0; i < list_string1.size(); i++) {
 
                 OreDictionary.registerOre(
                         string1[j] + list_string1.get(i),
-                        new ItemStack(list_item1.get(j).setUnlocalizedName(("alloys" + string1[j])), 1, i)
+                        new ItemStack(list_item1.get(j), 1, i)
                 );
 
 
@@ -196,14 +199,14 @@ public class RegisterOreDictionary {
         for (int i = 0; i < list_heavyore.size(); i++) {
             OreDictionary.registerOre(
                     "ore" + list_heavyore.get(i),
-                    new ItemStack(Item.getItemFromBlock(IUItem.heavyore).setUnlocalizedName(string2[0]), 1, i)
+                    new ItemStack(Item.getItemFromBlock(IUItem.heavyore), 1, i)
             );
 
         }
         for (int i = 0; i < list_baseore.size(); i++) {
             OreDictionary.registerOre(
                     "ore" + list_baseore.get(i),
-                    new ItemStack(Item.getItemFromBlock((IUItem.ore)).setUnlocalizedName(string2[1]), 1,
+                    new ItemStack(Item.getItemFromBlock((IUItem.ore)), 1,
                             i
                     )
             );

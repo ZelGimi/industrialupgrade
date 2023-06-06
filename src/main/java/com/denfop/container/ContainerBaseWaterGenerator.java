@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -24,7 +22,6 @@ public class ContainerBaseWaterGenerator extends ContainerFullInv<TileEntityBase
         ret.add("slot");
         ret.add("rotorSide");
         ret.add("generation");
-        ret.add("energy");
         ret.add("timers");
         ret.add("wind_speed");
         ret.add("wind_side");

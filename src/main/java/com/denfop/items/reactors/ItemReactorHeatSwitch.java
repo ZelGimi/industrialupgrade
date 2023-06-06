@@ -33,8 +33,12 @@ public class ItemReactorHeatSwitch extends ItemReactorHeatStorage {
             @NotNull final List<String> tooltip,
             @NotNull final ITooltipFlag advanced
     ) {
-        tooltip.add(Localization.translate("iu.reactorheatswitch") + switchReactor + " eT");
-        tooltip.add(Localization.translate("iu.reactorheatswitch1") + " " + switchSide + " eT");
+        if (switchReactor != 0) {
+            tooltip.add(Localization.translate("iu.reactorheatswitch") + switchReactor + " eT");
+        }
+        if (switchSide != 0) {
+            tooltip.add(Localization.translate("iu.reactorheatswitch1") + " " + switchSide + " eT");
+        }
 
         super.addInformation(stack, world, tooltip, advanced);
     }

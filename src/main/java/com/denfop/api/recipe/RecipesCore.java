@@ -2,7 +2,7 @@ package com.denfop.api.recipe;
 
 import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
 
 import java.util.ArrayList;
@@ -16,13 +16,24 @@ import java.util.stream.Collectors;
 public class RecipesCore implements IRecipes {
 
     private final List<IHasRecipe> recipes = new ArrayList<>();
+    private final RecipesFluidCore fluid_recipe;
     public Map<String, List<BaseMachineRecipe>> map_recipes = new HashMap<>();
     public Map<String, IBaseRecipe> map_recipe_managers = new HashMap<>();
     public Map<String, List<IRecipeInputStack>> map_recipe_managers_itemStack = new HashMap<>();
-    public Map<String, List<BaseFluidMachineRecipe>> map_recipes_fluid = new HashMap<>();
+
+    public Map<String, List<Fluid>> map_fluid_input = new HashMap<>();
+    public List<RecipeRemove> recipeRemoves = new ArrayList<>();
+
+    public List<RecipeAdder> recipeAdders = new ArrayList<>();
 
     public RecipesCore() {
         init();
+        this.fluid_recipe = new RecipesFluidCore();
+        fluid_recipe.init();
+    }
+
+    public List<Fluid> getInputFluidsFromRecipe(String name) {
+        return map_fluid_input.get(name);
     }
 
     public void init() {
@@ -37,7 +48,7 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("genstone", 2, false);
         this.addRecipeManager("microchip", 5, true);
         this.addRecipeManager("sunnurium", 4, true);
-        this.addRecipeManager("wither", 7, true);
+        this.addRecipeManager("wither", 7, true, true);
         this.addRecipeManager("doublemolecular", 2, true);
         this.addRecipeManager("molecular", 1, true);
         this.addRecipeManager("plastic", 2, true);
@@ -71,7 +82,43 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("gearing", 1, true, false);
         this.addRecipeManager("water_rotor_assembler", 5, true, true);
         this.addRecipeManager("water_rotor_upgrade", 2, false, true);
+        this.addRecipeManager("welding", 2, true, true);
+        this.addRecipeManager("replicator", 1, false, false);
 
+        this.addRecipeManager("cannerbottle", 2, true, true);
+        this.addRecipeManager("cannerenrich", 2, true, true);
+        this.addRecipeManager("empty", 1, false, true);
+
+    }
+
+    public void addRemoveRecipe(String name, ItemStack stack, boolean allRemove) {
+        this.recipeRemoves.add(new RecipeRemove(name, stack, allRemove));
+    }
+
+    public void addRemoveRecipe(String name, ItemStack stack) {
+        this.recipeRemoves.add(new RecipeRemove(name, stack, false));
+    }
+
+    public void removeAllRecipesFromList() {
+        this.recipeRemoves.forEach(recipeRemove -> {
+            if (recipeRemove.isRemoveAll()) {
+                this.removeAllRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+            } else {
+                this.removeRecipe(recipeRemove.getNameRecipe(), new RecipeOutput(null, recipeRemove.getStack()));
+            }
+        });
+    }
+
+    @Override
+    public void addAdderRecipe(final String name, final BaseMachineRecipe baseMachineRecipe) {
+        this.recipeAdders.add(new RecipeAdder(name, baseMachineRecipe));
+    }
+
+    @Override
+    public void addAllRecipesFromList() {
+        this.recipeAdders.forEach(recipeAdder -> {
+            this.addRecipe(recipeAdder.getName(), recipeAdder.getBaseMachineRecipe());
+        });
 
     }
 
@@ -81,33 +128,12 @@ public class RecipesCore implements IRecipes {
 
     public void addRecipeManager(String name, int size, boolean consume) {
         this.map_recipe_managers.put(name, new RecipeManager(name, size, consume));
-        if (!this.map_recipes_fluid.containsKey(name)) {
-            List<BaseFluidMachineRecipe> lst = new ArrayList<>();
-            this.map_recipes_fluid.put(name, lst);
-        }
     }
 
-    public List<BaseFluidMachineRecipe> getFluidRecipes(String name) {
-        return this.map_recipes_fluid.get(name);
-    }
 
-    public BaseFluidMachineRecipe getFluidRecipe(List<FluidStack> fluidStacks, List<BaseFluidMachineRecipe> recipes) {
-        for (BaseFluidMachineRecipe recipe : recipes) {
-            if (recipe.matches(fluidStacks)) {
-                return recipe;
-            }
-        }
-        return null;
-    }
-
-    public void addRecipeManagerFluid(String name, int size, boolean consume) {
-        this.map_recipe_managers.put(name, new RecipeManager(name, size, consume));
-        if (!this.map_recipes.containsKey(name)) {
-            List<BaseMachineRecipe> lst = new ArrayList<>();
-            List<IRecipeInputStack> lst1 = new ArrayList<>();
-            this.map_recipes.put(name, lst);
-            this.map_recipe_managers_itemStack.put(name, lst1);
-        }
+    @Override
+    public RecipesFluidCore getRecipeFluid() {
+        return fluid_recipe;
     }
 
     public void addRecipeManager(String name, int size, boolean consume, boolean require) {
@@ -121,8 +147,68 @@ public class RecipesCore implements IRecipes {
     }
 
     public void removeRecipe(String name, RecipeOutput output) {
+        List<BaseMachineRecipe> recipes = this.map_recipes.getOrDefault(name, new ArrayList<>());
+        BaseMachineRecipe deleteRecipe = null;
+        for (BaseMachineRecipe recipe : recipes) {
+            for (ItemStack stack : output.items) {
+                for (ItemStack output_stack : recipe.output.items) {
+                    if (stack.isItemEqual(output_stack)) {
+                        deleteRecipe = recipe;
+                        break;
+                    }
+                }
+                if (deleteRecipe != null) {
+                    break;
+                }
+            }
+            if (deleteRecipe != null) {
+                break;
+            }
+        }
+        if (deleteRecipe != null) {
+            recipes.remove(deleteRecipe);
+            final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
+            IInput input = deleteRecipe.input;
+            final List<IRecipeInput> list2 = input.getInputs();
+            for (IRecipeInput input1 : list2) {
+                IRecipeInputStack iRecipeInputStack = new RecipeInputStack(input1);
+                list.remove(iRecipeInputStack);
+            }
+
+        }
+
+    }
+
+    public void removeAllRecipe(String name, RecipeOutput output) {
         List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
-        recipes.removeIf(recipe -> recipe.getOutput().items.get(0).isItemEqual(output.items.get(0)));
+        List<BaseMachineRecipe> deleteRecipes = new ArrayList<>();
+        for (BaseMachineRecipe recipe : recipes) {
+            boolean find = false;
+            for (ItemStack stack : output.items) {
+                for (ItemStack output_stack : recipe.output.items) {
+                    if (stack.isItemEqual(output_stack)) {
+                        deleteRecipes.add(recipe);
+                        find = true;
+                        break;
+                    }
+                }
+                if (find) {
+                    break;
+                }
+            }
+
+        }
+        for (BaseMachineRecipe deleteRecipe : deleteRecipes) {
+            recipes.remove(deleteRecipe);
+            final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
+            IInput input = deleteRecipe.input;
+            final List<IRecipeInput> list2 = input.getInputs();
+            for (IRecipeInput input1 : list2) {
+                IRecipeInputStack iRecipeInputStack = new RecipeInputStack(input1);
+                list.remove(iRecipeInputStack);
+            }
+
+        }
 
     }
 
@@ -225,8 +311,10 @@ public class RecipesCore implements IRecipes {
             final FluidTank tank
     ) {
         int size = recipe.getSize();
+
         for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
             if (!recipe.require()) {
+
                 int[] col = new int[size];
                 int[] col1 = new int[size];
                 List<Integer> lst = new ArrayList<>();
@@ -282,16 +370,17 @@ public class RecipesCore implements IRecipes {
                     }
                     need = false;
                 }
+
                 if (need) {
                     continue;
                 }
-                if (tank.getFluid() == null) {
-                    return null;
+                if (baseMachineRecipe.input.hasFluids() && tank.getFluid() == null) {
+                    continue;
                 }
-                if (tank.getFluidAmount() < 1000) {
-                    return null;
+                if (baseMachineRecipe.input.hasFluids() && tank.getFluidAmount() < 1000) {
+                    continue;
                 }
-                if (!tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid())) {
+                if (baseMachineRecipe.input.hasFluids() && !tank.getFluid().isFluidEqual(baseMachineRecipe.input.getFluid())) {
                     continue;
                 }
                 List<Integer> integer = new ArrayList<>();
@@ -305,6 +394,7 @@ public class RecipesCore implements IRecipes {
                     tank.drain(baseMachineRecipe.input.getFluid(), true);
                     break;
                 } else {
+
                     return new MachineRecipe(baseMachineRecipe, integer);
                 }
             }
@@ -403,12 +493,16 @@ public class RecipesCore implements IRecipes {
         if (!this.map_recipes.containsKey(name)) {
             List<IRecipeInput> iRecipeInputList = recipe.input.getInputs();
             List<IRecipeInputStack> inputStackList = new ArrayList<>();
-
             for (IRecipeInput recipeInput : iRecipeInputList) {
                 inputStackList.add(new RecipeInputStack(recipeInput));
             }
 
             this.map_recipe_managers_itemStack.put(name, inputStackList);
+            if (recipe.input.hasFluids()) {
+                List<Fluid> fluidStackList = new ArrayList<>();
+                fluidStackList.add(recipe.input.getFluid().getFluid());
+                map_fluid_input.put(name, fluidStackList);
+            }
             List<BaseMachineRecipe> lst = new ArrayList<>();
             if (name.equals("comb_macerator")) {
                 recipe.output.items.get(0).setCount(3);
@@ -420,7 +514,16 @@ public class RecipesCore implements IRecipes {
                 recipe.output.items.get(0).setCount(3);
             }
             List<IRecipeInputStack> iRecipeInputList = this.map_recipe_managers_itemStack.get(name);
-
+            if (recipe.input.hasFluids()) {
+                List<Fluid> fluidStackList = map_fluid_input.get(name);
+                if (fluidStackList != null) {
+                    fluidStackList.add(recipe.input.getFluid().getFluid());
+                } else {
+                    fluidStackList = new ArrayList<>();
+                    fluidStackList.add(recipe.input.getFluid().getFluid());
+                    map_fluid_input.put(name, fluidStackList);
+                }
+            }
             if (iRecipeInputList.isEmpty()) {
                 for (IRecipeInput input1 : recipe.input.getInputs()) {
                     iRecipeInputList.add(new RecipeInputStack(input1));
@@ -464,8 +567,28 @@ public class RecipesCore implements IRecipes {
     }
 
     @Override
+    public void removeAll(final String recipe) {
+        map_recipes.remove(recipe);
+        map_recipe_managers_itemStack.remove(recipe);
+    }
+
+    @Override
+    public void reloadRecipes(final String className) {
+
+        this.recipes.forEach(iHasRecipe -> {
+                    if (className.equals(iHasRecipe.getClass().getName())) {
+                        iHasRecipe.init();
+                    }
+
+                }
+
+        );
+    }
+
+    @Override
     public void initializationRecipes() {
         this.recipes.forEach(IHasRecipe::init);
+        this.fluid_recipe.initializationRecipes();
     }
 
     public BaseMachineRecipe getRecipeOutput(
@@ -823,7 +946,7 @@ public class RecipesCore implements IRecipes {
         for (int i = 0; i < recipe1.input.getInputs().size(); i++) {
             if (slot.get(i).isEmpty() || slot.get(i).getCount() < recipe1.input
                     .getInputs()
-                    .get(0)
+                    .get(i)
                     .getInputs()
                     .get(0)
                     .getCount()) {
@@ -842,16 +965,19 @@ public class RecipesCore implements IRecipes {
         for (int i = 0; i < recipe1.input.getInputs().size(); i++) {
             if (slot.get(i).isEmpty() || slot.get(i).getCount() < recipe1.input
                     .getInputs()
-                    .get(0)
+                    .get(i)
                     .getInputs()
                     .get(0)
                     .getCount()) {
                 return false;
             }
         }
-        return tank.getFluid() != null && tank.getFluid().getFluid().equals(recipe1.input
+        return !recipe.getRecipe().input.hasFluids() || (tank.getFluid() != null && tank
                 .getFluid()
-                .getFluid()) && tank.getFluidAmount() >= recipe1.input.getFluid().amount;
+                .getFluid()
+                .equals(recipe1.input
+                        .getFluid()
+                        .getFluid()) && tank.getFluidAmount() >= recipe1.input.getFluid().amount);
     }
 
     @Override

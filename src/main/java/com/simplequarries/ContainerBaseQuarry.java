@@ -1,7 +1,8 @@
 package com.simplequarries;
 
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
+
+import com.denfop.container.ContainerFullInv;
+import com.denfop.container.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -56,12 +57,17 @@ public class ContainerBaseQuarry extends ContainerFullInv<TileEntityBaseQuarry> 
         ret.add("blockpos");
         ret.add("energy1");
         ret.add("cold");
+        ret.add("col");
         ret.add("min_y");
         ret.add("max_y");
         ret.add("exp");
         ret.add("vein_need");
         ret.add("need_work");
         ret.add("default_pos");
+        ret.add("chunkx1");
+        ret.add("chunkz1");
+        ret.add("chunkx2");
+        ret.add("chunkz2");
         return ret;
     }
 

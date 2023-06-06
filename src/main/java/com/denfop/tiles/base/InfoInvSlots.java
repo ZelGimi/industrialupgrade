@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
-import ic2.core.block.invslot.InvSlot;
+
+import com.denfop.invslot.InvSlot;
 
 public class InfoInvSlots {
 

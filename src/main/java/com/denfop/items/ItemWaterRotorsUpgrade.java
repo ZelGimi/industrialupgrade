@@ -5,7 +5,7 @@ import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.water.upgrade.RotorUpgradeItemInform;
-import ic2.core.block.state.IIdProvider;
+import com.denfop.blocks.IIdProvider;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.ItemMulti;
@@ -59,7 +59,6 @@ public class ItemWaterRotorsUpgrade extends ItemMulti<ItemWaterRotorsUpgrade.Typ
             case 13:
             case 14:
             case 15:
-            case 16:
             case 17:
             case 18:
             case 19:
@@ -104,6 +103,7 @@ public class ItemWaterRotorsUpgrade extends ItemMulti<ItemWaterRotorsUpgrade.Typ
         water_rotorupgrade13(13),
         water_rotorupgrade14(14),
         water_rotorupgrade15(15),
+        water_rotorupgrade16(16),
         ;
 
         private final String name;

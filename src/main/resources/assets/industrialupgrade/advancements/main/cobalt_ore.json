@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:baseore",
-      "data": 4
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 4
     },
-    "title": {
-      "translate": "achievement.cobaltore"
+    "title" : {
+      "translate" : "achievement.cobaltore"
     },
-    "description": {
-      "translate": "achievement.cobaltore.desc"
+    "description" : {
+      "translate" : "achievement.cobaltore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:baseore",
-            "data": 4
+            "item" : "industrialupgrade:baseore",
+            "data" : 4
           }
         ]
       }

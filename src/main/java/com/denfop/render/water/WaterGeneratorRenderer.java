@@ -82,7 +82,7 @@ public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntity
     ) {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x, (float) y, (float) z);
-        this.renderBlockRotor(te, te.getWorld(), te.getPos());
+        this.renderBlockRotor(te, te.getWorld(), te.getBlockPos());
 
         GL11.glPopMatrix();
     }

@@ -4,34 +4,36 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.gui.IType;
 import com.denfop.api.vein.IVein;
+import com.denfop.api.vein.Type;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerQuarryVein;
 import com.denfop.gui.GuiQuarryVein;
+import com.denfop.items.ItemVeinSensor;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
 import ic2.api.network.INetworkUpdateListener;
-import ic2.core.IC2;
+import ic2.core.block.machine.BlockMiningPipe;
 import ic2.core.init.Localization;
-import ic2.core.network.NetworkManager;
+import ic2.core.ref.BlockName;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TileEntityQuarryVein extends TileEntityElectricMachine implements INetworkUpdateListener, INetworkDataProvider,
@@ -93,7 +95,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -115,9 +117,30 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
                     updateTileEntityField();
                     return true;
                 }
+            } else if (player.getHeldItem(hand).getItem() instanceof ItemVeinSensor) {
+                if (this.vein != VeinSystem.system.getEMPTY() && this.vein.get() && this.vein.getType() != Type.EMPTY) {
+                    final NBTTagCompound nbt = ModUtils.nbt(player.getHeldItem(hand));
+                    if (this.vein.getType() == Type.VEIN) {
+                        String s = getType(this.vein.getMeta());
+                        nbt.setString("type", s);
+                    } else {
+                        String s = "oil";
+                        nbt.setString("type", s);
+                    }
+                    nbt.setInteger("x", this.pos.getX());
+                    nbt.setInteger("z", this.pos.getZ());
+                    return true;
+                }
             }
         }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    }
+
+    private String getType(int meta) {
+        String[] s = {"magnetite", "calaverite", "galena", "nickelite", "pyrite", "quartzite", "uranite", "azurite",
+                "rhodonite", "alfildit", "euxenite", "smithsonite", "ilmenite", "todorokite", "ferroaugite", "sheelite"};
+
+        return s[meta % s.length];
     }
 
     @Override
@@ -127,43 +150,35 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
 
         this.level = nbt.getInteger("level") != 0 ? nbt.getInteger("level") : 1;
         if (getWorld().provider.getDimension() != 0) {
-            this.vein = null;
+            this.vein = VeinSystem.system.getEMPTY();
         } else {
             if (this.world.isRemote) {
                 return;
             }
-            this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+            final Chunk chunk = this.getWorld().getChunkFromBlockCoords(this.pos);
+            final ChunkPos chunkpos = chunk.getPos();
+            if (!VeinSystem.system.getChunkPos().contains(chunkpos)) {
+                VeinSystem.system.addVein(chunk);
+            }
+            this.vein = VeinSystem.system.getVein(chunkpos);
             if (this.vein.get()) {
                 this.progress = 1200;
             }
             IUCore.network.get(true).updateTileEntityField(this, "vein");
 
         }
-        if (!world.isRemote) {
-            IUCore.network.get(true).sendInitialData(this);
-        }
 
     }
 
     @Override
     public List<String> getNetworkFields() {
-        final List<String> list = new ArrayList<>();
+        final List<String> list = super.getNetworkFields();
         list.add("level");
-        if(this.vein != null)
         list.add("vein");
+
         return list;
     }
-    public NBTTagCompound getUpdateTag() {
-        super.getUpdateTag();
-        IUCore.network.get(true).sendInitialData(this);
-        return  new NBTTagCompound();
-    }
 
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        super.getUpdatePacket();
-        IUCore.network.get(true).sendInitialData(this);
-        return null;
-    }
 
     @Override
     protected void onLoaded() {
@@ -172,9 +187,16 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             return;
         }
         if (getWorld().provider.getDimension() != 0) {
-            this.vein = null;
+            this.vein = VeinSystem.system.getEMPTY();
         } else {
-            this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+            final Chunk chunk = this.getWorld().getChunkFromBlockCoords(this.pos);
+            final ChunkPos chunkpos = chunk.getPos();
+            if (!VeinSystem.system.getChunkPos().contains(chunkpos)) {
+                VeinSystem.system.addVein(chunk);
+            }
+            this.vein = VeinSystem.system.getVein(chunkpos);
+
+
             if (this.vein.get()) {
                 this.progress = 1200;
             }
@@ -183,12 +205,10 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             }
         }
         updateTileEntityField();
-        if(!this.getWorld().isRemote)
-            IUCore.network.get(true).sendInitialData(this);
     }
 
     private void updateTileEntityField() {
-        IC2.network.get(true).updateTileEntityField(this, "level");
+        IUCore.network.get(true).updateTileEntityField(this, "level");
         IUCore.network.get(true).updateTileEntityField(this, "vein");
 
     }
@@ -215,7 +235,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
         if (this.vein.getCol() != this.count) {
             this.count = this.vein.getCol();
             if (this.getWorld().provider.getWorldTime() % 4 == 0) {
-                IC2.network.get(true).updateTileEntityField(this, "count");
+                IUCore.network.get(true).updateTileEntityField(this, "count");
             }
         }
         if (this.vein.get()) {
@@ -236,6 +256,7 @@ public class TileEntityQuarryVein extends TileEntityElectricMachine implements I
             }
             time++;
             progress += Math.pow(2, this.level - 1);
+            final ItemStack itemstack = BlockName.mining_pipe.getItemStack(BlockMiningPipe.MiningPipeType.pipe);
             this.energy.useEnergy(5);
             if (progress >= 1200) {
                 initiate(2);

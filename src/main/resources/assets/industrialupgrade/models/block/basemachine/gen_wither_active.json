@@ -1,12 +1,12 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "particle": "industrialupgrade:blocks/blockwithermaker_bottom",
-    "down": "industrialupgrade:blocks/blockwithermaker_bottom",
-    "up": "industrialupgrade:blocks/blockwithermaker_top_active",
-    "north": "industrialupgrade:blocks/blockwithermaker_main_active",
-    "east": "industrialupgrade:blocks/blockwithermaker_main_active",
-    "south": "industrialupgrade:blocks/blockwithermaker_main_active",
-    "west": "industrialupgrade:blocks/blockwithermaker_main_active"
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockwithermaker_bottom",
+    "down" : "industrialupgrade:blocks/blockwithermaker_bottom",
+    "up" : "industrialupgrade:blocks/blockwithermaker_top_active",
+    "north" : "industrialupgrade:blocks/blockwithermaker_main_active",
+    "east" : "industrialupgrade:blocks/blockwithermaker_main_active",
+    "south" : "industrialupgrade:blocks/blockwithermaker_main_active",
+    "west" : "industrialupgrade:blocks/blockwithermaker_main_active"
   }
 }

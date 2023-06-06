@@ -1,22 +1,22 @@
 package com.denfop.tiles.transport.types;
 
-import ic2.core.block.state.IIdProvider;
+import com.denfop.blocks.IIdProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum UniversalType implements IIdProvider {
-    glass(0.25F, 0.19D, 32768),
-    glass1(0.25F, 0.17D, 131072),
-    glass2(0.25F, 0.15D, 524288),
-    glass3(0.25F, 0.12D, 2097152),
+    glass(0.25F, 0.06D, 32768),
+    glass1(0.25F, 0.07D, 131072),
+    glass2(0.25F, 0.08D, 524288),
+    glass3(0.25F, 0.09D, 2097152),
     glass4(0.25F, 0.1D, 8388608),
-    glass5(0.25F, 0.08D, 33554432),
-    glass6(0.25F, 0.05D, 134217728),
-    glass7(0.25F, 0.01D, 536870912),
-    glass8(0.25F, 0.005D, 8589934590D),
-    glass9(0.25F, 0.001D, 439804653000D),
-    glass10(0.25F, 0.0001D, 1759218610000D),
+    glass5(0.25F, 0.11D, 33554432),
+    glass6(0.25F, 0.12D, 134217728),
+    glass7(0.25F, 0.15D, 536870912),
+    glass8(0.25F, 0.18D, 8589934590D),
+    glass9(0.25F, 0.2D, 439804653000D),
+    glass10(0.25F, 0.25D, 1759218610000D),
 
     ;
 

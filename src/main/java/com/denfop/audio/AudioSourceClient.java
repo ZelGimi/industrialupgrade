@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import paulscode.sound.SoundSystem;
 
+import java.lang.ref.WeakReference;
 import java.net.URL;
 
 @SideOnly(Side.CLIENT)
@@ -23,8 +24,9 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
     private final String initialSoundFile;
     private final boolean loop;
     private final boolean prioritized;
-    private final AudioPosition position;
+    private final WeakReference obj;
     public boolean isPlaying = false;
+    private AudioPosition position;
     private boolean valid = false;
     private boolean culled = false;
     private float configuredVolume;
@@ -45,6 +47,7 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
         this.loop = loop;
         this.prioritized = prioritized;
         this.position = AudioPosition.getFrom(obj);
+        this.obj = new WeakReference<>(obj);
         this.configuredVolume = volume;
         this.soundSystem = soundSystem;
         URL url = AudioSource.class.getClassLoader().getResource("assets/industrialupgrade/sounds/" + initialSoundFile);
@@ -244,8 +247,14 @@ final class AudioSourceClient extends AudioSource implements Comparable<AudioSou
         }
     }
 
+    public void updatePosition() {
+        if (this.check()) {
+            this.position = AudioPosition.getFrom(this.obj.get());
+        }
+    }
+
     private boolean check() {
-        return (!this.valid || IUCore.audioManager.valid()) && (!(this.valid = false));
+        return (!this.valid || IUCore.audioManager.valid()) && (this.valid);
     }
 
 }

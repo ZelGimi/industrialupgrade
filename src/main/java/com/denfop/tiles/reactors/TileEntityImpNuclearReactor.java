@@ -1,9 +1,9 @@
 package com.denfop.tiles.reactors;
 
+import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.componets.EnumTypeStyle;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyTile;
 import ic2.api.reactor.IReactorComponent;
 import ic2.core.ExplosionIC2;
 import ic2.core.IC2;
@@ -14,6 +14,7 @@ import ic2.core.util.Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.Level;
@@ -38,50 +39,6 @@ public class TileEntityImpNuclearReactor extends TileEntityBaseNuclearReactorEle
         }
 
         this.getWorld().setBlockToAir(this.pos);
-    }
-
-    @Override
-    public List<IEnergyTile> getSubTiles() {
-        World world = this.getWorld();
-        List<IEnergyTile> newSubTiles = new ArrayList<>();
-        newSubTiles.add(this);
-        EnumFacing[] var3 = EnumFacing.VALUES;
-        for (EnumFacing dir : var3) {
-            TileEntity te = world.getTileEntity(this.pos.offset(dir));
-            if (te instanceof TileEntityImpReactorChamberElectric && !te.isInvalid()) {
-                newSubTiles.add((TileEntityImpReactorChamberElectric) te);
-            }
-        }
-        return newSubTiles;
-    }
-
-
-    @Override
-    void getSubs() {
-        World world = this.getWorld();
-        List<IEnergyTile> newSubTiles = new ArrayList<>();
-        newSubTiles.add(this);
-        EnumFacing[] var3 = EnumFacing.VALUES;
-        for (EnumFacing dir : var3) {
-            TileEntity te = world.getTileEntity(this.pos.offset(dir));
-            if (te instanceof TileEntityImpReactorChamberElectric && !te.isInvalid()) {
-                newSubTiles.add((TileEntityImpReactorChamberElectric) te);
-            }
-        }
-
-        if (!newSubTiles.equals(this.subTiles)) {
-            this.change = true;
-            if (this.addedToEnergyNet) {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-            }
-
-            this.subTiles.clear();
-            this.subTiles.addAll(newSubTiles);
-            if (this.addedToEnergyNet) {
-                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-            }
-        }
-        this.getReactorSize();
     }
 
 
@@ -126,6 +83,24 @@ public class TileEntityImpNuclearReactor extends TileEntityBaseNuclearReactorEle
         explosion.doExplosion();
     }
 
+
+    @Override
+    public EnumTypeStyle getStyle() {
+        return EnumTypeStyle.IMPROVED;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return this;
+    }
+
+    public void removeAndUpdate(final IAdvEnergyTile tile) {
+        this.unloadFast();
+        this.subTiles.remove(tile);
+        this.loadFast();
+        this.getReactorSize();
+    }
+
     public short getReactorSize() {
         if (world == null) {
             return 11;
@@ -140,21 +115,60 @@ public class TileEntityImpNuclearReactor extends TileEntityBaseNuclearReactorEle
                 TileEntity target = this.getWorld().getTileEntity(pos.offset(direction));
                 if (target instanceof TileEntityImpReactorChamberElectric) {
                     cols++;
+                    this.blockPos.add(target.getPos());
                 }
             }
+            if (cols != 11) {
+                this.blockPos.add(this.getPos());
+            }
+            List<BlockPos> blockPos1 = new ArrayList<>();
+            for (BlockPos pos : this.blockPos) {
+                for (EnumFacing facing : var2) {
+                    final BlockPos pos1 = pos.offset(facing);
+                    if (!blockPos1.contains(pos1)) {
+                        blockPos1.add(pos1);
+                    }
+
+                }
+            }
+            this.blockPos.clear();
+            this.blockPos.addAll(blockPos1);
+            this.redstone.setBlockPosList(this.blockPos);
             this.size = cols;
             this.change = false;
             this.reactorSlot.update();
             return cols;
         } else {
-            return (short) this.size;
+            return this.size;
         }
     }
 
 
-    @Override
-    public EnumTypeStyle getStyle() {
-        return EnumTypeStyle.IMPROVED;
+    void getSubs() {
+        World world = this.getWorld();
+        List<IAdvEnergyTile> newSubTiles = new ArrayList<>();
+        newSubTiles.add(this);
+        EnumFacing[] var3 = EnumFacing.VALUES;
+        for (EnumFacing dir : var3) {
+            TileEntity te = world.getTileEntity(this.pos.offset(dir));
+            if (te instanceof TileEntityImpReactorChamberElectric && !te.isInvalid()) {
+                newSubTiles.add((TileEntityImpReactorChamberElectric) te);
+            }
+        }
+
+        if (!newSubTiles.equals(this.subTiles)) {
+            this.change = true;
+            if (this.addedToEnergyNet) {
+                MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+            }
+
+            this.subTiles.clear();
+            this.subTiles.addAll(newSubTiles);
+            if (this.addedToEnergyNet) {
+                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            }
+        }
+        this.getReactorSize();
     }
 
 }

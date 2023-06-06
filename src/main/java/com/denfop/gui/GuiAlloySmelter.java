@@ -6,7 +6,6 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.tiles.mechanism.dual.heat.TileEntityAlloySmelter;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +24,7 @@ public class GuiAlloySmelter extends GuiIU<ContainerDoubleElectricMachine> {
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
         this.addComponent(new GuiComponent(this, 104, 58, EnumTypeComponent.HEAT,
-                new Component<>(((TileEntityAlloySmelter) this.container.base).heat)
+                new Component<>(this.container.base.heat)
         ));
         this.addComponent(new GuiComponent(this, 58, 35, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
 

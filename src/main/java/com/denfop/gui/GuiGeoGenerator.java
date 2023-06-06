@@ -1,11 +1,11 @@
 package com.denfop.gui;
 
+import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerGeoGenerator;
 import com.denfop.utils.ModUtils;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.core.IC2;
-import ic2.core.gui.GuiElement;
-import ic2.core.gui.TankGauge;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

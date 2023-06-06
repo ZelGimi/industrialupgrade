@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.IUItem;
 import com.denfop.tiles.mechanism.exp.TileEntityStorageExp;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotExpStorage extends InvSlot {
@@ -11,7 +10,7 @@ public class InvSlotExpStorage extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotExpStorage(TileEntityStorageExp base1) {
-        super(base1, "input5", InvSlot.Access.I, 1, InvSlot.InvSide.TOP);
+        super(base1, "input5", InvSlot.Access.I, 1, InvSlot.InvSide.ANY);
 
         this.stackSizeLimit = 1;
         this.base1 = base1;
@@ -28,7 +27,7 @@ public class InvSlotExpStorage extends InvSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
 
         return itemStack.getItem().equals(IUItem.expmodule);
     }

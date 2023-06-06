@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -86,7 +86,7 @@ public class CTAlloySmelter {
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore1 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            Recipes.recipes.addRecipe("alloysmelter", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("alloysmelter", new BaseMachineRecipe(
                     new Input(
                             OreDictionary.getOres(ore).isEmpty()
                                     ? new IC2RecipeInput(this.container)
@@ -100,7 +100,7 @@ public class CTAlloySmelter {
         }
 
         public String describe() {
-            return "Adding alloy smelter bottle recipe " + this.container + " + " + this.fill + " => " + this.output;
+            return "Adding alloy smelter recipe " + this.container + " + " + this.fill + " => " + this.output;
         }
 
         public Object getOverrideKey() {
@@ -164,7 +164,7 @@ public class CTAlloySmelter {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("alloysmelter", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("alloysmelter", getItemStack(this.output));
         }
 
         public String describe() {

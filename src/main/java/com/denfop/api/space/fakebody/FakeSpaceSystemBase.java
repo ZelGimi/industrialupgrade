@@ -1,11 +1,6 @@
 package com.denfop.api.space.fakebody;
 
-import com.denfop.api.space.IAsteroid;
-import com.denfop.api.space.IBaseResource;
-import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.ISatellite;
-import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.*;
 import com.denfop.api.space.research.IResearchTable;
 import com.denfop.api.space.rovers.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.IRovers;
@@ -14,12 +9,7 @@ import ic2.api.item.ElectricItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 

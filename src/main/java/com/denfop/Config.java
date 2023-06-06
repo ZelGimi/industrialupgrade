@@ -527,7 +527,7 @@ public final class Config {
             PerMFSUOutput = config.get("Configuration Energy storages", "Perfectoutput", 242144).getDouble(242144);
             tierPerMFSU = config.get("Configuration Energy storages", "Perfecttier", 7).getDouble(7);
             expstorage = config.get("Basic Mechanisms", "exp storage", 500).getInt(500);
-            enerycost = config.get("Quantum Quarry", "energy consume in QE (1 QE = 16 EU)", 5000).getInt(5000);
+            enerycost = config.get("Quantum Quarry", "energy consume in QE (1 QE = 16 EU)", 25000).getInt(25000);
             coefficientrf = config.get("general", "coefficient rf", 4).getInt(4);
             if (coefficientrf < 1) {
                 coefficientrf = 4;

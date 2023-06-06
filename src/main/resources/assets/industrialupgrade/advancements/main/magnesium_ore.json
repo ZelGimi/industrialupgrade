@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:baseore",
-      "data": 5
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 5
     },
-    "title": {
-      "translate": "achievement.magnesiumore"
+    "title" : {
+      "translate" : "achievement.magnesiumore"
     },
-    "description": {
-      "translate": "achievement.magnesiumore.desc"
+    "description" : {
+      "translate" : "achievement.magnesiumore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:baseore",
-            "data": 5
+            "item" : "industrialupgrade:baseore",
+            "data" : 5
           }
         ]
       }

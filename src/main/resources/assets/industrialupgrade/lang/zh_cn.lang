@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§d强子太阳能
 industrialupgrade.machines.graviton_solar_panel=§d重力太阳能
 industrialupgrade.machines.quark_solar_panel=§d夸克太阳能
 blockAdministatorSolarPanel.name=§8管理员太阳能
-iu.adminpanel_item.adminpanel_item=§8管理员太阳能
+industrialupgrade.admpanel.admpanel=§8管理员太阳能
 
 # Draconic Evolution Panels
 industrialupgrade.draconicpanel.draconium_solar_panel=§d飞龙太阳能
@@ -399,7 +399,7 @@ ic2.item.tooltip.Store=储存:
 wirelles=§e允许您无线传递电力
 transformator=增加太阳能等级
 transformator1=降低太阳能等级
-iu.sintezator_item.sintezator_item=太阳能合成器
+industrialupgrade.sintezator.sintezator=太阳能合成器
 iu.sintezator=太阳能在里面折叠. 插槽上限: 2
 supsolpans.SpecSP.Output=输出:
 supsolpans.SpecSP.Storage=容量:
@@ -659,17 +659,17 @@ iu.fluidoxy=氧
 iu.fluidpolyeth=聚乙烯
 iu.fluidazot=氮
 iu.fluidco2=二氧化碳
-fluid.luidNeutron=中子
-fluid.luidHelium=氦
-fluid.luidbenz=汽油
-fluid.luiddizel=柴油
-fluid.luidneft=原油
-fluid.luidpolyprop=聚丙烯
-fluid.luidhyd=氢
-fluid.luidoxy=氧
-fluid.luidpolyeth=聚乙烯
-fluid.luidazot=氮
-fluid.luidco2=二氧化碳
+fluid.fluidNeutron=中子
+fluid.fluidHelium=氦
+fluid.fluidbenz=汽油
+fluid.fluiddizel=柴油
+fluid.fluidneft=原油
+fluid.fluidpolyprop=聚丙烯
+fluid.fluidhyd=氢
+fluid.fluidoxy=氧
+fluid.fluidpolyeth=聚乙烯
+fluid.fluidazot=氮
+fluid.fluidco2=二氧化碳
 
 #Bucket. The following lines are aligned with other localizations.
 #item.forge.bucketFilled.iufluidneutron
@@ -756,80 +756,80 @@ iu.reactordepletedprotondual=耗尽的双联质子燃料棒
 iu.reactordepletedprotonquad=耗尽的四联质子燃料棒
 iu.reactordepletedprotonsimple=耗尽的质子燃料棒
 iu.reactordepletedprotoneit=耗尽的八联质子燃料棒
-iu.actorprotondual=双联质子燃料棒
-iu.actorprotonquad=四联质子燃料棒
-iu.actorprotonsimple=质子燃料棒
-iu.actorprotoneit=八联质子燃料棒
+iu.reactorprotondual=双联质子燃料棒
+iu.reactorprotonquad=四联质子燃料棒
+iu.reactorprotonsimple=质子燃料棒
+iu.reactorprotoneit=八联质子燃料棒
 
 iu.reactorDepletedterastrellDual=耗尽的双联泰拉钢燃料棒
 iu.reactorDepletedterastrellQuad=耗尽的四联泰拉钢燃料棒
 iu.reactorDepletedterastrellSimple=耗尽的泰拉钢燃料棒
-iu.actorterastrellDual=双联泰拉钢燃料棒
-iu.actorterastrellQuad=四联泰拉钢燃料棒
-iu.actorterastrellSimple=泰拉钢燃料棒
+iu.reactorterastrellDual=双联泰拉钢燃料棒
+iu.reactorterastrellQuad=四联泰拉钢燃料棒
+iu.reactorterastrellSimple=泰拉钢燃料棒
 
 iu.reactordepletedtoriydual=耗尽的双联钍燃料棒
 iu.reactordepletedtoriyquad=耗尽的四联钍燃料棒
 iu.reactordepletedtoriysimple=耗尽的钍燃料棒
-iu.actortoriydual=双联钍燃料棒
-iu.actortoriyquad=四联钍燃料棒
-iu.actortoriysimple=钍燃料棒
+iu.reactortoriydual=双联钍燃料棒
+iu.reactortoriyquad=四联钍燃料棒
+iu.reactortoriysimple=钍燃料棒
 
 iu.reactordepletedamericiumdual=耗尽的双联镅燃料棒
 iu.reactordepletedamericiumquad=耗尽的四联镅燃料棒
 iu.reactordepletedamericiumsimple=耗尽的镅燃料棒
-iu.actoramericiumdual=双联镅燃料棒
-iu.actoramericiumquad=四联镅燃料棒
-iu.actoramericiumsimple=镅燃料棒
+iu.reactoramericiumdual=双联镅燃料棒
+iu.reactoramericiumquad=四联镅燃料棒
+iu.reactoramericiumsimple=镅燃料棒
 
 iu.reactordepletedneptuniumdual=耗尽的双联镎燃料棒
 iu.reactordepletedneptuniumquad=耗尽的四联镎燃料棒
 iu.reactordepletedneptuniumsimple=耗尽的镎燃料棒
-iu.actorneptuniumdual=双联镎燃料棒
-iu.actorneptuniumquad=四联镎燃料棒
-iu.actorneptuniumsimple=镎燃料棒
+iu.reactorneptuniumdual=双联镎燃料棒
+iu.reactorneptuniumquad=四联镎燃料棒
+iu.reactorneptuniumsimple=镎燃料棒
 
 iu.reactordepletedcuriumdual=耗尽的双联锔燃料棒
 iu.reactordepletedcuriumquad=耗尽的四联锔燃料棒
 iu.reactordepletedcuriumsimple=耗尽的锔燃料棒
-iu.actorcuriumdual=双联锔燃料棒
-iu.actorcuriumquad=四联锔燃料棒
-iu.actorcuriumsimple=锔燃料棒
+iu.reactorcuriumdual=双联锔燃料棒
+iu.reactorcuriumquad=四联锔燃料棒
+iu.reactorcuriumsimple=锔燃料棒
 
 iu.reactordepletedcaliforniadual=耗尽的双联锎燃料棒
 iu.reactordepletedcaliforniaquad=耗尽的四联锎燃料棒
 iu.reactordepletedcaliforniasimple=耗尽的锎燃料棒
-iu.actorcaliforniadual=双联锎燃料棒
-iu.actorcaliforniaquad=四联锎燃料棒
-iu.actorcaliforniasimple=锎燃料棒
+iu.reactorcaliforniadual=双联锎燃料棒
+iu.reactorcaliforniaquad=四联锎燃料棒
+iu.reactorcaliforniasimple=锎燃料棒
 
 iu.reactordepletedeinsteiniumdual=耗尽的双联锕燃料棒
 iu.reactordepletedeinsteiniumquad=耗尽的四联锕燃料棒
 iu.reactordepletedeinsteiniumsimple=耗尽的锕燃料棒
-iu.actoreinsteiniumdual=双联锕燃料棒
-iu.actoreinsteiniumquad=四联锕燃料棒
-iu.actoreinsteiniumsimple=锕燃料棒
+iu.reactoreinsteiniumdual=双联锕燃料棒
+iu.reactoreinsteiniumquad=四联锕燃料棒
+iu.reactoreinsteiniumsimple=锕燃料棒
 
 iu.reactordepletedmendeleviumdual=耗尽的双联钔燃料棒
 iu.reactordepletedmendeleviumquad=耗尽的四联钔燃料棒
 iu.reactordepletedmendeleviumsimple=耗尽的钔燃料棒
-iu.actormendeleviumdual=双联钔燃料棒
-iu.actormendeleviumquad=四联钔燃料棒
-iu.actormendeleviumsimple=钔燃料棒
+iu.reactormendeleviumdual=双联钔燃料棒
+iu.reactormendeleviumquad=四联钔燃料棒
+iu.reactormendeleviumsimple=钔燃料棒
 
 iu.reactordepleteduran233dual=耗尽的双联铀-233燃料棒
 iu.reactordepleteduran233quad=耗尽的四联铀-233燃料棒
 iu.reactordepleteduran233simple=耗尽的铀-233燃料棒
-iu.actoruran233dual=双联铀-233燃料棒
-iu.actoruran233quad=四联铀-233燃料棒
-iu.actoruran233simple=铀-233燃料棒
+iu.reactoruran233dual=双联铀-233燃料棒
+iu.reactoruran233quad=四联铀-233燃料棒
+iu.reactoruran233simple=铀-233燃料棒
 
 iu.reactordepletedberkeliumdual=耗尽的双联锫燃料棒
 iu.reactordepletedberkeliumquad=耗尽的四联锫燃料棒
 iu.reactordepletedberkeliumsimple=耗尽的锫燃料棒
-iu.actorberkeliumdual=双联锫燃料棒
-iu.actorberkeliumquad=四联锫燃料棒
-iu.actorberkeliumsimple=锫燃料棒
+iu.reactorberkeliumdual=双联锫燃料棒
+iu.reactorberkeliumquad=四联锫燃料棒
+iu.reactorberkeliumsimple=锫燃料棒
 
 #合金块
 iu.aluminum_bronze_block.name=铝青铜块
@@ -1516,7 +1516,7 @@ industrialupgrade.basemachine1.magnet_generator=电磁发电机
 industrialupgrade.basemachine2.fisher=自动钓鱼机
 industrialupgrade.basemachine2.painter=印染机
 industrialupgrade.upgrade_block.upgrade_block=修改站
-iu.quarry_vein_item.quarry_vein_item=核心钻探装置
+industrialupgrade.quarry_vein.quarry_vein=核心钻探装置
 industrialupgrade.petrol_quarry.petrol_quarry=石油钻井
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=固体物质发生组合器
 industrialupgrade.basemachine2.expierence_block=经验储存器

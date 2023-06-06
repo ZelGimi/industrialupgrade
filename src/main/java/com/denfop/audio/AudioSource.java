@@ -43,4 +43,7 @@ public class AudioSource {
         return false;
     }
 
+    public void updatePosition() {
+    }
+
 }

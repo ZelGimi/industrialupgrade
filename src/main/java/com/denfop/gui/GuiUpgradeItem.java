@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.container.ContainerHeldUpgradeItem;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;

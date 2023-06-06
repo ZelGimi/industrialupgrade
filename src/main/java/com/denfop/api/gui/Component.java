@@ -1,14 +1,12 @@
 package com.denfop.api.gui;
 
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.CoolComponent;
-import com.denfop.componets.EXPComponent;
 import com.denfop.componets.HeatComponent;
-import com.denfop.componets.QEComponent;
 import com.denfop.componets.RFComponent;
-import com.denfop.componets.SEComponent;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
 import net.minecraftforge.fluids.FluidTank;
@@ -84,36 +82,8 @@ public class Component<T> {
                         guiComponent.getType().getHeight()
                 );
             }
-        } else if (this.component instanceof QEComponent) {
-            QEComponent component = (QEComponent) this.component;
-            double fillratio = component.storage / component.capacity;
-            if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
-                fillratio *= guiComponent.getType().getHeight();
-                int chargeLevel = (int) fillratio;
-                guiComponent.getGui().drawTexturedModalRect(
-                        mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
-                        mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
-                                .getType()
-                                .getHeight() - chargeLevel,
-                        guiComponent.getType().getX1(),
-                        guiComponent.getType().getY1() + guiComponent.getType().getHeight() - chargeLevel,
-                        guiComponent.getType().getWeight(),
-                        chargeLevel
-                );
-            } else {
-                fillratio *= guiComponent.getType().getWeight();
-                int chargeLevel = (int) fillratio;
-                guiComponent.getGui().drawTexturedModalRect(
-                        mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
-                        mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
-                        guiComponent.getType().getX1(),
-                        guiComponent.getType().getY1(),
-                        chargeLevel + 1,
-                        guiComponent.getType().getHeight()
-                );
-            }
-        } else if (this.component instanceof SEComponent) {
-            SEComponent component = (SEComponent) this.component;
+        } else if (this.component instanceof ComponentBaseEnergy) {
+            ComponentBaseEnergy component = (ComponentBaseEnergy) this.component;
             double fillratio = component.storage / component.capacity;
             if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
                 fillratio *= guiComponent.getType().getHeight();
@@ -170,34 +140,6 @@ public class Component<T> {
             }
         } else if (this.component instanceof HeatComponent) {
             HeatComponent component = (HeatComponent) this.component;
-            double fillratio = component.storage / component.capacity;
-            if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
-                fillratio *= guiComponent.getType().getHeight();
-                int chargeLevel = (int) fillratio;
-                guiComponent.getGui().drawTexturedModalRect(
-                        mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
-                        mouseY + guiComponent.getType().getEndY() + guiComponent.getY() + guiComponent
-                                .getType()
-                                .getHeight() - chargeLevel,
-                        guiComponent.getType().getX1(),
-                        guiComponent.getType().getY1() + guiComponent.getType().getHeight() - chargeLevel,
-                        guiComponent.getType().getWeight(),
-                        chargeLevel
-                );
-            } else {
-                fillratio *= guiComponent.getType().getWeight();
-                int chargeLevel = (int) fillratio;
-                guiComponent.getGui().drawTexturedModalRect(
-                        mouseX + guiComponent.getX() + guiComponent.getType().getEndX(),
-                        mouseY + guiComponent.getType().getEndY() + guiComponent.getY(),
-                        guiComponent.getType().getX1(),
-                        guiComponent.getType().getY1(),
-                        chargeLevel + 1,
-                        guiComponent.getType().getHeight()
-                );
-            }
-        } else if (this.component instanceof EXPComponent) {
-            EXPComponent component = (EXPComponent) this.component;
             double fillratio = component.storage / component.capacity;
             if (guiComponent.getType().getRender() == EnumTypeRender.HEIGHT) {
                 fillratio *= guiComponent.getType().getHeight();
@@ -274,6 +216,15 @@ public class Component<T> {
                     )) + "/" + ModUtils.getString(component.getCapacity()) + " " +
                             "EU";
 
+        } else if (this.component instanceof ComponentBaseEnergy) {
+
+            ComponentBaseEnergy component = (ComponentBaseEnergy) this.component;
+            text =
+                    ModUtils.getString(Math.min(
+                            component.getEnergy(),
+                            component.getCapacity()
+                    )) + "/" + ModUtils.getString(component.getCapacity()) + component.getType().getPrefix();
+
         } else if (this.component instanceof RFComponent) {
             RFComponent component = (RFComponent) this.component;
             text =
@@ -314,24 +265,6 @@ public class Component<T> {
             if (component.need) {
                 text += "\n" + Localization.translate("iu.need_heat");
             }
-
-        } else if (this.component instanceof EXPComponent) {
-            EXPComponent component = (EXPComponent) this.component;
-            text = "EXP: " +
-                    ModUtils.getString(component
-                            .getEnergy()) + "/" + ModUtils.getString(component.getCapacity());
-
-        } else if (this.component instanceof QEComponent) {
-            QEComponent component = (QEComponent) this.component;
-            text = "QE: " +
-                    ModUtils.getString(component
-                            .getEnergy()) + "/" + ModUtils.getString(component.getCapacity());
-
-        } else if (this.component instanceof SEComponent) {
-            SEComponent component = (SEComponent) this.component;
-            text = "SE: " +
-                    ModUtils.getString(component
-                            .getEnergy()) + "/" + ModUtils.getString(component.getCapacity());
 
         } else if (this.component instanceof FluidTank) {
             FluidTank component = (FluidTank) this.component;

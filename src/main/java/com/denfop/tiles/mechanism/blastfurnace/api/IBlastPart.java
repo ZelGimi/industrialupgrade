@@ -1,9 +1,8 @@
 package com.denfop.tiles.mechanism.blastfurnace.api;
 
-public interface IBlastPart {
+import com.denfop.api.multiblock.IMultiElement;
 
-    IBlastMain getMain();
+public interface IBlastPart extends IMultiElement {
 
-    void setMain(IBlastMain blastMain);
 
 }

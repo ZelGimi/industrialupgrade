@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemWindMeter extends BaseElectricItem implements IModelRegister {
 
@@ -42,12 +43,16 @@ public class ItemWindMeter extends BaseElectricItem implements IModelRegister {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(
+            @NotNull World world,
+            @NotNull EntityPlayer player,
+            @NotNull EnumHand hand
+    ) {
         ItemStack stack = StackUtil.get(player, hand);
         if (!IC2.platform.isSimulating() || world.provider.getDimension() != 0) {
-            return new ActionResult(EnumActionResult.PASS, stack);
+            return new ActionResult<>(EnumActionResult.PASS, stack);
         } else if (!ElectricItem.manager.canUse(stack, 10)) {
-            return new ActionResult(EnumActionResult.PASS, stack);
+            return new ActionResult<>(EnumActionResult.PASS, stack);
         } else {
             ElectricItem.manager.use(stack, 10, player);
 
@@ -59,7 +64,7 @@ public class ItemWindMeter extends BaseElectricItem implements IModelRegister {
                             WindSystem.windSystem.getWind_Strength()
                     ) + " m/s"
             );
-            return new ActionResult(EnumActionResult.SUCCESS, stack);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
     }
 

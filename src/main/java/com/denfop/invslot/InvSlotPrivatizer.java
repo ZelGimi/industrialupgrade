@@ -6,7 +6,6 @@ import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TileEntityPrivatizer;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -17,7 +16,7 @@ public class InvSlotPrivatizer extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotPrivatizer(TileEntityInventory base1, String name, int type, int count) {
-        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.TOP);
+        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
         this.stackSizeLimit = 1;
         this.type = type;
         this.tile = (TileEntityPrivatizer) base1;
@@ -47,7 +46,7 @@ public class InvSlotPrivatizer extends InvSlot {
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
             return itemStack.getItem() instanceof ItemEntityModule && itemStack.getItemDamage() == 0;
         } else {

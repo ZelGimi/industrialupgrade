@@ -1,5 +1,6 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.cool.ICoolAcceptor;
@@ -30,6 +31,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -78,12 +80,17 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
         this.continuousUpdate = null;
         this.obscuration = this.addComponent(new Obscuration(
                 this,
-                () -> IC2.network.get(true).updateTileEntityField(TileEntityCoolPipes.this, "obscuration")
+                () -> IUCore.network.get(true).updateTileEntityField(TileEntityCoolPipes.this, "obscuration")
         ));
     }
 
     public static TileEntityCoolPipes delegate(CoolType cableType, int insulation) {
         return new TileEntityCoolPipes(cableType, insulation);
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -277,7 +284,7 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -329,7 +336,7 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
 
             --this.insulation;
             if (!this.getWorld().isRemote) {
-                IC2.network.get(true).updateTileEntityField(this, "insulation");
+                IUCore.network.get(true).updateTileEntityField(this, "insulation");
             }
 
         }
@@ -376,7 +383,7 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
     @Override
@@ -473,7 +480,7 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
                 }
 
                 if (!duringLoad) {
-                    IC2.network.get(true).updateTileEntityField(this, "foam");
+                    IUCore.network.get(true).updateTileEntityField(this, "foam");
                     world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
                     this.markDirty();
                 }
@@ -492,6 +499,11 @@ public class TileEntityCoolPipes extends TileEntityBlock implements ICoolConduct
                 this.connectivity,
                 this.getActive()
         );
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

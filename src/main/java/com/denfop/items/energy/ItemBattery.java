@@ -46,6 +46,14 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
         IUCore.proxy.addIModelRegister(this);
     }
 
+    public ItemBattery(String name, double maxCharge, double transferLimit, int tier) {
+        super(name, maxCharge, transferLimit, tier);
+        this.setMaxDamage(16);
+        this.wirelessCharge = false;
+        this.name1 = name;
+        IUCore.proxy.addIModelRegister(this);
+    }
+
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation1(String name, String extraName) {
         final String loc = Constants.MOD_ID +
@@ -142,7 +150,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
             int mode = ModUtils.NBTGetInteger(itemStack, "mode");
             EntityPlayer entityplayer = (EntityPlayer) p_77663_3_;
             if (mode == 1) {
-                if (IC2.platform.isSimulating()) {
+                if (IC2.platform.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < 9; i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
@@ -169,7 +177,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                     }
                 }
             } else if (mode == 2) {
-                if (IC2.platform.isSimulating()) {
+                if (IC2.platform.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);
@@ -197,7 +205,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                 }
 
             } else if (mode == 3) {
-                if (IC2.platform.isSimulating()) {
+                if (IC2.platform.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.armorInventory.get(i);
@@ -225,7 +233,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
                 }
 
             } else if (mode == 4) {
-                if (IC2.platform.isSimulating()) {
+                if (IC2.platform.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.armorInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.armorInventory.get(i);
@@ -253,7 +261,7 @@ public class ItemBattery extends BaseElectricItem implements IModelRegister {
 
 
                 }
-                if (IC2.platform.isSimulating()) {
+                if (IC2.platform.isSimulating() && entityplayer.getEntityWorld().provider.getWorldTime() % 40 == 0) {
                     boolean transferred = false;
                     for (int i = 0; i < entityplayer.inventory.mainInventory.size(); i++) {
                         ItemStack stack = entityplayer.inventory.mainInventory.get(i);

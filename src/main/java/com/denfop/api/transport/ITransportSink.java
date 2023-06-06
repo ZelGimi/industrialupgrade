@@ -20,4 +20,5 @@ public interface ITransportSink<T, E> extends ITransportAcceptor<T, E> {
     boolean canAdd(EnumFacing facing);
 
     List<EnumFacing> getFacingList();
+
 }

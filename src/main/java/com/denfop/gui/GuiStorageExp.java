@@ -1,9 +1,8 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.container.ContainerStorageExp;
-import ic2.core.GuiIC2;
-import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -36,11 +35,11 @@ public class GuiStorageExp extends GuiIC2<ContainerStorageExp> {
     protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         if (guibutton.id == 0) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
 
         }
         if (guibutton.id == 1) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
 
         }
     }

@@ -1,20 +1,15 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package com.denfop.tiles.mechanism.generator.energy;
 
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.container.ContainerBase;
+import com.denfop.invslot.InvSlotCharge;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.item.ElectricItem;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
-import ic2.core.block.invslot.InvSlotCharge;
-import ic2.core.gui.dynamic.DynamicContainer;
 import ic2.core.gui.dynamic.DynamicGui;
 import ic2.core.gui.dynamic.GuiParser;
 import ic2.core.init.Localization;
@@ -49,14 +44,16 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
+
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -72,7 +69,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
 
     protected void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
         }
 
@@ -161,7 +158,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
     }
 
     public ContainerBase<? extends TileEntityBaseGenerator> getGuiContainer(EntityPlayer player) {
-        return DynamicContainer.create(this, player, GuiParser.parse(this.teBlock));
+        return null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -172,7 +169,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
     public void onNetworkUpdate(String field) {
         if (field.equals("active")) {
             if (this.audioSource == null && this.getOperationSoundFile() != null) {
-                this.audioSource = IC2.audioManager.createSource(
+                this.audioSource = IUCore.audioManager.createSource(
                         this,
                         PositionSpec.Center,
                         this.getOperationSoundFile(),

@@ -1,8 +1,10 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.componets.SEComponent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerCombinerSE;
 import com.denfop.gui.GuiCombinerSE;
 import com.denfop.invslot.InvSlotCombinerSEG;
@@ -10,9 +12,7 @@ import com.denfop.invslot.InvSlotGenCombinerSunarrium;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +35,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     public final InvSlotCombinerSEG inputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotOutput outputSlot;
-    public final SEComponent sunenergy;
+    public final ComponentBaseEnergy sunenergy;
     public final InvSlotGenCombinerSunarrium input;
     public final ItemStack itemstack = new ItemStack(IUItem.sunnarium, 1, 4);
     public double coef_day;
@@ -55,8 +55,8 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
 
         this.outputSlot = new InvSlotOutput(this, "output", 9);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
-        this.sunenergy = this.addComponent(SEComponent
-                .asBasicSource(this, 0, 1));
+        this.sunenergy = this.addComponent(ComponentBaseEnergy
+                .asBasicSource(EnergyType.SOLARIUM, this, 0, 1));
         this.lst = new ArrayList<>();
         this.lst.add(0D);
         this.lst.add(0D);
@@ -212,7 +212,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         return new GuiCombinerSE(new ContainerCombinerSE(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityCombinerSEGenerators> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerCombinerSE getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerCombinerSE(entityPlayer, this);
     }
 

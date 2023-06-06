@@ -28,7 +28,6 @@ public class IC2RecipeInput implements IRecipeInput {
 
     public List<ItemStack> getInputs() {
         List<ItemStack> items = new ArrayList<>();
-
         for (final IItemStack item : this.ingredient.getItems()) {
             items.add(CraftTweakerMC.getItemStack(item));
         }

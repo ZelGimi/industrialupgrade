@@ -7,9 +7,9 @@ import com.denfop.tiles.mechanism.TileEntityGenerationMicrochip;
 import com.denfop.tiles.mechanism.TileEntityGenerationStone;
 import com.denfop.tiles.mechanism.TileEntityModuleMachine;
 import com.denfop.tiles.mechanism.dual.heat.TileEntityAlloySmelter;
-import com.denfop.tiles.mechanism.generator.energy.TileEntityGeneratorAdv;
-import com.denfop.tiles.mechanism.generator.energy.TileEntityGeneratorImp;
-import com.denfop.tiles.mechanism.generator.energy.TileEntityGeneratorPer;
+import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGeneratorAdv;
+import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGeneratorImp;
+import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGeneratorPer;
 import com.denfop.tiles.mechanism.generator.things.matter.TileEntityAdvancedMatter;
 import com.denfop.tiles.mechanism.generator.things.matter.TileEntityImprovedMatter;
 import com.denfop.tiles.mechanism.generator.things.matter.TileEntityUltimateMatter;
@@ -19,8 +19,10 @@ import com.denfop.tiles.mechanism.quarry.TileEntityPerQuantumQuarry;
 import com.denfop.tiles.mechanism.quarry.TileEntityQuantumQuarry;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -144,6 +146,11 @@ public enum BlockBaseMachine implements ITeBlock {
     @Override
     public float getExplosionResistance() {
         return 0.0f;
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Override

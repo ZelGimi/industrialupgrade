@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§dАдронная солнечн
 industrialupgrade.machines.graviton_solar_panel=§dГравитонная солнечная панель
 industrialupgrade.machines.quark_solar_panel=§dКварковая солнечная панель
 blockAdministatorSolarPanel.name=§8Административная солнечная панель
-iu.adminpanel_item.adminpanel_item=§8Административная солнечная панель
+industrialupgrade.admpanel.admpanel=§8Административная солнечная панель
 
 # Панели Draconic Evolution
 industrialupgrade.draconicpanel.draconium_solar_panel=§dДракониевая солнечная панель
@@ -92,6 +92,7 @@ item.singular_solar_helmet.name=§8Сингулярный солнечный ш�
 iu.katana=Катана
 
 # Сабли
+iu.nano_saber=Нано-сабля
 iu.itemNanoSaber1=Квантовая сабля
 iu.itemNanoSaber=Спектральная сабля
 
@@ -224,6 +225,8 @@ iu.rune_energy.name=Руна энергии
 iu.rune_night.name=Руна ночи
 iu.rune_sun.name=Руна Солнца
 
+item.drill.name=Шахтёрский бур
+item.diamond_drill.name=Алмазный бур
 item.teraDDrill.name=Террастальной бур
 item.ultDDrill.name=Совершенный бур
 item.spectraldrill.name=Спектральный бур
@@ -232,6 +235,24 @@ item.quantumdrill.name=Квантовый бур
 
 item.GraviTool=Грави-тул
 item.purifier.name=Очиститель
+iu.electric_hoe=Электромотыга
+iu.electric_treetap=Электрокраник
+item.electric_wrench.name=Электроключ
+item.chainsaw.name=Электропила
+item.frequency_transmitter.name=Частотный связыватель
+item.re_battery.name=Аккумулятор
+item.advanced_re_battery.name=Улучшенный аккумулятор
+item.energy_crystal.name=Энергетический кристалл
+item.lapotron_crystal.name=Лазуротроновый кристалл
+
+item.charging_re_battery.name=Заряжающий аккумулятор
+item.advanced_charging_re_battery.name=Улучшенный заряжающий аккумулятор
+item.charging_energy_crystal.name=Заряжающий энергетический кристалл
+item.charging_lapotron_crystal.name=Заряжающий лазуротроновый кристалл
+
+item.batpack.name=Аккумуляторный ранец
+item.advanced_batpack.name=Улучшенный аккумуляторный ранец
+item.lappack.name=Лазуротроновый ранец
 
 iu.upgrades.overclockerupgrade1=Улучшение "Улучшенный ускоритель"
 iu.upgrades.overclockerupgrade2=Улучшение "Продвинутый ускоритель"
@@ -431,7 +452,7 @@ ic2.item.tooltip.Store=Хранит:
 wirelles=§eПозволяет передавать энергию без проводов
 transformator=Повышает уровень панели
 transformator1=Понижает уровень панели
-iu.sintezator_item.sintezator_item=Объединитель панелей
+industrialupgrade.sintezator.sintezator=Объединитель панелей
 iu.sintezator=Панели складываются внутри. Лимит на слот:
 supsolpans.SpecSP.Output=Выход:
 supsolpans.SpecSP.Storage=Ёмкость:
@@ -552,7 +573,7 @@ aer_matter.name=Воздушная твёрдая материя
 
 personality=§cЗапрещает чужим игрокам открывать интерфейс панели.
 personality1=§cИгрок, не являющийся владельцем панели, не может демонтировать панель.
-iu.error=§cОшибка! Сработал модуль: Приватность. Вы не владелец панели!
+iu.error=§cОшибка! Сработал модуль: Приватность. Вы не владелец!
 iu.miny=Минимальная высота:
 iu.maxy=Максимальная высота:
 iu.storage.helmet=Ёмкость энергии панели:
@@ -681,7 +702,7 @@ reactor.info1=При нагреве (99%) вырабатывает:
 
 iu.oil.name=Нефтяная жила
 
-#Жидкости и газы
+# Жидкости и газы
 iu.fluidNeutron=§9Нейтрон
 iu.fluidHelium=Гелий
 iu.fluidbenz=Бензин
@@ -693,19 +714,29 @@ iu.fluidoxy=Кислород
 iu.fluidpolyeth=Полиэтилен
 iu.fluidazot=Азот
 iu.fluidco2=Диоксид углерода
-fluid.luidNeutron=Нейтрон
-fluid.luidHelium=Гелий
-fluid.luidbenz=Бензин
-fluid.luiddizel=Дизельное топливо
-fluid.luidneft=Нефть
-fluid.luidpolyprop=Полипропилен
-fluid.luidhyd=Водород
-fluid.luidoxy=Кислород
-fluid.luidpolyeth=Полиэтилен
-fluid.luidazot=Азот
-fluid.luidco2=Диоксид углерода
+iu.fluidgas=Природный газ
+iu.fluidchlorum=Хлор
+iu.fluidbromine=Бром
+iu.fluidiodine=Иод
 
-#Вёдра
+# Жидкости и газы (в ёмкостях)
+fluid.fluidNeutron=Нейтрон
+fluid.fluidHelium=Гелий
+fluid.fluidbenz=Бензин
+fluid.fluiddizel=Дизельное топливо
+fluid.fluidneft=Нефть
+fluid.fluidpolyprop=Полипропилен
+fluid.fluidhyd=Водород
+fluid.fluidoxy=Кислород
+fluid.fluidpolyeth=Полиэтилен
+fluid.fluidazot=Азот
+fluid.fluidco2=Диоксид углерода
+fluid.fluidgas=Природный газ
+fluid.fluidchlorum=Хлор
+fluid.fluidbromine=Бром
+fluid.fluidiodine=Иод
+
+# Вёдра
 item.forge.bucketFilled.iufluidneutron=Ведро нейтрона
 item.forge.bucketFilled.iufluidhelium=Ведро гелия
 item.forge.bucketFilled.iufluidbenz=Ведро бензина
@@ -717,8 +748,12 @@ item.forge.bucketFilled.iufluidoxy=Ведро кислорода
 item.forge.bucketFilled.iufluidpolyeth=Ведро полиэтилена
 item.forge.bucketFilled.iufluidazot=Ведро азота
 item.forge.bucketFilled.iufluidco2=Ведро углекислого газа
+item.forge.bucketFilled.iufluidgas=Ведро природного газа
+item.forge.bucketFilled.iufluidchlorum=Ведро хлора
+item.forge.bucketFilled.iufluidbromine=Ведро брома
+item.forge.bucketFilled.iufluidiodine=Ведро иода
 
-#Капсулы
+# Капсулы
 iu.itemcell.empty=Капсула
 iu.itemcell.neutron=Капсула нейтрона
 iu.itemcell.helium=Капсула гелия
@@ -790,80 +825,94 @@ iu.reactordepletedprotondual=Истощённый сдвоенный прото�
 iu.reactordepletedprotonquad=Истощённый счетверённый протонный стержень
 iu.reactordepletedprotonsimple=Истощённый протонный стержень
 iu.reactordepletedprotoneit=Истощённый восьмикратный протонный стержень
-iu.actorprotondual=Сдвоенный протонный стержень
-iu.actorprotonquad=Счетверённый протонный стержень
-iu.actorprotonsimple=Протонный стержень
-iu.actorprotoneit=Восьмикратный протонный стержень
+iu.reactorprotondual=Сдвоенный протонный стержень
+iu.reactorprotonquad=Счетверённый протонный стержень
+iu.reactorprotonsimple=Протонный стержень
+iu.reactorprotoneit=Восьмикратный протонный стержень
 
 iu.reactorDepletedterastrellDual=Истощённый сдвоенный террастальной стержень
 iu.reactorDepletedterastrellQuad=Истощённый счетверённый террастальной стержень
 iu.reactorDepletedterastrellSimple=Истощённый террастальной стержень
-iu.actorterastrellDual=Сдвоенный террастальной стержень
-iu.actorterastrellQuad=Счетверённый террастальной стержень
-iu.actorterastrellSimple=Террастальной стержень
+iu.reactorterastrellDual=Сдвоенный террастальной стержень
+iu.reactorterastrellQuad=Счетверённый террастальной стержень
+iu.reactorterastrellSimple=Террастальной стержень
 
 iu.reactordepletedtoriydual=Истощённый сдвоенный ториевый стержень
 iu.reactordepletedtoriyquad=Истощённый счетверённый ториевый стержень
 iu.reactordepletedtoriysimple=Истощённый ториевый стержень
-iu.actortoriydual=Сдвоенный ториевый стержень
-iu.actortoriyquad=Счетверённый ториевый стержень
-iu.actortoriysimple=Ториевый стержень
+iu.reactortoriydual=Сдвоенный ториевый стержень
+iu.reactortoriyquad=Счетверённый ториевый стержень
+iu.reactortoriysimple=Ториевый стержень
 
 iu.reactordepletedamericiumdual=Истощённый сдвоенный америциевый стержень
 iu.reactordepletedamericiumquad=Истощённый счетверённый америциевый стержень
 iu.reactordepletedamericiumsimple=Истощённый америциевый стержень
-iu.actoramericiumdual=Сдвоенный америциевый стержень
-iu.actoramericiumquad=Счетверённый америциевый стержень
-iu.actoramericiumsimple=Америциевый стержень
+iu.reactoramericiumdual=Сдвоенный америциевый стержень
+iu.reactoramericiumquad=Счетверённый америциевый стержень
+iu.reactoramericiumsimple=Америциевый стержень
 
 iu.reactordepletedneptuniumdual=Истощённый сдвоенный нептуниевый стержень
 iu.reactordepletedneptuniumquad=Истощённый счетверённый нептуниевый стержень
 iu.reactordepletedneptuniumsimple=Истощённый нептуниевый стержень
-iu.actorneptuniumdual=Сдвоенный нептуниевый стержень
-iu.actorneptuniumquad=Счетверённый нептуниевый стержень
-iu.actorneptuniumsimple=Нептуниевый стержень
+iu.reactorneptuniumdual=Сдвоенный нептуниевый стержень
+iu.reactorneptuniumquad=Счетверённый нептуниевый стержень
+iu.reactorneptuniumsimple=Нептуниевый стержень
 
 iu.reactordepletedcuriumdual=Истощённый сдвоенный кюриевый стержень
 iu.reactordepletedcuriumquad=Истощённый счетверённый кюриевый стержень
 iu.reactordepletedcuriumsimple=Истощённый кюриевый стержень
-iu.actorcuriumdual=Сдвоенный кюриевый стержень
-iu.actorcuriumquad=Счетверённый кюриевый стержень
-iu.actorcuriumsimple=Кюриевый стержень
+iu.reactorcuriumdual=Сдвоенный кюриевый стержень
+iu.reactorcuriumquad=Счетверённый кюриевый стержень
+iu.reactorcuriumsimple=Кюриевый стержень
 
 iu.reactordepletedcaliforniadual=Истощённый сдвоенный калифорниевый стержень
 iu.reactordepletedcaliforniaquad=Истощённый счетверённый калифорниевый стержень
 iu.reactordepletedcaliforniasimple=Истощённый калифорниевый стержень
-iu.actorcaliforniadual=Сдвоенный калифорниевый стержень
-iu.actorcaliforniaquad=Счетверённый калифорниевый стержень
-iu.actorcaliforniasimple=Калифорниевый стержень
+iu.reactorcaliforniadual=Сдвоенный калифорниевый стержень
+iu.reactorcaliforniaquad=Счетверённый калифорниевый стержень
+iu.reactorcaliforniasimple=Калифорниевый стержень
 
 iu.reactordepletedeinsteiniumdual=Истощённый сдвоенный эйнштейниевый стержень
 iu.reactordepletedeinsteiniumquad=Истощённый счетверённый эйнштейниевый стержень
 iu.reactordepletedeinsteiniumsimple=Истощённый эйнштейниевый стержень
-iu.actoreinsteiniumdual=Сдвоенный эйнштейниевый стержень
-iu.actoreinsteiniumquad=Счетверённый эйнштейниевый стержень
-iu.actoreinsteiniumsimple=Эйнштейниевый стержень
+iu.reactoreinsteiniumdual=Сдвоенный эйнштейниевый стержень
+iu.reactoreinsteiniumquad=Счетверённый эйнштейниевый стержень
+iu.reactoreinsteiniumsimple=Эйнштейниевый стержень
 
 iu.reactordepletedmendeleviumdual=Истощённый сдвоенный менделевиевый стержень
 iu.reactordepletedmendeleviumquad=Истощённый счетверённый менделевиевый стержень
 iu.reactordepletedmendeleviumsimple=Истощённый менделевиевый стержень
-iu.actormendeleviumdual=Сдвоенный менделевиевый стержень
-iu.actormendeleviumquad=Счетверённый менделевиевый стержень
-iu.actormendeleviumsimple=Менделевиевый стержень
+iu.reactormendeleviumdual=Сдвоенный менделевиевый стержень
+iu.reactormendeleviumquad=Счетверённый менделевиевый стержень
+iu.reactormendeleviumsimple=Менделевиевый стержень
 
 iu.reactordepleteduran233dual=Истощённый сдвоенный стержень урана-233
 iu.reactordepleteduran233quad=Истощённый счетверённый стержень урана-233
 iu.reactordepleteduran233simple=Истощённый стержень урана-233
-iu.actoruran233dual=Сдвоенный стержень урана-233
-iu.actoruran233quad=Счетверённый стержень урана-233
-iu.actoruran233simple=Стержень урана-233
+iu.reactoruran233dual=Сдвоенный стержень урана-233
+iu.reactoruran233quad=Счетверённый стержень урана-233
+iu.reactoruran233simple=Стержень урана-233
 
 iu.reactordepletedberkeliumdual=Истощённый сдвоенный берклиевый стержень
 iu.reactordepletedberkeliumquad=Истощённый счетверённый берклиевый стержень
 iu.reactordepletedberkeliumsimple=Истощённый берклиевый стержень
-iu.actorberkeliumdual=Сдвоенный берклиевый стержень
-iu.actorberkeliumquad=Счетверённый берклиевый стержень
-iu.actorberkeliumsimple=Берклиевый стержень
+iu.reactorberkeliumdual=Сдвоенный берклиевый стержень
+iu.reactorberkeliumquad=Счетверённый берклиевый стержень
+iu.reactorberkeliumsimple=Берклиевый стержень
+
+iu.depleted_dual_uranium=Истощённый сдвоенный урановый стержень
+iu.depleted_quad_uranium=Истощённый счетверённый урановый стержень
+iu.depleted_uranium=Истощённый урановый стержень
+iu.dual_uranium_fuel_rod=Сдвоенный урановый стержень
+iu.quad_uranium_fuel_rod=Счетверённый урановый стержень
+iu.uranium_fuel_rod=Урановый стержень
+
+iu.depleted_dual_mox=Истощённый сдвоенный стержень МОКС-топлива
+iu.depleted_quad_mox=Истощённый счетверённый стержень МОКС-топлива
+iu.depleted_mox=Истощённый стержень МОКС-топлива
+iu.dual_mox_fuel_rod=Сдвоенный стержень МОКС-топлива
+iu.quad_mox_fuel_rod=Счетверённый стержень МОКС-топлива
+iu.mox_fuel_rod=Стержень МОКС-топлива
 
 #Блоки сплавов
 iu.aluminum_bronze_block.name=Блок алюминиевой бронзы
@@ -873,7 +922,7 @@ iu.muntsa_block.name=Блок мунц-металла
 iu.nichrome_block.name=Нихромовый блок
 iu.alcled_block.name=Алькледный блок
 iu.vanadoalumite_block.name=Блок ванадиево-алюминиевого сплава
-iu.vitalium_block.name=Виталиевый блок
+iu.vitalium_block.name=Виталлиевый блок
 iu.duralumin_block.name=Дюралюминиевый блок
 iu.ferromanganese_block.name=Ферромарганцевый блок
 
@@ -906,7 +955,7 @@ iu.alloysingot.muntsa=Слиток мунц-металла
 iu.alloysingot.nichrome=Нихромовый слиток
 iu.alloysingot.alcled=Алькледный слиток
 iu.alloysingot.vanadoalumite=Слиток ванадиево-алюминиевого сплава
-iu.alloysingot.vitalium=Виталиевый слиток
+iu.alloysingot.vitalium=Виталлиевый слиток
 iu.alloysingot.duralumin=Дюралюминиевый слиток
 iu.alloysingot.ferromanganese=Ферромарганцевый слиток
 
@@ -939,7 +988,7 @@ iu.alloysplate.muntsa=Пластина мунц-металла
 iu.alloysplate.nichrome=Нихромовая пластина
 iu.alloysplate.alcled=Алькледная пластина
 iu.alloysplate.vanadoalumite=Пластина ванадиево-алюминиевого сплава
-iu.alloysplate.vitalium=Виталиевая пластина
+iu.alloysplate.vitalium=Виталлиевая пластина
 iu.alloysplate.duralumin=Дюралюминиевая пластина
 iu.alloysplate.ferromanganese=Ферромарганцевая пластина
 
@@ -977,7 +1026,7 @@ iu.alloysdoubleplate.muntsa=Плотная пластина мунц-метал�
 iu.alloysdoubleplate.nichrome=Плотная нихромовая пластина
 iu.alloysdoubleplate.alcled=Плотная алькледная пластина
 iu.alloysdoubleplate.vanadoalumite=Плотная пластина ванадиево-алюминиевого сплава
-iu.alloysdoubleplate.vitalium=Плотная виталиевая пластина
+iu.alloysdoubleplate.vitalium=Плотная виталлиевая пластина
 iu.alloysdoubleplate.duralumin=Плотная дюралюминиевая пластина
 iu.alloysdoubleplate.ferromanganese=Плотная ферромарганцевая пластина
 
@@ -1010,7 +1059,7 @@ iu.alloyscasing.muntsa=Оболочка мунц-металла
 iu.alloyscasing.nichrome=Нихромовая оболочка
 iu.alloyscasing.alcled=Алькледная оболочка
 iu.alloyscasing.vanadoalumite=Оболочка ванадиево-алюминиевого сплава
-iu.alloyscasing.vitalium=Виталиевая оболочка
+iu.alloyscasing.vitalium=Виталлиевая оболочка
 iu.alloyscasing.duralumin=Дюралюминиевая оболочка
 iu.alloyscasing.ferromanganese=Ферромарганцевая оболочка
 
@@ -1043,7 +1092,7 @@ iu.alloysstik.muntsa=Палка мунц-металла
 iu.alloysstik.nichrome=Нихромовая палка
 iu.alloysstik.alcled=Алькледная палка
 iu.alloysstik.vanadoalumite=Палка ванадиево-алюминиевого сплава
-iu.alloysstik.vitalium=Виталиевая палка
+iu.alloysstik.vitalium=Виталлиевая палка
 iu.alloysstik.duralumin=Дюралюминиевая палка
 iu.alloysstik.ferromanganese=Ферромарганцевая палка
 
@@ -1076,7 +1125,7 @@ iu.alloysnugget.muntsa=Кусочек мунц-металла
 iu.alloysnugget.nichrome=Кусочек нихрома
 iu.alloysnugget.alcled=Кусочек алькледа
 iu.alloysnugget.vanadoalumite=Кусочек ванадиево-алюминиевого сплава
-iu.alloysnugget.vitalium=Кусочек виталия
+iu.alloysnugget.vitalium=Кусочек виталлия
 iu.alloysnugget.duralumin=Кусочек дюралюминия
 iu.alloysnugget.ferromanganese=Кусочек ферромарганца
 
@@ -1109,7 +1158,7 @@ iu.alloysdust.muntsa=Пыль мунц-металла
 iu.alloysdust.nichrome=Нихромовая пыль
 iu.alloysdust.alcled=Алькледная пыль
 iu.alloysdust.vanadoalumite=Пыль ванадиево-алюминиевого сплава
-iu.alloysdust.vitalium=Виталиевая пыль
+iu.alloysdust.vitalium=Виталлиевая пыль
 iu.alloysdust.duralumin=Дюралюминиевая пыль
 iu.alloysdust.ferromanganese=Ферромарганцевая пыль
 
@@ -1559,7 +1608,7 @@ industrialupgrade.basemachine1.magnet_generator=Магнитный генера�
 industrialupgrade.basemachine2.fisher=Рыболовная машина
 industrialupgrade.basemachine2.painter=Красильная машина
 industrialupgrade.upgrade_block.upgrade_block=Модификационная станция
-iu.quarry_vein_item.quarry_vein_item=Буровая установка для поиска жил
+industrialupgrade.quarry_vein.quarry_vein=Буровая установка для поиска жил
 industrialupgrade.petrol_quarry.petrol_quarry=Станок-качалка
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=Объединитель генераторов твёрдой материи
 industrialupgrade.basemachine2.expierence_block=Хранилище опыта
@@ -2397,7 +2446,7 @@ iu.solarium_energy_sink.info=Для работы нужна SE
 iu.vein.info=Анализируйте чанки с помощью буровой установки
 iu.vein.info1=С его помощью можно найти жилы минералов или нефти
 iu.vein.info2=Расположение нефтяной жилы зависит от биомов
-iu.vein.info3=Процент получения жилы минерала составляет 20%
+iu.vein.info3=Процент получения жилы минерала составляет 15%
 iu.oilpump.info=Нужна нефтяная жила
 iu.blastfurnace.info=Инструкция
 iu.blastfurnace.info1=Конструкция 3х3х3
@@ -2822,6 +2871,27 @@ iu.crafting_elements.crafting_246_element=Продвинутый датчик: �
 iu.crafting_elements.crafting_247_element=Совершенный датчик: Реакторная камера
 iu.crafting_elements.crafting_248_element=Улучшенный датчик: Помпа
 iu.crafting_elements.crafting_249_element=Улучшенный датчик: Реакторная камера
+iu.crafting_elements.crafting_250_element=Датчик: Квантовый карьер
+iu.crafting_elements.crafting_251_element=Датчик: Нефть
+iu.crafting_elements.crafting_252_element=Продвинутый датчик: Карьер
+iu.crafting_elements.crafting_253_element=Продвинутый датчик: Квантовый карьер
+iu.crafting_elements.crafting_254_element=Совершенный датчик: Карьер
+iu.crafting_elements.crafting_255_element=Совершенный датчик: Квантовый карьер
+iu.crafting_elements.crafting_256_element=Улучшенный датчик: Карьер
+iu.crafting_elements.crafting_257_element=Улучшенный датчик: Квантовый карьер
+iu.crafting_elements.crafting_258_element=Датчик: Генератор на красном камне
+iu.crafting_elements.crafting_259_element=Продвинутый датчик: Генератор на красном камне
+iu.crafting_elements.crafting_260_element=Совершенный датчик: Генератор на красном камне
+iu.crafting_elements.crafting_261_element=Улучшенный датчик: Генератор на красном камне
+iu.crafting_elements.crafting_262_element=Датчик: Сварочный аппарат
+iu.crafting_elements.crafting_263_element=Датчик: Газовый генератор
+iu.crafting_elements.crafting_264_element=Датчик: Консервирование
+iu.crafting_elements.crafting_265_element=Датчик: Наполение
+iu.crafting_elements.crafting_266_element=Датчик: Красный камень
+iu.crafting_elements.crafting_267_element=Датчик: Смешиватель
+iu.crafting_elements.crafting_268_element=Датчик: Телепортация
+iu.crafting_elements.crafting_269_element=Телепортационный кристалл
+iu.crafting_elements.crafting_270_element=Ядро телепортера
 iu.transport.heat=Передаёт тепла: 
 iu.transport.cold=Передаёт холода: 
 iu.transport.energy=Передаёт EU/RF/FE/TE
@@ -2867,6 +2937,11 @@ industrialupgrade.moremachine3.gearing=§eМеханический штамп
 industrialupgrade.moremachine3.doublegearing=§eУлучшенный механический штамп
 industrialupgrade.moremachine3.triplegearing=§eПродвинутый механический штамп
 industrialupgrade.moremachine3.quadgearing=§eСовершенный механический штамп
+industrialupgrade.basemachine3.limiter=§eОграничитель энергии
+industrialupgrade.basemachine3.redstone_generator=§eГенератор на красном камне
+industrialupgrade.basemachine3.adv_redstone_generator=§eУлучшенный генератор на красном камне
+industrialupgrade.basemachine3.imp_redstone_generator=§eПродвинутый генератор на красном камне
+industrialupgrade.basemachine3.per_redstone_generator=§eСовершенный генератор на красном камне
 
 iu.gear.mikhail=Михаловая шестерня
 iu.gear.aluminium=Алюминиевая шестерня
@@ -2894,7 +2969,7 @@ iu.alloysgear.muntsa=Шестерня из мунц-металла
 iu.alloysgear.nichrome=Нихромовая шестерня
 iu.alloysgear.alcled=Алькледная шестерня
 iu.alloysgear.vanadoalumite=Шестерня из ванадиево-алюминиевого сплава
-iu.alloysgear.vitalium=Виталиевая шестерня
+iu.alloysgear.vitalium=Виталлиевая шестерня
 iu.alloysgear.duralumin=Дюралюминиевая шестерня
 iu.alloysgear.ferromanganese=Ферромарганцевая шестерня
 
@@ -2919,6 +2994,8 @@ iu.water_rotors_upgrade.water_rotorupgrade12=Модуль водяного ро�
 iu.water_rotors_upgrade.water_rotorupgrade13=Модуль водяного ротора: Автопочинка I
 iu.water_rotors_upgrade.water_rotorupgrade14=Модуль водяного ротора: Автопочинка II
 iu.water_rotors_upgrade.water_rotorupgrade15=Модуль водяного ротора: Автопочинка III
+
+iu.water_rotors_upgrade.water_rotorupgrade16=Модуль водяного ротора: Океан
 
 iu.itempipes_transport=Выходная предметная труба
 iu.itempipes1_transport=Входная предметная труба
@@ -2993,3 +3070,97 @@ itemGroup.CraftingElementsTab=Элементы создания
 
 iu.watergenerator=При силе течения: 
 iu.watergenerator1=Генерация зависит от биомов (используйте биомы «Река» или «Океан»)
+
+iu.vein_info=Жила: 
+iu.oil_vein=Нефть
+iu.quarry_energy=Повышает потребление карьера на 
+iu.quarry_energy1=Понижает потребление карьера на 
+iu.sensor.sensor=Датчик
+iu.sensor.info=Сохраняет в себе информацию о жиле, ПКМ по буровой установке
+iu.limiter.info=Информация об ограничителе энергии
+iu.limiter.info1=В слот необходимо установить Датчик: Трансформатор (любой)
+iu.limiter.info2=От уровня датчика зависит максимальное значение
+iu.limiter.info3=Вы указываете число которое вам нужно, минимально - 0, 
+iu.limiter.info4=Нажимаете кнопку "Записать"
+iu.limiter.info5=Передаёт энергию через основную сторону и принимает через остальные
+iu.limiter.info6=Упрощает системы трансформаторов, и является более компактным решением 
+iu.limiter.info7=Вместо 3+ трансформаторов можно поставить этот механизм и датчик к нему
+iu.limiter.info8=И указать то число, которое вам выгодно передавать по проводам
+iu.limiter.info9=Максимальное число передачи энергии: 
+
+water.ocean_info=Убирает зависимость от биома океан и река
+button.update_info=Обновить
+button.delete_info=Удалить
+industrialupgrade.basemachine3.welding=Сварочный аппарат
+industrialupgrade.basemachine3.heat_limiter=Контроллер реактора
+iu.heat_limiter.main_info=Информация о контроллере реактора
+iu.heat_limiter.info=Установите вплотную задней частью к реакторной камере или ядерному реактору 
+iu.heat_limiter.info1=Нажмите "Обновить", чтобы записать данные о реакторе
+iu.heat_limiter.info2=Укажите температуру до 10000 (100%)
+iu.heat_limiter.info3=Нажмите "Записать", чтобы установить ограничения для реактора
+iu.heat_limiter.info4=Нажмите "Удалить", чтобы снять ограничения для реактора
+
+iu.heat_storage=Охлаждающий стержень 10к
+iu.tri_heat_storage=Охлаждающий стержень 30к
+iu.hex_heat_storage=Охлаждающий стержень 60к
+iu.plating=Реакторная обшивка
+iu.heat_plating=Теплоёмкая реакторная обшивка
+iu.containment_plating=Сдерживающая реакторная обшивка
+iu.heat_exchanger=Теплообменник
+iu.reactor_heat_exchanger=Реакторный теплообменник
+iu.component_heat_exchanger=Компонентный теплообменник
+iu.advanced_heat_exchanger=Улучшенный теплообменник
+iu.heat_vent=Теплоотвод
+iu.reactor_heat_vent=Реакторный теплоотвод
+iu.overclocked_heat_vent=Разогнанный теплоотвод
+iu.component_heat_vent=Компонентный теплоотвод
+iu.advanced_heat_vent=Улучшенный теплоотвод
+iu.neutron_reflector=Отражатель нейтронов
+iu.iridium_reflector=Иридиевый отражатель нейтронов
+iu.thick_neutron_reflector=Утолщённый отражатель нейтронов
+iu.rsh_condensator=Красный конденсатор
+iu.lzh_condensator=Лазуритовый конденсатор
+iu.heatpack=Нагревающая капсула
+
+iu.activate_multiblock=Активируйте многоблочную структуру, используя
+
+industrialupgrade.basemachine3.gas_generator=Газовый генератор
+industrialupgrade.basemachine3.canner_iu=Наполнитель
+industrialupgrade.basemachine3.pattern_storage_iu=Хранилище шаблонов
+industrialupgrade.basemachine3.pump_iu=Помпа
+industrialupgrade.basemachine3.solid_canner_iu=Консервирующая машина
+industrialupgrade.basemachine3.generator_iu=Генератор
+industrialupgrade.basemachine3.geogenerator_iu=Геотермальный генератор
+industrialupgrade.basemachine3.reactor_iu=Ядерный реактор
+industrialupgrade.basemachine3.teleporter_iu=Телепорт
+industrialupgrade.basemachine3.chamber_iu=Реакторная камера
+industrialupgrade.basemachine3.solar_iu=Солнечная панель
+industrialupgrade.basemachine3.crop_harvester_iu=Сборщик урожая
+industrialupgrade.basemachine3.crop_matron=Автосадовник
+iu.meter=Ваттметр
+
+iu.upgrades.storageupgrade=Улучшение "Лазуротронное энергохранилище"
+iu.upgrades.adv_storageupgrade=Улучшение "Улучшенное лазуротронное энергохранилище"
+iu.upgrades.imp_storageupgrade=Улучшение "Продвинутое лазуротронное энергохранилище"
+iu.upgrades.per_storageupgrade=Улучшение "Совершенное лазуротронное энергохранилище"
+
+iu.itemcoppercable=Медный провод
+iu.itemcoppercable1=Изолированный медный провод
+iu.itemglasscable1=Стекловолоконный провод
+iu.itemgold_cable=Золотой провод
+iu.itemgold_cable1=Изолированный золотой провод
+iu.itemgold_cable2=Золотой провод с двойной изоляцией
+iu.itemiron_cable=Высоковольтный провод
+iu.itemiron_cable1=Изолированный высоковольтный провод
+iu.itemiron_cable2=Высоковольтный провод с двойной изоляцией
+iu.itemiron_cable3=Высоковольтный провод с тройной изоляцией
+iu.itemtin_cable=Оловянный провод
+iu.itemtin1_cable=Изолированный оловянный провод
+
+find.gas_vein=Газ генерируется в больших количествах под землёй
+find.oil_vein=Нефть генерируется в огромных количествах в пустыне
+iu.replicator_using_matter=Для создания предмета в репликаторе нужно: 
+
+iu.cooling_sensor=Сенсор нагрева механизма
+iu.heat_sensor=Сенсор тепла механизма 
+iu.aircollector.info=Генерирует за %d тик: 

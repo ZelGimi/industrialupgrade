@@ -4,7 +4,6 @@ import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.tiles.base.TileEntitySolarGeneratorEnergy;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -16,12 +15,12 @@ public class InvSlotGenSunarrium extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotGenSunarrium(TileEntitySolarGeneratorEnergy base1) {
-        super(base1, "input", InvSlot.Access.I, 4, InvSlot.InvSide.TOP);
+        super(base1, "input", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
         this.stackSizeLimit = 1;
         this.tile = base1;
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem() instanceof ItemBaseModules && (itemStack.getItemDamage() < 6 || itemStack.getItemDamage() > 14);
     }
 

@@ -1,19 +1,17 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Config;
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerSolidMatter;
 import com.denfop.gui.GuiSolidMatter;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
-import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
 import ic2.core.init.Localization;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -60,14 +58,13 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.matter_solid_work_info") + (int) Config.SolidMatterStorage);
         }
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
+        AdvEnergy energy = this.energy;
+        if (!energy.getSourceDirs().isEmpty()) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+        } else if (!energy.getSinkDirs().isEmpty()) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
         }
+
 
     }
 
@@ -83,7 +80,7 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
     }
 
     protected void initiate(int soundEvent) {
-        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
     }
 
     protected void updateEntityServer() {
@@ -108,11 +105,11 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiSolidMatter getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiSolidMatter(new ContainerSolidMatter(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityMatterGenerator> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSolidMatter getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerSolidMatter(entityPlayer, this);
     }
 

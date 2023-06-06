@@ -5,14 +5,17 @@ import com.denfop.IUCore;
 import com.denfop.tiles.reactors.TileEntityImpReactorChamberElectric;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -29,6 +32,7 @@ public enum BlockImpChamber implements ITeBlock {
     private final int itemMeta;
     private final EnumRarity rarity;
     private TileEntityBlock dummyTe;
+    private TeBlock.ITePlaceHandler placeHandler;
 
 
     BlockImpChamber(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
@@ -64,6 +68,24 @@ public enum BlockImpChamber implements ITeBlock {
         }
     }
 
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
+    }
+
+    @Nullable
+    @Override
+    public TeBlock.ITePlaceHandler getPlaceHandler() {
+        return placeHandler;
+    }
+
+    public void setPlaceHandler(TeBlock.ITePlaceHandler handler) {
+        if (this.placeHandler != null) {
+            throw new RuntimeException("duplicate place handler");
+        } else {
+            this.placeHandler = handler;
+        }
+    }
 
     @Override
     public String getName() {

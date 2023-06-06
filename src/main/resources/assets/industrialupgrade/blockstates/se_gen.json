@@ -1,33 +1,32 @@
 {
-  "forge_marker": 1,
-  "variants": {
-    "type": {
-	  "se_gen": {
-        "model": "industrialupgrade:solarenergy/se_gen"
-      }
-	  
-    },
-    "facing": {
-      "down": {
-        "transform": "forge:default-block"
-      },
-      "up": {
-        "transform": "forge:default-block"
-      },
-      "north": {
-        "transform": "forge:default-block"
-      },
-      "south": {
-         "transform": "forge:default-block"
-      },
-      "west": {
-         "transform": "forge:default-block"
-      },
-      "east": {
-        "transform": "forge:default-block"
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "se_gen" : {
+        "model" : "industrialupgrade:solarenergy/se_gen"
       }
     },
-    "inventory": [
+    "facing" : {
+      "down" : {
+        "transform" : "forge:default-block"
+      },
+      "up" : {
+        "transform" : "forge:default-block"
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "transform" : "forge:default-block"
+      },
+      "west" : {
+        "transform" : "forge:default-block"
+      },
+      "east" : {
+        "transform" : "forge:default-block"
+      }
+    },
+    "inventory" : [
       {}
     ]
   }

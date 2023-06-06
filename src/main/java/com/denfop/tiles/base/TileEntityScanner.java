@@ -1,35 +1,37 @@
 package com.denfop.tiles.base;
 
+import com.denfop.api.Recipes;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IPatternStorage;
+import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.container.ContainerScanner;
 import com.denfop.gui.GuiScanner;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotConsumable;
+import com.denfop.invslot.InvSlotConsumableId;
+import com.denfop.invslot.InvSlotScannable;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.api.recipe.IPatternStorage;
-import ic2.core.ContainerBase;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
-import ic2.core.block.invslot.InvSlotConsumable;
-import ic2.core.block.invslot.InvSlotConsumableId;
-import ic2.core.block.invslot.InvSlotScannable;
 import ic2.core.item.ItemCrystalMemory;
 import ic2.core.profile.NotClassic;
 import ic2.core.ref.ItemName;
 import ic2.core.util.StackUtil;
-import ic2.core.uu.UuGraph;
-import ic2.core.uu.UuIndex;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @NotClassic
 public abstract class TileEntityScanner extends TileEntityElectricMachine implements IHasGui, IType,
@@ -41,8 +43,11 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
     public int progress;
     public double patternUu;
     public double patternEu;
+    public ItemStack pattern;
+    public BaseMachineRecipe recipe;
+    Map<BlockPos, IPatternStorage> iPatternStorageMap = new HashMap<>();
+    List<IPatternStorage> iPatternStorageList = new ArrayList<>();
     private ItemStack currentStack;
-    private ItemStack pattern;
     private TileEntityScanner.State state;
 
     public TileEntityScanner(int maxprogress) {
@@ -53,56 +58,79 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
         this.maxprogress = maxprogress;
         this.state = TileEntityScanner.State.IDLE;
         this.inputSlot = new InvSlotScannable(this, "input", 1);
-        this.diskSlot = new InvSlotConsumableId(this, "disk", Access.IO, 1, InvSide.ANY, ItemName.crystal_memory.getInstance());
+        this.diskSlot = new InvSlotConsumableId(
+                this,
+                "disk",
+                InvSlot.Access.IO,
+                1,
+                InvSlot.InvSide.ANY,
+                ItemName.crystal_memory.getInstance()
+        );
+    }
+
+    @Override
+    protected void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
+        super.onNeighborChange(neighbor, neighborPos);
+        final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+
+        if (tile instanceof IPatternStorage) {
+            if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
+                this.iPatternStorageList.add((IPatternStorage) tile);
+                this.iPatternStorageMap.put(neighborPos, (IPatternStorage) tile);
+            }
+        } else if (tile == null) {
+            IPatternStorage storage = iPatternStorageMap.get(neighborPos);
+            if (storage != null) {
+                this.iPatternStorageList.remove(storage);
+                this.iPatternStorageMap.remove(neighborPos, storage);
+            }
+        }
     }
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        boolean newActive = false;
-        if (this.progress < maxprogress) {
-            if (!this.inputSlot.isEmpty() && (StackUtil.isEmpty(this.currentStack) || StackUtil.checkItemEquality(
-                    this.currentStack,
-                    this.inputSlot.get()
-            ))) {
-                if (this.getPatternStorage() == null && this.diskSlot.isEmpty()) {
-                    this.state = TileEntityScanner.State.NO_STORAGE;
-                    this.reset();
-                } else if (this.energy.getEnergy() >= 256.0D) {
-                    if (StackUtil.isEmpty(this.currentStack)) {
-                        this.currentStack = StackUtil.copyWithSize(this.inputSlot.get(), 1);
-                    }
-
-                    this.pattern = UuGraph.find(this.currentStack);
-                    if (StackUtil.isEmpty(this.pattern)) {
-                        this.state = TileEntityScanner.State.FAILED;
-                    } else if (this.isPatternRecorded(this.pattern)) {
-                        this.state = TileEntityScanner.State.ALREADY_RECORDED;
+        if (this.state != TileEntityScanner.State.COMPLETED) {
+            if (this.progress < maxprogress) {
+                if (!this.inputSlot.isEmpty() && (StackUtil.isEmpty(this.currentStack) || StackUtil.checkItemEquality(
+                        this.currentStack,
+                        this.inputSlot.get()
+                ))) {
+                    if (this.getPatternStorage() == null && this.diskSlot.isEmpty()) {
+                        this.state = TileEntityScanner.State.NO_STORAGE;
                         this.reset();
-                    } else {
-                        newActive = true;
-                        this.state = TileEntityScanner.State.SCANNING;
-                        this.energy.useEnergy(256.0D);
-                        ++this.progress;
-                        if (this.progress >= maxprogress) {
-                            this.refreshInfo();
-                            if (this.patternUu != 1.0D / 0.0) {
+                    } else if (this.energy.getEnergy() >= 256.0D) {
+                        if (StackUtil.isEmpty(this.currentStack)) {
+                            this.currentStack = StackUtil.copyWithSize(this.inputSlot.get(), 1);
+                        }
+
+
+                        if (this.recipe == null) {
+                            this.state = TileEntityScanner.State.FAILED;
+                        } else if (this.isPatternRecorded(this.pattern)) {
+                            this.state = TileEntityScanner.State.ALREADY_RECORDED;
+                            this.reset();
+                        } else {
+                            this.state = TileEntityScanner.State.SCANNING;
+                            this.energy.useEnergy(256.0D);
+                            ++this.progress;
+                            if (this.progress >= maxprogress) {
+                                this.refreshInfo();
+                                this.pattern = this.currentStack.copy();
                                 this.state = TileEntityScanner.State.COMPLETED;
                                 this.inputSlot.consume(1, false, true);
-                            } else {
-                                this.state = TileEntityScanner.State.FAILED;
                             }
                         }
+                    } else {
+                        this.state = TileEntityScanner.State.NO_ENERGY;
                     }
                 } else {
-                    this.state = TileEntityScanner.State.NO_ENERGY;
+                    this.state = TileEntityScanner.State.IDLE;
+                    this.reset();
                 }
-            } else {
+            } else if (StackUtil.isEmpty(this.pattern)) {
                 this.state = TileEntityScanner.State.IDLE;
-                this.reset();
+                this.progress = 0;
             }
-        } else if (StackUtil.isEmpty(this.pattern)) {
-            this.state = TileEntityScanner.State.IDLE;
-            this.progress = 0;
         }
 
     }
@@ -110,7 +138,6 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
     public void reset() {
         this.progress = 0;
         this.currentStack = StackUtil.emptyStack;
-        this.pattern = StackUtil.emptyStack;
     }
 
     private boolean isPatternRecorded(ItemStack stack) {
@@ -125,16 +152,16 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
         if (storage == null) {
             return false;
         } else {
-            Iterator<ItemStack> var3 = storage.getPatterns().iterator();
+            Iterator<RecipeInfo> var3 = storage.getPatterns().iterator();
 
-            ItemStack stored;
+            RecipeInfo stored;
             do {
                 if (!var3.hasNext()) {
                     return false;
                 }
 
                 stored = var3.next();
-            } while (!StackUtil.checkItemEquality(stored, stack));
+            } while (!StackUtil.checkItemEquality(stored.getStack(), stack));
 
             return true;
         }
@@ -148,8 +175,7 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
                     this.state = TileEntityScanner.State.TRANSFER_ERROR;
                     return;
                 }
-
-                if (!storage.addPattern(this.pattern)) {
+                if (!storage.addPattern(new RecipeInfo(this.pattern, this.patternUu))) {
                     this.state = TileEntityScanner.State.TRANSFER_ERROR;
                     return;
                 }
@@ -170,7 +196,6 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
         this.state = stateIdx < TileEntityScanner.State.values().length
                 ? TileEntityScanner.State.values()[stateIdx]
                 : TileEntityScanner.State.IDLE;
-        this.refreshInfo();
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -193,12 +218,12 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
         return nbt;
     }
 
-    public ContainerBase<TileEntityScanner> getGuiContainer(EntityPlayer player) {
+    public ContainerScanner getGuiContainer(EntityPlayer player) {
         return new ContainerScanner(player, this);
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
+    public GuiScanner getGui(EntityPlayer player, boolean isAdmin) {
         return new GuiScanner(new ContainerScanner(player, this));
     }
 
@@ -206,16 +231,11 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
     }
 
     public IPatternStorage getPatternStorage() {
-        World world = this.getWorld();
-        EnumFacing[] var2 = EnumFacing.VALUES;
-        for (EnumFacing dir : var2) {
-            TileEntity target = world.getTileEntity(this.pos.offset(dir));
-            if (target instanceof IPatternStorage) {
-                return (IPatternStorage) target;
-            }
+        if (this.iPatternStorageList.isEmpty()) {
+            return null;
+        } else {
+            return this.iPatternStorageList.get(0);
         }
-
-        return null;
     }
 
     public boolean savetoDisk(ItemStack stack) {
@@ -238,16 +258,49 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
                 this.reset();
                 break;
             case 1:
-                if (this.progress >= this.maxprogress) {
+                if (this.state == State.COMPLETED) {
                     this.record();
+                    this.state = TileEntityScanner.State.IDLE;
                 }
         }
 
     }
 
+    @Override
+    protected void onLoaded() {
+        super.onLoaded();
+        if (this.inputSlot.isEmpty()) {
+            if (pattern.isEmpty()) {
+                this.recipe = null;
+            } else {
+                this.recipe = Recipes.recipes.getRecipeOutput("replicator", false, this.pattern);
+            }
+        } else {
+            this.recipe = Recipes.recipes.getRecipeOutput("replicator", false, this.inputSlot.get());
+            this.pattern = this.inputSlot.get(0);
+        }
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            final BlockPos neighborPos = pos.offset(facing);
+            final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+            if (tile instanceof IPatternStorage) {
+                if (!this.iPatternStorageList.contains((IPatternStorage) tile)) {
+                    this.iPatternStorageList.add((IPatternStorage) tile);
+                    this.iPatternStorageMap.put(neighborPos, (IPatternStorage) tile);
+                }
+            } else if (tile == null) {
+                IPatternStorage storage = iPatternStorageMap.get(neighborPos);
+                if (storage != null) {
+                    this.iPatternStorageList.remove(storage);
+                    this.iPatternStorageMap.remove(neighborPos, storage);
+                }
+            }
+        }
+        this.refreshInfo();
+    }
+
     private void refreshInfo() {
         if (!StackUtil.isEmpty(this.pattern)) {
-            this.patternUu = UuIndex.instance.getInBuckets(this.pattern);
+            this.patternUu = this.recipe.getOutput().metadata.getDouble("matter");
         }
 
     }

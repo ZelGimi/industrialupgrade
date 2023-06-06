@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemsunnarium",
-      "data": 2
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemsunnarium",
+      "data" : 2
     },
-    "title": {
-      "translate": "achievement.sunnarium_plate"
+    "title" : {
+      "translate" : "achievement.sunnarium_plate"
     },
-    "description": {
-      "translate": "achievement.sunnarium_plate.desc"
+    "description" : {
+      "translate" : "achievement.sunnarium_plate.desc"
     }
   },
-  "parent": "industrialupgrade:main/sunnarium",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/sunnarium",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemsunnarium",
-            "data": 2
+            "item" : "industrialupgrade:itemsunnarium",
+            "data" : 2
           }
         ]
       }

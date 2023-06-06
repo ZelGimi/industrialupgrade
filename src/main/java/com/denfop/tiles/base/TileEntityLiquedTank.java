@@ -1,19 +1,19 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerTank;
 import com.denfop.gui.GuiTank;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.LiquidUtil;
@@ -28,7 +28,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -37,8 +36,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -62,9 +59,11 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         this.containerslot = new InvSlotConsumableLiquidByList(this,
                 "containerslot", InvSlot.Access.I, 1, InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill
         );
+        this.containerslot.setUsually(true);
         this.containerslot1 = new InvSlotConsumableLiquidByList(this,
                 "containerslot1", InvSlot.Access.I, 1, InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Drain
         );
+        this.containerslot1.setUsually(true);
         this.texture = new ResourceLocation(
                 Constants.TEXTURES,
                 "textures/models/" + texturename + ".png"
@@ -77,7 +76,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,
@@ -88,7 +87,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         if (!this.getWorld().isRemote && LiquidUtil.isFluidContainer(player.getHeldItem(hand))) {
 
             return FluidUtil.interactWithFluidHandler(player, hand,
-                    this.getComponent(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
@@ -134,7 +133,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
                 this.fluidTank.fill(fluidStack, true);
             }
             this.old_amount = this.fluidTank.getFluidAmount();
-            IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+            IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
         }
     }
 
@@ -167,8 +166,8 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         return true;
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("fluidTank");
         return ret;
     }
@@ -188,7 +187,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
                 need = true;
             }
             if (need) {
-                IC2.network.get(true).updateTileEntityField(this, "fluidTank");
+                IUCore.network.get(true).updateTileEntityField(this, "fluidTank");
             }
         }
 
@@ -203,7 +202,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
         }
         if (this.needsFluid()) {
             output = new MutableObject<>();
-            if (this.containerslot1.transferToTank(
+            if (this.fluidTank.getFluidAmount() + 1000 <= this.fluidTank.getCapacity() && this.containerslot1.transferToTank(
                     this.fluidTank,
                     output,
                     true
@@ -235,7 +234,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
     }
 
 
-    public ContainerBase<TileEntityLiquedTank> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerTank getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerTank(entityPlayer, this);
     }
 
@@ -301,7 +300,8 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IHasGui
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

@@ -8,6 +8,8 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
@@ -16,8 +18,6 @@ import ic2.api.item.IElectricItem;
 import ic2.api.item.IItemHudInfo;
 import ic2.api.item.IMetalArmor;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.BaseElectricItem;
@@ -58,11 +58,11 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     protected static AudioSource audioSource;
     private static boolean lastJetpackUsed = false;
     private final String armorName;
-    private final int maxStorage;
-    private final int TransferLimit;
+    private final double maxStorage;
+    private final double TransferLimit;
     private final int tier;
 
-    public ItemAdvJetpack(String name, int maxStorage, int TransferLimit, int tier) {
+    public ItemAdvJetpack(String name, double maxStorage, double TransferLimit, int tier) {
         super(null, "", EntityEquipmentSlot.CHEST, maxStorage, TransferLimit, tier);
 
         this.setMaxDamage(27);
@@ -397,7 +397,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
                 if (lastJetpackUsed != jetpackUsed) {
                     if (jetpackUsed) {
                         if (audioSource == null) {
-                            audioSource = IC2.audioManager.createSource(
+                            audioSource = IUCore.audioManager.createSource(
                                     player,
                                     PositionSpec.Backpack,
                                     "Tools/Jetpack/JetpackLoop.ogg",

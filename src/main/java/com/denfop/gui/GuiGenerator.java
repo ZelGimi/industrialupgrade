@@ -32,7 +32,7 @@ public class GuiGenerator extends GuiIU<ContainerGenerator> {
         this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 4210752);
         new AdvArea(this, 90, 35, 121, 51).withTooltip(Localization.translate(
                 "ic2.generic.text.bufferEU",
-                ModUtils.getString( this.container.base.getEnergy())
+                ModUtils.getString(this.container.base.getEnergy())
         )).drawForeground(par1, par2);
 
     }

@@ -1,16 +1,19 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.IAdvEnergyNet;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.SunCoef;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.gui.GuiSolarGeneratorEnergy;
 import com.denfop.invslot.InvSlotGenSunarrium;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
@@ -35,7 +38,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     public final double maxSunEnergy;
     public final double cof;
     public boolean work;
-    public SEComponent sunenergy;
+    public ComponentBaseEnergy sunenergy;
     public List<Double> lst;
     public double coef_day;
     public double coef_night;
@@ -44,10 +47,11 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     private boolean noSunWorld;
     private boolean skyIsVisible;
     private boolean sunIsUp;
+    private SunCoef sunCoef;
 
     public TileEntitySolarGeneratorEnergy(double cof) {
 
-        this.maxSunEnergy = 4500;
+        this.maxSunEnergy = 6500;
         this.cof = cof;
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.input = new InvSlotGenSunarrium(this);
@@ -55,8 +59,8 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.lst.add(0D);
         this.lst.add(0D);
         this.lst.add(0D);
-        this.sunenergy = this.addComponent(SEComponent
-                .asBasicSource(this, 10000, 1));
+        this.sunenergy = this.addComponent(ComponentBaseEnergy
+                .asBasicSource(EnergyType.SOLARIUM, this, 10000, 1));
         this.coef_day = 0;
         this.coef_night = 0;
         this.update_night = 0;
@@ -107,8 +111,8 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         return true;
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("sunenergy");
 
         return ret;
@@ -123,6 +127,8 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         this.coef_day = this.lst.get(0);
         this.coef_night = this.lst.get(1);
         this.update_night = this.lst.get(2);
+        IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
+        this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
         updateVisibility();
 
     }
@@ -140,14 +146,13 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
         if (this.world.provider.getWorldTime() % 80 == 0) {
             updateVisibility();
         }
-        long tick = this.getWorld().provider.getWorldTime() % 24000L;
         this.generation = 0;
         if (this.skyIsVisible) {
-            energy(tick);
-            if (this.sunenergy.getEnergy() >= 4500) {
+            energy();
+            if (this.sunenergy.getEnergy() >= 6500) {
                 if (this.outputSlot.get().getCount() < 64 || this.outputSlot.isEmpty()) {
                     if (this.outputSlot.add(itemstack)) {
-                        this.sunenergy.addEnergy(-4500);
+                        this.sunenergy.addEnergy(-6500);
                     }
                 }
             }
@@ -156,45 +161,15 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
 
     }
 
-    public void energy(long tick) {
-        double k = 0;
+    public void energy() {
+
 
         if (this.sunIsUp) {
-            if (tick <= 1000L) {
-                k = 5;
-            }
-            if (tick > 1000L && tick <= 4000L) {
-                k = 10;
-            }
-            if (tick > 4000L && tick <= 8000L) {
-                k = 30;
-            }
-            if (tick > 8000L && tick <= 11000L) {
-                k = 10;
-            }
-            if (tick > 11000L) {
-                k = 5;
-            }
-            this.generation = k * this.cof * (1 + coef_day);
+            this.generation = this.sunCoef.getCoef() * 30 * this.cof * (1 + coef_day);
             this.sunenergy.addEnergy(this.generation);
         } else if (this.update_night > 0) {
-            double tick1 = tick - 12000;
-            if (tick1 <= 1000L) {
-                k = 5;
-            }
-            if (tick1 > 1000L && tick1 <= 4000L) {
-                k = 10;
-            }
-            if (tick1 > 4000L && tick1 <= 8000L) {
-                k = 30;
-            }
-            if (tick1 > 8000L && tick1 <= 11000L) {
-                k = 10;
-            }
-            if (tick1 > 11000L) {
-                k = 5;
-            }
-            this.generation = k * this.cof * (this.update_night - 1) * (1 + this.coef_night);
+
+            this.generation = this.sunCoef.getCoef() * 30 * this.cof * (this.update_night - 1) * (1 + this.coef_night);
             this.sunenergy.addEnergy(this.generation);
 
         }
@@ -207,7 +182,7 @@ public class TileEntitySolarGeneratorEnergy extends TileEntityInventory implemen
     }
 
 
-    public ContainerBase<? extends TileEntitySolarGeneratorEnergy> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerSolarGeneratorEnergy getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerSolarGeneratorEnergy(entityPlayer, this);
     }
 

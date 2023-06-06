@@ -7,7 +7,6 @@ import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatSink;
 import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
-import ic2.api.info.ILocatable;
 import ic2.core.IC2;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -27,8 +26,6 @@ public class HeatNetLocal {
 
     private final World world;
     private final HeatPathMap HeatSourceToHeatPathMap;
-    private final Map<IHeatTile, BlockPos> chunkCoordinatesMap;
-    private final Map<IHeatTile, TileEntity> HeatTileTileEntityMap;
     private final Map<BlockPos, IHeatTile> chunkCoordinatesIHeatTileMap;
     private final WaitingList waitingList;
 
@@ -38,8 +35,6 @@ public class HeatNetLocal {
         this.waitingList = new WaitingList();
         this.world = world;
         this.chunkCoordinatesIHeatTileMap = new HashMap<>();
-        this.chunkCoordinatesMap = new HashMap<>();
-        this.HeatTileTileEntityMap = new HashMap<>();
     }
 
 
@@ -57,8 +52,6 @@ public class HeatNetLocal {
         if (this.chunkCoordinatesIHeatTileMap.containsKey(coords)) {
             return;
         }
-        this.HeatTileTileEntityMap.put(tile, tileentity);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesIHeatTileMap.put(coords, tile);
         this.update(coords);
         if (tile instanceof IHeatAcceptor) {
@@ -73,17 +66,16 @@ public class HeatNetLocal {
     }
 
     public BlockPos getPos(final IHeatTile tile) {
-        return this.chunkCoordinatesMap.get(tile);
+        if (tile == null) {
+            return null;
+        }
+        return tile.getBlockPos();
     }
 
     public void addTileEntity(final BlockPos coords, final IHeatTile tile) {
         if (this.chunkCoordinatesIHeatTileMap.containsKey(coords)) {
             return;
         }
-
-        TileEntity te = getTileFromIHeat(tile);
-        this.HeatTileTileEntityMap.put(tile, te);
-        this.chunkCoordinatesMap.put(tile, coords);
         this.chunkCoordinatesIHeatTileMap.put(coords, tile);
         this.update(coords);
         if (tile instanceof IHeatAcceptor) {
@@ -103,12 +95,10 @@ public class HeatNetLocal {
 
 
     public void removeTileEntity(IHeatTile tile) {
-        if (!this.HeatTileTileEntityMap.containsKey(tile)) {
+        if (!this.chunkCoordinatesIHeatTileMap.containsKey(tile.getBlockPos())) {
             return;
         }
-        final BlockPos coord = this.chunkCoordinatesMap.get(tile);
-        this.chunkCoordinatesMap.remove(tile);
-        this.HeatTileTileEntityMap.remove(tile, this.HeatTileTileEntityMap.get(tile));
+        final BlockPos coord = tile.getBlockPos();
         this.chunkCoordinatesIHeatTileMap.remove(coord, tile);
         this.update(coord);
         if (tile instanceof IHeatAcceptor) {
@@ -120,11 +110,7 @@ public class HeatNetLocal {
         }
     }
 
-    public TileEntity getTileFromMap(IHeatTile tile) {
-        return this.HeatTileTileEntityMap.get(tile);
-    }
-
-    public double emitHeatFrom(final IHeatSource HeatSource, double amount, final SystemTick<IHeatSource, HeatPath> tick) {
+    public void emitHeatFrom(final IHeatSource HeatSource, double amount, final SystemTick<IHeatSource, HeatPath> tick) {
         List<HeatPath> HeatPaths = tick.getList();
 
         if (HeatPaths == null) {
@@ -166,21 +152,17 @@ public class HeatNetLocal {
             }
         }
 
-        if(!allow)
+        if (!allow) {
             HeatSource.setAllowed(false);
-        return amount;
+        }
     }
 
 
     public TileEntity getTileFromIHeat(IHeatTile tile) {
-        if (tile instanceof TileEntity) {
-            return (TileEntity) tile;
+        if (tile == null) {
+            return null;
         }
-        if (tile instanceof ILocatable) {
-            return this.world.getTileEntity(((ILocatable) tile).getPosition());
-        }
-
-        return null;
+        return tile.getTile();
     }
 
     public List<HeatPath> discover(final IHeatSource emitter) {
@@ -213,11 +195,12 @@ public class HeatNetLocal {
         for (HeatPath HeatPath : HeatPaths) {
             IHeatTile tileEntity = HeatPath.target;
             EnumFacing HeatBlockLink = HeatPath.targetDirection;
+            BlockPos te = tileEntity.getBlockPos();
             if (emitter != null) {
                 while (tileEntity != emitter) {
-                    BlockPos te = this.chunkCoordinatesMap.get(tileEntity);
                     if (HeatBlockLink != null && te != null) {
                         tileEntity = this.getTileEntity(te.offset(HeatBlockLink));
+                        te = te.offset(HeatBlockLink);
                     }
                     if (!(tileEntity instanceof IHeatConductor)) {
                         break;
@@ -240,11 +223,11 @@ public class HeatNetLocal {
 
                             .getY() + "," + te
 
-                            .getZ() + ")\n" + "R: " + HeatPath.target + " (" + this.HeatTileTileEntityMap
-                            .get(HeatPath.target)
-                            .getPos()
-                            .getX() + "," + getTileFromMap(HeatPath.target).getPos().getY() + "," + getTileFromIHeat(
-                            HeatPath.target).getPos().getZ() + ")");
+                            .getZ() + ")\n" + "R: " + HeatPath.target + " (" + HeatPath.target
+                            .getBlockPos()
+                            .getX() + "," + HeatPath.target.getBlockPos().getY() + "," + HeatPath.target
+                            .getBlockPos()
+                            .getZ() + ")");
                 }
             }
         }
@@ -255,11 +238,7 @@ public class HeatNetLocal {
         if (tile == null) {
             return null;
         }
-        final TileEntity tile1 = this.HeatTileTileEntityMap.get(tile);
-        if (tile1 == null) {
-            return null;
-        }
-        return this.getTileEntity(tile1.getPos().offset(dir));
+        return this.getTileEntity(tile.getBlockPos().offset(dir));
     }
 
     private List<HeatTarget> getValidReceivers(final IHeatTile emitter, final boolean reverse) {
@@ -305,7 +284,7 @@ public class HeatNetLocal {
         workList.add(par1);
         while (workList.size() > 0) {
             final IHeatTile tile = workList.remove(0);
-            final TileEntity te = this.HeatTileTileEntityMap.get(tile);
+            final TileEntity te = tile.getTile();
             if (te == null) {
                 continue;
             }
@@ -350,10 +329,10 @@ public class HeatNetLocal {
 
                     if (entry.isAllowed()) {
 
-                       this.emitHeatFrom(entry, offered, tick);
+                        this.emitHeatFrom(entry, offered, tick);
 
 
-                    }else {
+                    } else {
                         this.emitHeatFromNotAllowed(entry, offered, tick);
 
                     }
@@ -366,7 +345,11 @@ public class HeatNetLocal {
 
     }
 
-    public double emitHeatFromNotAllowed(final IHeatSource HeatSource, double amount, final SystemTick<IHeatSource, HeatPath> tick) {
+    public void emitHeatFromNotAllowed(
+            final IHeatSource HeatSource,
+            double amount,
+            final SystemTick<IHeatSource, HeatPath> tick
+    ) {
         List<HeatPath> HeatPaths = tick.getList();
 
         if (HeatPaths == null) {
@@ -374,53 +357,45 @@ public class HeatNetLocal {
             tick.setList(HeatPaths);
         }
 
-            for (final HeatPath HeatPath : HeatPaths) {
-                final IHeatSink HeatSink = HeatPath.target;
-                double demandedHeat = HeatSink.getDemandedHeat();
-                if(HeatSink.needTemperature())
-                    HeatSource.setAllowed(true);
-                if (demandedHeat <= 0.0) {
-                    continue;
-                }
+        for (final HeatPath HeatPath : HeatPaths) {
+            final IHeatSink HeatSink = HeatPath.target;
+            double demandedHeat = HeatSink.getDemandedHeat();
+            if (HeatSink.needTemperature()) {
+                HeatSource.setAllowed(true);
+            }
+            if (demandedHeat <= 0.0) {
+                continue;
+            }
 
-                double HeatProvided = amount;
-                double adding;
-
-
-                adding = Math.min(HeatProvided, demandedHeat);
-                if (adding <= 0.0D) {
-                    continue;
-                }
+            double adding;
 
 
-                adding -= HeatSink.injectHeat(HeatPath.targetDirection, adding, 0);
-                HeatPath.totalHeatConducted = (long) adding;
-
-
-                if (adding > HeatPath.min) {
-                    for (IHeatConductor HeatConductor : HeatPath.conductors) {
-                        if (HeatConductor.getConductorBreakdownHeat() < adding) {
-                            HeatConductor.removeConductor();
-                        } else {
-                            break;
-                        }
-                    }
-                }
-
-
+            adding = Math.min(amount, demandedHeat);
+            if (adding <= 0.0D) {
+                continue;
             }
 
 
-        return amount;
+            adding -= HeatSink.injectHeat(HeatPath.targetDirection, adding, 0);
+            HeatPath.totalHeatConducted = (long) adding;
+
+
+            if (adding > HeatPath.min) {
+                for (IHeatConductor HeatConductor : HeatPath.conductors) {
+                    if (HeatConductor.getConductorBreakdownHeat() < adding) {
+                        HeatConductor.removeConductor();
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+
+        }
+
+
     }
 
-
-
-
-    private double getPacketAmount() {
-
-        return 1.0D;
-    }
 
     public IHeatTile getTileEntity(BlockPos pos) {
 
@@ -446,8 +421,6 @@ public class HeatNetLocal {
         this.HeatSourceToHeatPathMap.clear();
         this.waitingList.clear();
         this.chunkCoordinatesIHeatTileMap.clear();
-        this.chunkCoordinatesMap.clear();
-        this.HeatTileTileEntityMap.clear();
     }
 
     static class HeatTarget {

@@ -1,28 +1,28 @@
 package com.denfop.tiles.base;
 
 
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.ComparatorEmitter;
+import com.denfop.componets.Redstone;
 import com.denfop.container.ContainerCombinerMatter;
 import com.denfop.gui.GuiCombinerMatter;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotConsumableLiquid;
+import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotMatter;
+import com.denfop.invslot.InvSlotProcessableStandard;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.MachineRecipeResult;
 import ic2.api.recipe.Recipes;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
-import ic2.core.block.comp.ComparatorEmitter;
-import ic2.core.block.comp.Redstone;
-import ic2.core.block.invslot.InvSlot;
-import ic2.core.block.invslot.InvSlotConsumableLiquid;
-import ic2.core.block.invslot.InvSlotConsumableLiquidByList;
-import ic2.core.block.invslot.InvSlotProcessable;
 import ic2.core.ref.FluidName;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
 
     public final InvSlotMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotProcessable<IRecipeInput, Integer, ItemStack> amplifierSlot;
+    public final InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack> amplifierSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
     protected final Redstone redstone;
@@ -57,7 +57,14 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
     public TileEntityCombinerMatter() {
         super(0, 14, 12);
         this.energycost = 0;
-        this.amplifierSlot = new InvSlotProcessable<IRecipeInput, Integer, ItemStack>(this, "scrap", 1, Recipes.matterAmplifier) {
+        this.amplifierSlot = new InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack>(
+                this,
+                "scrap",
+                1,
+                Recipes.matterAmplifier
+        ) {
+
+
             protected ItemStack getInput(ItemStack stack) {
                 return stack;
             }
@@ -68,12 +75,16 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         };
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.containerslot = new InvSlotConsumableLiquidByList(this, "containerslot", InvSlot.Access.I, 1,
-                InvSlot.InvSide.TOP, InvSlotConsumableLiquid.OpType.Fill, FluidName.uu_matter.getInstance()
+                InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill, FluidName.uu_matter.getInstance()
         );
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
         this.inputSlot = new InvSlotMatter(this);
+        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
 
-        this.redstone = addComponent(new Redstone(this));
+        this.redstone = this.addComponent(new Redstone(this));
+        this.redstone.subscribe((newLevel) -> {
+            this.energy.setEnabled(newLevel == 0);
+        });
         this.comparator = this.addComponent(new ComparatorEmitter(this));
         this.comparator.setUpdate(() -> {
             int count = calcRedstoneFromInvSlots(this.amplifierSlot);
@@ -83,7 +94,6 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                 return this.scrap > 0 ? 1 : 0;
             }
         });
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14).addManagedSlot(this.dischargeSlot));
 
     }
 
@@ -113,7 +123,9 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (this.fluidTank.getCapacity() <= 0) {
+            this.fluidTank.drain(Integer.MAX_VALUE, true);
+        }
         if (this.redstone.hasRedstoneInput() || this.energy.getEnergy() <= 0.0D) {
             if (this.getActive()) {
                 setState(0);
@@ -170,28 +182,27 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
 
     public void onUnloaded() {
         if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
+            IUCore.audioManager.removeSources(this);
             this.audioSource = null;
             this.audioSourceScrap = null;
         }
         super.onUnloaded();
     }
 
-    public boolean attemptGeneration() {
+    public void attemptGeneration() {
         int k = (int) (this.energy.getEnergy() / this.energycost);
         int m;
 
         if (this.fluidTank.getFluidAmount() + 1 > this.fluidTank.getCapacity()) {
-            return false;
+            return;
         }
         m = this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount();
         this.fluidTank.fillInternal(new FluidStack(FluidName.uu_matter.getInstance(), Math.min(m, k)), true);
         this.energy.useEnergy(this.energycost * Math.min(m, k));
-        return true;
     }
 
 
-    public ContainerBase<TileEntityCombinerMatter> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerCombinerMatter getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerCombinerMatter(entityPlayer, this);
     }
 
@@ -207,15 +218,15 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
     private void setState(int aState) {
         this.state = aState;
         if (this.prevState != this.state) {
-            IC2.network.get(true).updateTileEntityField(this, "state");
+            IUCore.network.get(true).updateTileEntityField(this, "state");
         }
         this.prevState = this.state;
     }
 
-    public List<String> getNetworkedFields() {
+    public List<String> getNetworkFields() {
         List<String> ret = new Vector<>(1);
         ret.add("state");
-        ret.addAll(super.getNetworkedFields());
+        ret.addAll(super.getNetworkFields());
         return ret;
     }
 
@@ -232,7 +243,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                     break;
                 case 1:
                     if (this.audioSource == null) {
-                        this.audioSource = IC2.audioManager.createSource(
+                        this.audioSource = IUCore.audioManager.createSource(
                                 this,
                                 PositionSpec.Center,
                                 "Generators/MassFabricator/MassFabLoop.ogg",
@@ -250,7 +261,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                     break;
                 case 2:
                     if (this.audioSource == null) {
-                        this.audioSource = IC2.audioManager.createSource(
+                        this.audioSource = IUCore.audioManager.createSource(
                                 this,
                                 PositionSpec.Center,
                                 "Generators/MassFabricator/MassFabLoop.ogg",
@@ -260,7 +271,7 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
                         );
                     }
                     if (this.audioSourceScrap == null) {
-                        this.audioSourceScrap = IC2.audioManager.createSource(
+                        this.audioSourceScrap = IUCore.audioManager.createSource(
                                 this,
                                 PositionSpec.Center,
                                 "Generators/MassFabricator/MassFabScrapSolo.ogg",

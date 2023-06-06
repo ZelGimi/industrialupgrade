@@ -8,9 +8,9 @@ import com.denfop.tiles.mechanism.TileEntityMagnetGenerator;
 import com.denfop.tiles.mechanism.TileEntityWitherMaker;
 import com.denfop.tiles.mechanism.dual.TileEntityEnrichment;
 import com.denfop.tiles.mechanism.dual.TileEntitySynthesis;
-import com.denfop.tiles.mechanism.generator.energy.TileEntityAdvGeoGenerator;
-import com.denfop.tiles.mechanism.generator.energy.TileEntityImpGeoGenerator;
-import com.denfop.tiles.mechanism.generator.energy.TileEntityPerGeoGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityAdvGeoGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityImpGeoGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityPerGeoGenerator;
 import com.denfop.tiles.mechanism.triple.heat.TileEntityAdvAlloySmelter;
 import com.denfop.tiles.reactors.TileEntityAdvNuclearReactorElectric;
 import com.denfop.tiles.reactors.TileEntityImpNuclearReactor;
@@ -18,8 +18,10 @@ import com.denfop.tiles.reactors.TileEntityPerNuclearReactor;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -90,6 +92,11 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
                 }
             }
         }
+    }
+
+    @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
     }
 
     @Override

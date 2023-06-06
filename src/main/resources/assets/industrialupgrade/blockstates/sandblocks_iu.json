@@ -1,94 +1,94 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "cube_all",
-		"transform": "forge:default-block"
-	},
-	"variants": {
-		"type": {
-			"mikhail": {
-				"textures": {
-					"all": "industrialupgrade:blocks/mikhail_sandore"
-				}
-			},
-			"aluminium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/aluminium_sandore"
-				}
-			},
-			"vanady": {
-				"textures": {
-					"all": "industrialupgrade:blocks/vanady_sandore"
-				}
-			},
-			"wolfram": {
-				"textures": {
-					"all": "industrialupgrade:blocks/wolfram_sandore"
-				}
-			},
-			"cobalt": {
-				"textures": {
-					"all": "industrialupgrade:blocks/cobalt_sandore"
-				}
-			},
-			"magnesium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/magnesium_sandore"
-				}
-			},
-			"nickel": {
-				"textures": {
-					"all": "industrialupgrade:blocks/nickel_sandore"
-				}
-			},
-			"platium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/platium_sandore"
-				}
-			},
-			"titanium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/titanium_sandore"
-				}
-			},
-			"chromium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/chromium_sandore"
-				}
-			},
-			"spinel": {
-				"textures": {
-					"all": "industrialupgrade:blocks/spinel_sandore"
-				}
-			},
-			"silver": {
-				"textures": {
-					"all": "industrialupgrade:blocks/silver_sandore"
-				}
-			},
-			"zinc": {
-				"textures": {
-					"all": "industrialupgrade:blocks/zinc_sandore"
-				}
-			},
-			"manganese": {
-				"textures": {
-					"all": "industrialupgrade:blocks/manganese_sandore"
-				}
-			},
-			"iridium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/iridium_sandore"
-				}
-			},
-			"germanium": {
-				"textures": {
-					"all": "industrialupgrade:blocks/germanium_sandore"
-				}
-			}
-		},
-		"inventory": [
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "mikhail" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mikhail_sandore"
+        }
+      },
+      "aluminium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/aluminium_sandore"
+        }
+      },
+      "vanady" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/vanady_sandore"
+        }
+      },
+      "wolfram" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/wolfram_sandore"
+        }
+      },
+      "cobalt" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/cobalt_sandore"
+        }
+      },
+      "magnesium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/magnesium_sandore"
+        }
+      },
+      "nickel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nickel_sandore"
+        }
+      },
+      "platium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/platium_sandore"
+        }
+      },
+      "titanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/titanium_sandore"
+        }
+      },
+      "chromium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/chromium_sandore"
+        }
+      },
+      "spinel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/spinel_sandore"
+        }
+      },
+      "silver" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/silver_sandore"
+        }
+      },
+      "zinc" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/zinc_sandore"
+        }
+      },
+      "manganese" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/manganese_sandore"
+        }
+      },
+      "iridium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/iridium_sandore"
+        }
+      },
+      "germanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/germanium_sandore"
+        }
+      }
+    },
+    "inventory" : [
       {}
     ]
-	}
+  }
 }

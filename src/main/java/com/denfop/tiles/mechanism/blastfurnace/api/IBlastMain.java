@@ -1,12 +1,8 @@
 package com.denfop.tiles.mechanism.blastfurnace.api;
 
-public interface IBlastMain {
+import com.denfop.api.multiblock.IMainMultiBlock;
 
-    boolean getFull();
-
-    void setFull(boolean full);
-
-    void update_block();
+public interface IBlastMain extends IMainMultiBlock {
 
     IBlastHeat getHeat();
 
@@ -16,13 +12,6 @@ public interface IBlastMain {
 
     void setInputFluid(IBlastInputFluid blastInputFluid);
 
-    IBlastInputItem getInputItem();
-
-    void setInputItem(IBlastInputItem blastInputItem);
-
-    IBlastOutputItem getOutputItem();
-
-    void setOutputItem(IBlastOutputItem blastOutputItem);
 
     double getProgress();
 

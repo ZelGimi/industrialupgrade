@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemcell",
-      "data": 9
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcell",
+      "data" : 9
     },
-    "title": {
-      "translate": "achievement.hydrogen"
+    "title" : {
+      "translate" : "achievement.hydrogen"
     },
-    "description": {
-      "translate": "achievement.hydrogen.desc"
+    "description" : {
+      "translate" : "achievement.hydrogen.desc"
     }
   },
-  "parent": "industrialupgrade:main/oxygen",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/oxygen",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemcell",
-            "data": 9
+            "item" : "industrialupgrade:itemcell",
+            "data" : 9
           }
         ]
       }

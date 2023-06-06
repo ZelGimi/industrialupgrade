@@ -1,13 +1,11 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.api.gui.Gauge;
+import com.denfop.api.gui.IGuiValueProvider;
+import com.denfop.api.gui.LinkedGauge;
 import com.denfop.container.ContainerBaseNuclearReactor;
-import ic2.core.IC2;
-import ic2.core.gui.Gauge;
-import ic2.core.gui.LinkedGauge;
-import ic2.core.gui.Text;
-import ic2.core.gui.dynamic.IGuiValueProvider;
-import ic2.core.gui.dynamic.TextProvider;
 import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,7 +39,7 @@ public class GuiNuclearReactor extends GuiIU<ContainerBaseNuclearReactor> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 216 && x <= 229 && y >= 39 && y <= 51) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
         }
     }
 
@@ -51,16 +49,18 @@ public class GuiNuclearReactor extends GuiIU<ContainerBaseNuclearReactor> {
         new AdvArea(this, 5, 160, 22, 177)
                 .withTooltip(Localization.translate("ic2.NuclearReactor.gui.mode.electric"))
                 .drawForeground(par1, par2);
+
         (new LinkedGauge(this, 7, 136, container.base, "heat", Gauge.GaugeStyle.HeatNuclearReactor)).withTooltip(
                 () -> Localization.translate(
                         "ic2.NuclearReactor.gui.info.temp",
                         ((IGuiValueProvider) (GuiNuclearReactor.this.container).base).getGuiValue("heat") * 100.0D
                 )).drawForeground(par1, par2);
-        Text.create(this, 107, 136, 200, 13, TextProvider.of(() -> Localization.translate(
-                "ic2.NuclearReactor.gui.info.EUoutput",
-                Math.round(((GuiNuclearReactor.this.container).base).getOfferedEnergy())
-        )), 5752026, false, 4, 0, false, true).drawForeground(par1, par2)
-        ;
+        this.fontRenderer.drawString(Localization.translate(
+                        "ic2.NuclearReactor.gui.info.EUoutput",
+                        Math.round(this.container.base.output * 5 * this.container.base.getCoef())
+                ),
+                111, 139, 5752026
+        );
         new AdvArea(this, 216, 39, 229, 51).withTooltip(this.container.base.work ? Localization.translate("turn_off") :
                 Localization.translate("turn_on")).drawForeground(par1, par2);
     }
@@ -97,11 +97,6 @@ public class GuiNuclearReactor extends GuiIU<ContainerBaseNuclearReactor> {
                         ((IGuiValueProvider) (GuiNuclearReactor.this.container).base).getGuiValue("heat") * 100.0D
                 )).drawBackground(xOffset, yOffset);
 
-        Text.create(this, 107, 136, 200, 13, TextProvider.of(() -> Localization.translate(
-                "ic2.NuclearReactor.gui.info.EUoutput",
-                Math.round(((GuiNuclearReactor.this.container).base).getOfferedEnergy())
-        )), 5752026, false, 4, 0, false, true).drawBackground(xOffset, yOffset)
-        ;
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(this.background);
         this.drawTexturedModalRect(xOffset + 209, yOffset + 27, 209, 27, 40, 61 - 27);

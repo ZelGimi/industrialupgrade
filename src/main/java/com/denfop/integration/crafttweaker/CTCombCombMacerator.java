@@ -1,12 +1,11 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
 import com.blamejared.mtlib.helpers.LogHelper;
-import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
@@ -22,7 +21,7 @@ public class CTCombCombMacerator {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "comb_macerator",
                 new BaseMachineRecipe(
                         new Input(
@@ -38,7 +37,7 @@ public class CTCombCombMacerator {
 
     @ZenMethod
     public static void remove(IItemStack output) {
-        ModTweaker.LATE_REMOVALS.add(new Remove(output));
+        CraftTweakerAPI.apply(new Remove(output));
     }
 
 
@@ -52,7 +51,7 @@ public class CTCombCombMacerator {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("comb_macerator", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("comb_macerator", CraftTweakerMC.getItemStack(output));
 
         }
 

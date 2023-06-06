@@ -1,12 +1,12 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "particle": "powerutils:blocks/pc3_side",
-    "down": "powerutils:blocks/pc3_side",
-    "up": "powerutils:blocks/pc3_side",
-    "north": "powerutils:blocks/pc3_side",
-    "east": "powerutils:blocks/pc3_side",
-    "south": "powerutils:blocks/pc3_side",
-    "west": "powerutils:blocks/pc3_side"
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "powerutils:blocks/pc3_side",
+    "down" : "powerutils:blocks/pc3_side",
+    "up" : "powerutils:blocks/pc3_side",
+    "north" : "powerutils:blocks/pc3_side",
+    "east" : "powerutils:blocks/pc3_side",
+    "south" : "powerutils:blocks/pc3_side",
+    "west" : "powerutils:blocks/pc3_side"
   }
 }

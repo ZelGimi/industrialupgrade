@@ -2,22 +2,12 @@ package com.denfop.invslot;
 
 import com.denfop.Ic2Items;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.componets.AbstractComponent;
+import com.denfop.componets.Fluids;
+import com.denfop.componets.Redstone;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.IAugmentationUpgrade;
-import ic2.api.upgrade.IEnergyStorageUpgrade;
-import ic2.api.upgrade.IFullUpgrade;
-import ic2.api.upgrade.IProcessingUpgrade;
-import ic2.api.upgrade.IRedstoneSensitiveUpgrade;
-import ic2.api.upgrade.ITransformerUpgrade;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.comp.Redstone;
-import ic2.core.block.comp.Redstone.IRedstoneModifier;
-import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.block.invslot.InvSlot;
+import ic2.api.upgrade.*;
 import ic2.core.util.StackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -26,8 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -35,36 +27,41 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InvSlotUpgrade extends InvSlot {
 
-    private final TileEntityBlock tile;
+    private final TileEntityInventory tile;
     private final Map<EnumFacing, HandlerInventory> iItemHandlerMap;
     private final Map<IItemHandler, Integer> slotHandler;
     private final EnumFacing[] enumFacings = EnumFacing.values();
     private final Map<EnumFacing, IFluidHandler> iFluidHandlerMap;
     private final Fluids fluids;
     private final List<Fluids.InternalFluidTank> fluidTankList = new ArrayList<>();
+    private final IItemHandler main_handler;
+    public boolean isUpdate = false;
     public int augmentation;
     public int extraProcessTime;
     public double processTimeMultiplier;
-    public int extraEnergyDemand;
+    public double extraEnergyDemand;
     public double energyDemandMultiplier;
-    public int extraEnergyStorage;
+    public double extraEnergyStorage;
+
+    public double operationsPerTick;
+    public double operationLength;
+    public double energyConsume;
     public double energyStorageMultiplier;
     public int extraTier;
     public int tick = 0;
     public boolean update = false;
     List<InvSlotOutput> slots = new ArrayList<>();
+    List<InvSlot> inv_slots = new ArrayList<>();
     private EnumFacing[] facings;
-    private List<IRedstoneModifier> redstoneModifiers = Collections.emptyList();
+    private List<Redstone.IRedstoneModifier> redstoneModifiers = Collections.emptyList();
     private boolean ejectorUpgrade;
     private boolean fluidEjectorUpgrade;
+    private boolean pullingUpgrade;
+    private boolean fluidPullingUpgrade;
 
     public InvSlotUpgrade(
             TileEntityInventory base,
@@ -79,7 +76,13 @@ public class InvSlotUpgrade extends InvSlot {
                 slots.add((InvSlotOutput) slot);
             }
         });
-        fluids = base.getParent().getComponent(Fluids.class);
+        base.getInvSlots().forEach(slot -> {
+            if (slot.canInput()) {
+                inv_slots.add(slot);
+            }
+        });
+        main_handler = base.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, base.getFacing());
+        fluids = base.getParent().getComp(Fluids.class);
         if (fluids != null) {
             fluids.getAllTanks().forEach(fluidTankList::add);
         }
@@ -94,13 +97,17 @@ public class InvSlotUpgrade extends InvSlot {
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
+    private static double applyModifier(double base, double extra, double multiplier) {
+        return (double) Math.round((base + extra) * multiplier);
+    }
+
     private static EnumFacing getDirection(ItemStack stack) {
         int rawDir = StackUtil.getOrCreateNbtData(stack).getByte("dir");
         return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
     }
 
 
-    public boolean accepts(ItemStack stack) {
+    public boolean accepts(ItemStack stack, final int index) {
         Item rawItem = stack.getItem();
         if (!(rawItem instanceof IUpgradeItem)) {
             return false;
@@ -180,7 +187,7 @@ public class InvSlotUpgrade extends InvSlot {
     public void onChanged() {
         this.resetRates();
         IUpgradableBlock block = (IUpgradableBlock) this.base;
-        List<IRedstoneModifier> newRedstoneModifiers = new ArrayList<>();
+        List<Redstone.IRedstoneModifier> newRedstoneModifiers = new ArrayList<>();
 
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
@@ -210,17 +217,11 @@ public class InvSlotUpgrade extends InvSlot {
                     this.extraTier += ((ITransformerUpgrade) upgrade).getExtraTier(stack, block) * size;
                 }
 
-                if (all || upgrade instanceof IRedstoneSensitiveUpgrade) {
-                    IRedstoneSensitiveUpgrade redUpgrade = (IRedstoneSensitiveUpgrade) upgrade;
-                    if (redUpgrade.modifiesRedstoneInput(stack, block)) {
-                        newRedstoneModifiers.add(new InvSlotUpgrade.UpgradeRedstoneModifier(redUpgrade, stack, block));
-                    }
-                }
             }
 
         }
 
-        for (final TileEntityComponent component : this.base.getParent().getComponents()) {
+        for (final AbstractComponent component : this.base.getParent().getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
                 rs.removeRedstoneModifiers(this.redstoneModifiers);
@@ -228,7 +229,7 @@ public class InvSlotUpgrade extends InvSlot {
                 rs.update();
             }
         }
-        this.redstoneModifiers = newRedstoneModifiers.isEmpty() ? Collections.emptyList() : newRedstoneModifiers;
+        this.redstoneModifiers = newRedstoneModifiers;
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
             if (stack.isItemEqual(Ic2Items.ejectorUpgrade)) {
@@ -236,6 +237,12 @@ public class InvSlotUpgrade extends InvSlot {
                 this.facings[i] = getDirection(stack);
             } else if (stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
                 this.fluidEjectorUpgrade = true;
+                this.facings[i] = getDirection(stack);
+            } else if (stack.isItemEqual(Ic2Items.pullingUpgrade)) {
+                this.pullingUpgrade = true;
+                this.facings[i] = getDirection(stack);
+            } else if (stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
+                this.fluidPullingUpgrade = true;
                 this.facings[i] = getDirection(stack);
             }
         }
@@ -252,21 +259,50 @@ public class InvSlotUpgrade extends InvSlot {
         this.extraTier = 0;
         this.ejectorUpgrade = false;
         this.fluidEjectorUpgrade = false;
+        this.fluidPullingUpgrade = false;
+        this.pullingUpgrade = false;
         this.facings = new EnumFacing[this.size()];
     }
 
+    public int getOperationsPerTick1(int defaultOperationLength) {
+        if (this.isUpdate) {
+            this.operationsPerTick = defaultOperationLength == 0 ? 64 :
+                    this.getOpsPerTick(this.getStackOpLen(defaultOperationLength));
+
+        }
+        return (int) this.operationsPerTick;
+    }
+
+    public int getOperationLength1(int defaultOperationLength) {
+        if (this.isUpdate) {
+            if (defaultOperationLength == 0) {
+                this.operationLength = 1;
+            } else {
+                double stackOpLen = this.getStackOpLen(defaultOperationLength);
+                int opsPerTick = this.getOpsPerTick(stackOpLen);
+                this.operationLength = Math.max(1, (int) Math.round(stackOpLen * (double) opsPerTick / 64.0D));
+            }
+        }
+        return (int) this.operationLength;
+    }
+
     public int getOperationsPerTick(int defaultOperationLength) {
-        return defaultOperationLength == 0 ? 64 : this.getOpsPerTick(this.getStackOpLen(defaultOperationLength));
+        this.operationsPerTick = defaultOperationLength == 0 ? 64 :
+                this.getOpsPerTick(this.getStackOpLen(defaultOperationLength));
+
+        return (int) this.operationsPerTick;
     }
 
     public int getOperationLength(int defaultOperationLength) {
         if (defaultOperationLength == 0) {
-            return 1;
+            this.operationLength = 1;
         } else {
             double stackOpLen = this.getStackOpLen(defaultOperationLength);
             int opsPerTick = this.getOpsPerTick(stackOpLen);
-            return Math.max(1, (int) Math.round(stackOpLen * (double) opsPerTick / 64.0D));
+            this.operationLength = Math.max(1, (int) Math.round(stackOpLen * (double) opsPerTick / 64.0D));
         }
+
+        return (int) this.operationLength;
     }
 
     private double getStackOpLen(int defaultOperationLength) {
@@ -277,11 +313,28 @@ public class InvSlotUpgrade extends InvSlot {
         return (int) Math.min(Math.ceil(64.0D / stackOpLen), 2.147483647E9D);
     }
 
-    public int getEnergyDemand(int defaultEnergyDemand) {
+    public double getEnergyDemand(int defaultEnergyDemand) {
         return applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
     }
 
-    public int getEnergyStorage(int defaultEnergyStorage) {
+    public double getEnergyDemand(double defaultEnergyDemand) {
+        this.energyConsume = applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
+
+        return this.energyConsume;
+    }
+
+    public double getEnergyDemand1(double defaultEnergyDemand) {
+        if (this.isUpdate) {
+            this.energyConsume = applyModifier(defaultEnergyDemand, this.extraEnergyDemand, this.energyDemandMultiplier);
+        }
+        return this.energyConsume;
+    }
+
+    public double getEnergyStorage(int defaultEnergyStorage) {
+        return applyModifier(defaultEnergyStorage, this.extraEnergyStorage, this.energyStorageMultiplier);
+    }
+
+    public double getEnergyStorage(double defaultEnergyStorage) {
         return applyModifier(defaultEnergyStorage, this.extraEnergyStorage, this.energyStorageMultiplier);
     }
 
@@ -290,31 +343,10 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     public boolean tickNoMark() {
-        IUpgradableBlock block = (IUpgradableBlock) this.base;
         boolean ret = false;
         this.tick++;
-        if (this.iItemHandlerMap.isEmpty()) {
-            for (EnumFacing facing : enumFacings) {
-                BlockPos pos = this.tile.getPos().offset(facing);
-                final TileEntity tile1 = this.tile.getWorld().getTileEntity(pos);
-                final IItemHandler handler = getItemHandler(tile1, facing.getOpposite());
-                if (!(tile1 instanceof IInventory)) {
-                    this.iItemHandlerMap.put(facing, null);
-                } else {
-                    this.iItemHandlerMap.put(facing, new HandlerInventory(handler, (IInventory) tile1));
-                }
-
-            }
-            this.iFluidHandlerMap.clear();
-            for (EnumFacing facing : enumFacings) {
-                BlockPos pos = this.tile.getPos().offset(facing);
-                final TileEntity tile1 = this.tile.getWorld().getTileEntity(pos);
-                final IFluidHandler handler = getFluidHandler(tile1, facing.getOpposite());
-                this.iFluidHandlerMap.put(facing, handler);
-            }
-        }
         if (this.tick % 20 == 0) {
-            if (this.ejectorUpgrade) {
+            if (this.ejectorUpgrade || pullingUpgrade) {
                 this.iItemHandlerMap.clear();
                 slotHandler.clear();
                 for (EnumFacing facing : enumFacings) {
@@ -336,7 +368,7 @@ public class InvSlotUpgrade extends InvSlot {
                     }
                 }
             }
-            if (this.fluidEjectorUpgrade) {
+            if (this.fluidEjectorUpgrade || this.fluidPullingUpgrade) {
                 this.iFluidHandlerMap.clear();
                 for (EnumFacing facing : enumFacings) {
                     BlockPos pos = this.tile.getPos().offset(facing);
@@ -352,12 +384,14 @@ public class InvSlotUpgrade extends InvSlot {
             ItemStack stack = this.get(i);
             if (!StackUtil.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
                 update = true;
-                if (stack.isItemEqual(Ic2Items.ejectorUpgrade)) {
+                if (stack.isItemEqual(Ic2Items.ejectorUpgrade) || stack.isItemEqual(Ic2Items.advejectorUpgrade)) {
                     this.tick(i);
                 } else if (stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
                     this.tick_fluid(i);
-                } else {
-                    ((IUpgradeItem) stack.getItem()).onTick(stack, block);
+                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.pullingUpgrade) || stack.isItemEqual(Ic2Items.advpullingUpgrade)) {
+                    this.tickPullIn(i);
+                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
+                    this.tickPullIn_fluid(i);
                 }
                 ret = true;
             }
@@ -367,6 +401,57 @@ public class InvSlotUpgrade extends InvSlot {
             return true;
         }
         return ret;
+    }
+
+    private void tickPullIn_fluid(int i) {
+        EnumFacing facing = this.facings[i];
+        if (facing != null) {
+
+            final IFluidHandler handler = this.iFluidHandlerMap.get(facing);
+            if (handler == null) {
+                return;
+            }
+            if (this.fluids == null) {
+                return;
+            }
+            if (handler.drain(Integer.MAX_VALUE, false) == null) {
+                return;
+            }
+            for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
+                if (fluidTankProperties.getContents() != null) {
+                    for (Fluids.InternalFluidTank tank : this.fluidTankList) {
+                        final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
+                        if (fluid != null && fluid.amount > 0 && tank.canFillFluidType(fluid)) {
+                            tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (EnumFacing facing1 : enumFacings) {
+                final IFluidHandler handler = this.iFluidHandlerMap.get(facing1);
+                if (handler == null) {
+                    continue;
+                }
+                if (handler.drain(Integer.MAX_VALUE, false) == null) {
+                    continue;
+                }
+                if (this.fluids == null) {
+                    return;
+                }
+
+                for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
+                    if (fluidTankProperties.getContents() != null) {
+                        for (Fluids.InternalFluidTank tank : this.fluidTankList) {
+                            final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
+                            if (fluid != null && fluid.amount > 0 && tank.acceptsFluid(fluid.getFluid())) {
+                                tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public IItemHandler getItemHandler(@Nullable TileEntity tile, EnumFacing side) {
@@ -407,6 +492,55 @@ public class InvSlotUpgrade extends InvSlot {
         }
 
         return (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
+    }
+
+    private void tickPullIn(int i) {
+        EnumFacing facing = this.facings[i];
+        if (facing != null) {
+
+            final HandlerInventory handler = this.iItemHandlerMap.get(facing);
+            if (handler == null) {
+                return;
+            }
+            int slots = 0;
+            try {
+                slots = this.slotHandler.get(handler.getHandler());
+            } catch (Exception ignored) {
+            }
+            for (int j = 0; j < slots; j++) {
+                ItemStack took = handler.getHandler().extractItem(j, 64, true);
+                if (!took.isEmpty()) {
+                    if (ModUtils.insertItem(this.main_handler, took, true, slots).isEmpty()) {
+                        took = handler.getHandler().extractItem(j, took.getCount(), false);
+                        ModUtils.insertItem(this.main_handler, took, false, slots);
+                    }
+                }
+            }
+        } else {
+            for (EnumFacing facing1 : enumFacings) {
+                final HandlerInventory handler = this.iItemHandlerMap.get(facing1);
+
+                if (handler == null) {
+                    continue;
+                }
+                int slots = 0;
+                try {
+                    slots = this.slotHandler.get(handler.getHandler());
+                } catch (Exception ignored) {
+                }
+
+                for (int j = 0; j < slots; j++) {
+                    ItemStack took = handler.getHandler().extractItem(j, 64, true);
+
+                    if (!took.isEmpty()) {
+                        if (ModUtils.insertItem(this.main_handler, took, true, slots).isEmpty()) {
+                            took = handler.getHandler().extractItem(j, took.getCount(), false);
+                            ModUtils.insertItem(this.main_handler, took, false, slots);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void tick(final int i) {
@@ -463,6 +597,7 @@ public class InvSlotUpgrade extends InvSlot {
                 if (handler == null) {
                     continue;
                 }
+
                 int slots = 0;
                 try {
                     slots = this.slotHandler.get(handler.getHandler());
@@ -556,6 +691,7 @@ public class InvSlotUpgrade extends InvSlot {
 
         for (int i = 0; i < slot; i++) {
             stack = this.insertItem2(dest, i, stack, simulate);
+
             if (stack.isEmpty()) {
                 return ItemStack.EMPTY;
             }
@@ -573,17 +709,25 @@ public class InvSlotUpgrade extends InvSlot {
 
         final IItemHandler dest = dest1.getHandler();
         final IInventory inventory = dest1.getInventory();
-        ItemStack stackInSlot = inventory.getStackInSlot(slot);
-
+        ItemStack stackInSlot;
+        int maxSlots = dest.getSlots();
+        try {
+            stackInSlot = inventory.getStackInSlot(slot);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            stackInSlot = dest.getStackInSlot(slot);
+        }
         int m;
         if (!stackInSlot.isEmpty()) {
+
             int max = stackInSlot.getMaxStackSize();
             int limit = dest.getSlotLimit(slot);
             if (stackInSlot.getCount() >= Math.min(max, limit)) {
                 return stack;
             }
             if (simulate) {
-                if (!inventory.isItemValidForSlot(slot, stackInSlot)) {
+
+
+                if (!inventory.isItemValidForSlot(slot, stack)) {
                     return stack;
                 }
             }
@@ -615,10 +759,10 @@ public class InvSlotUpgrade extends InvSlot {
             }
             return stack;
         } else {
-            if (simulate) {
-                if (!inventory.isItemValidForSlot(slot, stackInSlot)) {
-                    return stack;
-                }
+
+
+            if (!inventory.isItemValidForSlot(slot, stack)) {
+                return stack;
             }
             m = Math.min(stack.getMaxStackSize(), dest.getSlotLimit(slot));
             if (m < stack.getCount()) {
@@ -631,7 +775,12 @@ public class InvSlotUpgrade extends InvSlot {
                 return stack;
             } else {
                 if (!simulate) {
-                    inventory.setInventorySlotContents(slot, stack);
+                    try {
+                        inventory.setInventorySlotContents(slot, stack);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        dest.insertItem(slot, stack, false);
+                    }
+
 
                 }
                 return ItemStack.EMPTY;
@@ -641,7 +790,7 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
 
-    private static class UpgradeRedstoneModifier implements IRedstoneModifier {
+    private static class UpgradeRedstoneModifier implements Redstone.IRedstoneModifier {
 
         private final IRedstoneSensitiveUpgrade upgrade;
         private final ItemStack stack;

@@ -1,7 +1,8 @@
 package com.powerutils;
 
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
+
+import com.denfop.container.ContainerFullInv;
+import com.denfop.container.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;

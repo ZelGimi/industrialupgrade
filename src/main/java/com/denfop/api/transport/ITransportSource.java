@@ -19,5 +19,4 @@ public interface ITransportSource<T, E> extends ITransportEmitter<T, E> {
     List<T> getItemStackFromFacing(EnumFacing facing);
 
 
-
 }

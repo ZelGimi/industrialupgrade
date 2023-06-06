@@ -1,6 +1,6 @@
 package com.denfop.tiles.transport.types;
 
-import ic2.core.block.state.IIdProvider;
+import com.denfop.blocks.IIdProvider;
 
 import java.util.HashMap;
 import java.util.Map;

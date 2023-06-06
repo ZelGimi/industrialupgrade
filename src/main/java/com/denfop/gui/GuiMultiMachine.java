@@ -2,19 +2,15 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.*;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMachine;
+import com.denfop.container.SlotInvSlot;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.utils.ModUtils;
-import ic2.core.gui.Area;
-import ic2.core.gui.GuiElement;
 import ic2.core.init.Localization;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -42,30 +38,28 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
-        this.addComponent(new GuiComponent(this, 8, 48, EnumTypeComponent.ENERGY_CLASSIC,
+        this.addComponent(new GuiComponent(this, 12, 48, EnumTypeComponent.ENERGY_CLASSIC,
                 new Component<>(this.container.base.energy)
         ));
-        this.addComponent(new GuiComponent(this, 17, 48, EnumTypeComponent.ENERGY_RF_CLASSIC,
-                new Component<>(this.container.base.energy2)
-        ));
-        this.addComponent(new GuiComponent(this, 27, 47, EnumTypeComponent.COLD,
-                new Component<>(this.container.base.cold)
-        ));
+        if (this.container.base.getMachine().type != EnumTypeMachines.Centrifuge) {
+            this.addComponent(new GuiComponent(this, 27, 47, EnumTypeComponent.COLD,
+                    new Component<>(this.container.base.cold)
+            ));
+        }
 
         this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.WATER,
                 new Component<>(this.container.base.tank)
         ));
-        this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.COLD,
-                new Component<>(this.container.base.heat)
-        ));
+        if (this.container.base.getMachine().type == EnumTypeMachines.Centrifuge) {
+            this.addComponent(new GuiComponent(this, 27, 63, EnumTypeComponent.COLD,
+                    new Component<>(this.container.base.heat)
+            ));
+        }
         this.addComponent(new GuiComponent(this, 34, 47, EnumTypeComponent.EXP,
                 new Component<>(this.container.base.exp)
         ));
         isBlack = false;
 
-        if (this.container.base.energy2.isRf()) {
-            itemStackList.add(new ItemStack(IUItem.module7, 1, 4));
-        }
         if (this.container.base.multi_process.quickly) {
             itemStackList.add(new ItemStack(IUItem.module_quickly));
         }

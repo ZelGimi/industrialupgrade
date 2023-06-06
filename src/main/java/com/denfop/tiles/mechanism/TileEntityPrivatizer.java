@@ -8,8 +8,6 @@ import com.denfop.invslot.InvSlotPrivatizer;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,11 +51,11 @@ public class TileEntityPrivatizer extends TileEntityElectricMachine
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
+    public GuiPrivatizer getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiPrivatizer(new ContainerPrivatizer(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityPrivatizer> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerPrivatizer getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerPrivatizer(entityPlayer, this);
     }
 

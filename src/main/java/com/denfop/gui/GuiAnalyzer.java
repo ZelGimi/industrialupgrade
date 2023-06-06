@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -9,7 +10,6 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAnalyzer;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -260,11 +260,11 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
     protected void actionPerformed(GuiButton guibutton) {
 
         if (guibutton.id == 0) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
 
         }
         if (guibutton.id == 1) {
-            IC2.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
 
         }
 

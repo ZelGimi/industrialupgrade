@@ -4,6 +4,7 @@ import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import com.denfop.Config;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -15,7 +16,6 @@ import ic2.api.tile.IEnergyStorage;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
 import net.minecraft.client.gui.GuiScreen;
@@ -41,8 +41,8 @@ public class TileEntityConverter extends TileEntityInventory implements IHasGui,
 
     public final AdvEnergy energy;
     public final InvSlotUpgrade upgradeSlot;
-    public final int defaultEnergyRFStorage;
-    public final int defaultEnergyStorage;
+    public final double defaultEnergyRFStorage;
+    public final double defaultEnergyStorage;
     public double capacity;
     public double maxStorage2;
     public double energy2;
@@ -75,8 +75,8 @@ public class TileEntityConverter extends TileEntityInventory implements IHasGui,
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.hasComp(AdvEnergy.class)) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -161,6 +161,7 @@ public class TileEntityConverter extends TileEntityInventory implements IHasGui,
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
                 double add = Math.min(maxStorage2 - energy2, energy.getEnergy() * Config.coefficientrf);
+                add = Math.max(add, 0);
                 energy2 += add;
                 energy.useEnergy(add / Config.coefficientrf);
             }

@@ -1,9 +1,11 @@
 package com.powerutils;
 
-import com.denfop.api.qe.NodeQEStats;
-import com.denfop.api.qe.QENet;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.componets.AdvEnergy;
-import com.denfop.componets.QEComponent;
+import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.NodeStats;
@@ -12,8 +14,6 @@ import ic2.api.tile.IEnergyStorage;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlotUpgrade;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
 import net.minecraft.client.gui.GuiScreen;
@@ -42,7 +42,7 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
     public double capacity;
     public double capacity2;
     public double maxStorage2;
-    public QEComponent energy2;
+    public ComponentBaseEnergy energy2;
     public boolean rf;
     public double differenceenergy = 0;
     public double perenergy1 = 0;
@@ -59,7 +59,7 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
                 5, false
         )));
         this.energy.setDirections(Util.allFacings, Util.allFacings);
-        this.energy2 = this.addComponent(new QEComponent(this, 40000D / 16, Util.allFacings,
+        this.energy2 = this.addComponent(new ComponentBaseEnergy(EnergyType.QUANTUM, this, 40000D / 16, Util.allFacings,
                 Util.allFacings,
                 5,
                 5, false
@@ -74,8 +74,8 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.hasComp(AdvEnergy.class)) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -89,6 +89,8 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
         super.onLoaded();
         if (IC2.platform.isSimulating()) {
             this.setOverclockRates();
+            this.energy.setDirections(Util.allFacings, Util.allFacings);
+            this.energy2.setDirections(Util.allFacings, Util.allFacings);
         }
 
 
@@ -131,6 +133,7 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2.getEnergy() < energy2.getCapacity()) {
                 double add = Math.min(energy2.getFreeEnergy(), energy.getEnergy() / 16);
+                add = Math.max(add, 0);
                 energy2.addEnergy(add);
                 energy.useEnergy(add * 16);
             }
@@ -138,8 +141,8 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
 
             if (energy2.getEnergy() > 0 && energy.getEnergy() < energy.getCapacity()) {
                 double add = Math.min(energy.getFreeEnergy(), energy2.getEnergy() * 10);
-                energy.addEnergy(add / 10);
-                energy2.useEnergy(add);
+                energy.addEnergy(add);
+                energy2.useEnergy(add / 10);
             }
 
         }
@@ -147,26 +150,27 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
             if (!this.list.isEmpty()) {
                 if (this.rf) {
                     NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
-                    NodeQEStats stats1 = QENet.instance.getNodeStats(this.energy2.getDelegate(), this.world);
+                    com.denfop.api.sytem.NodeStats stats1 = EnergyBase.QE.getNodeStats(this.energy2.getDelegate(), this.world);
 
                     if (stats != null) {
                         this.differenceenergy1 = stats.getEnergyIn();
                     }
                     if (stats1 != null) {
-                        this.differenceenergy = stats1.getQE();
+                        this.differenceenergy = stats1.getOut();
                     }
 
                 } else {
                     this.perenergy1 = this.energy.getEnergy();
                     NodeStats stats = EnergyNet.instance.getNodeStats(this.energy.getDelegate());
-                    NodeQEStats stats1 = QENet.instance.getNodeStats(this.energy2.getDelegate(), this.world);
+                    com.denfop.api.sytem.NodeStats stats1 = EnergyBase.QE.getNodeStats(this.energy2.getDelegate(), this.world);
 
                     if (stats != null) {
                         this.differenceenergy = stats.getEnergyOut();
                     }
                     if (stats1 != null) {
-                        this.differenceenergy = stats1.getQEIn();
+                        this.differenceenergy1 = stats1.getIn();
                     }
+
                 }
             }
         }
@@ -188,11 +192,9 @@ public class TileEntityQEConverter extends TileEntityInventory implements IHasGu
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.energy.setDirections(Util.allFacings, Util.allFacings);
-        this.energy2.setDirections(Util.allFacings, Util.allFacings);
+
         this.tier = nbttagcompound.getInteger("tier");
 
-        this.energy2.setDirections(Util.allFacings, Util.allFacings);
         this.rf = nbttagcompound.getBoolean("rf");
 
     }

@@ -1,7 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -11,6 +10,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -67,7 +67,7 @@ public class CTMatterRecipe {
 
     @ZenMethod
     public static void remove(IItemStack input) {
-        ModTweaker.LATE_REMOVALS.add(new CTMatterRecipe.Remove(input));
+        CraftTweakerAPI.apply(new CTMatterRecipe.Remove(input));
     }
 
     private static class Remove extends BaseAction {
@@ -96,7 +96,8 @@ public class CTMatterRecipe {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("converter", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("converter", CraftTweakerMC.getItemStack(output));
+
         }
 
         public String describe() {
@@ -156,7 +157,7 @@ public class CTMatterRecipe {
         public void apply() {
             final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
             if (!this.delete) {
-                Recipes.recipes.addRecipe("converter", new BaseMachineRecipe(
+                Recipes.recipes.addAdderRecipe("converter", new BaseMachineRecipe(
                                 new Input(input.forStack((ItemStack) output.getInternal())), new RecipeOutput(
                                 this.nbt,
                                 getItemStack(this.output)

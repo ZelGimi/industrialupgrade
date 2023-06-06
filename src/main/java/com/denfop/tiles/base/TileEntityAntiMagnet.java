@@ -29,7 +29,7 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

@@ -6,8 +6,10 @@ import com.denfop.tiles.base.TileEntityQuarryVein;
 import ic2.api.item.ITeBlockSpecialItem;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.ref.IC2Material;
 import ic2.core.ref.TeBlock;
 import ic2.core.util.Util;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -69,6 +71,11 @@ public enum BlockQuarryVein implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
+    public Material getMaterial() {
+        return IC2Material.MACHINE;
+    }
+
+    @Override
     public String getName() {
         return this.name();
     }
@@ -86,7 +93,7 @@ public enum BlockQuarryVein implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasItem() {
-        return false;
+        return true;
     }
 
     @Override
@@ -146,11 +153,11 @@ public enum BlockQuarryVein implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean doesOverrideDefault(final ItemStack itemStack) {
-        return false;
+        return true;
     }
 
     @Override
     public ModelResourceLocation getModelLocation(final ItemStack itemStack) {
-        return null;
+        return new ModelResourceLocation(Constants.MOD_ID + ":" + "quarry_vein_item", null);
     }
 }

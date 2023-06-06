@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemsunnarium",
-      "data": 0
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemsunnarium",
+      "data" : 0
     },
-    "title": {
-      "translate": "achievement.sunnarium_enrich"
+    "title" : {
+      "translate" : "achievement.sunnarium_enrich"
     },
-    "description": {
-      "translate": "achievement.sunnarium_enrich.desc"
+    "description" : {
+      "translate" : "achievement.sunnarium_enrich.desc"
     }
   },
-  "parent": "industrialupgrade:main/enrichment",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/enrichment",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemsunnarium",
-            "data": 0
+            "item" : "industrialupgrade:itemsunnarium",
+            "data" : 0
           }
         ]
       }

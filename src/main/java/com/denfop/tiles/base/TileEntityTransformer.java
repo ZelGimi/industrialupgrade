@@ -1,13 +1,12 @@
 package com.denfop.tiles.base;
 
 import com.denfop.api.energy.ITransformer;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerTransformer;
 import com.denfop.gui.GuiTransformer;
 import ic2.api.energy.EnergyNet;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.ContainerBase;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -44,7 +43,7 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         this.defaultTier = tier;
         this.energy = this.addComponent(new AdvEnergy(
                 this,
-                EnergyNet.instance.getPowerFromTier(tier) * 8.0D,
+                EnergyNet.instance.getPowerFromTier(tier) * 4.0D,
                 Collections.emptySet(),
                 Collections.emptySet(),
                 tier,
@@ -180,18 +179,14 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, tooltip, advanced);
-        tooltip.add(String.format(
-                "%s %.0f %s %s %.0f %s",
-                Localization.translate("ic2.item.tooltip.Low"),
-                EnergyNet.instance.getPowerFromTier(this.energy.getSinkTier()),
-                Localization.translate("ic2.generic.text.EUt"),
-                Localization.translate("ic2.item.tooltip.High"),
-                EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() + 1),
-                Localization.translate("ic2.generic.text.EUt")
-        ));
+        tooltip.add(Localization.translate("ic2.item.tooltip.Low") + (int) EnergyNet.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
+                + Localization.translate("ic2.generic.text.EUt") + " " + Localization.translate("ic2.item.tooltip.High")
+                + (int) EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() + 1) + " " + Localization.translate("ic2" +
+                ".generic.text.EUt"));
+
     }
 
-    public ContainerBase<TileEntityTransformer> getGuiContainer(EntityPlayer player) {
+    public ContainerTransformer getGuiContainer(EntityPlayer player) {
         return new ContainerTransformer(player, this, 219);
     }
 

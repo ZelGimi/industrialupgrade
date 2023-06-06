@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism.triple.heat;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.audio.EnumTypeAudio;
@@ -7,7 +8,6 @@ import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.HeatComponent;
@@ -23,21 +23,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public class TileEntityAdvAlloySmelter extends TileEntityTripleElectricMachine implements IHasRecipe, IType {
 
     public final HeatComponent heat;
-    private boolean auto;
 
     public TileEntityAdvAlloySmelter() {
         super(1, 300, 1, Localization.translate("iu.AdvAlloymachine.name"), EnumTripleElectricMachine.ADV_ALLOY_SMELTER);
-        this.auto = false;
         this.heat = this.addComponent(HeatComponent
                 .asBasicSink(this, 5000));
         Recipes.recipes.addInitRecipes(this);
@@ -83,66 +77,12 @@ public class TileEntityAdvAlloySmelter extends TileEntityTripleElectricMachine i
         );
     }
 
-    protected List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
-        List<ItemStack> ret = super.getWrenchDrops(player, fortune);
-        if (this.auto) {
-            ret.add(new ItemStack(IUItem.autoheater));
-            this.auto = false;
-        }
-        return ret;
-    }
-
-    @Override
-    protected boolean onActivated(
-            final EntityPlayer player,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
-    ) {
-        final ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItem().equals(IUItem.autoheater) && !this.auto) {
-            this.auto = true;
-            stack.shrink(1);
-        }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
-
-    public void readFromNBT(NBTTagCompound nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        this.auto = nbttagcompound.getBoolean("auto");
-    }
-
-
-    @Override
-    protected void updateEntityServer() {
-        super.updateEntityServer();
-
-        if (this.auto) {
-            if (this.heat.getEnergy() + 1 <= this.heat.getCapacity()) {
-                this.heat.addEnergy(2);
-            }
-        }
-    }
-
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("auto", this.auto);
-        return nbttagcompound;
-    }
-
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiAdvAlloySmelter(new ContainerTripleElectricMachine(entityPlayer, this, type));
     }
 
-    @Override
-    public void operateOnce(final MachineRecipe output, final List<ItemStack> processResult) {
-        this.inputSlotA.consume();
-        this.outputSlot.add(processResult);
-    }
 
     public String getStartSoundFile() {
         return "Machines/alloysmelter.ogg";
@@ -165,7 +105,7 @@ public class TileEntityAdvAlloySmelter extends TileEntityTripleElectricMachine i
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {

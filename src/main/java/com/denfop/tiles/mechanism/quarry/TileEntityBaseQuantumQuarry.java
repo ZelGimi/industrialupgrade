@@ -6,15 +6,16 @@ import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.QEComponent;
-import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerQuantumQuarry;
 import com.denfop.gui.GuiQuantumQuarry;
 import com.denfop.invslot.InvSlotQuantumQuarry;
@@ -25,14 +26,11 @@ import com.denfop.utils.ModUtils;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
 import ic2.core.ref.TeBlock;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,7 +67,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     public List<QuarryItem> list;
     public AudioSource audioSource;
     public double getblock;
-    public QEComponent energy;
+    public ComponentBaseEnergy energy;
     public boolean analyzer;
     public int progress;
     public EnumQuarryModules list_modules;
@@ -79,6 +77,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     public boolean can_dig_vein = true;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
+    public double col_tick;
     private boolean sound = true;
 
     public TileEntityBaseQuantumQuarry(int coef) {
@@ -86,7 +85,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         this.progress = 0;
         this.getblock = 0;
         this.energyconsume = Config.enerycost * coef;
-        this.energy = this.addComponent(QEComponent.asBasicSink(this, 5E7D, 14));
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 5E7D, 14));
         this.inputslot = new InvSlotQuantumQuarry(this, 25, "input", 0);
         this.inputslotA = new InvSlotQuantumQuarry(this, 26, "input1", 1);
         this.inputslotB = new InvSlotQuantumQuarry(this, 27, "input2", 2);
@@ -113,8 +112,9 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         }
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(energy.getCapacity())
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    energy.getCapacity())
                     + " QE");
         }
         super.addInformation(stack, tooltip, advanced);
@@ -123,12 +123,12 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final QEComponent component2 = this.energy;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    final ComponentBaseEnergy component2 = this.energy;
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component2.getEnergy());
                         }
@@ -145,9 +145,9 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             }
         }
 
-        final QEComponent component2 = this.energy;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        final ComponentBaseEnergy component2 = this.energy;
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component2.getEnergy());
             }
@@ -175,7 +175,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
         if (sound) {
-            IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+            IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
         }
     }
 
@@ -195,7 +195,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     public void changeSound() {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
@@ -221,7 +221,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         this.inputslotA.update();
         this.inputslotB.update();
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
@@ -229,6 +229,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             if (list(this.list_modules, stack)) {
                 this.can_dig_vein = false;
             }
+            IUCore.network.get(true).updateTileEntityField(this, "vein");
         }
     }
 
@@ -247,11 +248,11 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-        if (this.vein != null) {
+        if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
@@ -259,7 +260,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
             if (list(this.list_modules, stack1)) {
                 this.can_dig_vein = false;
             }
-
+            IUCore.network.get(true).updateTileEntityField(this, "vein");
         }
 
     }
@@ -285,17 +286,19 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                 }
             }
         }
+        this.col_tick = 0;
         if (this.analyzer && !Config.enableonlyvein) {
             double col = this.col;
             int chance2 = this.chance;
             int coble = rand.nextInt((int) col + 1);
             this.getblock += coble;
             col -= coble;
+
             boolean work = this.energy.getEnergy() >= proccent;
             for (double i = 0; i < col; i++) {
                 if (this.energy.getEnergy() >= proccent) {
                     work = true;
-
+                    this.col_tick++;
                     this.energy.useEnergy(proccent);
                     this.getblock++;
                     int num = main_list.size();
@@ -303,7 +306,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                         return;
                     }
                     int chance1 = rand.nextInt(num);
-                    if (main_list.size() != IUCore.list.size()) {
+                    if (num != IUCore.list.size()) {
                         int chance3 = rand.nextInt(IUCore.list.size());
                         if (!(chance3 <= chance1)) {
                             continue;
@@ -326,7 +329,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
                     } else {
 
-                        this.outputSlot.add(main_list.get(chance1).getStack());
+                        this.outputSlot.add(stack.getStack());
 
                     }
 
@@ -358,13 +361,13 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
 
     }
 
-    public ContainerBase<? extends TileEntityBaseQuantumQuarry> getGuiContainer(EntityPlayer player) {
+    public ContainerQuantumQuarry getGuiContainer(EntityPlayer player) {
         return new ContainerQuantumQuarry(player, this);
 
     }
 
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
+    public GuiQuantumQuarry getGui(EntityPlayer player, boolean isAdmin) {
 
         return new GuiQuantumQuarry(new ContainerQuantumQuarry(player, this));
     }
@@ -473,12 +476,12 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
         sound = !sound;
-        IC2.network.get(true).updateTileEntityField(this, "sound");
+        IUCore.network.get(true).updateTileEntityField(this, "sound");
 
         if (!sound) {
             if (this.getType() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
-                IC2.network.get(true).initiateTileEntityEvent(this, 2, true);
+                IUCore.network.get(true).initiateTileEntityEvent(this, 2, true);
 
             }
         }

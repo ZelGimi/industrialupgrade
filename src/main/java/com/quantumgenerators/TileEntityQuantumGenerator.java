@@ -1,14 +1,15 @@
 package com.quantumgenerators;
 
 import com.denfop.IUItem;
-import com.denfop.componets.QEComponent;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.items.ItemCore;
 import com.denfop.items.energy.ItemPurifier;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.energy.EnergyNet;
 import ic2.api.item.ElectricItem;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,7 +29,7 @@ import java.util.List;
 public class TileEntityQuantumGenerator extends TileEntityInventory implements IHasGui, INetworkClientTileEntityEventListener {
 
     public final String texture;
-    public final QEComponent energy;
+    public final ComponentBaseEnergy energy;
     private final int meta;
     private final int tier;
     public double gen;
@@ -38,7 +39,8 @@ public class TileEntityQuantumGenerator extends TileEntityInventory implements I
     public TileEntityQuantumGenerator(int tier, String texture, int meta) {
         this.gen = 5 * Math.pow(4, (tier - 1)) / 16;
         this.genmax = 5 * Math.pow(4, (tier - 1)) / 16;
-        this.energy = this.addComponent(QEComponent.asBasicSource(this, gen * 32,
+        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSource(
+                        EnergyType.QUANTUM, this, gen * 32,
                         tier
                 )
         );
@@ -117,7 +119,12 @@ public class TileEntityQuantumGenerator extends TileEntityInventory implements I
     }
 
     @Override
-    protected boolean onActivated(
+    protected void onLoaded() {
+        super.onLoaded();
+    }
+
+    @Override
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:blockradiationore",
-      "data": 0
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:blockradiationore",
+      "data" : 0
     },
-    "title": {
-      "translate": "achievement.americiumore"
+    "title" : {
+      "translate" : "achievement.americiumore"
     },
-    "description": {
-      "translate": "achievement.americiumore.desc"
+    "description" : {
+      "translate" : "achievement.americiumore.desc"
     }
   },
-  "parent": "industrialupgrade:main/root",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:radiationresources",
-            "data": 0
+            "item" : "industrialupgrade:radiationresources",
+            "data" : 0
           }
         ]
       }

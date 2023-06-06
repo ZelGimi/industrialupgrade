@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.utils.BaseAction;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -72,7 +72,7 @@ public class CTAirTransformer {
             nbt.setDouble("need", this.matter);
             final IC2RecipeInput stack = new IC2RecipeInput(this.container);
 
-            Recipes.recipes.addRecipe("aercollector", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("aercollector", new BaseMachineRecipe(
                     new Input(
                             stack
                     ),
@@ -137,11 +137,11 @@ public class CTAirTransformer {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("aerassembler", new RecipeOutput(null, getItemStack(this.output)));
+            Recipes.recipes.addRemoveRecipe("aercollector", getItemStack(this.output));
         }
 
         public String describe() {
-            return "removing alloy smelter recipe " + this.output;
+            return "removing air transformer recipe " + this.output;
         }
 
         public Object getOverrideKey() {

@@ -7,6 +7,8 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.audio.AudioSource;
+import com.denfop.audio.PositionSpec;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
@@ -16,15 +18,10 @@ import ic2.api.item.IBoxable;
 import ic2.api.item.IElectricItem;
 import ic2.api.item.IItemHudInfo;
 import ic2.core.IC2;
-import ic2.core.audio.AudioSource;
-import ic2.core.audio.PositionSpec;
 import ic2.core.init.BlocksItems;
 import ic2.core.init.Localization;
 import ic2.core.item.armor.ItemArmorNanoSuit;
 import ic2.core.item.armor.ItemArmorQuantumSuit;
-import ic2.core.item.tool.HarvestLevel;
-import ic2.core.item.tool.IToolClass;
-import ic2.core.item.tool.ToolClass;
 import ic2.core.slot.ArmorSlot;
 import ic2.core.util.StackUtil;
 import net.minecraft.block.material.Material;
@@ -385,9 +382,9 @@ public class ItemQuantumSaber extends ItemTool implements IElectricItem, IUpgrad
                 if (this.audioSource == null) {
                     initSound = this.getIdleSound();
                     if (initSound != null) {
-                        this.audioSource = IC2.audioManager.createSource(
+                        this.audioSource = IUCore.audioManager.createSource(
                                 entity,
-                                ic2.core.audio.PositionSpec.Hand,
+                                PositionSpec.Hand,
                                 initSound,
                                 true,
                                 false,
@@ -402,9 +399,9 @@ public class ItemQuantumSaber extends ItemTool implements IElectricItem, IUpgrad
 
                 initSound = this.getStartSound();
                 if (initSound != null) {
-                    IC2.audioManager.playOnce(
+                    IUCore.audioManager.playOnce(
                             entity,
-                            ic2.core.audio.PositionSpec.Hand,
+                            PositionSpec.Hand,
                             initSound,
                             true,
                             IC2.audioManager.getDefaultVolume()
@@ -418,7 +415,7 @@ public class ItemQuantumSaber extends ItemTool implements IElectricItem, IUpgrad
                         this.removeAudioSource();
                         String sound = this.getStopSound();
                         if (sound != null) {
-                            IC2.audioManager.playOnce(
+                            IUCore.audioManager.playOnce(
                                     entity,
                                     PositionSpec.Hand,
                                     sound,

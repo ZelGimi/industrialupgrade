@@ -1,15 +1,16 @@
 package com.denfop.tiles.transport.tiles;
 
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.se.ISEAcceptor;
-import com.denfop.api.se.ISEConductor;
-import com.denfop.api.se.ISEEmitter;
-import com.denfop.api.se.ISETile;
-import com.denfop.api.se.SENet;
-import com.denfop.api.se.event.SETileLoadEvent;
-import com.denfop.api.se.event.SETileUnloadEvent;
-import com.denfop.componets.QEComponent;
+import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IConductor;
+import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.sytem.ITile;
 import com.denfop.tiles.transport.CableFoam;
 import com.denfop.tiles.transport.types.SEType;
 import ic2.api.network.INetworkTileEntityEventListener;
@@ -31,6 +32,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -49,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TileEntitySCable extends TileEntityBlock implements ISEConductor, INetworkTileEntityEventListener {
+public class TileEntitySCable extends TileEntityBlock implements IConductor, INetworkTileEntityEventListener {
 
     public static final IUnlistedProperty<TileEntitySCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
             "renderstate",
@@ -78,12 +80,17 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         this.continuousUpdate = null;
         this.obscuration = this.addComponent(new Obscuration(
                 this,
-                () -> IC2.network.get(true).updateTileEntityField(TileEntitySCable.this, "obscuration")
+                () -> IUCore.network.get(true).updateTileEntityField(TileEntitySCable.this, "obscuration")
         ));
     }
 
     public static TileEntitySCable delegate(SEType cableType, int insulation) {
         return new TileEntitySCable(cableType, insulation);
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        return this.pos;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -108,7 +115,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         } else {
 
 
-            MinecraftForge.EVENT_BUS.post(new SETileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
             this.addedToEnergyNet = true;
             this.updateConnectivity();
             if (this.foam == CableFoam.Soft) {
@@ -120,7 +127,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
 
     protected void onUnloaded() {
         if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
-            MinecraftForge.EVENT_BUS.post(new SETileUnloadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
             this.addedToEnergyNet = false;
         }
 
@@ -260,15 +267,14 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            ISETile tile = SENet.instance.getSubTile(world, this.pos.offset(dir));
+            final ITile tile = EnergyBase.SE.getSubTile(world, this.pos.offset(dir));
 
-            if ((tile instanceof ISEAcceptor && ((ISEAcceptor) tile).acceptsSEFrom(
+            if (tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof ISEEmitter && ((ISEEmitter) tile).emitsSETo(
+            ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
                     this,
                     dir.getOpposite()
-            ) || tile instanceof TileEntityBlock && ((TileEntityBlock) tile).hasComponent(QEComponent.class)) && this.canInteractWith(
             )) {
                 newConnectivity = (byte) (newConnectivity | mask);
             }
@@ -278,7 +284,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
 
         if (this.connectivity != newConnectivity) {
             this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
+            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
         }
 
     }
@@ -332,7 +338,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
 
             --this.insulation;
             if (!this.getWorld().isRemote) {
-                IC2.network.get(true).updateTileEntityField(this, "insulation");
+                IUCore.network.get(true).updateTileEntityField(this, "insulation");
             }
 
         }
@@ -342,11 +348,11 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         return false;
     }
 
-    public boolean acceptsSEFrom(ISEEmitter emitter, EnumFacing direction) {
+    public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
         return this.canInteractWith();
     }
 
-    public boolean emitsSETo(ISEAcceptor receiver, EnumFacing direction) {
+    public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
         return this.canInteractWith();
     }
 
@@ -355,31 +361,32 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         return true;
     }
 
-    public double getConductionLoss() {
+    public double getConductionLoss(EnergyType type) {
         return this.cableType.loss;
     }
 
-    public double getInsulationEnergyAbsorption() {
+    public double getInsulationEnergyAbsorption(EnergyType type) {
 
         return 2.147483647E9D;
 
     }
 
-    public double getInsulationBreakdownEnergy() {
+    public double getInsulationBreakdownEnergy(EnergyType type) {
         return 9001.0D;
     }
 
-    public double getConductorBreakdownSolariumEnergy() {
+    public double getConductorBreakdownEnergy(EnergyType type) {
         return this.cableType.capacity + 1;
     }
 
-    public void removeInsulation() {
+
+    public void removeInsulation(EnergyType type) {
         this.tryRemoveInsulation(false);
     }
 
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IC2.network.get(true).initiateTileEntityEvent(this, 0, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
     }
 
     @Override
@@ -387,6 +394,20 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
         this.updateConnectivity();
     }
 
+    @Override
+    public EnergyType getEnergyType() {
+        return EnergyType.SOLARIUM;
+    }
+
+    @Override
+    public boolean hasEnergies() {
+        return false;
+    }
+
+    @Override
+    public List<EnergyType> getEnergies() {
+        return null;
+    }
 
     public List<String> getNetworkedFields() {
         List<String> ret = new ArrayList<>();
@@ -476,7 +497,7 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
                 }
 
                 if (!duringLoad) {
-                    IC2.network.get(true).updateTileEntityField(this, "foam");
+                    IUCore.network.get(true).updateTileEntityField(this, "foam");
                     world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), true);
                     this.markDirty();
                 }
@@ -495,6 +516,11 @@ public class TileEntitySCable extends TileEntityBlock implements ISEConductor, I
                 this.connectivity,
                 this.getActive()
         );
+    }
+
+    @Override
+    public TileEntity getTile() {
+        return this;
     }
 
 

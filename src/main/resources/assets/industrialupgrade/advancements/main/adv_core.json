@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemcore",
-      "data": 0
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcore",
+      "data" : 0
     },
-    "title": {
-      "translate": "achievement.adv_core"
+    "title" : {
+      "translate" : "achievement.adv_core"
     },
-    "description": {
-      "translate": "achievement.adv_core.desc"
+    "description" : {
+      "translate" : "achievement.adv_core.desc"
     }
   },
-  "parent": "industrialupgrade:main/molecular_transformer",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/molecular_transformer",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemcore",
-            "data": 0
+            "item" : "industrialupgrade:itemcore",
+            "data" : 0
           }
         ]
       }

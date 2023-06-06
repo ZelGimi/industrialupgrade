@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public enum EnumMultiMachine {
@@ -422,7 +422,7 @@ public enum EnumMultiMachine {
     ),
 
 
-    RECYCLER("Recycler", 1, 45, 1, IUItem.machines_base1, 0, 0, 5, EnumTypeMachines.RECYCLER, IUItem.simplemachine),
+    RECYCLER("Recycler", 1, 45, 1, IUItem.machines_base1, 0, 0, 5, EnumTypeMachines.RECYCLER, IUItem.simplemachine, 1, 8),
 
     OreWashing(
             "OreWashing",
@@ -627,9 +627,9 @@ public enum EnumMultiMachine {
     public static void write() {
 
         final ItemStack stack = new ItemStack(IUItem.oilquarry);
-        IUItem.map_upgrades.put(0, Arrays.asList(stack));
-        IUItem.map_upgrades.put(1, Arrays.asList(stack));
-        IUItem.map_upgrades.put(2, Arrays.asList(stack));
+        IUItem.map_upgrades.put(0, Collections.singletonList(stack));
+        IUItem.map_upgrades.put(1, Collections.singletonList(stack));
+        IUItem.map_upgrades.put(2, Collections.singletonList(stack));
         List<ItemStack> list1 = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             List<ItemStack> list = IUItem.map_upgrades.get(i);

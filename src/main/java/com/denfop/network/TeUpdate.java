@@ -6,7 +6,6 @@ import ic2.core.block.TeBlockRegistry;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
-import ic2.core.util.ReflectionUtil;
 import ic2.core.util.Util;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;

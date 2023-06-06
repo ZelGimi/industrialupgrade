@@ -13,13 +13,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TransportNetLocal {
 
@@ -89,14 +83,20 @@ public class TransportNetLocal {
             ITransportSource<ItemStack, IItemHandler> TransportSource,
             TransportItem<ItemStack> amount,
             List<TransportPath> TransportPaths,
-            SystemTick tick
+            SystemTick<ITransportSource, TransportPath> tick
     ) {
+
         if (TransportPaths == null) {
             TransportPaths = discover(TransportSource);
             tick.setList(TransportPaths);
+            for (TransportPath path : TransportPaths) {
+                path.end = path.getConductors().get(0);
+                path.first = path.getConductors().get(path.getConductors().size() - 1);
+            }
         }
         List<ItemStack> list = amount.getList();
         List<Integer> list1 = amount.getList1();
+
         if (!list.isEmpty()) {
             for (TransportPath TransportPath : TransportPaths) {
                 if (list.isEmpty()) {
@@ -104,6 +104,7 @@ public class TransportNetLocal {
                 }
                 ITransportSink<ItemStack, IItemHandler> TransportSink = TransportPath.target;
                 List<Integer> demandedTransport = TransportSink.getDemanded();
+
                 if (demandedTransport.isEmpty() || !TransportSink.canAccept(TransportPath.targetDirection.getOpposite())) {
                     continue;
                 }
@@ -287,8 +288,11 @@ public class TransportNetLocal {
                 for (SystemTick<ITransportSource, TransportPath> tick : this.TransportSourceToTransportPathMap.senderPath) {
                     if (tick.getSource().isItem()) {
                         ITransportSource<ItemStack, IItemHandler> entry = (ITransportSource<ItemStack, IItemHandler>) tick.getSource();
+
+
                         if (entry != null) {
                             TransportItem<ItemStack> offered = entry.getOffered(0);
+
                             if (!offered.getList().isEmpty()) {
                                 emitTransportFrom(entry, offered, tick.getList(), tick);
                             }
@@ -318,18 +322,23 @@ public class TransportNetLocal {
         if (TransportPaths == null) {
             TransportPaths = discover(TransportSource);
             tick.setList(TransportPaths);
+            for (TransportPath path : TransportPaths) {
+                path.end = path.getConductors().get(0);
+                path.first = path.getConductors().get(path.getConductors().size() - 1);
+            }
         }
         List<FluidStack> list = transportItem.getList();
         if (!list.isEmpty()) {
             for (TransportPath TransportPath : TransportPaths) {
-                if (list.isEmpty() ) {
+                if (list.isEmpty()) {
                     break;
                 }
-                if(!TransportPath.target.canAccept(TransportPath.targetDirection.getOpposite()))
+                if (!TransportPath.target.canAccept(TransportPath.targetDirection.getOpposite())) {
                     continue;
+                }
                 IFluidHandler handler = TransportPath.getHandler();
                 for (FluidStack fluidStack : list) {
-                    if (fluidStack.amount <= 0 ) {
+                    if (fluidStack.amount <= 0) {
                         continue;
                     }
                     int amount = handler.fill(fluidStack, false);
@@ -505,14 +514,16 @@ public class TransportNetLocal {
 
         IFluidHandler fluidHandler = null;
 
+        ITransportConductor first = null;
+
+        ITransportConductor end = null;
+
         TransportPath(ITransportSink sink, EnumFacing facing) {
             this.target = sink;
             this.conductors = new ArrayList<>();
             this.targetDirection = facing;
             if (this.target.getHandler() instanceof IFluidHandler) {
-                this
-
-                        .fluidHandler = TransportNetLocal.this.getTileFromITransport(this.target).getCapability(
+                this.fluidHandler = TransportNetLocal.this.getTileFromITransport(this.target).getCapability(
                         CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
                         this.targetDirection
                 );

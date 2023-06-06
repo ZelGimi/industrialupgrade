@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism.worlcollector;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Ic2Items;
 import com.denfop.api.recipe.MachineRecipe;
@@ -7,6 +8,8 @@ import com.denfop.tiles.base.EnumTypeCollector;
 import com.denfop.tiles.base.IIsMolecular;
 import com.denfop.tiles.base.TileEntityBaseWorldCollector;
 import ic2.core.block.TileEntityBlock;
+import ic2.core.item.type.DustResourceType;
+import ic2.core.ref.ItemName;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -18,7 +21,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class TileEntityCrystallize extends TileEntityBaseWorldCollector implements IIsMolecular {
+
     protected ItemStack output_stack;
+
     public TileEntityCrystallize() {
         super(EnumTypeCollector.DEFAULT);
     }
@@ -26,7 +31,10 @@ public class TileEntityCrystallize extends TileEntityBaseWorldCollector implemen
     public void init() {
 
         addRecipe(Ic2Items.diamondDust, 0.125, new ItemStack(Items.DIAMOND));
-        addRecipe(Ic2Items.emeraldDust, 0.125, new ItemStack(Items.EMERALD));
+        if (IUCore.isHasVersion("ic2", "220")) {
+            addRecipe(ItemName.dust.getItemStack(DustResourceType.emerald), 0.125, new ItemStack(Items.EMERALD));
+        }
+
         addRecipe(Ic2Items.lapiDust, 0.0625, new ItemStack(Items.DYE, 1, 4));
         addRecipe(new ItemStack(Items.DIAMOND), 0.25, new ItemStack(Items.EMERALD));
         addRecipe(new ItemStack(Items.EMERALD), 0.25, new ItemStack(Items.DIAMOND));
@@ -44,32 +52,38 @@ public class TileEntityCrystallize extends TileEntityBaseWorldCollector implemen
         addRecipe(Ic2Items.latex, 10, new ItemStack(Items.SLIME_BALL));
 
     }
+
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.machineRecipe = output;
-        if(this.machineRecipe != null){
+        if (this.machineRecipe != null) {
             output_stack = this.machineRecipe.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         this.setOverclockRates();
 
     }
+
     public MachineRecipe getOutput() {
 
         this.machineRecipe = this.inputSlot.process();
-        if(this.machineRecipe != null){
+        if (this.machineRecipe != null) {
             output_stack = this.machineRecipe.getRecipe().output.items.get(0);
-        }else
-            output_stack = new ItemStack( Items.AIR);
+        } else {
+            output_stack = new ItemStack(Items.AIR);
+        }
 
         return this.machineRecipe;
     }
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
+
+    public List<String> getNetworkFields() {
+        List<String> ret = super.getNetworkFields();
         ret.add("output_stack");
         return ret;
     }
+
     @SideOnly(Side.CLIENT)
     protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;

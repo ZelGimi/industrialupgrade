@@ -1,26 +1,26 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:machines",
-      "data": 12
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:machines",
+      "data" : 12
     },
-    "title": {
-      "translate": "achievement.gra_panel"
+    "title" : {
+      "translate" : "achievement.gra_panel"
     },
-    "description": {
-      "translate": "achievement.gra_panel.desc"
+    "description" : {
+      "translate" : "achievement.gra_panel.desc"
     },
-    "frame": "challenge"
+    "frame" : "challenge"
   },
-  "parent": "industrialupgrade:main/gra_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/gra_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:machines",
-            "data": 12
+            "item" : "industrialupgrade:machines",
+            "data" : 12
           }
         ]
       }

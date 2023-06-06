@@ -6,7 +6,6 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.recipe.Recipes;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ public class InvSlotInput extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         final Block block = Block.getBlockFromItem(stack.getItem());
         return block != Blocks.AIR;
     }
@@ -39,6 +38,7 @@ public class InvSlotInput extends InvSlot {
             final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
                     block.getStateFromMeta(content.getItemDamage()), this.tile.chance
             );
+
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
                 final List<ItemStack> list2 = new ArrayList<>();
@@ -52,7 +52,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 = stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -65,7 +68,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 = stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -81,8 +87,13 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    final List<ItemStack> list3 = new ArrayList<>(recipe.getOutput().items);
+                    final List<ItemStack> list3 = new ArrayList<>();
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 = stack1.copy();
+                        list3.add(stack1);
+                    });
                     list3.forEach(stack1 -> stack1.setCount(stack.getCount()));
+
                     list2.addAll(list3);
                 }
                 list.removeAll(list1);
@@ -122,7 +133,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 = stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -136,7 +150,10 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 = stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
@@ -153,11 +170,15 @@ public class InvSlotInput extends InvSlot {
                         continue;
                     }
                     list1.add(stack);
-                    list2.addAll(recipe.getOutput().items);
+                    recipe.getOutput().items.forEach(stack1 -> {
+                        stack1 = stack1.copy();
+                        list2.add(stack1);
+                    });
                 }
                 list.removeAll(list1);
                 list.addAll(list2);
             }
+
             this.tile.setBaseMachineRecipe(i, new BaseMachineRecipe(
                     new Input(input.forStack(this.get(i))),
                     new RecipeOutput(null, list)

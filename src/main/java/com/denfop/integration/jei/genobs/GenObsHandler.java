@@ -1,15 +1,13 @@
 package com.denfop.integration.jei.genobs;
 
 
-import com.denfop.api.IObsidianGenerator;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GenObsHandler {
 
@@ -56,9 +54,12 @@ public class GenObsHandler {
     }
 
     public static void initRecipes() {
-        for (Map.Entry<IObsidianGenerator.Input, RecipeOutput> container :
-                Recipes.obsidianGenerator.getRecipes().entrySet()) {
-            addRecipe(container.getKey().fluidStack, container.getKey().fluidStack1, container.getValue().items.get(0));
+
+        for (BaseFluidMachineRecipe container :
+                Recipes.recipes.getRecipeFluid().getRecipeList("obsidian")) {
+            addRecipe(container.getInput().getInputs().get(0), container.getInput().getInputs().get(1),
+                    container.getOutput().items.get(0)
+            );
 
         }
     }

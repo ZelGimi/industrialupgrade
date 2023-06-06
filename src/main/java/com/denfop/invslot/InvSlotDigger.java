@@ -6,7 +6,6 @@ import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileEntityAutoDigger;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotDigger extends InvSlot implements ITypeSlot {
@@ -108,7 +107,7 @@ public class InvSlotDigger extends InvSlot implements ITypeSlot {
         this.tile.inputslot.update();
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
 
 
         return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(

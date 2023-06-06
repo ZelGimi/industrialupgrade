@@ -301,7 +301,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
 
     @Override
     public List<EnumFacing> getFacingList() {
-        return  this.facingListSink;
+        return this.facingListSink;
     }
 
 }

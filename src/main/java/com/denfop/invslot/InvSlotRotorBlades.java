@@ -4,7 +4,6 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWindRod;
 import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotorBlades extends InvSlot implements ITypeSlot {
@@ -27,7 +26,7 @@ public class InvSlotRotorBlades extends InvSlot implements ITypeSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
         if (this.windGenerator.getRotor() == null) {
             return false;
         }

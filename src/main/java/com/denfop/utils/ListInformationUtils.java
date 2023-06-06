@@ -24,6 +24,7 @@ public class ListInformationUtils {
     public static final List<String> mechanism_info = new ArrayList<>();
     public static final List<String> mechanism_info1 = new ArrayList<>();
     public static final List<String> mechanism_info2 = new ArrayList<>();
+    public static final List<String> limiter_info = new ArrayList<>();
     public static final List<String> cooling = new ArrayList<>();
     public static final List<String> heating = new ArrayList<>();
     public static final List<String> wind_generator = new ArrayList<>();
@@ -33,6 +34,7 @@ public class ListInformationUtils {
     public static final List<String> quarry = new ArrayList<>();
     public static final List<String> quarryvein = new ArrayList<>();
     public static final List<String> solar = new ArrayList<>();
+    public static final List<String> heat_limiter = new ArrayList<>();
     public static final Map<Integer, List<String>> integerListMap = new HashMap<>();
     public static int tick = 0;
     public static int index = 0;
@@ -119,6 +121,15 @@ public class ListInformationUtils {
         wind_generator.add(Localization.translate("iu.wind_generator.info6"));
         wind_generator.add(Localization.translate("iu.wind_generator.info7"));
 
+        limiter_info.add(Localization.translate("iu.limiter.info1"));
+        limiter_info.add(Localization.translate("iu.limiter.info2"));
+        limiter_info.add(Localization.translate("iu.limiter.info3"));
+        limiter_info.add(Localization.translate("iu.limiter.info4"));
+        limiter_info.add(Localization.translate("iu.limiter.info5"));
+        limiter_info.add(Localization.translate("iu.limiter.info6"));
+        limiter_info.add(Localization.translate("iu.limiter.info7"));
+        limiter_info.add(Localization.translate("iu.limiter.info8"));
+
         water_generator.add(Localization.translate("iu.water_generator.info1"));
         water_generator.add(Localization.translate("iu.water_generator.info2"));
         water_generator.add(Localization.translate("iu.water_generator.info3"));
@@ -137,6 +148,15 @@ public class ListInformationUtils {
 
         anti_upgrade_block.add(Localization.translate("iu.anti_modification.info1"));
         anti_upgrade_block.add(Localization.translate("iu.anti_modification.info2"));
+
+        heat_limiter.add(Localization.translate("iu.heat_limiter.main_info"));
+        heat_limiter.add(Localization.translate("iu.heat_limiter.info"));
+        heat_limiter.add(Localization.translate("iu.heat_limiter.info1"));
+        heat_limiter.add(Localization.translate("iu.heat_limiter.info2"));
+        heat_limiter.add(Localization.translate("iu.heat_limiter.info3"));
+        heat_limiter.add(Localization.translate("iu.heat_limiter.info4"));
+
+
         for (int i = 1; i < 9; i++) {
             quarry.add(Localization.translate("iu.simplyquarries_info" + i));
         }

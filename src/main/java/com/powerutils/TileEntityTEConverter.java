@@ -1,7 +1,10 @@
 package com.powerutils;
 
 import com.denfop.Config;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.powerutils.handler.TeslaHelper;
 import ic2.api.energy.EnergyNet;
@@ -10,8 +13,6 @@ import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.block.invslot.InvSlotUpgrade;
 import ic2.core.init.Localization;
 import ic2.core.util.Util;
 import net.darkhax.tesla.api.ITeslaConsumer;
@@ -75,8 +76,8 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.hasComp(AdvEnergy.class)) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -150,10 +151,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         }
         int i = (int) Math.min(
                 this.maxStorage2 - this.energy2,
-                Math.min(
-                        EnergyNet.instance.getPowerFromTier(this.energy.getSourceTier() * Config.coefficientrf),
-                        paramInt
-                )
+                paramInt
         );
         if (!paramBoolean) {
             this.energy2 += i;
@@ -180,6 +178,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         if (this.rf) {
             if (energy.getEnergy() > 0 && energy2 < maxStorage2) {
                 double add = Math.min(maxStorage2 - energy2, energy.getEnergy() * Config.coefficientrf);
+                add = Math.max(add, 0);
                 energy2 += add;
                 energy.useEnergy(add / Config.coefficientrf);
             }
@@ -204,7 +203,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
 
             }
         }
-        int transfer = (int) Math.min(this.energy2, 10000);
+        int transfer = (int) Math.min(this.energy2, EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier()));
         this.energy2 -= transfer;
         this.energy2 += this.transmitEnergy(transfer);
 
@@ -220,7 +219,7 @@ public class TileEntityTEConverter extends TileEntityInventory implements IHasGu
         EnumFacing[] var2 = EnumFacing.values();
 
         for (EnumFacing e : var2) {
-            BlockPos neighbor = this.getPos().offset(e);
+            BlockPos neighbor = this.getBlockPos().offset(e);
             if (this.world.isBlockLoaded(neighbor)) {
                 TileEntity te = this.world.getTileEntity(neighbor);
                 if (te != null) {

@@ -8,11 +8,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import ic2.core.block.state.Ic2BlockState.Ic2BlockStateInstance;
-import ic2.core.model.AbstractModel;
-import ic2.core.model.BasicBakedBlockModel;
-import ic2.core.model.ISpecialParticleModel;
-import ic2.core.model.ModelUtil;
-import ic2.core.model.VdUtil;
+import ic2.core.model.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -25,13 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -130,7 +120,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
     }
 
     private IBakedModel generateModel(CableRenderState prop) {
-        float th = prop.type.thickness + (float) (0) * 0.0625F;
+        float th = prop.type.thickness + +(float) (prop.type.insulation * 2) * 0.0625F;
         float sp = (1.0F - th) / 2.0F;
         List<BakedQuad>[] faceQuads = new List[EnumFacing.VALUES.length];
 
@@ -139,8 +129,7 @@ public class ModelCable extends AbstractModel implements ISpecialParticleModel {
         }
 
         List<BakedQuad> generalQuads = new ArrayList<>();
-        TextureAtlasSprite sprite = this.textures.get(getTextureLocation(prop.type
-        ));
+        TextureAtlasSprite sprite = this.textures.get(getTextureLocation(prop.type));
         EnumFacing[] var7 = EnumFacing.VALUES;
         int i = var7.length;
 

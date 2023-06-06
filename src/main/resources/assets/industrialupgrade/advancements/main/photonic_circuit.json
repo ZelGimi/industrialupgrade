@@ -1,26 +1,26 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:circuit",
-	  "data": 21
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:circuit",
+      "data" : 21
     },
-    "title": {
-      "translate": "achievement.photonic_circuit"
+    "title" : {
+      "translate" : "achievement.photonic_circuit"
     },
-    "description": {
-      "translate": "achievement.photonic_circuit.desc"
+    "description" : {
+      "translate" : "achievement.photonic_circuit.desc"
     },
-	"hidden": true
+    "hidden" : true
   },
-  "parent": "industrialupgrade:main/spectral_circuit",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/spectral_circuit",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:circuit",
-			"data": 21
+            "item" : "industrialupgrade:circuit",
+            "data" : 21
           }
         ]
       }

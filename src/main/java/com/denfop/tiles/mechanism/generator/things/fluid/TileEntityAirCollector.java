@@ -2,8 +2,10 @@ package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerAirCollector;
 import com.denfop.gui.GuiAirCollector;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByListRemake;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -11,10 +13,7 @@ import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityElectricMachine;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -59,7 +58,7 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
         this.containerslot = new InvSlotConsumableLiquidByListRemake[name1.length];
         for (int i = 0; i < name1.length; i++) {
             this.containerslot[i] = new InvSlotConsumableLiquidByListRemake(this, "container" + i, InvSlot.Access.I, 1,
-                    InvSlot.InvSide.TOP,
+                    InvSlot.InvSide.ANY,
                     InvSlotConsumableLiquid.OpType.Fill, name1[i]
             );
         }
@@ -76,6 +75,13 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
+            tooltip.add(Localization.translate("iu.aircollector.info", 20) + new FluidStack(FluidName.fluidazot.getInstance(),
+                    1).getLocalizedName());
+            tooltip.add(Localization.translate("iu.aircollector.info", 60) + new FluidStack(FluidName.fluidoxy.getInstance(),
+                    1).getLocalizedName());
+            tooltip.add(Localization.translate("iu.aircollector.info", 120) + new FluidStack(FluidName.fluidco2.getInstance(),
+                    1).getLocalizedName());
+
         }
         super.addInformation(stack, tooltip, advanced);
     }
@@ -94,7 +100,7 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
     }
 
     @Override
-    public ContainerBase<?> getGuiContainer(final EntityPlayer entityPlayer) {
+    public ContainerAirCollector getGuiContainer(final EntityPlayer entityPlayer) {
         return new ContainerAirCollector(entityPlayer, this);
     }
 
@@ -114,7 +120,7 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
     }
 
     @Override
-    protected boolean onActivated(
+    public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,
             final EnumFacing side,

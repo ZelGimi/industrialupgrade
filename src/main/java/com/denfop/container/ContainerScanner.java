@@ -2,7 +2,6 @@ package com.denfop.container;
 
 
 import com.denfop.tiles.base.TileEntityScanner;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;

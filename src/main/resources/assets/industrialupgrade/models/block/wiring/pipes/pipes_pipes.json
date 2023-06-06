@@ -1,6 +1,6 @@
 {
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "industrialupgrade:blocks/wiring/pipes/pipes_pipes"
-	}
+  "parent" : "block/cube_all",
+  "textures" : {
+    "all" : "industrialupgrade:blocks/wiring/pipes/pipes_pipes"
+  }
 }

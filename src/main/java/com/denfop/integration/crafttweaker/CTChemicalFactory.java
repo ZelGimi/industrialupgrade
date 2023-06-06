@@ -1,12 +1,11 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
 import com.blamejared.mtlib.helpers.LogHelper;
-import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
@@ -23,7 +22,7 @@ public class CTChemicalFactory {
 
     @ZenMethod
     public static void addRecipe(IItemStack output, IIngredient container, IIngredient container1, ILiquidStack liquidStack) {
-        Recipes.recipes.addRecipe(
+        Recipes.recipes.addAdderRecipe(
                 "plastic",
                 new BaseMachineRecipe(
                         new Input(new IC2FluidRecipeInput(liquidStack).getInputs(),
@@ -39,7 +38,7 @@ public class CTChemicalFactory {
 
     @ZenMethod
     public static void remove(IItemStack output) {
-        ModTweaker.LATE_REMOVALS.add(new Remove(output));
+        CraftTweakerAPI.apply(new Remove(output));
     }
 
 
@@ -53,7 +52,8 @@ public class CTChemicalFactory {
         }
 
         public void apply() {
-            Recipes.recipes.removeRecipe("plastic", new RecipeOutput(null, CraftTweakerMC.getItemStacks(output)));
+            Recipes.recipes.addRemoveRecipe("plastic", CraftTweakerMC.getItemStack(output));
+
 
         }
 

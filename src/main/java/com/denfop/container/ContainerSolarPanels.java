@@ -1,8 +1,6 @@
 package com.denfop.container;
 
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
-import ic2.core.ContainerFullInv;
-import ic2.core.slot.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -32,21 +30,14 @@ public class ContainerSolarPanels extends ContainerFullInv<TileEntitySolarPanel>
         ret.add("genNight");
         ret.add("storage");
         ret.add("maxStorage");
-        ret.add("storage2");
-        ret.add("maxStorage2");
         ret.add("production");
         ret.add("rain");
         ret.add("solarType");
-        ret.add("rf");
-        ret.add("getmodulerf");
         ret.add("type");
         ret.add("u");
         ret.add("p");
         ret.add("k");
         ret.add("m");
-        ret.add("time");
-        ret.add("time1");
-        ret.add("time2");
         ret.add("tier");
         ret.add("solarpanels");
         ret.add("wireless");

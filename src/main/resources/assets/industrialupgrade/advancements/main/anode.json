@@ -1,23 +1,23 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:anode"
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:anode"
     },
-    "title": {
-      "translate": "achievement.anode"
+    "title" : {
+      "translate" : "achievement.anode"
     },
-    "description": {
-      "translate": "achievement.anode.desc"
+    "description" : {
+      "translate" : "achievement.anode.desc"
     }
   },
-  "parent": "industrialupgrade:main/elecrolyzer",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/elecrolyzer",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:anode"
+            "item" : "industrialupgrade:anode"
           }
         ]
       }

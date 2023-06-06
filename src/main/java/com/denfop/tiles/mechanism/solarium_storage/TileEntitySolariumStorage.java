@@ -1,15 +1,15 @@
 package com.denfop.tiles.mechanism.solarium_storage;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
-import com.denfop.componets.QEComponent;
-import com.denfop.componets.SEComponent;
 import com.denfop.container.ContainerSolariumStorage;
 import com.denfop.gui.GuiSolariumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import ic2.api.energy.EnergyNet;
-import ic2.core.IHasGui;
 import ic2.core.block.type.ResourceBlock;
 import ic2.core.init.Localization;
 import ic2.core.ref.BlockName;
@@ -30,11 +30,11 @@ import java.util.List;
 
 public class TileEntitySolariumStorage extends TileEntityInventory implements IHasGui, IType {
 
-    public final SEComponent se;
+    public final ComponentBaseEnergy se;
     private final EnumTypeStyle enumTypeStyle;
 
     public TileEntitySolariumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
-        this.se = this.addComponent((new SEComponent(this, maxStorage1,
+        this.se = this.addComponent((new ComponentBaseEnergy(EnergyType.SOLARIUM, this, maxStorage1,
                 new HashSet<>(
                         Arrays.asList(EnumFacing.values())), new HashSet<>(
                 Arrays.asList(EnumFacing.values())),
@@ -43,23 +43,28 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IH
         )));
         this.enumTypeStyle = enumTypeStyle;
     }
+
     @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(se.getCapacity())
+        tooltip.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.se.getCapacity()) + " " +
+                "SE");
+        if (energy1 != 0) {
+            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+                    se.getCapacity())
                     + " SE");
         }
     }
+
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
-            switch(this.teBlock.getDefaultDrop()) {
+            switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final SEComponent component2 = this.se;
-                    if(component2 != null){
-                        if(component2.getEnergy() != 0) {
+                    final ComponentBaseEnergy component2 = this.se;
+                    if (component2 != null) {
+                        if (component2.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
                             nbt.setDouble("energy", component2.getEnergy());
                         }
@@ -76,9 +81,9 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IH
             }
         }
 
-        final SEComponent component2 = this.se;
-        if(component2 != null){
-            if(component2.getEnergy() != 0) {
+        final ComponentBaseEnergy component2 = this.se;
+        if (component2 != null) {
+            if (component2.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setDouble("energy", component2.getEnergy());
             }
@@ -86,14 +91,16 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IH
 
         return drop;
     }
+
     public void onPlaced(final ItemStack stack, final EntityLivingBase placer, final EnumFacing facing) {
         super.onPlaced(stack, placer, facing);
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        if(energy1 != 0){
+        if (energy1 != 0) {
             this.se.addEnergy(energy1);
         }
     }
+
     @Override
     public ContainerSolariumStorage getGuiContainer(final EntityPlayer entityPlayer) {
         return new ContainerSolariumStorage(entityPlayer, this);

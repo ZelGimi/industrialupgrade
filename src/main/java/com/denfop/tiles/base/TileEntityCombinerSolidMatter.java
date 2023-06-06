@@ -1,6 +1,7 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerCombinerSolidMatter;
@@ -10,9 +11,7 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,12 +34,12 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         IUpgradableBlock {
 
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(
-            -0.28125,
+            -0.5625,
             0.0D,
-            -0.28125,
-            1.28125,
+            -0.5625,
+            1.5625,
             1.5D,
-            1.28125
+            1.5625
     ));
     public final InvSlotSolidMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;
@@ -62,15 +61,14 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComponent(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComponent(AdvEnergy.class);
+        if (this.getComp(AdvEnergy.class) != null) {
+            AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
-
     }
 
     protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
@@ -129,6 +127,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         super.updateEntityServer();
 
         if (this.energy.getCapacity() > 0 && this.energy.getEnergy() == this.energy.getCapacity()) {
+
             for (int i = 0; i < this.solid_col.length; i++) {
                 if (this.solid_col[i] == 0) {
                     continue;
@@ -168,7 +167,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         return new GuiCombinerSolidMatter(new ContainerCombinerSolidMatter(entityPlayer, this));
     }
 
-    public ContainerBase<? extends TileEntityCombinerSolidMatter> getGuiContainer(EntityPlayer entityPlayer) {
+    public ContainerCombinerSolidMatter getGuiContainer(EntityPlayer entityPlayer) {
         return new ContainerCombinerSolidMatter(entityPlayer, this);
     }
 

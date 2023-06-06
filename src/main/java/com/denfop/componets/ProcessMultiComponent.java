@@ -1,18 +1,15 @@
 package com.denfop.componets;
 
-import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.IMultiUpdateTick;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileEntityMultiMachine;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import ic2.core.IC2;
-import ic2.core.block.comp.TileEntityComponent;
 import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -23,30 +20,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public class ProcessMultiComponent extends TileEntityComponent implements IMultiUpdateTick {
+public class ProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
 
     public final InvSlotOutput outputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final AdvEnergy energy;
     public final InvSlotMultiRecipes inputSlots;
-    public final int defaultEnergyConsume;
+    public final double defaultEnergyConsume;
     public final int defaultOperationLength;
-    private final RFComponent energy2;
     private final int sizeWorkingSlot;
     private final short[] progress;
     private final double[] guiProgress;
     private final TileEntityMultiMachine multimachine;
     private final int defaultTier;
-    private final int defaultEnergyStorage;
+    private final double defaultEnergyStorage;
     private final EnumMultiMachine enumMultiMachine;
     private final boolean random;
     private final int min;
     private final int max;
     private final CoolComponent cold;
-    private final EXPComponent exp;
+    private final ComponentBaseEnergy exp;
     private final boolean isCentrifuge;
     private final HeatComponent heat;
-    public int energyConsume;
+    public double energyConsume;
     public int operationLength;
     public boolean quickly;
     public int module;
@@ -72,9 +68,8 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
         this.upgradeSlot = new InvSlotUpgrade(parent, "upgrade", 4);
-        this.energy = parent.getComponent(AdvEnergy.class);
+        this.energy = parent.getComp(AdvEnergy.class);
         this.enumMultiMachine = enumMultiMachine;
-        this.energy2 = parent.getComponent(RFComponent.class);
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
         this.progress = new short[sizeWorkingSlot];
         this.guiProgress = new double[sizeWorkingSlot];
@@ -91,14 +86,10 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         this.max = enumMultiMachine.getMax();
         this.random = enumMultiMachine.type == EnumTypeMachines.RECYCLER;
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.cold = parent.getComponent(CoolComponent.class);
-        this.exp = parent.getComponent(EXPComponent.class);
-        this.heat = parent.getComponent(HeatComponent.class);
+        this.cold = parent.getComp(CoolComponent.class);
+        this.exp = parent.getComp(ComponentBaseEnergy.class);
+        this.heat = parent.getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
-    }
-
-    public EnumMultiMachine getEnumMultiMachine() {
-        return enumMultiMachine;
     }
 
     public MachineRecipe getRecipeOutput(int slotId) {
@@ -173,6 +164,15 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         }
     }
 
+    public CoolComponent getCold() {
+        return cold;
+    }
+
+    @Override
+    public boolean isServer() {
+        return true;
+    }
+
     public void operateOnce(int slotId, List<ItemStack> processResult, int size) {
 
         for (int i = 0; i < size; i++) {
@@ -219,13 +219,9 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         }
     }
 
-    @Override
-    public boolean enableWorldTick() {
-        return true;
-    }
 
     @Override
-    public void onWorldTick() {
+    public void updateEntityServer() {
         if (this.parent.getWorld().isRemote) {
             return;
         }
@@ -330,7 +326,7 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
             if (output != null && this.inputSlots.continue_proccess(
                     this.outputSlot,
                     i
-            ) && (this.energy.canUseEnergy(this.energyConsume * quickly * size) || this.energy2.getEnergy() >= Math.abs(this.energyConsume * 4 * quickly * size))) {
+            ) && (this.energy.canUseEnergy(this.energyConsume * quickly * size))) {
                 active = true;
                 if (this.progress[i] == 0) {
                     if (this.operationLength > this.defaultOperationLength * 0.1) {
@@ -349,8 +345,6 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
                 }
                 if (this.energy.getEnergy() >= this.energyConsume * quickly * size) {
                     this.energy.useEnergy(this.energyConsume * quickly * size);
-                } else if (this.energy2.getEnergy() >= Math.abs(this.energyConsume * 4 * quickly * size)) {
-                    this.energy2.useEnergy(Math.abs(this.energyConsume * 4 * quickly * size));
                 } else {
                     return;
                 }
@@ -454,6 +448,8 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     }
 
     public void setOverclockRates() {
+
+
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
 
@@ -475,23 +471,21 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
-        this.energy2.setCapacity(this.upgradeSlot.getEnergyStorage(
-                this.defaultEnergyStorage
-        ) * Config.coefficientrf);
 
     }
 
     public double getProgress(int slotId) {
-        return this.guiProgress[slotId];
+        return this.progress[slotId] * 1D / this.operationLength;
     }
 
     @Override
     public void onContainerUpdate(final EntityPlayerMP player) {
         GrowingBuffer buffer = new GrowingBuffer(16);
+        buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
-            buffer.writeDouble(this.guiProgress[i]);
+            buffer.writeInt(this.progress[i]);
         }
-        buffer.writeInt(this.energyConsume);
+        buffer.writeDouble(this.energyConsume);
         buffer.writeInt(this.mode);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
@@ -500,10 +494,11 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     @Override
     public void onNetworkUpdate(final DataInput is) throws IOException {
         super.onNetworkUpdate(is);
+        this.operationLength = is.readInt();
         for (int i = 0; i < sizeWorkingSlot; i++) {
-            this.guiProgress[i] = is.readDouble();
+            this.progress[i] = (short) is.readInt();
         }
-        this.energyConsume = is.readInt();
+        this.energyConsume = is.readDouble();
         this.mode = is.readInt();
     }
 
@@ -552,15 +547,6 @@ public class ProcessMultiComponent extends TileEntityComponent implements IMulti
     }
 
     public boolean onActivated(ItemStack heldItem) {
-        if (heldItem.getItem() instanceof ItemAdditionModule && heldItem
-                .getItemDamage() == 4) {
-            if (!this.energy2.isRf() && this.module < 2) {
-                this.energy2.setRf(true);
-                this.module++;
-                heldItem.shrink(1);
-                return true;
-            }
-        }
         if (heldItem.getItem().equals(IUItem.module_quickly)) {
             if (!this.quickly && this.module < 2) {
                 this.quickly = true;

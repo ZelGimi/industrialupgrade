@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:moremachine1",
-      "data": 6
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:moremachine1",
+      "data" : 6
     },
-    "title": {
-      "translate": "achievement.comb_macerator"
+    "title" : {
+      "translate" : "achievement.comb_macerator"
     },
-    "description": {
-      "translate": "achievement.comb_macerator.desc"
+    "description" : {
+      "translate" : "achievement.comb_macerator.desc"
     }
   },
-  "parent": "industrialupgrade:main/spe_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/spe_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:moremachine1",
-			"data": 6
+            "item" : "industrialupgrade:moremachine1",
+            "data" : 6
           }
         ]
       }

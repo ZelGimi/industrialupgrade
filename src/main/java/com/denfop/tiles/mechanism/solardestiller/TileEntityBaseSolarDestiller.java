@@ -1,10 +1,13 @@
 package com.denfop.tiles.mechanism.solardestiller;
 
 import com.denfop.api.gui.IType;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSolarDestiller;
 import com.denfop.gui.GuiSolarDestiller;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotConsumableLiquidByTank;
@@ -12,11 +15,6 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
-import ic2.core.IHasGui;
-import ic2.core.block.comp.Fluids;
-import ic2.core.block.invslot.InvSlot.Access;
-import ic2.core.block.invslot.InvSlot.InvSide;
 import ic2.core.profile.NotClassic;
 import ic2.core.ref.FluidName;
 import ic2.core.util.BiomeUtil;
@@ -26,7 +24,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -59,18 +56,18 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         this.waterinputSlot = new InvSlotConsumableLiquidByList(
                 this,
                 "waterInput",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.TOP,
+                InvSlot.InvSide.ANY,
                 InvSlotConsumableLiquid.OpType.Drain,
                 FluidRegistry.WATER
         );
         this.destiwaterinputSlot = new InvSlotConsumableLiquidByTank(
                 this,
                 "destilledWaterInput",
-                Access.I,
+                InvSlot.Access.I,
                 1,
-                InvSide.BOTTOM,
+                InvSlot.InvSide.BOTTOM,
                 InvSlotConsumableLiquid.OpType.Fill,
                 this.outputTank
         );
@@ -117,7 +114,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
 
-    public ContainerBase<TileEntityBaseSolarDestiller> getGuiContainer(EntityPlayer player) {
+    public ContainerSolarDestiller getGuiContainer(EntityPlayer player) {
         return new ContainerSolarDestiller(player, this);
     }
 

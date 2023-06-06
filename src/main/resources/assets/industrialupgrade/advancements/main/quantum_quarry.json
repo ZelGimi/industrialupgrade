@@ -1,25 +1,25 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:basemachine",
-      "data": 8
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine",
+      "data" : 8
     },
-    "title": {
-      "translate": "achievement.quantum_quarry"
+    "title" : {
+      "translate" : "achievement.quantum_quarry"
     },
-    "description": {
-      "translate": "achievement.quantum_quarry.desc"
+    "description" : {
+      "translate" : "achievement.quantum_quarry.desc"
     }
   },
-  "parent": "industrialupgrade:main/dif_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/dif_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:basemachine",
-			"data": 8
+            "item" : "industrialupgrade:basemachine",
+            "data" : 8
           }
         ]
       }

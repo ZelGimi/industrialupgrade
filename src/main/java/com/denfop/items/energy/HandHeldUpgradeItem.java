@@ -1,9 +1,9 @@
 package com.denfop.items.energy;
 
+import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerHeldUpgradeItem;
 import com.denfop.gui.GuiUpgradeItem;
-import ic2.core.ContainerBase;
-import ic2.core.item.tool.HandHeldInventory;
+import com.denfop.items.HandHeldInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

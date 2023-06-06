@@ -15,7 +15,6 @@ import com.denfop.gui.GuiPlasticPlateCreator;
 import com.denfop.tiles.base.TileEntityBasePlasticPlateCreator;
 import ic2.api.recipe.IRecipeInputFactory;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.ContainerBase;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +31,8 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     public TileEntityPlasticPlateCreator() {
         super(1, 300, 1);
         this.inputSlotA = new InvSlotRecipes(this, "plasticplate", this, this.fluidTank);
+        this.componentProcess.setInvSlotRecipes(inputSlotA);
+        this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -55,16 +56,17 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     }
 
 
+    @Override
+    public ContainerPlasticPlateCreator getGuiContainer(final EntityPlayer entityPlayer) {
+        return new ContainerPlasticPlateCreator(entityPlayer, this);
+    }
+
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
         return new GuiPlasticPlateCreator(new ContainerPlasticPlateCreator(entityPlayer, this));
 
     }
 
-    public ContainerBase<? extends TileEntityPlasticPlateCreator> getGuiContainer(EntityPlayer entityPlayer) {
-        return new ContainerPlasticPlateCreator(entityPlayer, this);
-
-    }
 
     public String getStartSoundFile() {
         return "Machines/plastic_plate.ogg";
@@ -79,8 +81,13 @@ public class TileEntityPlasticPlateCreator extends TileEntityBasePlasticPlateCre
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+        return EnumSet.of(
+                UpgradableProperty.Processing,
+                UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage,
+                UpgradableProperty.ItemConsuming,
+                UpgradableProperty.ItemProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

@@ -1,12 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.container.ContainerBaseWitherMaker;
 import com.denfop.gui.GuiWitherMaker;
 import com.denfop.tiles.base.TileEntityBaseWitherMaker;
@@ -29,8 +24,8 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker implements 
     public TileEntityWitherMaker() {
         super(1, 1500, 1);
         this.inputSlotA = new InvSlotRecipes(this, "wither", this);
-        inputSlotA.setStackSizeLimit(1);
         Recipes.recipes.addInitRecipes(this);
+        this.componentProcess.setInvSlotRecipes(inputSlotA);
     }
 
 
@@ -39,7 +34,7 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker implements 
             IRecipeInput fill2, ItemStack output
     ) {
         Recipes.recipes.addRecipe("wither", new BaseMachineRecipe(
-                new Input(container, container, fill2, fill2, fill2, container, fill2),
+                new Input(container, container, container, fill2, fill2, fill2, fill2),
                 new RecipeOutput(
                         null,
                         output
@@ -58,15 +53,6 @@ public class TileEntityWitherMaker extends TileEntityBaseWitherMaker implements 
 
     }
 
-    public int getInventoryStackLimit() {
-
-        return 1;
-    }
-
-    public String getInventoryName() {
-
-        return "wither maker";
-    }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

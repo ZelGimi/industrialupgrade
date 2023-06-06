@@ -3,7 +3,6 @@ package com.denfop.invslot;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.items.ItemAdvancedWaterRotor;
 import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import ic2.core.block.invslot.InvSlot;
 import ic2.core.item.DamageHandler;
 import ic2.core.util.StackUtil;
 import net.minecraft.entity.EntityLivingBase;
@@ -119,7 +118,7 @@ public class InvSlotWaterRotor extends InvSlot {
     }
 
     @Override
-    public boolean accepts(final ItemStack stack) {
+    public boolean accepts(final ItemStack stack, final int index) {
 
         return stack.getItem() instanceof ItemAdvancedWaterRotor && ((IWindRotor) stack.getItem()).getLevel() >= windGenerator
                 .getLevel()

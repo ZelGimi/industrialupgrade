@@ -1,12 +1,12 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "particle": "industrialupgrade:blocks/thaum_bottom",
-    "down": "industrialupgrade:blocks/thaum_bottom",
-    "up": "industrialupgrade:blocks/thaum_top",
-    "north": "industrialupgrade:blocks/thaum_side",
-    "east": "industrialupgrade:blocks/thaum_side",
-    "south": "industrialupgrade:blocks/thaum_side",
-    "west": "industrialupgrade:blocks/thaum_side"
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/thaum_bottom",
+    "down" : "industrialupgrade:blocks/thaum_bottom",
+    "up" : "industrialupgrade:blocks/thaum_top",
+    "north" : "industrialupgrade:blocks/thaum_side",
+    "east" : "industrialupgrade:blocks/thaum_side",
+    "south" : "industrialupgrade:blocks/thaum_side",
+    "west" : "industrialupgrade:blocks/thaum_side"
   }
 }

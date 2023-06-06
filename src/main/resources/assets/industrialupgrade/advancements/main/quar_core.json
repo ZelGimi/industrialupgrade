@@ -1,26 +1,26 @@
 {
-  "display": {
-    "icon": {
-      "item": "industrialupgrade:itemcore",
-      "data": 13
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcore",
+      "data" : 13
     },
-    "title": {
-      "translate": "achievement.quar_core"
+    "title" : {
+      "translate" : "achievement.quar_core"
     },
-    "description": {
-      "translate": "achievement.quar_core.desc"
+    "description" : {
+      "translate" : "achievement.quar_core.desc"
     },
-    "frame": "challenge"
+    "frame" : "challenge"
   },
-  "parent": "industrialupgrade:main/gra_core",
-  "criteria": {
-    "mine": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
+  "parent" : "industrialupgrade:main/gra_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
           {
-            "item": "industrialupgrade:itemcore",
-            "data": 13
+            "item" : "industrialupgrade:itemcore",
+            "data" : 13
           }
         ]
       }

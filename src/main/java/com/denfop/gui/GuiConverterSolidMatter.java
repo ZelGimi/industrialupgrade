@@ -7,7 +7,6 @@ import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.IUpgradeItem;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.GuiIC2;
 import ic2.core.init.Localization;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -52,12 +51,7 @@ public class GuiConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
-        this.fontRenderer.drawString(
-                this.getName(),
-                (this.xSize - this.fontRenderer.getStringWidth(this.getName())) / 2,
-                6,
-                4210752
-        );
+
 
         new AdvArea(this, 119, 114, 157, 126)
                 .withTooltip("EU: " + ModUtils.getString((this.container.base).energy.getEnergy()) + "/" + ModUtils.getString((this.container.base).energy.getCapacity()))

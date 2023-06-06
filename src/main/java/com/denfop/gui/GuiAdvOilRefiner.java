@@ -1,17 +1,20 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAdvOilRefiner;
 import com.denfop.utils.ModUtils;
-import ic2.core.GuiIC2;
-import ic2.core.gui.TankGauge;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiAdvOilRefiner extends GuiIC2<ContainerAdvOilRefiner> {
+public class GuiAdvOilRefiner extends GuiIU<ContainerAdvOilRefiner> {
 
     private static final ResourceLocation background;
 
@@ -24,7 +27,10 @@ public class GuiAdvOilRefiner extends GuiIC2<ContainerAdvOilRefiner> {
     public GuiAdvOilRefiner(ContainerAdvOilRefiner container1) {
         super(container1);
         this.container = container1;
-
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 131, 38, EnumTypeComponent.SOUND_BUTTON,
+                new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
@@ -67,7 +73,7 @@ public class GuiAdvOilRefiner extends GuiIC2<ContainerAdvOilRefiner> {
             this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
-
+        this.drawBackground();
     }
 
 }

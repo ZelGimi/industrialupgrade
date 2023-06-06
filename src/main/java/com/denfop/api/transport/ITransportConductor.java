@@ -9,6 +9,7 @@ public interface ITransportConductor<T, E> extends ITransportAcceptor<T, E>, ITr
 
     boolean isItem();
 
+
 }
 
 

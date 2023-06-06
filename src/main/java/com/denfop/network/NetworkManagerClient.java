@@ -1,25 +1,28 @@
 package com.denfop.network;
 
+import com.denfop.IUCore;
+import com.denfop.api.inv.IHasGui;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.research.ResearchSystem;
 import com.denfop.api.research.main.BaseLevelSystem;
 import com.denfop.api.research.main.EnumLeveling;
+import com.denfop.audio.AudioPosition;
+import com.denfop.audio.PositionSpec;
+import com.denfop.componets.AbstractComponent;
+import com.denfop.items.IHandHeldInventory;
+import com.denfop.items.IHandHeldSubInventory;
+import com.denfop.tiles.base.TileEntityInventory;
 import com.mojang.authlib.GameProfile;
 import ic2.api.network.INetworkItemEventListener;
 import ic2.api.network.INetworkTileEntityEventListener;
 import ic2.core.ExplosionIC2;
 import ic2.core.IC2;
-import ic2.core.IHasGui;
-import ic2.core.audio.AudioPosition;
-import ic2.core.audio.PositionSpec;
 import ic2.core.block.ITeBlock;
 import ic2.core.block.TeBlockRegistry;
 import ic2.core.block.TileEntityBlock;
 import ic2.core.block.comp.Components;
 import ic2.core.block.comp.TileEntityComponent;
-import ic2.core.item.IHandHeldInventory;
-import ic2.core.item.IHandHeldSubInventory;
 import ic2.core.network.GrowingBuffer;
 import ic2.core.util.LogCategory;
 import ic2.core.util.ParticleUtil;
@@ -235,7 +238,7 @@ public class NetworkManagerClient extends NetworkManager {
                                     EntityPlayer player1 = IC2.platform.getPlayerInstance();
                                     TileEntity te = DataEncoder.getValue(teDeferred);
                                     if (te instanceof IHasGui) {
-                                        IC2.platform.launchGuiClient(player1, (IHasGui) te, isAdmin);
+                                        IUCore.proxy.launchGuiClient(player1, (IHasGui) te, isAdmin);
                                         player1.openContainer.windowId = windowId;
                                     } else if (player1 instanceof EntityPlayerSP) {
                                         ((EntityPlayerSP) player1).connection.sendPacket(new CPacketCloseWindow(windowId));
@@ -268,7 +271,7 @@ public class NetworkManagerClient extends NetworkManager {
 
                                     if (currentItem.getItem() instanceof IHandHeldInventory) {
                                         if (subGUI && currentItem.getItem() instanceof IHandHeldSubInventory) {
-                                            IC2.platform.launchGuiClient(
+                                            IUCore.proxy.launchGuiClient(
                                                     player12,
                                                     ((IHandHeldSubInventory) currentItem.getItem()).getSubInventory(
                                                             player12,
@@ -278,7 +281,7 @@ public class NetworkManagerClient extends NetworkManager {
                                                     isAdmin
                                             );
                                         } else {
-                                            IC2.platform.launchGuiClient(
+                                            IUCore.proxy.launchGuiClient(
                                                     player12,
                                                     ((IHandHeldInventory) currentItem.getItem()).getInventory(
                                                             player12,
@@ -325,7 +328,7 @@ public class NetworkManagerClient extends NetworkManager {
                                         );
                                         break;
                                     case Electrical:
-                                        IC2.audioManager.playOnce(
+                                        IUCore.audioManager.playOnce(
                                                 new AudioPosition(
                                                         world,
                                                         (float) pos.x,
@@ -367,7 +370,7 @@ public class NetworkManagerClient extends NetworkManager {
                                         );
                                         break;
                                     case Nuclear:
-                                        IC2.audioManager.playOnce(
+                                        IUCore.audioManager.playOnce(
                                                 new AudioPosition(
                                                         world,
                                                         (float) pos.x,
@@ -393,17 +396,10 @@ public class NetworkManagerClient extends NetworkManager {
 
                         });
                         break;
-                    case Rpc:
-                        throw new RuntimeException("Received unexpected RPC packet");
                     case TileEntityBlockComponent:
                         state = is.readInt();
                         BlockPos pos1 = DataEncoder.decode(is, BlockPos.class);
                         String componentName = is.readString();
-                        final Class<? extends TileEntityComponent> componentCls = Components.getClass(componentName);
-                        if (componentCls == null) {
-                            throw new IOException("invalid component: " + componentName);
-                        }
-
                         dataLen = is.readVarInt();
                         if (dataLen > 65536) {
                             throw new IOException("data length limit exceeded");
@@ -415,7 +411,21 @@ public class NetworkManagerClient extends NetworkManager {
                             World world = Minecraft.getMinecraft().world;
                             if (world.provider.getDimension() == state) {
                                 TileEntity teRaw = world.getTileEntity(pos1);
-                                if (teRaw instanceof TileEntityBlock) {
+                                if (teRaw instanceof TileEntityInventory) {
+                                    TileEntityInventory tile = (TileEntityInventory) teRaw;
+                                    AbstractComponent component = tile.getComp(componentName);
+
+                                    if (component != null) {
+                                        DataInputStream dataIs = new DataInputStream(new ByteArrayInputStream(data));
+
+                                        try {
+                                            component.onNetworkUpdate(dataIs);
+                                        } catch (IOException var6) {
+                                            throw new RuntimeException(var6);
+                                        }
+                                    }
+                                } else if (teRaw instanceof TileEntityBlock) {
+                                    final Class<TileEntityComponent> componentCls = Components.getClass(componentName);
                                     TileEntityComponent component = ((TileEntityBlock) teRaw).getComponent(componentCls);
                                     if (component != null) {
                                         DataInputStream dataIs = new DataInputStream(new ByteArrayInputStream(data));
@@ -595,7 +605,7 @@ public class NetworkManagerClient extends NetworkManager {
                                     EntityPlayer player = IC2.platform.getPlayerInstance();
                                     TileEntity te = DataEncoder.getValue(teDeferred);
                                     if (te instanceof IHasGui) {
-                                        IC2.platform.launchGuiClient(player, (IHasGui) te, isAdmin);
+                                        IUCore.proxy.launchGuiClient(player, (IHasGui) te, isAdmin);
                                         player.openContainer.windowId = windowId;
                                     } else if (player instanceof EntityPlayerSP) {
                                         ((EntityPlayerSP) player).connection.sendPacket(new CPacketCloseWindow(windowId));
@@ -628,7 +638,7 @@ public class NetworkManagerClient extends NetworkManager {
 
                                     if (!currentItem.isEmpty() && currentItem.getItem() instanceof IHandHeldInventory) {
                                         if (subGUI && currentItem.getItem() instanceof IHandHeldSubInventory) {
-                                            IC2.platform.launchGuiClient(
+                                            IUCore.proxy.launchGuiClient(
                                                     player,
                                                     ((IHandHeldSubInventory) currentItem.getItem()).getSubInventory(
                                                             player,
@@ -638,7 +648,7 @@ public class NetworkManagerClient extends NetworkManager {
                                                     isAdmin
                                             );
                                         } else {
-                                            IC2.platform.launchGuiClient(
+                                            IUCore.proxy.launchGuiClient(
                                                     player,
                                                     ((IHandHeldInventory) currentItem.getItem()).getInventory(
                                                             player,

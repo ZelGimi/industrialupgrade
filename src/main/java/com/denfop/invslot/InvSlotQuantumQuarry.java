@@ -9,7 +9,6 @@ import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
     public int stackSizeLimit;
 
     public InvSlotQuantumQuarry(TileEntityBaseQuantumQuarry base1, int oldStartIndex1, String name, int type) {
-        super(base1, name, Access.I, oldStartIndex1, InvSlot.InvSide.TOP);
+        super(base1, name, Access.I, oldStartIndex1, InvSlot.InvSide.ANY);
         this.tile = base1;
         this.stackSizeLimit = 1;
         this.type = type;
@@ -109,6 +108,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 break;
             case 2:
                 this.tile.analyzer = !this.get().isEmpty();
+                IUCore.network.get(true).updateTileEntityField(this.tile, "analyzer");
                 break;
         }
     }
@@ -185,11 +185,12 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 break;
             case 2:
                 this.tile.analyzer = !this.get().isEmpty();
+                IUCore.network.get(true).updateTileEntityField(this.tile, "analyzer");
                 break;
         }
     }
 
-    public boolean accepts(ItemStack itemStack) {
+    public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
 
             return itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type != EnumQuarryType.WHITELIST && EnumQuarryModules.getFromID(

@@ -1,8 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.ModTweaker;
 import com.blamejared.mtlib.helpers.LogHelper;
-import com.blamejared.mtlib.utils.BaseAction;
 import com.denfop.IUCore;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
@@ -43,7 +41,7 @@ public class CTQuarry {
 
     @ZenMethod
     public static void remove(IItemStack input) {
-        ModTweaker.LATE_REMOVALS.add(new CTQuarry.Remove(input));
+        CraftTweakerAPI.apply(new CTQuarry.Remove(input));
     }
 
 
@@ -73,16 +71,17 @@ public class CTQuarry {
         public void apply() {
 
 
-            if (OreDictionary.getOreIDs((ItemStack) output.getInternal()).length == 0) {
+            if (OreDictionary.getOreIDs((ItemStack) output.getInternal()).length != 0) {
                 if (!IUCore.list_adding.contains((ItemStack) output.getInternal())) {
                     IUCore.list_adding.add((ItemStack) output.getInternal());
-                } else {
-                    int i = OreDictionary.getOreIDs((ItemStack) output.getInternal())[0];
-                    if (!IUCore.list_adding.contains(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0))) {
-                        IUCore.list_adding.add(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0));
-                    }
+                }
+            } else {
+                int i = OreDictionary.getOreIDs((ItemStack) output.getInternal())[0];
+                if (!IUCore.list_adding.contains(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0))) {
+                    IUCore.list_adding.add(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0));
                 }
             }
+
 
         }
 

@@ -284,13 +284,13 @@ public class WavefrontObject implements IModelCustom {
 
     @SideOnly(Side.CLIENT)
     public void renderAll() {
+
         Tessellator tessellator = Tessellator.getInstance();
         if (this.currentGroupObject != null) {
             tessellator.getBuffer().begin(this.currentGroupObject.glDrawingMode, DefaultVertexFormats.POSITION_TEX_NORMAL);
         } else {
             tessellator.getBuffer().begin(4, DefaultVertexFormats.POSITION_TEX_NORMAL);
         }
-
         this.tessellateAll(tessellator);
         tessellator.draw();
     }
@@ -298,10 +298,7 @@ public class WavefrontObject implements IModelCustom {
     @SideOnly(Side.CLIENT)
     public void tessellateAll(Tessellator tessellator) {
 
-        for (final GroupObject groupObject : this.groupObjects) {
-            groupObject.render(tessellator);
-        }
-
+        this.groupObjects.forEach(groupObject -> groupObject.render(tessellator));
     }
 
     @SideOnly(Side.CLIENT)
@@ -484,12 +481,7 @@ public class WavefrontObject implements IModelCustom {
 
         @SideOnly(Side.CLIENT)
         public void render(Tessellator tessellator) {
-            if (this.faces.size() > 0) {
-
-                for (final Face face : this.faces) {
-                    face.addFaceForRender(tessellator);
-                }
-            }
+            faces.forEach(face -> face.addFaceForRender(tessellator));
 
         }
 
@@ -501,6 +493,9 @@ public class WavefrontObject implements IModelCustom {
         public Vertex[] vertexNormals;
         public Vertex faceNormal;
         public WavefrontObject.TextureCoordinate[] textureCoordinates;
+        private boolean update = false;
+        private float averageU;
+        private float averageV;
 
         public Face() {
         }
@@ -515,19 +510,20 @@ public class WavefrontObject implements IModelCustom {
             if (this.faceNormal == null) {
                 this.faceNormal = this.calculateFaceNormal();
             }
+            if (!this.update) {
+                this.update = true;
+                this.averageU = 0.0F;
+                this.averageV = 0.0F;
+                if (this.textureCoordinates != null && this.textureCoordinates.length > 0) {
+                    for (TextureCoordinate textureCoordinate : this.textureCoordinates) {
+                        averageU += textureCoordinate.u;
+                        averageV += textureCoordinate.v;
+                    }
 
-            float averageU = 0.0F;
-            float averageV = 0.0F;
-            if (this.textureCoordinates != null && this.textureCoordinates.length > 0) {
-                for (final TextureCoordinate textureCoordinate : this.textureCoordinates) {
-                    averageU += textureCoordinate.u;
-                    averageV += textureCoordinate.v;
+                    averageU /= (float) this.textureCoordinates.length;
+                    averageV /= (float) this.textureCoordinates.length;
                 }
-
-                averageU /= (float) this.textureCoordinates.length;
-                averageV /= (float) this.textureCoordinates.length;
             }
-
             for (int i = 0; i < this.vertices.length; ++i) {
                 if (this.textureCoordinates != null && this.textureCoordinates.length > 0) {
                     float offsetU = textureOffset;

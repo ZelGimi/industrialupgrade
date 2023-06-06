@@ -2,11 +2,8 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerPlasticCreator;
 import com.denfop.gui.GuiPlasticCreator;
 import com.denfop.tiles.base.TileEntityBasePlasticCreator;
@@ -30,6 +27,8 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator imple
     public TileEntityPlasticCreator() {
         super(1, 300, 1);
         this.inputSlotA = new InvSlotRecipes(this, "plastic", this, this.fluidTank);
+        this.componentProcess.setInvSlotRecipes(inputSlotA);
+        this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -51,6 +50,14 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator imple
                                 "iufluidpolyprop"))
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.plast))
+        ));
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidazot.getInstance(), 12000),
+                        input.forOreDict("blockVitalium"),
+                        input.forStack(new ItemStack(IUItem.crafting_elements, 1, 269))
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 270))
         ));
     }
 
@@ -85,8 +92,13 @@ public class TileEntityPlasticCreator extends TileEntityBasePlasticCreator imple
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+        return EnumSet.of(
+                UpgradableProperty.Processing,
+                UpgradableProperty.Transformer,
+                UpgradableProperty.EnergyStorage,
+                UpgradableProperty.ItemConsuming,
+                UpgradableProperty.ItemProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 
