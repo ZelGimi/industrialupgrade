@@ -10,7 +10,9 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiSynthesis;
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
@@ -58,6 +60,7 @@ public class TileEntitySynthesis extends TileEntityDoubleElectricMachine impleme
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
+
     }
 
     public static void addsynthesis(ItemStack container, ItemStack fill, int number, ItemStack output) {

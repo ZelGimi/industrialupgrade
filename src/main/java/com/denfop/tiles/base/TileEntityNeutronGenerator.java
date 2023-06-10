@@ -102,19 +102,18 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
     protected void updateEntityServer() {
         super.updateEntityServer();
 
-        boolean needsInvUpdate = false;
-        if (this.work && !(this.energy.getEnergy() <= 0.0D)) {
+        boolean needsInvUpdate;
+        if (!this.containerslot.isEmpty()) {
+            this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
+        }
+        if (this.work && this.energy.getEnergy() >= this.energycost) {
 
             if (!this.getActive()) {
                 this.setActive(true);
             }
 
-            if (this.energy.getEnergy() >= this.energycost) {
-                needsInvUpdate = this.attemptGeneration();
-            }
-            if (!this.containerslot.isEmpty()) {
-                this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
-            }
+            needsInvUpdate = this.attemptGeneration();
+
 
             if (needsInvUpdate && this.upgradeSlot.tickNoMark()) {
                 setUpgradestat();
@@ -163,13 +162,6 @@ public class TileEntityNeutronGenerator extends TileEntityElectricMachine implem
         super.onNetworkUpdate(field);
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
-
-    }
 
     public void setUpgradestat() {
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));

@@ -246,13 +246,7 @@ public abstract class TileEntityBaseLiquedMachine extends TileEntityElectricMach
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
 
-    }
 
     public void setUpgradestat() {
         this.energy.setSinkTier(this.tier + this.upgradeSlot.extraTier);

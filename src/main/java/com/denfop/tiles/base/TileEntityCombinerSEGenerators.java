@@ -185,9 +185,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
                 this.sunenergy.addEnergy(-2500);
             }
         }
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
+        this.upgradeSlot.tickNoMark();
     }
 
     protected void onUnloaded() {
@@ -196,16 +194,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-        }
-    }
 
-    public void setOverclockRates() {
-
-    }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

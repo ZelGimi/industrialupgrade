@@ -9,7 +9,9 @@ import com.denfop.audio.AudioSource;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerSunnariumMaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -32,6 +34,7 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
+    private final ComponentUpgrade componentUpgrades;
     public AudioSource audioSource;
     public ComponentBaseEnergy sunenergy;
     public InvSlotRecipes inputSlotA;
@@ -54,6 +57,8 @@ public abstract class TileEntityBaseSunnariumMaker extends TileEntityElectricMac
         this.componentProcess = this.addComponent(new ComponentProcess(this, length, energyPerTick));
         this.componentProcess.setHasAudio(false);
         this.componentProcess.setSlotOutput(outputSlot);
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT,TypeUpgrade.STACK));
+
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

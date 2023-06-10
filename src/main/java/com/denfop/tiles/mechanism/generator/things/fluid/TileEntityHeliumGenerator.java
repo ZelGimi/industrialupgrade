@@ -122,7 +122,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
         if (!this.containerslot.isEmpty() && this.fluidTank.getFluidAmount() > 0) {
             this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
         }
-        if (this.fluidTank.getFluidAmount() > 0 && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setUpgradestat();
         }
     }
@@ -168,13 +168,7 @@ public class TileEntityHeliumGenerator extends TileEntityElectricMachine impleme
         super.onNetworkUpdate(field);
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
 
-    }
 
     public void setUpgradestat() {
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));

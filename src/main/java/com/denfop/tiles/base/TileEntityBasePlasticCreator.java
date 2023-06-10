@@ -8,8 +8,10 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerPlasticCreator;
 import com.denfop.gui.GuiPlasticCreator;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
@@ -45,6 +47,7 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
+    private final ComponentUpgrade componentUpgrades;
     public AudioSource audioSource;
 
     public InvSlotRecipes inputSlotA;
@@ -64,6 +67,8 @@ public class TileEntityBasePlasticCreator extends TileEntityElectricLiquidTankIn
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setHasTank(true);
         this.componentProcess.setSlotOutput(outputSlot);
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT,TypeUpgrade.STACK));
+
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

@@ -8,9 +8,11 @@ import com.denfop.audio.AudioSource;
 import com.denfop.componets.Action;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.TypeAction;
 import com.denfop.componets.TypeLoad;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerBaseWitherMaker;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.upgrade.IUpgradableBlock;
@@ -37,6 +39,7 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProgress componentProgress;
     public final ComponentProcess componentProcess;
+    private final ComponentUpgrade componentUpgrades;
     public AudioSource audioSource;
     public MachineRecipe output;
     public InvSlotRecipes inputSlotA;
@@ -57,6 +60,8 @@ public abstract class TileEntityBaseWitherMaker extends TileEntityElectricMachin
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setAction(new Action(this, 20, TypeAction.AUDIO, TypeLoad.PROGRESS, Boolean.FALSE, 3));
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT,TypeUpgrade.STACK));
+
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

@@ -30,22 +30,7 @@ public class MaceratorRecipe {
 
     public static void recipe() {
 
-        Iterable<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> recipe3 =
-                ic2.api.recipe.Recipes.macerator.getRecipes();
-        Iterator<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> iter1 = recipe3.iterator();
-        while (iter1.hasNext()) {
-            MachineRecipe<IRecipeInput, Collection<ItemStack>> recipe2 = iter1.next();
-            List<ItemStack> list = (List<ItemStack>) recipe2.getOutput();
-            if (list.get(0).isItemEqual(Ic2Items.crushedSilverOre)) {
-                iter1.remove();
-            }
-            if (list.get(0).isItemEqual(Ic2Items.silverDust)) {
-                iter1.remove();
-            }
-            if (list.get(0).isItemEqual(Ic2Items.smallSilverDust)) {
-                iter1.remove();
-            }
-        }
+
         if (!Loader.isModLoaded("aobd")) {
             for (int j = 0; j < recipe.length; j++) {
                 for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
@@ -115,7 +100,6 @@ public class MaceratorRecipe {
         addmacerator("plateLapis", "dustLapis");
         addmacerator("plateDenseBronze", "dustBronze", 9);
         addmacerator("plateSteel", "dustIron");
-        addmacerator("plateObsidian", "dustIron");
         if (IUCore.isHasVersion("ic2", "220")) {
             addmacerator(new ItemStack(Blocks.NETHERRACK), ItemName.dust.getItemStack(DustResourceType.netherrack));
         }

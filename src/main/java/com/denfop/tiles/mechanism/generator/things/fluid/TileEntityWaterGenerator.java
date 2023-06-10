@@ -128,7 +128,7 @@ public class TileEntityWaterGenerator extends TileEntityElectricMachine implemen
         if (!this.containerslot.isEmpty() && this.fluidTank.getFluidAmount() > 0) {
             this.containerslot.processFromTank(this.fluidTank, this.outputSlot);
         }
-        if (this.fluidTank.getFluidAmount() > 0 && this.upgradeSlot.tickNoMark()) {
+        if (this.upgradeSlot.tickNoMark()) {
             setUpgradestat();
         }
     }
@@ -173,13 +173,7 @@ public class TileEntityWaterGenerator extends TileEntityElectricMachine implemen
         super.onNetworkUpdate(field);
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
 
-    }
 
     public String getStartSoundFile() {
         return null;

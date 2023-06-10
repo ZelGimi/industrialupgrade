@@ -217,7 +217,6 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
 
         info.add(ModUtils.getString(capacity) + " " + Localization.translate("ic2.generic.text.EUt"));
         info.add(Localization.translate("ic2.cable.tooltip.loss", lossFormat.format(loss)));
-        info.add(Localization.translate("iu.transport.energy"));
     }
 
     @Nonnull

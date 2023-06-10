@@ -1,3 +1,3 @@
-Version:2.5.0.17
+Version:2.5.0.18
 CurseForge:https://www.curseforge.com/minecraft/mc-mods/industrial-upgrade/
 Changelog:changelog.txt

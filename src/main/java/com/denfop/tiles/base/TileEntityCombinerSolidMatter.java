@@ -138,9 +138,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
             }
             this.energy.useEnergy(this.energy.getEnergy());
         }
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
+        this.upgradeSlot.tickNoMark();
 
 
     }
@@ -151,16 +149,9 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-        }
-    }
 
-    public void setOverclockRates() {
 
-    }
+
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {

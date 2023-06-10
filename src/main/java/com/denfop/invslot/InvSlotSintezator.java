@@ -86,12 +86,11 @@ public class InvSlotSintezator extends InvSlot {
             tile.genDay = myArray1[0];
             tile.genNight = myArray1[1];
             tile.maxStorage = myArray1[2];
-            tile.maxStorage2 = myArray1[2] * Config.coefficientrf;
             tile.production = myArray1[3];
 
         } else {
+            this.tile.inputslot.update();
             this.checkmodule();
-            this.getrfmodule();
             int type = this.tile.solartype;
             this.tile.solartype = this.solartype();
             if (type != tile.solartype) {
@@ -144,12 +143,11 @@ public class InvSlotSintezator extends InvSlot {
             tile.genDay = myArray1[0];
             tile.genNight = myArray1[1];
             tile.maxStorage = myArray1[2];
-            tile.maxStorage2 = myArray1[2] * Config.coefficientrf;
             tile.production = myArray1[3];
 
         } else {
+            this.tile.inputslot.update();
             this.checkmodule();
-            this.getrfmodule();
             int type = this.tile.solartype;
             this.tile.solartype = this.solartype();
             if (type != tile.solartype) {
@@ -207,18 +205,7 @@ public class InvSlotSintezator extends InvSlot {
         }
     }
 
-    public void getrfmodule() {
-        TileEntitySintezator tile = (TileEntitySintezator) base;
-        for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItemDamage() == 4 && this
-                    .get(i)
-                    .getItem() instanceof ItemAdditionModule) {
-                tile.getmodulerf = true;
-                return;
-            }
-        }
-        tile.getmodulerf = false;
-    }
+
 
     public int solartype() {
         TileEntitySintezator tile = (TileEntitySintezator) base;

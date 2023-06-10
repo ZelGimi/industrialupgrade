@@ -400,12 +400,7 @@ public class TileEntityConverterSolidMatter extends TileEntityElectricMachine
     }
 
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-        }
-    }
+
 
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

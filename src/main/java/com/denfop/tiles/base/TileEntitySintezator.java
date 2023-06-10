@@ -1,8 +1,5 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyProvider;
-import cofh.redstoneflux.api.IEnergyReceiver;
-import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.energy.IAdvEnergySource;
@@ -15,7 +12,6 @@ import com.denfop.gui.GuiSintezator;
 import com.denfop.invslot.InvSlotSintezator;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
-import com.denfop.tiles.panels.entity.TransferRFEnergy;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkDataProvider;
@@ -38,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileEntitySintezator extends TileEntityInventory implements IAdvEnergySource, IHasGui,
-        IEnergyProvider, INetworkDataProvider, INetworkClientTileEntityEventListener,
+         INetworkDataProvider, INetworkClientTileEntityEventListener,
         INetworkUpdateListener {
 
     public final InvSlotSintezator inputslot;
@@ -59,29 +55,22 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
     public double maxStorage;
 
     public boolean rain = false;
-    public boolean getmodulerf = false;
     public double progress;
-    public double storage2;
-    public double maxStorage2;
-    public double progress2;
     public boolean wetBiome;
     public EnumType type;
     public TileEntitySolarPanel.GenerationState active;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
-    List<TransferRFEnergy> transferRFEnergyList = new ArrayList<>();
     private double pastEnergy;
     private double perenergy;
 
     public TileEntitySintezator() {
         this.facing = 2;
         this.storage = 0;
-        this.storage2 = 0;
         this.sunIsUp = false;
         this.skyIsVisible = false;
         this.genNight = 0;
         this.genDay = 0;
         this.maxStorage = 0;
-        this.maxStorage2 = 0;
         this.machineTire = 0;
         this.machineTire1 = 0;
         this.inputslot = new InvSlotSintezator(this, "input", 0, 9);
@@ -167,29 +156,10 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
 
     }
 
-    @Override
-    public int extractEnergy(final EnumFacing enumFacing, final int i, final boolean b) {
-        return extractEnergy((int) Math.min(this.production * Config.coefficientrf, i), b);
-    }
-
-    public int extractEnergy(int paramInt, boolean paramBoolean) {
-        int i = (int) Math.min(this.storage2, Math.min(this.production * Config.coefficientrf, paramInt));
-        if (!paramBoolean) {
-            this.storage2 -= i;
-        }
-        return i;
-    }
-
-    @Override
-    public int getEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.storage2;
-    }
 
     public void readFromNBT(final NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        if (nbttagcompound.getDouble("storage2") > 0) {
-            this.storage2 = nbttagcompound.getDouble("storage2");
-        }
+
         if (nbttagcompound.getInteger("solarType") != 0) {
             this.solartype = nbttagcompound.getInteger("solarType");
         }
@@ -202,16 +172,13 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
             this.genNight = nbttagcompound.getDouble("genNight");
             this.maxStorage = nbttagcompound.getDouble("maxStorage");
             this.production = nbttagcompound.getDouble("production");
-            this.maxStorage2 = nbttagcompound.getDouble("maxStorage2");
 
         }
     }
 
     public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        if (storage2 > 0) {
-            nbttagcompound.setDouble("storage2", this.storage2);
-        }
+
         nbttagcompound.setInteger("solarType", this.solartype);
 
         if (storage > 0) {
@@ -223,10 +190,6 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
             nbttagcompound.setDouble("production", this.production);
 
             nbttagcompound.setDouble("maxStorage", this.maxStorage);
-            if (maxStorage2 > 0) {
-                nbttagcompound.setDouble("maxStorage2", this.maxStorage2);
-
-            }
         }
         return nbttagcompound;
 
@@ -296,14 +259,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
         return this.machineTire;
     }
 
-    public double gaugeEnergyScaled1(int i) {
-        return progress2 * i;
-    }
 
-    @Override
-    public int getMaxEnergyStored(final EnumFacing enumFacing) {
-        return (int) this.maxStorage2;
-    }
 
     public void updateTileEntityField() {
         if (this.world != null) {
@@ -312,10 +268,6 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
 
     }
 
-    @Override
-    public boolean canConnectEnergy(final EnumFacing enumFacing) {
-        return true;
-    }
 
 
     @Override
@@ -331,53 +283,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
 
         super.updateEntityServer();
 
-        if (this.getmodulerf && this.storage2 > 0) {
-            if (this.getWorld().getWorldTime() % 60 == 0) {
-                transferRFEnergyList.clear();
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    BlockPos pos = new BlockPos(
-                            this.pos.getX() + facing.getFrontOffsetX(),
-                            this.pos.getY() + facing.getFrontOffsetY(),
-                            this.pos.getZ() + facing.getFrontOffsetZ()
-                    );
-                    TileEntity tile = this.getWorld().getTileEntity(pos);
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile instanceof IEnergyReceiver) {
-                        transferRFEnergyList.add(new TransferRFEnergy(tile, ((IEnergyReceiver) tile), facing));
-                    }
-                }
 
-            }
-            boolean refresh = false;
-            for (TransferRFEnergy rfEnergy : this.transferRFEnergyList) {
-                if (rfEnergy.getTile().isInvalid()) {
-                    refresh = true;
-                    continue;
-                }
-                extractEnergy(rfEnergy.getFacing(), rfEnergy.getSink().receiveEnergy(rfEnergy.getFacing().getOpposite(),
-                        extractEnergy(rfEnergy.getFacing(), (int) this.storage2, true), false
-                ), false);
-            }
-            if (refresh) {
-                transferRFEnergyList.clear();
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    BlockPos pos = new BlockPos(
-                            this.pos.getX() + facing.getFrontOffsetX(),
-                            this.pos.getY() + facing.getFrontOffsetY(),
-                            this.pos.getZ() + facing.getFrontOffsetZ()
-                    );
-                    TileEntity tile = this.getWorld().getTileEntity(pos);
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile instanceof IEnergyReceiver) {
-                        transferRFEnergyList.add(new TransferRFEnergy(tile, ((IEnergyReceiver) tile), facing));
-                    }
-                }
-            }
-        }
 
 
         this.gainFuel();
@@ -400,21 +306,12 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
             this.inputslot.wirelessmodule();
         }
         if (this.generating > 0D) {
-            if (!this.getmodulerf) {
                 if (((this.storage + this.generating)) <= (this.maxStorage)) {
                     this.storage += this.generating;
                 } else {
                     this.storage = (this.maxStorage);
                 }
-            } else {
-                if (((this.storage2 + this.generating * Config.coefficientrf)) <= (this.maxStorage2)) {
-                    this.storage2 += this.generating * Config.coefficientrf;
-                } else {
-                    this.storage2 = (this.maxStorage2);
-                }
-            }
         }
-        this.progress2 = Math.min(1, this.storage2 / this.maxStorage2);
 
         this.progress = Math.min(1, this.storage / this.maxStorage);
         if (this.storage < 0D) {
@@ -423,12 +320,7 @@ public class TileEntitySintezator extends TileEntityInventory implements IAdvEne
         if (this.maxStorage <= 0D) {
             this.storage = 0D;
         }
-        if (this.storage2 < 0D) {
-            this.storage2 = 0D;
-        }
-        if (this.maxStorage2 <= 0D) {
-            this.storage2 = 0D;
-        }
+
     }
 
     public void gainFuel() {

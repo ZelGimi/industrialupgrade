@@ -264,7 +264,7 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
                 }
             }
             double heat = this.heat.getEnergy();
-            if (heat > 250 && this.tank.getFluidAmount() + 2 < this.tank.getCapacity()) {
+            if (heat > 500 && this.tank.getFluidAmount() + 2 < this.tank.getCapacity()) {
                 int size = this.tank1.getFluidAmount();
                 int size_stream = this.tank.getCapacity() - this.tank.getFluidAmount();
                 int size1 = size / 5;

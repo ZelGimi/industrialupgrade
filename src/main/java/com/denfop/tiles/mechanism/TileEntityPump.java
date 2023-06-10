@@ -133,7 +133,9 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
 
         this.guiProgress = (float) this.progress / (float) this.operationLength;
-        this.upgradeSlot.tickNoMark();
+        if(this.upgradeSlot.tickNoMark()){
+            setUpgradestat();
+        };
 
 
     }
@@ -225,13 +227,7 @@ public class TileEntityPump extends TileEntityElectricLiquidTankInventory implem
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
 
-    }
 
     public void setUpgradestat() {
         double previousProgress = (double) this.progress / (double) this.operationLength;

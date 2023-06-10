@@ -4,38 +4,22 @@ import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-enum TypeUpgrade {
-    STACK(new ItemStack(IUItem.module_stack)),
-    INSTANT(new ItemStack(IUItem.module_quickly)),
-    SORTING(new ItemStack(IUItem.module_storage));
-    private final ItemStack stack;
-
-    TypeUpgrade(ItemStack stack) {
-        this.stack = stack;
-    }
-
-    public ItemStack getStack() {
-        return stack;
-    }
-}
-
 public class ComponentUpgrade extends AbstractComponent {
 
     private final List<TypeUpgrade> listUpgrade;
     private final List<TypeUpgrade> listActiveUpgrade = new ArrayList<>();
     private boolean change = true;
-    private int maxUpgrade;
 
     public ComponentUpgrade(final TileEntityInventory parent, TypeUpgrade... typeUpgrades) {
         super(parent);
         this.listUpgrade = Arrays.asList(typeUpgrades);
-        this.maxUpgrade = this.listUpgrade.size();
     }
 
     public boolean isChange() {
@@ -46,9 +30,7 @@ public class ComponentUpgrade extends AbstractComponent {
         this.change = change;
     }
 
-    public void setMaxUpgrade(final int maxUpgrade) {
-        this.maxUpgrade = maxUpgrade;
-    }
+
 
     public boolean hasUpgrade(TypeUpgrade typeUpgrade) {
         return listActiveUpgrade.contains(typeUpgrade);
@@ -57,6 +39,29 @@ public class ComponentUpgrade extends AbstractComponent {
     @Override
     public boolean canUsePurifier(final EntityPlayer player) {
         return !this.listActiveUpgrade.isEmpty();
+    }
+
+    @Override
+    public TypePurifierJob getPurifierJob() {
+        return TypePurifierJob.ItemStack;
+    }
+
+    @Override
+    public List<ItemStack> getDrops() {
+        final List<ItemStack> list = super.getDrops();
+        for (TypeUpgrade upgrade : this.listActiveUpgrade) {
+            list.add(upgrade.getStack().copy());
+        }
+        return list;
+    }
+
+    public ItemStack getItemStackUpgrade() {
+        final TypeUpgrade type = this.listActiveUpgrade.remove(0);
+        this.change = true;
+        if (type != null) {
+            return type.getStack().copy();
+        }
+        return super.getItemStackUpgrade();
     }
 
     @Override
@@ -73,6 +78,28 @@ public class ComponentUpgrade extends AbstractComponent {
             }
         }
         return false;
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt() {
+        final NBTTagCompound nbt = super.writeToNbt();
+        nbt.setInteger("max", this.listActiveUpgrade.size());
+        int i = 0;
+        for (TypeUpgrade upgrade : this.listActiveUpgrade) {
+            nbt.setInteger(String.valueOf(i), upgrade.ordinal());
+            i++;
+        }
+        return nbt;
+    }
+
+    @Override
+    public void readFromNbt(final NBTTagCompound nbt) {
+        super.readFromNbt(nbt);
+        int size = nbt.getInteger("max");
+        final TypeUpgrade[] values = TypeUpgrade.values();
+        for (int i = 0; i < size; i++) {
+            this.listActiveUpgrade.add(values[nbt.getInteger(String.valueOf(i))]);
+        }
     }
 
 }

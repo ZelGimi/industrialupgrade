@@ -213,8 +213,7 @@ public class ItemUniversalCable extends ItemIC2 implements IMultiItem<UniversalT
         info.add(Localization.translate("ic2.cable.tooltip.loss", lossFormat.format(loss)));
         info.add(Localization.translate("iu.transport.cold") + "-" + ModUtils.getString(64) + " °C");
         info.add(Localization.translate("iu.transport.heat") + ModUtils.getString(16000) + " °C");
-        info.add(Localization.translate("iu.transport.energy"));
-    }
+       }
 
     @Nonnull
     public EnumActionResult onItemUse(

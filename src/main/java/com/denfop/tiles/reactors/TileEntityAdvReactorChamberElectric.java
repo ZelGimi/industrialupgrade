@@ -248,15 +248,6 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
     protected void onBlockBreak() {
         super.onBlockBreak();
 
-        if (this.reactor != null) {
-            this.reactor.change = true;
-            this.reactor.getReactorSize();
-            BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
-            TileEntity tile = this.getWorld().getTileEntity(pos1);
-            if (tile instanceof TileEntityHeatSensor) {
-                this.reactor.isLimit = false;
-            }
-        }
     }
 
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
@@ -271,7 +262,6 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
 
     public void destoryChamber(boolean wrench) {
         World world = this.getWorld();
-
         MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
 
         world.setBlockToAir(this.pos);
@@ -287,6 +277,11 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
             if (!this.reactor.isInvalid()) {
                 this.reactor.change = true;
                 this.reactor.getReactorSize();
+                BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
+                TileEntity tile = this.getWorld().getTileEntity(pos1);
+                if (tile instanceof TileEntityHeatSensor) {
+                    this.reactor.isLimit = false;
+                }
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             }
         }
@@ -296,17 +291,14 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
     private void updateReactor() {
         World world = this.getWorld();
         this.reactor = null;
-        EnumFacing[] var2 = EnumFacing.VALUES;
 
 
-        for (EnumFacing facing : var2) {
+        for (EnumFacing facing :  EnumFacing.VALUES) {
             TileEntity te = world.getTileEntity(this.pos.offset(facing));
 
             if (te instanceof TileEntityAdvNuclearReactorElectric) {
-
                 this.reactor = (TileEntityAdvNuclearReactorElectric) te;
                 this.reactor.getReactorSize();
-                break;
             }
         }
 

@@ -13,6 +13,7 @@ import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.CoolComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
@@ -23,6 +24,7 @@ import com.denfop.container.ContainerMultiMachine;
 import com.denfop.gui.GuiMultiMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.items.modules.ItemModuleTypePanel;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
@@ -68,6 +70,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
     public final CoolComponent cold;
     public final ProcessMultiComponent multi_process;
     public final int sizeWorkingSlot;
+    private final ComponentUpgradeSlots componentUpgrades;
     public HeatComponent heat = null;
     public FluidTank tank = null;
     public ComponentBaseEnergy exp;
@@ -115,6 +118,15 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
         }
         this.multi_process = this.addComponent(new ProcessMultiComponent(this, getMachine()));
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.HEAT);
+        this.componentUpgrades = this.addComponent(new ComponentUpgradeSlots(this,this.multi_process.getUpgradeSlot()){
+            @Override
+            public void setOverclockRates(final InvSlotUpgrade invSlotUpgrade) {
+                super.setOverclockRates(invSlotUpgrade);
+                invSlotUpgrade.isUpdate = true;
+                ((TileEntityMultiMachine)this.getParent()).multi_process.setOverclockRates();
+                invSlotUpgrade.isUpdate = false;
+            }
+        });
     }
 
     public List<String> getNetworkFields() {
@@ -132,11 +144,7 @@ public abstract class TileEntityMultiMachine extends TileEntityInventory impleme
 
     }
 
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        this.multi_process.setOverclockRates();
-    }
+
 
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {

@@ -32,6 +32,9 @@ public class ComponentProcess extends AbstractComponent {
     AdvEnergy advEnergy;
     private boolean audoFix;
     private Action action;
+    private ComponentUpgrade componentUpgrade;
+    private boolean instant;
+    private boolean stack;
 
     public ComponentProcess(
             final TileEntityInventory parent,
@@ -66,6 +69,7 @@ public class ComponentProcess extends AbstractComponent {
         this.coldComponent = this.getParent().getComp(CoolComponent.class);
         this.componentSE = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergysolarium");
         this.audoFix = this.getParent() instanceof IAudioFixer;
+        this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
     }
 
     public void setSlotOutput(final InvSlotOutput slotOutput) {
@@ -105,7 +109,11 @@ public class ComponentProcess extends AbstractComponent {
     }
 
     public boolean checkSE() {
-        return componentSE == null || componentSE.getEnergy() > 5;
+        int energy = 5;
+        if (this.instant) {
+            energy*=this.operationLength;
+        }
+        return componentSE == null || componentSE.getEnergy() > energy;
     }
 
     public boolean checkFluidRecipe() {
@@ -142,6 +150,42 @@ public class ComponentProcess extends AbstractComponent {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        double energyConsume = this.energyConsume;
+        int size = 64;
+        if (this.componentUpgrade != null) {
+            if (this.componentUpgrade.isChange()) {
+                this.instant = this.componentUpgrade.hasUpgrade(TypeUpgrade.INSTANT);
+                this.stack = this.componentUpgrade.hasUpgrade(TypeUpgrade.STACK);
+                this.componentUpgrade.setChange(false);
+            }
+        }
+        if (this.instant) {
+            energyConsume *= this.operationLength;
+        }
+        if (this.stack) {
+            if (this.updateTick.getRecipeOutput() != null) {
+                final List<Integer> list = this.updateTick.getRecipeOutput().getList();
+                for (int i = 0; i <list.size(); i++) {
+                    size = Math.min(
+                            size,
+                            this.invSlotRecipes.get(i).getCount() / list.get(i)
+                    );
+                }
+                int count = this.outputSlot.get().isEmpty() ? 64 : 64 - this.outputSlot.get().getCount();
+                count = count / this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getCount();
+                size = Math.min(size, count);
+                if(this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null){
+                    final int size1 = this.invSlotRecipes.getTank().getFluid().amount / this.updateTick
+                            .getRecipeOutput()
+                            .getRecipe().input.getFluid().amount;
+                    size =  Math.min(size, size1);
+                }
+            }
+        } else {
+            size = 1;
+        }
+
+        energyConsume *= size;
         if (this.updateTick.getRecipeOutput() != null && this.advEnergy.canUseEnergy(energyConsume) && !this.invSlotRecipes.isEmpty() && this.outputSlot.canAdd(
                 this.updateTick
                         .getRecipeOutput()
@@ -154,10 +198,12 @@ public class ComponentProcess extends AbstractComponent {
                 this.parent.setActive(true);
             }
             if (this.componentProgress.getProgress() == 0 && this.hasAudio) {
-                if (!this.audoFix) {
-                    IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 0, true);
-                } else {
-                    ((IAudioFixer) this.getParent()).initiate(0);
+                if (this.operationLength > this.defaultOperationLength * 0.1) {
+                    if (!this.audoFix) {
+                        IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 0, true);
+                    } else {
+                        ((IAudioFixer) this.getParent()).initiate(0);
+                    }
                 }
             }
             this.componentProgress.addProgress();
@@ -168,22 +214,32 @@ public class ComponentProcess extends AbstractComponent {
                 this.componentProgress.setMaxValue((short) this.operationLength);
             }
             if (this.componentSE != null) {
-                this.componentSE.useEnergy(5);
+                int energy = 5;
+                if (this.instant) {
+                    energy*=this.operationLength;
+                }
+                this.componentSE.useEnergy(energy);
             }
             this.advEnergy.useEnergy(energyConsume);
+            if (this.instant) {
+                this.componentProgress.setProgress((short) this.operationLength);
+            }
             if (this.componentProgress.getProgress() >= this.operationLength) {
                 this.componentProgress.cancellationProgress();
-                operate(this.updateTick.getRecipeOutput());
+                for (int i = 0; i < size; i++) {
+                    operate(this.updateTick.getRecipeOutput());
+                }
                 if (action != null && action.needAction(TypeLoad.AFTER_PROGRESS)) {
                     action.doAction();
                 }
-                if (this.hasAudio) {
-                    if (!this.audoFix) {
-                        IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 2, true);
-                    } else {
-                        ((IAudioFixer) this.getParent()).initiate(2);
+                     if (this.hasAudio) {
+                        if (!this.audoFix) {
+                            IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 2, true);
+                        } else {
+                            ((IAudioFixer) this.getParent()).initiate(2);
+                        }
                     }
-                }
+
             }
         } else {
             if (this.heatComponent != null && this.updateTick.getRecipeOutput() == null) {

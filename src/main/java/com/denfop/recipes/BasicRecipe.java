@@ -5022,7 +5022,7 @@ public class BasicRecipe {
                 'D',
                 IUItem.toriy,
                 'E',
-                Ic2Items.platebronze
+                "plateBronze"
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 176),
@@ -5038,7 +5038,7 @@ public class BasicRecipe {
                 'D',
                 IUItem.toriy,
                 'E',
-                Ic2Items.platebronze
+                "plateBronze"
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 174),
@@ -5054,7 +5054,7 @@ public class BasicRecipe {
                 'D',
                 IUItem.toriy,
                 'E',
-                Ic2Items.platebronze
+                "plateBronze"
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 175),
@@ -5070,7 +5070,7 @@ public class BasicRecipe {
                 'D',
                 IUItem.toriy,
                 'E',
-                Ic2Items.platebronze
+                "plateBronze"
         );
         Recipes.advRecipes.addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 217),
@@ -8167,7 +8167,15 @@ public class BasicRecipe {
         Recipes.advRecipes.addShapelessRecipe(getBlockStack(BlockBaseMachine3.pump_iu), Ic2Items.pump);
         Recipes.advRecipes.addShapelessRecipe(getBlockStack(BlockBaseMachine3.reactor_iu), Ic2Items.nuclearReactor);
         Recipes.advRecipes.addShapelessRecipe(getBlockStack(BlockBaseMachine3.chamber_iu), Ic2Items.reactorChamber);
-
+        Recipes.advRecipes.addRecipe(Ic2Items.odScanner,
+                " A ", " B ", " C ", 'A', new ItemStack(IUItem.analyzermodule), 'B', Ic2Items.electronicCircuit, 'C',
+                new ItemStack(Ic2Items.advBattery.getItem(), 1, OreDictionary.WILDCARD_VALUE)
+        );
+        Recipes.advRecipes.addRecipe(Ic2Items.ovScanner,
+                " A ", " B ", " C ", 'A',  Ic2Items.advancedCircuit, 'B', new ItemStack(Ic2Items.odScanner.getItem()
+                        ,1,OreDictionary.WILDCARD_VALUE), 'C',
+                new ItemStack(Ic2Items.energyCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE)
+        );
         Recipes.advRecipes.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 264),
                 " C ",
                 "BAB",

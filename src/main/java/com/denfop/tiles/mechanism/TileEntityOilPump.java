@@ -161,11 +161,7 @@ public class TileEntityOilPump extends TileEntityElectricLiquidTankInventory imp
     }
 
     private void updateTileEntityField() {
-        IUCore.network.get(true).updateTileEntityField(this, "level");
-        IUCore.network.get(true).updateTileEntityField(this, "count");
-        IUCore.network.get(true).updateTileEntityField(this, "find");
-        IUCore.network.get(true).updateTileEntityField(this, "maxcount");
-        IUCore.network.get(true).updateTileEntityField(this, "type");
+
     }
 
     protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {

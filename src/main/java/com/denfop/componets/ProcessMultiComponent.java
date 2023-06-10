@@ -52,6 +52,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public boolean modulestorage = false;
     private int mode;
     private int operationsPerTick = 1;
+    private int operationChange;
 
     public ProcessMultiComponent(
             final TileEntityMultiMachine parent, EnumMultiMachine enumMultiMachine
@@ -77,7 +78,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         double speed = getspeed();
         this.mode = 0;
         this.defaultEnergyConsume = this.energyConsume = Math.max((int) (enumMultiMachine.usagePerTick * coefenergy), 1);
-        this.defaultOperationLength = this.operationLength = Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
+        this.defaultOperationLength = this.operationChange = this.operationLength =
+                Math.max((int) (enumMultiMachine.lenghtOperation * 1D / speed), 1);
         this.defaultTier = this.energy.getSinkTier();
         this.defaultEnergyStorage = this.defaultEnergyConsume * this.defaultOperationLength;
         this.quickly = false;
@@ -98,6 +100,10 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
     public void setRecipeOutput(MachineRecipe output, int slotId) {
         this.output[slotId] = output;
+    }
+
+    public InvSlotUpgrade getUpgradeSlot() {
+        return upgradeSlot;
     }
 
     public int getSizeWorkingSlot() {
@@ -145,10 +151,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                         .get(slotId)
                         .getCount() < this.output[slotId].getRecipe().input
                         .getInputs()
-                        .get(0)
-                        .getInputs()
-                        .get(0)
-                        .getCount() || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
+                        .get(0).getAmount()
+                        || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
                     this.getOutput(slotId);
                     break;
                 } else {
@@ -185,7 +189,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     this.exp.addEnergy(this.getRecipeOutput(slotId).getRecipe().output.metadata.getFloat("experience"));
                 }
             } else {
-                Random rand = new Random();
+                Random rand = this.getParent().getWorld().rand;
                 this.inputSlots.consume(slotId);
                 if (rand.nextInt(max + 1) <= min) {
                     this.outputSlot.add(processResult);
@@ -222,9 +226,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
     @Override
     public void updateEntityServer() {
-        if (this.parent.getWorld().isRemote) {
-            return;
-        }
+
         int quickly = 1;
 
         if (this.parent.getWorld().provider.getWorldTime() % 10 == 0) {
@@ -301,12 +303,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     }
                     (this).heat.storage--;
                 }
-                if (this.modulesize) {
-                    try {
-                        size = this.output[i].getRecipe().input.getInputs().get(0).getInputs().get(0).getCount();
-
-                    } catch (Exception ignored) {
-                    }
+                if (output != null && this.modulesize) {
+                    size = this.output[i].getRecipe().input.getInputs().get(0).getAmount();
                     size = (int) Math.floor((float) this.inputSlots.get(i).getCount() / size);
                     int size1 = 0;
 
@@ -317,9 +315,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                             size1 += 64;
                         }
                     }
-                    if (output != null) {
-                        size1 = size1 / output.getRecipe().output.items.get(0).getCount();
-                    }
+                    size1 = size1 / output.getRecipe().output.items.get(0).getCount();
                     size = Math.min(size1, size);
                 }
             }
@@ -392,25 +388,21 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         }
 
         final double fillratio = this.cold.getFillRatio();
+        operationLength = this.upgradeSlot.getOperationLength1(this.defaultOperationLength);
         if (fillratio >= 0.75 && fillratio < 1) {
-            this.operationLength = this.defaultOperationLength * 2;
+            this.operationLength = this.operationLength * 2;
         }
         if (fillratio >= 1) {
             this.operationLength = Integer.MAX_VALUE;
         }
         if (fillratio >= 0.5 && fillratio < 0.75) {
-            this.operationLength = (int) (this.defaultOperationLength * 1.5);
+            this.operationLength = (int) (this.operationLength * 1.5);
         }
-        if (fillratio < 0.5) {
-            this.operationLength = this.defaultOperationLength;
-        }
+
         if (this.multimachine.heat != null) {
             this.multimachine.heat.useEnergy(1);
         }
 
-        if (this.upgradeSlot.tickNoMark()) {
-            setOverclockRates();
-        }
     }
 
     public void readFromNbt(NBTTagCompound nbttagcompound) {
@@ -450,8 +442,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public void setOverclockRates() {
 
 
-        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
-        this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
+        this.operationsPerTick = this.upgradeSlot.getOperationsPerTick1(this.defaultOperationLength);
+        this.operationLength = this.upgradeSlot.getOperationLength1(this.defaultOperationLength);
 
         final double fillratio = this.cold.getFillRatio();
         if (fillratio >= 0.75 && fillratio < 1) {
@@ -463,7 +455,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         if (fillratio >= 0.5 && fillratio < 0.75) {
             this.operationLength *= 1.5;
         }
-
+        this.operationChange = this.operationLength;
         this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
         int tier = this.upgradeSlot.getTier(this.defaultTier);
         this.energy.setSinkTier(tier);

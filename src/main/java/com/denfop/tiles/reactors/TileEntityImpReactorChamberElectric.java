@@ -99,19 +99,7 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
         }
     }
 
-    protected void onBlockBreak() {
-        super.onBlockBreak();
 
-        if (this.reactor != null) {
-            this.reactor.change = true;
-            this.reactor.getReactorSize();
-            BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
-            TileEntity tile = this.getWorld().getTileEntity(pos1);
-            if (tile instanceof TileEntityHeatSensor) {
-                this.reactor.isLimit = false;
-            }
-        }
-    }
 
     protected void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
@@ -143,6 +131,11 @@ public class TileEntityImpReactorChamberElectric extends TileEntityBlock impleme
             if (!this.reactor.isInvalid()) {
                 this.reactor.change = true;
                 this.reactor.getReactorSize();
+                BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
+                TileEntity tile = this.getWorld().getTileEntity(pos1);
+                if (tile instanceof TileEntityHeatSensor) {
+                    this.reactor.isLimit = false;
+                }
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             }
         }

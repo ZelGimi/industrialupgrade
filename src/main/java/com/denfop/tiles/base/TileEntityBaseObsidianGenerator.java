@@ -127,12 +127,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
         }
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setOverclockRates();
-        }
-    }
+
 
     public void updateEntityServer() {
         super.updateEntityServer();
@@ -160,7 +155,7 @@ public abstract class TileEntityBaseObsidianGenerator extends TileEntityElectric
             }
             check = true;
         }
-        if (check) {
+        if (check || (this.fluid_handler.output() == null && this.fluidTank2.getFluidAmount() >= 1000 && this.fluidTank1.getFluidAmount() >= 1000)) {
             this.fluid_handler.getOutput();
         }
 
