@@ -61,7 +61,6 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
         this.defaultEnergyStorage = energyPerTick * length;
         this.upgradeSlot = new InvSlotUpgrade(this, "upgrade", 4);
         this.output = null;
-        this.upgradeSlot.setStackSizeLimit(2);
         this.mode = Mode.COBBLESTONE;
         this.sand = new ItemStack(Blocks.SAND, 8);
         this.gravel = new ItemStack(Blocks.GRAVEL, 8);
@@ -168,13 +167,7 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setOverclockRates();
-        }
 
-    }
 
     protected void updateEntityServer() {
         super.updateEntityServer();
@@ -226,6 +219,7 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
+        this.operationsPerTick = Math.min(1,this.operationsPerTick);
         dischargeSlot.setTier(tier);
     }
 

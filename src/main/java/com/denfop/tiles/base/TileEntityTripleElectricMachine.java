@@ -10,7 +10,9 @@ import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -42,6 +44,7 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
     public final ComponentProcess componentProcess;
     protected final String name;
     protected final EnumTripleElectricMachine type;
+    private final ComponentUpgrade componentUpgrades;
     public double energyConsume;
     public int operationLength;
     public int operationsPerTick;
@@ -80,6 +83,8 @@ public abstract class TileEntityTripleElectricMachine extends TileEntityStandart
         this.energy = this.addComponent(AdvEnergy
                 .asBasicSink(this, (double) energyPerTick * length, aDefaultTier)
                 .addManagedSlot(this.dischargeSlot));
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT,TypeUpgrade.STACK));
+
     }
 
     @Override

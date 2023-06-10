@@ -9,7 +9,7 @@ import com.denfop.container.ContainerBase;
 import com.denfop.items.HandHeldInventory;
 import com.denfop.items.IHandHeldInventory;
 import com.denfop.items.IHandHeldSubInventory;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
+import com.denfop.render.streak.PlayerStreakInfo;
 import ic2.api.network.ClientModifiable;
 import ic2.api.network.INetworkClientTileEntityEventListener;
 import ic2.api.network.INetworkManager;
@@ -43,13 +43,13 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketE
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
-import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.DeflaterOutputStream;
 
 public class NetworkManager implements INetworkManager {
@@ -450,20 +450,11 @@ public class NetworkManager implements INetworkManager {
                     IC2.platform.requestTick(true, () -> IUCore.keyboard.processKeyUpdate(player, keyState));
                     return;
                 } else if (packetType == SubPacketType.ColorPicker) {
-                    final int color = is.readInt();
-                    final ItemStack armor = player.inventory.armorInventory.get(2);
-                    if (armor.getItem() instanceof ItemArmorImprovemedQuantum) {
-                        if (color != -1) {
-                            Color color1 = new Color(color);
-                            final NBTTagCompound nbt = player.getEntityData();
-                            nbt.setDouble("Red", color1.getRed());
-                            nbt.setDouble("Blue", color1.getBlue());
-                            nbt.setDouble("Green", color1.getGreen());
-                        } else {
-                            final NBTTagCompound nbt = player.getEntityData();
-                            nbt.setBoolean("RGB", true);
-                        }
-                    }
+                    final String nick = is.readString();
+                    PlayerStreakInfo playerStreakInfo = DataEncoder.decode(is, PlayerStreakInfo.class);
+                    IUCore.mapStreakInfo.remove(nick);
+                    IUCore.mapStreakInfo.put(nick, playerStreakInfo);
+                    updateColorPickerAll();
                     return;
                 }
                 onCommonPacketData(packetType, true, is, player);
@@ -759,6 +750,32 @@ public class NetworkManager implements INetworkManager {
             this.sendPacket(buffer);
         }
 
+    }
+
+    public void updateColorPicker(PlayerStreakInfo colorPicker, String name) {
+    }
+
+    public void updateColorPickerAll() {
+        GrowingBuffer buffer = new GrowingBuffer();
+        SubPacketType.ColorPickerAllLoggIn.writeTo(buffer);
+        NBTTagCompound tagCompound = new NBTTagCompound();
+        buffer.writeInt(IUCore.mapStreakInfo.size());
+        int i = 0;
+        for (Map.Entry<String, PlayerStreakInfo> playerStreakInfoEntry : IUCore.mapStreakInfo.entrySet()) {
+            NBTTagCompound tag4 = new NBTTagCompound();
+            tag4.setString("nick", playerStreakInfoEntry.getKey());
+            tag4.setTag("streak", playerStreakInfoEntry.getValue().writeNBT());
+            tagCompound.setTag(String.valueOf(i), tag4);
+            i++;
+
+        }
+        try {
+            DataEncoder.encode(buffer, tagCompound);
+            buffer.flip();
+            sendPacket(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

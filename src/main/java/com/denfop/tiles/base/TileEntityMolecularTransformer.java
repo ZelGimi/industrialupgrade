@@ -3,6 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.Config;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Ic2Items;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -161,7 +162,7 @@ public class TileEntityMolecularTransformer extends TileEntityElectricMachine im
         addrecipe(new ItemStack(IUItem.matter, 1, 7), new ItemStack(IUItem.lens, 1), Config.molecular33);
 
         addrecipe(
-                ItemName.misc_resource.getItemStack(MiscResourceType.iridium_ore),
+                Ic2Items.iridiumOre,
                 new ItemStack(IUItem.photoniy),
                 Config.molecular34
         );

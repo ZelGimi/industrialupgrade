@@ -12,6 +12,8 @@ import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.IHandHeldInventory;
 import com.denfop.items.IHandHeldSubInventory;
+import com.denfop.render.streak.EventSpectralSuitEffect;
+import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.mojang.authlib.GameProfile;
 import ic2.api.network.INetworkItemEventListener;
@@ -193,6 +195,19 @@ public class NetworkManagerClient extends NetworkManager {
                             }
 
                             is.writeTo(this.largePacketBuffer);
+                        }
+                        break;
+                    case ColorPickerAllLoggIn:
+                        int size = is.readInt();
+                        NBTTagCompound tagCompound = (NBTTagCompound) DataEncoder.decode(is);
+                       if(tagCompound == null)
+                           break;
+                        for(int i = 0; i < size;i++){
+                            final NBTTagCompound tag2 = tagCompound.getCompoundTag(String.valueOf(i));
+                            final String nick = tag2.getString("nick");
+                            final PlayerStreakInfo playerStreakInfo = new PlayerStreakInfo(tag2.getCompoundTag("streak"));
+                            EventSpectralSuitEffect.mapStreakInfo.remove(nick);
+                            EventSpectralSuitEffect.mapStreakInfo.put(nick, playerStreakInfo);
                         }
                         break;
                     case TileEntityEvent:
@@ -673,19 +688,17 @@ public class NetworkManagerClient extends NetworkManager {
         }
     }
 
-    public void updateColorPicker(NBTTagCompound entityData) {
+    public void updateColorPicker(PlayerStreakInfo playerStreakInfo, String nick) {
         GrowingBuffer buffer = new GrowingBuffer();
         SubPacketType.ColorPicker.writeTo(buffer);
-        Color colorRGB = new Color((int) entityData.getDouble("Red"), (int) entityData.getDouble("Blue"),
-                (int) entityData.getDouble("Green")
-        );
-        if (!entityData.getBoolean("RGB")) {
-            buffer.writeInt(colorRGB.getRGB());
-        } else {
-            buffer.writeInt(-1);
+        buffer.writeString(nick);
+        try {
+            DataEncoder.encode(buffer, playerStreakInfo.writeNBT());
+            buffer.flip();
+            sendPacket(buffer);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        buffer.flip();
-        sendPacket(buffer);
     }
 
 }

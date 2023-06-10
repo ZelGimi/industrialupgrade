@@ -78,6 +78,7 @@ import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.network.NetworkManager;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.register.RegisterOreDictionary;
+import com.denfop.render.streak.PlayerStreakInfo;
 import com.denfop.tabs.TabCore;
 import com.denfop.tiles.mechanism.quarry.QuarryItem;
 import com.denfop.utils.KeyboardIU;
@@ -181,6 +182,8 @@ public final class IUCore {
     public static final List<QuarryItem> get_crushed_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_comb_crushed_quarry = new ArrayList<>();
     public static final List<List<ItemStack>> removing_list = new ArrayList<>();
+    public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
+
     public static boolean dynamicTrees = false;
     public static Logger log;
     @SidedProxy(clientSide = "com.denfop.proxy.ClientProxy", serverSide = "com.denfop.proxy.CommonProxy")

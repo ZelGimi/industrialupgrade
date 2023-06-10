@@ -25,6 +25,7 @@ public class ContainerOilPump extends ContainerFullInv<TileEntityOilPump> {
         ret.add("maxcount");
         ret.add("level");
         ret.add("type");
+        ret.add("vein");
         return ret;
     }
 

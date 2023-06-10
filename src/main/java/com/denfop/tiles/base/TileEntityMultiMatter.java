@@ -3,7 +3,10 @@ package com.denfop.tiles.base;
 import com.denfop.IUCore;
 import com.denfop.api.gui.IType;
 import com.denfop.api.inv.IHasGui;
+import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
@@ -16,13 +19,9 @@ import com.denfop.gui.GuiMultiMatter;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
-import com.denfop.invslot.InvSlotProcessableStandard;
 import com.denfop.invslot.InvSlotUpgrade;
 import ic2.api.energy.tile.IExplosionPowerOverride;
 import ic2.api.network.INetworkClientTileEntityEventListener;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipeResult;
-import ic2.api.recipe.Recipes;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
@@ -49,16 +48,17 @@ import java.util.Set;
 
 
 public abstract class TileEntityMultiMatter extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock,
-        IExplosionPowerOverride, INetworkClientTileEntityEventListener, IType {
+        IExplosionPowerOverride, INetworkClientTileEntityEventListener, IType, IUpdateTick {
 
     public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack> amplifierSlot;
+    public final InvSlotRecipes amplifierSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
     @GuiSynced
     public final FluidTank fluidTank;
     public final float energycost;
     protected final Fluids fluids;
+    private int amountScrap;
     private final Redstone redstone;
     private final BasicRedstoneComponent comparator;
     public boolean work;
@@ -69,25 +69,12 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
     private int prevState = 0;
     private AudioSource audioSource;
     private AudioSource audioSourceScrap;
+    private MachineRecipe recipe;
 
     public TileEntityMultiMatter(float storageEnergy, int sizeTank, float maxtempEnergy) {
         super(Math.round(maxtempEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor")), 3, 1);
-        this.amplifierSlot = new InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack>(
-                this,
-                "scrap",
-                1,
-                Recipes.matterAmplifier
-        ) {
-            protected ItemStack getInput(ItemStack stack) {
-                return stack;
-            }
+        this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
 
-            protected void setInput(ItemStack input) {
-                this.put(input);
-            }
-
-
-        };
         this.energycost = storageEnergy * ConfigUtil.getFloat(MainConfig.get(), "balance/uuEnergyFactor");
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.containerslot = new InvSlotConsumableLiquidByList(
@@ -176,6 +163,8 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         super.onLoaded();
         if (!this.getWorld().isRemote) {
             this.setUpgradestat();
+            this.amplifierSlot.load();
+            getOutput();
         }
 
     }
@@ -189,7 +178,9 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
 
         super.onUnloaded();
     }
-
+    private void getOutput() {
+        this.recipe = this.amplifierSlot.process();
+    }
     protected void updateEntityServer() {
         super.updateEntityServer();
         this.redstonePowered = false;
@@ -211,11 +202,14 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
             if (!this.getActive()) {
                 this.setActive(true);
             }
-            if (this.scrap < 10000) {
-                MachineRecipeResult<IRecipeInput, Integer, ItemStack> recipe = this.amplifierSlot.process();
+            if (this.scrap < 10000 && this.amountScrap > 0) {
+                recipe = this.getRecipeOutput();
                 if (recipe != null) {
-                    this.amplifierSlot.consume(recipe);
-                    this.scrap += recipe.getOutput();
+                    this.amplifierSlot.consume();
+                    this.scrap += amountScrap;
+                    if (this.amplifierSlot.isEmpty()) {
+                        this.getOutput();
+                    }
                 }
             }
             if (this.energy.getEnergy() >= this.energycost) {
@@ -358,13 +352,7 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
         super.onNetworkUpdate(field);
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
 
-    }
 
     public void setUpgradestat() {
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
@@ -395,5 +383,23 @@ public abstract class TileEntityMultiMatter extends TileEntityElectricMachine im
     public float getExplosionPower(int tier, float defaultPower) {
         return 15.0F;
     }
+    @Override
+    public void onUpdate() {
 
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.recipe;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.recipe = output;
+        if (this.recipe == null) {
+            this.amountScrap = 0;
+        } else {
+            this.amountScrap = recipe.getRecipe().getOutput().metadata.getInteger("amount");
+        }
+    }
 }

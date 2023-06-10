@@ -170,13 +170,6 @@ public class TileEntityAirCollector extends TileEntityElectricMachine implements
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setUpgradestat();
-        }
-
-    }
 
     protected void updateEntityServer() {
         super.updateEntityServer();

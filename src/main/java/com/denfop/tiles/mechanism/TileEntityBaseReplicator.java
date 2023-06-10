@@ -6,8 +6,11 @@ import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.RecipeInfo;
+import com.denfop.componets.ComponentUpgrade;
+import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerReplicator;
 import com.denfop.gui.GuiReplicator;
 import com.denfop.invslot.InvSlot;
@@ -34,7 +37,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @NotClassic
 public class TileEntityBaseReplicator extends TileEntityElectricMachine implements IHasGui, IUpgradableBlock, IType,
@@ -47,6 +55,8 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final double coef;
+    private final ComponentUpgrade componentUpgrades;
+    private final ComponentUpgradeSlots componentUpgrade;
     public double uuProcessed = 0.0D;
     public RecipeInfo pattern;
     public int index;
@@ -59,6 +69,8 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
     private double uuPerTick = 1.0E-4D;
     private double euPerTick = 512.0D;
     private double extraUuStored = 0.0D;
+    private boolean instant = false;
+    private boolean stack = false;
 
     public TileEntityBaseReplicator(double coef) {
         super(2000000, 4, 0);
@@ -72,6 +84,15 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 16000, Fluids.fluidPredicate(FluidName.uu_matter.getInstance()));
         this.coef = coef;
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, this.upgradeSlot){
+            @Override
+            public void setOverclockRates(final InvSlotUpgrade invSlotUpgrade) {
+                super.setOverclockRates(invSlotUpgrade);
+                ((TileEntityBaseReplicator)this.getParent()).setOverclockRates();
+            }
+        });
+
     }
 
     private static int applyModifier(int base, int extra, double multiplier) {
@@ -108,23 +129,58 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
         if (this.fluidTank.getFluidAmount() < this.fluidTank.getCapacity()) {
             this.gainFluid();
         }
-
+        if (this.componentUpgrades.isChange()) {
+            this.instant = this.componentUpgrades.hasUpgrade(TypeUpgrade.INSTANT);
+            this.stack = this.componentUpgrades.hasUpgrade(TypeUpgrade.STACK);
+            this.componentUpgrades.setChange(false);
+        }
         boolean newActive = false;
-        if (this.mode != Mode.STOPPED && this.energy.getEnergy() >= this.euPerTick && this.pattern != null && this.outputSlot.canAdd(
+        double energyConsume = this.euPerTick;
+        if (this.instant) {
+            energyConsume *= 10;
+        }
+        if (this.mode != Mode.STOPPED && this.energy.getEnergy() >= energyConsume && this.pattern != null && this.outputSlot.canAdd(
                 this.pattern.getStack())) {
+
+
             double uuRemaining = this.patternUu - this.uuProcessed;
             boolean finish;
-            if (uuRemaining <= this.uuPerTick) {
-                finish = true;
+            if (this.instant) {
+                if (uuRemaining <= (this.fluidTank.getFluidAmount() * 1D)) {
+                    uuRemaining = this.patternUu;
+                    finish = true;
+                } else {
+                    if (uuRemaining <= this.uuPerTick) {
+                        finish = true;
+                    } else {
+                        uuRemaining = this.uuPerTick;
+                        finish = false;
+                    }
+                }
             } else {
-                uuRemaining = this.uuPerTick;
-                finish = false;
+                if (uuRemaining <= this.uuPerTick) {
+                    finish = true;
+                } else {
+                    uuRemaining = this.uuPerTick;
+                    finish = false;
+                }
             }
+            double size = 1;
+            if (this.stack) {
+                size = (this.fluidTank.getFluidAmount() / this.patternUu);
+                size = Math.min(size, 64);
+                final int amount = this.outputSlot.get().isEmpty() ? 64 : 64 - this.outputSlot.get().getCount();
+                size = Math.min(amount, size);
+                if (size >= 1) {
+                    uuRemaining = this.patternUu;
+                    finish = true;
+                }
 
-            if (this.consumeUu(uuRemaining)) {
+            }
+            if (this.consumeUu(uuRemaining * size)) {
                 newActive = true;
-                this.energy.useEnergy(this.euPerTick);
-                this.uuProcessed += uuRemaining;
+                this.energy.useEnergy(energyConsume);
+                this.uuProcessed += uuRemaining * size;
                 if (finish) {
                     this.uuProcessed = 0.0D;
                     if (this.mode == Mode.SINGLE) {
@@ -134,16 +190,15 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
                     }
 
                     if (this.pattern != null) {
-                        this.outputSlot.add(this.pattern.getStack());
+                        for (int i = 0; i < size; i++) {
+                            this.outputSlot.add(this.pattern.getStack());
+                        }
                     }
                 }
             }
         }
 
         this.setActive(newActive);
-        this.upgradeSlot.tickNoMark();
-
-
     }
 
     private boolean consumeUu(double amount) {
@@ -210,7 +265,6 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
     }
 
     public void setOverclockRates() {
-        this.upgradeSlot.onChanged();
         this.uuPerTick = 1.0E-4D / this.upgradeSlot.processTimeMultiplier;
         this.euPerTick = (512.0D + this.upgradeSlot.extraEnergyDemand) * this.upgradeSlot.energyDemandMultiplier;
         this.energy.setSinkTier(applyModifier(4, this.upgradeSlot.extraTier, 1.0D));
@@ -257,13 +311,6 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
 
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            this.setOverclockRates();
-        }
-
-    }
 
     public void gainFluid() {
         this.fluidSlot.processIntoTank(this.fluidTank, this.cellSlot);

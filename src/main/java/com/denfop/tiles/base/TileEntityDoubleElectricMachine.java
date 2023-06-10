@@ -13,8 +13,10 @@ import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.HeatComponent;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -46,6 +48,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
     public final InvSlotUpgrade upgradeSlot;
     public final HeatComponent heat;
     protected final EnumDoubleElectricMachine type;
+    private final ComponentUpgrade componentUpgrades;
     public AudioSource audioSource;
     public MachineRecipe output;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
@@ -105,6 +108,7 @@ public abstract class TileEntityDoubleElectricMachine extends TileEntityInventor
             this.componentProcess.setSlotOutput(outputSlot);
             this.componentProcess.setInvSlotRecipes(this.inputSlotA);
         }
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT,TypeUpgrade.STACK));
     }
 
     public void onNetworkEvent(EntityPlayer var1, int var2) {

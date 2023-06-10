@@ -1,6 +1,7 @@
 package com.denfop.events;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.space.IBody;
@@ -9,6 +10,7 @@ import com.denfop.api.space.fakebody.FakePlayer;
 import com.denfop.api.space.fakebody.SpaceOperation;
 import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
+import com.denfop.render.streak.PlayerStreakInfo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
@@ -95,7 +97,20 @@ public class WorldSavedDataIU extends WorldSavedData {
         } else {
             compound.setTag("radiations", new NBTTagCompound());
         }
-
+        if (compound.hasKey("streaks")) {
+            NBTTagCompound tag1 = compound.getCompoundTag("streaks");
+            int size = tag1.getInteger("col");
+            for (int i = 0; i < size; i++) {
+                final NBTTagCompound tag2 = tag1.getCompoundTag(String.valueOf(i));
+                final String nick = tag2.getString("nick");
+                final PlayerStreakInfo playerStreakInfo = new PlayerStreakInfo(tag2.getCompoundTag("streak"));
+                if (!IUCore.mapStreakInfo.containsKey(nick)) {
+                    IUCore.mapStreakInfo.put(nick, playerStreakInfo);
+                }
+            }
+        } else {
+            compound.setTag("streaks", new NBTTagCompound());
+        }
 
     }
 
@@ -155,6 +170,20 @@ public class WorldSavedDataIU extends WorldSavedData {
         }
 
         compound.setTag("radiations", tag2);
+
+        NBTTagCompound tag3 = new NBTTagCompound();
+        tag3.setInteger("col", IUCore.mapStreakInfo.size());
+        i = 0;
+        for (Map.Entry<String, PlayerStreakInfo> playerStreakInfoEntry : IUCore.mapStreakInfo.entrySet()) {
+            NBTTagCompound tag4 = new NBTTagCompound();
+            tag4.setString("nick", playerStreakInfoEntry.getKey());
+            tag4.setTag("streak", playerStreakInfoEntry.getValue().writeNBT());
+            tag3.setTag(String.valueOf(i), tag4);
+            i++;
+
+        }
+        compound.setTag("streaks", tag3);
+
         this.tagCompound = compound;
         return compound;
     }

@@ -197,7 +197,12 @@ public class IUEventHandler {
             }
         }
     }
-
+    @SubscribeEvent
+    public void initiatePlayer(PlayerEvent.PlayerLoggedInEvent event){
+        if(event.player.getEntityWorld().isRemote)
+            return;
+        IUCore.network.get(true).updateColorPickerAll();
+    }
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         WorldData.onWorldUnload(event.getWorld());
@@ -396,7 +401,7 @@ public class IUEventHandler {
             event.getToolTip().add(Localization.translate("iu.radiation.warning"));
         }
 
-        if (item.equals(IUItem.tank)) {
+        if (item.equals(Item.getItemFromBlock(IUItem.tank))) {
             switch (stack.getItemDamage()) {
                 case 1:
                     event.getToolTip().add(Localization.translate("iu.storage_fluid") + 160 + " B");
@@ -426,6 +431,9 @@ public class IUEventHandler {
             int meta = stack.getItemDamage() - 205;
             event.getToolTip().add(Localization.translate("iu.limiter.info9") + EnergyNet.instance.getPowerFromTier(meta) + " " +
                     "EU");
+        }
+        if (item.equals(IUItem.module7)&& stack.getItemDamage() == 9){
+            event.getToolTip().add(Localization.translate("module.wireless"));
         }
         if (item.equals(IUItem.upgrade_speed_creation) || item.equals(IUItem.autoheater) || item.equals(IUItem.coolupgrade) || item.equals(
                 IUItem.module_quickly) || item.equals(

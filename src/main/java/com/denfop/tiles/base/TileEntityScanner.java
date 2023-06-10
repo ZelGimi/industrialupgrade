@@ -51,7 +51,7 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
     private TileEntityScanner.State state;
 
     public TileEntityScanner(int maxprogress) {
-        super(512000, 4, 0);
+        super(512000, 14, 0);
         this.currentStack = StackUtil.emptyStack;
         this.pattern = StackUtil.emptyStack;
         this.progress = 0;

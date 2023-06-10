@@ -384,9 +384,9 @@ public class InvSlotUpgrade extends InvSlot {
             ItemStack stack = this.get(i);
             if (!StackUtil.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
                 update = true;
-                if (stack.isItemEqual(Ic2Items.ejectorUpgrade) || stack.isItemEqual(Ic2Items.advejectorUpgrade)) {
+                if (this.tick % 2 == 0 && stack.isItemEqual(Ic2Items.ejectorUpgrade) || stack.isItemEqual(Ic2Items.advejectorUpgrade)) {
                     this.tick(i);
-                } else if (stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
+                } else if (this.tick % 2 == 0 && stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
                     this.tick_fluid(i);
                 } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.pullingUpgrade) || stack.isItemEqual(Ic2Items.advpullingUpgrade)) {
                     this.tickPullIn(i);

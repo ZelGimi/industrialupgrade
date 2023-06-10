@@ -1,6 +1,10 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.render.streak.EventSpectralSuitEffect;
+import com.denfop.render.streak.PlayerStreakInfo;
+import com.denfop.render.streak.RGB;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiPageButtonList;
@@ -25,32 +29,39 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
 
     protected final int ySize = 166;
     private final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/Color.png");
+    private PlayerStreakInfo colorPicker;
 
     public GuiColorPicker(EntityPlayer player) {
         this.player = player;
+        this.colorPicker = EventSpectralSuitEffect.mapStreakInfo.get(this.player.getName());
     }
 
     @Override
     public void initGui() {
-        player.getEntityData();
-        NBTTagCompound nbt = player.getEntityData();
+        this.colorPicker = EventSpectralSuitEffect.mapStreakInfo.get(this.player.getName());
+        if(this.colorPicker == null){
+            this.colorPicker = new PlayerStreakInfo(new RGB((short) 0,(short)0,(short)0),false);
+            EventSpectralSuitEffect.mapStreakInfo.put(this.player.getName(),colorPicker);
+            IUCore.network.get(false).updateColorPicker(colorPicker,this.player.getName());
+
+        }
         this.buttonList.add(new GuiSlider(this, 0, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 65,
                 Localization.translate("iu.red"),
-                0, 255, (float) nbt.getDouble("Red"), this
+                0, 255, colorPicker.getRgb().getRed(), this
         ));
 
         this.buttonList.add(new GuiSlider(this, 1, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 95,
                 Localization.translate("iu.green"),
-                0, 255, (float) nbt.getDouble("Green"), this
+                0, 255, colorPicker.getRgb().getGreen(), this
         ));
         this.buttonList.add(new GuiSlider(this, 2, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 125,
                 Localization.translate("iu.blue"),
-                0, 255, (float) nbt.getDouble("Blue"), this
+                0, 255, colorPicker.getRgb().getBlue(), this
         ));
 
 
         this.buttonList.add(new GuiCheckBox(3, (this.width - this.xSize) / 2 + 10, (this.height - this.ySize) / 2 + 155,
-                Localization.translate("iu.rgb"), nbt.getBoolean("RGB")
+                Localization.translate("iu.rgb"), colorPicker.isRainbow()
         ));
 
     }
@@ -58,15 +69,27 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
     @Override
     public void updateScreen() {
         super.updateScreen();
-        String[] name = {"Red", "Green", "Blue"};
-        for (int i = 0; i < 3; i++) {
+      /*  String[] name = {"Red", "Green", "Blue"};
+        for (int i = 0; i < 4; i++) {
             if (this.buttonList.get(i) instanceof GuiSlider) {
-                NBTTagCompound nbt = player.getEntityData();
-                GuiSlider slider = (GuiSlider) this.buttonList.get(i);
-                nbt.setDouble(name[i], slider.getSliderValue());
+                 GuiSlider slider = (GuiSlider) this.buttonList.get(i);
+                switch (name[i]){
+                    case "Red":
+                        colorPicker.getRgb().setRed((short) slider.getSliderValue());
+                        break;
+                    case "Green":
+                        colorPicker.getRgb().setGreen((short) slider.getSliderValue());
+                        break;
+                    case "Blue":
+                        colorPicker.getRgb().setBlue((short) slider.getSliderValue());
+                        break;
+                }
+            }else{
+                GuiCheckBox checkBox = (GuiCheckBox) this.buttonList.get(i);
+
             }
 
-        }
+        }*/
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
@@ -130,28 +153,31 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
     protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         if (player != null) {
-            NBTTagCompound nbt = player.getEntityData();
             if (guibutton instanceof GuiSlider) {
                 GuiSlider slider = (GuiSlider) guibutton;
                 switch (guibutton.id) {
                     case 0:
-                        nbt.setDouble("Red", slider.getSliderValue());
+                        this.colorPicker.getRgb().setRed((short) slider.getSliderValue());
                         break;
                     case 1:
-                        nbt.setDouble("Green", slider.getSliderValue());
+                        this.colorPicker.getRgb().setGreen((short) slider.getSliderValue());
+
                         break;
                     case 2:
-                        nbt.setDouble("Blue", slider.getSliderValue());
+                        this.colorPicker.getRgb().setBlue((short) slider.getSliderValue());
                         break;
 
                 }
             }
             if (guibutton instanceof GuiCheckBox) {
                 GuiCheckBox checkbox = (GuiCheckBox) guibutton;
-                nbt.setBoolean("RGB", checkbox.isChecked());
+                this.colorPicker.setRainbow( checkbox.isChecked());
 
             }
+            IUCore.network.get(false).updateColorPicker(colorPicker,this.player.getName());
+
         }
+
     }
 
     @Override
@@ -162,20 +188,19 @@ public class GuiColorPicker extends GuiScreen implements GuiPageButtonList.GuiRe
 
     @Override
     public void setEntryValue(final int id, final float value) {
-        NBTTagCompound nbt = player.getEntityData();
         switch (id) {
             case 0:
-                nbt.setDouble("Red", value);
+                this.colorPicker.getRgb().setRed((short) value);
                 break;
             case 1:
-                nbt.setDouble("Green", value);
+                this.colorPicker.getRgb().setGreen((short) value);
                 break;
             case 2:
-                nbt.setDouble("Blue", value);
+                this.colorPicker.getRgb().setBlue((short) value);
                 break;
 
         }
-    }
+     }
 
     @Override
     public void setEntryValue(final int id, @Nonnull final String value) {

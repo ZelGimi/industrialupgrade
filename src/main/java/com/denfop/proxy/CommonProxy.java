@@ -259,7 +259,6 @@ public class CommonProxy implements IGuiHandler {
         EnumSolarPanels.registerTile();
         ItemUpgradePanelKit.EnumSolarPanelsKit.registerkit();
         IUItem.register_mineral();
-        TileEntityMatter.addAmplifier(new ItemStack(IUItem.doublescrapBox), 1, 405000);
 
 
     }
@@ -296,7 +295,10 @@ public class CommonProxy implements IGuiHandler {
         BlockImpChamber.imp_chamber.setPlaceHandler(Ic2IntegrationHandler.impReactorChamberPlace);
         BlockPerChamber.per_chamber.setPlaceHandler(Ic2IntegrationHandler.perReactorChamberPlace);
         BlockBaseMachine3.chamber_iu.setPlaceHandler(Ic2IntegrationHandler.ReactorChamberPlace);
-
+        BlockBaseMachine1.adv_reactor.setPlaceHandler(Ic2IntegrationHandler.advReactorPlace);
+        BlockBaseMachine1.imp_reactor.setPlaceHandler(Ic2IntegrationHandler.impReactorPlace);
+        BlockBaseMachine1.per_reactor.setPlaceHandler(Ic2IntegrationHandler.perReactorPlace);
+        BlockBaseMachine3.reactor_iu.setPlaceHandler(Ic2IntegrationHandler.ReactorPlace);
         IUEventHandler sspEventHandler = new IUEventHandler();
         MinecraftForge.EVENT_BUS.register(sspEventHandler);
         Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();

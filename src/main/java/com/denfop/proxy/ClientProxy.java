@@ -17,10 +17,7 @@ import com.denfop.render.multiblock.TileEntityMultiBlockRender;
 import com.denfop.render.oilquarry.TileEntityQuarryOilRender;
 import com.denfop.render.oilrefiner.TileEntityOilRefinerRender;
 import com.denfop.render.sintezator.TileEntitySintezatorRender;
-import com.denfop.render.streak.EntityRendererStreak;
-import com.denfop.render.streak.EntityStreak;
 import com.denfop.render.streak.EventSpectralSuitEffect;
-import com.denfop.render.streak.EventStreakEffect;
 import com.denfop.render.tank.TileEntityTankRender;
 import com.denfop.render.tile.TileEntityAdminPanelRender;
 import com.denfop.render.transport.ModelCable;
@@ -113,13 +110,6 @@ public class ClientProxy extends CommonProxy {
                 TileEntityDoubleMolecular.class,
                 new RenderCoreProcess<>()
         );
-        RenderingRegistry.registerEntityRenderingHandler(
-                EntityStreak.class,
-                renderManager -> new EntityRendererStreak(renderManager) {
-
-
-                }
-        );
 
 
         IUModelLoader loader = new IUModelLoader();
@@ -204,7 +194,6 @@ public class ClientProxy extends CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        MinecraftForge.EVENT_BUS.register(new EventStreakEffect());
 
         MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySintezator.class, new TileEntitySintezatorRender());

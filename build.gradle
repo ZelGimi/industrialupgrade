@@ -267,3 +267,17 @@ static def getGitHash() {
 
 // Hack to include resources for Forge 1.12.2 using FG3
 sourceSets { main { output.resourcesDir = output.classesDirs[0] } }
+task devJar(type: Jar) {
+    classifier = 'dev'
+    from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives devJar
+    archives sourcesJar
+}

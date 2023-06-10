@@ -12,6 +12,7 @@ import com.denfop.api.space.fakebody.FakeSatellite;
 import com.denfop.api.vein.Vein;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.render.streak.PlayerStreakInfo;
 import com.mojang.authlib.GameProfile;
 import ic2.api.crops.CropCard;
 import ic2.api.crops.Crops;
@@ -620,6 +621,10 @@ public final class DataEncoder {
                 Radiation radiation = (Radiation) o;
                 encode(os, radiation.writeCompound(), true);
                 break;
+            case PlayerStreakInfo:
+                PlayerStreakInfo playerStreakInfo = (PlayerStreakInfo) o;
+                encode(os, playerStreakInfo.writeNBT(), true);
+                break;
             case FAKE_PLANET:
                 break;
 
@@ -850,6 +855,8 @@ public final class DataEncoder {
                 return new Vein((NBTTagCompound) decode(is));
             case RecipeInfo:
                 return new RecipeInfo((NBTTagCompound) decode(is));
+            case PlayerStreakInfo:
+                return new PlayerStreakInfo((NBTTagCompound) decode(is));
             case Radiation:
                 return new Radiation((NBTTagCompound) decode(is));
             case FAKE_PLANET:
@@ -1084,17 +1091,15 @@ public final class DataEncoder {
         BaseLevelSystem(BaseLevelSystem.class),
         BaseResearch(BaseResearch.class),
         RecipeInfo(RecipeInfo.class),
+        PlayerStreakInfo(PlayerStreakInfo.class),
         Object(Object.class);
 
         static final DataEncoder.EncodedType[] types = values();
         static final Map<Class<?>, DataEncoder.EncodedType> classToTypeMap = new IdentityHashMap(types.length - 2);
 
         static {
-            DataEncoder.EncodedType[] var0 = types;
-            int var1 = var0.length;
 
-            for (int var2 = 0; var2 < var1; ++var2) {
-                DataEncoder.EncodedType type = var0[var2];
+            for (EncodedType type : types) {
                 if (type.cls != null) {
                     classToTypeMap.put(type.cls, type);
                 }

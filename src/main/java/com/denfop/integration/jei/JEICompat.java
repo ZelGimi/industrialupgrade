@@ -1685,10 +1685,6 @@ public final class JEICompat implements IModPlugin {
                 new ItemStack(IUItem.machines_base1, 1, 5),
                 new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
-        registry.addRecipeCatalyst(
-                new ItemStack(IUItem.machines_base1, 1, 6),
-                new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
-        );
     }
 
     public void onRuntimeAvailable(@Nonnull IJeiRuntime iJeiRuntime) {

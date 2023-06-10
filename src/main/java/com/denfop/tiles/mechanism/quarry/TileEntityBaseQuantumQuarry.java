@@ -302,7 +302,7 @@ public class TileEntityBaseQuantumQuarry extends TileEntityInventory implements 
                     this.energy.useEnergy(proccent);
                     this.getblock++;
                     int num = main_list.size();
-                    if (num <= 0) {
+                    if (num == 0) {
                         return;
                     }
                     int chance1 = rand.nextInt(num);

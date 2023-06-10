@@ -71,6 +71,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     protected List<AbstractComponent> updateServerList = new ArrayList<>();
     protected List<AbstractComponent> updateClientList = new ArrayList<>();
     protected Map<String, AbstractComponent> advComponentMap = new HashMap<>();
+    private int[] slotsFace;
 
     public TileEntityInventory() {
         this.itemHandler = new IItemHandler[EnumFacing.VALUES.length + 1];
@@ -421,13 +422,15 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     @Nonnull
     public int[] getSlotsForFace(@Nonnull EnumFacing side) {
-        int[] ret = new int[this.getSizeInventory()];
+        if(this.slotsFace == null) {
+            this.slotsFace = new int[this.getSizeInventory()];
 
-        for (int i = 0; i < this.getSizeInventory(); i++) {
-            ret[i] = i;
+            for (int i = 0; i < this.getSizeInventory(); i++) {
+                this.slotsFace[i] = i;
+            }
+
         }
-
-        return ret;
+        return this.slotsFace;
     }
 
     public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
@@ -594,13 +597,13 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
         for (AbstractComponent component : this.getComponentList()) {
             if (!component.getDrops().isEmpty()) {
-                component.getDrops().forEach(stack -> ret.add(stack));
+                ret.addAll(component.getDrops());
             }
         }
         return ret;
     }
 
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == null) {
                 if (this.itemHandler[this.itemHandler.length - 1] == null) {
@@ -641,7 +644,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         isLoaded = true;
     }
 
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
 
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return true;

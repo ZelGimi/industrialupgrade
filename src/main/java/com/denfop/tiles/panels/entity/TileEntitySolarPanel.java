@@ -103,7 +103,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected boolean addedToEnet;
     protected double pastEnergy;
     protected double perenergy;
-    Map<BlockPos, IEnergyStorage> energyStorageMap = new HashMap<>();
     private AudioSource audioSource;
 
     public TileEntitySolarPanel(
@@ -166,30 +165,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
         }
     }
 
-    @Override
-    protected void onNeighborChange(final Block srcBlock, final BlockPos srcPos) {
-        super.onNeighborChange(srcBlock, srcPos);
-        TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
-        boolean hasElement = this.energyStorageMap.containsKey(srcPos);
-        if (srcBlock.getDefaultState().getMaterial() == Material.AIR && hasElement) {
-            this.energyStorageMap.remove(srcPos);
-        } else if (hasElement) {
-            this.energyStorageMap.remove(srcPos);
-        }
-        if (tile instanceof TileEntityInventory) {
-            return;
-        }
-        if (tile == null) {
-            return;
-        }
-        if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
-            IEnergyStorage energy_storage = tile.getCapability(
-                    CapabilityEnergy.ENERGY,
-                    this.getParent().getFacing().getOpposite()
-            );
-            this.energyStorageMap.put(srcPos, energy_storage);
-        }
-    }
+
 
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
@@ -315,29 +291,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     protected void onLoaded() {
         super.onLoaded();
         if (!this.world.isRemote) {
-            if (!this.getWorld().isRemote) {
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    final BlockPos srcPos = this.getPos().offset(facing);
-                    TileEntity tile = this.getParent().getWorld().getTileEntity(srcPos);
-                    boolean hasElement = this.energyStorageMap.containsKey(srcPos);
-                    if (hasElement) {
-                        continue;
-                    }
-                    if (tile instanceof TileEntityInventory) {
-                        continue;
-                    }
-                    if (tile == null) {
-                        continue;
-                    }
-                    if (tile.hasCapability(CapabilityEnergy.ENERGY, this.getParent().getFacing().getOpposite())) {
-                        IEnergyStorage energy_storage = tile.getCapability(
-                                CapabilityEnergy.ENERGY,
-                                this.getParent().getFacing().getOpposite()
-                        );
-                        this.energyStorageMap.put(srcPos, energy_storage);
-                    }
-                }
-            }
             this.addedToEnet = !MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
             this.hasSky = !this.world.provider.isNether();
@@ -386,20 +339,6 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
     protected void updateEntityServer() {
         super.updateEntityServer();
-        if (!this.energyStorageMap.isEmpty()) {
-            for (Map.Entry<BlockPos, IEnergyStorage> iEnergyStorageEntry : this.energyStorageMap.entrySet()) {
-                this.storage -= (4 * iEnergyStorageEntry.getValue().receiveEnergy(
-                        (int) Math.min(Math.min(
-                                this.storage / 4,
-                                Integer.MAX_VALUE - 1
-                        ), this.getOfferedEnergy() / 4),
-                        false
-                ));
-                if (this.storage <= 0) {
-                    break;
-                }
-            }
-        }
 
         if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             updateVisibility();

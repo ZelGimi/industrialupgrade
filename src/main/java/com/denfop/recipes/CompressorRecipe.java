@@ -20,6 +20,8 @@ public class CompressorRecipe {
     public static final String[] recipe1 = {"doubleplate", "dust", "smalldust"};
 
     public static void recipe() {
+        addcompressor(ModUtils.setSize(Ic2Items.iridiumShard,9), Ic2Items.iridiumOre);
+
         addcompressor(new ItemStack(IUItem.sunnarium, 1, 3), new ItemStack(IUItem.sunnarium, 1, 2));
         addcompressor(Ic2Items.carbonPlate, 9, new ItemStack(IUItem.compresscarbon));
         addcompressor(Ic2Items.advancedAlloy, 9, new ItemStack(IUItem.compresscarbonultra));

@@ -3,7 +3,10 @@ package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
 import com.denfop.api.inv.IHasGui;
+import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InvSlotRecipes;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.audio.AudioSource;
 import com.denfop.audio.PositionSpec;
 import com.denfop.componets.AdvEnergy;
@@ -15,11 +18,7 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotConsumableLiquid;
 import com.denfop.invslot.InvSlotConsumableLiquidByList;
 import com.denfop.invslot.InvSlotMatter;
-import com.denfop.invslot.InvSlotProcessableStandard;
 import com.denfop.invslot.InvSlotUpgrade;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipeResult;
-import ic2.api.recipe.Recipes;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.IC2;
@@ -39,11 +38,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInventory implements IHasGui, IUpgradableBlock {
+public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInventory implements IHasGui, IUpgradableBlock,
+        IUpdateTick {
 
     public final InvSlotMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;
-    public final InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack> amplifierSlot;
+    public final InvSlotRecipes amplifierSlot;
     public final InvSlotOutput outputSlot;
     public final InvSlotConsumableLiquid containerslot;
     protected final Redstone redstone;
@@ -53,26 +53,13 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
     private int state, prevState;
     private AudioSource audioSource, audioSourceScrap;
     private double lastEnergy;
+    private MachineRecipe recipe;
+    private int amountScrap;
 
     public TileEntityCombinerMatter() {
         super(0, 14, 12);
         this.energycost = 0;
-        this.amplifierSlot = new InvSlotProcessableStandard<IRecipeInput, Integer, ItemStack>(
-                this,
-                "scrap",
-                1,
-                Recipes.matterAmplifier
-        ) {
-
-
-            protected ItemStack getInput(ItemStack stack) {
-                return stack;
-            }
-
-            protected void setInput(ItemStack input) {
-                this.put(input);
-            }
-        };
+        this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.containerslot = new InvSlotConsumableLiquidByList(this, "containerslot", InvSlot.Access.I, 1,
                 InvSlot.InvSide.ANY, InvSlotConsumableLiquid.OpType.Fill, FluidName.uu_matter.getInstance()
@@ -146,11 +133,14 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
             if (!this.getActive()) {
                 this.setActive(true);
             }
-            if (this.scrap < 10000) {
-                MachineRecipeResult<IRecipeInput, Integer, ItemStack> recipe = this.amplifierSlot.process();
+            if (this.scrap < 10000 && this.amountScrap > 0) {
+                recipe = this.getRecipeOutput();
                 if (recipe != null) {
-                    this.amplifierSlot.consume(recipe);
-                    this.scrap += recipe.getOutput();
+                    this.amplifierSlot.consume();
+                    this.scrap += amountScrap;
+                    if (this.amplifierSlot.isEmpty()) {
+                        this.getOutput();
+                    }
                 }
             }
 
@@ -177,6 +167,11 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
 
         }
 
+    }
+
+    private void getOutput() {
+        this.recipe = this.amplifierSlot.process();
+        this.setRecipeOutput(this.recipe);
     }
 
 
@@ -310,15 +305,12 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         if (IC2.platform.isSimulating()) {
             setUpgradestat();
             this.inputSlot.update();
+            this.amplifierSlot.load();
+            getOutput();
         }
     }
 
-    public void markDirty() {
-        super.markDirty();
-        if (IC2.platform.isSimulating()) {
-            setUpgradestat();
-        }
-    }
+
 
     public void setUpgradestat() {
         this.energy.setSinkTier(applyModifier(this.upgradeSlot.extraTier));
@@ -340,6 +332,26 @@ public class TileEntityCombinerMatter extends TileEntityElectricLiquidTankInvent
         return EnumSet.of(UpgradableProperty.RedstoneSensitive, UpgradableProperty.Transformer,
                 UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
         );
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public MachineRecipe getRecipeOutput() {
+        return this.recipe;
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.recipe = output;
+        if (this.recipe == null) {
+            this.amountScrap = 0;
+        } else {
+            this.amountScrap = recipe.getRecipe().getOutput().metadata.getInteger("amount");
+        }
     }
 
 }

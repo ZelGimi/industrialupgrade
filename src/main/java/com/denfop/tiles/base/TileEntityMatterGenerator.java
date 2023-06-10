@@ -88,8 +88,7 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
         if (this.energy.getEnergy() > 0) {
             this.progress = this.energy.getEnergy() / this.energy.getCapacity();
             if (this.energy.getEnergy() >= this.energy.getCapacity()) {
-                if (this.outputSlot.canAdd(itemstack)) {
-                    this.outputSlot.add(itemstack);
+                if (this.outputSlot.add(itemstack)) {
                     this.energy.useEnergy(this.energy.getCapacity());
                     this.progress = 0;
                 }

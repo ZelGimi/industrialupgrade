@@ -21,6 +21,7 @@ public enum SubPacketType {
     TileEntityData(false, true),
     RequestGUI(false, true),
     ColorPicker(false, true),
+    ColorPickerAllLoggIn(true, false),
     LevelSystem(true, false),
     LevelSystemAdd(true, false),
     LevelSystemRemove(true, false),

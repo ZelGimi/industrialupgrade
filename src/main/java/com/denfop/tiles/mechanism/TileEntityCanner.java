@@ -12,8 +12,10 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerCanner;
 import com.denfop.gui.GuiCanner;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -51,6 +53,7 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
     public final ComponentUpgradeSlots componentUpgrade;
     public final ComponentProcess componentProcess;
     public final ComponentProgress componentProgress;
+    private final ComponentUpgrade componentUpgrades;
     public MachineRecipe output;
     private int fluid_amount;
 
@@ -69,6 +72,7 @@ public class TileEntityCanner extends TileEntityElectricLiquidTankInventory
         this.componentProcess.setHasTank(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
+        this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT,TypeUpgrade.STACK));
 
     }
 
