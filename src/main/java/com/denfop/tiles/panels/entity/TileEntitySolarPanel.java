@@ -97,6 +97,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
     public double moonPhase = 1;
     public double tick;
     public SunCoef sunCoef;
+    public int level = 0;
     protected double tierPower;
     protected boolean canRain;
     protected boolean hasSky;
@@ -342,7 +343,7 @@ public class TileEntitySolarPanel extends TileEntityInventory implements IAdvEne
 
         if (this.getWorld().provider.getWorldTime() % 40 == 0) {
             updateVisibility();
-
+            this.solarType = this.inputslot.solartypeFast();
         }
 
 

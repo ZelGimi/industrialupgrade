@@ -86,7 +86,7 @@ public class TileEntityCropHarvester extends TileEntityElectricMachine implement
                     drops = crop.performHarvest();
                 }
                 for (ItemStack drop : drops) {
-                    if (!this.contentSlot.canAdd(drop)) {
+                    if (!this.contentSlot.add(drop)) {
                         StackUtil.dropAsEntity(world, this.pos, drop);
                     }
 

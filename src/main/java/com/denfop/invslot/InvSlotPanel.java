@@ -58,20 +58,23 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
 
     public int solartype() {
         TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
-
-        List<Integer> list1 = new ArrayList<>();
+        tile.level = 0;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleType) {
-                list1.add(get(i).getItemDamage() + 1);
-            } else {
-                list1.add(0);
+                tile.level = get(i).getItemDamage() + 1;
             }
         }
-        EnumType type = EnumType.getFromID(ModUtils.slot(list1));
+        EnumType type = EnumType.getFromID(tile.level);
 
         return tile.setSolarType(type);
     }
+    public int solartypeFast() {
+        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
 
+        EnumType type = EnumType.getFromID(tile.level);
+
+        return tile.setSolarType(type);
+    }
 
     public void checkmodule() {
         TileEntitySolarPanel tile = (TileEntitySolarPanel) base;

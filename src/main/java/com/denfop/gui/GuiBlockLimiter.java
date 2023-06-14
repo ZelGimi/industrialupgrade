@@ -52,7 +52,8 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         if (x >= 12 && x <= 46 && y >= 36 && y <= 48) {
             try {
                 IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, Integer.parseInt(textBox.getText()));
-                this.textBox.setText(String.valueOf(this.container.base.getEnergy().limit_amount));
+
+                this.textBox.setText(String.valueOf((int) Math.min( Integer.parseInt(textBox.getText()), this.container.base.max_value)));
             } catch (Exception ignored) {
             }
         }

@@ -20,6 +20,7 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
         INetworkTileEntityEventListener {
 
     public int limit;
+    public boolean update = false;
     public TileEntityBaseNuclearReactorElectric reactor;
     private AudioSource audioSource;
 
@@ -60,10 +61,7 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
         return "Machines/pen.ogg";
     }
 
-    @Override
-    protected void updateEntityServer() {
-        super.updateEntityServer();
-    }
+
 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
@@ -74,12 +72,14 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
                 reactor.limit = i;
                 reactor.isLimit = true;
                 limit = i;
+                IUCore.network.get(true).updateTileEntityField(this, "limit");
             }
         } else {
             if (reactor != null) {
                 reactor.isLimit = false;
             }
         }
+
         initiate(0);
     }
 
@@ -98,9 +98,9 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
 
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
-        final NBTTagCompound nbt1 = super.writeToNBT(nbt);
-        nbt1.setInteger("heat", limit);
-        return nbt1;
+        super.writeToNBT(nbt);
+        nbt.setInteger("limit", this.limit);
+        return nbt;
     }
 
     public void initiate(int soundEvent) {
@@ -112,7 +112,7 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
     @Override
     public void readFromNBT(final NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.limit = nbtTagCompound.getInteger("heat");
+        this.limit = nbtTagCompound.getInteger("limit");
     }
 
     @Override
@@ -123,6 +123,7 @@ public class TileEntityHeatSensor extends TileEntityInventory implements IHasGui
             reactor.limit = this.limit;
             reactor.isLimit = true;
         }
+        IUCore.network.get(true).updateTileEntityField(this, "limit");
     }
 
     @Override

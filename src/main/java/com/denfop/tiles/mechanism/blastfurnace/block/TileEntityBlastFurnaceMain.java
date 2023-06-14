@@ -325,11 +325,13 @@ public class TileEntityBlastFurnaceMain extends TileEntityMultiBlockBase impleme
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         this.sound = nbttagcompound.getBoolean("sound");
+        this.bar = nbttagcompound.getInteger("bar");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.setBoolean("sound", this.sound);
+        nbttagcompound.setInteger("bar", this.bar);
 
         return nbttagcompound;
     }
