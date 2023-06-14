@@ -43,7 +43,8 @@ public enum EnumType {
     }
 
     public static EnumType getFromID(final int ID) {
-        return values()[ID % values().length];
+        final EnumType[] values = values();
+        return values[ID % values.length];
     }
 
 }

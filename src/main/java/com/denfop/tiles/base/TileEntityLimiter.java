@@ -25,7 +25,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
 
     private final AdvEnergy energy;
     public InvSlotLimiter slot;
-    private double max_value;
+    public double max_value;
     private AudioSource audioSource;
 
     public TileEntityLimiter() {
@@ -44,7 +44,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
 
     public void initiate(int soundEvent) {
 
-        IC2.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
+        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
 
     }
 
@@ -92,6 +92,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
             setTier(this.slot.get().getItemDamage() - 205);
         }
         this.energy.setDirections(EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
+        this.energy.setCapacity(this.energy.limit_amount);
 
     }
 
@@ -114,8 +115,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
     @Override
     protected void updateEntityServer() {
         super.updateEntityServer();
-
-    }
+      }
 
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
@@ -139,6 +139,7 @@ public class TileEntityLimiter extends TileEntityInventory implements IHasGui, I
 
         this.energy.limit_amount = (int) Math.min(i, this.max_value);
         this.energy.setDirections(EnumSet.complementOf(EnumSet.of(this.getFacing())), EnumSet.of(this.getFacing()));
+        this.energy.setCapacity(this.energy.limit_amount);
         initiate(0);
 
     }

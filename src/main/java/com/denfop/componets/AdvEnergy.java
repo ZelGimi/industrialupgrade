@@ -316,7 +316,7 @@ public class AdvEnergy extends AbstractComponent {
         GrowingBuffer buffer = new GrowingBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
-        buffer.writeDouble(this.limit_amount);
+        buffer.writeInt(this.limit_amount);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -325,7 +325,7 @@ public class AdvEnergy extends AbstractComponent {
 
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
-        limit_amount = is.readInt();
+        this.limit_amount = is.readInt();
 
     }
 

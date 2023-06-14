@@ -304,7 +304,11 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     (this).heat.storage--;
                 }
                 if (output != null && this.modulesize) {
-                    size = this.output[i].getRecipe().input.getInputs().get(0).getAmount();
+                    if (!this.enumMultiMachine.recipe.equals("recycler")) {
+                        size = this.output[i].getRecipe().input.getInputs().get(0).getAmount();
+                    } else {
+                        size = 1;
+                    }
                     size = (int) Math.floor((float) this.inputSlots.get(i).getCount() / size);
                     int size1 = 0;
 
