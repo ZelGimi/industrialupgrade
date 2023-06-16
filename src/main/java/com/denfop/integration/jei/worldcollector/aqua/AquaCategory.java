@@ -42,7 +42,7 @@ public class AquaCategory extends Gui implements IRecipeCategory<AquaWrapper> {
     @Nonnull
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine2, 1, 34).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine2, 1, 35).getUnlocalizedName());
     }
 
     @Nonnull

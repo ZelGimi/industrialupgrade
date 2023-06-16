@@ -175,7 +175,7 @@ public class ComponentProcess extends AbstractComponent {
                 count = count / this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getCount();
                 size = Math.min(size, count);
                 if(this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null){
-                    final int size1 = this.invSlotRecipes.getTank().getFluid().amount / this.updateTick
+                    final int size1 = this.invSlotRecipes.getTank().getFluidAmount() / this.updateTick
                             .getRecipeOutput()
                             .getRecipe().input.getFluid().amount;
                     size =  Math.min(size, size1);
