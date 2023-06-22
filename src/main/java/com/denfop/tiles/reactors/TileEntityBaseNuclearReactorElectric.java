@@ -464,7 +464,7 @@ public abstract class TileEntityBaseNuclearReactorElectric extends TileEntityInv
 
     public abstract short getReactorSize();
 
-
+    public abstract short removeBlock(BlockPos pos );
     public int getTickRate() {
         return 20;
     }

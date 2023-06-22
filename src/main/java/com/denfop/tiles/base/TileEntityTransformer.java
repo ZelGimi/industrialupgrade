@@ -3,6 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.api.energy.ITransformer;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Redstone;
 import com.denfop.container.ContainerTransformer;
 import com.denfop.gui.GuiTransformer;
 import ic2.api.energy.EnergyNet;
@@ -32,6 +33,8 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
 
     protected final AdvEnergy energy;
     private final int defaultTier;
+    private final Redstone redstone;
+    private boolean hasRedstone = false;
     private double inputFlow = 0.0D;
     private double outputFlow = 0.0D;
     private TileEntityTransformer.Mode configuredMode;
@@ -50,6 +53,10 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
                 tier,
                 true
         ).setMultiSource(true));
+        this.redstone = this.addComponent(new Redstone(this));
+        this.redstone.subscribe((newLevel) -> {
+            hasRedstone = newLevel != 0;
+        });
     }
 
     public String getType() {
@@ -133,7 +140,7 @@ public abstract class TileEntityTransformer extends TileEntityInventory implemen
         TileEntityTransformer.Mode newMode;
         switch (this.configuredMode) {
             case redstone:
-                newMode = this.getWorld().isBlockPowered(this.pos)
+                newMode = this.hasRedstone
                         ? TileEntityTransformer.Mode.stepup
                         : TileEntityTransformer.Mode.stepdown;
                 break;

@@ -110,7 +110,7 @@ public class TileEntityImpNuclearReactor extends TileEntityBaseNuclearReactorEle
 
             EnumFacing[] var2 = EnumFacing.values();
 
-
+            this.blockPos.clear();
             for (EnumFacing direction : var2) {
                 TileEntity target = this.getWorld().getTileEntity(pos.offset(direction));
                 if (target instanceof TileEntityImpReactorChamberElectric) {
@@ -134,6 +134,34 @@ public class TileEntityImpNuclearReactor extends TileEntityBaseNuclearReactorEle
             this.blockPos.clear();
             this.blockPos.addAll(blockPos1);
             this.redstone.setBlockPosList(this.blockPos);
+            this.size = cols;
+            this.change = false;
+            this.reactorSlot.update();
+            return cols;
+        } else {
+            return this.size;
+        }
+    }
+
+    @Override
+    public short removeBlock(final BlockPos pos) {
+        if (world == null) {
+            return 11;
+        }
+        if (this.change) {
+            if(!this.blockPos.contains(pos)) {
+                this.change = false;
+                return this.size;
+            }
+            short cols = (short) (this.size - 1);
+
+            EnumFacing[] var2 = EnumFacing.values();
+
+            this.blockPos.remove(pos);
+            for (EnumFacing direction : var2) {
+                this.blockPos.remove(pos.offset(direction));
+            }
+            this.blockPos.add(this.getPos());
             this.size = cols;
             this.change = false;
             this.reactorSlot.update();

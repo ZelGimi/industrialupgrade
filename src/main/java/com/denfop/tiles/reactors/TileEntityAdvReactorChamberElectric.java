@@ -276,7 +276,7 @@ public class TileEntityAdvReactorChamberElectric extends TileEntityBlock impleme
         if (this.reactor != null) {
             if (!this.reactor.isInvalid()) {
                 this.reactor.change = true;
-                this.reactor.getReactorSize();
+                this.reactor.removeBlock(this.pos);
                 BlockPos pos1 = pos.add(this.getFacing().getDirectionVec());
                 TileEntity tile = this.getWorld().getTileEntity(pos1);
                 if (tile instanceof TileEntityHeatSensor) {

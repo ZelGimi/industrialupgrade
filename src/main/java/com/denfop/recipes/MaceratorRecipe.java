@@ -6,9 +6,7 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.register.RegisterOreDictionary;
-import ic2.api.recipe.IRecipeInput;
 import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.MachineRecipe;
 import ic2.api.recipe.Recipes;
 import ic2.core.item.type.DustResourceType;
 import ic2.core.ref.ItemName;
@@ -17,10 +15,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 public class MaceratorRecipe {
 
@@ -74,6 +68,7 @@ public class MaceratorRecipe {
         if (IUCore.isHasVersion("ic2", "220")) {
             addmacerator(new ItemStack(Items.EMERALD), ItemName.dust.getItemStack(DustResourceType.emerald));
         }
+        addmacerator(new ItemStack(Items.SPIDER_EYE), Ic2Items.grinPowder);
         addmacerator("crushedCopper", "dustCopper");
         addmacerator("oreGold", "crushedGold", 2);
         addmacerator("plateDenseObsidian", "dustObsidian", 9);
