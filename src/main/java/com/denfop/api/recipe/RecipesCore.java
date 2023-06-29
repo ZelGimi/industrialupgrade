@@ -1,5 +1,6 @@
 package com.denfop.api.recipe;
 
+
 import ic2.api.recipe.IRecipeInput;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -89,6 +90,7 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("cannerenrich", 2, true, true);
         this.addRecipeManager("empty", 1, false, true);
         this.addRecipeManager("matterAmplifier", 1, true, true);
+        this.addRecipeManager("scrapbox", 1, true, true);
 
 
     }
@@ -406,7 +408,9 @@ public class RecipesCore implements IRecipes {
 
     @Override
     public void addInitRecipes(final IHasRecipe hasRecipe) {
-        this.recipes.add(hasRecipe);
+        if (this.recipes.size() < this.map_recipe_managers.keySet().size()) {
+            this.recipes.add(hasRecipe);
+        }
     }
 
     @Override
@@ -577,7 +581,7 @@ public class RecipesCore implements IRecipes {
     @Override
     public void reloadRecipes(final String className) {
 
-        this.recipes.forEach(iHasRecipe -> {
+        this.getRecipesForInit().forEach(iHasRecipe -> {
                     if (className.equals(iHasRecipe.getClass().getName())) {
                         iHasRecipe.init();
                     }
@@ -589,7 +593,7 @@ public class RecipesCore implements IRecipes {
 
     @Override
     public void initializationRecipes() {
-        this.recipes.forEach(IHasRecipe::init);
+        this.getRecipesForInit().forEach(IHasRecipe::init);
         this.fluid_recipe.initializationRecipes();
     }
 
