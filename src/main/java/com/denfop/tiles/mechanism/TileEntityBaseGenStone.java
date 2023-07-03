@@ -252,7 +252,11 @@ public abstract class TileEntityBaseGenStone extends TileEntityElectricMachine i
 
     @Override
     public void onNetworkEvent(final EntityPlayer entityPlayer, final int i) {
-        this.mode = Mode.values()[(this.mode.ordinal() + 1) % Mode.values().length];
+        if (i == 10) {
+            super.onNetworkEvent(entityPlayer, i);
+        } else {
+            this.mode = Mode.values()[(this.mode.ordinal() + 1) % Mode.values().length];
+        }
     }
 
     public ContainerGenStone getGuiContainer(EntityPlayer entityPlayer) {

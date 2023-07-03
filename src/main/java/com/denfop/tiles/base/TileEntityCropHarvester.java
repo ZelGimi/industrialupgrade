@@ -19,7 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -79,17 +78,19 @@ public class TileEntityCropHarvester extends TileEntityElectricMachine implement
         if (tileEntity instanceof TileEntityCrop && !this.isInvFull()) {
             TileEntityCrop crop = (TileEntityCrop) tileEntity;
             if (crop.getCrop() != null) {
-                List<ItemStack> drops = new ArrayList<>();
+                List<ItemStack> drops = null;
                 if (crop.getCurrentSize() == crop.getCrop().getOptimalHarvestSize(crop)) {
                     drops = crop.performHarvest();
                 } else if (crop.getCurrentSize() == crop.getCrop().getMaxSize()) {
                     drops = crop.performHarvest();
                 }
-                for (ItemStack drop : drops) {
-                    if (!this.contentSlot.add(drop)) {
-                        StackUtil.dropAsEntity(world, this.pos, drop);
-                    }
+                if (drops != null) {
+                    for (ItemStack drop : drops) {
+                        if (!this.contentSlot.add(drop)) {
+                            StackUtil.dropAsEntity(world, this.pos, drop);
+                        }
 
+                    }
                 }
             }
         }

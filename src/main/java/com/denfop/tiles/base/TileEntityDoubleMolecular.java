@@ -202,7 +202,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
                 new ItemStack(Items.BLAZE_ROD, 4),
                 new ItemStack(
                         IUItem.upgrademodule, 1,
-                        25
+                        24
                 ),
                 4000000
         );
@@ -214,7 +214,7 @@ public class TileEntityDoubleMolecular extends TileEntityElectricMachine impleme
         addrecipe(
                 new ItemStack(IUItem.module_schedule, 1),
                 new ItemStack(IUItem.perBatChargeCrystal, 1, OreDictionary.WILDCARD_VALUE),
-                new ItemStack(IUItem.upgrademodule, 1, 23),
+                new ItemStack(IUItem.upgrademodule, 1, 25),
                 4000000
         );
 

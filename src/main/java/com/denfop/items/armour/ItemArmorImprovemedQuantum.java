@@ -744,9 +744,9 @@ public class ItemArmorImprovemedQuantum extends ItemArmorElectric
                     player.motionY += motion;
                 }
 
+                int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
+                if (mode != 0) {
 
-                if (nbtData.getBoolean("magnet")) {
-                    int mode = ModUtils.NBTGetInteger(itemStack, "mode1");
                     int radius = 11;
                     if (mode != 0) {
                         AxisAlignedBB axisalignedbb = new AxisAlignedBB(player.posX - radius, player.posY - radius,
