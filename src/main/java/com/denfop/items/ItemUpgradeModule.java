@@ -170,7 +170,25 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
             }
         }
     }
-
+    public double getEnergyStorage(ItemStack stack, IUpgradableBlock parent) {
+        Types type = this.getType(stack);
+        if (type == null) {
+            return 0;
+        } else {
+            switch (type) {
+                case storageUpgrade:
+                    return 100000;
+                case adv_storageUpgrade:
+                    return 1000000;
+                case imp_storageUpgrade:
+                    return 10000000;
+                case per_storageUpgrade:
+                    return 100000000;
+                default:
+                    return 0;
+            }
+        }
+    }
     @Override
     public double getEnergyStorageMultiplier(final ItemStack itemStack, final IUpgradableBlock iUpgradableBlock) {
         return 1;
@@ -235,7 +253,7 @@ public class ItemUpgradeModule extends ItemMulti<ItemUpgradeModule.Types> implem
             case per_storage:
                 list.add(Localization.translate(
                         "ic2.tooltip.upgrade.storage",
-                        this.getExtraEnergyStorage(stack, null) * StackUtil.getSize(stack)
+                        this.getEnergyStorage(stack, null) * StackUtil.getSize(stack)
                 ));
                 break;
 

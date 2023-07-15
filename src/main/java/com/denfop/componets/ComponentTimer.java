@@ -130,13 +130,15 @@ public class ComponentTimer extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(this.timers.size() * 3);
+        GrowingBuffer buffer = new GrowingBuffer(this.timers.size() * 3 + 1);
+        buffer.writeInt(this.indexWork);
         this.timers.forEach(timer -> timer.writeBuffer(buffer));
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
 
     public void onNetworkUpdate(DataInput is) throws IOException {
+        this.indexWork = is.readInt();
         this.timers.forEach(timer -> {
             try {
                 timer.readBuffer(is);

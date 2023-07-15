@@ -178,7 +178,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         if (power <= 0.0) {
             return 0;
         }
-        return (int) Math.ceil(Math.log(power / 8.0) / Math.log(4.0));
+        return Math.min(14, (int) Math.ceil(Math.log(power / 8.0) / Math.log(4.0)));
     }
 
     @Override

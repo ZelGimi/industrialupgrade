@@ -226,7 +226,7 @@ public class ComponentProcess extends AbstractComponent {
             }
             if (this.componentProgress.getProgress() >= this.operationLength) {
                 this.componentProgress.cancellationProgress();
-                for (int i = 0; i < size; i++) {
+                for (int i = 0; i < Math.ceil(size * 1D / this.operationsPerTick ); i++) {
                     operate(this.updateTick.getRecipeOutput());
                 }
                 if (action != null && action.needAction(TypeLoad.AFTER_PROGRESS)) {
@@ -320,7 +320,11 @@ public class ComponentProcess extends AbstractComponent {
     }
 
     public void operate(MachineRecipe output) {
+        if (output.getRecipe() == null) {
+            return;
+        }
         for (int i = 0; i < this.operationsPerTick; i++) {
+
             List<ItemStack> processResult = output.getRecipe().output.items;
             operateOnce(processResult);
             if (!this.invSlotRecipes.continue_process(this.updateTick.getRecipeOutput()) || !this.outputSlot.canAdd(output.getRecipe().output.items)) {

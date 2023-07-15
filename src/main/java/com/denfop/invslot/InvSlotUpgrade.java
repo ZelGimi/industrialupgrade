@@ -420,6 +420,8 @@ public class InvSlotUpgrade extends InvSlot {
             for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
                 if (fluidTankProperties.getContents() != null) {
                     for (Fluids.InternalFluidTank tank : this.fluidTankList) {
+                        if(tank.getFluidAmount() >= tank.getCapacity())
+                            continue;
                         final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
                         if (fluid != null && fluid.amount > 0 && tank.canFillFluidType(fluid)) {
                             tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
@@ -443,6 +445,8 @@ public class InvSlotUpgrade extends InvSlot {
                 for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
                     if (fluidTankProperties.getContents() != null) {
                         for (Fluids.InternalFluidTank tank : this.fluidTankList) {
+                            if(tank.getFluidAmount() >= tank.getCapacity())
+                                continue;
                             final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
                             if (fluid != null && fluid.amount > 0 && tank.acceptsFluid(fluid.getFluid())) {
                                 tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);

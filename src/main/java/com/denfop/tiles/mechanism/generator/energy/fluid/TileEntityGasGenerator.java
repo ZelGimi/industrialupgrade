@@ -3,6 +3,7 @@ package com.denfop.tiles.mechanism.generator.energy.fluid;
 import com.denfop.IUCore;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.AudioSource;
@@ -45,7 +46,7 @@ public class TileEntityGasGenerator extends TileEntityLiquidTankInventory implem
                 InvSlotConsumableLiquid.OpType.Drain
         );
         this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(this, 50000000, 1));
+        this.energy = this.addComponent(AdvEnergy.asBasicSource(this, 50000000, EnergyNetGlobal.instance.getTierFromPower(production)));
 
     }
 

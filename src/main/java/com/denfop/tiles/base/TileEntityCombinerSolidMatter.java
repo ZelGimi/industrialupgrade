@@ -11,7 +11,6 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
 import ic2.api.upgrade.IUpgradableBlock;
 import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.IC2;
 import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -127,16 +126,20 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
         super.updateEntityServer();
 
         if (this.energy.getCapacity() > 0 && this.energy.getEnergy() == this.energy.getCapacity()) {
-
+            boolean need = false;
             for (int i = 0; i < this.solid_col.length; i++) {
                 if (this.solid_col[i] == 0) {
                     continue;
                 }
                 ItemStack stack = this.solid[i].stack.copy();
                 stack.setCount(this.solid_col[i]);
-                this.outputSlot.add(stack);
+                if (this.outputSlot.add(stack)) {
+                    need = true;
+                }
             }
-            this.energy.useEnergy(this.energy.getEnergy());
+            if (need) {
+                this.energy.useEnergy(this.energy.getEnergy());
+            }
         }
         this.upgradeSlot.tickNoMark();
 
@@ -148,9 +151,6 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
 
 
     }
-
-
-
 
 
     @SideOnly(Side.CLIENT)

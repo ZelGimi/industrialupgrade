@@ -159,6 +159,13 @@ public class TileEntityWindGenerator extends TileEntityInventory implements IWin
         return false;
     }
 
+    @Override
+    protected List<ItemStack> getWrenchDrops(final EntityPlayer player, final int fortune) {
+        final List<ItemStack> list = super.getWrenchDrops(player, fortune);
+        this.onBlockBreak();
+        return list;
+    }
+
     public boolean setFacingWrench(EnumFacing facing, EntityPlayer player) {
         boolean fac = super.setFacingWrench(facing, player);
         IUCore.network.get(true).updateTileEntityField(this, "facing");

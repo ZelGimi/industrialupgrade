@@ -301,6 +301,7 @@ public abstract class TileEntityScanner extends TileEntityElectricMachine implem
     private void refreshInfo() {
         if (!StackUtil.isEmpty(this.pattern)) {
             this.patternUu = this.recipe.getOutput().metadata.getDouble("matter");
+            this.patternEu = this.patternUu * 1000000000;
         }
 
     }

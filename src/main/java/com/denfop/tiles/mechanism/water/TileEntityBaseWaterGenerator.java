@@ -108,6 +108,13 @@ public class TileEntityBaseWaterGenerator extends TileEntityInventory implements
     }
 
     @Override
+    protected List<ItemStack> getWrenchDrops(final EntityPlayer player, final int fortune) {
+        final List<ItemStack> list = super.getWrenchDrops(player, fortune);
+        this.onBlockBreak();
+        return list;
+    }
+
+    @Override
     public boolean onActivated(
             final EntityPlayer player,
             final EnumHand hand,

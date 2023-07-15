@@ -242,6 +242,7 @@ public class TileEntityBaseReplicator extends TileEntityElectricMachine implemen
             } else {
                 this.pattern = patterns.get(this.index);
                 this.patternUu = pattern.getCol() * this.coef;
+                this.patternEu = this.patternUu * 1000000000;
                 if (oldPattern == null || !StackUtil.checkItemEqualityStrict(this.pattern.getStack(), oldPattern.getStack())) {
                     this.uuProcessed = 0.0D;
                     this.mode = Mode.STOPPED;
