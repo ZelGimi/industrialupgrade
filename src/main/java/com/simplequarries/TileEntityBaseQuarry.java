@@ -800,10 +800,7 @@ public class TileEntityBaseQuarry extends TileEntityInventory implements IHasGui
 
                 break;
             case 2:
-                this.max_y = Math.min(this.getWorld().provider.getHeight(), Math.min(
-                        k,
-                        this.getWorld().provider.getHeight() - this.max_y
-                ));
+                this.max_y = Math.min(this.getWorld().provider.getHeight(), k + this.max_y);
                 if (this.min_y > this.max_y) {
                     this.min_y = this.max_y;
                 }

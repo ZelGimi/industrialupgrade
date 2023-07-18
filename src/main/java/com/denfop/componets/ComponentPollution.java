@@ -27,6 +27,9 @@ public class ComponentPollution extends AbstractComponent {
     public void onLoaded() {
         super.onLoaded();
         this.stack = new ItemStack(IUItem.module7, 1, 9);
+        if(this.active){
+            this.timer.setCanWork(false);
+        }
     }
 
     @Override

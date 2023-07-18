@@ -6,6 +6,7 @@ import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerBaseDoubleMolecular;
 import com.denfop.utils.ModUtils;
 import ic2.core.init.Localization;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,7 +33,7 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         new AdvArea(this, 7, 3, 58, 17).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3")).drawForeground(mouseX, mouseY);
+                "iu.molecular_info3")+ "\n" + (this.container.base.queue ? "x64" : "x1")).drawForeground(mouseX, mouseY);
         new AdvArea(this, 180, 3, 195, 17)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
@@ -42,7 +43,15 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                 );
 
     }
-
+    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.7,0.7,1);
+        String name = Localization.translate(this.container.base.getName());
+        this.drawXCenteredString((int) ((this.xSize / 2) / 0.48 ), 22, name, 4210752, false);
+        GlStateManager.popMatrix();
+    }
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.bindTexture();

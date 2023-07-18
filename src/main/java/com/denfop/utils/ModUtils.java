@@ -490,94 +490,7 @@ public class ModUtils {
         return handler;
     }
 
-    public static void tick(InvSlotOutput slot, TileEntityBlock tile) {
 
-        for (EnumFacing facing1 : facings) {
-            BlockPos pos = tile.getPos().offset(facing1);
-            final TileEntity tile1 = tile.getWorld().getTileEntity(pos);
-            final IItemHandler handler = getItemHandler(tile1, facing1.getOpposite());
-            if (handler == null) {
-                continue;
-            }
-            final int slots = handler.getSlots();
-            for (int j = 0; j < slot.size(); j++) {
-                ItemStack took = slot.get(j);
-                if (took.isEmpty()) {
-                    continue;
-                }
-
-                if (!(handler instanceof ISidedInventory)) {
-                    took = took.copy();
-                    if (insertItem(handler, took, true, slots).isEmpty()) {
-                        slot.put(j, ItemStack.EMPTY);
-                        insertItem(handler, took, false, slots);
-                    }
-                } else {
-                    if (insertItem1(handler, took, true, slots).isEmpty()) {
-                        slot.put(j, ItemStack.EMPTY);
-                        insertItem1(handler, took, false, slots);
-
-                    }
-                }
-
-            }
-        }
-
-    }
-
-    public static void tick(ItemStack[] slot, IItemHandler tile, HandHeldBags handHeldBags) {
-        if (tile == null) {
-            return;
-        }
-        final int slots = tile.getSlots();
-        for (int i = 0; i < slot.length; i++) {
-            ItemStack took = slot[i];
-            if (took.isEmpty()) {
-                continue;
-            }
-
-            if (!(tile instanceof ISidedInventory)) {
-                took = took.copy();
-                if (insertItem(tile, took, true, slots).isEmpty()) {
-                    handHeldBags.put(i, ItemStack.EMPTY);
-                    insertItem(tile, took, false, slots);
-                }
-            } else {
-                if (insertItem1(tile, took, true, slots).isEmpty()) {
-                    handHeldBags.put(i, ItemStack.EMPTY);
-                    insertItem1(tile, took, false, slots);
-
-                }
-            }
-
-
-        }
-
-    }
-
-    @Nonnull
-    public static ItemStack insertItem1(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, int slot) {
-        if (dest == null || stack.isEmpty()) {
-            return stack;
-        }
-        slot = Math.min(slot, dest.getSlots());
-        for (int i = 0; i < slot; i++) {
-            stack = insertItem2(dest, i, stack, simulate);
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-        }
-
-        return stack;
-    }
-
-    public static boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
-        if (a.isEmpty() || !a.isItemEqual(b) || a.hasTagCompound() != b.hasTagCompound()) {
-            return false;
-        }
-
-        return (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
-    }
 
     @Nonnull
     public static ItemStack insertItem2(IItemHandler dest, int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -648,14 +561,125 @@ public class ModUtils {
         }
         slots = Math.min(slots, dest.getSlots());
         for (int i = 0; i < slots; i++) {
-            stack = dest.insertItem(i, stack, simulate);
-            if (stack.isEmpty()) {
+            ItemStack   stack1 = dest.insertItem(i, stack, simulate);
+            if (stack1.isEmpty()) {
                 return ItemStack.EMPTY;
+            }else if(stack1 != stack){
+                return stack1;
             }
         }
 
         return stack;
     }
+
+    @Nonnull
+    public static ItemStack insertItem1(IItemHandler dest, @Nonnull ItemStack stack, boolean simulate, int slot) {
+        if (dest == null || stack.isEmpty()) {
+            return stack;
+        }
+        slot = Math.min(slot, dest.getSlots());
+        for (int i = 0; i < slot; i++) {
+            final ItemStack stack2 = insertItem2(dest, i, stack, simulate);
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
+            }else if(stack2 != stack)
+                return stack2;
+        }
+
+        return stack;
+    }
+    public static void tick(InvSlotOutput slot, TileEntityBlock tile) {
+
+        for (EnumFacing facing1 : facings) {
+            BlockPos pos = tile.getPos().offset(facing1);
+            final TileEntity tile1 = tile.getWorld().getTileEntity(pos);
+            final IItemHandler handler = getItemHandler(tile1, facing1.getOpposite());
+            if (handler == null) {
+                continue;
+            }
+            final int slots = handler.getSlots();
+            for (int j = 0; j < slot.size(); j++) {
+                ItemStack took = slot.get(j);
+                if (took.isEmpty()) {
+                    continue;
+                }
+
+                ItemStack stack1;
+                if (!(handler instanceof ISidedInventory)) {
+                    took = took.copy();
+                    stack1 = insertItem(handler, took, true, slots);
+                    if (stack1.isEmpty()) {
+                        slot.put(j, ItemStack.EMPTY);
+                        insertItem(handler, took, false, slots);
+                    }else if(stack1 != took){
+                        slot.get(j).shrink(stack1.getCount());
+                        insertItem(handler, stack1, false, slots);
+                    }
+                } else {
+                    stack1 = insertItem1(handler, took, true, slots);
+                    if (stack1.isEmpty()){
+                        slot.put(j, ItemStack.EMPTY);
+                        insertItem1(handler, took, false, slots);
+                    }else if(stack1 != took){
+                        slot.get(j).shrink(stack1.getCount());
+                        insertItem1(handler, stack1, false, slots);
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    public static void tick(ItemStack[] slot, IItemHandler tile, HandHeldBags handHeldBags) {
+        if (tile == null) {
+            return;
+        }
+        final int slots = tile.getSlots();
+        for (int i = 0; i < slot.length; i++) {
+            ItemStack took = slot[i];
+            if (took.isEmpty()) {
+                continue;
+            }
+
+            if (!(tile instanceof ISidedInventory)) {
+                took = took.copy();
+                final ItemStack stack = insertItem(tile, took, true, slots);
+                if (stack.isEmpty()) {
+                    handHeldBags.put(i, ItemStack.EMPTY);
+                    insertItem(tile, took, false, slots);
+                }
+                else if(stack != took){
+                    handHeldBags.get(i).shrink(stack.getCount());
+                    insertItem1(tile, stack, false, slots);
+                }
+            } else {
+                final ItemStack stack =   insertItem1(tile, took, true, slots);
+                if (stack.isEmpty()) {
+                    handHeldBags.put(i, ItemStack.EMPTY);
+                    insertItem1(tile, took, false, slots);
+
+                }
+                else if(stack != took){
+                    handHeldBags.get(i).shrink(stack.getCount());
+                    insertItem1(tile, stack, false, slots);
+                }
+            }
+
+
+        }
+
+    }
+
+    public static boolean canItemStacksStack(@Nonnull ItemStack a, @Nonnull ItemStack b) {
+        if (a.isEmpty() || !a.isItemEqual(b) || a.hasTagCompound() != b.hasTagCompound()) {
+            return false;
+        }
+
+        return (!a.hasTagCompound() || a.getTagCompound().equals(b.getTagCompound()));
+    }
+
+
 
 
     public static ItemStack setSize(ItemStack stack, int col) {

@@ -514,9 +514,13 @@ public class InvSlotUpgrade extends InvSlot {
             for (int j = 0; j < slots; j++) {
                 ItemStack took = handler.getHandler().extractItem(j, 64, true);
                 if (!took.isEmpty()) {
-                    if (ModUtils.insertItem(this.main_handler, took, true, slots).isEmpty()) {
+                    final ItemStack took1 = ModUtils.insertItem(this.main_handler, took, true, this.main_handler.getSlots());
+                    if (took1.isEmpty()) {
                         took = handler.getHandler().extractItem(j, took.getCount(), false);
-                        ModUtils.insertItem(this.main_handler, took, false, slots);
+                        ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
+                    }else if(took1 != took){
+                        took = handler.getHandler().extractItem(j, took1.getCount(), false);
+                        ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
                     }
                 }
             }
@@ -537,9 +541,13 @@ public class InvSlotUpgrade extends InvSlot {
                     ItemStack took = handler.getHandler().extractItem(j, 64, true);
 
                     if (!took.isEmpty()) {
-                        if (ModUtils.insertItem(this.main_handler, took, true, slots).isEmpty()) {
+                        final ItemStack took1 = ModUtils.insertItem(this.main_handler, took, true, this.main_handler.getSlots());
+                        if (took1.isEmpty()) {
                             took = handler.getHandler().extractItem(j, took.getCount(), false);
-                            ModUtils.insertItem(this.main_handler, took, false, slots);
+                            ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
+                        }else if(took1 != took){
+                            took = handler.getHandler().extractItem(j, took1.getCount(), false);
+                            ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
                         }
                     }
                 }
@@ -568,12 +576,13 @@ public class InvSlotUpgrade extends InvSlot {
                             continue;
                         }
 
-
-                        if (insertItem1(handler, took, true, slots).isEmpty()) {
-
+                        final ItemStack stack = insertItem1(handler, took, true, slots);
+                        if (stack.isEmpty()) {
                             slot.put(j, ItemStack.EMPTY);
                             insertItem1(handler, took, false, slots);
-
+                        }else if(stack != took){
+                            slot.get(j).shrink(stack.getCount());
+                            insertItem1(handler, stack, false, slots);
                         }
 
 
@@ -587,9 +596,13 @@ public class InvSlotUpgrade extends InvSlot {
                             continue;
                         }
                         took = took.copy();
-                        if (ModUtils.insertItem(handler.getHandler(), took, true, slots).isEmpty()) {
+                        final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
+                        if (stack.isEmpty()) {
                             slot.put(j, ItemStack.EMPTY);
                             ModUtils.insertItem(handler.getHandler(), took, false, slots);
+                        }else if(stack != took){
+                            slot.get(j).shrink(stack.getCount());
+                            ModUtils.insertItem(handler.getHandler(), stack, false, slots);
                         }
 
                     }
@@ -614,10 +627,13 @@ public class InvSlotUpgrade extends InvSlot {
                             if (took.isEmpty()) {
                                 continue;
                             }
-                            if (insertItem1(handler, took, true, slots).isEmpty()) {
+                            final ItemStack stack = insertItem1(handler, took, true, slots);
+                            if (stack.isEmpty()) {
                                 slot.put(j, ItemStack.EMPTY);
                                 insertItem1(handler, took, false, slots);
-
+                            }else if(stack != took){
+                                slot.get(j).shrink(stack.getCount());
+                                insertItem1(handler, stack, false, slots);
                             }
 
 
@@ -631,9 +647,13 @@ public class InvSlotUpgrade extends InvSlot {
                                 continue;
                             }
                             took = took.copy();
-                            if (ModUtils.insertItem(handler.getHandler(), took, true, slots).isEmpty()) {
+                            final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
+                            if (stack.isEmpty()) {
                                 slot.put(j, ItemStack.EMPTY);
                                 ModUtils.insertItem(handler.getHandler(), took, false, slots);
+                            }else if(stack != took){
+                                slot.get(j).shrink(stack.getCount());
+                                ModUtils.insertItem(handler.getHandler(), stack, false, slots);
                             }
 
                         }
@@ -694,11 +714,12 @@ public class InvSlotUpgrade extends InvSlot {
         }
 
         for (int i = 0; i < slot; i++) {
-            stack = this.insertItem2(dest, i, stack, simulate);
+            final ItemStack stack2 = this.insertItem2(dest, i, stack, simulate);
 
-            if (stack.isEmpty()) {
+            if (stack2.isEmpty()) {
                 return ItemStack.EMPTY;
-            }
+            }else  if(stack2 != stack)
+                return stack2;
         }
 
         return stack;
@@ -750,7 +771,7 @@ public class InvSlotUpgrade extends InvSlot {
                     inventory.setInventorySlotContents(slot, copy);
                     return ItemStack.EMPTY;
                 }
-
+                return ItemStack.EMPTY;
             } else {
                 // copy the stack to not modify the original one
                 stack = stack.copy();
@@ -759,9 +780,11 @@ public class InvSlotUpgrade extends InvSlot {
                     copy.grow(stackInSlot.getCount());
                     inventory.setInventorySlotContents(slot, copy);
                     return stack;
+                }else {
+                    stack.shrink(m);
+                    return stack;
                 }
             }
-            return stack;
         } else {
 
 

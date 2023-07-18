@@ -34,7 +34,7 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         new AdvArea(this, 7, 3, 58, 17).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3")).drawForeground(mouseX, mouseY);
+                "iu.molecular_info3"+ "\n" + (this.container.base.queue ? "x64" : "x1"))).drawForeground(mouseX, mouseY);
         new AdvArea(this, 180, 3, 195, 17)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
