@@ -1,0 +1,94 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "cable_iu" : {
+        "model" : "industrialupgrade:wiring/cable_iu"
+      },
+	  "cable_iu_copper1" : {
+        "model" : "industrialupgrade:wiring/cable/copper1_cable"
+      },
+	  "cable_iu_copper" : {
+        "model" : "industrialupgrade:wiring/cable/copper_cable"
+      },
+	  "cable_iu_glass_1" : {
+        "model" : "industrialupgrade:wiring/cable/glass_1_cable"
+      },
+	  "cable_iu_gold" : {
+        "model" : "industrialupgrade:wiring/cable/gold_cable"
+      },
+	  "cable_iu_gold1" : {
+        "model" : "industrialupgrade:wiring/cable/gold1_cable"
+      },
+	  "cable_iu_iron" : {
+        "model" : "industrialupgrade:wiring/cable/iron_cable"
+      },
+	  "cable_iu_iron1" : {
+        "model" : "industrialupgrade:wiring/cable/iron1_cable"
+      },
+	  "cable_iu_tin" : {
+        "model" : "industrialupgrade:wiring/cable/tin_cable"
+      },
+	  "cable_iu_tin1" : {
+        "model" : "industrialupgrade:wiring/cable/tin1_cable"
+      },
+	  "cable_iu_glass" : {
+        "model" : "industrialupgrade:wiring/cable/glass_cable"
+      },
+	  "cable_iu_glass1" : {
+        "model" : "industrialupgrade:wiring/cable/glass1_cable"
+      },
+	  "cable_iu_glass2" : {
+        "model" : "industrialupgrade:wiring/cable/glass2_cable"
+      },
+	  "cable_iu_glass3" : {
+        "model" : "industrialupgrade:wiring/cable/glass3_cable"
+      },
+	  "cable_iu_glass4" : {
+        "model" : "industrialupgrade:wiring/cable/glass4_cable"
+      },
+	  "cable_iu_glass5" : {
+        "model" : "industrialupgrade:wiring/cable/glass5_cable"
+      },
+	  "cable_iu_glass6" : {
+        "model" : "industrialupgrade:wiring/cable/glass6_cable"
+      },
+	  "cable_iu_glass7" : {
+        "model" : "industrialupgrade:wiring/cable/glass7_cable"
+      },
+	  "cable_iu_glass8" : {
+        "model" : "industrialupgrade:wiring/cable/glass8_cable"
+      },
+	  "cable_iu_glass9" : {
+        "model" : "industrialupgrade:wiring/cable/glass9_cable"
+      },
+	  "cable_iu_glass10" : {
+        "model" : "industrialupgrade:wiring/cable/glass10_cable"
+      }
+	  
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

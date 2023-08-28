@@ -1,0 +1,54 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "aer_solidmatter" : {
+        "model" : "industrialupgrade:solid/aer_solidmatter"
+      },
+      "aqua_solidmatter" : {
+        "model" : "industrialupgrade:solid/aqua_solidmatter"
+      },
+      "earth_solidmatter" : {
+        "model" : "industrialupgrade:solid/earth_solidmatter"
+      },
+      "end_solidmatter" : {
+        "model" : "industrialupgrade:solid/end_solidmatter"
+      },
+      "solidmatter" : {
+        "model" : "industrialupgrade:solid/solidmatter"
+      },
+      "nether_solidmatter" : {
+        "model" : "industrialupgrade:solid/nether_solidmatter"
+      },
+      "night_solidmatter" : {
+        "model" : "industrialupgrade:solid/night_solidmatter"
+      },
+      "sun_solidmatter" : {
+        "model" : "industrialupgrade:solid/sun_solidmatter"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

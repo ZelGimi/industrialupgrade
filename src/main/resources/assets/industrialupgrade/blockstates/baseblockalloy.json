@@ -1,0 +1,64 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "aluminum_bronze" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/aluminum_bronze_block"
+        }
+      },
+      "alumel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/alumel_block"
+        }
+      },
+      "red_brass" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/red_brass_block"
+        }
+      },
+      "muntsa" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/muntsa_block"
+        }
+      },
+      "nichrome" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nichrome_block"
+        }
+      },
+      "alcled" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/alcled_block"
+        }
+      },
+      "vanadoalumite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/vanadoalumite_block"
+        }
+      },
+      "vitalium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/vitalium_block"
+        }
+      },
+      "duralumin" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/duralumin_block"
+        }
+      },
+      "ferromanganese" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/ferromanganese_block"
+        }
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

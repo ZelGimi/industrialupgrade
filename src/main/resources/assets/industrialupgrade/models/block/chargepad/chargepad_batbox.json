@@ -1,0 +1,12 @@
+{
+	"parent": "industrialupgrade:block/wiring/chargepad/chargepad_base",
+	"textures": {
+		"particle": "industrialupgrade:blocks/chargepad_batbox_left",
+		"down": "industrialupgrade:blocks/chargepad_batbox_bottom",
+		"up": "industrialupgrade:blocks/chargepad_batbox_top",
+		"north": "industrialupgrade:blocks/chargepad_batbox_front",
+		"east": "industrialupgrade:blocks/chargepad_batbox_left",
+		"south": "industrialupgrade:blocks/chargepad_batbox_back",
+		"west": "industrialupgrade:blocks/chargepad_batbox_right"
+	}
+}

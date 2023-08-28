@@ -1,0 +1,36 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "double_transformer" : {
+        "model" : "industrialupgrade:basemachine/double_transformer"
+      },
+      "double_transformer_active" : {
+        "model" : "industrialupgrade:basemachine/double_transformer"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "transform" : "forge:default-block"
+      },
+      "up" : {
+        "transform" : "forge:default-block"
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "transform" : "forge:default-block"
+      },
+      "west" : {
+        "transform" : "forge:default-block"
+      },
+      "east" : {
+        "transform" : "forge:default-block"
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

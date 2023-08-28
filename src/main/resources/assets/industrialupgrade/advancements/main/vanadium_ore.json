@@ -1,0 +1,28 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 2
+    },
+    "title" : {
+      "translate" : "achievement.vanadiumore"
+    },
+    "description" : {
+      "translate" : "achievement.vanadiumore.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:baseore",
+            "data" : 2
+          }
+        ]
+      }
+    }
+  }
+}

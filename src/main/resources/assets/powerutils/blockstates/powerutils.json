@@ -1,0 +1,54 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "power_utilities" : {
+        "model" : "powerutils:power_utilities"
+      },
+      "power_utilities_fe" : {
+        "model" : "powerutils:power_utilities_fe"
+      },
+      "power_utilities_te" : {
+        "model" : "powerutils:power_utilities_te"
+      },
+      "power_utilities_qe" : {
+        "model" : "powerutils:power_utilities_qe"
+      },
+      "imp_simply_quarry" : {
+        "model" : "simplyquarries:imp_simply_quarry"
+      },
+      "imp_simply_quarry_active" : {
+        "model" : "simplyquarries:imp_simply_quarry_active"
+      },
+      "per_simply_quarry" : {
+        "model" : "simplyquarries:per_simply_quarry"
+      },
+      "qper_simply_quarry_active" : {
+        "model" : "simplyquarries:per_simply_quarry_active"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

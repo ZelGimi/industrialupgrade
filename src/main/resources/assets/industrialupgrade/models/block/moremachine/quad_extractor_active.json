@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockextractor3_side",
+    "down" : "industrialupgrade:blocks/blockextractor3_side",
+    "up" : "industrialupgrade:blocks/blockextractor3_top",
+    "north" : "industrialupgrade:blocks/blockextractor3_main_active",
+    "east" : "industrialupgrade:blocks/blockextractor3_side2_active",
+    "south" : "industrialupgrade:blocks/blockextractor3_side",
+    "west" : "industrialupgrade:blocks/blockextractor3_side2_active"
+  }
+}

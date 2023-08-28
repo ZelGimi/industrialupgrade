@@ -1,0 +1,28 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine1",
+      "data" : 12
+    },
+    "title" : {
+      "translate" : "achievement.mineral_separator"
+    },
+    "description" : {
+      "translate" : "achievement.mineral_separator.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/minerals",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:basemachine1",
+            "data" : 12
+          }
+        ]
+      }
+    }
+  }
+}

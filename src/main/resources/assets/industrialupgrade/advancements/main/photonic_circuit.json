@@ -1,0 +1,29 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:circuit",
+      "data" : 21
+    },
+    "title" : {
+      "translate" : "achievement.photonic_circuit"
+    },
+    "description" : {
+      "translate" : "achievement.photonic_circuit.desc"
+    },
+    "hidden" : true
+  },
+  "parent" : "industrialupgrade:main/spectral_circuit",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:circuit",
+            "data" : 21
+          }
+        ]
+      }
+    }
+  }
+}

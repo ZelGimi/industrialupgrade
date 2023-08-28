@@ -1,0 +1,26 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:anode"
+    },
+    "title" : {
+      "translate" : "achievement.anode"
+    },
+    "description" : {
+      "translate" : "achievement.anode.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/elecrolyzer",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:anode"
+          }
+        ]
+      }
+    }
+  }
+}

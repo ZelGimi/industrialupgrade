@@ -1,0 +1,26 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:molecular"
+    },
+    "title" : {
+      "translate" : "achievement.molecular_transformer"
+    },
+    "description" : {
+      "translate" : "achievement.molecular_transformer.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/sunnarium_makerpanel",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:molecular"
+          }
+        ]
+      }
+    }
+  }
+}

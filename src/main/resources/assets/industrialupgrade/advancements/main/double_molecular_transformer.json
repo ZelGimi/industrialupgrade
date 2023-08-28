@@ -1,0 +1,26 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:double_transformer"
+    },
+    "title" : {
+      "translate" : "achievement.double_molecular_transformer"
+    },
+    "description" : {
+      "translate" : "achievement.double_molecular_transformer.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/molecular_transformer",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:double_transformer"
+          }
+        ]
+      }
+    }
+  }
+}

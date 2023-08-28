@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "down" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "up" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "north" : "industrialupgrade:blocks/blockcombmacerator3_main_active",
+    "east" : "industrialupgrade:blocks/blockcombmacerator3_side2_active",
+    "south" : "industrialupgrade:blocks/blockcombmacerator3_side",
+    "west" : "industrialupgrade:blocks/blockcombmacerator3_side2_active"
+  }
+}

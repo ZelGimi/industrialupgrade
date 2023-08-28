@@ -1,0 +1,26 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:adv_se_gen"
+    },
+    "title" : {
+      "translate" : "achievement.adv_SE_generator"
+    },
+    "description" : {
+      "translate" : "achievement.adv_SE_generator.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/se_generator",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:adv_se_gen"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockelecfurnace1_side",
+    "down" : "industrialupgrade:blocks/blockelecfurnace1_side",
+    "up" : "industrialupgrade:blocks/blockelecfurnace1_side2_active",
+    "north" : "industrialupgrade:blocks/blockelecfurnace1_main_active",
+    "east" : "industrialupgrade:blocks/blockelecfurnace1_side1_active",
+    "south" : "industrialupgrade:blocks/blockelecfurnace1_side",
+    "west" : "industrialupgrade:blocks/blockelecfurnace1_side1_active"
+  }
+}

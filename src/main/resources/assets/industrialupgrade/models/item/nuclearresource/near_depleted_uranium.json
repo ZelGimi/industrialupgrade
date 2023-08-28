@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:item/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/reactor/uran_empty_cell"
+	}
+}

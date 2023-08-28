@@ -1,0 +1,28 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:baseore",
+      "data" : 7
+    },
+    "title" : {
+      "translate" : "achievement.platinumore"
+    },
+    "description" : {
+      "translate" : "achievement.platinumore.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:baseore",
+            "data" : 7
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "ruby_ore" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/ruby_ore"
+        }
+      },
+      "sapphire_ore" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/sapphire_ore"
+        }
+      },
+      "topaz_ore" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/topaz_ore"
+        }
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

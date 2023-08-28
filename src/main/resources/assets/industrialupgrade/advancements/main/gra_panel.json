@@ -1,0 +1,29 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:machines",
+      "data" : 12
+    },
+    "title" : {
+      "translate" : "achievement.gra_panel"
+    },
+    "description" : {
+      "translate" : "achievement.gra_panel.desc"
+    },
+    "frame" : "challenge"
+  },
+  "parent" : "industrialupgrade:main/gra_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:machines",
+            "data" : 12
+          }
+        ]
+      }
+    }
+  }
+}

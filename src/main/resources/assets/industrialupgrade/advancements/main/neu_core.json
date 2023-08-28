@@ -1,0 +1,29 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:itemcore",
+      "data" : 9
+    },
+    "title" : {
+      "translate" : "achievement.neu_core"
+    },
+    "description" : {
+      "translate" : "achievement.neu_core.desc"
+    },
+    "frame" : "challenge"
+  },
+  "parent" : "industrialupgrade:main/pho_core",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:itemcore",
+            "data" : 9
+          }
+        ]
+      }
+    }
+  }
+}

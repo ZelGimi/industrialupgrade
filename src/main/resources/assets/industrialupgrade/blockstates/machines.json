@@ -1,0 +1,492 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "molecular_transformer" : {
+        "model" : "industrialupgrade:molecular_transformer"
+      },
+      "barion_solar_panel" : {
+        "model" : "industrialupgrade:barion_solar_panel"
+      },
+      "hadron_solar_panel" : {
+        "model" : "industrialupgrade:hadron_solar_panel"
+      },
+      "graviton_solar_panel" : {
+        "model" : "industrialupgrade:graviton_solar_panel"
+      },
+      "quark_solar_panel" : {
+        "model" : "industrialupgrade:quark_solar_panel"
+      },
+      "spectral_solar_panel" : {
+        "model" : "industrialupgrade:spectral_solar_panel"
+      },
+      "singular_solar_panel" : {
+        "model" : "industrialupgrade:singulary_solar_panel"
+      },
+      "admin_solar_panel" : {
+        "model" : "industrialupgrade:admin_solar_panel"
+      },
+      "photonic_solar_panel" : {
+        "model" : "industrialupgrade:photonic_solar_panel"
+      },
+      "neutronium_solar_panel" : {
+        "model" : "industrialupgrade:neutronium_solar_panel"
+      },
+      "proton_solar_panel" : {
+        "model" : "industrialupgrade:proton_solar_panel"
+      },
+      "transformator" : {
+        "model" : "industrialupgrade:transformator"
+      },
+      "transformator1" : {
+        "model" : "industrialupgrade:transformator1"
+      },
+      "transformator2" : {
+        "model" : "industrialupgrade:transformator2"
+      },
+      "transformator3" : {
+        "model" : "industrialupgrade:transformator3"
+      },
+      "transformator4" : {
+        "model" : "industrialupgrade:transformator4"
+      },
+      "transformator5" : {
+        "model" : "industrialupgrade:transformator5"
+      },
+      "nutronfabricator" : {
+        "model" : "industrialupgrade:nutronfabricator"
+      },
+      "advanced_solar_panelsun" : {
+        "model" : "industrialupgrade:advanced_solar_panelsun"
+      },
+      "hybrid_solar_panelsun" : {
+        "model" : "industrialupgrade:hybrid_solar_panelsun"
+      },
+      "ultimate_solar_panelsun" : {
+        "model" : "industrialupgrade:ultimate_solar_panelsun"
+      },
+      "quantum_solar_panelsun" : {
+        "model" : "industrialupgrade:quantum_solar_panelsun"
+      },
+      "spectral_solar_panelsun" : {
+        "model" : "industrialupgrade:spectral_solar_panelsun"
+      },
+      "singular_solar_panelsun" : {
+        "model" : "industrialupgrade:singulary_solar_panelsun"
+      },
+      "admin_solar_panelsun" : {
+        "model" : "industrialupgrade:admin_solar_panelsun"
+      },
+      "photonic_solar_panelsun" : {
+        "model" : "industrialupgrade:photonic_solar_panelsun"
+      },
+      "neutronium_solar_panelsun" : {
+        "model" : "industrialupgrade:neutronium_solar_panelsun"
+      },
+      "proton_solar_panelsun" : {
+        "model" : "industrialupgrade:proton_solar_panelsun"
+      },
+      "advanced_solar_paneliu" : {
+        "model" : "industrialupgrade:advanced_solar_panel"
+      },
+      "hybrid_solar_paneliu" : {
+        "model" : "industrialupgrade:hybrid_solar_panel"
+      },
+      "ultimate_solar_paneliu" : {
+        "model" : "industrialupgrade:ultimate_solar_panel"
+      },
+      "quantum_solar_paneliu" : {
+        "model" : "industrialupgrade:quantum_solar_panel"
+      },
+      "advanced_solar_panelnight" : {
+        "model" : "industrialupgrade:advanced_solar_panelmoon"
+      },
+      "hybrid_solar_panelnight" : {
+        "model" : "industrialupgrade:hybrid_solar_panelmoon"
+      },
+      "ultimate_solar_panelnight" : {
+        "model" : "industrialupgrade:ultimate_solar_panelmoon"
+      },
+      "quantum_solar_panelnight" : {
+        "model" : "industrialupgrade:quantum_solar_panelmoon"
+      },
+      "spectral_solar_panelnight" : {
+        "model" : "industrialupgrade:spectral_solar_panelmoon"
+      },
+      "singular_solar_panelnight" : {
+        "model" : "industrialupgrade:singulary_solar_panelmoon"
+      },
+      "admin_solar_panelnight" : {
+        "model" : "industrialupgrade:admin_solar_panelmoon"
+      },
+      "photonic_solar_panelnight" : {
+        "model" : "industrialupgrade:photonic_solar_panelmoon"
+      },
+      "cable2" : {
+        "model" : "industrialupgrade:glass"
+      },
+      "neutronium_solar_panelnight" : {
+        "model" : "industrialupgrade:neutronium_solar_panelmoon"
+      },
+      "proton_solar_panelnight" : {
+        "model" : "industrialupgrade:proton_solar_panelmoon"
+      },
+      "spectral_solar_panelrain" : {
+        "model" : "industrialupgrade:spectral_solar_panelrain"
+      },
+      "singular_solar_panelrain" : {
+        "model" : "industrialupgrade:singulary_solar_panelrain"
+      },
+      "admin_solar_panelrain" : {
+        "model" : "industrialupgrade:admin_solar_panelrain"
+      },
+      "photonic_solar_panelrain" : {
+        "model" : "industrialupgrade:photonic_solar_panelrain"
+      },
+      "neutronium_solar_panelrain" : {
+        "model" : "industrialupgrade:neutronium_solar_panelrain"
+      },
+      "proton_solar_panelrain" : {
+        "model" : "industrialupgrade:proton_solar_panelrain"
+      },
+      "advanced_solar_panelrain" : {
+        "model" : "industrialupgrade:advanced_solar_panelrain"
+      },
+      "hybrid_solar_panelrain" : {
+        "model" : "industrialupgrade:hybrid_solar_panelrain"
+      },
+      "ultimate_solar_panelrain" : {
+        "model" : "industrialupgrade:ultimate_solar_panelrain"
+      },
+      "advancedmfsu" : {
+        "model" : "industrialupgrade:advancedmfsu"
+      },
+      "ultimatemfsu" : {
+        "model" : "industrialupgrade:ultimatemfsu"
+      },
+      "quantummfsu" : {
+        "model" : "industrialupgrade:quantummfsu"
+      },
+      "quantum_solar_panelrain" : {
+        "model" : "industrialupgrade:quantum_solar_panelrain"
+      },
+      "advanced_solar_paneliu_aer" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_aer"
+      },
+      "advanced_solar_paneliu_earth" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_earth"
+      },
+      "advanced_solar_paneliu_end" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_end"
+      },
+      "advanced_solar_paneliu_nether" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_nether"
+      },
+      "advanced_solar_paneliu_sun" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_sun"
+      },
+      "advanced_solar_paneliu_night" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_night"
+      },
+      "advanced_solar_paneliu_rain" : {
+        "model" : "industrialupgrade:advanced_solar_paneliu_rain"
+      },
+      "hybrid_solar_paneliu_aer" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_aer"
+      },
+      "hybrid_solar_paneliu_earth" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_earth"
+      },
+      "hybrid_solar_paneliu_end" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_end"
+      },
+      "hybrid_solar_paneliu_nether" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_nether"
+      },
+      "hybrid_solar_paneliu_sun" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_sun"
+      },
+      "hybrid_solar_paneliu_night" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_night"
+      },
+      "hybrid_solar_paneliu_rain" : {
+        "model" : "industrialupgrade:hybrid_solar_paneliu_rain"
+      },
+      "ultimate_solar_paneliu_aer" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_aer"
+      },
+      "ultimate_solar_paneliu_earth" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_earth"
+      },
+      "ultimate_solar_paneliu_end" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_end"
+      },
+      "ultimate_solar_paneliu_nether" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_nether"
+      },
+      "ultimate_solar_paneliu_sun" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_sun"
+      },
+      "ultimate_solar_paneliu_night" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_night"
+      },
+      "ultimate_solar_paneliu_rain" : {
+        "model" : "industrialupgrade:ultimate_solar_paneliu_rain"
+      },
+      "quantum_solar_paneliu_aer" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_aer"
+      },
+      "quantum_solar_paneliu_earth" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_earth"
+      },
+      "quantum_solar_paneliu_end" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_end"
+      },
+      "quantum_solar_paneliu_nether" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_nether"
+      },
+      "quantum_solar_paneliu_sun" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_sun"
+      },
+      "quantum_solar_paneliu_night" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_night"
+      },
+      "quantum_solar_paneliu_rain" : {
+        "model" : "industrialupgrade:quantum_solar_paneliu_rain"
+      },
+      "spectral_solar_panel_aer" : {
+        "model" : "industrialupgrade:spectral_solar_panel_aer"
+      },
+      "spectral_solar_panel_earth" : {
+        "model" : "industrialupgrade:spectral_solar_panel_earth"
+      },
+      "spectral_solar_panel_end" : {
+        "model" : "industrialupgrade:spectral_solar_panel_end"
+      },
+      "spectral_solar_panel_nether" : {
+        "model" : "industrialupgrade:spectral_solar_panel_nether"
+      },
+      "spectral_solar_panel_sun" : {
+        "model" : "industrialupgrade:spectral_solar_panel_sun"
+      },
+      "spectral_solar_panel_night" : {
+        "model" : "industrialupgrade:spectral_solar_panel_night"
+      },
+      "spectral_solar_panel_rain" : {
+        "model" : "industrialupgrade:spectral_solar_panel_rain"
+      },
+      "proton_solar_panel_aer" : {
+        "model" : "industrialupgrade:proton_solar_panel_aer"
+      },
+      "proton_solar_panel_earth" : {
+        "model" : "industrialupgrade:proton_solar_panel_earth"
+      },
+      "proton_solar_panel_end" : {
+        "model" : "industrialupgrade:proton_solar_panel_end"
+      },
+      "proton_solar_panel_nether" : {
+        "model" : "industrialupgrade:proton_solar_panel_nether"
+      },
+      "proton_solar_panel_sun" : {
+        "model" : "industrialupgrade:proton_solar_panel_sun"
+      },
+      "proton_solar_panel_night" : {
+        "model" : "industrialupgrade:proton_solar_panel_night"
+      },
+      "proton_solar_panel_rain" : {
+        "model" : "industrialupgrade:proton_solar_panel_rain"
+      },
+      "singular_solar_panel_aer" : {
+        "model" : "industrialupgrade:singular_solar_panel_aer"
+      },
+      "singular_solar_panel_earth" : {
+        "model" : "industrialupgrade:singular_solar_panel_earth"
+      },
+      "singular_solar_panel_end" : {
+        "model" : "industrialupgrade:singular_solar_panel_end"
+      },
+      "singular_solar_panel_nether" : {
+        "model" : "industrialupgrade:singular_solar_panel_nether"
+      },
+      "singular_solar_panel_sun" : {
+        "model" : "industrialupgrade:singular_solar_panel_sun"
+      },
+      "singular_solar_panel_night" : {
+        "model" : "industrialupgrade:singular_solar_panel_night"
+      },
+      "singular_solar_panel_rain" : {
+        "model" : "industrialupgrade:singular_solar_panel_rain"
+      },
+      "admin_solar_panel_aer" : {
+        "model" : "industrialupgrade:admin_solar_panel_aer"
+      },
+      "admin_solar_panel_earth" : {
+        "model" : "industrialupgrade:admin_solar_panel_earth"
+      },
+      "admin_solar_panel_end" : {
+        "model" : "industrialupgrade:admin_solar_panel_end"
+      },
+      "admin_solar_panel_nether" : {
+        "model" : "industrialupgrade:admin_solar_panel_nether"
+      },
+      "admin_solar_panel_sun" : {
+        "model" : "industrialupgrade:admin_solar_panel_sun"
+      },
+      "admin_solar_panel_night" : {
+        "model" : "industrialupgrade:admin_solar_panel_night"
+      },
+      "admin_solar_panel_rain" : {
+        "model" : "industrialupgrade:admin_solar_panel_rain"
+      },
+      "photonic_solar_panel_aer" : {
+        "model" : "industrialupgrade:photonic_solar_panel_aer"
+      },
+      "photonic_solar_panel_earth" : {
+        "model" : "industrialupgrade:photonic_solar_panel_earth"
+      },
+      "photonic_solar_panel_end" : {
+        "model" : "industrialupgrade:photonic_solar_panel_end"
+      },
+      "photonic_solar_panel_nether" : {
+        "model" : "industrialupgrade:photonic_solar_panel_nether"
+      },
+      "photonic_solar_panel_sun" : {
+        "model" : "industrialupgrade:photonic_solar_panel_sun"
+      },
+      "photonic_solar_panel_night" : {
+        "model" : "industrialupgrade:photonic_solar_panel_night"
+      },
+      "photonic_solar_panel_rain" : {
+        "model" : "industrialupgrade:photonic_solar_panel_rain"
+      },
+      "neutronium_solar_panel_aer" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_aer"
+      },
+      "neutronium_solar_panel_earth" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_earth"
+      },
+      "neutronium_solar_panel_end" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_end"
+      },
+      "neutronium_solar_panel_nether" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_nether"
+      },
+      "neutronium_solar_panel_sun" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_sun"
+      },
+      "neutronium_solar_panel_night" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_night"
+      },
+      "neutronium_solar_panel_rain" : {
+        "model" : "industrialupgrade:neutronium_solar_panel_rain"
+      },
+      "barion_solar_panel_aer" : {
+        "model" : "industrialupgrade:barion_solar_panel_aer"
+      },
+      "barion_solar_panel_earth" : {
+        "model" : "industrialupgrade:barion_solar_panel_earth"
+      },
+      "barion_solar_panel_end" : {
+        "model" : "industrialupgrade:barion_solar_panel_end"
+      },
+      "barion_solar_panel_nether" : {
+        "model" : "industrialupgrade:barion_solar_panel_nether"
+      },
+      "barion_solar_panel_sun" : {
+        "model" : "industrialupgrade:barion_solar_panel_sun"
+      },
+      "barion_solar_panel_night" : {
+        "model" : "industrialupgrade:barion_solar_panel_night"
+      },
+      "barion_solar_panel_rain" : {
+        "model" : "industrialupgrade:barion_solar_panel_rain"
+      },
+      "hadron_solar_panel_aer" : {
+        "model" : "industrialupgrade:hadron_solar_panel_aer"
+      },
+      "hadron_solar_panel_earth" : {
+        "model" : "industrialupgrade:hadron_solar_panel_earth"
+      },
+      "hadron_solar_panel_end" : {
+        "model" : "industrialupgrade:hadron_solar_panel_end"
+      },
+      "hadron_solar_panel_nether" : {
+        "model" : "industrialupgrade:hadron_solar_panel_nether"
+      },
+      "hadron_solar_panel_sun" : {
+        "model" : "industrialupgrade:hadron_solar_panel_sun"
+      },
+      "hadron_solar_panel_night" : {
+        "model" : "industrialupgrade:hadron_solar_panel_night"
+      },
+      "hadron_solar_panel_rain" : {
+        "model" : "industrialupgrade:hadron_solar_panel_rain"
+      },
+      "graviton_solar_panel_aer" : {
+        "model" : "industrialupgrade:graviton_solar_panel_aer"
+      },
+      "graviton_solar_panel_earth" : {
+        "model" : "industrialupgrade:graviton_solar_panel_earth"
+      },
+      "graviton_solar_panel_end" : {
+        "model" : "industrialupgrade:graviton_solar_panel_end"
+      },
+      "graviton_solar_panel_nether" : {
+        "model" : "industrialupgrade:graviton_solar_panel_nether"
+      },
+      "graviton_solar_panel_sun" : {
+        "model" : "industrialupgrade:graviton_solar_panel_sun"
+      },
+      "graviton_solar_panel_night" : {
+        "model" : "industrialupgrade:graviton_solar_panel_night"
+      },
+      "graviton_solar_panel_rain" : {
+        "model" : "industrialupgrade:graviton_solar_panel_rain"
+      },
+      "quark_solar_panel_aer" : {
+        "model" : "industrialupgrade:quark_solar_panel_aer"
+      },
+      "quark_solar_panel_earth" : {
+        "model" : "industrialupgrade:quark_solar_panel_earth"
+      },
+      "quark_solar_panel_end" : {
+        "model" : "industrialupgrade:quark_solar_panel_end"
+      },
+      "quark_solar_panel_nether" : {
+        "model" : "industrialupgrade:quark_solar_panel_nether"
+      },
+      "quark_solar_panel_sun" : {
+        "model" : "industrialupgrade:quark_solar_panel_sun"
+      },
+      "quark_solar_panel_night" : {
+        "model" : "industrialupgrade:quark_solar_panel_night"
+      },
+      "quark_solar_panel_rain" : {
+        "model" : "industrialupgrade:quark_solar_panel_rain"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:thorium_ore"
+    },
+    "title" : {
+      "translate" : "achievement.thoriumore"
+    },
+    "description" : {
+      "translate" : "achievement.thoriumore.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/root",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:toriy"
+          }
+        ]
+      }
+    }
+  }
+}

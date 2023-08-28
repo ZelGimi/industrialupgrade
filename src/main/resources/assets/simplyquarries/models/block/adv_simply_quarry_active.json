@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockcompressor_side",
+    "down" : "industrialupgrade:blocks/blockcompressor_side",
+    "up" : "industrialupgrade:blocks/blockcompressor_side",
+    "north" : "simplyquarries:blocks/adv_simply_quarry_active",
+    "east" : "industrialupgrade:blocks/blockcompressor_side",
+    "south" : "industrialupgrade:blocks/blockcompressor_side",
+    "west" : "industrialupgrade:blocks/blockcompressor_side"
+  }
+}

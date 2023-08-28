@@ -1,0 +1,28 @@
+{
+  "display" : {
+    "icon" : {
+      "item" : "industrialupgrade:basemachine2",
+      "data" : 4
+    },
+    "title" : {
+      "translate" : "achievement.diesel_generator"
+    },
+    "description" : {
+      "translate" : "achievement.diesel_generator.desc"
+    }
+  },
+  "parent" : "industrialupgrade:main/diesel",
+  "criteria" : {
+    "mine" : {
+      "trigger" : "minecraft:inventory_changed",
+      "conditions" : {
+        "items" : [
+          {
+            "item" : "industrialupgrade:basemachine2",
+            "data" : 4
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/spsp_side",
+    "down" : "industrialupgrade:blocks/spsp_bottom",
+    "up" : "industrialupgrade:blocks/spsp_top",
+    "north" : "industrialupgrade:blocks/spsp_side",
+    "east" : "industrialupgrade:blocks/spsp_side",
+    "south" : "industrialupgrade:blocks/spsp_side",
+    "west" : "industrialupgrade:blocks/spsp_side"
+  }
+}

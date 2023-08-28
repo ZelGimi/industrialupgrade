@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/batbox_leftright",
+		"down": "industrialupgrade:blocks/batbox_bottom",
+		"up": "industrialupgrade:blocks/batbox_top",
+		"north": "industrialupgrade:blocks/batbox_front",
+		"east": "industrialupgrade:blocks/batbox_leftright",
+		"south": "industrialupgrade:blocks/batbox_back",
+		"west": "industrialupgrade:blocks/batbox_leftright"
+	}
+}

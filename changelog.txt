@@ -1,0 +1,324 @@
+###############################################
+#                  Changelog                  #
+###############################################
+Version:2.5:
+1. The mod has completely moved away from the ic2 power grid
+2. Fixed information of the wattmeter
+3. Transformers transfer 4 times per tick energy
+4. Creation your own main GUI
+5. Creation your own main container
+6. Creation of a system of liquid recipes
+7. Slots depend on indices (this was not the case in ic2)
+8. Reworked the liquid matter system, optimization, abandoning the ic2 batch system
+9. The multistructure system has been reworked
+10. Added Natural Gas
+11. Added Chlorine, Bromine, Iodine
+12. Mechanisms have IC2Material.MACHINE
+13. Recycled almost all energies into one
+14. Optimization of panel rendering in synthesizer by Landex
+15. Fixed crash on planets with Galacticraft
+16. Adding sound to some mechanisms
+17. Adding mute sounds in some mechanisms
+18. Optimization of tighteners (now working)
+19. Added sounds when pressing buttons in mechanisms
+20. Fixed localization
+21. Added effects for a mechanism that is heated, or a refrigerator or hydro generator.
+22. Slots in solid matter transducers are now dependent on matter.
+23. Added an optimized version of redstone for reactors
+24. Added an optimized version of redstone for matter generators
+25. Added an optimized version of redstone for vaults
+26. Switching to a completely custom batch system
+27. Added support for craftweaker with filler
+28. Added support for craftweaker with preserving mechanism
+29. Fixed the robot of some tweakers
+30. Added various jei support
+31. Added support for OpenComputer (Reactors, Storages, Multi-mechanisms, Windmills / Hydrogenerators)
+32. The obsidian generator is the last mechanism that abandoned the ic2 recipe system
+33. Creation your own recipes with the replicator
+34. Support for craftweaker with replicator
+35. Items that can be created in the replicator, when you hover over them, you can see their price in matter
+36. Fixed a bug with the redstone generator
+37. Spectral Armor Optimization
+38. Fixed the cost of damage in spectral armor (was x2)
+39. If a player has a lead box with him, then when he picks up a radioactive element, he will immediately be in the box
+40. Fixed the work of wireless batteries
+41. Creation your own wires from copper to fiberglass
+42. Creation your own analogues of a solar panel, generator, geogenerator, pump, reactor with a camera, teleporter, harvester, auto gardener
+43. When creating a multi-block structure, the main block will draw a diagram of the creation of the structure
+44. Fixed for creating a modification module: Damage
+45. Fixed the load from the shipment of wind / hydro generators
+46. Increased the radius of the pump
+47. Optimization of oil and vein 
+Version:2.4:
+1. Adding your api for sounds, which facilitates the work of the client and server
+2. Adding a cooling system
+3. Adding a unified energy system (now wires and mechs receive / transmit EU / RF / TE / FE)
+4. Energy grid optimization
+5. Create an experience system
+6. Create your own GUI render system
+7. Adding battery life for heaters
+8. Adding a unified crafting system, which is much optimized from the standard system (it was received by all mechanisms except the obsidian generator)
+9. Optimization of multi-mechanisms
+10. Optimization of exit slots
+11. Optimizing the rendering of wires and pipes
+12. Create your own system of transport pipes (both objects and liquids)
+13. Optimization of the module system for items
+14. Adding 7 modules to items
+15. Adding a core system (which is much lighter and optimized core blocks)
+16. Adding wind and water power system modules system
+17. Adding a wind system
+18. Optimization of the system of improvements in mechanisms
+19. Optimization of the ejection system in mechanisms
+20. Adding about 42 mechanisms (later about them)
+21. Adding own blast furnace and system for it
+22. Adding experimental pipes
+23. Adding universal heat pipes (which conduct cold and heat)
+24. Adding transport pipes
+25. Adding Standard Transformers to the Mod
+26. Fix drop transformers
+27. Adding universal wires that conduct everything
+28. Addition of quantum and solarite systems
+29. Sannarium renamed to solarite
+30. Analyzer chest added
+31. Added own wind generators
+32. Energy controller added
+33. Added cable management device
+34. Air/Water/Earth/Hell/Ender converters
+35. Added crystallizer
+36. Added excavator
+37. Added new types of separators
+38. Added wind and water modification stations and rotor assemblers
+39. Added blade collectors
+40. Blades and cores for water and wind rotors
+41. Added new types of scanners
+42. Added new types of replicators
+43. Added new storage types for quantum and solarite energy
+44. Added combiner of solar energy generators
+45. Added refrigerator
+46. Added air separation unit
+47. Added water generator
+48. Added module removal station
+49. Added anti-magnetic machine
+50. Updated models in molecular transducers
+51. Molecular transducer optimization
+52. Optimizing the operation of nuclear reactors
+53. Adding your own types of watermakers
+54. Each type of mechanism has its own interface colors
+55. Wither manufacturer accepts 1 item each
+56. Added the ability to turn off the sound in mechanisms
+57. Adding spawn of a large pile of minerals at one point
+58. Increased the capacity of oil in the vein by 100%
+59. Updated in many mechs their models
+60. Changed the work of an autonomous farm
+61. Added ore washing and thermal centrifuges
+62. Added mechanical stamps
+63. Increased tank capacity
+64. Bellows that have liquid in them, then liquid is not lost during destruction
+65. Module: Manufacturer
+66. Module: Autonomous heater
+67. Optimization of some graphical interfaces
+68. Added a bunch of support for crafttweaker
+69 Added a lot of jei support
+70. Added a lot of descriptions for various items
+71. Addition of chip system for advanced and conventional wiring
+72. Adding new types of skins for tools and armor
+73. Adding a lead box
+74. Fixed crashes, bugs in bags
+75. Added katana
+76. Fixed bugs in sabers
+77. Fixed bugs in bows
+78. Completely rewritten tool system (shovel, pick, drill, ax)
+79. Solarite plate manufacturer and solarite converter require solarite energy
+80. Solar Power Manufacturers Have Module Slots
+81. Autonomous hunter optimization
+82. Autonomous operation of an advanced converter when items that have crafts for the same items are placed in the slot
+83. Increased the number of blocks in the white and black list
+84. Added the ability to view the black list
+85. Optimized quantum careers
+86. Added a lot of sensors and crafting items
+87. Energy wireless system optimization
+88. Added many sounds for different mechanisms
+89. Jetpacks added to the system of pumping modules
+90. Lappaks added to the system of pumping modules
+91. Bags have a description of the items stored there
+92. Adding Your Own Batch System
+93. Plasma renderer added for molecular transducers
+94. Removed information about item modules at the top left
+95. Metalforming mechanism removed
+96. Added the ability to edit the lane for the players
+97. Adding Cooling Modules
+98. Improving performance in mechanisms
+99. Increased generation of ores
+100. Optimizing solar panels
+Version:2.4RC6:
+1. Added Energy Controller
+2. Added Cable Management Device
+3. Added Air Transformer
+4. Added Water Transformer
+5. Added Earth Transformer
+6. Added Nether Transformer
+7. Added Excavator
+8. Added Crystallizer
+9. Added End Transformer
+10. Fixed bugs
+11. Rework network energy (energy is transferred from level 1 to the last)
+12. Fixed drops in blast furnace
+13. Fixed textures armor in spectral boots
+14. Change streak in spectral chestplate
+15. Added changing color streak in spectral chestplate
+16. Fixed oredict in Stick
+17. Fixed oredict in Vanadium
+18. Added new information
+19. Changed gui in heater and refrigerator
+20. Added script for converter solid matter, which processes all the recipes in the workbench and creates recipes based on them
+21. Added new modules for rotors (9 items)
+22. Added to molecular transformer`s shine, when it starts to work (color depends on the interface)
+Version:2.4RCS5:
+1. Fixed all existing bugs
+2. Added more information about the mod
+3. Added crafttweaker support for other mechanisms
+Version:2.4RC4:
+1. Fixed a lot of bugs of the old version
+2. Optimization of many things
+3. Added new blocks, mechanisms and items
+4. Reworked crafts
+5. Removed unnecessary crafts
+6. Added a lot of jei support
+7. Added a lot of hints in the mod so that players can normal play
+Version:2.2:
+1.RF storage is expandable with modules in panels
+2.fixed module "stack"
+3.added the ability of the module "instant"  to work in storages
+4.Purifier can now clean up upgrades in double, triple and quad machines
+5.fixed spectral saber 
+6.fixed of all kits of upgrades
+7.fixed obsidian generator
+8.fixed cable pick up 
+9.removed crafting of 4 iridium ingots in the molecular transformer
+10.fixed textures in lava and neutronium generators
+11.fixed crash when breaking some blocks with tools
+12.flying no consumes energy from other armor
+13.added the ability for the panel combiner to work with a wireless module
+14.fixed of reactor chambers, which could be safely put on blocks
+15.fixed not the appearance of text in the nuclear fusion reactor
+16.The wireless module has types again (panel and storage) 
+Version:2.1:
+1. Fixed the cobblestone generator
+2. Fixed the helium generator
+3. Added some prompts to mechanisms
+4. Added the ability to change the getting of resources in quarries
+5. Added the ability for helmets to eat tin cans
+6. If the player is on the ground, he does not fly.
+7. Added even more jei support
+8. Fixed the work of tools on the server side
+9. Fixed rotate  storages and transformers
+10. Fixed purifier
+11. Fixed crafting improved lappack
+12. Added support for Chinese by 绝绝子
+13. Fixed incompatibility with ASP
+14. When pressed with shift, only one block breaks 
+Version:2.0.2:
+1.fixed localization
+2.fixed the work of the modification station
+3.fixed the models of mechanisms when they work
+4.added blacklist for instruments
+5.added even more integration to jei
+6.added information about rotors
+7.fixed small bugs 
+Version:2.0.1:
+1.fixed of obtaining energy in molecular converters
+2.fixed crash on the server side in heaters
+3.fixed the black and white list in a quantum quarries
+4.added even more blocks to the blacklist of instruments
+5.fixed crash sounds
+Version:2.0:
+1. New panels
+2. Reworked energy generation in 1.12.2
+3. The system of the panels has been redesigned
+4. Added modules to the panel
+5. Changed transformers
+6. Added new generators of matters
+7. Added new double, triple and quad mechanisms,
+8. Added alloy smelter and advanced version
+9. Added manufacturer of microcircuits, transistors, boards and processors
+10. Added new types of generators
+11. Added quantum generators with modules
+12. Added a drilling rig for searching for veins
+13. Added veins of ores and oil
+14. Added generators of solar energy
+15. Added sannarium maker
+16. Added modification station
+17. Added Radiation Purifier
+18. Added privatizer
+19. Added Wireless Configurator
+20. Added an automatic hunter and modules to it
+21. Added own heaters
+22. Added advanced molecular transformer
+23. Redesigned molecular transformer
+24. Added improved versions of geogenerators
+25. Added improved nuclear reactors
+26. Added enrichment
+27. Added synthesis
+28. Added mineral separator
+29. Added manufacturer of withers
+30. Added magnetic trap
+31. Added magnetic generators
+32. Added a combined generator of matter
+33. Added fishing machine
+34. Added analyzer and modules for it are the same as in quarries
+35. Added dyeing machine and skins for items (drills and armor)
+36. Added petrol  and diesel generators
+37. Added improved pumps
+38. Added storage of experience and a module to it
+39. Added hydrogen, obsidian, lava and helium generators
+40. Added chemical plant and plastic automatic machine
+41. Added electrolyzer, with its own hydrogen and oxygen
+42. Added generators of solid matter and a combiner to it
+43. Added refineries
+44. Added own liquid tanks
+45. Added a rocking machine and oil deposits in the desert
+46. Added solids converter
+47. Added panel combiner
+48. Added the ability for double, triple and quad mechanisms to put RF modules, stacks, multipliers and modules of the "Panel" type
+49. Added combined macerators and recyclers
+50. Added rolling machines, extruders and cutting machines
+51. Added standalone farms and scrap collectors
+52. Added maker of Sannarium and Sannarium Plates
+53. Added and improved energy storage and modules for them
+54. Added modules for pumping tools and armor
+55. Added sets of pumping panels, energy storage and mechanisms
+56. Added new improvements for mechanisms
+57. Added wires
+58. Added new rotors
+59. Added new radioactive elements and nuclear rods to them
+60. Added new improvements for reactors
+61. Added panel glass and paint and solid matter
+62. Added new ingots, ores
+63. Added alloys
+64. Added cathode and anode
+65. Added core panels
+66. Added charging energy crystals
+67. Added gravitool
+68. Added purifier
+69. Added ruby, sapphire and topaz and armor to them
+70. Added reinforced nano-armor
+71. Added spectral armor
+72. Added bags
+73. Added magnets
+74. Added plastic and plastic plate
+75. Added nano, quantum and spectral tools (pickaxes, axes, shovels, drills)
+76. Bows added
+77. Added quantum and spectrum saber
+78. Added jetpacks
+79. Added sun helmets
+80. Added energy packs
+81. Added integration with JEI
+82. Added integration with CraftTweaker
+83. Added integration with WirelessIndustry
+84. Added integration with EMC
+85. Added integration with DraconicEvolution
+86. Added integration with CompactSolarPanels
+87. Added integration with Avaritia
+88. Added integration with Forestry
+89. Added integration with ExNihiloReborn
+90. Added integration with Thaumcraft 

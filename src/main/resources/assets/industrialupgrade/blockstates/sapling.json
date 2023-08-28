@@ -1,0 +1,10 @@
+{
+	"forge_marker": 1,
+	"variants": {
+		"type": {
+			"rubber": { "model": "industrialupgrade:rubber_sapling" }
+		},
+		"inventory": [{}]
+	}
+}
+

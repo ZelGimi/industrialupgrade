@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockuev_side",
+    "down" : "industrialupgrade:blocks/blockuev_side",
+    "up" : "industrialupgrade:blocks/blockuev_side",
+    "north" : "industrialupgrade:blocks/blockuev_main",
+    "east" : "industrialupgrade:blocks/blockuev_side",
+    "south" : "industrialupgrade:blocks/blockuev_side",
+    "west" : "industrialupgrade:blocks/blockuev_side"
+  }
+}

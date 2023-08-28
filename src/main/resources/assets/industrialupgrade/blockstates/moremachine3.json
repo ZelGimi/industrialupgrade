@@ -1,0 +1,150 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "farmer" : {
+        "model" : "industrialupgrade:moremachine3/farmer"
+      },
+      "farmer_active" : {
+        "model" : "industrialupgrade:moremachine3/farmer_active"
+      },
+      "double_farmer" : {
+        "model" : "industrialupgrade:moremachine3/double_farmer"
+      },
+      "double_farmer_active" : {
+        "model" : "industrialupgrade:moremachine3/double_farmer_active"
+      },
+      "triple_farmer" : {
+        "model" : "industrialupgrade:moremachine3/triple_farmer"
+      },
+      "triple_farmer_active" : {
+        "model" : "industrialupgrade:moremachine3/triple_farmer_active"
+      },
+      "quad_farmer" : {
+        "model" : "industrialupgrade:moremachine3/quad_farmer"
+      },
+      "quad_farmer_active" : {
+        "model" : "industrialupgrade:moremachine3/quad_farmer_active"
+      },
+      "assamplerscrap" : {
+        "model" : "industrialupgrade:moremachine3/assamplerscrap"
+      },
+      "assamplerscrap_active" : {
+        "model" : "industrialupgrade:moremachine3/assamplerscrap_active"
+      },
+      "double_assamplerscrap" : {
+        "model" : "industrialupgrade:moremachine3/double_assamplerscrap"
+      },
+      "double_assamplerscrap_active" : {
+        "model" : "industrialupgrade:moremachine3/double_assamplerscrap_active"
+      },
+      "triple_assamplerscrap" : {
+        "model" : "industrialupgrade:moremachine3/triple_assamplerscrap"
+      },
+      "triple_assamplerscrap_active" : {
+        "model" : "industrialupgrade:moremachine3/triple_assamplerscrap_active"
+      },
+      "quad_assamplerscrap" : {
+        "model" : "industrialupgrade:moremachine3/quad_assamplerscrap"
+      },
+      "quad_assamplerscrap_active" : {
+        "model" : "industrialupgrade:moremachine3/quad_assamplerscrap_active"
+      },
+      "centrifuge_iu" : {
+        "model" : "industrialupgrade:moremachine3/centrifuge"
+      },
+      "centrifuge_iu_active" : {
+        "model" : "industrialupgrade:moremachine3/centrifuge_active"
+      },
+      "doublecentrifuge" : {
+        "model" : "industrialupgrade:moremachine3/doublecentrifuge"
+      },
+      "doublecentrifuge_active" : {
+        "model" : "industrialupgrade:moremachine3/doublecentrifuge_active"
+      },
+      "triplecentrifuge" : {
+        "model" : "industrialupgrade:moremachine3/triplecentrifuge"
+      },
+      "triplecentrifuge_active" : {
+        "model" : "industrialupgrade:moremachine3/triplecentrifuge_active"
+      },
+      "quadcentrifuge" : {
+        "model" : "industrialupgrade:moremachine3/quadcentrifuge"
+      },
+      "quadcentrifuge_active" : {
+        "model" : "industrialupgrade:moremachine3/quadcentrifuge_active"
+      },
+      "gearing" : {
+        "model" : "industrialupgrade:moremachine3/gearing"
+      },
+      "gearing_active" : {
+        "model" : "industrialupgrade:moremachine3/gearing_active"
+      },
+      "doublegearing" : {
+        "model" : "industrialupgrade:moremachine3/doublegearing"
+      },
+      "doublegearing_active" : {
+        "model" : "industrialupgrade:moremachine3/doublegearing_active"
+      },
+      "triplegearing" : {
+        "model" : "industrialupgrade:moremachine3/triplegearing"
+      },
+      "triplegearing_active" : {
+        "model" : "industrialupgrade:moremachine3/triplegearing_active"
+      },
+      "quadgearing" : {
+        "model" : "industrialupgrade:moremachine3/quadgearing"
+      },
+      "quadgearing_active" : {
+        "model" : "industrialupgrade:moremachine3/quadgearing_active"
+      },
+      "orewashing" : {
+        "model" : "industrialupgrade:moremachine3/orewashing"
+      },
+      "orewashing_active" : {
+        "model" : "industrialupgrade:moremachine3/orewashing_active"
+      },
+      "doubleorewashing" : {
+        "model" : "industrialupgrade:moremachine3/doubleorewashing"
+      },
+      "doubleorewashing_active" : {
+        "model" : "industrialupgrade:moremachine3/doubleorewashing_active"
+      },
+      "tripleorewashing" : {
+        "model" : "industrialupgrade:moremachine3/tripleorewashing"
+      },
+      "tripleorewashing_active" : {
+        "model" : "industrialupgrade:moremachine3/tripleorewashing_active"
+      },
+      "quadorewashing" : {
+        "model" : "industrialupgrade:moremachine3/quadorewashing"
+      },
+      "quadorewashing_active" : {
+        "model" : "industrialupgrade:moremachine3/quadorewashing_active"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

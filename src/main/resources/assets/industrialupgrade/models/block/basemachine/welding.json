@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/welding_side",
+    "down" : "industrialupgrade:blocks/welding_button",
+    "up" : "industrialupgrade:blocks/welding_top",
+    "north" : "industrialupgrade:blocks/welding_main",
+    "east" : "industrialupgrade:blocks/welding_side",
+    "south" : "industrialupgrade:blocks/welding_button",
+    "west" : "industrialupgrade:blocks/welding_side"
+  }
+}
