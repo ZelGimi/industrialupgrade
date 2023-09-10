@@ -1,13 +1,17 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ComponentPollution extends AbstractComponent {
 
@@ -27,9 +31,18 @@ public class ComponentPollution extends AbstractComponent {
     public void onLoaded() {
         super.onLoaded();
         this.stack = new ItemStack(IUItem.module7, 1, 9);
-        if(this.active){
+        if (this.active) {
             this.timer.setCanWork(false);
         }
+
+    }
+
+    public ItemStack getStack() {
+        return stack;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     @Override
@@ -45,6 +58,30 @@ public class ComponentPollution extends AbstractComponent {
             }
         }
         return false;
+    }
+
+    public void onContainerUpdate(EntityPlayerMP player) {
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        buffer.writeBoolean(this.active);
+        buffer.flip();
+        this.setNetworkUpdate(player, buffer);
+    }
+
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
+
+        this.active = is.readBoolean();
+    }
+
+    public int getAllTime() {
+        final AtomicInteger time = new AtomicInteger();
+        this.timer.getDefaultTimers().forEach(timer -> time.addAndGet(timer.getTime()));
+        return time.get();
+    }
+
+    public int getTime() {
+        final AtomicInteger time = new AtomicInteger();
+        this.timer.getTimers().forEach(timer -> time.addAndGet(timer.getTime()));
+        return time.get();
     }
 
     @Override

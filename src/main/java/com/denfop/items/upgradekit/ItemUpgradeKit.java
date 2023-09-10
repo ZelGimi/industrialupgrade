@@ -3,16 +3,14 @@ package com.denfop.items.upgradekit;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import com.denfop.tiles.base.TileEntityElectricBlock;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
+import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
@@ -36,14 +34,14 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements IModelRegister {
+public class ItemUpgradeKit extends ItemSubTypes<ItemUpgradeKit.Types> implements IModelRegister {
 
     protected static final String NAME = "upgradekitstorage";
 
     public ItemUpgradeKit() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.UpgradeTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
@@ -59,10 +57,6 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
 
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     @Nonnull
     public EnumActionResult onItemUseFirst(
@@ -75,7 +69,7 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
             float hitZ,
             @Nonnull EnumHand hand
     ) {
-        if (IC2.platform.isSimulating()) {
+        if (IUCore.proxy.isSimulating()) {
             final EnumActionResult hooks = ForgeHooks.onItemRightClick(player, hand);
             if (hooks == EnumActionResult.FAIL) {
                 return hooks;
@@ -85,19 +79,19 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
             TileEntity tileEntity = world.getTileEntity(pos);
 
 
-            if (tileEntity instanceof TileEntityElectricBlock) {
-                TileEntityElectricBlock tile = (TileEntityElectricBlock) tileEntity;
-                final EnumElectricBlock enumblock = TileEntityElectricBlock.getElectricBlock();
+            if (tileEntity instanceof TileElectricBlock) {
+                TileElectricBlock tile = (TileElectricBlock) tileEntity;
+                final EnumElectricBlock enumblock = TileElectricBlock.getElectricBlock();
                 if (enumblock != null && enumblock.kit_meta == meta) {
                     ItemStack stack1;
-                    if (TileEntityElectricBlock.getElectricBlock().chargepad) {
+                    if (TileElectricBlock.getElectricBlock().chargepad) {
                         stack1 = new ItemStack(
                                 IUItem.chargepadelectricblock,
                                 1,
-                                TileEntityElectricBlock.getElectricBlock().meta
+                                TileElectricBlock.getElectricBlock().meta
                         );
                     } else {
-                        stack1 = new ItemStack(IUItem.electricblock, 1, TileEntityElectricBlock.getElectricBlock().meta);
+                        stack1 = new ItemStack(IUItem.electricblock, 1, TileElectricBlock.getElectricBlock().meta);
                     }
                     final NBTTagCompound nbt = ModUtils.nbt(stack1);
                     nbt.setDouble("energy", tile.energy.getEnergy());
@@ -140,11 +134,11 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
 
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -152,7 +146,7 @@ public class ItemUpgradeKit extends ItemMulti<ItemUpgradeKit.Types> implements I
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         upgradekit(0),
         upgradekit1(1),
         upgradekit2(2),

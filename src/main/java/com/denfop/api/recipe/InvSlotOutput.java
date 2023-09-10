@@ -1,7 +1,7 @@
 package com.denfop.api.recipe;
 
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.IInventorySlotHolder;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -9,12 +9,9 @@ import java.util.List;
 
 public class InvSlotOutput extends InvSlot {
 
-    public InvSlotOutput(IInventorySlotHolder<?> base1, String name1, int count) {
-        this(base1, name1, count, InvSide.ANY);
-    }
 
-    public InvSlotOutput(IInventorySlotHolder<?> base1, String name1, int count, InvSide side) {
-        super(base1, name1, Access.O, count, side);
+    public InvSlotOutput(IAdvInventory<?> base1, String name1, int count) {
+        super(base1, TypeItemSlot.OUTPUT, count);
     }
 
     public boolean accepts(ItemStack stack, final int index) {

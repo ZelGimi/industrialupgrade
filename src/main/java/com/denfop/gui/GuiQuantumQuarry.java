@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -8,8 +9,6 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerQuantumQuarry;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class GuiQuantumQuarry extends GuiIU<ContainerQuantumQuarry> {
         this.mc.getTextureManager().bindTexture(getTexture());
         drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
         this.drawBackground();

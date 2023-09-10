@@ -3,7 +3,19 @@
   "variants" : {
     "type" : {
       "item_pipes" : {
-        "model" : "industrialupgrade:wiring/item_pipes"
+        "model" : "industrialupgrade:wiring/item_pipes/itemcable_pipes"
+      },
+	  "item_pipes_itemcable" : {
+        "model" : "industrialupgrade:wiring/item_pipes/itemcable_pipes"
+      },
+	  "item_pipes_itemcable1" : {
+        "model" : "industrialupgrade:wiring/item_pipes/itemcable1_pipes"
+      },
+	  "item_pipes_itemcable2" : {
+        "model" : "industrialupgrade:wiring/item_pipes/itemcable2_pipes"
+      },
+	  "item_pipes_itemcable3" : {
+        "model" : "industrialupgrade:wiring/item_pipes/itemcable3_pipes"
       }
     },
     "facing" : {

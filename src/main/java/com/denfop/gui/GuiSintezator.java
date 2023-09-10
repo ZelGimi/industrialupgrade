@@ -1,13 +1,13 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.container.ContainerSinSolarPanel;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GuiSintezator extends GuiIC2<ContainerSinSolarPanel> {
+public class GuiSintezator extends GuiCore<ContainerSinSolarPanel> {
 
     private static ResourceLocation tex;
 
@@ -39,12 +39,12 @@ public class GuiSintezator extends GuiIC2<ContainerSinSolarPanel> {
         this.fontRenderer.drawString(maxOutputString + output + (" " + energyPerTickString), 50, 32 - 10, 13487565);
         this.fontRenderer.drawString(tierString + this.container.tileentity.machineTire, 50, 32, 13487565);
 
-            String generation = ModUtils.getString(this.container.tileentity.generating);
-            String tooltip2 = generatingString + generation + " " + energyPerTickString;
-            tooltip = storageString + maxstorage_2 + "/" + maxstorage_1;
+        String generation = ModUtils.getString(this.container.tileentity.generating);
+        String tooltip2 = generatingString + generation + " " + energyPerTickString;
+        tooltip = storageString + maxstorage_2 + "/" + maxstorage_1;
 
-            new AdvArea(this, 18, 24, 43, 38).withTooltip(tooltip).drawForeground(par1, par2);
-            new AdvArea(this, 18, 40, 43, 58).withTooltip(tooltip2).drawForeground(par1, par2);
+        new AdvArea(this, 18, 24, 43, 38).withTooltip(tooltip).drawForeground(par1, par2);
+        new AdvArea(this, 18, 40, 43, 58).withTooltip(tooltip2).drawForeground(par1, par2);
 
     }
 
@@ -61,28 +61,27 @@ public class GuiSintezator extends GuiIC2<ContainerSinSolarPanel> {
         final int k = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
 
-            if (this.container.tileentity.storage > 0
-                    || this.container.tileentity.storage <= this.container.tileentity.maxStorage) {
-                final double l = this.container.tileentity.gaugeEnergyScaled(24);
+        if (this.container.tileentity.storage > 0
+                || this.container.tileentity.storage <= this.container.tileentity.maxStorage) {
+            final double l = this.container.tileentity.gaugeEnergyScaled(24);
 
-                this.drawTexturedModalRect(h + 19, k + 24, 195, 0, (int) (l), 14);
-            }
+            this.drawTexturedModalRect(h + 19, k + 24, 195, 0, (int) (l), 14);
+        }
 
 
-
-            if (!this.container.tileentity.rain) {
-                if (this.container.tileentity.sunIsUp) {
-                    drawTexturedModalRect(h + 24, k + 42, 195, 15, 14, 14);
-                } else {
-                    drawTexturedModalRect(h + 24, k + 42, 210, 15, 14, 14);
-                }
+        if (!this.container.tileentity.rain) {
+            if (this.container.tileentity.sunIsUp) {
+                drawTexturedModalRect(h + 24, k + 42, 195, 15, 14, 14);
             } else {
-                if (this.container.tileentity.sunIsUp) {
-                    drawTexturedModalRect(h + 24, k + 42, 225, 15, 14, 14);
-                } else {
-                    drawTexturedModalRect(h + 24, k + 42, 240, 15, 14, 14);
-                }
+                drawTexturedModalRect(h + 24, k + 42, 210, 15, 14, 14);
             }
+        } else {
+            if (this.container.tileentity.sunIsUp) {
+                drawTexturedModalRect(h + 24, k + 42, 225, 15, 14, 14);
+            } else {
+                drawTexturedModalRect(h + 24, k + 42, 240, 15, 14, 14);
+            }
+        }
     }
 
 }

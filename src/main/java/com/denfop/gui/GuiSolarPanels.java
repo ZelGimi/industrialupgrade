@@ -1,11 +1,12 @@
 package com.denfop.gui;
 
+import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.container.ContainerSolarPanels;
-import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
+import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,10 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
+public class GuiSolarPanels extends GuiCore<ContainerSolarPanels> {
 
 
-    public final TileEntitySolarPanel tileentity;
+    public final TileSolarPanel tileentity;
     private ResourceLocation res;
 
     public GuiSolarPanels(ContainerSolarPanels container) {
@@ -239,7 +240,7 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
         int k = (this.height - this.ySize) / 2;
         drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         drawTexturedModalRect(h, k, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getResourceLocation());
 
@@ -254,7 +255,7 @@ public class GuiSolarPanels extends GuiIC2<ContainerSolarPanels> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation("industrialupgrade", "textures/gui/GUIAdvancedSolarPanel.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIAdvancedSolarPanel.png");
     }
 
     private ResourceLocation getResourceLocation() {

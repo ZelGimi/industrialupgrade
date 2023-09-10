@@ -1,14 +1,12 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityMolecularTransformer;
+import com.denfop.tiles.base.TileMolecularTransformer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 
-import java.util.List;
+public class ContainerBaseMolecular extends ContainerBase<TileMolecularTransformer> {
 
-public class ContainerBaseMolecular extends ContainerBase<TileEntityMolecularTransformer> {
-
-    public ContainerBaseMolecular(EntityPlayer entityPlayer, TileEntityMolecularTransformer tileEntity1) {
+    public ContainerBaseMolecular(EntityPlayer entityPlayer, TileMolecularTransformer tileEntity1) {
         super(tileEntity1);
 
         addSlotToContainer(
@@ -27,15 +25,5 @@ public class ContainerBaseMolecular extends ContainerBase<TileEntityMolecularTra
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("queue");
-        ret.add("redstoneMode");
-        ret.add("energy");
-        ret.add("differenceenergy");
-        ret.add("perenergy");
-        return ret;
-    }
 
 }

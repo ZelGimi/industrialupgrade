@@ -1,8 +1,8 @@
 package com.denfop.integration.jei.vein;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.FluidName;
-import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;

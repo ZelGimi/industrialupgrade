@@ -9,11 +9,6 @@ public class RecipeInputFluidStack implements IRecipeInputFluidStack {
 
     private final List<FluidStack> input;
 
-    public RecipeInputFluidStack(List<FluidStack> input) {
-        this.input = input;
-
-    }
-
     public RecipeInputFluidStack(FluidStack input) {
         this.input = Collections.singletonList(input);
 

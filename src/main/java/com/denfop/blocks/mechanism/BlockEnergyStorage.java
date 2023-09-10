@@ -3,25 +3,25 @@ package com.denfop.blocks.mechanism;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IElectricBlock;
-import com.denfop.tiles.base.TileEntityElectricBlock;
-import com.denfop.tiles.wiring.storage.TileEntityElectricAdvMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricBarMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricBatBox;
-import com.denfop.tiles.wiring.storage.TileEntityElectricCESU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricGraMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricHadrMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricKvrMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricMFE;
-import com.denfop.tiles.wiring.storage.TileEntityElectricMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricPerMFSU;
-import com.denfop.tiles.wiring.storage.TileEntityElectricUltMFSU;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.IStorage;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileElectricBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.wiring.storage.TileElectricAdvMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricBarMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricBatBox;
+import com.denfop.tiles.wiring.storage.TileElectricCESU;
+import com.denfop.tiles.wiring.storage.TileElectricGraMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricHadrMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricKvrMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricMFE;
+import com.denfop.tiles.wiring.storage.TileElectricMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricPerMFSU;
+import com.denfop.tiles.wiring.storage.TileElectricUltMFSU;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -29,22 +29,24 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-public enum BlockEnergyStorage implements ITeBlock, IElectricBlock {
-    adv_mfsu(TileEntityElectricAdvMFSU.class, 0),
+public enum BlockEnergyStorage implements IMultiTileBlock, IElectricBlock {
+    adv_mfsu(TileElectricAdvMFSU.class, 0),
 
-    ult_mfsu(TileEntityElectricUltMFSU.class, 1),
-    batbox_iu(TileEntityElectricBatBox.class, 2),
+    ult_mfsu(TileElectricUltMFSU.class, 1),
+    batbox_iu(TileElectricBatBox.class, 2),
 
-    mfe_iu(TileEntityElectricMFE.class, 3),
-    mfsu_iu(TileEntityElectricMFSU.class, 4),
-    cesu_iu(TileEntityElectricCESU.class, 5),
-    per_mfsu(TileEntityElectricPerMFSU.class, 6),
-    bar_mfsu(TileEntityElectricBarMFSU.class, 7),
-    had_mfsu(TileEntityElectricHadrMFSU.class, 8),
-    gra_mfsu(TileEntityElectricGraMFSU.class, 9),
-    qua_mfsu(TileEntityElectricKvrMFSU.class, 10),
+    mfe_iu(TileElectricMFE.class, 3),
+    mfsu_iu(TileElectricMFSU.class, 4),
+    cesu_iu(TileElectricCESU.class, 5),
+    per_mfsu(TileElectricPerMFSU.class, 6),
+    bar_mfsu(TileElectricBarMFSU.class, 7),
+    had_mfsu(TileElectricHadrMFSU.class, 8),
+    gra_mfsu(TileElectricGraMFSU.class, 9),
+    qua_mfsu(TileElectricKvrMFSU.class, 10),
 
     ;
 
@@ -73,7 +75,7 @@ public enum BlockEnergyStorage implements ITeBlock, IElectricBlock {
 
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -83,17 +85,10 @@ public enum BlockEnergyStorage implements ITeBlock, IElectricBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -129,9 +124,33 @@ public enum BlockEnergyStorage implements ITeBlock, IElectricBlock {
     }
 
     @Override
+    public boolean hasOtherVersion() {
+        return true;
+    }
+
+    @Override
+    public List<ItemStack> getOtherVersion(ItemStack stack) {
+        final List<ItemStack> list = new ArrayList<>();
+        stack = stack.copy();
+        if (this.dummyTe == null) {
+            try {
+                this.dummyTe = this.teClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        ModUtils.nbt(stack).setDouble(
+                "energy",
+                ((IStorage) (((IElectricBlock) this).getDummyElec())).getEUCapacity()
+        );
+        list.add(stack);
+        return list;
+    }
+
+    @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.allFacings;
+        return ModUtils.allFacings;
     }
 
     @Override
@@ -140,26 +159,15 @@ public enum BlockEnergyStorage implements ITeBlock, IElectricBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override
@@ -173,7 +181,7 @@ public enum BlockEnergyStorage implements ITeBlock, IElectricBlock {
     }
 
     @Override
-    public TileEntityElectricBlock getDummyElec() {
-        return (TileEntityElectricBlock) this.dummyTe;
+    public TileElectricBlock getDummyElec() {
+        return (TileElectricBlock) this.dummyTe;
     }
 }

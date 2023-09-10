@@ -1,9 +1,11 @@
 package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import com.denfop.ElectricItem;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvEnergySink;
-import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergySink;
+import com.denfop.api.energy.IEnergyTile;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
@@ -13,25 +15,19 @@ import com.denfop.items.modules.ItemModuleTypePanel;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
-import com.denfop.tiles.panels.entity.TileEntitySolarPanel;
+import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.tile.IChargingSlot;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class InvSlotPanel extends InvSlot implements IChargingSlot {
+public class InvSlotPanel extends InvSlot {
 
     public final int tier;
 
-    public InvSlotPanel(final TileEntitySolarPanel base, final int tier, final int slotNumbers, final InvSlot.Access access) {
-        super(base, "charge", access, slotNumbers, InvSlot.InvSide.ANY);
+    public InvSlotPanel(final TileSolarPanel base, final int tier, final int slotNumbers, final TypeItemSlot typeItemSlot) {
+        super(base, typeItemSlot, slotNumbers);
         this.tier = tier;
         this.setStackSizeLimit(1);
     }
@@ -41,7 +37,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
         this.checkmodule();
-        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
+        TileSolarPanel tile = (TileSolarPanel) base;
         tile.solarType = this.solartype();
     }
 
@@ -49,7 +45,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
         return stack.getItem() instanceof ItemBaseModules
                 || stack.getItem() instanceof ItemModuleTypePanel
                 || stack.getItem() instanceof ItemAdditionModule
-                || stack.getItem() instanceof IElectricItem
+                || stack.getItem() instanceof IEnergyItem
                 || stack.getItem() instanceof IEnergyContainerItem
                 || stack.getItem() instanceof ItemModuleType
                 ;
@@ -57,7 +53,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
 
 
     public int solartype() {
-        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
+        TileSolarPanel tile = (TileSolarPanel) base;
         tile.level = 0;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleType) {
@@ -68,8 +64,9 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
 
         return tile.setSolarType(type);
     }
+
     public int solartypeFast() {
-        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
+        TileSolarPanel tile = (TileSolarPanel) base;
 
         EnumType type = EnumType.getFromID(tile.level);
 
@@ -77,7 +74,7 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
     }
 
     public void checkmodule() {
-        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
+        TileSolarPanel tile = (TileSolarPanel) base;
 
         double temp_day = tile.k;
         double temp_night = tile.m;
@@ -185,10 +182,10 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
 
     public void charge() {
         double sentPacket;
-        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
+        TileSolarPanel tile = (TileSolarPanel) base;
         for (int j = 0; j < this.size(); j++) {
 
-            if (!this.get(j).isEmpty() && this.get(j).getItem() instanceof ic2.api.item.IElectricItem
+            if (!this.get(j).isEmpty() && this.get(j).getItem() instanceof IEnergyItem
                     && tile.storage > 0.0D) {
                 sentPacket = ElectricItem.manager.charge(this.get(j), tile.storage, 2147483647, true,
                         false
@@ -200,13 +197,9 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
         }
     }
 
-    @Override
-    public double charge(final double v) {
-        return 0;
-    }
 
     public void wirelessmodule() {
-        TileEntitySolarPanel tile = (TileEntitySolarPanel) base;
+        TileSolarPanel tile = (TileSolarPanel) base;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
                     .get(i)
@@ -224,11 +217,11 @@ public class InvSlotPanel extends InvSlot implements IChargingSlot {
                         && tile.getWorld().getTileEntity(pos) instanceof TileEntityInventory && x != 0
                         && y != 0 && z != 0 && !nbttagcompound.getBoolean("change")) {
                     TileEntityInventory tile1 = (TileEntityInventory) tile.getWorld().getTileEntity(pos);
-                    final IAdvEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
+                    final IEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
                             .getParent()
                             .getWorld(), pos);
-                    if (energy instanceof IAdvEnergySink) {
-                        tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IAdvEnergySink) energy));
+                    if (energy instanceof IEnergySink) {
+                        tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy));
                     }
 
                 }

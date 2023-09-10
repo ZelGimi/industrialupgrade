@@ -1,9 +1,9 @@
 package com.denfop.integration.jei.canning;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.recipes.BasicRecipe;
-import ic2.core.init.Localization;
+import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -42,7 +42,7 @@ public class CanningCategory extends Gui implements IRecipeCategory<CanningRecip
     @Nonnull
     @Override
     public String getTitle() {
-        return Localization.translate(BasicRecipe.getBlockStack(BlockBaseMachine3.canner_iu).getUnlocalizedName());
+        return Localization.translate(JEICompat.getBlockStack(BlockBaseMachine3.canner_iu).getUnlocalizedName());
     }
 
     @Nonnull
@@ -69,7 +69,7 @@ public class CanningCategory extends Gui implements IRecipeCategory<CanningRecip
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(13 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(14 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
         drawTexturedModalRect(74 - 5, 22 - 16, 232, 0, (int) (xScale), 16);

@@ -34,7 +34,7 @@ public class GuiRodManufacturer extends GuiIU<ContainerRodManufacturer> {
         if (progress > 0) {
             drawTexturedModalRect(xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         this.component.drawBackground(xoffset, yoffset);
 

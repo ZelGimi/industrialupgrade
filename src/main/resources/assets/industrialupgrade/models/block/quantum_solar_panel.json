@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/Quantum Solar Side",
-    "down" : "industrialupgrade:blocks/Quantum Solar Bottom",
-    "up" : "industrialupgrade:blocks/Quantum Solar Top",
-    "north" : "industrialupgrade:blocks/Quantum Solar Side",
-    "east" : "industrialupgrade:blocks/Quantum Solar Side",
-    "south" : "industrialupgrade:blocks/Quantum Solar Side",
-    "west" : "industrialupgrade:blocks/Quantum Solar Side"
+    "particle" : "industrialupgrade:blocks/qsp_side",
+    "down" : "industrialupgrade:blocks/qsp_bottom",
+    "up" : "industrialupgrade:blocks/qsp_top",
+    "north" : "industrialupgrade:blocks/qsp_side",
+    "east" : "industrialupgrade:blocks/qsp_side",
+    "south" : "industrialupgrade:blocks/qsp_side",
+    "west" : "industrialupgrade:blocks/qsp_side"
   }
 }

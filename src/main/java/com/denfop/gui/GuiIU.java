@@ -1,5 +1,6 @@
 package com.denfop.gui;
 
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -9,21 +10,20 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
 import com.denfop.invslot.InvSlot;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.inventory.IInventory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> extends GuiIC2<T> {
+public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> extends GuiCore<T> {
 
     private final EnumTypeStyle style;
     public boolean isBlack = false;
     protected GuiComponent inventory;
     protected GuiComponent slots;
     protected List<InvSlot> invSlotList = new ArrayList<>();
-    List<GuiComponent> componentList = new ArrayList<>();
+    protected List<GuiComponent> componentList = new ArrayList<>();
 
     public GuiIU(final T container) {
         super(container);

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/advanced_machine",
+		"down": "industrialupgrade:blocks/industrial_workbench_bottom",
+		"up": "industrialupgrade:blocks/industrial_workbench_top",
+		"north": "industrialupgrade:blocks/industrial_workbench_front",
+		"east": "industrialupgrade:blocks/industrial_workbench_right",
+		"south": "industrialupgrade:blocks/industrial_workbench_back",
+		"west": "industrialupgrade:blocks/industrial_workbench_left"
+	}
+}

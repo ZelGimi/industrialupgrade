@@ -1,13 +1,12 @@
 package com.denfop.componets;
 
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.Timer;
-import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +98,7 @@ public class ComponentTimer extends AbstractComponent {
     @Override
     public NBTTagCompound writeToNbt() {
         NBTTagCompound nbtTagCompound = super.writeToNbt();
+        nbtTagCompound.setInteger("indexWork", indexWork);
         nbtTagCompound.setInteger("size", this.timers.size());
         for (int i = 0; i < this.timers.size(); i++) {
             nbtTagCompound.setTag("Timer_" + i, this.timers.get(i).writeNBT(new NBTTagCompound()));
@@ -109,10 +109,19 @@ public class ComponentTimer extends AbstractComponent {
     @Override
     public void readFromNbt(final NBTTagCompound nbt) {
         super.readFromNbt(nbt);
+        indexWork = nbt.getInteger("indexWork");
         final int size = nbt.getInteger("size");
         for (int i = 0; i < size; i++) {
             this.timers.get(i).readNBT(nbt.getCompoundTag("Timer_" + i));
         }
+    }
+
+    public List<Timer> getDefaultTimers() {
+        return defaultTimers;
+    }
+
+    public List<Timer> getTimers() {
+        return timers;
     }
 
     @Override
@@ -130,15 +139,15 @@ public class ComponentTimer extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(this.timers.size() * 3 + 1);
-        buffer.writeInt(this.indexWork);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(this.timers.size() * 3 + 1);
         this.timers.forEach(timer -> timer.writeBuffer(buffer));
+        buffer.writeInt(this.indexWork);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
+
     }
 
-    public void onNetworkUpdate(DataInput is) throws IOException {
-        this.indexWork = is.readInt();
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.timers.forEach(timer -> {
             try {
                 timer.readBuffer(is);
@@ -146,6 +155,7 @@ public class ComponentTimer extends AbstractComponent {
                 throw new RuntimeException(e);
             }
         });
+        this.indexWork = is.readInt();
     }
 
 

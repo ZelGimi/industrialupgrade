@@ -1,5 +1,5 @@
 {
-  "parent" : "ic2:block/wiring/chargepad/chargepad_base",
+  "parent" : "industrialupgrade:block/wiring/chargepad/chargepad_base",
   "textures" : {
     "particle" : "industrialupgrade:blocks/bar_mfsu_bottom",
     "down" : "industrialupgrade:blocks/bar_mfsu_bottom",

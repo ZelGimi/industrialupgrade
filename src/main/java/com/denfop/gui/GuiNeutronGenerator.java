@@ -2,14 +2,14 @@ package com.denfop.gui;
 
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerNeutronGenerator;
-import ic2.core.init.Localization;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,8 +27,8 @@ public class GuiNeutronGenerator extends GuiIU<ContainerNeutronGenerator> {
     public GuiNeutronGenerator(ContainerNeutronGenerator container1) {
         super(container1);
         this.container = container1;
-        this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");
-        this.amplifierLabel = Localization.translate("ic2.Matter.gui.info.amplifier");
+        this.progressLabel = Localization.translate("Matter.gui.info.progress");
+        this.amplifierLabel = Localization.translate("Matter.gui.info.amplifier");
         addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
         this.xSize = 200;
         this.componentList.clear();
@@ -44,7 +44,7 @@ public class GuiNeutronGenerator extends GuiIU<ContainerNeutronGenerator> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 182 && x <= 190 && y >= 6 && y <= 14) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
     }
 

@@ -1,19 +1,17 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseSunnariumMaker;
+import com.denfop.tiles.base.TileBaseSunnariumMaker;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerSunnariumMaker extends ContainerFullInv<TileBaseSunnariumMaker> {
 
-public class ContainerSunnariumMaker extends ContainerFullInv<TileEntityBaseSunnariumMaker> {
-
-    public ContainerSunnariumMaker(EntityPlayer entityPlayer, TileEntityBaseSunnariumMaker tileEntity1) {
+    public ContainerSunnariumMaker(EntityPlayer entityPlayer, TileBaseSunnariumMaker tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerSunnariumMaker(
             EntityPlayer entityPlayer,
-            TileEntityBaseSunnariumMaker tileEntity1,
+            TileBaseSunnariumMaker tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
@@ -54,14 +52,5 @@ public class ContainerSunnariumMaker extends ContainerFullInv<TileEntityBaseSunn
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("tier");
-        ret.add("guiChargeLevel");
-        ret.add("sunenergy");
-        ret.add("energy");
-        ret.add("sound");
-        return ret;
-    }
 
 }

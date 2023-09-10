@@ -2,23 +2,17 @@ package com.denfop.items.transport;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.items.block.ISubItem;
+import com.denfop.items.block.ItemBlockTileEntity;
+import com.denfop.register.Register;
 import com.denfop.tiles.transport.tiles.TileEntityCable;
 import com.denfop.tiles.transport.types.CableType;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.IBoxable;
-import ic2.core.IC2;
-import ic2.core.block.BlockTileEntity;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemIC2;
-import ic2.core.item.block.ItemBlockTileEntity;
-import ic2.core.ref.BlockName;
-import ic2.core.ref.IMultiItem;
-import ic2.core.ref.ItemName;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.LogCategory;
-import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -35,6 +29,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,7 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxable, IModelRegister {
+public class ItemCable extends Item implements ISubItem<CableType>, IModelRegister {
 
     public static final List<ItemStack> variants = new ArrayList<>();
     protected static final String NAME = "cable_iu_item";
@@ -60,13 +55,13 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
             , "itemglasscable"
             , "itemglasscablei",
             "itemcoppercable", "itemcoppercable1", "itemglasscable1",
-            "itemgold_cable", "itemgold_cable1", "itemgold_cable2",
-            "itemiron_cable", "itemiron_cable1", "itemiron_cable2", "itemiron_cable3", "itemtin_cable", "itemtin1_cable"
+            "itemgold_cable", "itemgold_cable1",
+            "itemiron_cable", "itemiron_cable1", "itemtin_cable", "itemtin1_cable"
     };
 
 
     public ItemCable() {
-        super(null);
+        super();
         this.setHasSubtypes(true);
         CableType[] var1 = CableType.values;
 
@@ -77,7 +72,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
             }
         }
         this.setCreativeTab(IUCore.ItemTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
@@ -97,10 +92,13 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         return type < CableType.values.length ? CableType.values[type] : CableType.glass;
     }
 
-
     private static String getName(ItemStack stack) {
         CableType type = getCableType(stack);
         return type.getName();
+    }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack));
     }
 
     @SideOnly(Side.CLIENT)
@@ -121,7 +119,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    protected void registerModel(final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -157,14 +155,11 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
             String value = variant.substring(sepPos + 1, nextPos);
             if (key.equals("type")) {
                 type = CableType.get(value);
-                if (type == null) {
-                    IC2.log.warn(LogCategory.Item, "Invalid cable type: %s", value);
-                }
             } else if (key.equals("insulation")) {
                 try {
                     insulation = Integer.parseInt(value);
-                } catch (NumberFormatException var10) {
-                    IC2.log.warn(LogCategory.Item, "Invalid cable insulation: %s", value);
+                } catch (NumberFormatException ignored) {
+
                 }
             }
         }
@@ -174,7 +169,6 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         } else if (insulation == 0) {
             return getCable(type);
         } else {
-            IC2.log.warn(LogCategory.Item, "Invalid cable insulation: %d", insulation);
             return null;
         }
     }
@@ -215,8 +209,8 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
         loss = type.loss;
 
 
-        info.add(ModUtils.getString(capacity) + " " + Localization.translate("ic2.generic.text.EUt"));
-        info.add(Localization.translate("ic2.cable.tooltip.loss", lossFormat.format(loss)));
+        info.add(ModUtils.getString(capacity) + " " + Localization.translate("iu.generic.text.EUt"));
+        info.add(Localization.translate("cable.tooltip.loss", lossFormat.format(loss)));
     }
 
     @Nonnull
@@ -230,27 +224,26 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
             float hitY,
             float hitZ
     ) {
-        ItemStack stack = StackUtil.get(player, hand);
+        ItemStack stack = ModUtils.get(player, hand);
         IBlockState oldState = world.getBlockState(pos);
         Block oldBlock = oldState.getBlock();
         if (!oldBlock.isReplaceable(world, pos)) {
             pos = pos.offset(side);
         }
 
-        Block newBlock = BlockName.te.getInstance();
-        if (!StackUtil.isEmpty(stack) && player.canPlayerEdit(pos, side, stack) && world.mayPlace(
+        Block newBlock = IUItem.invalid;
+        if (!ModUtils.isEmpty(stack) && player.canPlayerEdit(pos, side, stack) && world.mayPlace(
                 newBlock,
                 pos,
                 false,
                 side,
                 player
-        ) && ((BlockTileEntity) newBlock).canReplace(world, pos, side, BlockName.te.getItemStack(TeBlock.cable))) {
+        ) && ((BlockTileEntity) newBlock).canReplace(world, pos, side, IUItem.invalid.getItemStack(MultiTileBlock.invalid))) {
             newBlock.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, 0, player, hand);
             CableType type = getCableType(stack);
-            int insulation = 0;
 
             TileEntityCable te;
-            te = TileEntityCable.delegate(type, insulation);
+            te = TileEntityCable.delegate(type);
 
             if (ItemBlockTileEntity.placeTeBlock(stack, player, world, pos, side, te)) {
                 SoundType soundtype = newBlock.getSoundType(world.getBlockState(pos), world, pos, player);
@@ -262,7 +255,7 @@ public class ItemCable extends ItemIC2 implements IMultiItem<CableType>, IBoxabl
                         (soundtype.getVolume() + 1.0F) / 2.0F,
                         soundtype.getPitch() * 0.8F
                 );
-                StackUtil.consumeOrError(player, hand, 1);
+                player.getHeldItem(hand).shrink(1);
 
             }
 

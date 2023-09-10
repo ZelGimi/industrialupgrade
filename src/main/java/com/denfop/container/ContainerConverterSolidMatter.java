@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityConverterSolidMatter;
+import com.denfop.tiles.base.TileConverterSolidMatter;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerConverterSolidMatter extends ContainerFullInv<TileConverterSolidMatter> {
 
-public class ContainerConverterSolidMatter extends ContainerFullInv<TileEntityConverterSolidMatter> {
-
-    public ContainerConverterSolidMatter(EntityPlayer entityPlayer, TileEntityConverterSolidMatter tileEntity) {
+    public ContainerConverterSolidMatter(EntityPlayer entityPlayer, TileConverterSolidMatter tileEntity) {
         super(entityPlayer, tileEntity, 240 - 16);
         for (int i = 0; i < 6; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity.MatterSlot, i, 51 + (i % 3) * 18, 9 + 18 * (i / 3)));
@@ -23,13 +21,5 @@ public class ContainerConverterSolidMatter extends ContainerFullInv<TileEntityCo
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("progress");
-        ret.add("quantitysolid");
-        ret.add("guiProgress");
-        return ret;
-    }
 
 }

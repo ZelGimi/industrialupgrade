@@ -2,8 +2,8 @@ package com.denfop.integration.jei.synthesis;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -64,7 +64,7 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
         energy++;
         int energylevel = (int) Math.min(14.0F * energy / 100, 14);
         int xScale = 15 * progress / 100;
-        int xScale1 = 10 * progress / 100;
+        int xScale1 = 20 * progress / 100;
         if (xScale > 15) {
             progress = 0;
         }

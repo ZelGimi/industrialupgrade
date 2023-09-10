@@ -1,10 +1,9 @@
 package com.denfop.componets;
 
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.io.DataInput;
 import java.io.IOException;
 
 public class ComponentProgress extends AbstractComponent {
@@ -72,7 +71,7 @@ public class ComponentProgress extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(final EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeShort(progress.length);
         for (final short value : progress) {
             buffer.writeShort(value);
@@ -83,7 +82,7 @@ public class ComponentProgress extends AbstractComponent {
     }
 
     @Override
-    public void onNetworkUpdate(final DataInput is) throws IOException {
+    public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
         super.onNetworkUpdate(is);
         int size = is.readShort();
         for (int i = 0; i < size; i++) {

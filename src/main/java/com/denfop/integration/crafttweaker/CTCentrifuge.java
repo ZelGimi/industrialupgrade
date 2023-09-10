@@ -30,14 +30,12 @@ public class CTCentrifuge {
                 "centrifuge",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2RecipeInput(container)
+                                new IC2InputItemStack(container)
                         ),
                         new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                 )
         );
-        ic2.api.recipe.Recipes.centrifuge.addRecipe(new IC2RecipeInput(container), nbt, false,
-                CraftTweakerMC.getItemStacks(output)
-        );
+
 
     }
 

@@ -2,13 +2,12 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.container.ContainerQuarryVein;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -245,7 +244,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 6, 31, 17, 80)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -294,7 +293,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 break;
         }
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
         int chargeLevel = (int) (48.0F * this.container.base.energy.getEnergy()

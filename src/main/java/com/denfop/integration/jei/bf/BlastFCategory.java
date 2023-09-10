@@ -2,9 +2,8 @@ package com.denfop.integration.jei.bf;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBlastFurnace;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -94,7 +93,7 @@ public class BlastFCategory extends Gui implements IRecipeCategory<BlastFWrapper
         fff.set(1, new FluidStack(FluidRegistry.WATER, 1000));
 
         isg.init(2, false, 110, 28);
-        isg.set(2, Ic2Items.advIronIngot);
+        isg.set(2, IUItem.advIronIngot);
     }
 
     protected ResourceLocation getTexture() {

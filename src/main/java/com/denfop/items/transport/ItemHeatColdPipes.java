@@ -2,23 +2,17 @@ package com.denfop.items.transport;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.items.block.ISubItem;
+import com.denfop.items.block.ItemBlockTileEntity;
+import com.denfop.register.Register;
 import com.denfop.tiles.transport.tiles.TileEntityHeatColdPipes;
 import com.denfop.tiles.transport.types.HeatColdType;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.IBoxable;
-import ic2.core.IC2;
-import ic2.core.block.BlockTileEntity;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemIC2;
-import ic2.core.item.block.ItemBlockTileEntity;
-import ic2.core.ref.BlockName;
-import ic2.core.ref.IMultiItem;
-import ic2.core.ref.ItemName;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.LogCategory;
-import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -31,6 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdType>, IBoxable, IModelRegister {
+public class ItemHeatColdPipes extends Item implements ISubItem<HeatColdType>, IModelRegister {
 
     public static final List<ItemStack> variants = new ArrayList<>();
     protected static final String NAME = "heatcoldpipes_iu_item";
@@ -47,7 +42,7 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
 
 
     public ItemHeatColdPipes() {
-        super(null);
+        super();
         this.setHasSubtypes(true);
         HeatColdType[] var1 = HeatColdType.values;
 
@@ -58,7 +53,7 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
             }
         }
         this.setCreativeTab(IUCore.ItemTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
@@ -71,7 +66,6 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
 
         return new ModelResourceLocation(loc, null);
     }
-
 
     private static HeatColdType getCableType(ItemStack stack) {
         int type = stack.getItemDamage();
@@ -86,6 +80,10 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
     private static String getName(ItemStack stack) {
         HeatColdType type = getCableType(stack);
         return type.getName();
+    }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack));
     }
 
     @SideOnly(Side.CLIENT)
@@ -106,7 +104,7 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    protected void registerModel(final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -142,14 +140,11 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
             String value = variant.substring(sepPos + 1, nextPos);
             if (key.equals("type")) {
                 type = HeatColdType.get(value);
-                if (type == null) {
-                    IC2.log.warn(LogCategory.Item, "Invalid cable type: %s", value);
-                }
+
             } else if (key.equals("insulation")) {
                 try {
                     insulation = Integer.parseInt(value);
-                } catch (NumberFormatException var10) {
-                    IC2.log.warn(LogCategory.Item, "Invalid cable insulation: %s", value);
+                } catch (NumberFormatException ignored) {
                 }
             }
         }
@@ -159,7 +154,6 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
         } else if (insulation >= 0 && insulation <= type.maxInsulation) {
             return getCable(type);
         } else {
-            IC2.log.warn(LogCategory.Item, "Invalid cable insulation: %d", insulation);
             return null;
         }
     }
@@ -209,27 +203,26 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
             float hitY,
             float hitZ
     ) {
-        ItemStack stack = StackUtil.get(player, hand);
+        ItemStack stack = ModUtils.get(player, hand);
         IBlockState oldState = world.getBlockState(pos);
         Block oldBlock = oldState.getBlock();
         if (!oldBlock.isReplaceable(world, pos)) {
             pos = pos.offset(side);
         }
 
-        Block newBlock = BlockName.te.getInstance();
-        if (!StackUtil.isEmpty(stack) && player.canPlayerEdit(pos, side, stack) && world.mayPlace(
+        Block newBlock = IUItem.invalid;
+        if (!ModUtils.isEmpty(stack) && player.canPlayerEdit(pos, side, stack) && world.mayPlace(
                 newBlock,
                 pos,
                 false,
                 side,
                 player
-        ) && ((BlockTileEntity) newBlock).canReplace(world, pos, side, BlockName.te.getItemStack(TeBlock.cable))) {
+        ) && ((BlockTileEntity) newBlock).canReplace(world, pos, side, IUItem.invalid.getItemStack(MultiTileBlock.invalid))) {
             newBlock.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, 0, player, hand);
             HeatColdType type = getCableType(stack);
-            int insulation = getInsulation(stack);
 
             TileEntityHeatColdPipes te;
-            te = TileEntityHeatColdPipes.delegate(type, insulation);
+            te = TileEntityHeatColdPipes.delegate(type);
 
             if (ItemBlockTileEntity.placeTeBlock(stack, player, world, pos, side, te)) {
                 SoundType soundtype = newBlock.getSoundType(world.getBlockState(pos), world, pos, player);
@@ -241,7 +234,7 @@ public class ItemHeatColdPipes extends ItemIC2 implements IMultiItem<HeatColdTyp
                         (soundtype.getVolume() + 1.0F) / 2.0F,
                         soundtype.getPitch() * 0.8F
                 );
-                StackUtil.consumeOrError(player, hand, 1);
+                player.getHeldItem(hand).shrink(1);
 
             }
 

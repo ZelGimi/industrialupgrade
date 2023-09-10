@@ -1,11 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityPrivatizer;
+import com.denfop.tiles.mechanism.TilePrivatizer;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ContainerPrivatizer extends ContainerFullInv<TileEntityPrivatizer> {
+public class ContainerPrivatizer extends ContainerFullInv<TilePrivatizer> {
 
-    public ContainerPrivatizer(EntityPlayer entityPlayer, TileEntityPrivatizer tileEntity1) {
+    public ContainerPrivatizer(EntityPlayer entityPlayer, TilePrivatizer tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
 
 
@@ -22,7 +22,7 @@ public class ContainerPrivatizer extends ContainerFullInv<TileEntityPrivatizer> 
 
     }
 
-    public ContainerPrivatizer(EntityPlayer entityPlayer, TileEntityPrivatizer tileEntity1, int height) {
+    public ContainerPrivatizer(EntityPlayer entityPlayer, TilePrivatizer tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

@@ -1,19 +1,17 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseHandlerHeavyOre;
+import com.denfop.tiles.base.TileBaseHandlerHeavyOre;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerHandlerHeavyOre extends ContainerFullInv<TileBaseHandlerHeavyOre> {
 
-public class ContainerHandlerHeavyOre extends ContainerFullInv<TileEntityBaseHandlerHeavyOre> {
-
-    public ContainerHandlerHeavyOre(EntityPlayer entityPlayer, TileEntityBaseHandlerHeavyOre tileEntity1) {
+    public ContainerHandlerHeavyOre(EntityPlayer entityPlayer, TileBaseHandlerHeavyOre tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerHandlerHeavyOre(
             EntityPlayer entityPlayer,
-            TileEntityBaseHandlerHeavyOre tileEntity1,
+            TileBaseHandlerHeavyOre tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
@@ -40,10 +38,5 @@ public class ContainerHandlerHeavyOre extends ContainerFullInv<TileEntityBaseHan
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("sound");
-        return ret;
-    }
 
 }

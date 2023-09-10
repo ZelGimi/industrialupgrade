@@ -1,5 +1,6 @@
 package com.denfop.gui;
 
+import com.denfop.Constants;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerSolarDestiller;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,7 @@ public class GuiSolarDestiller extends GuiIU<ContainerSolarDestiller> {
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation("ic2", "textures/gui/GUISolarDestiller.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUISolarDestiller.png");
     }
 
 }

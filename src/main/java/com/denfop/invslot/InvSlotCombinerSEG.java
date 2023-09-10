@@ -12,7 +12,7 @@ public class InvSlotCombinerSEG extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotCombinerSEG(TileEntityCombinerSEGenerators base1) {
-        super(base1, "input5", InvSlot.Access.I, 9, InvSlot.InvSide.ANY);
+        super(base1, TypeItemSlot.INPUT, 9);
         this.tile = base1;
         this.stackSizeLimit = 4;
     }

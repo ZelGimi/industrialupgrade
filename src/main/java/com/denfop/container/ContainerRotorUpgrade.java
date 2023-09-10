@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.mechanism.TileEntityRotorModifier;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerRotorUpgrade extends ContainerFullInv<TileEntityRotorModifier> {
 
     public ContainerRotorUpgrade(TileEntityRotorModifier tileEntityRotorModifier, EntityPlayer entityPlayer) {
@@ -26,12 +24,5 @@ public class ContainerRotorUpgrade extends ContainerFullInv<TileEntityRotorModif
         ));
     }
 
-    @Override
-    public List<String> getNetworkedFields() {
-        final List<String> ret = super.getNetworkedFields();
-        ret.add("rotor_slot");
-        ret.add("slot");
-        return ret;
-    }
 
 }

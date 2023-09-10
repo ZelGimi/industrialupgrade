@@ -1,8 +1,6 @@
 package com.denfop.api.gui;
 
 public enum EnumTypeComponent {
-    ENERGY_CLASSIC(139, 4, 148, 4, 7, 14, EnumTypeRender.HEIGHT, true),
-    ENERGY_RF_CLASSIC(139, 18, 148, 18, 7, 14, EnumTypeRender.HEIGHT, true),
     ENERGY(0, 0, 12, 1, 12, 16, EnumTypeRender.HEIGHT, 0, 1, true),
     ENERGY_WEIGHT(30, 2, 69, 2, 39, 12, EnumTypeRender.WEIGHT, 0, 0, true),
     ADVANCED(220, 0, 220, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),

@@ -1,12 +1,11 @@
 package com.denfop.tiles.base;
 
+import com.denfop.Localization;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.Fluids;
-import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,9 +27,9 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
         if (this.hasComp(AdvEnergy.class)) {
             AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
 
@@ -62,11 +61,6 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
     public boolean needsFluid() {
         return this.getFluidTank().getFluidAmount() <= this.getFluidTank().getCapacity();
     }
-
-
-    public abstract boolean canFill(Fluid var2);
-
-    public abstract boolean canDrain(Fluid var2);
 
 
 }

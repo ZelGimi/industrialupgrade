@@ -1,14 +1,12 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityAutoSpawner;
+import com.denfop.tiles.base.TileAutoSpawner;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerAutoSpawner extends ContainerFullInv<TileAutoSpawner> {
 
-public class ContainerAutoSpawner extends ContainerFullInv<TileEntityAutoSpawner> {
-
-    public ContainerAutoSpawner(EntityPlayer entityPlayer, TileEntityAutoSpawner tileEntity1) {
-        this(entityPlayer, tileEntity1, 177);
+    public ContainerAutoSpawner(EntityPlayer entityPlayer, TileAutoSpawner tileEntity1) {
+        super(entityPlayer, tileEntity1, 177);
         if (tileEntity1.outputSlot != null) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 9; j++) {
@@ -27,20 +25,6 @@ public class ContainerAutoSpawner extends ContainerFullInv<TileEntityAutoSpawner
         }
 
 
-    }
-
-    public ContainerAutoSpawner(EntityPlayer entityPlayer, TileEntityAutoSpawner tileEntity1, int height) {
-        super(entityPlayer, tileEntity1, height);
-    }
-
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("progress");
-        ret.add("energy2");
-        ret.add("tempprogress");
-        ret.add("exp");
-        ret.add("description_mobs");
-        return ret;
     }
 
 

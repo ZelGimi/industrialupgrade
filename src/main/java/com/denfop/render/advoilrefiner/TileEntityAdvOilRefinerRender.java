@@ -3,13 +3,13 @@ package com.denfop.render.advoilrefiner;
 import com.denfop.Constants;
 import com.denfop.api.render.IModelCustom;
 import com.denfop.render.base.AdvancedModelLoader;
-import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
+import com.denfop.tiles.mechanism.TileAdvOilRefiner;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class TileEntityAdvOilRefinerRender extends TileEntitySpecialRenderer<TileEntityAdvOilRefiner> {
+public class TileEntityAdvOilRefinerRender extends TileEntitySpecialRenderer<TileAdvOilRefiner> {
 
     public static final ResourceLocation texture = new ResourceLocation(
             Constants.TEXTURES,
@@ -36,7 +36,7 @@ public class TileEntityAdvOilRefinerRender extends TileEntitySpecialRenderer<Til
     static final IModelCustom model3 = AdvancedModelLoader
             .loadModel(new ResourceLocation(Constants.TEXTURES, "models/oil2.obj"));
 
-    public void getRotate(TileEntityAdvOilRefiner tile) {
+    public void getRotate(TileAdvOilRefiner tile) {
 
         if (tile.getFacing() == EnumFacing.SOUTH) {
             GL11.glRotatef(180F, 0.0F, 1F, 0F);
@@ -55,7 +55,7 @@ public class TileEntityAdvOilRefinerRender extends TileEntitySpecialRenderer<Til
     }
 
     public void render(
-            TileEntityAdvOilRefiner tile,
+            TileAdvOilRefiner tile,
             double x,
             double y,
             double z,

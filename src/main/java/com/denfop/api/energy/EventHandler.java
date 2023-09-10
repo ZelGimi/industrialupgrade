@@ -1,10 +1,10 @@
 package com.denfop.api.energy;
 
 
-import com.denfop.api.energy.event.*;
-import ic2.api.energy.prefab.BasicSink;
-import ic2.api.energy.tile.IEnergyTile;
-import net.minecraft.util.math.BlockPos;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.energy.event.EventLoadController;
+import com.denfop.api.energy.event.EventUnloadController;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -53,64 +53,6 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onEnergyIC2TileLoad(ic2.api.energy.event.EnergyTileLoadEvent event) {
-        if ((event.getWorld()).isRemote) {
-            return;
-        }
-        final IEnergyTile tile = event.tile;
-        IAdvEnergyTile energyTile = null;
-        if (tile instanceof BasicSink) {
-            energyTile = new com.denfop.api.energy.BasicSinkIC2(((BasicSink) tile));
-        }
-        EnergyNetLocal local = EnergyNetGlobal.getForWorld(event.getWorld());
-        if (local != EnergyNetLocal.EMPTY && energyTile != null) {
-            local.addTile(energyTile);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onEnergyIC2TileUnLoad(ic2.api.energy.event.EnergyTileUnloadEvent event) {
-        if ((event.getWorld()).isRemote) {
-            return;
-        }
-        final IEnergyTile tile = event.tile;
-        IAdvEnergyTile energyTile = null;
-        if (tile instanceof BasicSink) {
-            final BlockPos pos = ((BasicSink) tile).getPosition();
-            energyTile = EnergyNetGlobal.instance.getSubTile(event.getWorld(), pos);
-        }
-        if (energyTile != EnergyNetGlobal.EMPTY && energyTile != null) {
-            EnergyNetLocal local = EnergyNetGlobal.getForWorld(event.getWorld());
-            if (local != null) {
-                local.removeTile(energyTile);
-            }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onEnergyTileLoad(EnergyMultiTileLoadEvent event) {
-        if ((event.getWorld()).isRemote) {
-            return;
-        }
-
-        EnergyNetLocal local = EnergyNetGlobal.getForWorld(event.getWorld());
-        if (local != null) {
-
-            local.addTileEntity(event.tile, event.subject);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onEnergyTileUnLoad(EnergyMultiTileUnLoadEvent event) {
-        if ((event.getWorld()).isRemote) {
-            return;
-        }
-        EnergyNetLocal local = EnergyNetGlobal.getForWorld(event.getWorld());
-        if (local != null) {
-            local.removeTileEntity(event.subject, event.tile);
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEnergyTileUnLoad(EnergyTileUnLoadEvent event) {

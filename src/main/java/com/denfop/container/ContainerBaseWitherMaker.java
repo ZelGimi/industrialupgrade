@@ -1,20 +1,18 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseWitherMaker;
+import com.denfop.tiles.base.TileBaseWitherMaker;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerBaseWitherMaker
-        extends ContainerFullInv<TileEntityBaseWitherMaker> {
+        extends ContainerFullInv<TileBaseWitherMaker> {
 
-    public ContainerBaseWitherMaker(EntityPlayer entityPlayer, TileEntityBaseWitherMaker tileEntity1) {
+    public ContainerBaseWitherMaker(EntityPlayer entityPlayer, TileBaseWitherMaker tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerBaseWitherMaker(
             EntityPlayer entityPlayer,
-            TileEntityBaseWitherMaker tileEntity1,
+            TileBaseWitherMaker tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
@@ -51,11 +49,5 @@ public class ContainerBaseWitherMaker
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiChargeLevel");
-        ret.add("tier");
-        return ret;
-    }
 
 }

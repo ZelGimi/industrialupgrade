@@ -1,16 +1,14 @@
 package com.denfop.container;
 
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
-import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
+import com.denfop.tiles.base.TileDoubleElectricMachine;
 import net.minecraft.entity.player.EntityPlayer;
-
-import java.util.List;
 
 public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricMachine {
 
     public ContainerDoubleElectricMachine(
             EntityPlayer entityPlayer,
-            TileEntityDoubleElectricMachine tileEntity1,
+            TileDoubleElectricMachine tileEntity1,
             EnumDoubleElectricMachine type
     ) {
         this(
@@ -34,7 +32,7 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
 
     public ContainerDoubleElectricMachine(
             EntityPlayer entityPlayer,
-            TileEntityDoubleElectricMachine tileEntity1,
+            TileDoubleElectricMachine tileEntity1,
             int height,
             int dischargeX,
             int dischargeY,
@@ -72,10 +70,5 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("sound");
-        return ret;
-    }
 
 }

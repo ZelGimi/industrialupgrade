@@ -1,12 +1,12 @@
 package com.denfop.invslot;
 
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvEnergySink;
-import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergySink;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
-import com.denfop.tiles.base.TileEntityElectricBlock;
+import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
@@ -21,8 +21,8 @@ public class InvSlotElectricBlock extends InvSlot {
 
     private final int type;
 
-    public InvSlotElectricBlock(TileEntityInventory base, int oldStartIndex1, String name, int count) {
-        super(base, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
+    public InvSlotElectricBlock(TileEntityInventory base, int oldStartIndex1, int count) {
+        super(base, TypeItemSlot.INPUT_OUTPUT, count);
         this.type = oldStartIndex1;
         this.setStackSizeLimit(1);
     }
@@ -38,7 +38,7 @@ public class InvSlotElectricBlock extends InvSlot {
     }
 
     public boolean checkignore() {
-        TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
+        TileElectricBlock tile = (TileElectricBlock) base;
         return tile.movementcharge || tile.movementchargeitem;
     }
 
@@ -82,7 +82,7 @@ public class InvSlotElectricBlock extends InvSlot {
     @Override
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
-        TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
+        TileElectricBlock tile = (TileElectricBlock) base;
         if (this.type == 3) {
             tile.output_plus = this.output_plus(tile.l);
             tile.output = tile.l + tile.output_plus;
@@ -103,7 +103,7 @@ public class InvSlotElectricBlock extends InvSlot {
     }
 
     public void wirelessmodule() {
-        TileEntityElectricBlock tile = (TileEntityElectricBlock) base;
+        TileElectricBlock tile = (TileElectricBlock) base;
 
         for (int i = 0; i < this.size(); i++) {
             if (this.get(i).getItem() instanceof ItemAdditionModule && this.get(i).getItemDamage() == 10) {
@@ -117,13 +117,13 @@ public class InvSlotElectricBlock extends InvSlot {
                 y = nbttagcompound.getInteger("Ycoord");
                 z = nbttagcompound.getInteger("Zcoord");
                 BlockPos pos = new BlockPos(x, y, z);
-                final IAdvEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
+                final IEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
                         .getParent()
                         .getWorld(), pos);
-                if (energy instanceof IAdvEnergySink) {
+                if (energy instanceof IEnergySink) {
                     tile.wirelessTransferList.add(new WirelessTransfer(
                             tile.getWorld().getTileEntity(pos),
-                            (IAdvEnergySink) energy
+                            (IEnergySink) energy
                     ));
                 }
             }

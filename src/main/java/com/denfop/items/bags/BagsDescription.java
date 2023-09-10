@@ -31,7 +31,7 @@ public class BagsDescription {
         return stack;
     }
 
-    void addCount(int count) {
+    public void addCount(int count) {
         this.count += count;
     }
 

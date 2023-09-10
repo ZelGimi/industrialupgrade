@@ -1,14 +1,13 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastFurnaceMain;
+import com.denfop.tiles.mechanism.blastfurnace.block.TileBlastFurnaceMain;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-public class ContainerBlastFurnace extends ContainerFullInv<TileEntityBlastFurnaceMain> {
+public class ContainerBlastFurnace extends ContainerFullInv<TileBlastFurnaceMain> {
 
-    public ContainerBlastFurnace(EntityPlayer entityPlayer, TileEntityBlastFurnaceMain tileEntityBlastFurnaceMain) {
+    public ContainerBlastFurnace(EntityPlayer entityPlayer, TileBlastFurnaceMain tileEntityBlastFurnaceMain) {
         super(entityPlayer, tileEntityBlastFurnaceMain, 166);
 
 
@@ -37,17 +36,5 @@ public class ContainerBlastFurnace extends ContainerFullInv<TileEntityBlastFurna
         this.base.entityPlayerList.remove(playerIn);
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("tank");
-        ret.add("full");
-        ret.add("tank1");
-        ret.add("progress");
-        ret.add("bar");
-        ret.add("sound");
-        ret.add("heat");
-        return ret;
-
-    }
 
 }

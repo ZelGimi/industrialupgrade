@@ -1,8 +1,8 @@
 package com.denfop.render.water;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import ic2.core.block.KineticGeneratorRotor;
+import com.denfop.render.windgenerator.KineticGeneratorRotor;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntityBaseWaterGenerator> {
+public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileBaseWaterGenerator> {
 
     private static final Map<Integer, ModelBase> rotorModels = new HashMap<>();
 
@@ -72,7 +72,7 @@ public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntity
     }
 
     public void render(
-            @Nonnull TileEntityBaseWaterGenerator te,
+            @Nonnull TileBaseWaterGenerator te,
             double x,
             double y,
             double z,

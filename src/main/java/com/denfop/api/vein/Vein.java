@@ -24,14 +24,6 @@ public class Vein implements IVein {
     }
 
     public Vein(NBTTagCompound tagCompound) {
-    /*   this.meta = tagCompound.getInteger("meta");
-        this.type = Type.getID(tagCompound.getInteger("id"));
-        this.chunk = new ChunkPos(tagCompound.getInteger("x"), tagCompound.getInteger("z"));
-        this.col = tagCompound.getInteger("col");
-        this.maxcol = tagCompound.getInteger("maxcol");
-        this.find = tagCompound.getBoolean("find");
-*/
-
         int data = tagCompound.getInteger("data");
         int z = data & 2047;
         data = data >> 11;

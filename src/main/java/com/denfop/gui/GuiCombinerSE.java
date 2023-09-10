@@ -1,11 +1,11 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.container.ContainerCombinerSE;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GuiCombinerSE extends GuiIC2<ContainerCombinerSE> {
+public class GuiCombinerSE extends GuiCore<ContainerCombinerSE> {
 
     public final ContainerCombinerSE container;
 
@@ -31,11 +31,11 @@ public class GuiCombinerSE extends GuiIC2<ContainerCombinerSE> {
         int yoffset = (this.height - this.ySize) / 2;
         drawTexturedModalRect(xoffset, yoffset, 0, 0, this.xSize, this.ySize);
         if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         this.mc.getTextureManager().bindTexture(getTexture());
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(163.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }

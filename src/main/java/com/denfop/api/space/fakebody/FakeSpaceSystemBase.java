@@ -1,11 +1,11 @@
 package com.denfop.api.space.fakebody;
 
+import com.denfop.ElectricItem;
 import com.denfop.api.space.*;
 import com.denfop.api.space.research.IResearchTable;
 import com.denfop.api.space.rovers.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.IRovers;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import ic2.api.item.ElectricItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 

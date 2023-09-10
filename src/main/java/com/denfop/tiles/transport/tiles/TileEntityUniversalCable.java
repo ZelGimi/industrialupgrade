@@ -9,8 +9,8 @@ import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvConductor;
 import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyConductor;
 import com.denfop.api.energy.IEnergyEmitter;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
@@ -27,70 +27,65 @@ import com.denfop.api.sytem.EnumTypeEvent;
 import com.denfop.api.sytem.IAcceptor;
 import com.denfop.api.sytem.IConductor;
 import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockUniversalCable;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketCableSound;
+import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.UniversalType;
-import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.core.IC2;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.state.Ic2BlockState.Ic2BlockStateInstance;
-import ic2.core.block.state.UnlistedProperty;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import scala.actors.threadpool.Arrays;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 
-public class TileEntityUniversalCable extends TileEntityBlock implements IAdvConductor, IHeatConductor, ICoolConductor,
-        IConductor,
-        INetworkTileEntityEventListener {
+public class TileEntityUniversalCable extends TileEntityMultiCable implements IEnergyConductor, IHeatConductor, ICoolConductor,
+        IConductor {
 
-    public static final IUnlistedProperty<TileEntityUniversalCable.CableRenderState> renderStateProperty = new UnlistedProperty<>(
-            "renderstate",
-            TileEntityUniversalCable.CableRenderState.class
-    );
+
     public boolean addedToEnergyNet;
-    public int type;
     protected UniversalType cableType;
-    private byte connectivity;
-    private volatile TileEntityUniversalCable.CableRenderState renderState;
 
-    public TileEntityUniversalCable(UniversalType cableType, int insulation) {
-        this();
+    public TileEntityUniversalCable(UniversalType cableType) {
+        super(cableType);
         this.cableType = cableType;
-        this.type = cableType.ordinal();
     }
 
     public TileEntityUniversalCable() {
+        super(UniversalType.glass);
         this.cableType = UniversalType.glass;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
 
     }
 
-    public static TileEntityUniversalCable delegate(UniversalType cableType, int insulation) {
-        return new TileEntityUniversalCable(cableType, insulation);
+    public static TileEntityUniversalCable delegate(UniversalType cableType) {
+        return new TileEntityUniversalCable(cableType);
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockUniversalCable.universal_cable;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.universalcableblock;
+    }
+
+    public ICableItem getCableItem() {
+        return cableType;
     }
 
     @Override
@@ -109,11 +104,9 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         return nbt;
     }
 
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
-        if (this.getWorld().isRemote) {
-            this.updateRenderState();
-        } else {
+        if (!this.getWorld().isRemote) {
 
 
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
@@ -130,8 +123,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
 
     }
 
-    protected void onUnloaded() {
-        if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
+    public void onUnloaded() {
+        if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
             MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
@@ -146,115 +139,11 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         super.onUnloaded();
     }
 
-    protected SoundType getBlockSound(Entity entity) {
-        return SoundType.CLOTH;
-    }
 
-    public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
-        this.updateRenderState();
-        super.onPlaced(stack, placer, facing);
-    }
-
-    protected ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
+    public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return new ItemStack(IUItem.universal_cable, 1, this.cableType.ordinal());
     }
 
-    protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        {
-            float th = this.cableType.thickness + (float) (0) * 0.0625F;
-            float sp = (1.0F - th) / 2.0F;
-            List<AxisAlignedBB> ret = new ArrayList<>(7);
-            ret.add(new AxisAlignedBB(
-                    sp,
-                    sp,
-                    sp,
-                    sp + th,
-                    sp + th,
-                    sp + th
-            ));
-            EnumFacing[] var5 = EnumFacing.VALUES;
-
-            for (EnumFacing facing : var5) {
-                boolean hasConnection = (this.connectivity & 1 << facing.ordinal()) != 0;
-                if (hasConnection) {
-                    float zS = sp;
-                    float yS = sp;
-                    float xS = sp;
-                    float yE;
-                    float zE;
-                    float xE = yE = zE = sp + th;
-                    switch (facing) {
-                        case DOWN:
-                            yS = 0.0F;
-                            yE = sp;
-                            break;
-                        case UP:
-                            yS = sp + th;
-                            yE = 1.0F;
-                            break;
-                        case NORTH:
-                            zS = 0.0F;
-                            zE = sp;
-                            break;
-                        case SOUTH:
-                            zS = sp + th;
-                            zE = 1.0F;
-                            break;
-                        case WEST:
-                            xS = 0.0F;
-                            xE = sp;
-                            break;
-                        case EAST:
-                            xS = sp + th;
-                            xE = 1.0F;
-                            break;
-                        default:
-                            throw new RuntimeException();
-                    }
-
-                    ret.add(new AxisAlignedBB(xS, yS, zS, xE, yE, zE));
-                }
-            }
-
-            return ret;
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    protected boolean isNormalCube() {
-        return false;
-    }
-
-    protected boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    protected boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    protected boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    public Ic2BlockStateInstance getExtendedState(Ic2BlockStateInstance state) {
-        state = super.getExtendedState(state);
-        TileEntityUniversalCable.CableRenderState cableRenderState = this.renderState;
-        if (cableRenderState != null) {
-            state = state.withProperties(renderStateProperty, cableRenderState);
-        }
-
-
-        return state;
-    }
 
     public void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
@@ -268,11 +157,12 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     private void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
-        int mask = 1;
         EnumFacing[] var4 = EnumFacing.VALUES;
 
         for (EnumFacing dir : var4) {
-            Object tile = EnergyNetGlobal.instance.getSubTile(world, this.pos.offset(dir));
+            newConnectivity = (byte) (newConnectivity << 1);
+
+            Object tile = EnergyNetGlobal.instance.getTile(world, this.pos.offset(dir));
             if (tile != EnergyNetGlobal.EMPTY) {
                 if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
                         this,
@@ -281,7 +171,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                         this,
                         dir.getOpposite()
                 )) && this.canInteractWith()) {
-                    newConnectivity = (byte) (newConnectivity | mask);
+                    newConnectivity = (byte) (newConnectivity + 1);
+
                 }
             } else {
                 tile = EnergyBase.SE.getSubTile(world, this.pos.offset(dir));
@@ -294,7 +185,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                             this,
                             dir.getOpposite()
                     ))) {
-                        newConnectivity = (byte) (newConnectivity | mask);
+                        newConnectivity = (byte) (newConnectivity + 1);
+
                     }
                 } else {
                     tile = HeatNet.instance.getSubTile(world, this.pos.offset(dir));
@@ -306,7 +198,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                                 this,
                                 dir.getOpposite()
                         )) && this.canInteractWith()) {
-                            newConnectivity = (byte) (newConnectivity | mask);
+                            newConnectivity = (byte) (newConnectivity + 1);
+
                         }
                     } else {
                         tile = CoolNet.instance.getSubTile(world, this.pos.offset(dir));
@@ -318,7 +211,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                                     this,
                                     dir.getOpposite()
                             )) && this.canInteractWith()) {
-                                newConnectivity = (byte) (newConnectivity | mask);
+                                newConnectivity = (byte) (newConnectivity + 1);
+
                             }
                         } else {
                             tile = EnergyBase.QE.getSubTile(world, this.pos.offset(dir));
@@ -330,7 +224,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                                         this,
                                         dir.getOpposite()
                                 )) && this.canInteractWith()) {
-                                    newConnectivity = (byte) (newConnectivity | mask);
+                                    newConnectivity = (byte) (newConnectivity + 1);
+
                                 }
 
                             } else {
@@ -343,7 +238,8 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                                             this,
                                             dir.getOpposite()
                                     )) && this.canInteractWith()) {
-                                        newConnectivity = (byte) (newConnectivity | mask);
+                                        newConnectivity = (byte) (newConnectivity + 1);
+
                                     }
                                 }
                             }
@@ -351,49 +247,10 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
                     }
                 }
             }
-            mask *= 2;
         }
 
-        if (this.connectivity != newConnectivity) {
-            this.connectivity = newConnectivity;
-            IUCore.network.get(true).updateTileEntityField(this, "connectivity");
-        }
+        setConnectivity(newConnectivity);
 
-    }
-
-    protected boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-
-    }
-
-    protected void onClicked(EntityPlayer player) {
-        super.onClicked(player);
-
-
-    }
-
-    protected float getHardness() {
-        return super.getHardness();
-    }
-
-    protected float getExplosionResistance(Entity exploder, Explosion explosion) {
-
-        return super.getHardness();
-
-    }
-
-    protected int getLightOpacity() {
-        return 0;
-    }
-
-
-    protected boolean recolor(EnumFacing side, EnumDyeColor mcColor) {
-        return false;
-    }
-
-    protected boolean onRemovedByPlayer(EntityPlayer player, boolean willHarvest) {
-        return super.onRemovedByPlayer(player, willHarvest);
     }
 
 
@@ -418,34 +275,9 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         return this.cableType.loss;
     }
 
-    public double getInsulationEnergyAbsorption() {
-
-        return 2.147483647E9D;
-
-    }
-
-    public double getInsulationBreakdownEnergy() {
-        return 9001.0D;
-    }
-
     @Override
     public double getConductorBreakdownEnergy() {
         return this.cableType.capacity + 1;
-    }
-
-    @Override
-    public double getConductionLoss(final EnergyType energyType) {
-        return this.cableType.loss;
-    }
-
-    @Override
-    public double getInsulationEnergyAbsorption(final EnergyType energyType) {
-        return 2.147483647E9D;
-    }
-
-    @Override
-    public double getInsulationBreakdownEnergy(final EnergyType energyType) {
-        return 9001.0D;
     }
 
     @Override
@@ -453,11 +285,6 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
             EnergyType energyType
     ) {
         return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public void removeInsulation(final EnergyType energyType) {
-
     }
 
 
@@ -471,72 +298,37 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
         return 65;
     }
 
-    public void removeInsulation() {
-
-    }
-
     public void removeConductor() {
         this.getWorld().setBlockToAir(this.pos);
-        IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
+        new PacketCableSound(this.getWorld(), this.pos,
+                0.5F,
+                2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
+        );
     }
 
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = new ArrayList<>();
-        ret.add("cableType");
-        ret.add("connectivity");
-        ret.addAll(super.getNetworkedFields());
-        return ret;
+    public CustomPacketBuffer writePacket() {
+        final CustomPacketBuffer packet = super.writePacket();
+        try {
+            EncoderHandler.encode(packet, cableType);
+            EncoderHandler.encode(packet, connectivity);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
     }
 
-    public void onNetworkUpdate(String field) {
-        this.updateRenderState();
-
-
-        this.rerender();
-        super.onNetworkUpdate(field);
-    }
-
-
-    public void onNetworkEvent(int event) {
-        World world = this.getWorld();
-        if (event == 0) {
-            world.playSound(
-                    null,
-                    this.pos,
-                    SoundEvents.ENTITY_GENERIC_BURN,
-                    SoundCategory.BLOCKS,
-                    0.5F,
-                    2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F
-            );
-
-            for (int l = 0; l < 8; ++l) {
-                world.spawnParticle(
-                        EnumParticleTypes.SMOKE_LARGE,
-                        (double) this.pos.getX() + Math.random(),
-                        (double) this.pos.getY() + 1.2D,
-                        (double) this.pos.getZ() + Math.random(),
-                        0.0D,
-                        0.0D,
-                        0.0D
-                );
-            }
-
-        } else {
-            IC2.platform.displayError(
-                    "An unknown event type was received over multiplayer.\nThis could happen due to corrupted data or a bug.\n\n(Technical information: event ID " + event + ", tile entity below)\nT: " + this + " (" + this.pos + ")"
-            );
+    public void readPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        try {
+            cableType = UniversalType.values[(int) DecoderHandler.decode(customPacketBuffer)];
+            connectivity = (byte) DecoderHandler.decode(customPacketBuffer);
+            this.rerender();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-
-    private void updateRenderState() {
-        this.renderState = new TileEntityUniversalCable.CableRenderState(
-                this.cableType,
-                this.connectivity,
-                this.getActive()
-        );
-    }
 
     @Override
     public void update_render() {
@@ -598,43 +390,6 @@ public class TileEntityUniversalCable extends TileEntityBlock implements IAdvCon
     @Override
     public TileEntity getTileEntity() {
         return this;
-    }
-
-
-    public static class CableRenderState {
-
-        public final UniversalType type;
-        public final int connectivity;
-        public final boolean active;
-
-        public CableRenderState(UniversalType type, int connectivity, boolean active) {
-            this.type = type;
-            this.connectivity = connectivity;
-            this.active = active;
-        }
-
-        public int hashCode() {
-            int ret = this.type.hashCode();
-            ret = ret * 31 + this.connectivity;
-            ret = ret << 1 | (this.active ? 1 : 0);
-            return ret;
-        }
-
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            } else if (!(obj instanceof TileEntityUniversalCable.CableRenderState)) {
-                return false;
-            } else {
-                TileEntityUniversalCable.CableRenderState o = (TileEntityUniversalCable.CableRenderState) obj;
-                return o.type == this.type && o.connectivity == this.connectivity && o.active == this.active;
-            }
-        }
-
-        public String toString() {
-            return "CableState<" + this.type + ", " + this.connectivity + ", " + this.active + '>';
-        }
-
     }
 
 }

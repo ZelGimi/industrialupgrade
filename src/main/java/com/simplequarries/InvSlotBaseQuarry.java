@@ -10,11 +10,11 @@ import net.minecraft.item.ItemStack;
 public class InvSlotBaseQuarry extends InvSlot {
 
 
-    public final TileEntityBaseQuarry tile;
+    public final TileBaseQuarry tile;
     public int stackSizeLimit;
 
-    public InvSlotBaseQuarry(TileEntityBaseQuarry base1, int oldStartIndex1) {
-        super(base1, "input", Access.I, oldStartIndex1, InvSlot.InvSide.ANY);
+    public InvSlotBaseQuarry(TileBaseQuarry base1, int oldStartIndex1) {
+        super(base1, TypeItemSlot.INPUT, oldStartIndex1);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }

@@ -1,18 +1,12 @@
 package com.denfop.tiles.mechanism.generator.energy;
 
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.api.inv.IHasGui;
-import com.denfop.audio.AudioSource;
-import com.denfop.audio.PositionSpec;
+import com.denfop.Localization;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerBase;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.api.item.ElectricItem;
-import ic2.core.IC2;
-import ic2.core.gui.dynamic.DynamicGui;
-import ic2.core.gui.dynamic.GuiParser;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,20 +17,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public abstract class TileEntityBaseGenerator extends TileEntityInventory implements IHasGui {
+public abstract class TileEntityBaseGenerator extends TileEntityInventory {
 
     public final InvSlotCharge chargeSlot;
     public final AdvEnergy energy;
 
     public int fuel = 0;
-    public AudioSource audioSource;
     protected double production;
     private int ticksSinceLastActiveUpdate;
     private int activityMeter = 0;
 
     public TileEntityBaseGenerator(double production, int tier, int maxStorage) {
         this.production = production;
-        this.ticksSinceLastActiveUpdate = IC2.random.nextInt(256);
+        this.ticksSinceLastActiveUpdate = IUCore.random.nextInt(256);
         this.chargeSlot = new InvSlotCharge(this, 1);
         this.energy =
                 this.addComponent(AdvEnergy.asBasicSource(this, maxStorage, tier).addManagedSlot(this.chargeSlot));
@@ -48,9 +41,9 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
         if (this.getComp(AdvEnergy.class) != null) {
             AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
 
@@ -67,14 +60,6 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
         return nbt;
     }
 
-    protected void onUnloaded() {
-        if (IC2.platform.isRendering() && this.audioSource != null) {
-            IUCore.audioManager.removeSources(this);
-            this.audioSource = null;
-        }
-
-        super.onUnloaded();
-    }
 
     public double charge(double amount, ItemStack stack, boolean simulate, boolean ignore) {
         if (amount < 0.0) {
@@ -87,7 +72,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
         return ElectricItem.manager.charge(stack, amount, 2147483647, ignore, simulate);
     }
 
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
         if (this.needsFuel()) {
             this.gainFuel();
@@ -146,16 +131,10 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
 
     public abstract boolean gainFuel();
 
-    public String getOperationSoundFile() {
-        return null;
-    }
-
     protected boolean delayActiveUpdate() {
         return false;
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
     public ContainerBase<? extends TileEntityBaseGenerator> getGuiContainer(EntityPlayer player) {
         return null;
@@ -163,32 +142,8 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory implem
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return DynamicGui.create(this, player, GuiParser.parse(this.teBlock));
+        return null;
     }
 
-    public void onNetworkUpdate(String field) {
-        if (field.equals("active")) {
-            if (this.audioSource == null && this.getOperationSoundFile() != null) {
-                this.audioSource = IUCore.audioManager.createSource(
-                        this,
-                        PositionSpec.Center,
-                        this.getOperationSoundFile(),
-                        true,
-                        false,
-                        IC2.audioManager.getDefaultVolume()
-                );
-            }
-
-            if (this.getActive()) {
-                if (this.audioSource != null) {
-                    this.audioSource.play();
-                }
-            } else if (this.audioSource != null) {
-                this.audioSource.stop();
-            }
-        }
-
-        super.onNetworkUpdate(field);
-    }
 
 }

@@ -49,18 +49,14 @@ public class TransportNetGlobal implements ITransportNet {
         }
     }
 
+
     @Override
-    public ITransportTile getTile(final World var1, final BlockPos var2) {
+    public ITransportTile getSubTile(final World var1, final BlockPos var2) {
         final TransportNetLocal local = getForWorld(var1);
         if (local != null) {
             return local.getTileEntity(var2);
         }
         return null;
-    }
-
-    @Override
-    public ITransportTile getSubTile(final World var1, final BlockPos var2) {
-        return getTile(var1, var2);
     }
 
     @Override

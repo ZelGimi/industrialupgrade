@@ -1,18 +1,22 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
-import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.container.ContainerCombinerSE;
 import com.denfop.gui.GuiCombinerSE;
 import com.denfop.invslot.InvSlotCombinerSEG;
 import com.denfop.invslot.InvSlotGenCombinerSunarrium;
 import com.denfop.invslot.InvSlotUpgrade;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.IC2;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,12 +27,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityCombinerSEGenerators extends TileEntityInventory implements IHasGui,
+public class TileEntityCombinerSEGenerators extends TileEntityInventory implements
         IUpgradableBlock {
 
 
@@ -54,7 +59,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         this.input = new InvSlotGenCombinerSunarrium(this);
 
         this.outputSlot = new InvSlotOutput(this, "output", 9);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
+        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSource(EnergyType.SOLARIUM, this, 0, 1));
         this.lst = new ArrayList<>();
@@ -66,29 +71,37 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         this.update_night = 0;
     }
 
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.combiner_se_generators;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
+    }
+
     @Override
     public int getInventoryStackLimit() {
         return 4;
     }
 
     @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
     }
 
-    protected boolean isNormalCube() {
+    public boolean isNormalCube() {
         return false;
     }
 
-    protected boolean doesSideBlockRendering(EnumFacing side) {
+    public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
 
-    protected boolean isSideSolid(EnumFacing side) {
+    public boolean isSideSolid(EnumFacing side) {
         return false;
     }
 
-    protected boolean clientNeedsExtraModelInfo() {
+    public boolean clientNeedsExtraModelInfo() {
         return true;
     }
 
@@ -102,13 +115,35 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
 
     }
 
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        try {
+            generation = (double) DecoderHandler.decode(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        final CustomPacketBuffer packet = super.writeContainerPacket();
+        try {
+            EncoderHandler.encode(packet, generation);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
+    }
+
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         return nbttagcompound;
     }
 
 
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
         this.inputSlot.update();
         this.lst = this.input.coefday();
@@ -172,7 +207,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
 
     }
 
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
         if (this.world.provider.getWorldTime() % 80 == 0) {
             updateVisibility();
@@ -188,12 +223,11 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         this.upgradeSlot.tickNoMark();
     }
 
-    protected void onUnloaded() {
+    public void onUnloaded() {
         super.onUnloaded();
 
 
     }
-
 
 
     @SideOnly(Side.CLIENT)
@@ -214,14 +248,6 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         return null;
     }
 
-
-    public double getEnergy() {
-        return 0;
-    }
-
-    public boolean useEnergy(double amount) {
-        return false;
-    }
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {

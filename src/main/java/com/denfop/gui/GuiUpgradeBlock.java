@@ -42,7 +42,7 @@ public class GuiUpgradeBlock extends GuiIU<ContainerDoubleElectricMachine> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 25, 55, 36, 70)
                 .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);

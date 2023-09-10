@@ -1,18 +1,16 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBasePlasticCreator;
+import com.denfop.tiles.base.TileBasePlasticCreator;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerPlasticCreator extends ContainerFullInv<TileBasePlasticCreator> {
 
-public class ContainerPlasticCreator extends ContainerFullInv<TileEntityBasePlasticCreator> {
-
-    public ContainerPlasticCreator(EntityPlayer entityPlayer, TileEntityBasePlasticCreator tileEntity1) {
+    public ContainerPlasticCreator(EntityPlayer entityPlayer, TileBasePlasticCreator tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 56, 53, 56, 17, 116, 35, 152, 8);
     }
 
     public ContainerPlasticCreator(
-            EntityPlayer entityPlayer, TileEntityBasePlasticCreator tileEntity1, int height, int dischargeX,
+            EntityPlayer entityPlayer, TileBasePlasticCreator tileEntity1, int height, int dischargeX,
             int dischargeY, int inputX, int inputY, int outputX, int outputY, int upgradeX, int upgradeY
     ) {
         super(entityPlayer, tileEntity1, height);
@@ -46,12 +44,5 @@ public class ContainerPlasticCreator extends ContainerFullInv<TileEntityBasePlas
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("fluidTank");
-        ret.add("energy");
-        ret.add("sound");
-        return ret;
-    }
 
 }

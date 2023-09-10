@@ -2,16 +2,12 @@ package com.denfop.items.reactors;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUPotion;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import com.denfop.items.armour.ItemArmorAdvHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
-import ic2.core.IC2Potion;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemMulti;
-import ic2.core.item.armor.ItemArmorHazmat;
-import ic2.core.item.type.IRadioactiveItemType;
-import ic2.core.ref.ItemName;
+import com.denfop.api.item.IHazmatLike;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,23 +20,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class RadiationResources extends ItemMulti<RadiationResources.Types> implements IModelRegister, IRadioactiveItemType {
+public class RadiationResources extends ItemSubTypes<RadiationResources.Types> implements IModelRegister, IRadioactiveItemType {
 
     protected static final String NAME = "radiationresources";
 
     public RadiationResources() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ReactorsTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, int meta, String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -52,18 +48,17 @@ public class RadiationResources extends ItemMulti<RadiationResources.Types> impl
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase entityLiving = (EntityLivingBase) entity;
-            if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
-                    entityLiving)) {
-                IC2Potion.radiation.applyTo(entityLiving, 150, 10);
+            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+                IUPotion.radiation.applyTo(
+                        entityLiving,
+                        this.getRadiationDuration(),
+                        this.getRadiationAmplifier()
+                );
             }
         }
 
     }
 
-    @Override
-    public void registerModels() {
-        this.registerModels(null);
-    }
 
     @Override
     public int getRadiationDuration() {
@@ -75,7 +70,7 @@ public class RadiationResources extends ItemMulti<RadiationResources.Types> impl
         return 100;
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         americium_gem(0),
         neptunium_gem(1),
         curium_gem(2),

@@ -1,13 +1,13 @@
 package com.simplequarries;
 
-import com.denfop.IUCore;
+import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.gui.AdvArea;
 import com.denfop.gui.GuiIU;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -93,25 +93,25 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
         int y = j - yMin;
         boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
         if (x >= 179 && x <= 189 && y >= 29 && y <= 39) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, (shift ? 1 : 0));
+            new PacketUpdateServerTile(this.container.base, (shift ? 1 : 0));
         }
         if (x >= 206 && x <= 216 && y >= 29 && y <= 39) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 10 + (shift ? 1 : 0));
+            new PacketUpdateServerTile(this.container.base, 10 + (shift ? 1 : 0));
         }
         if (x >= 179 && x <= 189 && y >= 64 && y <= 74) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 20 + (shift ? 1 : 0));
+            new PacketUpdateServerTile(this.container.base, 20 + (shift ? 1 : 0));
         }
         if (x >= 206 && x <= 216 && y >= 64 && y <= 74) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 30 + (shift ? 1 : 0));
+            new PacketUpdateServerTile(this.container.base, 30 + (shift ? 1 : 0));
         }
         if (x >= 146 && x <= 160 && y >= 5 && y <= 23) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 40 + (shift ? 1 : 0));
+            new PacketUpdateServerTile(this.container.base, 40 + (shift ? 1 : 0));
         }
         if (x >= 189 && x <= 206 && y >= 83 && y <= 100) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 50);
+            new PacketUpdateServerTile(this.container.base, 50);
         }
         if (x >= 209 && x <= 224 && y >= 86 && y <= 99) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 60);
+            new PacketUpdateServerTile(this.container.base, 60);
         }
     }
 
@@ -306,7 +306,7 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
             y1 += 18;
         }
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
         RenderHelper.enableGUIStandardItemLighting();

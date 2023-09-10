@@ -43,7 +43,7 @@ public class GuiElectrolyzer extends GuiIU<ContainerElectrolyzer> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 38, 68, 68, 78)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -60,7 +60,7 @@ public class GuiElectrolyzer extends GuiIU<ContainerElectrolyzer> {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
         this.drawBackground();

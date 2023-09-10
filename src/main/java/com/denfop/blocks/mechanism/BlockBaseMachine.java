@@ -2,27 +2,25 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.base.TileEntityNeutronGenerator;
-import com.denfop.tiles.mechanism.TileEntityGenerationMicrochip;
-import com.denfop.tiles.mechanism.TileEntityGenerationStone;
-import com.denfop.tiles.mechanism.TileEntityModuleMachine;
-import com.denfop.tiles.mechanism.dual.heat.TileEntityAlloySmelter;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.base.TileNeutronGenerator;
+import com.denfop.tiles.mechanism.TileGenerationMicrochip;
+import com.denfop.tiles.mechanism.TileGenerationStone;
+import com.denfop.tiles.mechanism.TileModuleMachine;
+import com.denfop.tiles.mechanism.dual.heat.TileAlloySmelter;
 import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGeneratorAdv;
 import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGeneratorImp;
 import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGeneratorPer;
-import com.denfop.tiles.mechanism.generator.things.matter.TileEntityAdvancedMatter;
-import com.denfop.tiles.mechanism.generator.things.matter.TileEntityImprovedMatter;
-import com.denfop.tiles.mechanism.generator.things.matter.TileEntityUltimateMatter;
-import com.denfop.tiles.mechanism.quarry.TileEntityAdvQuantumQuarry;
-import com.denfop.tiles.mechanism.quarry.TileEntityImpQuantumQuarry;
-import com.denfop.tiles.mechanism.quarry.TileEntityPerQuantumQuarry;
-import com.denfop.tiles.mechanism.quarry.TileEntityQuantumQuarry;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.tiles.mechanism.generator.things.matter.TileAdvancedMatter;
+import com.denfop.tiles.mechanism.generator.things.matter.TileImprovedMatter;
+import com.denfop.tiles.mechanism.generator.things.matter.TileUltimateMatter;
+import com.denfop.tiles.mechanism.quarry.TileAdvQuantumQuarry;
+import com.denfop.tiles.mechanism.quarry.TileImpQuantumQuarry;
+import com.denfop.tiles.mechanism.quarry.TilePerQuantumQuarry;
+import com.denfop.tiles.mechanism.quarry.TileQuantumQuarry;
+import com.denfop.utils.ModUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -35,23 +33,23 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockBaseMachine implements ITeBlock {
+public enum BlockBaseMachine implements IMultiTileBlock {
 
-    adv_matter(TileEntityAdvancedMatter.class, 1),
-    imp_matter(TileEntityImprovedMatter.class, 2),
-    per_matter(TileEntityUltimateMatter.class, 3),
-    alloy_smelter(TileEntityAlloySmelter.class, 4),
-    neutron_generator(TileEntityNeutronGenerator.class, 5),
-    generator_microchip(TileEntityGenerationMicrochip.class, 6),
-    gen_stone(TileEntityGenerationStone.class, 7),
-    quantum_quarry(TileEntityQuantumQuarry.class, 8),
-    modulator(TileEntityModuleMachine.class, 9),
+    adv_matter(TileAdvancedMatter.class, 1),
+    imp_matter(TileImprovedMatter.class, 2),
+    per_matter(TileUltimateMatter.class, 3),
+    alloy_smelter(TileAlloySmelter.class, 4),
+    neutron_generator(TileNeutronGenerator.class, 5),
+    generator_microchip(TileGenerationMicrochip.class, 6),
+    gen_stone(TileGenerationStone.class, 7),
+    quantum_quarry(TileQuantumQuarry.class, 8),
+    modulator(TileModuleMachine.class, 9),
     adv_gen(TileEntityGeneratorAdv.class, 10),
     imp_gen(TileEntityGeneratorImp.class, 11),
     per_gen(TileEntityGeneratorPer.class, 12),
-    adv_quantum_quarry(TileEntityAdvQuantumQuarry.class, 13),
-    imp_quantum_quarry(TileEntityImpQuantumQuarry.class, 14),
-    per_quantum_quarry(TileEntityPerQuantumQuarry.class, 15),
+    adv_quantum_quarry(TileAdvQuantumQuarry.class, 13),
+    imp_quantum_quarry(TileImpQuantumQuarry.class, 14),
+    per_quantum_quarry(TilePerQuantumQuarry.class, 15),
     ;
 
 
@@ -78,7 +76,7 @@ public enum BlockBaseMachine implements ITeBlock {
 
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -88,9 +86,7 @@ public enum BlockBaseMachine implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
@@ -135,7 +131,7 @@ public enum BlockBaseMachine implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -144,31 +140,15 @@ public enum BlockBaseMachine implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override

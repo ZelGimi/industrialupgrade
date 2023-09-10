@@ -1,53 +1,11 @@
 package com.denfop.integration.jei;
 
-import com.denfop.IUCore;
+import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
-import com.denfop.blocks.mechanism.BlockAdvRefiner;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockBlastFurnace;
-import com.denfop.blocks.mechanism.BlockConverterMatter;
-import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
-import com.denfop.blocks.mechanism.BlockMolecular;
-import com.denfop.blocks.mechanism.BlockMoreMachine;
-import com.denfop.blocks.mechanism.BlockMoreMachine1;
-import com.denfop.blocks.mechanism.BlockMoreMachine2;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.blocks.mechanism.BlockPetrolQuarry;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.blocks.mechanism.BlockSimpleMachine;
-import com.denfop.blocks.mechanism.BlockSolarEnergy;
-import com.denfop.blocks.mechanism.BlockSolidMatter;
-import com.denfop.blocks.mechanism.BlockSunnariumMaker;
-import com.denfop.blocks.mechanism.BlockSunnariumPanelMaker;
-import com.denfop.blocks.mechanism.BlockUpgradeBlock;
-import com.denfop.gui.GuiAdvAlloySmelter;
-import com.denfop.gui.GuiAdvOilRefiner;
-import com.denfop.gui.GuiAlloySmelter;
-import com.denfop.gui.GuiConverterSolidMatter;
-import com.denfop.gui.GuiDoubleMolecularTransformer;
-import com.denfop.gui.GuiElectrolyzer;
-import com.denfop.gui.GuiEnriched;
-import com.denfop.gui.GuiFisher;
-import com.denfop.gui.GuiGenStone;
-import com.denfop.gui.GuiGenerationMicrochip;
-import com.denfop.gui.GuiHandlerHeavyOre;
-import com.denfop.gui.GuiMolecularTransformer;
-import com.denfop.gui.GuiObsidianGenerator;
-import com.denfop.gui.GuiOilRefiner;
-import com.denfop.gui.GuiPainting;
-import com.denfop.gui.GuiPlasticCreator;
-import com.denfop.gui.GuiPlasticPlateCreator;
-import com.denfop.gui.GuiRodManufacturer;
-import com.denfop.gui.GuiSunnariumMaker;
-import com.denfop.gui.GuiSunnariumPanelMaker;
-import com.denfop.gui.GuiSynthesis;
-import com.denfop.gui.GuiUpgradeBlock;
-import com.denfop.gui.GuiWelding;
-import com.denfop.gui.GuiWitherMaker;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.TileBlockCreator;
+import com.denfop.blocks.mechanism.*;
+import com.denfop.gui.*;
 import com.denfop.integration.jei.advalloysmelter.AdvAlloySmelterCategory;
 import com.denfop.integration.jei.advalloysmelter.AdvAlloySmelterHandler;
 import com.denfop.integration.jei.advalloysmelter.AdvAlloySmelterRecipeWrapper;
@@ -72,9 +30,6 @@ import com.denfop.integration.jei.blastfurnace.BFWrapper;
 import com.denfop.integration.jei.canning.CanningCategory;
 import com.denfop.integration.jei.canning.CanningHandler;
 import com.denfop.integration.jei.canning.CanningRecipeWrapper;
-import com.denfop.integration.jei.canningsolid.CanningSolidCategory;
-import com.denfop.integration.jei.canningsolid.CanningSolidHandler;
-import com.denfop.integration.jei.canningsolid.CanningSolidRecipeWrapper;
 import com.denfop.integration.jei.centrifuge.CentrifugeCategory;
 import com.denfop.integration.jei.centrifuge.CentrifugeHandler;
 import com.denfop.integration.jei.centrifuge.CentrifugeWrapper;
@@ -159,11 +114,7 @@ import com.denfop.integration.jei.macerator.MaceratorWrapper;
 import com.denfop.integration.jei.microchip.MicrochipCategory;
 import com.denfop.integration.jei.microchip.MicrochipHandler;
 import com.denfop.integration.jei.microchip.MicrochipRecipeWrapper;
-import com.denfop.integration.jei.modularator.ModulatorCategory;
-import com.denfop.integration.jei.modularator.ModulatorCategory1;
-import com.denfop.integration.jei.modularator.ModulatorHandler;
-import com.denfop.integration.jei.modularator.ModulatorWrapper;
-import com.denfop.integration.jei.modularator.ModulatorWrapper1;
+import com.denfop.integration.jei.modularator.*;
 import com.denfop.integration.jei.molecular.MolecularTransformerCategory;
 import com.denfop.integration.jei.molecular.MolecularTransformerHandler;
 import com.denfop.integration.jei.molecular.MolecularTransformerRecipeWrapper;
@@ -266,33 +217,25 @@ import com.denfop.integration.jei.worldcollector.end.EndWrapper;
 import com.denfop.integration.jei.worldcollector.nether.NetherCategory;
 import com.denfop.integration.jei.worldcollector.nether.NetherHandler;
 import com.denfop.integration.jei.worldcollector.nether.NetherWrapper;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TeBlockRegistry;
-import ic2.core.item.type.CraftingItemType;
-import ic2.core.ref.BlockName;
-import ic2.core.ref.ItemName;
-import ic2.core.ref.TeBlock;
-import ic2.jeiIntegration.recipe.machine.IORecipeCategory;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientRegistry;
-import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 
 @JEIPlugin
 public final class JEICompat implements IModPlugin {
 
     private IIngredientRegistry itemRegistry;
 
+    public static ItemStack getBlockStack(IMultiTileBlock block) {
+        return TileBlockCreator.instance.get(block.getIdentifier()).getItemStack(block);
+    }
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
+
         registry.addRecipeCategories(new MolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new DoubleMolecularTransformerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new AlloySmelterCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -364,19 +307,23 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GasGeneratorCategory(registry.getJeiHelpers().getGuiHelper()));
-        registry.addRecipeCategories(new CanningSolidCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new CanningCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new ScrapboxRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
 
 
     }
 
     public void register(IModRegistry registry) {
         itemRegistry = registry.getIngredientRegistry();
+        registry.addRecipeHandlers(new BaseRecipeHandler());
+        registry.addRecipeHandlers(new BaseShapelessHandler());
         registry.addRecipes(
                 OreWashingHandler.getRecipes(),
                 new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
-
+        registry.addRecipeCategoryCraftingItem(IUItem.scrapBox, Constants.MOD_ID + ".scrapbox");
+        registry.addRecipeHandlers(new ScrapboxRecipeHandler());
+        registry.addRecipes(ScrapboxRecipeWrapper.createRecipes());
         registry.handleRecipes(
                 OreWashingHandler.class, OreWashingWrapper::new,
                 BlockMoreMachine3.orewashing.getName()
@@ -412,19 +359,6 @@ public final class JEICompat implements IModPlugin {
                 new GasGeneratorCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
-        registry.addRecipes(
-                CanningSolidHandler.getRecipes(),
-                new CanningSolidCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
-        );
-
-        registry.handleRecipes(
-                CanningSolidHandler.class, CanningSolidRecipeWrapper::new,
-                BlockBaseMachine3.solid_canner_iu.getName()
-        );
-        registry.addRecipeCatalyst(
-                getBlockStack(BlockBaseMachine3.solid_canner_iu),
-                new CanningSolidCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
-        );
 
         registry.addRecipes(
                 CanningHandler.getRecipes(),
@@ -1685,126 +1619,12 @@ public final class JEICompat implements IModPlugin {
                 new ItemStack(IUItem.machines_base1, 1, 5),
                 new RecyclerCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
+
     }
 
     public void onRuntimeAvailable(@Nonnull IJeiRuntime iJeiRuntime) {
-        if (this.itemRegistry != null) {
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.WindKineticGenerator));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.blastfurnace));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.windmeter));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.steelrotor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.steelrotorblade));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.carbonrotor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.carbonrotorblade));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.woodrotor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.woodrotorblade));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ironrotor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ironrotorblade));
-            if (IUCore.isHasVersion("ic2", "154")) {
-                this.itemRegistry.removeIngredientsAtRuntime(
-                        VanillaTypes.ITEM,
-                        Collections.singleton(ItemName.crafting.getItemStack(
-                                CraftingItemType.bronze_rotor_blade))
-                );
-                this.itemRegistry.removeIngredientsAtRuntime(
-                        VanillaTypes.ITEM,
-                        Collections.singleton(ItemName.rotor_bronze.getItemStack())
-                );
-
-            }
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.copperCableItem));
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.insulatedCopperCableItem)
-            );
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.goldCableItem));
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.insulatedGoldCableItem)
-            );
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.doubleInsulatedGoldCableItem)
-            );
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ironCableItem));
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.insulatedIronCableItem)
-            );
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.doubleInsulatedIronCableItem)
-            );
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.tinCableItem));
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.insulatedTinCableItem)
-            );
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.glassFiberCableItem));
 
 
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.solarPanel));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.solardestiller));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.macerator));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.orewashingplant));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.teleporter));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.electroFurnace));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.centrifuge));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.compressor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.extractor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.pump));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.generator));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.geothermalGenerator));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.reactorChamber));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.nuclearReactor));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.recycler));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.massFabricator));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.metalformer));
-
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfeUnit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfsukit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mfsUnit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.batBox));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.cesuUnit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.lvTransformer));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.mvTransformer));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.hvTransformer));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.evTransformer));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ChargepadbatBox));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ChargepadcesuUnit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ChargepadmfeUnit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.ChargepadmfsUnit));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.electrolyzer));
-            if (IUCore.isHasVersion("ic2", "134")) {
-                ItemStack tank = BlockName.te.getItemStack(TeBlock.bronze_tank);
-                ItemStack tank1 = BlockName.te.getItemStack(TeBlock.iridium_tank);
-                ItemStack tank2 = BlockName.te.getItemStack(TeBlock.iron_tank);
-                ItemStack tank3 = BlockName.te.getItemStack(TeBlock.steel_tank);
-
-                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank));
-                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank1));
-                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank2));
-                this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(tank3));
-            }
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.silverBlock));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.silverDust));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.silverIngot));
-            this.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, Collections.singleton(Ic2Items.crushedSilverOre));
-            this.itemRegistry.removeIngredientsAtRuntime(
-                    VanillaTypes.ITEM,
-                    Collections.singleton(Ic2Items.purifiedCrushedSilverOre)
-            );
-
-        }
-
-    }
-
-    public ItemStack getBlockStack(ITeBlock block) {
-        return TeBlockRegistry.get(block.getIdentifier()).getItemStack(block);
-    }
-
-    private <T> void addMachineRecipes(IModRegistry registry, IORecipeCategory<T> category, ITeBlock block) {
-        registry.addRecipeCatalyst(getBlockStack(block), category.getUid());
     }
 
 

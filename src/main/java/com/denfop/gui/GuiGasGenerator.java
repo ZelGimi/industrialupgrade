@@ -1,12 +1,12 @@
 package com.denfop.gui;
 
+import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.*;
+import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerGasGenerator;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +38,7 @@ public class GuiGasGenerator extends GuiIU<ContainerGasGenerator> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 111, 28, 136, 38)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -46,7 +46,7 @@ public class GuiGasGenerator extends GuiIU<ContainerGasGenerator> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/GUIFluidGenerator.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIFluidGenerator.png");
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -60,16 +60,15 @@ public class GuiGasGenerator extends GuiIU<ContainerGasGenerator> {
             this.drawTexturedModalRect(xOffset + 111, yOffset + 25, 176, 0, i2, 17);
         }
         if (this.container.base instanceof IUpgradableBlock) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 
         x -= this.guiLeft;
         y -= this.guiTop;
         for (final GuiElement<?> guiElement : this.elements) {
-            if (guiElement.isEnabled()) {
-                guiElement.drawBackground(x, y);
-            }
+            guiElement.drawBackground(x, y);
+
         }
         this.drawBackground();
 

@@ -1,8 +1,7 @@
 package com.denfop.render.windgenerator;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
-import ic2.core.block.KineticGeneratorRotor;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileEntityWindGenerator> {
+public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileWindGenerator> {
 
     private static final Map<Integer, ModelBase> rotorModels = new HashMap<>();
 
@@ -71,7 +70,7 @@ public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileEnti
     }
 
     public void render(
-            @Nonnull TileEntityWindGenerator te,
+            @Nonnull TileWindGenerator te,
             double x,
             double y,
             double z,

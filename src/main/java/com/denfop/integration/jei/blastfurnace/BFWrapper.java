@@ -1,8 +1,7 @@
 package com.denfop.integration.jei.blastfurnace;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -46,7 +45,7 @@ public class BFWrapper implements IRecipeWrapper {
         ).getUnlocalizedName()), 75, 35, 4210752);
         minecraft.fontRenderer.drawString(Localization.translate("iu.blastfurnace.info4"), 75, 42, 4210752);
         minecraft.fontRenderer.drawString(
-                Localization.translate("iu.blastfurnace.info5") + Localization.translate(Ic2Items.ForgeHammer.getUnlocalizedName()),
+                Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName(),
                 75,
                 49,
                 4210752

@@ -1,7 +1,6 @@
 package com.denfop.register;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -156,6 +155,10 @@ public class RegisterOreDictionary {
         list.removeIf(stack1 -> stack1.isItemEqual(stack));
     }
 
+    private static void add(String name, ItemStack stack) {
+        OreDictionary.registerOre(name, stack);
+    }
+
     public static void oredict() {
         writelist();
         writelist1();
@@ -163,27 +166,18 @@ public class RegisterOreDictionary {
         OreDictionary.registerOre("oreThorium", IUItem.toriyore);
         OreDictionary.registerOre("gemThorium", new ItemStack(IUItem.toriy, 1, 0));
         OreDictionary.registerOre("ingotUranium", new ItemStack(IUItem.itemiu, 1, 2));
-        OreDictionary.getOres("ingotUranium").remove(0);
         OreDictionary.registerOre("oreRedstone", Blocks.REDSTONE_ORE);
-        OreDictionary.registerOre("casingBronze", Ic2Items.casingbronze);
-        OreDictionary.registerOre("casingIron", Ic2Items.casingiron);
-        OreDictionary.registerOre("casingSteel", Ic2Items.casingadviron);
+        OreDictionary.registerOre("casingBronze", IUItem.casingbronze);
+        OreDictionary.registerOre("casingIron", IUItem.casingiron);
+        OreDictionary.registerOre("casingSteel", IUItem.casingadviron);
         OreDictionary.registerOre("crystalProton", IUItem.proton);
         OreDictionary.registerOre("crystalPhoton", IUItem.photoniy);
         OreDictionary.registerOre("crystalingotPhoton", IUItem.photoniy_ingot);
         OreDictionary.registerOre("ingotNeutron", IUItem.neutroniumingot);
         OreDictionary.registerOre("nuggetNeutron", IUItem.neutronium);
-        OreDictionary.registerOre("casingLead", Ic2Items.casinglead);
+        OreDictionary.registerOre("casingLead", IUItem.casinglead);
+        OreDictionary.registerOre("woodRubber", IUItem.rubWood);
 
-        deleteOre("ingotSilver", Ic2Items.silverIngot);
-        deleteOre("crushedPurifiedSilver", Ic2Items.purifiedCrushedSilverOre);
-        deleteOre("crushedSilver", Ic2Items.crushedSilverOre);
-        deleteOre("dustTinySilver", Ic2Items.smallSilverDust);
-        deleteOre("dustSilver", Ic2Items.silverDust);
-        deleteOre("blockSilver", Ic2Items.silverBlock);
-        deleteOre("oreIridium", Ic2Items.iridiumOre);
-        deleteOre("gemIridium", Ic2Items.iridiumOre);
-        deleteOre("ingotIridium", Ic2Items.iridiumOre);
         for (int j = 0; j < list_item1.size(); j++) {
             for (int i = 0; i < list_string1.size(); i++) {
 
@@ -287,6 +281,102 @@ public class RegisterOreDictionary {
         OreDictionary.registerOre("gemRuby", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 0));
         OreDictionary.registerOre("gemSapphire", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 1));
         OreDictionary.registerOre("gemTopaz", new ItemStack(IUItem.preciousgem.setUnlocalizedName(string2[5]), 1, 2));
+
+
+        add("casingCopper", IUItem.casingcopper);
+        add("casingIron", IUItem.casingiron);
+        add("casingTin", IUItem.casingtin);
+        add("casingLead", IUItem.casinglead);
+        add("casingBronze", IUItem.casingbronze);
+        add("oreCopper", IUItem.copperOre);
+        add("oreLead", IUItem.leadOre);
+        add("oreTin", IUItem.tinOre);
+        add("oreUranium", IUItem.uraniumOre);
+        add("treeLeaves", new ItemStack(IUItem.leaves));
+        add("treeSapling", new ItemStack(IUItem.rubberSapling));
+        add("itemRubber", IUItem.rubber);
+        add("materialRubber", IUItem.rubber);
+        add("materialResin", IUItem.latex);
+        add("itemResin", IUItem.latex);
+        add("dustStone", IUItem.stoneDust);
+        add("dustBronze", IUItem.bronzeDust);
+        add("dustClay", IUItem.clayDust);
+        add("dustCoal", IUItem.coalDust);
+        add("dustCopper", IUItem.copperDust);
+        add("dustGold", IUItem.goldDust);
+        add("dustIron", IUItem.ironDust);
+        add("dustTin", IUItem.tinDust);
+        add("dustLead", IUItem.leadDust);
+        add("dustObsidian", IUItem.obsidianDust);
+        add("dustLapis", IUItem.lapiDust);
+        add("dustSulfur", IUItem.sulfurDust);
+        add("dustDiamond", IUItem.diamondDust);
+        add("dustTinyCopper", IUItem.smallCopperDust);
+        add("dustTinyGold", IUItem.smallGoldDust);
+        add("dustTinyIron", IUItem.smallIronDust);
+        add("dustTinyTin", IUItem.smallTinDust);
+        add("dustTinyLead", IUItem.smallLeadDust);
+        add("dustTinySulfur", IUItem.smallSulfurDust);
+        add("ingotBronze", IUItem.bronzeIngot);
+        add("ingotCopper", IUItem.copperIngot);
+        add("ingotSteel", IUItem.advIronIngot);
+        add("ingotLead", IUItem.leadIngot);
+        add("ingotTin", IUItem.tinIngot);
+        add("plateIron", IUItem.plateiron);
+        add("plateGold", IUItem.plategold);
+        add("plateCopper", IUItem.platecopper);
+        add("plateTin", IUItem.platetin);
+        add("plateLead", IUItem.platelead);
+        add("plateLapis", IUItem.platelapis);
+        add("plateObsidian", IUItem.plateobsidian);
+        add("plateBronze", IUItem.platebronze);
+        add("plateSteel", IUItem.plateadviron);
+        add("plateDenseSteel", IUItem.denseplateadviron);
+        add("plateDenseIron", IUItem.denseplateiron);
+        add("plateDenseGold", IUItem.denseplategold);
+        add("plateDenseCopper", IUItem.denseplatecopper);
+        add("plateDenseTin", IUItem.denseplatetin);
+        add("plateDenseLead", IUItem.denseplatelead);
+        add("plateDenseLapis", IUItem.denseplatelapi);
+        add("plateDenseObsidian", IUItem.denseplateobsidian);
+        add("plateDenseBronze", IUItem.denseplatebronze);
+        add("crushedIron", IUItem.crushedIronOre);
+        add("crushedGold", IUItem.crushedGoldOre);
+        add("crushedLead", IUItem.crushedLeadOre);
+        add("crushedCopper", IUItem.crushedCopperOre);
+        add("crushedTin", IUItem.crushedTinOre);
+        add("crushedUranium", IUItem.crushedUraniumOre);
+        add("crushedPurifiedIron", IUItem.purifiedCrushedIronOre);
+        add("crushedPurifiedGold", IUItem.purifiedCrushedGoldOre);
+        add("crushedPurifiedLead", IUItem.purifiedCrushedLeadOre);
+        add("crushedPurifiedCopper", IUItem.purifiedCrushedCopperOre);
+        add("crushedPurifiedTin", IUItem.purifiedCrushedTinOre);
+        add("crushedPurifiedUranium", IUItem.purifiedCrushedUraniumOre);
+        add("blockBronze", IUItem.bronzeBlock);
+        add("blockCopper", IUItem.copperBlock);
+        add("blockTin", IUItem.tinBlock);
+        add("blockUranium", IUItem.uraniumBlock);
+        add("blockLead", IUItem.leadBlock);
+        add("blockSteel", IUItem.advironblock);
+        add("circuitBasic", IUItem.electronicCircuit);
+        add("circuitAdvanced", IUItem.advancedCircuit);
+        add("craftingToolForgeHammer", new ItemStack(IUItem.ForgeHammer, 1, OreDictionary.WILDCARD_VALUE));
+        add("craftingToolWireCutter", new ItemStack(IUItem.cutter, 1, OreDictionary.WILDCARD_VALUE));
+        add("plateCarbon", IUItem.carbonPlate);
+        add("plateAdvancedAlloy", IUItem.advancedAlloy);
+        add("plateadvancedAlloy", IUItem.advancedAlloy);
+        add("itemScrap", IUItem.scrap);
+        add("materialScrap", IUItem.scrap);
+        add("itemScrapBox", IUItem.scrapBox);
+        add("itemCarbonFibre", IUItem.carbonFiber);
+        add("itemCarbonFiber", IUItem.carbonFiber);
+        add("itemCarbonMesh", IUItem.carbonMesh);
+        add("itemRawCarbonMesh", IUItem.carbonMesh);
+        add("machineBlock", IUItem.machine);
+        add("machineBlockCasing", IUItem.machine);
+        add("machineBlockAdvanced", IUItem.advancedMachine);
+        add("machineBlockAdvancedCasing", IUItem.advancedMachine);
+        add("dustSiliconDioxide", IUItem.silicondioxideDust);
 
     }
 

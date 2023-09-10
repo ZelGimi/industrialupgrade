@@ -5,8 +5,69 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.upgrade.UpgradeSystem;
-import com.denfop.blocks.*;
-import com.denfop.blocks.mechanism.*;
+import com.denfop.blocks.BlockClassicOre;
+import com.denfop.blocks.BlockFoam;
+import com.denfop.blocks.BlockHeavyOre;
+import com.denfop.blocks.BlockIUFluid;
+import com.denfop.blocks.BlockIngots1;
+import com.denfop.blocks.BlockOil;
+import com.denfop.blocks.BlockOre;
+import com.denfop.blocks.BlockPrecious;
+import com.denfop.blocks.BlockPreciousOre;
+import com.denfop.blocks.BlockResource;
+import com.denfop.blocks.BlockRubWood;
+import com.denfop.blocks.BlockTexGlass;
+import com.denfop.blocks.BlockThoriumOre;
+import com.denfop.blocks.BlocksAlloy;
+import com.denfop.blocks.BlocksIngot;
+import com.denfop.blocks.BlocksRadiationOre;
+import com.denfop.blocks.FluidName;
+import com.denfop.blocks.IUFluid;
+import com.denfop.blocks.IULeaves;
+import com.denfop.blocks.IUSapling;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.blocks.TileBlockCreator;
+import com.denfop.blocks.mechanism.BlockAdminPanel;
+import com.denfop.blocks.mechanism.BlockAdvRefiner;
+import com.denfop.blocks.mechanism.BlockAdvSolarEnergy;
+import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.blocks.mechanism.BlockBaseMachine1;
+import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.blocks.mechanism.BlockBlastFurnace;
+import com.denfop.blocks.mechanism.BlockCable;
+import com.denfop.blocks.mechanism.BlockChargepadStorage;
+import com.denfop.blocks.mechanism.BlockCombinerSolid;
+import com.denfop.blocks.mechanism.BlockConverterMatter;
+import com.denfop.blocks.mechanism.BlockCoolPipes;
+import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
+import com.denfop.blocks.mechanism.BlockEnergyStorage;
+import com.denfop.blocks.mechanism.BlockExpCable;
+import com.denfop.blocks.mechanism.BlockHeatColdPipes;
+import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
+import com.denfop.blocks.mechanism.BlockItemPipes;
+import com.denfop.blocks.mechanism.BlockMolecular;
+import com.denfop.blocks.mechanism.BlockMoreMachine;
+import com.denfop.blocks.mechanism.BlockMoreMachine1;
+import com.denfop.blocks.mechanism.BlockMoreMachine2;
+import com.denfop.blocks.mechanism.BlockMoreMachine3;
+import com.denfop.blocks.mechanism.BlockPetrolQuarry;
+import com.denfop.blocks.mechanism.BlockPipes;
+import com.denfop.blocks.mechanism.BlockQCable;
+import com.denfop.blocks.mechanism.BlockQuarryVein;
+import com.denfop.blocks.mechanism.BlockRefiner;
+import com.denfop.blocks.mechanism.BlockSCable;
+import com.denfop.blocks.mechanism.BlockSimpleMachine;
+import com.denfop.blocks.mechanism.BlockSintezator;
+import com.denfop.blocks.mechanism.BlockSolarEnergy;
+import com.denfop.blocks.mechanism.BlockSolarPanels;
+import com.denfop.blocks.mechanism.BlockSolidMatter;
+import com.denfop.blocks.mechanism.BlockSunnariumMaker;
+import com.denfop.blocks.mechanism.BlockSunnariumPanelMaker;
+import com.denfop.blocks.mechanism.BlockTank;
+import com.denfop.blocks.mechanism.BlockTransformer;
+import com.denfop.blocks.mechanism.BlockUniversalCable;
+import com.denfop.blocks.mechanism.BlockUpgradeBlock;
 import com.denfop.integration.botania.BotaniaIntegration;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.integration.exnihilo.blocks.DustBlocks;
@@ -15,34 +76,137 @@ import com.denfop.integration.exnihilo.blocks.SandBlocks;
 import com.denfop.integration.exnihilo.items.ItemDustCrushed;
 import com.denfop.integration.exnihilo.items.ItemGravelCrushed;
 import com.denfop.integration.exnihilo.items.ItemSandCrushed;
-import com.denfop.items.*;
-import com.denfop.items.armour.*;
+import com.denfop.items.IUItemBase;
+import com.denfop.items.ItemBaseCircuit;
+import com.denfop.items.ItemCell;
+import com.denfop.items.ItemChemistry;
+import com.denfop.items.ItemCore;
+import com.denfop.items.ItemCoreWater;
+import com.denfop.items.ItemCoreWind;
+import com.denfop.items.ItemCrystalMemory;
+import com.denfop.items.ItemEFReader;
+import com.denfop.items.ItemExcitedNucleus;
+import com.denfop.items.ItemFrequencyTransmitter;
+import com.denfop.items.ItemLens;
+import com.denfop.items.ItemPaints;
+import com.denfop.items.ItemPhotoniumGlass;
+import com.denfop.items.ItemRotorsUpgrade;
+import com.denfop.items.ItemSolidMatter;
+import com.denfop.items.ItemToolCutter;
+import com.denfop.items.ItemToolHammer;
+import com.denfop.items.ItemVeinSensor;
+import com.denfop.items.ItemWaterRod;
+import com.denfop.items.ItemWaterRotor;
+import com.denfop.items.ItemWaterRotorsUpgrade;
+import com.denfop.items.ItemWindRod;
+import com.denfop.items.ItemWindRotor;
+import com.denfop.items.ItemsCoolingSensor;
+import com.denfop.items.ItemsHeatSensor;
+import com.denfop.items.ItemsTemplates;
+import com.denfop.items.armour.BaseArmor;
+import com.denfop.items.armour.ItemAdvJetpack;
+import com.denfop.items.armour.ItemArmorAdvHazmat;
+import com.denfop.items.armour.ItemArmorHazmat;
+import com.denfop.items.armour.ItemArmorNightvisionGoggles;
+import com.denfop.items.armour.ItemLappack;
+import com.denfop.items.armour.ItemSolarPanelHelmet;
+import com.denfop.items.armour.special.EnumSubTypeArmor;
+import com.denfop.items.armour.special.EnumTypeArmor;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.book.ItemBook;
-import com.denfop.items.energy.*;
+import com.denfop.items.energy.ItemBattery;
+import com.denfop.items.energy.ItemBatterySU;
+import com.denfop.items.energy.ItemEnergyBow;
+import com.denfop.items.energy.ItemEnergyToolHoe;
+import com.denfop.items.energy.ItemGraviTool;
+import com.denfop.items.energy.ItemKatana;
+import com.denfop.items.energy.ItemMagnet;
+import com.denfop.items.energy.ItemNanoSaber;
+import com.denfop.items.energy.ItemPurifier;
+import com.denfop.items.energy.ItemQuantumSaber;
+import com.denfop.items.energy.ItemSpectralSaber;
+import com.denfop.items.energy.ItemSprayer;
+import com.denfop.items.energy.ItemToolWrench;
+import com.denfop.items.energy.ItemToolWrenchEnergy;
+import com.denfop.items.energy.ItemTreetap;
+import com.denfop.items.energy.ItemTreetapEnergy;
+import com.denfop.items.energy.ItemWindMeter;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.items.energy.instruments.EnumVarietyInstruments;
 import com.denfop.items.energy.instruments.ItemEnergyInstruments;
+import com.denfop.items.modules.ItemAdditionModule;
+import com.denfop.items.modules.ItemBaseModules;
+import com.denfop.items.modules.ItemCoolingUpgrade;
+import com.denfop.items.modules.ItemEntityModule;
+import com.denfop.items.modules.ItemModuleType;
+import com.denfop.items.modules.ItemModuleTypePanel;
+import com.denfop.items.modules.ItemQuarryModule;
+import com.denfop.items.modules.ItemSpawnerModules;
 import com.denfop.items.modules.ItemUpgradeModule;
-import com.denfop.items.modules.*;
-import com.denfop.items.reactors.*;
-import com.denfop.items.resource.*;
-import com.denfop.items.resource.alloys.*;
+import com.denfop.items.panel.ItemBatterySolarPanel;
+import com.denfop.items.panel.ItemDayNightSolarPanelGlass;
+import com.denfop.items.panel.ItemDaySolarPanelGlass;
+import com.denfop.items.panel.ItemNightSolarPanelGlass;
+import com.denfop.items.panel.ItemOutputSolarPanel;
+import com.denfop.items.reactors.ItemBaseRod;
+import com.denfop.items.reactors.ItemDepletedRod;
+import com.denfop.items.reactors.ItemRadioactive;
+import com.denfop.items.reactors.RadiationResources;
+import com.denfop.items.resource.ItemCasing;
+import com.denfop.items.resource.ItemCraftingElements;
+import com.denfop.items.resource.ItemCrushed;
+import com.denfop.items.resource.ItemDoublePlate;
+import com.denfop.items.resource.ItemDust;
+import com.denfop.items.resource.ItemGear;
+import com.denfop.items.resource.ItemIUCrafring;
+import com.denfop.items.resource.ItemIngots;
+import com.denfop.items.resource.ItemNuclearResource;
+import com.denfop.items.resource.ItemNugget;
+import com.denfop.items.resource.ItemPlate;
+import com.denfop.items.resource.ItemPurifiedCrushed;
+import com.denfop.items.resource.ItemSmallDust;
+import com.denfop.items.resource.ItemSticks;
+import com.denfop.items.resource.ItemSunnarium;
+import com.denfop.items.resource.ItemSunnariumPanel;
+import com.denfop.items.resource.ItemVerySmallDust;
+import com.denfop.items.resource.alloys.ItemAlloysCasing;
+import com.denfop.items.resource.alloys.ItemAlloysDoublePlate;
+import com.denfop.items.resource.alloys.ItemAlloysDust;
+import com.denfop.items.resource.alloys.ItemAlloysGear;
+import com.denfop.items.resource.alloys.ItemAlloysIngot;
+import com.denfop.items.resource.alloys.ItemAlloysNugget;
+import com.denfop.items.resource.alloys.ItemAlloysPlate;
 import com.denfop.items.resource.preciousresources.ItemPreciousGem;
-import com.denfop.items.transport.*;
+import com.denfop.items.transport.ItemCable;
+import com.denfop.items.transport.ItemCoolPipes;
+import com.denfop.items.transport.ItemExpCable;
+import com.denfop.items.transport.ItemHeatColdPipes;
+import com.denfop.items.transport.ItemItemPipes;
+import com.denfop.items.transport.ItemPipes;
+import com.denfop.items.transport.ItemQCable;
+import com.denfop.items.transport.ItemSCable;
+import com.denfop.items.transport.ItemUniversalCable;
 import com.denfop.items.upgradekit.ItemUpgradeKit;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
-import ic2.core.block.TeBlockRegistry;
+import com.denfop.utils.ModUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class Register {
 
@@ -57,7 +221,164 @@ public class Register {
     );
 
     public static void init() {
+        registerfluid(FluidName.fluidNeutron, 3000, 300, false);
+        registerfluid(FluidName.fluidHelium, -1000, 300, true);
+        registerfluid(FluidName.fluidbenz, 3000, 500, false);
+        registerfluid(FluidName.fluiddizel, 3000, 500, false);
+        registerfluid(FluidName.fluidneft, 3000, 500, false);
+        registerfluid(FluidName.fluidpolyeth, -3000, 2000, true);
+        registerfluid(FluidName.fluidpolyprop, -3000, 2000, true);
+        registerfluid(FluidName.fluidoxy, -3000, 500, true);
+
+        registerfluid(FluidName.fluidhyd, -3000, 500, true);
+        registerfluid(FluidName.fluidazot, -3000, 500, true);
+        registerfluid(FluidName.fluidco2, -3000, 500, true);
+        registerfluid(FluidName.fluidgas, -3000, 500, true);
+        registerfluid(FluidName.fluidchlorum, -3000, 500, true);
+        registerfluid(FluidName.fluidbromine, -3000, 500, true);
+        registerfluid(FluidName.fluidiodine, 3000, 500, true);
+
+        registerfluid(FluidName.fluiduu_matter, 3000, 3000, false);
+        registerfluid(FluidName.fluidconstruction_foam, 10000, 50000, false);
+        registerfluid(FluidName.fluidcoolant, 1000, 3000, false);
+        registerfluid(FluidName.fluidhot_coolant, 1000, 3000, false);
+        registerfluid(FluidName.fluidpahoehoe_lava, 50000, 250000, false);
+        registerfluid(FluidName.fluidbiomass, 1000, 3000, false);
+        registerfluid(FluidName.fluidbiogas, 1000, 3000, true);
+        registerfluid(FluidName.fluiddistilled_water, 1000, 1000, false);
+        registerfluid(FluidName.fluidsuperheated_steam, -3000, 100, true);
+        registerfluid(FluidName.fluidsteam, -800, 300, true);
+        registerfluid(FluidName.fluidhot_water, 1000, 1000, false);
+        registerfluid(FluidName.fluidair, 0, 500, true);
+        IUItem.invalid = TileBlockCreator.instance.create(MultiTileBlock.class);
+        IUItem.blockpanel = TileBlockCreator.instance.create(BlockSolarPanels.class);
+        IUItem.electricblock = TileBlockCreator.instance.create(BlockEnergyStorage.class);
+        IUItem.chargepadelectricblock = TileBlockCreator.instance.create(BlockChargepadStorage.class);
+        IUItem.machines_base = TileBlockCreator.instance.create(BlockMoreMachine.class);
+        IUItem.machines_base1 = TileBlockCreator.instance.create(BlockMoreMachine1.class);
+        IUItem.machines_base2 = TileBlockCreator.instance.create(BlockMoreMachine2.class);
+        IUItem.machines_base3 = TileBlockCreator.instance.create(BlockMoreMachine3.class);
+        IUItem.machines = TileBlockCreator.instance.create(BlockBaseMachine.class);
+        IUItem.solidmatter = TileBlockCreator.instance.create(BlockSolidMatter.class);
+        IUItem.combinersolidmatter = TileBlockCreator.instance.create(BlockCombinerSolid.class);
+        IUItem.blockSE = TileBlockCreator.instance.create(BlockSolarEnergy.class);
+        IUItem.adv_se_generator = TileBlockCreator.instance.create(BlockAdvSolarEnergy.class);
+        IUItem.imp_se_generator = TileBlockCreator.instance.create(BlockImpSolarEnergy.class);
+        IUItem.blockmolecular = TileBlockCreator.instance.create(BlockMolecular.class);
+        IUItem.basemachine = TileBlockCreator.instance.create(BlockBaseMachine1.class);
+        IUItem.basemachine1 = TileBlockCreator.instance.create(BlockBaseMachine2.class);
+        IUItem.basemachine2 = TileBlockCreator.instance.create(BlockBaseMachine3.class);
+        IUItem.blocksintezator = TileBlockCreator.instance.create(BlockSintezator.class);
+        IUItem.sunnariummaker = TileBlockCreator.instance.create(BlockSunnariumMaker.class);
+        IUItem.sunnariumpanelmaker = TileBlockCreator.instance.create(BlockSunnariumPanelMaker.class);
+        IUItem.oilrefiner = TileBlockCreator.instance.create(BlockRefiner.class);
+        IUItem.blockItemPipes = TileBlockCreator.instance.create(BlockItemPipes.class);
+        IUItem.oiladvrefiner = TileBlockCreator.instance.create(BlockAdvRefiner.class);
+        IUItem.upgradeblock = TileBlockCreator.instance.create(BlockUpgradeBlock.class);
+        IUItem.oilgetter = TileBlockCreator.instance.create(BlockPetrolQuarry.class);
+        IUItem.simplemachine = TileBlockCreator.instance.create(BlockSimpleMachine.class);
+        IUItem.tranformer = TileBlockCreator.instance.create(BlockTransformer.class);
+        IUItem.blockdoublemolecular = TileBlockCreator.instance.create(BlockDoubleMolecularTransfomer.class);
+        IUItem.blockadmin = TileBlockCreator.instance.create(BlockAdminPanel.class);
+        IUItem.cableblock = TileBlockCreator.instance.create(BlockCable.class);
+        IUItem.pipesblock = TileBlockCreator.instance.create(BlockPipes.class);
+        IUItem.oilquarry = TileBlockCreator.instance.create(BlockQuarryVein.class);
+        IUItem.qcableblock = TileBlockCreator.instance.create(BlockQCable.class);
+        IUItem.scableblock = TileBlockCreator.instance.create(BlockSCable.class);
+        IUItem.expcableblock = TileBlockCreator.instance.create(BlockExpCable.class);
+
+        IUItem.blastfurnace = TileBlockCreator.instance.create(BlockBlastFurnace.class);
+        IUItem.coolpipesblock = TileBlockCreator.instance.create(BlockCoolPipes.class);
+        IUItem.tank = TileBlockCreator.instance.create(BlockTank.class);
+        IUItem.convertersolidmatter = TileBlockCreator.instance.create(BlockConverterMatter.class);
+        IUItem.heatcoolpipesblock = TileBlockCreator.instance.create(BlockHeatColdPipes.class);
+        IUItem.universalcableblock = TileBlockCreator.instance.create(BlockUniversalCable.class);
+        IUItem.crystalMemory = new ItemCrystalMemory();
+        IUItem.solar_day_glass = new ItemDaySolarPanelGlass();
+        IUItem.solar_night_glass = new ItemNightSolarPanelGlass();
+        IUItem.solar_night_day_glass = new ItemDayNightSolarPanelGlass();
+        IUItem.solar_battery = new ItemBatterySolarPanel();
+        IUItem.solar_output = new ItemOutputSolarPanel();
+        IUItem.cell_all = new ItemCell();
+        IUItem.FluidCell = new ItemStack(IUItem.cell_all);
+        IUItem.ForgeHammer = new ItemToolHammer();
+        IUItem.cutter = new ItemToolCutter();
+        IUItem.classic_ore = new BlockClassicOre();
+        IUItem.blockResource = new BlockResource();
+        IUItem.rubberSapling = new IUSapling();
+        IUItem.leaves = new IULeaves();
+        IUItem.glass = new BlockTexGlass();
+        IUItem.foam = new BlockFoam();
+        IUItem.efReader = new ItemEFReader();
+        IUItem.hazmat_chestplate = new ItemArmorHazmat("hazmat_chestplate", EntityEquipmentSlot.CHEST);
+        IUItem.hazmat_helmet = new ItemArmorHazmat("hazmat_helmet", EntityEquipmentSlot.HEAD);
+        IUItem.hazmat_leggings = new ItemArmorHazmat("hazmat_leggings", EntityEquipmentSlot.LEGS);
+        IUItem.rubber_boots = new ItemArmorHazmat("rubber_boots", EntityEquipmentSlot.FEET);
+        ItemArmor.ArmorMaterial bronzeArmorMaterial = EnumHelper.addArmorMaterial("IU_BRONZE", "IU_BRONZE", 15, new int[]{2, 5,
+                6, 2}, 9, null, 0.0F);
+        IUItem.bronze_boots = new BaseArmor(
+                "bronze_boots",
+                bronzeArmorMaterial, 3, EntityEquipmentSlot.FEET,
+                "bronze"
+
+        ) {
+            public String getUnlocalizedName() {
+                return Constants.ABBREVIATION + "." + super.getUnlocalizedName().substring(5);
+            }
+
+            public String getUnlocalizedName(ItemStack stack) {
+                return this.getUnlocalizedName();
+            }
+
+        };
+        IUItem.bronze_chestplate = new BaseArmor(
+                "bronze_chestplate",
+                bronzeArmorMaterial, 3, EntityEquipmentSlot.CHEST,
+                "bronze"
+
+        ) {
+            public String getUnlocalizedName() {
+                return Constants.ABBREVIATION + "." + super.getUnlocalizedName().substring(5);
+            }
+
+            public String getUnlocalizedName(ItemStack stack) {
+                return this.getUnlocalizedName();
+            }
+
+        };
+        IUItem.bronze_helmet = new BaseArmor(
+                "bronze_helmet",
+                bronzeArmorMaterial,
+                3, EntityEquipmentSlot.HEAD,
+                "bronze"
+
+        ) {
+            public String getUnlocalizedName() {
+                return Constants.ABBREVIATION + "." + super.getUnlocalizedName().substring(5);
+            }
+
+            public String getUnlocalizedName(ItemStack stack) {
+                return this.getUnlocalizedName();
+            }
+
+        };
+        IUItem.bronze_leggings = new BaseArmor("bronze_leggings", bronzeArmorMaterial, 2, EntityEquipmentSlot.LEGS, "bronze") {
+            public String getUnlocalizedName() {
+                return Constants.ABBREVIATION + "." + super.getUnlocalizedName().substring(5);
+            }
+
+            public String getUnlocalizedName(ItemStack stack) {
+                return this.getUnlocalizedName();
+            }
+
+        };
+
+        IUItem.treetap = new ItemTreetap();
+        IUItem.wrench = new ItemToolWrench();
+        IUItem.sprayer = new ItemSprayer();
+        IUItem.nuclear_res = new ItemNuclearResource();
         IUItem.rotors_upgrade = new ItemRotorsUpgrade();
+        IUItem.rubWood = new BlockRubWood();
         IUItem.water_rotors_upgrade = new ItemWaterRotorsUpgrade();
         IUItem.water_rod = new ItemWaterRod();
         IUItem.excitednucleus = new ItemExcitedNucleus();
@@ -70,99 +391,98 @@ public class Register {
         IUItem.corewater = new ItemCoreWater();
         IUItem.heatcold_pipes = new ItemHeatColdPipes();
         IUItem.universal_cable = new ItemUniversalCable();
-        IUItem.energy_meter = new ItemToolMeter();
         IUItem.coolingsensor = new ItemsCoolingSensor();
         IUItem.heatsensor = new ItemsHeatSensor();
         IUItem.frequency_transmitter = new ItemFrequencyTransmitter();
-        IUItem.rotor_wood = new ItemAdvancedWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
-                "ic2",
+        IUItem.rotor_wood = new ItemWindRotor("rotor_wood", 5, 10800 / 2, 0.25F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor" +
                         "/wood_rotor_model.png"
         ), 1, 0);
-        IUItem.rotor_bronze = new ItemAdvancedWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
-                "ic2",
+        IUItem.rotor_bronze = new ItemWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor/bronze_rotor_model.png"
         ), 2, 1);
-        IUItem.rotor_iron = new ItemAdvancedWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
-                "ic2",
+        IUItem.rotor_iron = new ItemWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor/iron_rotor_model.png"
         ), 3, 2);
-        IUItem.rotor_steel = new ItemAdvancedWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
-                "ic2",
+        IUItem.rotor_steel = new ItemWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor/steel_rotor_model.png"
         ), 4, 3);
-        IUItem.rotor_carbon = new ItemAdvancedWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
-                "ic2", "textures/items/rotor/carbon_rotor_model.png"), 5, 4);
+        IUItem.rotor_carbon = new ItemWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
+                Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model.png"), 5, 4);
 
-        IUItem.water_rotor_wood = new ItemAdvancedWaterRotor("water_rotor_wood", 10800 / 2, 0.25F, new ResourceLocation(
-                "ic2",
+        IUItem.water_rotor_wood = new ItemWaterRotor("water_rotor_wood", 10800 / 2, 0.25F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor" +
                         "/wood_rotor_model.png"
         ), 1, 0);
-        IUItem.water_rotor_bronze = new ItemAdvancedWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
-                "ic2",
+        IUItem.water_rotor_bronze = new ItemWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor/bronze_rotor_model.png"
         ), 2, 1);
-        IUItem.water_rotor_iron = new ItemAdvancedWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
-                "ic2",
+        IUItem.water_rotor_iron = new ItemWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
+                Constants.MOD_ID,
                 "textures/items/rotor/iron_rotor_model.png"
         ), 3, 2);
-        IUItem.water_rotor_steel = new ItemAdvancedWaterRotor(
+        IUItem.water_rotor_steel = new ItemWaterRotor(
                 "water_rotor_steel",
                 (int) (172800 / 1.5),
                 0.75F,
                 new ResourceLocation(
-                        "ic2",
+                        Constants.MOD_ID,
                         "textures/items/rotor/steel_rotor_model.png"
                 ),
                 4,
                 3
         );
-        IUItem.water_rotor_carbon = new ItemAdvancedWaterRotor(
+        IUItem.water_rotor_carbon = new ItemWaterRotor(
                 "water_rotor_carbon",
                 (int) (604800 / 1.5),
                 1.0F,
                 new ResourceLocation(
-                        "ic2", "textures/items/rotor/carbon_rotor_model.png"),
+                        Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model.png"),
                 5,
                 4
         );
-        IUItem.water_iridium = new ItemStack(new ItemAdvancedWaterRotor("water_iridium", Config.durability,
+        IUItem.water_iridium = new ItemStack(new ItemWaterRotor("water_iridium", Config.durability,
                 Config.efficiency,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_1.png"), 6, 5
         ));
-        IUItem.water_compressiridium = new ItemStack(new ItemAdvancedWaterRotor("water_compressiridium",
+        IUItem.water_compressiridium = new ItemStack(new ItemWaterRotor("water_compressiridium",
                 Config.durability1, Config.efficiency1,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_2.png"), 7, 6
         ));
-        IUItem.water_spectral = new ItemStack(new ItemAdvancedWaterRotor("water_spectral",
+        IUItem.water_spectral = new ItemStack(new ItemWaterRotor("water_spectral",
                 Config.durability2, Config.efficiency2,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_3.png"), 8, 7
         ));
-        IUItem.water_myphical = new ItemStack(new ItemAdvancedWaterRotor("water_myphical",
+        IUItem.water_myphical = new ItemStack(new ItemWaterRotor("water_myphical",
                 Config.durability5, Config.efficiency5,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_4.png"), 9, 8
         ));
 
-        IUItem.water_photon = new ItemStack(new ItemAdvancedWaterRotor("water_photon", Config.durability3,
+        IUItem.water_photon = new ItemStack(new ItemWaterRotor("water_photon", Config.durability3,
                 Config.efficiency3,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_6.png"), 10, 9
         ));
-        IUItem.water_neutron = new ItemStack(new ItemAdvancedWaterRotor("water_neutron", Config.durability4,
+        IUItem.water_neutron = new ItemStack(new ItemWaterRotor("water_neutron", Config.durability4,
                 Config.efficiency4,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_5.png"), 11, 10
         ));
 
-        IUItem.water_barionrotor = new ItemStack(new ItemAdvancedWaterRotor("water_barionrotor",
+        IUItem.water_barionrotor = new ItemStack(new ItemWaterRotor("water_barionrotor",
                 Config.durability4 * 4, Config.efficiency4 * 2,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_7.png"), 12, 11
         ));
 
-        IUItem.water_adronrotor = new ItemStack(new ItemAdvancedWaterRotor("water_adronrotor",
+        IUItem.water_adronrotor = new ItemStack(new ItemWaterRotor("water_adronrotor",
                 Config.durability4 * 16, Config.efficiency4 * 4,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_8.png"), 13, 12
         ));
-        IUItem.water_ultramarinerotor = new ItemStack(new ItemAdvancedWaterRotor("water_ultramarinerotor",
+        IUItem.water_ultramarinerotor = new ItemStack(new ItemWaterRotor("water_ultramarinerotor",
                 Config.durability4 * 64, Config.efficiency4 * 8,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png"), 14, 13
         ));
@@ -181,90 +501,29 @@ public class Register {
         IUItem.qcable = new ItemQCable();
         IUItem.scable = new ItemSCable();
         IUItem.expcable = new ItemExpCable();
-        IUItem.simplemachine = TeBlockRegistry.get(BlockSimpleMachine.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.blockpanel = TeBlockRegistry.get(BlockSolarPanels.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.electricblock = TeBlockRegistry.get(BlockEnergyStorage.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.chargepadelectricblock = TeBlockRegistry.get(BlockChargepadStorage.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.solidmatter = TeBlockRegistry.get(BlockSolidMatter.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.machines = TeBlockRegistry.get(BlockBaseMachine.IDENTITY).setCreativeTab(IUCore.IUTab);
         IUItem.impBatChargeCrystal = new ItemBattery("itemadvbatchargecrystal", Config.Storagequantumsuit, 32368D, 5, true);
         IUItem.perBatChargeCrystal = new ItemBattery("itembatchargecrystal", Config.Storagequantumsuit * 4, 129472D, 6, true);
-        IUItem.re_battery = new ItemBattery("re_battery", 10000.0, 100.0, 1);
+        IUItem.reBattery = new ItemBattery("re_battery", 10000.0, 100.0, 1);
         IUItem.energy_crystal = new ItemBattery("energy_crystal", 1000000.0, 2048.0, 3);
         IUItem.lapotron_crystal = new ItemBattery("lapotron_crystal", 1.0E7, 8092.0, 4);
         IUItem.charging_re_battery = new ItemBattery("charging_re_battery", 40000.0, 128.0, 1, true);
         IUItem.advanced_charging_re_battery = new ItemBattery("advanced_charging_re_battery", 400000.0, 1024.0, 2, true);
         IUItem.charging_energy_crystal = new ItemBattery("charging_energy_crystal", 4000000.0, 8192.0, 3, true);
         IUItem.charging_lapotron_crystal = new ItemBattery("charging_lapotron_crystal", 4.0E7, 32768.0, 4, true);
-        IUItem.advanced_re_battery = new ItemBattery("advanced_re_battery", 100000.0, 256.0, 2);
+        IUItem.advBattery = new ItemBattery("advanced_re_battery", 100000.0, 256.0, 2);
         IUItem.batpack = new ItemLappack("batpack", 60000.0, 1, 100.0);
         IUItem.advanced_batpack = new ItemLappack("advanced_batpack", 600000.0, 2, 1000.0);
-        IUItem.jetpack = new ItemAdvJetpack("jetpack", 30000.0, 60.0, 1);
-        IUItem.lappack = new ItemLappack("lappack", 2.0E7, 4, 2500.0);
-        IUItem.blockSE = TeBlockRegistry.get(BlockSolarEnergy.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.blastfurnace = TeBlockRegistry.get(BlockBlastFurnace.IDENTITY).setCreativeTab(IUCore.IUTab);
-
+        IUItem.electricJetpack = new ItemAdvJetpack("jetpack", 30000.0, 60.0, 1);
+        IUItem.lappack = new ItemLappack("lappack", 2.0E6, 3, 2500.0);
+        IUItem.suBattery = new ItemBatterySU("single_use_battery", 1200, 1);
         IUItem.UpgradeKit = new ItemUpgradeKit();
-        IUItem.adv_se_generator = TeBlockRegistry.get(BlockAdvSolarEnergy.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.imp_se_generator = TeBlockRegistry.get(BlockImpSolarEnergy.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.blockmolecular = TeBlockRegistry.get(BlockMolecular.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.basemachine = TeBlockRegistry.get(BlockBaseMachine1.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.basemachine1 = TeBlockRegistry.get(BlockBaseMachine2.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.basemachine2 = TeBlockRegistry.get(BlockBaseMachine3.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.blocksintezator = TeBlockRegistry.get(BlockSintezator.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.sunnariummaker = TeBlockRegistry.get(BlockSunnariumMaker.IDENTITY).setCreativeTab(IUCore.IUTab); //
-        IUItem.sunnariumpanelmaker = TeBlockRegistry.get(BlockSunnariumPanelMaker.IDENTITY).setCreativeTab(IUCore.IUTab); //
-        IUItem.oilrefiner = TeBlockRegistry.get(BlockRefiner.IDENTITY);
-        IUItem.oiladvrefiner = TeBlockRegistry.get(BlockAdvRefiner.IDENTITY);
-        IUItem.upgradeblock = TeBlockRegistry.get(BlockUpgradeBlock.IDENTITY).setCreativeTab(IUCore.IUTab); // BlockUpgradeBlock
         IUItem.module = new com.denfop.items.ItemUpgradeModule();
-        IUItem.advchamberblock = TeBlockRegistry.get(BlockAdvChamber.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.impchamberblock = TeBlockRegistry.get(BlockImpChamber.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.perchamberblock = TeBlockRegistry.get(BlockPerChamber.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.tranformer = TeBlockRegistry.get(BlockTransformer.IDENTITY).setCreativeTab(IUCore.IUTab);
         IUItem.GraviTool = new ItemGraviTool("GraviTool");
-        IUItem.blockdoublemolecular = TeBlockRegistry.get(BlockDoubleMolecularTransfomer.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.blockadmin = TeBlockRegistry.get(BlockAdminPanel.IDENTITY);
-        IUItem.cableblock = TeBlockRegistry.get(BlockCable.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.oilquarry = TeBlockRegistry.get(BlockQuarryVein.IDENTITY).setCreativeTab(IUCore.IUTab);
         IUItem.cable = new ItemCable();
         IUItem.pipes = new ItemPipes();
-        IUItem.convertersolidmatter = TeBlockRegistry
-                .get(BlockConverterMatter.IDENTITY)
-                .setCreativeTab(IUCore.IUTab);
-        IUItem.oilgetter = TeBlockRegistry.get(BlockPetrolQuarry.IDENTITY).setCreativeTab(IUCore.IUTab); // BlockPetrolQuarry
-        IUItem.combinersolidmatter = TeBlockRegistry.get(BlockCombinerSolid.IDENTITY).setCreativeTab(IUCore.IUTab);
-
-        IUItem.machines_base = TeBlockRegistry.get(BlockMoreMachine.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.machines_base1 = TeBlockRegistry.get(BlockMoreMachine1.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.machines_base2 = TeBlockRegistry.get(BlockMoreMachine2.IDENTITY).setCreativeTab(IUCore.IUTab);
-        IUItem.machines_base3 = TeBlockRegistry.get(BlockMoreMachine3.IDENTITY).setCreativeTab(IUCore.IUTab);
-
-        IUItem.tank = TeBlockRegistry.get(BlockTank.IDENTITY);
-
-        if (Config.BotaniaLoaded) {
-            BotaniaIntegration.reactorDepletedterastrellSimple = new ItemStack(
-                    new ItemDepletedRod("reactorDepletedterastrellSimple"));
-            BotaniaIntegration.reactorDepletedterastrellDual = new ItemStack(
-                    new ItemDepletedRod("reactorDepletedterastrellDual"));
-            BotaniaIntegration.reactorDepletedterastrellQuad = new ItemStack(
-                    new ItemDepletedRod("reactorDepletedterastrellQuad"));
-            ItemStack[] stack4 = {BotaniaIntegration.reactorDepletedterastrellSimple, BotaniaIntegration.reactorDepletedterastrellDual, BotaniaIntegration.reactorDepletedterastrellQuad};
-
-            BotaniaIntegration.reactorterastrellSimple = new ItemStack(new ItemBaseRod("reactorterastrellSimple", 1,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
-            ));
-
-            BotaniaIntegration.reactorterastrellDual = new ItemStack(new ItemBaseRod("reactorterastrellDual", 2,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
-            ));
-
-            BotaniaIntegration.reactorterastrellQuad = new ItemStack(new ItemBaseRod("reactorterastrellQuad", 4,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
-            ));
 
 
-        }
+
 
 
         IUItem.ruby_helmet = new BaseArmor("ruby_helmet", RubyMaterial, 3, EntityEquipmentSlot.HEAD, "ruby");
@@ -289,72 +548,52 @@ public class Register {
         IUItem.hazmatchest = new ItemArmorAdvHazmat("hazmatchest", EntityEquipmentSlot.CHEST);
         IUItem.hazmatleggins = new ItemArmorAdvHazmat("hazmatleggins", EntityEquipmentSlot.LEGS);
         IUItem.hazmatboosts = new ItemArmorAdvHazmat("hazmatboosts", EntityEquipmentSlot.FEET);
-        IUItem.adv_nano_helmet = new ItemArmorImprovemedNano(
-                "itemArmorNanoHelmet",
-                EntityEquipmentSlot.HEAD,
-                (float) Config.NanoHelmet,
-                (float) Config.NanoTransfer,
-                Config.Nanotier
-        );
-        IUItem.adv_nano_chestplate = new ItemArmorImprovemedNano("itemArmorNanoChestplate", EntityEquipmentSlot.CHEST,
-                (float) Config.NanoBodyarmor, Config.NanoTransfer, Config.Nanotier
-        );
-        IUItem.adv_nano_leggings = new ItemArmorImprovemedNano(
-                "itemArmorNanoLegs",
-                EntityEquipmentSlot.LEGS,
-                (float) Config.NanoLeggings,
-                (float) Config.NanoTransfer,
-                Config.Nanotier
-        );
-        IUItem.adv_nano_boots = new ItemArmorImprovemedNano(
-                "itemArmorNanoBoots",
-                EntityEquipmentSlot.FEET,
-                (float) Config.NanoBoots,
-                (float) Config.NanoTransfer,
-                Config.Nanotier
-        );
+        IUItem.adv_nano_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.ADV_NANO);
+        IUItem.adv_nano_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.ADV_NANO);
+        IUItem.adv_nano_leggings = new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.ADV_NANO);
+        IUItem.adv_nano_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.ADV_NANO);
         IUItem.bags = new ItemEnergyBags("iu_bags", 27, 50000, 500);
         IUItem.adv_bags = new ItemEnergyBags("adv_iu_bags", 45, 75000, 750);
         IUItem.imp_bags = new ItemEnergyBags("imp_iu_bags", 63, 100000, 1000);
 
-        IUItem.lapotronCrystal = new ItemBattery("itembatlamacrystal", Config.Storagequantumsuit, 8092.0D, 4, false);
+        IUItem.AdvlapotronCrystal = new ItemBattery("itembatlamacrystal", Config.Storagequantumsuit, 8092.0D, 4, false);
 
-        IUItem.iridium = new ItemStack(new ItemAdvancedWindRotor("iridium", Config.Radius, Config.durability,
+        IUItem.iridium = new ItemStack(new ItemWindRotor("iridium", Config.Radius, Config.durability,
                 Config.efficiency,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_1.png"), 6, 5
         ));
-        IUItem.compressiridium = new ItemStack(new ItemAdvancedWindRotor("compressiridium", Config.Radius1,
+        IUItem.compressiridium = new ItemStack(new ItemWindRotor("compressiridium", Config.Radius1,
                 Config.durability1, Config.efficiency1,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_2.png"), 7, 6
         ));
-        IUItem.spectral = new ItemStack(new ItemAdvancedWindRotor("spectral", Config.Radius2,
+        IUItem.spectral = new ItemStack(new ItemWindRotor("spectral", Config.Radius2,
                 Config.durability2, Config.efficiency2,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_3.png"), 8, 7
         ));
-        IUItem.myphical = new ItemStack(new ItemAdvancedWindRotor("myphical", Config.Radius5,
+        IUItem.myphical = new ItemStack(new ItemWindRotor("myphical", Config.Radius5,
                 Config.durability5, Config.efficiency5,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_4.png"), 9, 8
         ));
 
-        IUItem.photon = new ItemStack(new ItemAdvancedWindRotor("photon", Config.Radius3, Config.durability3,
+        IUItem.photon = new ItemStack(new ItemWindRotor("photon", Config.Radius3, Config.durability3,
                 Config.efficiency3,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_6.png"), 10, 9
         ));
-        IUItem.neutron = new ItemStack(new ItemAdvancedWindRotor("neutron", Config.Radius4, Config.durability4,
+        IUItem.neutron = new ItemStack(new ItemWindRotor("neutron", Config.Radius4, Config.durability4,
                 Config.efficiency4,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_5.png"), 11, 10
         ));
 
-        IUItem.barionrotor = new ItemStack(new ItemAdvancedWindRotor("barionrotor", Config.Radius5,
+        IUItem.barionrotor = new ItemStack(new ItemWindRotor("barionrotor", Config.Radius5,
                 Config.durability4 * 4, Config.efficiency4 * 2,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_7.png"), 12, 11
         ));
 
-        IUItem.adronrotor = new ItemStack(new ItemAdvancedWindRotor("adronrotor", Config.Radius5,
+        IUItem.adronrotor = new ItemStack(new ItemWindRotor("adronrotor", Config.Radius5,
                 Config.durability4 * 16, Config.efficiency4 * 4,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_8.png"), 13, 12
         ));
-        IUItem.ultramarinerotor = new ItemStack(new ItemAdvancedWindRotor("ultramarinerotor", Config.Radius5,
+        IUItem.ultramarinerotor = new ItemStack(new ItemWindRotor("ultramarinerotor", Config.Radius5,
                 Config.durability4 * 64, Config.efficiency4 * 8,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png"), 14, 13
         ));
@@ -583,7 +822,7 @@ public class Register {
 
         IUItem.coal_chunk1 = new IUItemBase("coal_chunk");
         IUItem.compresscarbon = new IUItemBase("compresscarbon");
-        IUItem.compresscarbonultra = new IUItemBase("compresscarbonultra");
+        IUItem.compressAlloy = new IUItemBase("compresscarbonultra");
         IUItem.photoniy = new IUItemBase("photoniy");
         IUItem.photoniy_ingot = new IUItemBase("photoniy_ingot");
         IUItem.compressIridiumplate = new IUItemBase("quantumitems2");
@@ -624,45 +863,14 @@ public class Register {
         IUItem.alloysplate = new ItemAlloysPlate();
         IUItem.preciousgem = new ItemPreciousGem();
 
-        IUItem.advventspread = new ItemReactorVentSpread("advventspread", 5);
-        IUItem.impventspread = new ItemReactorVentSpread("impventspread", 6);
-        IUItem.reactoradvVent = new ItemReactorVent("reactoradvvent", 1000, 25, 32);
-        IUItem.reactorimpVent = new ItemReactorVent("reactorimpvent", 1500, 30, 25);
-        IUItem.reactorCondensatorDiamond = new ItemReactorCondensator("reactorcondensatordiamond", 500000);
-        IUItem.advheatswitch = new ItemReactorHeatSwitch("advheatswitch", 5000, 40, 45);
-        IUItem.impheatswitch = new ItemReactorHeatSwitch("impheatswitch", 5000, 60, 70);
-        IUItem.reactorCoolantmax = new ItemStack(new ItemReactorHeatStorage("reactorcoolantmax", 240000));
-        IUItem.reactorCoolanttwelve = new ItemStack(new ItemReactorHeatStorage("reactorcoolanttwelve", 120000));
 
-        IUItem.heat_storage = new ItemReactorHeatStorage("heat_storage", 10000);
-        IUItem.tri_heat_storage = new ItemReactorHeatStorage("tri_heat_storage", 30000);
-        IUItem.hex_heat_storage = new ItemReactorHeatStorage("hex_heat_storage", 60000);
-        IUItem.plating = new ItemReactorPlating("plating", 1000, 0.95F);
-        IUItem.heat_plating = new ItemReactorPlating("heat_plating", 2000, 0.99F);
-        IUItem.containment_plating = new ItemReactorPlating("containment_plating", 500, 0.9F);
-
-
-        IUItem.heat_exchanger = new ItemReactorHeatSwitch("heat_exchanger", 2500, 12, 4);
-        IUItem.reactor_heat_exchanger = new ItemReactorHeatSwitch("reactor_heat_exchanger", 5000, 0, 72);
-        IUItem.component_heat_exchanger = new ItemReactorHeatSwitch("component_heat_exchanger", 5000, 36, 0);
-        IUItem.advanced_heat_exchanger = new ItemReactorHeatSwitch("advanced_heat_exchanger", 10000, 24, 8);
-
-        IUItem.heat_vent = new ItemReactorVent("heat_vent", 1000, 6, 0);
-        IUItem.reactor_heat_vent = new ItemReactorVent("reactor_heat_vent", 1000, 5, 5);
-        IUItem.overclocked_heat_vent = new ItemReactorVent("overclocked_heat_vent", 1000, 20, 36);
-        IUItem.component_heat_vent = new ItemReactorVentSpread("component_heat_vent", 4);
-        IUItem.advanced_heat_vent = new ItemReactorVent("advanced_heat_vent", 1000, 12, 0);
-        IUItem.neutron_reflector = new ItemReactorReflector("neutron_reflector", 30000);
-        IUItem.thick_neutron_reflector = new ItemReactorReflector("thick_neutron_reflector", 120000);
-        IUItem.rsh_condensator = new ItemReactorCondensator("rsh_condensator", 20000);
-        IUItem.lzh_condensator = new ItemReactorCondensator("lzh_condensator", 100000);
         IUItem.reactorDepleteduranSimple = new ItemStack(
                 new ItemDepletedRod("depleted_uranium"));
         IUItem.reactorDepleteduranDual = new ItemStack(
                 new ItemDepletedRod("depleted_dual_uranium"));
         IUItem.reactorDepleteduranQuad = new ItemStack(
                 new ItemDepletedRod("depleted_quad_uranium"));
-        IUItem.reactorDepletedumoxSimple = new ItemStack(
+        IUItem.reactorDepletedmoxSimple = new ItemStack(
                 new ItemDepletedRod("depleted_mox"));
         IUItem.reactorDepletedmoxDual = new ItemStack(
                 new ItemDepletedRod("depleted_dual_mox"));
@@ -678,7 +886,7 @@ public class Register {
         IUItem.quad_uranium_fuel_rod = new ItemStack(new ItemBaseRod("quad_uranium_fuel_rod", 4,
                 10000, 0, (float) 1.5, stack1
         ));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedumoxSimple, IUItem.reactorDepletedmoxDual, IUItem.reactorDepletedmoxQuad};
+        stack1 = new ItemStack[]{IUItem.reactorDepletedmoxSimple, IUItem.reactorDepletedmoxDual, IUItem.reactorDepletedmoxQuad};
         IUItem.mox_fuel_rod = new ItemStack(new ItemBaseRod("mox_fuel_rod", 1,
                 10000, 2, (float) 3, stack1
         ));
@@ -693,19 +901,8 @@ public class Register {
         IUItem.impmagnet = new ItemMagnet("impmagnet", 200000, 7500, 5, 11);
         IUItem.purifier = new ItemPurifier("purifier", 100000, 1000, 3);
         IUItem.entitymodules = new ItemEntityModule();
-        IUItem.cell_all = new ItemCell();
-        IUItem.cell_all.setUseHandler(CellType.empty, ItemCell.emptyCellFill);
-        IUItem.cell_all.addCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, (stac) -> {
-            CellType type = IUItem.cell_all.getType(stac);
-            CellType.CellFluidHandler var10000;
-            if (type.isFluidContainer()) {
-                var10000 = new CellType.CellFluidHandler(stac, IUItem.cell_all::getType);
-            } else {
-                var10000 = null;
-            }
 
-            return var10000;
-        });
+
         IUItem.alloysblock = new BlocksAlloy();
         IUItem.block = new BlocksIngot();
         IUItem.block1 = new BlockIngots1();
@@ -784,27 +981,21 @@ public class Register {
         IUItem.quantumSaber = new ItemQuantumSaber("itemNanoSaber1", Config.maxCharge1, Config.transferLimit1,
                 Config.tier1, Config.spectralsaberactive1, Config.spectralsabernotactive1
         );
-        IUItem.electric_hoe = new ItemElectricToolHoe();
-        IUItem.electric_treetap = new ItemTreetapElectric();
-        IUItem.electric_wrench = new ItemToolWrenchElectric();
+        IUItem.electric_hoe = new ItemEnergyToolHoe();
+        IUItem.electric_treetap = new ItemTreetapEnergy();
+        IUItem.electric_wrench = new ItemToolWrenchEnergy();
         IUItem.nanosaber = new ItemNanoSaber("nano_saber", 160000, 500, 3, 19, 4);
-        IUItem.spectral_helmet = new ItemArmorImprovemedQuantum(
-                "itemArmorQuantumHelmet",
-                EntityEquipmentSlot.HEAD,
-                Config.armor_maxcharge,
-                Config.armor_transferlimit,
-                Config.tier
+        IUItem.spectral_helmet = new ItemSpecialArmor(
+                EnumSubTypeArmor.HELMET, EnumTypeArmor.SPECTRAL
         );
-        IUItem.spectral_chestplate = new ItemArmorImprovemedQuantum("itemArmorQuantumChestplate", EntityEquipmentSlot.CHEST,
-                Config.armor_maxcharge_body, Config.armor_transferlimit, Config.tier
+        IUItem.spectral_chestplate = new ItemSpecialArmor(
+                EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.SPECTRAL
         );
-        IUItem.spectral_leggings = new ItemArmorImprovemedQuantum("itemArmorQuantumLegs", EntityEquipmentSlot.LEGS,
-                Config.armor_maxcharge,
-                Config.armor_transferlimit, Config.tier
+        IUItem.spectral_leggings = new ItemSpecialArmor(
+                EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.SPECTRAL
         );
-        IUItem.spectral_boots = new ItemArmorImprovemedQuantum("itemArmorQuantumBoots", EntityEquipmentSlot.FEET,
-                Config.armor_maxcharge,
-                Config.armor_transferlimit, Config.tier
+        IUItem.spectral_boots = new ItemSpecialArmor(
+                EnumSubTypeArmor.BOOTS, EnumTypeArmor.SPECTRAL
         );
         IUItem.nanodrill = new ItemEnergyInstruments(EnumTypeInstruments.DRILL, EnumVarietyInstruments.NANO, "nanodrill");
         IUItem.quantumdrill = new ItemEnergyInstruments(
@@ -906,13 +1097,10 @@ public class Register {
         IUItem.glassFiberCableItem = new ItemStack(IUItem.cable, 1, 13);
         IUItem.goldCableItem = new ItemStack(IUItem.cable, 1, 14);
         IUItem.insulatedGoldCableItem = new ItemStack(IUItem.cable, 1, 15);
-        IUItem.doubleInsulatedGoldCableItem = new ItemStack(IUItem.cable, 1, 16);
-        IUItem.ironCableItem = new ItemStack(IUItem.cable, 1, 17);
-        IUItem.insulatedIronCableItem = new ItemStack(IUItem.cable, 1, 18);
-        IUItem.doubleInsulatedIronCableItem = new ItemStack(IUItem.cable, 1, 19);
-        IUItem.trippleInsulatedIronCableItem = new ItemStack(IUItem.cable, 1, 20);
-        IUItem.tinCableItem = new ItemStack(IUItem.cable, 1, 21);
-        IUItem.insulatedTinCableItem = new ItemStack(IUItem.cable, 1, 22);
+        IUItem.ironCableItem = new ItemStack(IUItem.cable, 1, 16);
+        IUItem.insulatedIronCableItem = new ItemStack(IUItem.cable, 1, 17);
+        IUItem.tinCableItem = new ItemStack(IUItem.cable, 1, 18);
+        IUItem.insulatedTinCableItem = new ItemStack(IUItem.cable, 1, 19);
 
         if (Loader.isModLoaded("exnihilocreatio")) {
             ExNihiloIntegration.gravel = new GravelBlocks();
@@ -923,7 +1111,184 @@ public class Register {
             ExNihiloIntegration.sand_crushed = new ItemSandCrushed();
         }
         IUItem.book = new ItemBook("book_iu");
+        IUItem.nano_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.NANO);
+        IUItem.nano_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.NANO);
+        IUItem.nano_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.NANO);
+        IUItem.nano_leggings = new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.NANO);
+        IUItem.nightvision = new ItemArmorNightvisionGoggles();
+        IUItem.quantum_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.QUANTUM);
+        IUItem.quantum_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.QUANTUM);
+        IUItem.quantum_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.QUANTUM);
+        IUItem.quantum_leggings = new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.QUANTUM);
 
+
+        IUItem.electricHoe = IUItem.electric_hoe.getItemStack();
+
+        IUItem.denseplateadviron = new ItemStack(IUItem.doubleplate, 1, 26);
+        IUItem.platecopper = new ItemStack(IUItem.plate, 1, 20);
+        IUItem.platetin = new ItemStack(IUItem.plate, 1, 27);
+        IUItem.platebronze = new ItemStack(IUItem.plate, 1, 19);
+        IUItem.plategold = new ItemStack(IUItem.plate, 1, 21);
+        IUItem.plateiron = new ItemStack(IUItem.plate, 1, 22);
+        IUItem.platelead = new ItemStack(IUItem.plate, 1, 24);
+        IUItem.platelapis = new ItemStack(IUItem.plate, 1, 23);
+        IUItem.plateobsidian = new ItemStack(IUItem.plate, 1, 25);
+        IUItem.plateadviron = new ItemStack(IUItem.plate, 1, 26);
+        IUItem.denseplatecopper = new ItemStack(IUItem.doubleplate, 1, 20);
+        IUItem.denseplatetin = new ItemStack(IUItem.doubleplate, 1, 27);
+        IUItem.denseplatebronze = new ItemStack(IUItem.doubleplate, 1, 19);
+        IUItem.denseplategold = new ItemStack(IUItem.doubleplate, 1, 21);
+        IUItem.denseplateiron = new ItemStack(IUItem.doubleplate, 1, 22);
+        IUItem.denseplatelead = new ItemStack(IUItem.doubleplate, 1, 24);
+        IUItem.denseplatelapi = new ItemStack(IUItem.doubleplate, 1, 23);
+        IUItem.denseplateobsidian = new ItemStack(IUItem.doubleplate, 1, 25);
+        IUItem.coolantCell = ModUtils.getCellFromFluid(FluidName.fluidcoolant.getInstance());
+        IUItem.hotcoolantCell = ModUtils.getCellFromFluid(FluidName.fluidhot_coolant.getInstance());
+        IUItem.copperOre = IUItem.classic_ore.getItemStack(BlockClassicOre.Type.copper);
+        IUItem.tinOre = IUItem.classic_ore.getItemStack(BlockClassicOre.Type.tin);
+        IUItem.uraniumOre = IUItem.classic_ore.getItemStack(BlockClassicOre.Type.uranium);
+        IUItem.leadOre = IUItem.classic_ore.getItemStack(BlockClassicOre.Type.lead);
+        IUItem.reinforcedStone = IUItem.blockResource.getItemStack(BlockResource.Type.reinforced_stone);
+        IUItem.reinforcedGlass = new ItemStack(IUItem.glass);
+        IUItem.bronzeBlock = IUItem.blockResource.getItemStack(BlockResource.Type.bronze_block);
+        IUItem.copperBlock = IUItem.blockResource.getItemStack(BlockResource.Type.copper_block);
+        IUItem.tinBlock = IUItem.blockResource.getItemStack(BlockResource.Type.tin_block);
+        IUItem.uraniumBlock = IUItem.blockResource.getItemStack(BlockResource.Type.uranium_block);
+        IUItem.leadBlock = IUItem.blockResource.getItemStack(BlockResource.Type.lead_block);
+        IUItem.advironblock = IUItem.blockResource.getItemStack(BlockResource.Type.steel_block);
+        IUItem.machine = IUItem.blockResource.getItemStack(BlockResource.Type.machine);
+        IUItem.advancedMachine = IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
+
+
+        IUItem.UranFuel = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.uranium);
+        IUItem.Plutonium = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.plutonium);
+        IUItem.smallPlutonium = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.small_plutonium);
+        IUItem.Uran235 = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.uranium_235);
+        IUItem.smallUran235 = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.small_uranium_235);
+        IUItem.Uran238 = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.uranium_238);
+        IUItem.mox = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.mox);
+        IUItem.latex = new ItemStack(IUItem.crafting_elements, 1, 290);
+        IUItem.rubber = new ItemStack(IUItem.crafting_elements, 1, 271);
+        IUItem.RTGPellets = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.rtg_pellet);
+        IUItem.elemotor = new ItemStack(IUItem.crafting_elements, 1, 276);
+        IUItem.powerunit = new ItemStack(IUItem.crafting_elements, 1, 279);
+        IUItem.powerunitsmall = new ItemStack(IUItem.crafting_elements, 1, 278);
+        IUItem.heatconducto = new ItemStack(IUItem.crafting_elements, 1, 277);
+        IUItem.cfPowder = new ItemStack(IUItem.crafting_elements, 1, 289);
+        IUItem.electronicCircuit = new ItemStack(IUItem.crafting_elements, 1, 272);
+        IUItem.advancedCircuit = new ItemStack(IUItem.crafting_elements, 1, 273);
+        IUItem.advancedAlloy = new ItemStack(IUItem.crafting_elements, 1, 274);
+        IUItem.iridiumOre = new ItemStack(IUItem.crafting_elements, 1, 275);
+        IUItem.iridiumShard = new ItemStack(IUItem.crafting_elements, 1, 291);
+        IUItem.scrap = new ItemStack(IUItem.crafting_elements, 1, 287);
+        IUItem.coalBall = new ItemStack(IUItem.crafting_elements, 1, 283);
+        IUItem.carbonPlate = new ItemStack(IUItem.crafting_elements, 1, 282);
+        IUItem.carbonMesh = new ItemStack(IUItem.crafting_elements, 1, 281);
+        IUItem.carbonFiber = new ItemStack(IUItem.crafting_elements, 1, 280);
+        IUItem.scrapBox = new ItemStack(IUItem.crafting_elements, 1, 288);
+        IUItem.iridiumPlate = new ItemStack(IUItem.crafting_elements, 1, 285);
+        IUItem.coal_chunk = new ItemStack(IUItem.crafting_elements, 1, 286);
+        IUItem.rawcrystalmemory = new ItemStack(IUItem.crafting_elements, 1, 292);
+        IUItem.biochaff = new ItemStack(IUItem.crafting_elements, 1, 293);
+        IUItem.casingadviron = new ItemStack(IUItem.casing, 1, 24);
+        IUItem.casingcopper = new ItemStack(IUItem.casing, 1, 20);
+        IUItem.casingtin = new ItemStack(IUItem.casing, 1, 25);
+        IUItem.casingbronze = new ItemStack(IUItem.casing, 1, 19);
+        IUItem.casinggold = new ItemStack(IUItem.casing, 1, 21);
+        IUItem.casingiron = new ItemStack(IUItem.casing, 1, 22);
+        IUItem.casinglead = new ItemStack(IUItem.casing, 1, 23);
+        IUItem.crushedIronOre = new ItemStack(IUItem.crushed, 1, 21);
+        IUItem.crushedCopperOre = new ItemStack(IUItem.crushed, 1, 19);
+        IUItem.crushedGoldOre = new ItemStack(IUItem.crushed, 1, 20);
+        IUItem.crushedTinOre = new ItemStack(IUItem.crushed, 1, 23);
+        IUItem.crushedUraniumOre = new ItemStack(IUItem.crushed, 1, 24);
+        IUItem.crushedLeadOre = new ItemStack(IUItem.crushed, 1, 22);
+        IUItem.purifiedCrushedIronOre = new ItemStack(IUItem.purifiedcrushed, 1, 21);
+        IUItem.purifiedCrushedCopperOre = new ItemStack(IUItem.purifiedcrushed, 1, 19);
+        IUItem.purifiedCrushedGoldOre = new ItemStack(IUItem.purifiedcrushed, 1, 20);
+        IUItem.purifiedCrushedTinOre = new ItemStack(IUItem.purifiedcrushed, 1, 23);
+        IUItem.purifiedCrushedUraniumOre = new ItemStack(IUItem.purifiedcrushed, 1, 24);
+        IUItem.purifiedCrushedLeadOre = new ItemStack(IUItem.purifiedcrushed, 1, 22);
+        IUItem.stoneDust = new ItemStack(IUItem.iudust, 1, 30);
+        IUItem.energiumDust = new ItemStack(IUItem.iudust, 1, 24);
+        IUItem.bronzeDust = new ItemStack(IUItem.iudust, 1, 19);
+        IUItem.clayDust = new ItemStack(IUItem.iudust, 1, 20);
+        IUItem.coalDust = new ItemStack(IUItem.iudust, 1, 21);
+        IUItem.copperDust = new ItemStack(IUItem.iudust, 1, 22);
+        IUItem.goldDust = new ItemStack(IUItem.iudust, 1, 25);
+        IUItem.ironDust = new ItemStack(IUItem.iudust, 1, 26);
+        IUItem.tinDust = new ItemStack(IUItem.iudust, 1, 32);
+        IUItem.leadDust = new ItemStack(IUItem.iudust, 1, 28);
+        IUItem.obsidianDust = new ItemStack(IUItem.iudust, 1, 29);
+        IUItem.lapiDust = new ItemStack(IUItem.iudust, 1, 27);
+        IUItem.sulfurDust = new ItemStack(IUItem.iudust, 1, 31);
+        IUItem.silicondioxideDust = new ItemStack(IUItem.iudust, 1, 33);
+        IUItem.diamondDust = new ItemStack(IUItem.iudust, 1, 23);
+        IUItem.smallIronDust = new ItemStack(IUItem.smalldust, 1, 22);
+        IUItem.smallCopperDust = new ItemStack(IUItem.smalldust, 1, 20);
+        IUItem.smallGoldDust = new ItemStack(IUItem.smalldust, 1, 21);
+        IUItem.smallTinDust = new ItemStack(IUItem.smalldust, 1, 27);
+        IUItem.smallLeadDust = new ItemStack(IUItem.smalldust, 1, 24);
+        IUItem.smallSulfurDust = new ItemStack(IUItem.smalldust, 1, 26);
+        IUItem.smallObsidian = new ItemStack(IUItem.smalldust, 1, 25);
+        IUItem.mixedMetalIngot = new ItemStack(IUItem.iuingot, 1, 19);
+        IUItem.copperIngot = new ItemStack(IUItem.iuingot, 1, 21);
+        IUItem.tinIngot = new ItemStack(IUItem.iuingot, 1, 24);
+        IUItem.bronzeIngot = new ItemStack(IUItem.iuingot, 1, 20);
+        IUItem.leadIngot = new ItemStack(IUItem.iuingot, 1, 22);
+        IUItem.advIronIngot = new ItemStack(IUItem.iuingot, 1, 23);
+        IUItem.coil = new ItemStack(IUItem.crafting_elements, 1, 294);
+        IUItem.plantBall = new ItemStack(IUItem.crafting_elements, 1, 295);
+        IUItem.tinCan = new ItemStack(IUItem.crafting_elements, 1, 296);
+        IUItem.compressedCoalBall = new ItemStack(IUItem.crafting_elements, 1, 297);
+        IUItem.copperboiler = new ItemStack(IUItem.crafting_elements, 1, 284);
+        IUItem.reactorCoolantSimple = new ItemStack(IUItem.crafting_elements, 1, 298);
+        IUItem.reactorCoolantTriple = new ItemStack(IUItem.crafting_elements, 1, 299);
+        IUItem.reactorCoolantSix = new ItemStack(IUItem.crafting_elements, 1, 300);
+    }
+
+    private static void registerfluid(
+            FluidName name, int density,
+            int temperature, boolean isGaseous
+    ) {
+        Material steam = new MaterialLiquid(MapColor.SILVER);
+        Fluid fluid =
+                (new IUFluid(name))
+                        .setDensity(density)
+                        .setTemperature(temperature)
+                        .setGaseous(isGaseous);
+        if (!FluidRegistry.registerFluid(fluid)) {
+            fluid = FluidRegistry.getFluid(name.getName());
+        }
+
+        if (!fluid.canBePlacedInWorld()) {
+            Block block = new BlockIUFluid(name, fluid, steam);
+            fluid.setBlock(block);
+            fluid.setUnlocalizedName(block.getUnlocalizedName().substring(3));
+        }
+
+        name.setInstance(fluid);
+        FluidRegistry.addBucketForFluid(fluid);
+    }
+
+    public static <T extends Item> T registerItem(T item, ResourceLocation rl) {
+        item.setRegistryName(rl);
+        return registerItem(item);
+    }
+
+    public static <T extends Item> T registerItem(T item) {
+        ForgeRegistries.ITEMS.register(item);
+        return item;
+    }
+
+    public static <T extends Block> T registerBlock(T item, ResourceLocation rl) {
+        item.setRegistryName(rl);
+        return registerBlock(item);
+    }
+
+    public static <T extends Block> T registerBlock(T item) {
+        ForgeRegistries.BLOCKS.register(item);
+        return item;
     }
 
 }

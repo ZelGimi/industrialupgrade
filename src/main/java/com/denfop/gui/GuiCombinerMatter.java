@@ -1,9 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerCombinerMatter;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiCombinerMatter extends GuiIC2<ContainerCombinerMatter> {
+public class GuiCombinerMatter extends GuiCore<ContainerCombinerMatter> {
 
     public final ContainerCombinerMatter container;
 

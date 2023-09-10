@@ -1,36 +1,37 @@
 package com.denfop.network;
 
-import ic2.core.IWorldTickCallback;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.world.IWorldTickCallback;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class WorldData {
 
-    public static ConcurrentMap<Integer, WorldData> idxClient = FMLCommonHandler.instance().getSide().isClient()
-            ? new ConcurrentHashMap<>()
+    public static Map<Integer, WorldData> idxClient = FMLCommonHandler.instance().getSide().isClient()
+            ? new HashMap<>()
             : null;
-    public static ConcurrentMap<Integer, WorldData> idxServer = new ConcurrentHashMap<>();
-    public final Queue<IWorldTickCallback> singleUpdates = new ConcurrentLinkedQueue<>();
-    public final Set<IWorldTickCallback> continuousUpdates = new HashSet<>();
-    public final List<IWorldTickCallback> continuousUpdatesToAdd = new ArrayList<>();
-    public final List<IWorldTickCallback> continuousUpdatesToRemove = new ArrayList<>();
-    public final Map<TileEntity, TeUpdateDataServer> tesToUpdate = new IdentityHashMap<>();
-    public final Map<Chunk, NBTTagCompound> worldGenData = new IdentityHashMap<>();
-    public final Set<Chunk> chunksToDecorate = Collections.newSetFromMap(new IdentityHashMap<>());
-    public final Set<Chunk> pendingUnloadChunks = Collections.newSetFromMap(new IdentityHashMap<>());
-    public boolean continuousUpdatesInUse = false;
+    public static Map<Integer, WorldData> idxServer = new HashMap<>();
+    public final Queue<IWorldTickCallback> singleUpdates = new LinkedList<>();
+    public final Map<TileEntityBlock, Map<EntityPlayer, CustomPacketBuffer>> mapUpdateContainer = new HashMap<>();
 
-    private WorldData(World world) {
+    public final List<TileEntityBlock> listUpdateTile = new ArrayList<>();
+    public final Map<TileEntityBlock, List<CustomPacketBuffer>> mapUpdateField = new HashMap<>();
 
+    public final Map<BlockPos, TileEntityBlock> mapUpdateOvertimeField = new HashMap<>();
+    private final World world;
 
+    public WorldData(World world) {
+        this.world = world;
     }
 
     public static WorldData get(World world) {
@@ -38,29 +39,30 @@ public class WorldData {
     }
 
     public static WorldData get(World world, boolean load) {
-        if (world == null) {
-            throw new IllegalArgumentException("world is null");
-        } else {
-            ConcurrentMap<Integer, WorldData> index = getIndex(!world.isRemote);
-            WorldData ret = index.get(world.provider.getDimension());
-            if (ret == null && load) {
-                ret = new WorldData(world);
-                WorldData prev = index.putIfAbsent(world.provider.getDimension(), ret);
-                if (prev != null) {
-                    ret = prev;
-                }
-
+        Map<Integer, WorldData> index = getIndex(!world.isRemote);
+        WorldData ret = index.get(world.provider.getDimension());
+        if (ret == null && load) {
+            ret = new WorldData(world);
+            WorldData prev = index.putIfAbsent(world.provider.getDimension(), ret);
+            if (prev != null) {
+                ret = prev;
             }
-            return ret;
+
         }
+        return ret;
+
     }
 
     public static void onWorldUnload(World world) {
         getIndex(!world.isRemote).remove(world.provider.getDimension());
     }
 
-    private static ConcurrentMap<Integer, WorldData> getIndex(boolean simulating) {
+    private static Map<Integer, WorldData> getIndex(boolean simulating) {
         return simulating ? idxServer : idxClient;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
 }

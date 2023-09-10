@@ -1,10 +1,10 @@
 package com.denfop.api.windsystem;
 
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
-import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
-import ic2.core.IC2;
-import ic2.core.util.Util;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -14,11 +14,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class WindSystem implements IWindSystem {
 
@@ -61,11 +57,11 @@ public class WindSystem implements IWindSystem {
             return;
         }
         facing = facingMap.get(facing);
-        if (windMechanism instanceof TileEntityWindGenerator) {
-            ((TileEntityWindGenerator) windMechanism).setFacingWrench(facing, null);
+        if (windMechanism instanceof TileWindGenerator) {
+            ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         } else {
-            ((TileEntityBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
+            ((TileBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         }
     }
@@ -107,14 +103,14 @@ public class WindSystem implements IWindSystem {
 
     public void getNewPositionOfMechanism(IWindMechanism windMechanism) {
         final EnumFacing newFacing = getNewFacing();
-        if (windMechanism instanceof TileEntityWindGenerator) {
-            ((TileEntityWindGenerator) windMechanism).setFacingWrench(newFacing, null);
+        if (windMechanism instanceof TileWindGenerator) {
+            ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
-            IC2.network.get(true).updateTileEntityField(((TileEntityWindGenerator) windMechanism), "facing");
+            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", windMechanism.getFacing());
         } else {
-            ((TileEntityBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
+            ((TileBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
-            IC2.network.get(true).updateTileEntityField(((TileEntityBaseWaterGenerator) windMechanism), "facing");
+            new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing", windMechanism.getFacing());
 
         }
     }
@@ -182,11 +178,11 @@ public class WindSystem implements IWindSystem {
     }
 
     public double getSpeed() {
-        return Util.limit((this.getWind_Strength()) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
+        return ModUtils.limit((this.getWind_Strength()) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
     }
 
     public double getSpeed(double speed) {
-        return Util.limit((speed) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
+        return ModUtils.limit((speed) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
     }
 
     @SubscribeEvent
@@ -222,7 +218,7 @@ public class WindSystem implements IWindSystem {
                 if (!world.isThundering()) {
                     if (world.getWorldInfo().getCleanWeatherTime() > 0) {
                         int time = world.getWorldInfo().getCleanWeatherTime();
-                        if (time < 11000 && time >= 8000) {
+                        if (time < 110000 && time >= 8000) {
                             this.time = time - 8000;
                             this.enumTypeWind = EnumTypeWind.ONE;
                         }

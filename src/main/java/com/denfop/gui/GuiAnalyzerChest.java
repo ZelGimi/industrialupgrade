@@ -5,7 +5,7 @@ import com.denfop.container.ContainerAnalyzerChest;
 import net.minecraft.util.ResourceLocation;
 
 
-public class GuiAnalyzerChest extends GuiIC2<ContainerAnalyzerChest> {
+public class GuiAnalyzerChest extends GuiCore<ContainerAnalyzerChest> {
 
     public final ContainerAnalyzerChest container;
 

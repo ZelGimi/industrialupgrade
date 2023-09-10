@@ -2,7 +2,7 @@ package com.denfop.invslot;
 
 import com.denfop.Config;
 import com.denfop.IUItem;
-import com.denfop.api.energy.IAdvEnergySink;
+import com.denfop.api.energy.IEnergySink;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
@@ -10,7 +10,7 @@ import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.items.modules.ItemModuleType;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileEntitySintezator;
+import com.denfop.tiles.base.TileSintezator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.WirelessTransfer;
@@ -27,10 +27,10 @@ public class InvSlotSintezator extends InvSlot {
 
 
     public final int type;
-    public final TileEntitySintezator tile;
+    public final TileSintezator tile;
 
-    public InvSlotSintezator(TileEntitySintezator base1, String name, int type, int count) {
-        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
+    public InvSlotSintezator(TileSintezator base1, String name, int type, int count) {
+        super(base1, TypeItemSlot.INPUT_OUTPUT, count);
         this.type = type;
         if (type == 0) {
             this.setStackSizeLimit(Config.limit);
@@ -157,7 +157,7 @@ public class InvSlotSintezator extends InvSlot {
     }
 
     public void wirelessmodule() {
-        TileEntitySintezator tile = (TileEntitySintezator) base;
+        TileSintezator tile = (TileSintezator) base;
 
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
@@ -178,8 +178,8 @@ public class InvSlotSintezator extends InvSlot {
                     TileEntityInventory tile1 = (TileEntityInventory) tile2;
                     if (tile1.getComp(AdvEnergy.class) != null) {
                         final AdvEnergy energy = tile1.getComp(AdvEnergy.class);
-                        if (energy.getDelegate() instanceof IAdvEnergySink) {
-                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IAdvEnergySink) energy.getDelegate()));
+                        if (energy.getDelegate() instanceof IEnergySink) {
+                            tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy.getDelegate()));
                         }
                     }
 
@@ -206,9 +206,8 @@ public class InvSlotSintezator extends InvSlot {
     }
 
 
-
     public int solartype() {
-        TileEntitySintezator tile = (TileEntitySintezator) base;
+        TileSintezator tile = (TileSintezator) base;
 
         List<Integer> list1 = new ArrayList<>();
         for (int i = 0; i < tile.inputslotA.size(); i++) {
@@ -225,7 +224,7 @@ public class InvSlotSintezator extends InvSlot {
     }
 
     public void checkmodule() {
-        TileEntitySintezator tile = (TileEntitySintezator) base;
+        TileSintezator tile = (TileSintezator) base;
         double temp_day = tile.genDay;
         double temp_night = tile.genNight;
         double temp_storage = tile.maxStorage;

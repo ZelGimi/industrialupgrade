@@ -1,15 +1,13 @@
 package com.denfop.container;
 
 
-import com.denfop.tiles.base.TileEntityDoubleMolecular;
+import com.denfop.tiles.base.TileDoubleMolecular;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 
-import java.util.List;
+public class ContainerBaseDoubleMolecular extends ContainerBase<TileDoubleMolecular> {
 
-public class ContainerBaseDoubleMolecular extends ContainerBase<TileEntityDoubleMolecular> {
-
-    public ContainerBaseDoubleMolecular(EntityPlayer entityPlayer, TileEntityDoubleMolecular tileEntity1) {
+    public ContainerBaseDoubleMolecular(EntityPlayer entityPlayer, TileDoubleMolecular tileEntity1) {
         super(tileEntity1);
         if (tileEntity1.inputSlot != null) {
             addSlotToContainer(
@@ -36,15 +34,5 @@ public class ContainerBaseDoubleMolecular extends ContainerBase<TileEntityDouble
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("queue");
-        ret.add("redstoneMode");
-        ret.add("energy");
-        ret.add("perenergy");
-        ret.add("differenceenergy");
-        return ret;
-    }
 
 }

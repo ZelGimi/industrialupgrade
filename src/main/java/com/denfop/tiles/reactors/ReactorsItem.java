@@ -1,7 +1,8 @@
 package com.denfop.tiles.reactors;
 
-import ic2.api.reactor.IReactor;
-import ic2.api.reactor.IReactorComponent;
+
+import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.items.reactors.IReactorComponent;
 import net.minecraft.item.ItemStack;
 
 public class ReactorsItem {
@@ -9,10 +10,10 @@ public class ReactorsItem {
     private final ItemStack stack;
     private final int x;
     private final int y;
-    private final IReactor reactor;
+    private final IAdvReactor reactor;
     private final IReactorComponent comp;
 
-    public ReactorsItem(ItemStack stack, int x, int y, IReactor reactor) {
+    public ReactorsItem(ItemStack stack, int x, int y, IAdvReactor reactor) {
         this.stack = stack;
         this.x = x;
         this.y = y;
@@ -24,7 +25,7 @@ public class ReactorsItem {
     public void update() {
         for (int pass = 0; pass < 2; ++pass) {
 
-            this.comp.processChamber(this.stack, this.reactor, this.x, this.y, pass == 0);
+
         }
     }
 

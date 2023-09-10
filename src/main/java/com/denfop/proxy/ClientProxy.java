@@ -6,57 +6,58 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.IFluidModelProvider;
 import com.denfop.api.IModelRegister;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.audio.EnumSound;
 import com.denfop.blocks.FluidName;
+import com.denfop.events.ElectricItemTooltipHandler;
 import com.denfop.events.TickHandler;
 import com.denfop.gui.GuiColorPicker;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.items.book.core.CoreBook;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
-import com.denfop.render.base.IUModelLoader;
 import com.denfop.render.base.RenderCoreProcess;
 import com.denfop.render.multiblock.TileEntityMultiBlockRender;
 import com.denfop.render.oilquarry.TileEntityQuarryOilRender;
 import com.denfop.render.oilrefiner.TileEntityOilRefinerRender;
+import com.denfop.render.panel.TileEntityMiniPanelRender;
+import com.denfop.render.panel.TileEntitySolarPanelRender;
 import com.denfop.render.sintezator.TileEntitySintezatorRender;
 import com.denfop.render.streak.EventSpectralSuitEffect;
 import com.denfop.render.tank.TileEntityTankRender;
 import com.denfop.render.tile.TileEntityAdminPanelRender;
-import com.denfop.render.transport.ModelCable;
-import com.denfop.render.transport.ModelCoolHeatPipes;
-import com.denfop.render.transport.ModelCoolPipes;
-import com.denfop.render.transport.ModelExpCable;
-import com.denfop.render.transport.ModelPipes;
-import com.denfop.render.transport.ModelQCable;
-import com.denfop.render.transport.ModelSCable;
-import com.denfop.render.transport.ModelTransportPipes;
-import com.denfop.render.transport.ModelUniversalCable;
+import com.denfop.render.transport.TileEntityCableRender;
 import com.denfop.render.water.WaterGeneratorRenderer;
 import com.denfop.render.windgenerator.KineticGeneratorRenderer;
 import com.denfop.tiles.base.EnumMultiMachine;
-import com.denfop.tiles.base.TileEntityAdminSolarPanel;
-import com.denfop.tiles.base.TileEntityDoubleMolecular;
+import com.denfop.tiles.base.TileAdminSolarPanel;
+import com.denfop.tiles.base.TileDoubleMolecular;
 import com.denfop.tiles.base.TileEntityLiquedTank;
-import com.denfop.tiles.base.TileEntityMolecularTransformer;
-import com.denfop.tiles.base.TileEntityQuarryVein;
-import com.denfop.tiles.base.TileEntitySintezator;
-import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
-import com.denfop.tiles.mechanism.TileEntityOilRefiner;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockBase;
-import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
-import com.denfop.tiles.mechanism.worlcollector.TileEntityCrystallize;
-import ic2.core.IC2;
-import ic2.core.profile.ProfileManager;
-import ic2.core.util.LogCategory;
+import com.denfop.tiles.base.TileMolecularTransformer;
+import com.denfop.tiles.base.TileQuarryVein;
+import com.denfop.tiles.base.TileSintezator;
+import com.denfop.tiles.mechanism.TileAdvOilRefiner;
+import com.denfop.tiles.mechanism.TileOilRefiner;
+import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
+import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
+import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
+import com.denfop.tiles.panels.entity.TileSolarPanel;
+import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -68,6 +69,7 @@ public class ClientProxy extends CommonProxy {
 
     public static final ArrayList<IModelRegister> modelList = new ArrayList<>();
     private final Minecraft mc = Minecraft.getMinecraft();
+    private GuiScreen gui;
 
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
@@ -85,9 +87,7 @@ public class ClientProxy extends CommonProxy {
         int var3;
         for (var3 = 0; var3 < var2; ++var3) {
             FluidName name = var8[var3];
-            if (!name.hasInstance()) {
-                IC2.log.warn(LogCategory.Block, "The fluid " + name + " is not initialized.");
-            } else {
+            if (name.hasInstance()) {
                 Fluid provider = name.getInstance();
                 if (provider instanceof IFluidModelProvider) {
                     ((IFluidModelProvider) provider).registerModels(name);
@@ -95,76 +95,87 @@ public class ClientProxy extends CommonProxy {
             }
         }
         ClientRegistry.bindTileEntitySpecialRenderer(
-                TileEntityCrystallize.class,
+                TileCrystallize.class,
                 new RenderCoreProcess<>()
         );
         ClientRegistry.bindTileEntitySpecialRenderer(
-                TileEntityMolecularTransformer.class,
+                TileMolecularTransformer.class,
                 new RenderCoreProcess<>()
         );
         ClientRegistry.bindTileEntitySpecialRenderer(
-                TileEntityMultiBlockBase.class,
+                TileMultiBlockBase.class,
                 new TileEntityMultiBlockRender<>()
         );
         ClientRegistry.bindTileEntitySpecialRenderer(
-                TileEntityDoubleMolecular.class,
+                TileDoubleMolecular.class,
                 new RenderCoreProcess<>()
         );
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniPanels.class, new TileEntityMiniPanelRender<>());
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileSintezator.class, new TileEntitySintezatorRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileQuarryVein.class, new TileEntityQuarryOilRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileAdminSolarPanel.class, new TileEntityAdminPanelRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileOilRefiner.class, new TileEntityOilRefinerRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileAdvOilRefiner.class, new TileEntityAdvOilRefinerRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquedTank.class, new TileEntityTankRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileWindGenerator.class, new KineticGeneratorRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileBaseWaterGenerator.class, new WaterGeneratorRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultiCable.class, new TileEntityCableRender<>());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new TileEntitySolarPanelRender<>());
 
 
-        IUModelLoader loader = new IUModelLoader();
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/cable_iu"), new ModelCable());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/pipes_iu"), new ModelPipes());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/qcable"), new ModelQCable());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/scable"), new ModelSCable());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/cool_pipes_iu"), new ModelCoolPipes());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/expcable"), new ModelExpCable());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/item_pipes"), new ModelTransportPipes());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/heatcold"), new ModelCoolHeatPipes());
-        loader.register(new ResourceLocation(Constants.MOD_ID, "models/block/wiring/universal_cable"), new ModelUniversalCable());
-
-
-        ModelLoaderRegistry.registerLoader(loader);
-        ProfileManager.doTextureChanges();
         EnumMultiMachine.write();
 
     }
 
-    public boolean launchGuiClient(EntityPlayer player, IHasGui inventory, boolean isAdmin) {
-        this.mc.displayGuiScreen(inventory.getGui(player, isAdmin));
-        return true;
+    public void requestTick(boolean simulating, Runnable runnable) {
+        if (simulating) {
+            super.requestTick(simulating, runnable);
+        } else {
+            this.mc.addScheduledTask(runnable);
+        }
+
     }
 
+    public EntityPlayer getPlayerInstance() {
+        return this.mc.player;
+    }
 
-    @Override
-    public void profilerEndStartSection(final String section) {
-        if (this.isRendering()) {
-            Minecraft.getMinecraft().mcProfiler.endStartSection(section);
+    public World getWorld(int dimId) {
+        if (this.isSimulating()) {
+            return super.getWorld(dimId);
         } else {
-            super.profilerEndStartSection(section);
+            World world = this.mc.world;
+            return world.provider.getDimension() == dimId ? world : null;
         }
     }
 
-    @Override
-    public void profilerEndSection() {
-        if (this.isRendering()) {
-            Minecraft.getMinecraft().mcProfiler.endSection();
+    public World getPlayerWorld() {
+        return this.mc.world;
+    }
+
+    public void messagePlayer(EntityPlayer player, String message, Object... args) {
+        if (args.length > 0) {
+            this.mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation(
+                    message,
+                    (Object[]) this.getMessageComponents(args)
+            ));
         } else {
-            super.profilerEndSection();
+            this.mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
         }
+
+    }
+
+    public void playSoundSp(String sound, float f, float g) {
+        this.getPlayerInstance().playSound(EnumSound.getSondFromString(sound), f, g);
     }
 
     public boolean isRendering() {
         return !this.isSimulating();
     }
 
-    @Override
-    public void profilerStartSection(final String section) {
-        if (this.isRendering()) {
-            Minecraft.getMinecraft().mcProfiler.startSection(section);
-        } else {
-            super.profilerStartSection(section);
-        }
+    public GuiScreen getGui() {
+        return gui;
     }
 
     @Nullable
@@ -177,11 +188,33 @@ public class ClientProxy extends CommonProxy {
             final int y,
             final int z
     ) {
+        if (ID == 1) {
+            final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+            if (stack.getItem() instanceof IItemStackInventory) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                this.gui = inventory.getInventory(player, stack).getGui(player, false);
+                return this.gui;
+            }
+        }
+        if (ID == 2) {
+            final ItemStack stack = player.inventory.armorInventory.get(1);
+            if (stack.getItem() instanceof IItemStackInventory) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                this.gui = inventory.getInventory(player, stack).getGui(player, false);
+                return this.gui;
+            }
+        }
         if (ID == 4) {
             if (!player.inventory.armorInventory.get(2).isEmpty() && player.inventory.armorInventory
                     .get(2)
                     .getItem() == IUItem.spectral_chestplate) {
                 return new GuiColorPicker(player);
+            }
+        }
+        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+        if (tile != null) {
+            if (tile instanceof IAdvInventory) {
+                return ((IAdvInventory<?>) tile).getGui(player, false);
             }
         }
         return null;
@@ -196,20 +229,13 @@ public class ClientProxy extends CommonProxy {
         super.init(event);
 
         MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySintezator.class, new TileEntitySintezatorRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuarryVein.class, new TileEntityQuarryOilRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdminSolarPanel.class, new TileEntityAdminPanelRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOilRefiner.class, new TileEntityOilRefinerRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvOilRefiner.class, new TileEntityAdvOilRefinerRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquedTank.class, new TileEntityTankRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWindGenerator.class, new KineticGeneratorRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBaseWaterGenerator.class, new WaterGeneratorRenderer());
-
 
     }
 
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
+        new ElectricItemTooltipHandler();
+        CoreBook.init();
     }
 
     public boolean addIModelRegister(IModelRegister modelRegister) {

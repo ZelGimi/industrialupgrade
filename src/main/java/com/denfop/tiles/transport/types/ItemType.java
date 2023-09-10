@@ -1,11 +1,11 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+import com.denfop.blocks.ISubEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum ItemType implements IIdProvider {
+public enum ItemType implements ISubEnum, ICableItem {
     itemcable(0.25F, true, true),
     itemcable1(0.25F, false, true),
     itemcable2(0.25F, true, false),
@@ -52,5 +52,15 @@ public enum ItemType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_pipes";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "item_pipes";
     }
 }

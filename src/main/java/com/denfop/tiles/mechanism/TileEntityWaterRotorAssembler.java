@@ -1,8 +1,8 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.Recipes;
-import com.denfop.api.inv.IHasGui;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -11,12 +11,17 @@ import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerWaterRotorAssembler;
 import com.denfop.gui.GuiWaterRotorAssembler;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.api.recipe.IRecipeInputFactory;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,9 +31,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
 import java.util.List;
 
-public class TileEntityWaterRotorAssembler extends TileEntityInventory implements IHasGui, IUpdateTick, IHasRecipe {
+public class TileEntityWaterRotorAssembler extends TileEntityInventory implements IUpdateTick, IHasRecipe {
 
     public final InvSlotRecipes inputSlotA;
     public final AdvEnergy energy;
@@ -58,18 +64,26 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
     }
 
     public static void addRecipe(int meta, int meta1, ItemStack stack) {
-        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("water_rotor_assembler", new BaseMachineRecipe(
                 new Input(
-                        input.forStack(new ItemStack(IUItem.water_rod, 1, meta)),
-                        input.forStack(new ItemStack(IUItem.water_rod, 1, meta)),
-                        input.forStack(new ItemStack(IUItem.water_rod, 1, meta)),
-                        input.forStack(new ItemStack(IUItem.water_rod, 1, meta)),
-                        input.forStack(new ItemStack(IUItem.corewater, 1, meta1))
+                        input.getInput(new ItemStack(IUItem.water_rod, 1, meta)),
+                        input.getInput(new ItemStack(IUItem.water_rod, 1, meta)),
+                        input.getInput(new ItemStack(IUItem.water_rod, 1, meta)),
+                        input.getInput(new ItemStack(IUItem.water_rod, 1, meta)),
+                        input.getInput(new ItemStack(IUItem.corewater, 1, meta1))
 
                 ),
                 new RecipeOutput(null, stack)
         ));
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.water_rotor_assembler;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
     }
 
     public void init() {
@@ -90,6 +104,32 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
         addRecipe(13, 13, IUItem.water_ultramarinerotor);
     }
 
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        try {
+            inputSlotA.readFromNbt(getNBTFromSlot(customPacketBuffer));
+            progress = (short) DecoderHandler.decode(customPacketBuffer);
+            guiProgress = (double) DecoderHandler.decode(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        final CustomPacketBuffer packet = super.writeContainerPacket();
+        try {
+            EncoderHandler.encode(packet, inputSlotA);
+            EncoderHandler.encode(packet, progress);
+            EncoderHandler.encode(packet, guiProgress);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
+    }
+
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
@@ -103,9 +143,9 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
         if (this.getComp(AdvEnergy.class) != null) {
             AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
 
@@ -161,7 +201,7 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
     }
 
     @Override
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
         if (this.recipe != null && this.energy.canUseEnergy(energyConsume) && !this.inputSlotA.isEmpty() && this.outputSlot.canAdd(
                 this.recipe.getRecipe().getOutput().items)) {
@@ -202,10 +242,6 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
         return new GuiWaterRotorAssembler(getGuiContainer(entityPlayer));
     }
 
-    @Override
-    public void onGuiClosed(final EntityPlayer entityPlayer) {
-
-    }
 
     @Override
     public void onUpdate() {

@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/hv_transformer_leftrightback",
+		"down": "industrialupgrade:blocks/hv_transformer_bottomtop",
+		"up": "industrialupgrade:blocks/hv_transformer_bottomtop",
+		"north": "industrialupgrade:blocks/hv_transformer_front",
+		"east": "industrialupgrade:blocks/hv_transformer_leftrightback",
+		"south": "industrialupgrade:blocks/hv_transformer_leftrightback",
+		"west": "industrialupgrade:blocks/hv_transformer_leftrightback"
+	}
+}

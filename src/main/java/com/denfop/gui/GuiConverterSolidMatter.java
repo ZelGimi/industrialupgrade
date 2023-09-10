@@ -1,13 +1,13 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.IUpgradeItem;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.container.ContainerConverterSolidMatter;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.init.Localization;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 @SideOnly(Side.CLIENT)
-public class GuiConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatter> {
+public class GuiConverterSolidMatter extends GuiCore<ContainerConverterSolidMatter> {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.TEXTURES,
@@ -54,7 +54,7 @@ public class GuiConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
 
 
         new AdvArea(this, 119, 114, 157, 126)
-                .withTooltip("EU: " + ModUtils.getString((this.container.base).energy.getEnergy()) + "/" + ModUtils.getString((this.container.base).energy.getCapacity()))
+                .withTooltip("EF: " + ModUtils.getString((this.container.base).energy.getEnergy()) + "/" + ModUtils.getString((this.container.base).energy.getCapacity()))
                 .drawForeground(par1, par2);
 
 
@@ -85,7 +85,7 @@ public class GuiConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
 
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
-            text.add(Localization.translate("ic2.generic.text.upgrade"));
+            text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
                 text.add(stack.getDisplayName());
@@ -139,7 +139,7 @@ public class GuiConverterSolidMatter extends GuiIC2<ContainerConverterSolidMatte
                     81, (int) energy, 11
             );
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 

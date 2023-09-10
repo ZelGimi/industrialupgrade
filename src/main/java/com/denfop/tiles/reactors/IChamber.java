@@ -1,13 +1,12 @@
 package com.denfop.tiles.reactors;
 
-import ic2.api.reactor.IReactor;
-import ic2.api.reactor.IReactorChamber;
 
-public interface IChamber extends IReactorChamber {
+import com.denfop.api.reactors.IAdvReactor;
 
-    TileEntityBaseNuclearReactorElectric getReactor();
+public interface IChamber {
 
-    void setReactor(IReactor reactor);
+
+    void setReactor(IAdvReactor reactor);
 
     void destoryChamber(boolean wrench);
 

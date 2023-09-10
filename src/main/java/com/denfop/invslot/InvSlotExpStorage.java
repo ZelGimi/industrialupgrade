@@ -1,16 +1,16 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.exp.TileEntityStorageExp;
+import com.denfop.tiles.mechanism.exp.TileStorageExp;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotExpStorage extends InvSlot {
 
-    private final TileEntityStorageExp base1;
+    private final TileStorageExp base1;
     private int stackSizeLimit;
 
-    public InvSlotExpStorage(TileEntityStorageExp base1) {
-        super(base1, "input5", InvSlot.Access.I, 1, InvSlot.InvSide.ANY);
+    public InvSlotExpStorage(TileStorageExp base1) {
+        super(base1, TypeItemSlot.INPUT, 1);
 
         this.stackSizeLimit = 1;
         this.base1 = base1;

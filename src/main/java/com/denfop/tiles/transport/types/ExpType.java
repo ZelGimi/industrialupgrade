@@ -1,11 +1,12 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+
+import com.denfop.blocks.ISubEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum ExpType implements IIdProvider {
+public enum ExpType implements ISubEnum, ICableItem {
     expcable(0, 0, 0.25F, 0.02D, Integer.MAX_VALUE);
 
     public static final ExpType[] values = values();
@@ -44,5 +45,15 @@ public enum ExpType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_expcable";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "expcable";
     }
 }

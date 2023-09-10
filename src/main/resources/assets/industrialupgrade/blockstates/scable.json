@@ -3,7 +3,7 @@
   "variants" : {
     "type" : {
       "scable" : {
-        "model" : "industrialupgrade:wiring/scable"
+        "model" : "industrialupgrade:wiring/scable/scable_scable"
       },
       "spec_cable" : {
         "model" : "industrialupgrade:wiring/glass_cable"

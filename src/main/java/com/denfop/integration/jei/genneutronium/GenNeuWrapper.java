@@ -1,7 +1,7 @@
 package com.denfop.integration.jei.genneutronium;
 
+import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -42,7 +42,7 @@ public class GenNeuWrapper implements IRecipeWrapper {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         minecraft.fontRenderer.drawSplitString(
-                Localization.translate("cost.name") + " " + ModUtils.getString(getEnergy()) + "EU",
+                Localization.translate("cost.name") + " " + ModUtils.getString(getEnergy()) + "EF",
                 10,
                 30,
                 recipeWidth - 10,

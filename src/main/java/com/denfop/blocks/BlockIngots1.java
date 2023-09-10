@@ -106,7 +106,6 @@ public class BlockIngots1 extends BlockCore implements IModelRegister {
         itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
         ForgeRegistries.ITEMS.register(itemBlock);
         IUCore.proxy.addIModelRegister(this);
-
         return true;
     }
 

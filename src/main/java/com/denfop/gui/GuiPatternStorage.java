@@ -1,70 +1,117 @@
 package com.denfop.gui;
 
-import com.denfop.api.gui.CustomButton;
-import com.denfop.api.gui.IEnableHandler;
+import com.denfop.Constants;
+import com.denfop.Localization;
+import com.denfop.api.gui.Area;
 import com.denfop.api.gui.ItemImage;
-import com.denfop.api.gui.Text;
-import com.denfop.api.gui.TextProvider;
-import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.container.ContainerPatternStorage;
-import com.denfop.tiles.mechanism.TileEntityPatternStorage;
-import ic2.core.init.Localization;
-import ic2.core.util.Util;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.utils.ModUtils;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class GuiPatternStorage extends GuiIC2<ContainerPatternStorage> {
+import java.io.IOException;
 
-    private static final ResourceLocation background = new ResourceLocation("ic2", "textures/gui/GUIPatternStorage.png");
+@SideOnly(Side.CLIENT)
+public class GuiPatternStorage extends GuiCore<ContainerPatternStorage> {
+
+    private static final ResourceLocation background = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/GUIPatternStorage.png"
+    );
 
     public GuiPatternStorage(final ContainerPatternStorage container) {
         super(container);
-        this.addElement((new CustomButton(this, 7, 19, 9, 18, this.createEventSender(0))).withTooltip(
-                "ic2.PatternStorage.gui.info.last"));
-        this.addElement((new CustomButton(this, 36, 19, 9, 18, this.createEventSender(1))).withTooltip(
-                "ic2.PatternStorage.gui.info.next"));
-        this.addElement((new CustomButton(this, 10, 37, 16, 8, this.createEventSender(2))).withTooltip(
-                "ic2.PatternStorage.gui.info.export"));
-        this.addElement((new CustomButton(this, 26, 37, 16, 8, this.createEventSender(3))).withTooltip(
-                "ic2.PatternStorage.gui.info.import"));
-        this.addElement(Text.create(this, this.xSize / 2, 30, TextProvider.of(() -> {
-            TileEntityPatternStorage te = container.base;
-            return Math.min(te.index + 1, te.maxIndex) + " / " + te.maxIndex;
-        }), 4210752, false, true, false));
-        this.addElement(Text.create(this, 10, 48, TextProvider.ofTranslated("ic2.generic.text.Name"), 16777215, false));
-        this.addElement(Text.create(this, 10, 59, TextProvider.ofTranslated("ic2.generic.text.UUMatte"), 16777215, false));
-        this.addElement(Text.create(this, 10, 70, TextProvider.ofTranslated("ic2.generic.text.Energy"), 16777215, false));
-        IEnableHandler patternInfoEnabler = () -> container.base.pattern != null;
-        this.addElement(Text.create(this, 80, 48, TextProvider.of(() -> {
-            final RecipeInfo pattern = container.base.pattern;
-            return pattern != null ? pattern.getStack().getDisplayName() : null;
-        }), 16777215, false).withEnableHandler(patternInfoEnabler));
-        this.addElement(Text
-                .create(
-                        this,
-                        80,
-                        59,
-                        TextProvider.of(() -> Util.toSiString(container.base.patternUu, 4) + Localization.translate(
-                                "ic2.generic.text.bucketUnit")),
-                        16777215,
-                        false
-                )
-                .withEnableHandler(patternInfoEnabler));
-        this.addElement(Text
-                .create(
-                        this,
-                        80,
-                        70,
-                        TextProvider.of(() -> Util.toSiString(container.base.patternEu, 4) + Localization.translate(
-                                "ic2.generic.text.EU")),
-                        16777215,
-                        false
-                )
-                .withEnableHandler(patternInfoEnabler));
         this.addElement(new ItemImage(this, 152, 29, () -> container.base.pattern != null ? container.base.pattern.getStack()
                 : null));
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, final int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        mouseX -= this.guiLeft;
+        mouseY -= this.guiTop;
+        if (mouseX >= 7 && mouseX <= 16 && mouseY >= 19 && mouseY <= 19 + 18) {
+            this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            new PacketUpdateServerTile(this.container.base, 0);
+        }
+        if (mouseX >= 36 && mouseX <= 54 && mouseY >= 19 && mouseY <= 19 + 18) {
+            this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            new PacketUpdateServerTile(this.container.base, 1);
+        }
+        if (mouseX >= 10 && mouseX <= 26 && mouseY >= 37 && mouseY <= 37 + 8) {
+            this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            new PacketUpdateServerTile(this.container.base, 2);
+        }
+        if (mouseX >= 26 && mouseX <= 42 && mouseY >= 37 && mouseY <= 37 + 8) {
+            this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            new PacketUpdateServerTile(this.container.base, 3);
+        }
+    }
+
+    @Override
+    protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
+        this.fontRenderer.drawString(Math.min(
+                        container.base.index + 1,
+                        container.base.maxIndex
+                ) + " / " + container.base.maxIndex, this.xSize / 2, 30
+                , 4210752,
+                false
+        );
+        new Area(this, 7, 19, 9, 18).withTooltip(Localization.translate("PatternStorage.gui.info.last")).drawForeground(
+                mouseX,
+                mouseY
+        );
+        new Area(this, 36, 19, 9, 18).withTooltip(Localization.translate("PatternStorage.gui.info.next")).drawForeground(
+                mouseX,
+                mouseY
+        );
+        new Area(this, 10, 37, 16, 8).withTooltip(Localization.translate("PatternStorage.gui.info.export")).drawForeground(
+                mouseX,
+                mouseY
+        );
+        new Area(this, 26, 37, 16, 8).withTooltip(Localization.translate("PatternStorage.gui.info.import")).drawForeground(
+                mouseX,
+                mouseY
+        );
+
+
+        this.fontRenderer.drawString(Localization.translate(Constants.ABBREVIATION + ".generic.text.Name"), 10, 48
+                , 16777215,
+                false
+        );
+        this.fontRenderer.drawString(Localization.translate(Constants.ABBREVIATION + ".generic.text.UUMatte"), 10, 59
+                , 16777215,
+                false
+        );
+        this.fontRenderer.drawString(Localization.translate(Constants.ABBREVIATION + ".generic.text.Energy"), 10, 70
+                , 16777215,
+                false
+        );
+        if (this.container.base.pattern != null) {
+            this.fontRenderer.drawString(this.container.base.pattern.getStack().getDisplayName(), 80, 49
+                    , 16777215,
+                    false
+            );
+
+            this.fontRenderer.drawString(ModUtils.getString(container.base.patternUu) + Localization.translate(
+                            Constants.ABBREVIATION + ".generic.text.bucketUnit"), 80, 59, 16777215,
+                    false
+            );
+            this.fontRenderer.drawString(ModUtils.getString(container.base.patternEu) + Localization.translate(
+                            Constants.ABBREVIATION + ".generic.text.EF"), 80, 70, 16777215,
+                    false
+            );
+        }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
+        super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
     }
 
     protected ResourceLocation getTexture() {

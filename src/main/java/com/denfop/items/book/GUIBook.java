@@ -1,12 +1,14 @@
 package com.denfop.items.book;
 
 import com.denfop.Constants;
-import com.denfop.gui.GuiIC2;
+import com.denfop.Localization;
+import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.MouseButton;
+import com.denfop.gui.GuiCore;
 import com.denfop.items.book.core.AddPages;
 import com.denfop.items.book.core.MainPage;
 import com.denfop.items.book.core.Pages;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -29,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GUIBook extends GuiIC2<ContainerBook> {
+public class GUIBook extends GuiCore<ContainerBook> {
 
     public static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/book.png");
     public final String name;
@@ -82,7 +84,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
 
     }
 
-    public static List<String> splitEqually(String text, int size) {
+    public List<String> splitEqually(String text, int size) {
         String[] ret = text.split(" ");
         List<String> ret1 = new ArrayList<>();
         StringBuilder k = new StringBuilder();
@@ -132,7 +134,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
             }
         }
         if (back) {
-            if (xof >= 11 && xof < 29 && yof >= 160 && yof < 170) {
+            if (xof >= 11 && xof < 29 && yof >= 180 && yof < 190) {
                 if (mainindex > 0) {
                     if (index > 0) {
                         if (indexpage > 0) {
@@ -192,7 +194,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
             }
         }
         if (next) {
-            if (xof >= 111 && xof < 129 && yof >= 160 && yof < 170) {
+            if (xof >= 111 && xof < 129 && yof >= 180 && yof < 190) {
                 if (mainindex > 0) {
                     if (index > 0) {
                         if (indexpage >= 0) {
@@ -285,15 +287,32 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                 }
             }
         }
+        if (index >= 1) {
+            Pages page1 = Pages.lst.get(index - 1);
+            List<AddPages> lst1 = Pages.pages.get(page1);
+            AddPages pages = lst1.get(indexpage);
+            MouseButton button = MouseButton.get(k);
+            if (button != null) {
+                i -= this.guiLeft;
+                j -= this.guiTop;
+
+                for (final GuiElement<?> element : pages.elements) {
+                    {
+                        element.onMouseClick(i, j, button, element.contains(i, j));
+                    }
+                }
+
+
+                i += this.guiLeft;
+                j += this.guiTop;
+            }
+        }
 
     }
 
     public void drawForegroundLayer(int par1, int par2) {
         handleUpgradeTooltip(par1, par2);
 
-        final boolean isUkrOrrus = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().equals(
-                "ru_ru") || (Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode().equals(
-                "uk_ua"));
 
         if (this.next) {
             draw(par1, par2, 111, 129, "description.next");
@@ -324,31 +343,17 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                 List<AddPages> lst1 = Pages.pages.get(page1);
                 if (indexpage < lst1.size()) {
                     AddPages addpag = lst1.get(indexpage);
-                    int max = isUkrOrrus ? 43 : 33;
-                    if (addpag.resource == null) {
-
-                        List<String> list = splitEqually(Localization.translate(addpag.description), max);
-                      /*     List<String> list = splitEqually(" The mod adds many new ores, there are 4 types in total, in this" +
-                                   " article we will analyze the first type. There are 16 ores of the first type in total. " +
-                                   "Information about each ore will be specifically given below, namely: name, min and max " +
-                                   "height, min and max quantity: " +
-                                   "\n \n Michalov ore - 0 - 70 - 3 - 6 " +
-                                   "\n Aluminium ore - 0 - 70 - 3 - 6 " +
-                                   "\n Vanadium ore - 0 - 70 - 3 - 6 " +
-                                   "\n Tungsten ore - 0 - 70 - 3 - 6 " +
-                                   "\n Cobalt ore - 0 - 70 - 3 - 6 " +
-                                   "\n Magnesium ore - 0 - 70 - 3 - 6 " +
-                                   "\n Nickel ore - 0 - 70 - 3 - 6 " +
-                                   "\n Platium ore - 0 - 70 - 3 - 6 " +
-                                   "\n Titanium ore - 0 - 70 - 3 - 6 " +
-                                   "\n Chromium ore - 0 - 70 - 3 - 6 " , max);*/
-                        int x0 = 12;
-                        int y = 26;
-                        if (indexpage > 0) {
-                            y -= 6;
-                        }
-                        if (indexpage == 0) {
-                            String name = Localization.translate(page1.text);
+                    if (indexpage == 0) {
+                        String name = Localization.translate(page1.text);
+                        int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
+                        this.fontRenderer.drawString(name, nmPos, 11, ModUtils.convertRGBcolorToInt(
+                                10,
+                                158,
+                                27
+                        ));
+                    } else {
+                        if (!addpag.getName().isEmpty()) {
+                            String name = Localization.translate(addpag.getName());
                             int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
                             this.fontRenderer.drawString(name, nmPos, 11, ModUtils.convertRGBcolorToInt(
                                     10,
@@ -356,118 +361,16 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                                     27
                             ));
                         }
-
-                        GlStateManager.scale(0.75F, 0.75F, 0.75F);
-
-
-                        for (String str : list) {
-
-                            this.fontRenderer.drawString(str, x0, y,
-                                    ModUtils.convertRGBcolorToInt(
-                                            10,
-                                            158,
-                                            27
-                                    )
-                            );
-                            y += 9;
-                            if (y > 205) {
-                                break;
-                            }
-                        }
-
-                        GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
-
-
-                    } else {
-                        List<String> list = splitEqually(Localization.translate(addpag.textBefore), max);
-                        int x0 = 16;
-                        int y = 20;
-                        if (indexpage > 0) {
-                            y -= 6;
-                        }
-
-                        GlStateManager.scale(0.75F, 0.75F, 0.75F);
-
-                        if (indexpage == 0) {
-                            String name = Localization.translate(page1.text);
-                            int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
-
-                            this.fontRenderer.drawString(name, nmPos, 12, ModUtils.convertRGBcolorToInt(
-                                    10,
-                                    158,
-                                    27
-                            ));
-                        }
-                        for (String str : list) {
-
-                            this.fontRenderer.drawString(str, x0, y,
-                                    ModUtils.convertRGBcolorToInt(
-                                            10,
-                                            158,
-                                            27
-                                    )
-                            );
-                            y += 8;
-                            if (y > 165) {
-                                break;
-                            }
-                        }
-
-                        GlStateManager.scale(1.3333F, 1.3333F, 1.3333F);
-
-                        y += 3;
-                        int y0 = y;
-                        y = Math.min(165 - y, (addpag.y1 - addpag.y));
-                        int y1 = y;
-                        y = y0 + y1 + 3;
-                        if (y + 8 < 165) {
-                            if (addpag.centerDescription.isEmpty()) {
-                                List<String> list1 = splitEqually(Localization.translate(addpag.textAfter), 30);
-                                for (String str : list1) {
-                                    this.fontRenderer.drawString(str, x0, y,
-                                            ModUtils.convertRGBcolorToInt(
-                                                    10,
-                                                    158,
-                                                    27
-                                            )
-                                    );
-                                    y += 8;
-                                    if (y > 165) {
-                                        break;
-                                    }
-                                }
-                            } else {
-                                String name = Localization.translate(addpag.centerDescription);
-                                int nmPos = (this.xSize - this.fontRenderer.getStringWidth(name)) / 2;
-
-                                this.fontRenderer.drawString(name, nmPos, y, ModUtils.convertRGBcolorToInt(13, 229, 34));
-                                y += 10;
-                                if (y + 8 < 165) {
-                                    List<String> list1 = splitEqually(Localization.translate(addpag.textAfter), 30);
-                                    for (String str : list1) {
-                                        this.fontRenderer.drawString(str, x0, y,
-                                                ModUtils.convertRGBcolorToInt(
-                                                        10,
-                                                        158,
-                                                        27
-                                                )
-                                        );
-                                        y += 8;
-                                        if (y > 165) {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
+                    addpag.setGuiCore(this);
+                    addpag.drawForeground(par1, par2);
                 }
             }
         }
     }
 
     private void draw(int mouseX, int mouseY, int x, int x1, String text) {
-        if (mouseX >= x && mouseX < x1 && mouseY >= 160 && mouseY < 170) {
+        if (mouseX >= x && mouseX < x1 && mouseY >= 180 && mouseY < 190) {
             this.drawTooltip(mouseX, mouseY, Collections.singletonList(Localization.translate(text)));
         }
     }
@@ -543,18 +446,7 @@ public class GUIBook extends GuiIC2<ContainerBook> {
 
         int x1 = mouseX - this.guiLeft;
         int y1 = mouseY - this.guiTop;
-        if (this.next) {
-            this.drawTexturedModalRect(this.guiLeft + 111, this.guiTop + 160, 3, 192, 20, 12);
-            if (x1 >= 111 && x1 < 129 && y1 >= 160 && y1 < 170) {
-                this.drawTexturedModalRect(this.guiLeft + 111, this.guiTop + 160, 26, 192, 20, 12);
-            }
-        }
-        if (this.back) {
-            this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 160, 3, 206, 20, 12);
-            if (x1 >= 11 && x1 < 29 && y1 >= 160 && y1 < 170) {
-                this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 160, 26, 206, 20, 12);
-            }
-        }
+
         if (tick >= 0) {
             int t = tick / 15;
             if (t > 0) {
@@ -668,46 +560,27 @@ public class GUIBook extends GuiIC2<ContainerBook> {
                 Pages page1 = Pages.lst.get(index - 1);
                 List<AddPages> lst1 = Pages.pages.get(page1);
                 if (indexpage < lst1.size()) {
+
+
                     AddPages addpag = lst1.get(indexpage);
-
-
-                    if (addpag.resource != null) {
-                        List<String> list = splitEqually(Localization.translate(addpag.textBefore), 30);
-                        int x0 = 16;
-                        int y = 20;
-                        if (indexpage > 0) {
-                            y -= 6;
-                        }
-                        for (String ignored : list) {
-                            y += 8;
-                            if (y > 165) {
-                                break;
-                            }
-                        }
-                        y += 3;
-                        int y0 = y;
-                        y = Math.min(165 - y, (addpag.y1 - addpag.y));
-                        int y2 = y;
-                        int nmPos = (this.xSize - (addpag.x1 - addpag.x) - x0) / 2;
-                        if (nmPos > x0) {
-                            x0 = nmPos;
-                        }
-                        int x2 = Math.min(125 - x0, (addpag.x1 - addpag.x));
-
-                        this.mc.getTextureManager().bindTexture(addpag.resource);
-                        if (!addpag.renderCenter) {
-                            drawTexturedModalRect(this.guiLeft + x0, this.guiTop + y0, addpag.x, addpag.y,
-                                    x2, y2
-                            );
-                        } else {
-                            drawTexturedModalRect(this.guiLeft + nmPos, this.guiTop + y0, addpag.x, addpag.y,
-                                    x2, y2
-                            );
-                        }
-                        this.mc.getTextureManager().bindTexture(background);
-
-                    }
+                    addpag.setGuiCore(this);
+                    addpag.drawBackground(this.guiLeft, this.guiTop);
                 }
+            }
+        }
+        this.bindTexture();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        if (this.next) {
+            this.drawTexturedModalRect(this.guiLeft + 111, this.guiTop + 180, 3, 192, 20, 12);
+            if (x1 >= 111 && x1 < 129 && y1 >= 180 && y1 < 190) {
+                this.drawTexturedModalRect(this.guiLeft + 111, this.guiTop + 180, 26, 192, 20, 12);
+            }
+        }
+        if (this.back) {
+            this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 180, 3, 206, 20, 12);
+            if (x1 >= 11 && x1 < 29 && y1 >= 180 && y1 < 190) {
+                this.drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 180, 26, 206, 20, 12);
             }
         }
 

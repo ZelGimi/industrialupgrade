@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityCanner;
+import com.denfop.tiles.mechanism.TileCanner;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerCanner extends ContainerFullInv<TileCanner> {
 
-public class ContainerCanner extends ContainerFullInv<TileEntityCanner> {
-
-    public ContainerCanner(TileEntityCanner tileEntity1, EntityPlayer player) {
+    public ContainerCanner(TileCanner tileEntity1, EntityPlayer player) {
         super(player, tileEntity1, 184);
         if (tileEntity1.outputSlot != null) {
             this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 119, 17));
@@ -22,13 +20,5 @@ public class ContainerCanner extends ContainerFullInv<TileEntityCanner> {
 
     }
 
-
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("fluidTank");
-        ret.add("outputTank");
-        ret.add("inputSlotA");
-        return ret;
-    }
 
 }

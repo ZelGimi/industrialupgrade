@@ -20,7 +20,6 @@ public class SunCoef {
         double k = 0;
         float angle = this.getWorld().getCelestialAngle(1.0F) - 0.784690560F < 0 ? 1.0F - 0.784690560F : -0.784690560F;
         float celestialAngle = (this.getWorld().getCelestialAngle(1.0F) + angle) * 360.0F;
-
         celestialAngle %= 360;
         celestialAngle += 12;
         //TODO: end code GC

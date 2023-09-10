@@ -1,15 +1,12 @@
 package com.denfop.recipes;
 
-import com.denfop.IUCore;
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
+import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
-import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.Recipes;
-import ic2.core.item.type.DustResourceType;
-import ic2.core.ref.ItemName;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -52,37 +49,31 @@ public class MaceratorRecipe {
 
         }
 
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         if (!OreDictionary.getOres("oreYellorite").isEmpty()) {
-            Recipes.macerator.addRecipe(input1.forOreDict("oreYellorite", 1), null, false,
-                    Ic2Items.uraniumOre
-            );
+            addmacerator("oreYellorite", "crushedUranium", 2);
         }
-        addmacerator(Ic2Items.plateobsidian, Ic2Items.obsidianDust);
+        addmacerator(IUItem.plateobsidian, IUItem.obsidianDust);
         addmacerator(new ItemStack(Blocks.WOOL), new ItemStack(Items.STRING, 2));
         addmacerator("ingotBronze", "dustBronze");
         addmacerator("ingotLead", "dustLead");
         addmacerator("plateDenseLead", "dustLead", 9);
         addmacerator(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ, 4));
-        addmacerator(new ItemStack(Items.WHEAT_SEEDS, 16), Ic2Items.biochaff);
-        if (IUCore.isHasVersion("ic2", "220")) {
-            addmacerator(new ItemStack(Items.EMERALD), ItemName.dust.getItemStack(DustResourceType.emerald));
-        }
-        addmacerator(new ItemStack(Items.SPIDER_EYE), Ic2Items.grinPowder);
+        addmacerator(new ItemStack(Items.WHEAT_SEEDS, 16), IUItem.biochaff);
+
         addmacerator("crushedCopper", "dustCopper");
         addmacerator("oreGold", "crushedGold", 2);
         addmacerator("plateDenseObsidian", "dustObsidian", 9);
         addmacerator("plateDenseLapis", "dustLapis", 9);
-        addmacerator(new ItemStack(Blocks.TALLGRASS, 8), Ic2Items.biochaff);
+        addmacerator(new ItemStack(Blocks.TALLGRASS, 8), IUItem.biochaff);
         addmacerator("ingotCopper", "dustCopper");
         addmacerator(new ItemStack(Items.BONE, 1), new ItemStack(Items.DYE, 4, 15));
-        addmacerator(new ItemStack(Items.MELON, 8), Ic2Items.biochaff);
-        addmacerator("treeSapling", 4, Ic2Items.biochaff);
+        addmacerator(new ItemStack(Items.MELON, 8), IUItem.biochaff);
+        addmacerator("treeSapling", 4, IUItem.biochaff);
         addmacerator("plateDenseIron", "dustIron", 9);
         addmacerator("crushedIron", "dustIron");
-        if (IUCore.isHasVersion("ic2", "220")) {
-            addmacerator(new ItemStack(Items.ENDER_PEARL), ItemName.dust.getItemStack(DustResourceType.ender_pearl));
-        }
+
+
         addmacerator(new ItemStack(Items.COAL), "dustCoal");
         addmacerator("crushedLead", "dustLead");
         addmacerator("crushedTin", "dustTin");
@@ -91,29 +82,26 @@ public class MaceratorRecipe {
         addmacerator("plateDenseTin", "dustTin", 9);
         addmacerator("plateDenseGold", "dustGold", 9);
         addmacerator(new ItemStack(Blocks.ICE), new ItemStack(Items.SNOWBALL));
-        addmacerator(new ItemStack(Items.PUMPKIN_SEEDS, 16), Ic2Items.biochaff);
+        addmacerator(new ItemStack(Items.PUMPKIN_SEEDS, 16), IUItem.biochaff);
         addmacerator("plateLapis", "dustLapis");
         addmacerator("plateDenseBronze", "dustBronze", 9);
         addmacerator("plateSteel", "dustIron");
-        if (IUCore.isHasVersion("ic2", "220")) {
-            addmacerator(new ItemStack(Blocks.NETHERRACK), ItemName.dust.getItemStack(DustResourceType.netherrack));
-        }
-        addmacerator(Ic2Items.biochaff, new ItemStack(Blocks.DIRT));
-        addmacerator(new ItemStack(Blocks.PUMPKIN, 8), Ic2Items.biochaff);
+
+        addmacerator(IUItem.biochaff, new ItemStack(Blocks.DIRT));
+        addmacerator(new ItemStack(Blocks.PUMPKIN, 8), IUItem.biochaff);
         addmacerator("gemDiamond", "dustDiamond");
-        addmacerator(new ItemStack(Items.RABBIT, 8), Ic2Items.biochaff);
+        addmacerator(new ItemStack(Items.RABBIT, 8), IUItem.biochaff);
         addmacerator("blockCoal", "dustCoal", 9);
-        addmacerator(new ItemStack(Blocks.OBSIDIAN), Ic2Items.obsidianDust);
-        addmacerator(new ItemStack(Items.REEDS, 8), Ic2Items.biochaff);
+        addmacerator(new ItemStack(Blocks.OBSIDIAN), IUItem.obsidianDust);
+        addmacerator(new ItemStack(Items.REEDS, 8), IUItem.biochaff);
         addmacerator("ingotGold", "dustGold");
         addmacerator("ingotIron", "dustIron");
         addmacerator("ingotTin", "dustTin");
-        addmacerator(Ic2Items.plantBall, Ic2Items.biochaff);
         addmacerator(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND));
-        addmacerator("treeLeaves", 8, Ic2Items.biochaff);
+        addmacerator("treeLeaves", 8, IUItem.biochaff);
         addmacerator("oreUranium", "crushedUranium", 2);
-        addmacerator(new ItemStack(Items.MELON_SEEDS, 16), Ic2Items.biochaff);
-        addmacerator(new ItemStack(Items.POTATO, 8), Ic2Items.biochaff);
+        addmacerator(new ItemStack(Items.MELON_SEEDS, 16), IUItem.biochaff);
+        addmacerator(new ItemStack(Items.POTATO, 8), IUItem.biochaff);
         addmacerator("oreIron", "crushedIron", 2);
         addmacerator("oreTin", "crushedTin", 2);
         addmacerator("oreCopper", "crushedCopper", 2);
@@ -128,11 +116,11 @@ public class MaceratorRecipe {
         addmacerator(new ItemStack(Blocks.REDSTONE_BLOCK), new ItemStack(Items.REDSTONE, 9));
         addmacerator(new ItemStack(Blocks.COBBLESTONE), new ItemStack(Blocks.SAND));
         addmacerator(
-                new ItemStack(Ic2Items.energyCrystal.getItem(), 1, OreDictionary.WILDCARD_VALUE),
-                ItemName.dust.getItemStack(DustResourceType.energium), 9
+                new ItemStack(IUItem.energy_crystal, 1, OreDictionary.WILDCARD_VALUE),
+                IUItem.energiumDust, 9
         );
         addmacerator(new ItemStack(Items.BLAZE_ROD), new ItemStack(Items.BLAZE_POWDER, 5, 0));
-        addmacerator(new ItemStack(Items.WHEAT, 8), Ic2Items.biochaff);
+        addmacerator(new ItemStack(Items.WHEAT, 8), IUItem.biochaff);
         addmacerator(new ItemStack(Blocks.LAPIS_BLOCK), "dustLapis", 9);
         addmacerator(new ItemStack(Items.DYE, 1, 4), "dustLapis", 1);
         addmacerator(new ItemStack(Blocks.STONE), new ItemStack(Blocks.COBBLESTONE));
@@ -140,14 +128,14 @@ public class MaceratorRecipe {
     }
 
     private static void addmacerator(ItemStack input, String output, int i) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();
         stack.setCount(i);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, stack)
                 )
@@ -157,12 +145,12 @@ public class MaceratorRecipe {
     private static void addmacerator(ItemStack input, String output) {
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();
         stack.setCount(1);
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input, 1)
+                                input1.getInput(input, 1)
                         ),
                         new RecipeOutput(null, stack)
                 )
@@ -170,12 +158,12 @@ public class MaceratorRecipe {
     }
 
     private static void addmacerator(String input, int i, ItemStack stack) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forOreDict(input, i)
+                                input1.getInput(input, i)
                         ),
                         new RecipeOutput(null, stack)
                 )
@@ -185,12 +173,12 @@ public class MaceratorRecipe {
     public static void addmacerator(String input, String output) {
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();
         stack.setCount(1);
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forOreDict(input, 1)
+                                input1.getInput(input, 1)
                         ),
                         new RecipeOutput(null, stack)
                 )
@@ -202,12 +190,12 @@ public class MaceratorRecipe {
     public static void addmacerator(String input, String output, int n) {
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();
         stack.setCount(n);
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forOreDict(input, 1)
+                                input1.getInput(input, 1)
                         ),
                         new RecipeOutput(null, stack)
                 )
@@ -217,12 +205,12 @@ public class MaceratorRecipe {
     }
 
     public static void addmacerator(ItemStack input, ItemStack output) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, output)
                 )
@@ -232,14 +220,14 @@ public class MaceratorRecipe {
     }
 
     public static void addmacerator(ItemStack input, int i, ItemStack output) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         input = input.copy();
         input.setCount(i);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, output)
                 )
@@ -249,7 +237,7 @@ public class MaceratorRecipe {
     }
 
     public static void addmacerator(ItemStack input, int i, ItemStack output, int j) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         input = input.copy();
         input.setCount(i);
         output = output.copy();
@@ -258,7 +246,7 @@ public class MaceratorRecipe {
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, output)
                 )
@@ -268,14 +256,14 @@ public class MaceratorRecipe {
     }
 
     public static void addmacerator(ItemStack input, ItemStack output, int j) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         output = output.copy();
         output.setCount(j);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "macerator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, output)
                 )

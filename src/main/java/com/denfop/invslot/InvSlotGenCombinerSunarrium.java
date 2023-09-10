@@ -15,7 +15,7 @@ public class InvSlotGenCombinerSunarrium extends InvSlot {
     private int stackSizeLimit;
 
     public InvSlotGenCombinerSunarrium(TileEntityCombinerSEGenerators base1) {
-        super(base1, "input", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
+        super(base1, TypeItemSlot.INPUT, 4);
         this.stackSizeLimit = 1;
         this.tile = base1;
     }

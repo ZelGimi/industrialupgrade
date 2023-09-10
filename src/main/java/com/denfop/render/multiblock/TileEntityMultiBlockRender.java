@@ -1,17 +1,17 @@
 package com.denfop.render.multiblock;
 
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockBase;
+import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 
 import javax.annotation.Nonnull;
 
-public class TileEntityMultiBlockRender<T extends TileEntityMultiBlockBase> extends TileEntitySpecialRenderer<T> {
+public class TileEntityMultiBlockRender<T extends TileMultiBlockBase> extends TileEntitySpecialRenderer<T> {
 
 
     public void render(
-            @Nonnull TileEntityMultiBlockBase te,
+            @Nonnull TileMultiBlockBase te,
             double x,
             double y,
             double z,

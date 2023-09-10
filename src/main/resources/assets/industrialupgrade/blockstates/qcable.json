@@ -3,7 +3,7 @@
   "variants" : {
     "type" : {
       "qcable" : {
-        "model" : "industrialupgrade:wiring/qcable"
+        "model" : "industrialupgrade:wiring/qcable/qcable_qcable"
       },
       "spec_cable" : {
         "model" : "industrialupgrade:wiring/glass_cable"

@@ -2,13 +2,12 @@ package com.denfop.items.modules;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -26,24 +25,21 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemQuarryModule extends ItemMulti<ItemQuarryModule.CraftingTypes> implements IModelRegister {
+public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingTypes> implements IModelRegister {
 
     protected static final String NAME = "quarrymodules";
 
     public ItemQuarryModule() {
-        super(null, CraftingTypes.class);
+        super(CraftingTypes.class);
         this.setCreativeTab(IUCore.ModuleTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, int meta, String extraName) {
+
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -116,10 +112,10 @@ public class ItemQuarryModule extends ItemMulti<ItemQuarryModule.CraftingTypes> 
 
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
-    public enum CraftingTypes implements IIdProvider {
+    public enum CraftingTypes implements ISubEnum {
         per(0),
         ef(1),
         ef1(2),

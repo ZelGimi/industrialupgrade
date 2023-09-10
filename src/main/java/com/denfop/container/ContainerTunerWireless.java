@@ -1,11 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityTunerWireless;
+import com.denfop.tiles.mechanism.TileTunerWireless;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ContainerTunerWireless extends ContainerFullInv<TileEntityTunerWireless> {
+public class ContainerTunerWireless extends ContainerFullInv<TileTunerWireless> {
 
-    public ContainerTunerWireless(EntityPlayer entityPlayer, TileEntityTunerWireless tileEntity1) {
+    public ContainerTunerWireless(EntityPlayer entityPlayer, TileTunerWireless tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
 
 
@@ -15,7 +15,7 @@ public class ContainerTunerWireless extends ContainerFullInv<TileEntityTunerWire
 
     }
 
-    public ContainerTunerWireless(EntityPlayer entityPlayer, TileEntityTunerWireless tileEntity1, int height) {
+    public ContainerTunerWireless(EntityPlayer entityPlayer, TileTunerWireless tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
     }
 

@@ -1,14 +1,13 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerHeatMachine;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
+public class GuiHeatMachine extends GuiCore<ContainerHeatMachine> {
 
     protected static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("textures/gui/widgets.png");
     public ContainerHeatMachine container;
@@ -40,13 +39,13 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 53 && x <= 63 && y >= 54 && y <= 64) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
         if (x >= 73 && x <= 83 && y >= 54 && y <= 64) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            new PacketUpdateServerTile(this.container.base, 1);
         }
         if (x >= 61 && x <= 74 && y >= 26 && y <= 38) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
+            new PacketUpdateServerTile(this.container.base, 2);
         }
     }
 
@@ -78,7 +77,7 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
                             this.container.base.energy.getEnergy(),
                             this.container.base.energy.getCapacity()
                     )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                            "EU";
+                            "EF";
             new AdvArea(this, 113, 21, 124, 70)
                     .withTooltip(tooltip2)
                     .drawForeground(par1, par2);
@@ -96,7 +95,7 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
         int yOffset = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(xOffset, yOffset, 0, 0, this.xSize, this.ySize);
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xOffset + 3, yOffset + 3, 0, 0, 10, 10);
 
         this.mc.getTextureManager().bindTexture(getTexture());
@@ -125,9 +124,8 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
         x -= this.guiLeft;
         y -= this.guiTop;
         for (final GuiElement<?> guiElement : this.elements) {
-            if (guiElement.isEnabled()) {
-                guiElement.drawBackground(x, y);
-            }
+            guiElement.drawBackground(x, y);
+
         }
 
 

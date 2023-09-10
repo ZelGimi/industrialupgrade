@@ -4,10 +4,8 @@ package com.denfop.blocks;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.damagesource.IUDamageSource;
-import ic2.core.block.BlockBase;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.block.ItemBlockIC2;
-import ic2.core.profile.Version;
+import com.denfop.items.block.ItemBlockIU;
+import com.denfop.register.Register;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -42,8 +40,8 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
 
 
         ResourceLocation regName = IUCore.getIdentifier(name.name());
-        BlocksItems.registerBlock(this, regName);
-        BlocksItems.registerItem(new ItemBlockIC2(this), regName);
+        Register.registerBlock(this, regName);
+        Register.registerItem(new ItemBlockIU(this), regName);
 
         IUCore.proxy.addIModelRegister(this);
     }
@@ -57,16 +55,9 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
 
 
     public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
-        boolean defaultState = Version.shouldEnable(FluidName.class);
 
-        try {
-            if (Version.shouldEnable(FluidName.class.getField(super.getUnlocalizedName().substring(5)), defaultState)) {
-                items.add(new ItemStack(this));
-            }
+        items.add(new ItemStack(this));
 
-        } catch (NoSuchFieldException var5) {
-            throw new RuntimeException("Impossible missing enum field!", var5);
-        }
     }
 
     public void updateTick(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull Random random) {
@@ -118,7 +109,11 @@ public class BlockIUFluid extends BlockFluidClassic implements IModelRegister {
             @Nonnull IBlockState state,
             @Nonnull Entity entityIn
     ) {
-        this.onEntityWalk(worldIn, pos, entityIn);
+        if (state.getBlock() instanceof BlockIUFluid) {
+            if (((BlockIUFluid) state.getBlock()).getFluid() == FluidName.fluidcoolant.getInstance() || ((BlockIUFluid) state.getBlock()).getFluid() == FluidName.fluidazot.getInstance()) {
+                this.onEntityWalk(worldIn, pos, entityIn);
+            }
+        }
 
     }
 

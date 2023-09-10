@@ -7,23 +7,23 @@ import java.util.Objects;
 
 public class EnergyTick {
 
-    private final IAdvEnergySource source;
+    private final IEnergySource source;
     private final boolean isAdv;
     private final boolean isDual;
-    private IAdvEnergySource advSource = null;
-    private List<EnergyNetLocal.EnergyPath> energyPaths;
+    private IEnergySource advSource = null;
+    private List<Path> energyPaths;
 
-    public EnergyTick(IAdvEnergySource source, List<EnergyNetLocal.EnergyPath> list) {
+    public EnergyTick(IEnergySource source, List<Path> list) {
         this.source = source;
         this.energyPaths = list;
         this.isAdv = source != null;
-        this.isDual = source instanceof IAdvDual;
+        this.isDual = source instanceof IDual;
         if (this.isAdv) {
             this.advSource = source;
         }
     }
 
-    public IAdvEnergySource getSource() {
+    public IEnergySource getSource() {
         return source;
     }
 
@@ -40,7 +40,7 @@ public class EnergyTick {
             if (!this.isDual && this.advSource.isSource()) {
                 this.advSource.setPastEnergy(this.advSource.getPerEnergy());
             } else if (this.isDual && (this.advSource.isSource())) {
-                ((IAdvDual) this.advSource).setPastEnergy1(((IAdvDual) this.advSource).getPerEnergy1());
+                ((IDual) this.advSource).setPastEnergy1(((IDual) this.advSource).getPerEnergy1());
 
             }
         }
@@ -51,7 +51,7 @@ public class EnergyTick {
             if (!this.isDual && this.advSource.isSource()) {
                 this.advSource.addPerEnergy(amount);
             } else if (this.isDual && this.advSource.isSource()) {
-                ((IAdvDual) advSource).addPerEnergy1(amount);
+                ((IDual) advSource).addPerEnergy1(amount);
             }
         }
     }
@@ -68,7 +68,7 @@ public class EnergyTick {
         return source == that.source;
     }
 
-    public IAdvEnergySource getAdvSource() {
+    public IEnergySource getAdvSource() {
         return advSource;
     }
 
@@ -77,16 +77,16 @@ public class EnergyTick {
         return Objects.hash(source);
     }
 
-    public List<EnergyNetLocal.EnergyPath> getList() {
+    public List<Path> getList() {
         return energyPaths;
     }
 
-    public void setList(final List<EnergyNetLocal.EnergyPath> energyPaths) {
+    public void setList(final List<Path> energyPaths) {
         this.energyPaths = energyPaths;
     }
 
     public void rework() {
-        List<EnergyNetLocal.EnergyPath> energyPaths1 = new ArrayList<>();
+        List<Path> energyPaths1 = new ArrayList<>();
         int i = 1;
         while (!energyPaths.isEmpty()) {
             if (i < 14) {

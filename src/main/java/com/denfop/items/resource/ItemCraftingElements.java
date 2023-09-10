@@ -2,15 +2,21 @@ package com.denfop.items.resource;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.recipes.ScrapboxRecipeManager;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,30 +24,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemCraftingElements extends ItemMulti<ItemCraftingElements.Types> implements IModelRegister {
+public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Types> implements IModelRegister {
 
     protected static final String NAME = "crafting_elements";
 
     public ItemCraftingElements() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ElementsTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
-    }
 
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
-            for (final Types type : this.typeProperty.getShownValues()) {
+            for (final Types type : this.typeProperty.getAllowedValues()) {
                 subItems.add(this.getItemStackUnchecked(type));
 
             }
@@ -49,16 +47,44 @@ public class ItemCraftingElements extends ItemMulti<ItemCraftingElements.Types> 
         }
     }
 
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(
+            @Nonnull final World world,
+            @Nonnull final EntityPlayer player,
+            @Nonnull final EnumHand hand
+    ) {
+        if (!player.getHeldItem(hand).isItemEqual(IUItem.scrapBox)) {
+            return super.onItemRightClick(world, player, hand);
+        } else {
+            int i = 0;
+            ItemStack stack = player.getHeldItem(hand);
+            while (i < 1) {
+                if (!player.getEntityWorld().isRemote) {
+                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox);
+                    player.dropItem(drop, false);
+                }
+                i++;
+            }
+            stack.shrink(1);
+            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+
+        }
+    }
+
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
+                new ModelResourceLocation(
+                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(),
+                        null
+                )
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         crafting_0_element(0),
         crafting_1_element(1),
         crafting_2_element(2),
@@ -330,7 +356,41 @@ public class ItemCraftingElements extends ItemMulti<ItemCraftingElements.Types> 
         crafting_268_element(268),
         crafting_269_element(269),
         crafting_270_element(270),
+        crafting_271_element(271), // rubber
+        crafting_272_element(272), // circuit
+        crafting_273_element(273), // advanced_circuit
+        crafting_274_element(274), // alloy
+        crafting_275_element(275), // iridium
+        crafting_276_element(276), // electric_motor
+        crafting_277_element(277), // heat_conductor
+        crafting_278_element(278), // small_power_unit
+        crafting_279_element(279), // power_unit
+        crafting_280_element(280), // carbon_fibre
+        crafting_281_element(281), // carbon_mesh
+        crafting_282_element(282), // carbon_plate
+        crafting_283_element(283), // coal_ball
+        crafting_284_element(284), // copperboiler
+        crafting_285_element(285), // iridiumPlate
+        crafting_286_element(286), // coal_chunk
+        crafting_287_element(287), // scrap
+        crafting_288_element(288), // scrap_box
+        crafting_289_element(289), // cf_powder
+        crafting_290_element(290), // latex
+        crafting_291_element(291), // iridium shard
 
+        crafting_292_element(292), // rawcrystalmemory
+
+        crafting_293_element(293),  // biochaff
+
+        crafting_294_element(294),  // coil
+
+        crafting_295_element(295),  // plantBall
+
+        crafting_296_element(296),  // tinCan
+        crafting_297_element(297),   // compressedCoalBall
+        crafting_298_element(298), // heat_storage
+        crafting_299_element(299), // tri_heat_storage
+        crafting_300_element(300), // six_heat_storage
         ;
 
         private final String name;

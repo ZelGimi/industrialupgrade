@@ -43,7 +43,7 @@ public class GuiAirCollector extends GuiIU<ContainerAirCollector> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 38, 68, 68, 78)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -73,7 +73,7 @@ public class GuiAirCollector extends GuiIU<ContainerAirCollector> {
         TankGauge.createNormal(this, 74, 6, container.base.fluidTank[1]).drawBackground(xOffset, yOffset);
         TankGauge.createNormal(this, 106, 6, container.base.fluidTank[2]).drawBackground(xOffset, yOffset);
         if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
 

@@ -1,7 +1,7 @@
 package com.denfop.integration.jei.synthesis;
 
+import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -81,8 +81,8 @@ public class SynthesisWrapper implements IRecipeWrapper {
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         minecraft.fontRenderer.drawSplitString(
                 TextFormatting.GREEN + Localization.translate("chance") + this.getPercent() + "%",
-                69,
-                67,
+                59,
+                65,
                 recipeWidth - 69,
                 ModUtils.convertRGBcolorToInt(217, 217, 217)
         );

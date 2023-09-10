@@ -17,6 +17,23 @@ public class KeyboardIU implements IKeyboard {
     public KeyboardIU() {
     }
 
+    public boolean isJumpKeyDown(EntityPlayer player) {
+        return this.get(player, Key.JUMP);
+    }
+
+    public boolean isArmorKey(EntityPlayer player) {
+        return this.get(player, Key.ARMOR);
+    }
+
+    public boolean isSneakKeyDown(EntityPlayer player) {
+        return player.isSneaking();
+    }
+
+    public boolean isForwardKeyDown(EntityPlayer player) {
+        return this.get(player, KeyboardIU.Key.FORWARD);
+    }
+
+
     public boolean isChangeKeyDown(EntityPlayer player) {
         return this.get(player, KeyboardIU.Key.CHANGE);
     }
@@ -24,6 +41,15 @@ public class KeyboardIU implements IKeyboard {
     public boolean isVerticalMode(EntityPlayer player) {
         return this.get(player, Key.VERTICALMODE);
     }
+
+    public boolean isBootsMode(EntityPlayer player) {
+        return this.get(player, Key.BOOTS);
+    }
+
+    public boolean isLeggingsMode(EntityPlayer player) {
+        return this.get(player, Key.LEGGINGS);
+    }
+
 
     public boolean isFlyModeKeyDown(EntityPlayer player) {
         return this.get(player, KeyboardIU.Key.FLYMODE);
@@ -74,7 +100,13 @@ public class KeyboardIU implements IKeyboard {
         SAVEMODE,
         SHIFT,
         STREAK,
-        BLACKMODE;
+        BLACKMODE,
+        FORWARD,
+        JUMP,
+        ARMOR,
+        BOOTS,
+        LEGGINGS;
+
 
         public static final KeyboardIU.Key[] keys = values();
 

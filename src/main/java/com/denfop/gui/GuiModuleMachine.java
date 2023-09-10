@@ -1,10 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.container.ContainerModuleMachine;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -61,7 +60,7 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
         int yoffset = (this.height - this.ySize) / 2;
 
         this.mc.getTextureManager().bindTexture(getTexture());
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         this.drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(this.getTexture());
 
@@ -93,7 +92,7 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
     protected void actionPerformed(GuiButton guibutton) {
 
         if (guibutton.id == 0) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
 
         }
     }

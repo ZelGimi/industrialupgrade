@@ -1,16 +1,16 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.api.vein.Type;
 import com.denfop.container.ContainerOilPump;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiOilPump extends GuiIC2<ContainerOilPump> {
+public class GuiOilPump extends GuiCore<ContainerOilPump> {
 
     public final ContainerOilPump container;
 
@@ -34,7 +34,7 @@ public class GuiOilPump extends GuiIC2<ContainerOilPump> {
             tooltip =
                     Localization.translate("iu.fluidneft") + ": " + this.container.base
                             .count + "/" + this.container.base.maxcount
-                            + Localization.translate("ic2.generic.text.mb");
+                            + Localization.translate(Constants.ABBREVIATION + ".generic.text.mb");
             new AdvArea(this, 43, 39, 52, 53).withTooltip(tooltip).drawForeground(par1, par2);
 
         } else {

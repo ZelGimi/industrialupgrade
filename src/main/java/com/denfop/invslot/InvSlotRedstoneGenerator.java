@@ -1,6 +1,6 @@
 package com.denfop.invslot;
 
-import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityBaseRedstoneGenerator;
+import com.denfop.tiles.mechanism.generator.energy.redstone.TileBaseRedstoneGenerator;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 
 public class InvSlotRedstoneGenerator extends InvSlot {
 
-    private final TileEntityBaseRedstoneGenerator tile;
+    private final TileBaseRedstoneGenerator tile;
 
-    public InvSlotRedstoneGenerator(TileEntityBaseRedstoneGenerator baseRedstoneGenerator) {
-        super(baseRedstoneGenerator, "slot", Access.I, 1, InvSide.ANY);
+    public InvSlotRedstoneGenerator(TileBaseRedstoneGenerator baseRedstoneGenerator) {
+        super(baseRedstoneGenerator, TypeItemSlot.INPUT, 1);
         this.tile = baseRedstoneGenerator;
     }
 

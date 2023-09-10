@@ -1,12 +1,12 @@
 package com.denfop.api.windsystem;
 
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.windsystem.upgrade.IRotorUpgradeItem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeItemInform;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.upgrade.event.EventRotorItemLoad;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.base.IInventorySlotHolder;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +20,7 @@ public class InvSlotUpgrade extends InvSlot {
     private final IWindUpgradeBlock tile;
 
     public InvSlotUpgrade(IWindUpgradeBlock base1) {
-        super((IInventorySlotHolder) base1, "upgrade_slot", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
+        super((IAdvInventory) base1, TypeItemSlot.INPUT, 4);
         setStackSizeLimit(1);
         this.tile = base1;
     }

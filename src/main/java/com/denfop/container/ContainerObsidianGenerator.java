@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseObsidianGenerator;
+import com.denfop.tiles.base.TileBaseObsidianGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerObsidianGenerator extends ContainerFullInv<TileBaseObsidianGenerator> {
 
-public class ContainerObsidianGenerator extends ContainerFullInv<TileEntityBaseObsidianGenerator> {
-
-    public ContainerObsidianGenerator(EntityPlayer entityPlayer, TileEntityBaseObsidianGenerator tileEntity1) {
+    public ContainerObsidianGenerator(EntityPlayer entityPlayer, TileBaseObsidianGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 131, 34));
@@ -21,14 +19,5 @@ public class ContainerObsidianGenerator extends ContainerFullInv<TileEntityBaseO
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("fluidTank1");
-        ret.add("fluidTank2");
-        ret.add("energy");
-        ret.add("guiProgress");
-        ret.add("guiChargeLevel");
-        return ret;
-    }
 
 }

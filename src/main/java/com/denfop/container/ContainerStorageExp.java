@@ -1,18 +1,16 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.exp.TileEntityStorageExp;
+import com.denfop.tiles.mechanism.exp.TileStorageExp;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerStorageExp extends ContainerFullInv<TileStorageExp> {
 
-public class ContainerStorageExp extends ContainerFullInv<TileEntityStorageExp> {
-
-    public ContainerStorageExp(EntityPlayer entityPlayer, TileEntityStorageExp tileEntity1) {
+    public ContainerStorageExp(EntityPlayer entityPlayer, TileStorageExp tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
 
     }
 
-    public ContainerStorageExp(EntityPlayer entityPlayer, TileEntityStorageExp tileEntity1, int height) {
+    public ContainerStorageExp(EntityPlayer entityPlayer, TileStorageExp tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlot,
@@ -21,12 +19,5 @@ public class ContainerStorageExp extends ContainerFullInv<TileEntityStorageExp> 
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("expirencelevel");
-        ret.add("expirencelevel1");
-        ret.add("energy");
-        return ret;
-    }
 
 }

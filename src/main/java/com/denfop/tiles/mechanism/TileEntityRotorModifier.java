@@ -1,12 +1,17 @@
 package com.denfop.tiles.mechanism;
 
-import com.denfop.api.inv.IHasGui;
+import com.denfop.IUItem;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
 import com.denfop.api.windsystem.InvSlotUpgrade;
 import com.denfop.api.windsystem.upgrade.InvSlotRotor;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerRotorUpgrade;
 import com.denfop.gui.GuiRotorUpgrade;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityRotorModifier extends TileEntityInventory implements IWindUpgradeBlock, IHasGui {
+import java.io.IOException;
+
+public class TileEntityRotorModifier extends TileEntityInventory implements IWindUpgradeBlock {
 
     public final InvSlotUpgrade slot;
     public final InvSlotRotor rotor_slot;
@@ -26,25 +33,52 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
         rotor_slot = new InvSlotRotor(slot);
     }
 
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        rotor_slot.readFromNbt(getNBTFromSlot(customPacketBuffer));
+        slot.readFromNbt(getNBTFromSlot(customPacketBuffer));
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        final CustomPacketBuffer packet = super.writeContainerPacket();
+        try {
+            EncoderHandler.encode(packet, rotor_slot);
+            EncoderHandler.encode(packet, slot);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.rotor_modifier;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
+    }
 
     @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
     }
 
-    protected boolean isNormalCube() {
+    public boolean isNormalCube() {
         return false;
     }
 
-    protected boolean doesSideBlockRendering(EnumFacing side) {
+    public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
 
-    protected boolean isSideSolid(EnumFacing side) {
+    public boolean isSideSolid(EnumFacing side) {
         return false;
     }
 
-    protected boolean clientNeedsExtraModelInfo() {
+    public boolean clientNeedsExtraModelInfo() {
         return true;
     }
 
@@ -76,9 +110,5 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
         return new GuiRotorUpgrade(getGuiContainer(entityPlayer));
     }
 
-    @Override
-    public void onGuiClosed(final EntityPlayer entityPlayer) {
-
-    }
 
 }

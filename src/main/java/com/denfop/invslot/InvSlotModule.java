@@ -5,21 +5,21 @@ import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.TileEntityModuleMachine;
+import com.denfop.tiles.mechanism.TileModuleMachine;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class InvSlotModule extends InvSlot implements ITypeSlot {
 
     private final int type;
-    private final TileEntityModuleMachine tile;
+    private final TileModuleMachine tile;
     private int stackSizeLimit;
 
-    public InvSlotModule(TileEntityInventory base1, String name, int type, int count) {
-        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
+    public InvSlotModule(TileEntityInventory base1, int type, int count) {
+        super(base1, TypeItemSlot.INPUT_OUTPUT, count);
         this.stackSizeLimit = 1;
         this.type = type;
-        this.tile = (TileEntityModuleMachine) base1;
+        this.tile = (TileModuleMachine) base1;
     }
 
     @Override

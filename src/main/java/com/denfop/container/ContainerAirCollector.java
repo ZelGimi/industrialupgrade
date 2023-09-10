@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityAirCollector;
+import com.denfop.tiles.mechanism.generator.things.fluid.TileAirCollector;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerAirCollector extends ContainerFullInv<TileAirCollector> {
 
-public class ContainerAirCollector extends ContainerFullInv<TileEntityAirCollector> {
-
-    public ContainerAirCollector(EntityPlayer entityPlayer, TileEntityAirCollector tileEntity1) {
+    public ContainerAirCollector(EntityPlayer entityPlayer, TileAirCollector tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 14, 63));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 1, 76, 63));
@@ -23,12 +21,5 @@ public class ContainerAirCollector extends ContainerFullInv<TileEntityAirCollect
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-        ret.add("sound");
-        return ret;
-    }
 
 }

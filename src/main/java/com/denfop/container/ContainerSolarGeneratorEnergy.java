@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntitySolarGeneratorEnergy;
+import com.denfop.tiles.base.TileSolarGeneratorEnergy;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerSolarGeneratorEnergy extends ContainerFullInv<TileSolarGeneratorEnergy> {
 
-public class ContainerSolarGeneratorEnergy extends ContainerFullInv<TileEntitySolarGeneratorEnergy> {
-
-    public ContainerSolarGeneratorEnergy(EntityPlayer entityPlayer, TileEntitySolarGeneratorEnergy tileEntity) {
+    public ContainerSolarGeneratorEnergy(EntityPlayer entityPlayer, TileSolarGeneratorEnergy tileEntity) {
         super(entityPlayer, tileEntity, 196);
 
         addSlotToContainer(new SlotInvSlot(tileEntity.outputSlot, 0, 67 + 2, 34 + 1));
@@ -17,14 +15,5 @@ public class ContainerSolarGeneratorEnergy extends ContainerFullInv<TileEntitySo
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("sunenergy");
-        ret.add("work");
-        ret.add("generation");
-
-        return ret;
-
-    }
 
 }

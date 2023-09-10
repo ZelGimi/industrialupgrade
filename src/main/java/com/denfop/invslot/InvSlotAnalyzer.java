@@ -3,8 +3,8 @@ package com.denfop.invslot;
 import com.denfop.IUItem;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemQuarryModule;
-import com.denfop.tiles.base.TileEntityAnalyzer;
-import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
+import com.denfop.tiles.base.TileAnalyzer;
+import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,11 +17,11 @@ import java.util.List;
 public class InvSlotAnalyzer extends InvSlot {
 
     private final int type;
-    private final TileEntityAnalyzer tile;
+    private final TileAnalyzer tile;
     private int stackSizeLimit;
 
-    public InvSlotAnalyzer(TileEntityAnalyzer base1, String name, int count, int type) {
-        super(base1, name, InvSlot.Access.I, count, InvSide.ANY);
+    public InvSlotAnalyzer(TileAnalyzer base1, String name, int count, int type) {
+        super(base1, TypeItemSlot.INPUT, count);
         this.type = type;
         this.stackSizeLimit = 1;
         this.tile = base1;
@@ -226,7 +226,7 @@ public class InvSlotAnalyzer extends InvSlot {
         return list;
     }
 
-    public double getenergycost(TileEntityBaseQuantumQuarry target1) {
+    public double getenergycost(TileBaseQuantumQuarry target1) {
         double energy = target1.energyconsume;
         double proccent;
         for (int i = 0; i < this.size(); i++) {

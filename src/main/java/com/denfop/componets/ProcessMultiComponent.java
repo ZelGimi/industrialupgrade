@@ -1,21 +1,20 @@
 package com.denfop.componets;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.IMultiUpdateTick;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
-import com.denfop.tiles.base.TileEntityMultiMachine;
+import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
-import ic2.core.IC2;
-import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +30,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     private final int sizeWorkingSlot;
     private final short[] progress;
     private final double[] guiProgress;
-    private final TileEntityMultiMachine multimachine;
+    private final TileMultiMachine multimachine;
     private final int defaultTier;
     private final double defaultEnergyStorage;
     private final EnumMultiMachine enumMultiMachine;
@@ -55,7 +54,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     private int operationChange;
 
     public ProcessMultiComponent(
-            final TileEntityMultiMachine parent, EnumMultiMachine enumMultiMachine
+            final TileMultiMachine parent, EnumMultiMachine enumMultiMachine
     ) {
         super(parent);
         this.multimachine = parent;
@@ -68,7 +67,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.outputSlot = new InvSlotOutput(parent, "output",
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
-        this.upgradeSlot = new InvSlotUpgrade(parent, "upgrade", 4);
+        this.upgradeSlot = new InvSlotUpgrade(parent, 4);
         this.energy = parent.getComp(AdvEnergy.class);
         this.enumMultiMachine = enumMultiMachine;
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
@@ -436,7 +435,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (IC2.platform.isSimulating()) {
+        if (IUCore.proxy.isSimulating()) {
             this.setOverclockRates();
             inputSlots.load();
             this.getsOutputs();
@@ -463,7 +462,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.energyConsume = this.upgradeSlot.getEnergyDemand(this.defaultEnergyConsume);
         int tier = this.upgradeSlot.getTier(this.defaultTier);
         this.energy.setSinkTier(tier);
-        ((TileEntityMultiMachine) parent).dischargeSlot.setTier(tier);
+        ((TileMultiMachine) parent).dischargeSlot.setTier(tier);
         this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
                 this.defaultEnergyStorage
         ));
@@ -476,7 +475,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
     @Override
     public void onContainerUpdate(final EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeInt(this.operationLength);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             buffer.writeInt(this.progress[i]);
@@ -488,7 +487,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     }
 
     @Override
-    public void onNetworkUpdate(final DataInput is) throws IOException {
+    public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
         super.onNetworkUpdate(is);
         this.operationLength = is.readInt();
         for (int i = 0; i < sizeWorkingSlot; i++) {

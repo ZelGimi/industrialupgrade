@@ -1,9 +1,10 @@
 package com.denfop.integration.topaddon;
 
+import com.denfop.Localization;
 import com.denfop.api.cool.ICoolSource;
 import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvConductor;
-import com.denfop.api.energy.IAdvEnergyTile;
+import com.denfop.api.energy.IEnergyConductor;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.NodeStats;
 import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.sytem.EnergyType;
@@ -17,18 +18,16 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemArmorAdvHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedNano;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
 import com.denfop.items.armour.ItemSolarPanelHelmet;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityLiquedTank;
-import com.denfop.tiles.base.TileEntityMultiMatter;
-import com.denfop.tiles.base.TileEntityObsidianGenerator;
-import com.denfop.tiles.mechanism.TileEntityPlasticCreator;
-import com.denfop.tiles.mechanism.TileEntityPlasticPlateCreator;
-import com.denfop.tiles.mechanism.TileEntityPump;
+import com.denfop.tiles.base.TileMultiMatter;
+import com.denfop.tiles.base.TileObsidianGenerator;
+import com.denfop.tiles.mechanism.TilePlasticCreator;
+import com.denfop.tiles.mechanism.TilePlasticPlateCreator;
+import com.denfop.tiles.mechanism.TilePump;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import io.github.drmanganese.topaddons.addons.AddonBlank;
 import io.github.drmanganese.topaddons.addons.AddonForge;
 import io.github.drmanganese.topaddons.api.TOPAddon;
@@ -62,9 +61,9 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                 capacity,
                 probeInfo
                         .defaultProgressStyle()
-                        .suffix("EU")
-                        .filledColor(Config.rfbarFilledColor)
-                        .alternateFilledColor(Config.rfbarAlternateFilledColor)
+                        .suffix("EF")
+                        .filledColor(ModUtils.convertRGBcolorToInt(33, 91, 199))
+                        .alternateFilledColor(ModUtils.convertRGBcolorToInt(70, 125, 227))
                         .borderColor(Config.rfbarBorderColor)
                         .numberFormat(
                                 NumberFormat.COMPACT)
@@ -132,22 +131,34 @@ public class AddonIndustrialUpgrade extends AddonBlank {
         Colors.FLUID_NAME_COLOR_MAP.put("iufluidbenz", ModUtils.convertRGBcolorToInt(197, 194, 127));
         Colors.FLUID_NAME_COLOR_MAP.put("iufluidazot", ModUtils.convertRGBcolorToInt(173, 235, 231));
         Colors.FLUID_NAME_COLOR_MAP.put("iufluidneft", ModUtils.convertRGBcolorToInt(1, 1, 1));
-
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluiduu_matter", -12909261);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidconstruction_foam", -14671840);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidcoolant", -15443350);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidhot_coolant", -4904908);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidpahoehoe_lava", -8686484);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidbiomass", -13144283);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidbiogas", -5793716);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluiddistilled_water", -12364043);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidsuperheated_steam", -3485231);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidsteam", -4408132);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidhot_water", -12132609);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidweed_ex", -16298220);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidair", -2302756);
+        Colors.FLUID_NAME_COLOR_MAP.put("iufluidheavy_water", -12364043);
     }
 
     public void addTankNames() {
-        Names.tankNamesMap.put(TileEntityObsidianGenerator.class, new String[]{"Water", "Lava"});
+        Names.tankNamesMap.put(TileObsidianGenerator.class, new String[]{"Water", "Lava"});
         Names.tankNamesMap.put(TileEntityLiquedTank.class, new String[]{"Buffer"});
-        Names.tankNamesMap.put(TileEntityPlasticCreator.class, new String[]{"Input"});
-        Names.tankNamesMap.put(TileEntityPlasticPlateCreator.class, new String[]{"Input"});
-        Names.tankNamesMap.put(TileEntityPump.class, new String[]{"Buffer"});
-        Names.tankNamesMap.put(TileEntityMultiMatter.class, new String[]{"Matter"});
+        Names.tankNamesMap.put(TilePlasticCreator.class, new String[]{"Input"});
+        Names.tankNamesMap.put(TilePlasticPlateCreator.class, new String[]{"Input"});
+        Names.tankNamesMap.put(TilePump.class, new String[]{"Buffer"});
+        Names.tankNamesMap.put(TileMultiMatter.class, new String[]{"Matter"});
     }
 
     public Map<Class<? extends ItemArmor>, EnumChip> getSpecialHelmets() {
         Map<Class<? extends ItemArmor>, EnumChip> map = new HashMap<>();
-        map.put(ItemArmorImprovemedNano.class, EnumChip.IC2);
-        map.put(ItemArmorImprovemedQuantum.class, EnumChip.IC2);
+        map.put(ItemSpecialArmor.class, EnumChip.STANDARD);
         map.put(ItemArmorAdvHazmat.class, EnumChip.IC2);
         map.put(ItemAdvJetpack.class, EnumChip.IC2);
         map.put(ItemSolarPanelHelmet.class, EnumChip.IC2);
@@ -164,52 +175,52 @@ public class AddonIndustrialUpgrade extends AddonBlank {
             final IProbeHitData data
     ) {
         TileEntity tile = world.getTileEntity(data.getPos());
-        if (tile instanceof IAdvConductor) {
-            final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IAdvEnergyTile) tile);
-            euBar(probeInfo, (int) node.getEnergyOut(), (int) ((IAdvConductor) tile).getConductorBreakdownEnergy());
+        if (tile instanceof IEnergyConductor) {
+            final NodeStats node = EnergyNetGlobal.instance.getNodeStats((IEnergyTile) tile);
+            euBar(probeInfo, (int) node.getEnergyOut(), (int) ((IEnergyConductor) tile).getConductorBreakdownEnergy());
         }
         if (tile instanceof IConductor) {
             IConductor conductor = (IConductor) tile;
             if (conductor.hasEnergies()) {
                 for (EnergyType type : conductor.getEnergies()) {
-                    com.denfop.api.sytem.NodeStats node = EnergyBase.getGlobal(type).getNodeStats((ITile) tile, world);
+                    NodeStats node = EnergyBase.getGlobal(type).getNodeStats((ITile) tile, world);
                     if (type == EnergyType.QUANTUM) {
 
-                        qeBar(probeInfo, (int) node.getOut(),
+                        qeBar(probeInfo, (int) node.getEnergyOut(),
                                 (int) conductor.getConductorBreakdownEnergy(type)
                         );
                     } else if (type == EnergyType.SOLARIUM) {
 
 
-                        seBar(probeInfo, (int) node.getOut(),
+                        seBar(probeInfo, (int) node.getEnergyOut(),
                                 (int) conductor.getConductorBreakdownEnergy(type)
                         );
                     } else if (type == EnergyType.EXPERIENCE) {
 
 
-                        eeBar(probeInfo, (int) node.getOut(),
+                        eeBar(probeInfo, (int) node.getEnergyOut(),
                                 (int) conductor.getConductorBreakdownEnergy(type)
                         );
                     }
                 }
             } else {
                 final EnergyType type = conductor.getEnergyType();
-                com.denfop.api.sytem.NodeStats node = EnergyBase.getGlobal(type).getNodeStats((ITile) tile, world);
+                NodeStats node = EnergyBase.getGlobal(type).getNodeStats((ITile) tile, world);
                 if (type == EnergyType.QUANTUM) {
 
-                    qeBar(probeInfo, (int) node.getOut(),
+                    qeBar(probeInfo, (int) node.getEnergyOut(),
                             (int) conductor.getConductorBreakdownEnergy(type)
                     );
                 } else if (type == EnergyType.SOLARIUM) {
 
 
-                    seBar(probeInfo, (int) node.getOut(),
+                    seBar(probeInfo, (int) node.getEnergyOut(),
                             (int) conductor.getConductorBreakdownEnergy(type)
                     );
                 } else if (type == EnergyType.EXPERIENCE) {
 
 
-                    eeBar(probeInfo, (int) node.getOut(),
+                    eeBar(probeInfo, (int) node.getEnergyOut(),
                             (int) conductor.getConductorBreakdownEnergy(type)
                     );
                 }
@@ -304,6 +315,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
 
 
         }
+
     }
 
 }

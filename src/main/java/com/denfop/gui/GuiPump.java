@@ -27,7 +27,7 @@ public class GuiPump extends GuiIU<ContainerPump> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 10, 28, 17, 40)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);

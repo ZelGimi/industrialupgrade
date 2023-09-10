@@ -1,29 +1,21 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
-import com.denfop.Ic2Items;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.AudioSource;
-import com.denfop.audio.PositionSpec;
+import com.denfop.audio.EnumSound;
+import com.denfop.audio.SoundHandler;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.register.Register;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.api.item.IItemHudInfo;
-import ic2.api.item.IMetalArmor;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.BaseElectricItem;
-import ic2.core.item.armor.ItemArmorElectric;
-import ic2.core.util.LogCategory;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -38,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -49,13 +42,12 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, IModelRegister, ISpecialArmor, IMetalArmor,
-        IItemHudInfo, IUpgradeItem {
+public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, IModelRegister, ISpecialArmor,
+        IUpgradeItem {
 
-    protected static AudioSource audioSource;
     private static boolean lastJetpackUsed = false;
     private final String armorName;
     private final double maxStorage;
@@ -63,9 +55,9 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     private final int tier;
 
     public ItemAdvJetpack(String name, double maxStorage, double TransferLimit, int tier) {
-        super(null, "", EntityEquipmentSlot.CHEST, maxStorage, TransferLimit, tier);
+        super("", EntityEquipmentSlot.CHEST, maxStorage, TransferLimit, tier);
 
-        this.setMaxDamage(27);
+
         this.setMaxStackSize(1);
         this.setNoRepair();
         this.setUnlocalizedName(name);
@@ -76,7 +68,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         this.TransferLimit = TransferLimit;
         this.tier = tier;
 
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.JETPACK.list);
 
@@ -136,14 +128,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
 
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
-        if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(
-                    LogCategory.Armor,
-                    new Throwable(),
-                    "Detected invalid armor damage application (%d):",
-                    damage - prev
-            );
-        }
+
 
     }
 
@@ -158,7 +143,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     }
 
     public String getUnlocalizedName() {
-        return super.getUnlocalizedName().substring(4) + ".name";
+        return super.getUnlocalizedName().substring(3) + ".name";
     }
 
     @Override
@@ -214,19 +199,17 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         if (this.getCharge(jetpack) <= 0.0D) {
             return false;
         } else {
-            boolean electric = jetpack.getItem() != Ic2Items.jetpack.getItem();
+            boolean electric = true;
             float power = 1.0F;
             float dropPercentage = 0.2F;
-            if (electric) {
-                power = 0.7F;
-                dropPercentage = 0.05F;
+            power = 0.7F;
+            dropPercentage = 0.05F;
+
+            if (this.getCharge(jetpack) / this.getMaxEnergy(jetpack) <= (double) dropPercentage) {
+                power = (float) ((double) power * (this.getCharge(jetpack) / (this.getMaxEnergy(jetpack) * (double) dropPercentage)));
             }
 
-            if (this.getCharge(jetpack) / this.getMaxCharge(jetpack) <= (double) dropPercentage) {
-                power = (float) ((double) power * (this.getCharge(jetpack) / (this.getMaxCharge(jetpack) * (double) dropPercentage)));
-            }
-
-            if (IC2.keyboard.isForwardKeyDown(player)) {
+            if (IUCore.keyboard.isForwardKeyDown(player)) {
                 float retruster = 0.15F;
                 if (hoverMode) {
                     retruster = 1.0F;
@@ -242,7 +225,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
                 }
             }
 
-            int worldHeight = IC2.getWorldHeight(player.getEntityWorld());
+            int worldHeight = player.getEntityWorld().getHeight();
             int maxFlightHeight = electric ? (int) ((float) worldHeight / 1.28F) : worldHeight;
             double y = player.posY;
             if (y > (double) (maxFlightHeight - 25)) {
@@ -257,7 +240,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
             player.motionY = Math.min(player.motionY + (double) (power * 0.2F), 0.6000000238418579D);
             if (hoverMode) {
                 float maxHoverY = 0.0F;
-                if (IC2.keyboard.isJumpKeyDown(player)) {
+                if (IUCore.keyboard.isJumpKeyDown(player)) {
                     if (electric) {
                         maxHoverY = 0.1F;
                     } else {
@@ -265,7 +248,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
                     }
                 }
 
-                if (IC2.keyboard.isSneakKeyDown(player)) {
+                if (IUCore.keyboard.isSneakKeyDown(player)) {
                     if (electric) {
                         maxHoverY = -0.1F;
                     } else {
@@ -296,7 +279,6 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
 
             player.fallDistance = 0.0F;
             player.distanceWalkedModified = 0.0F;
-            IC2.platform.resetPlayerInAirTime(player);
             return true;
         }
     }
@@ -306,15 +288,15 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
     }
 
 
-    public double getMaxCharge(ItemStack itemStack) {
+    public double getMaxEnergy(ItemStack itemStack) {
         return maxStorage;
     }
 
-    public int getTier(ItemStack itemStack) {
-        return this.tier;
+    public short getTierItem(ItemStack itemStack) {
+        return (short) this.tier;
     }
 
-    public double getTransferLimit(ItemStack itemStack) {
+    public double getTransferEnergy(ItemStack itemStack) {
         return this.TransferLimit;
     }
 
@@ -331,19 +313,19 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
 
     public void onArmorTick(@Nonnull World world, EntityPlayer player, @Nonnull ItemStack itemStack) {
         if (player.inventory.armorInventory.get(2).isItemEqual(itemStack)) {
-            NBTTagCompound nbtData = StackUtil.getOrCreateNbtData(itemStack);
+            NBTTagCompound nbtData = ModUtils.nbt(itemStack);
             boolean hoverMode = nbtData.getBoolean("hoverMode");
             byte toggleTimer = nbtData.getByte("toggleTimer");
             boolean jetpackUsed = false;
-            if (IC2.keyboard.isJumpKeyDown(player) && IC2.keyboard.isModeSwitchKeyDown(player) && toggleTimer == 0) {
+            if (IUCore.keyboard.isJumpKeyDown(player) && IUCore.keyboard.isVerticalMode(player) && toggleTimer == 0) {
                 toggleTimer = 10;
                 hoverMode = !hoverMode;
-                if (IC2.platform.isSimulating()) {
+                if (IUCore.proxy.isSimulating()) {
                     nbtData.setBoolean("hoverMode", hoverMode);
                     if (hoverMode) {
-                        IC2.platform.messagePlayer(player, "Hover Mode enabled.");
+                        IUCore.proxy.messagePlayer(player, "Hover Mode enabled.");
                     } else {
-                        IC2.platform.messagePlayer(player, "Hover Mode disabled.");
+                        IUCore.proxy.messagePlayer(player, "Hover Mode disabled.");
                     }
                 }
             }
@@ -351,7 +333,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
             if (nbtData.getBoolean("jetpack")) {
                 player.fallDistance = 0;
 
-                if (nbtData.getBoolean("jump") && !nbtData.getBoolean("canFly") && !player.capabilities.allowFlying && IC2.keyboard.isJumpKeyDown(
+                if (nbtData.getBoolean("jump") && !nbtData.getBoolean("canFly") && !player.capabilities.allowFlying && IUCore.keyboard.isJumpKeyDown(
                         player) && !nbtData.getBoolean(
                         "isFlyActive") && toggleTimer == 0) {
                     toggleTimer = 10;
@@ -368,7 +350,7 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
                 }
             }
             jetpack = nbtData.getBoolean("jetpack");
-            if ((IC2.keyboard.isJumpKeyDown(player) || hoverMode) && !jetpack) {
+            if ((IUCore.keyboard.isJumpKeyDown(player) || hoverMode) && !jetpack) {
                 jetpackUsed = this.useJetpack(player, hoverMode);
             }
             if (IUCore.keyboard.isFlyModeKeyDown(player) && toggleTimer == 0 && UpgradeSystem.system.hasModules(
@@ -377,50 +359,55 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
             )) {
                 toggleTimer = 10;
                 jetpack = !jetpack;
-                if (IC2.platform.isSimulating()) {
+                if (IUCore.proxy.isSimulating()) {
 
                     nbtData.setBoolean("jetpack", jetpack);
                     if (jetpack) {
-                        IC2.platform.messagePlayer(player, Localization.translate("iu.flymode_armor.info"));
+                        IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info"));
                     } else {
-                        IC2.platform.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
+                        IUCore.proxy.messagePlayer(player, Localization.translate("iu.flymode_armor.info1"));
 
                     }
                 }
             }
-            if (IC2.platform.isSimulating() && toggleTimer > 0) {
+            if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
                 --toggleTimer;
                 nbtData.setByte("toggleTimer", toggleTimer);
             }
 
-            if (IC2.platform.isRendering() && player == IC2.platform.getPlayerInstance()) {
+            if (IUCore.proxy.isRendering() && player == IUCore.proxy.getPlayerInstance()) {
                 if (lastJetpackUsed != jetpackUsed) {
                     if (jetpackUsed) {
-                        if (audioSource == null) {
-                            audioSource = IUCore.audioManager.createSource(
-                                    player,
-                                    PositionSpec.Backpack,
-                                    "Tools/Jetpack/JetpackLoop.ogg",
-                                    true,
-                                    false,
-                                    IC2.audioManager.getDefaultVolume()
-                            );
-                        }
-
-                        if (audioSource != null) {
-                            audioSource.play();
-                        }
-                    } else if (audioSource != null) {
-                        audioSource.remove();
-                        audioSource = null;
+                        SoundHandler.playSound(player, "JetpackLoop");
                     }
 
+
                     lastJetpackUsed = jetpackUsed;
+                    if (!lastJetpackUsed) {
+                        SoundHandler.stopSound(EnumSound.JetpackLoop);
+                    }
+                }
+                final Random rnd = world.rand;
+                if (jetpackUsed) {
+                    for (int i = 0; i < rnd.nextInt(10); i++) {
+                        world.spawnParticle(
+                                EnumParticleTypes.SMOKE_NORMAL,
+                                (float) (player.posX - player.motionX) + rnd.nextFloat(),
+                                (float) (player.posY),
+                                (float) (player.posZ - player.motionZ) + rnd.nextFloat(), 0, -0.25, 0
+                        );
+                    }
+                    for (int i = 0; i < rnd.nextInt(10); i++) {
+                        world.spawnParticle(
+                                EnumParticleTypes.FLAME,
+                                (float) (player.posX - player.motionX) + rnd.nextFloat(),
+                                (float) (player.posY),
+                                (float) (player.posZ - player.motionZ) + rnd.nextFloat(), 0, -0.25, 0
+                        );
+                    }
                 }
 
-                if (audioSource != null) {
-                    audioSource.updatePosition();
-                }
+
             }
             boolean fireResistance = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FIRE_PROTECTION, itemStack);
             if (fireResistance) {
@@ -465,11 +452,5 @@ public class ItemAdvJetpack extends ItemArmorElectric implements IElectricItem, 
         return 0;
     }
 
-
-    public List<String> getHudInfo(ItemStack stack, boolean advanced) {
-        List<String> info = new ArrayList<>();
-        info.add(ElectricItem.manager.getToolTip(stack));
-        return info;
-    }
 
 }

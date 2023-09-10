@@ -1,10 +1,10 @@
 package com.denfop.api.energy;
 
-import com.denfop.tiles.base.TileEntityTransformer;
+import com.denfop.tiles.base.TileTransformer;
 
 public interface ITransformer {
 
-    TileEntityTransformer.Mode getMode();
+    TileTransformer.Mode getMode();
 
     boolean isStepUp();
 

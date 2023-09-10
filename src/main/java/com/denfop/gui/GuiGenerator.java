@@ -1,9 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.container.ContainerGenerator;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,7 +31,7 @@ public class GuiGenerator extends GuiIU<ContainerGenerator> {
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 4210752);
         new AdvArea(this, 90, 35, 121, 51).withTooltip(Localization.translate(
-                "ic2.generic.text.bufferEU",
+                Constants.ABBREVIATION + ".generic.text.bufferEU",
                 ModUtils.getString(this.container.base.getEnergy())
         )).drawForeground(par1, par2);
 

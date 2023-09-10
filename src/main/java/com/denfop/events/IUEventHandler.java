@@ -1,10 +1,11 @@
 package com.denfop.events;
 
 
-import com.denfop.IUCore;
+import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
+import com.denfop.Localization;
 import com.denfop.api.IItemSoon;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
@@ -17,13 +18,19 @@ import com.denfop.container.ContainerBags;
 import com.denfop.container.ContainerLeadBox;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.armour.ItemAdvJetpack;
+import com.denfop.items.armour.special.EnumCapability;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
+import com.denfop.items.block.ItemBlockIU;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.items.modules.ItemEntityModule;
+import com.denfop.items.reactors.IRadioactiveItemType;
+import com.denfop.items.resource.ItemNuclearResource;
 import com.denfop.network.WorldData;
+import com.denfop.network.packet.PacketColorPickerAllLoggIn;
 import com.denfop.tiles.transport.tiles.TileEntityCoolPipes;
 import com.denfop.tiles.transport.tiles.TileEntityExpPipes;
 import com.denfop.tiles.transport.tiles.TileEntityHeatColdPipes;
@@ -33,16 +40,6 @@ import com.denfop.tiles.transport.tiles.TileEntityUniversalCable;
 import com.denfop.utils.CapturedMobUtils;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
-import ic2.core.IC2;
-import ic2.core.IWorldTickCallback;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemNuclearResource;
-import ic2.core.item.block.ItemBlockIC2;
-import ic2.core.item.reactor.ItemReactorUranium;
-import ic2.core.item.type.IRadioactiveItemType;
-import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -51,23 +48,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -87,33 +78,6 @@ public class IUEventHandler {
 
     }
 
-    private static void processUpdates(World world, WorldData worldData) {
-        IC2.platform.profilerStartSection("single-update");
-
-        IWorldTickCallback callback;
-        for (; (callback = worldData.singleUpdates.poll()) != null; callback.onTick(world)) {
-
-        }
-
-        IC2.platform.profilerEndStartSection("cont-update");
-        worldData.continuousUpdatesInUse = true;
-
-        IWorldTickCallback update;
-        for (Iterator var3 = worldData.continuousUpdates.iterator(); var3.hasNext(); update.onTick(world)) {
-            update = (IWorldTickCallback) var3.next();
-
-        }
-
-        worldData.continuousUpdatesInUse = false;
-
-
-        worldData.continuousUpdates.addAll(worldData.continuousUpdatesToAdd);
-        worldData.continuousUpdatesToAdd.clear();
-        worldData.continuousUpdates.removeAll(worldData.continuousUpdatesToRemove);
-        worldData.continuousUpdatesToRemove.clear();
-        IC2.platform.profilerEndSection();
-    }
-
     @SubscribeEvent
     public void loginPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player.getEntityWorld().isRemote) {
@@ -128,7 +92,7 @@ public class IUEventHandler {
             return;
         }
         ItemStack stack = event.getItemStack();
-        if (stack.getItem() == Ic2Items.cutter.getItem()) {
+        if (stack.getItem() == IUItem.cutter) {
 
             final TileEntity tile = event.getWorld().getTileEntity(event.getPos());
             if (tile instanceof com.denfop.tiles.transport.tiles.TileEntityCable) {
@@ -137,7 +101,7 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             } else if (tile instanceof TileEntityHeatColdPipes) {
@@ -146,7 +110,7 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             } else if (tile instanceof TileEntityHeatPipes) {
@@ -155,7 +119,7 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             } else if (tile instanceof TileEntityCoolPipes) {
@@ -164,7 +128,7 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             } else if (tile instanceof TileEntityUniversalCable) {
@@ -173,7 +137,7 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             } else if (tile instanceof TileEntityExpPipes) {
@@ -182,7 +146,7 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             } else if (tile instanceof TileEntityQCable) {
@@ -191,41 +155,26 @@ public class IUEventHandler {
                         100
                 );
                 if (!drops.isEmpty()) {
-                    StackUtil.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
+                    ModUtils.dropAsEntity(event.getWorld(), event.getPos(), drops.get(0));
                 }
                 cable.removeConductor();
             }
         }
     }
+
     @SubscribeEvent
-    public void initiatePlayer(PlayerEvent.PlayerLoggedInEvent event){
-        if(event.player.getEntityWorld().isRemote)
+    public void initiatePlayer(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.player.getEntityWorld().isRemote) {
             return;
-        IUCore.network.get(true).updateColorPickerAll();
+        }
+        new PacketColorPickerAllLoggIn();
     }
+
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         WorldData.onWorldUnload(event.getWorld());
     }
 
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        World world = event.world;
-        WorldData worldData = WorldData.get(world, false);
-        if (worldData != null) {
-            if (event.phase == TickEvent.Phase.START) {
-                IC2.platform.profilerStartSection("updates");
-                processUpdates(world, worldData);
-
-
-            } else {
-                IC2.platform.profilerStartSection("Networking");
-                IUCore.network.get(!world.isRemote).onTickEnd(worldData);
-            }
-            IC2.platform.profilerEndSection();
-
-        }
-    }
 
     @SubscribeEvent
     public void bag_pickup(EntityItemPickupEvent event) {
@@ -277,17 +226,6 @@ public class IUEventHandler {
         }
     }
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onViewRenderFogDensity(EntityViewRenderEvent.FogDensity event) {
-        if (!(event.getState().getBlock() instanceof BlockIUFluid)) {
-            return;
-        }
-        event.setCanceled(true);
-        Fluid fluid = ((BlockIUFluid) event.getState().getBlock()).getFluid();
-        GL11.glFogi(2917, 2048);
-        event.setDensity((float) Util.map(Math.abs(fluid.getDensity()), 20000.0D, 2.0D));
-    }
 
     public void setFly(EntityPlayer player, boolean fly, ItemStack stack) {
         player.capabilities.isFlying = fly;
@@ -321,8 +259,11 @@ public class IUEventHandler {
 
     public boolean canFly(ItemStack stack) {
         return stack
-                .getItem() == IUItem.spectral_chestplate || stack
-                .getItem() == IUItem.adv_nano_chestplate || (stack
+                .getItem() == IUItem.spectral_chestplate ||
+                (stack.getItem() instanceof ItemSpecialArmor && (((ItemSpecialArmor) stack.getItem())
+                        .getListCapability()
+                        .contains(EnumCapability.FLY) || ((ItemSpecialArmor) stack.getItem()).getListCapability().contains(
+                        EnumCapability.JETPACK_FLY))) || (stack
                 .getItem() instanceof ItemAdvJetpack && UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FLY, stack));
     }
 
@@ -397,7 +338,7 @@ public class IUEventHandler {
             event.getToolTip().add(((IItemSoon) item).getDescription());
         }
 
-        if (item instanceof IRadioactiveItemType || item instanceof ItemNuclearResource || item instanceof ItemReactorUranium) {
+        if (item instanceof IRadioactiveItemType || item instanceof ItemNuclearResource) {
             event.getToolTip().add(Localization.translate("iu.radiation.warning"));
         }
 
@@ -429,10 +370,12 @@ public class IUEventHandler {
         }
         if (item.equals(IUItem.crafting_elements) && stack.getItemDamage() >= 206 && stack.getItemDamage() <= 216) {
             int meta = stack.getItemDamage() - 205;
-            event.getToolTip().add(Localization.translate("iu.limiter.info9") + EnergyNet.instance.getPowerFromTier(meta) + " " +
-                    "EU");
+            event
+                    .getToolTip()
+                    .add(Localization.translate("iu.limiter.info9") + EnergyNetGlobal.instance.getPowerFromTier(meta) + " " +
+                            "EF");
         }
-        if (item.equals(IUItem.module7)&& stack.getItemDamage() == 9){
+        if (item.equals(IUItem.module7) && stack.getItemDamage() == 9) {
             event.getToolTip().add(Localization.translate("module.wireless"));
         }
         if (item.equals(IUItem.upgrade_speed_creation) || item.equals(IUItem.autoheater) || item.equals(IUItem.coolupgrade) || item.equals(
@@ -448,8 +391,8 @@ public class IUEventHandler {
                 event.getToolTip().add(Objects.requireNonNull(entity).getName());
             }
         }
-        if (item instanceof ItemBlockIC2) {
-            ItemBlockIC2 itemBlockTileEntity = (ItemBlockIC2) item;
+        if (item instanceof ItemBlockIU) {
+            ItemBlockIU itemBlockTileEntity = (ItemBlockIU) item;
             if (itemBlockTileEntity.getBlock() instanceof BlockIUFluid) {
                 BlockIUFluid blockFluid = (BlockIUFluid) itemBlockTileEntity.getBlock();
                 if (blockFluid.getFluid() == FluidName.fluidgas.getInstance()) {
@@ -603,10 +546,11 @@ public class IUEventHandler {
 
                     final RecipeOutput output1 = entry.getValue().output;
                     final double matter = output1.metadata.getDouble("matter");
-                    String usingMatter = Util.toSiString(matter, 4) + Localization.translate("ic2.generic.text.bucketUnit");
+                    String usingMatter = ModUtils.getStringBukket(matter) + Localization.translate(Constants.ABBREVIATION +
+                            ".generic.text.bucketUnit");
                     event
                             .getToolTip()
-                            .add(Localization.translate("iu.replicator_using_matter") + TextFormatting.DARK_PURPLE + usingMatter);
+                            .add(Localization.translate(Constants.ABBREVIATION + ".replicator_using_matter") + TextFormatting.DARK_PURPLE + usingMatter);
 
                 }
                 break;

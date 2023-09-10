@@ -9,8 +9,8 @@ import com.denfop.api.upgrade.event.EventItemBlackListLoad;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.modules.ItemUpgradeModule;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
@@ -57,13 +57,13 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
                 "mode_module",
                 fill.getItem() instanceof ItemUpgradeModule ? ItemUpgradeModule.getType(fill.getItemDamage()).name : "blacklist"
         );
-        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "upgradeblock",
                 new BaseMachineRecipe(
                         new Input(
-                                input.forStack(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
-                                input.forStack(fill)
+                                input.getInput(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
+                                input.getInput(fill)
                         ),
                         new RecipeOutput(nbt, new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
                 )
@@ -72,7 +72,7 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
                 "antiupgradeblock",
                 new BaseMachineRecipe(
                         new Input(
-                                input.forStack(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
+                                input.getInput(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
                         ),
                         new RecipeOutput(nbt, fill)
                 )
@@ -85,13 +85,13 @@ public class BaseUpgradeSystem implements IUpgradeSystem {
                 "type",
                 type
         );
-        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "upgradeblock",
                 new BaseMachineRecipe(
                         new Input(
-                                input.forStack(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
-                                input.forStack(fill)
+                                input.getInput(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
+                                input.getInput(fill)
                         ),
                         new RecipeOutput(nbt, new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
                 )

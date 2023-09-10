@@ -1,9 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.container.ContainerPrivatizer;
-import ic2.core.init.Localization;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiPrivatizer extends GuiIC2<ContainerPrivatizer> {
+public class GuiPrivatizer extends GuiCore<ContainerPrivatizer> {
 
     public final ContainerPrivatizer container;
 
@@ -39,7 +39,7 @@ public class GuiPrivatizer extends GuiIC2<ContainerPrivatizer> {
     protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         if (guibutton.id == 0) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
 
         }
     }

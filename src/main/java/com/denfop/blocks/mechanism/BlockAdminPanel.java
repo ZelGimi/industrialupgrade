@@ -2,31 +2,25 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.base.TileEntityAdminSolarPanel;
-import ic2.api.item.ITeBlockSpecialItem;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import com.denfop.api.item.IMultiBlockItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileAdminSolarPanel;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockAdminPanel implements ITeBlock, ITeBlockSpecialItem {
+public enum BlockAdminPanel implements IMultiTileBlock, IMultiBlockItem {
 
-    admpanel(TileEntityAdminSolarPanel.class, 0),
+    admpanel(TileAdminSolarPanel.class, 0),
     ;
 
 
@@ -53,31 +47,15 @@ public enum BlockAdminPanel implements ITeBlock, ITeBlockSpecialItem {
 
     }
 
-    public static void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
-        if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
-            throw new IllegalAccessError("Don't mess with this please.");
-        }
+    public void buildDummies() {
         for (final BlockAdminPanel block : values()) {
             if (block.teClass != null) {
                 try {
                     block.dummyTe = block.teClass.newInstance();
-                } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+                } catch (Exception ignored) {
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
-    }
-
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
@@ -108,14 +86,13 @@ public enum BlockAdminPanel implements ITeBlock, ITeBlockSpecialItem {
 
     @Override
     public boolean hasActive() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -124,26 +101,15 @@ public enum BlockAdminPanel implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override
@@ -157,7 +123,7 @@ public enum BlockAdminPanel implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public boolean doesOverrideDefault(final ItemStack itemStack) {
+    public boolean hasUniqueRender(final ItemStack itemStack) {
         return true;
     }
 

@@ -1,0 +1,23 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"basalt": { "model": "industrialupgrade:resource/basalt" },
+			"bronze_block": { "model": "industrialupgrade:resource/bronze_block" },
+			"copper_block": { "model": "industrialupgrade:resource/copper_block" },
+			"lead_block": { "model": "industrialupgrade:resource/lead_block" },
+			"steel_block": { "model": "industrialupgrade:resource/steel_block" },
+			"tin_block": { "model": "industrialupgrade:resource/tin_block" },
+			"uranium_block": { "model": "industrialupgrade:resource/uranium_block" },
+			"reinforced_stone": { "model": "industrialupgrade:resource/reinforced_stone" },
+			"machine": { "model": "industrialupgrade:resource/machine" },
+			"advanced_machine": { "model": "industrialupgrade:resource/advanced_machine" }
+			
+		},
+		"inventory": [{}]
+	}
+}
+

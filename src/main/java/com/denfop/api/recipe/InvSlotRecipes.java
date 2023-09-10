@@ -3,12 +3,12 @@ package com.denfop.api.recipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
+import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotConsumableLiquidByList;
-import com.denfop.tiles.base.TileEntityConverterSolidMatter;
+import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.api.upgrade.IUpgradeItem;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     private List<BaseMachineRecipe> recipe_list;
     private Fluids.InternalFluidTank tank;
 
-    private InvSlotConsumableLiquidByList invSlotConsumableLiquidByList = null;
+    private InvSlotFluidByList invSlotConsumableLiquidByList = null;
 
 
     public InvSlotRecipes(final TileEntityInventory base, IBaseRecipe baseRecipe, IUpdateTick tile) {
-        super(base, "input", Access.I, baseRecipe.getSize());
+        super(base, TypeItemSlot.INPUT, baseRecipe.getSize());
         this.recipe = baseRecipe;
         this.recipe_list = Recipes.recipes.getRecipeList(this.recipe.getName());
         this.accepts = Recipes.recipes.getMap_recipe_managers_itemStack(this.recipe.getName());
@@ -67,7 +67,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         return tile;
     }
 
-    public void setInvSlotConsumableLiquidByList(final InvSlotConsumableLiquidByList invSlotConsumableLiquidByList) {
+    public void setInvSlotConsumableLiquidByList(final InvSlotFluidByList invSlotConsumableLiquidByList) {
         this.invSlotConsumableLiquidByList = invSlotConsumableLiquidByList;
     }
 
@@ -174,8 +174,8 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
         }
         MachineRecipe output;
         output = this.getOutputFor();
-        if (this.tile instanceof TileEntityConverterSolidMatter) {
-            TileEntityConverterSolidMatter mechanism = (TileEntityConverterSolidMatter) this.tile;
+        if (this.tile instanceof TileConverterSolidMatter) {
+            TileConverterSolidMatter mechanism = (TileConverterSolidMatter) this.tile;
             if (output != null) {
                 mechanism.getrequiredmatter(output.getRecipe().getOutput());
             }
@@ -191,7 +191,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
             }
         }
         List<ItemStack> list = new ArrayList<>();
-        this.forEach(list::add);
+        this.contents.forEach(list::add);
         if (this.tank == null) {
             return Recipes.recipes.getRecipeConsume(this.recipe, this.tile.getRecipeOutput(), this.recipe.consume(), list);
         } else {
@@ -223,7 +223,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
 
     private MachineRecipe getOutputFor() {
         List<ItemStack> list = new ArrayList<>();
-        this.forEach(list::add);
+        this.contents.forEach(list::add);
         list = list.stream().limit(this.recipe.getSize()).collect(Collectors.toList());
         if (this.tank == null) {
             return Recipes.recipes.getRecipeMachineRecipeOutput(this.recipe, this.recipe_list, false, list);

@@ -35,7 +35,7 @@ public class GuiWitherMaker extends GuiIU<ContainerBaseWitherMaker> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 80, 50, 91, 65)
                 .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);

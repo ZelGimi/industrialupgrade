@@ -1,7 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -9,10 +9,9 @@ import com.denfop.api.windsystem.EnumTypeWind;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
 import com.denfop.container.ContainerWindGenerator;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -65,7 +64,7 @@ public class GuiWindGenerator extends GuiIU<ContainerWindGenerator> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 12 && x <= 25 && y >= 45 && y <= 68) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
 
 
@@ -79,7 +78,7 @@ public class GuiWindGenerator extends GuiIU<ContainerWindGenerator> {
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
         if (!this.container.base.slot.isEmpty()) {
@@ -181,7 +180,7 @@ public class GuiWindGenerator extends GuiIU<ContainerWindGenerator> {
                     33, 80, ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(Localization.translate("iu.wind_gen") +
-                            ModUtils.getString(this.container.base.generation) + " EU/t",
+                            ModUtils.getString(this.container.base.generation) + " EF/t",
                     33, 90, ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
             this.fontRenderer.drawString(Localization.translate("iu.wind_coef") + String.format(

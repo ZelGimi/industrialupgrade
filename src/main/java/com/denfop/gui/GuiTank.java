@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiTank extends GuiIC2<ContainerTank> {
+public class GuiTank extends GuiCore<ContainerTank> {
 
     public final ContainerTank container;
 

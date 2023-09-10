@@ -1,10 +1,7 @@
 package com.denfop.invslot;
 
-import com.denfop.tiles.mechanism.energy.TileEntityEnergySubstitute;
-import com.denfop.tiles.transport.types.CableType;
-import ic2.core.util.StackUtil;
+import com.denfop.tiles.mechanism.energy.TileEnergySubstitute;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,18 +9,13 @@ import java.util.List;
 
 public class InvSlotSubstitute extends InvSlot {
 
-    private final TileEntityEnergySubstitute tile;
+    private final TileEnergySubstitute tile;
 
-    public InvSlotSubstitute(TileEntityEnergySubstitute tileEntityEnergySubstitute) {
-        super(tileEntityEnergySubstitute, "slot", Access.I, 16);
+    public InvSlotSubstitute(TileEnergySubstitute tileEntityEnergySubstitute) {
+        super(tileEntityEnergySubstitute, TypeItemSlot.INPUT, 16);
         this.tile = tileEntityEnergySubstitute;
     }
 
-    private static CableType getCableType(ItemStack stack) {
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
-        int type = nbt.getByte("type") & 255;
-        return type < CableType.values.length ? CableType.values[type] : CableType.glass;
-    }
 
     public boolean add(List<ItemStack> stacks) {
         return this.add(stacks, false);
@@ -105,7 +97,7 @@ public class InvSlotSubstitute extends InvSlot {
                 this.tile.getCableItemList().clear();
                 this.tile.max_value = 0;
                 List<CableItem> cableItemList = new ArrayList<>();
-                for (ItemStack stack : this) {
+                for (ItemStack stack : this.gets()) {
                     if (stack.isEmpty()) {
                         continue;
                     }

@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.base.TileEntityLiquedTank;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerTank extends ContainerFullInv<TileEntityLiquedTank> {
 
     public ContainerTank(EntityPlayer entityPlayer, TileEntityLiquedTank tileEntity1) {
@@ -18,10 +16,5 @@ public class ContainerTank extends ContainerFullInv<TileEntityLiquedTank> {
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("fluidTank");
-        return ret;
-    }
 
 }

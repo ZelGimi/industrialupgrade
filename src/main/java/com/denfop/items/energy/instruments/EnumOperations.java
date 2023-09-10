@@ -1,6 +1,6 @@
 package com.denfop.items.energy.instruments;
 
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 import net.minecraft.util.text.TextFormatting;
 
 public enum EnumOperations {

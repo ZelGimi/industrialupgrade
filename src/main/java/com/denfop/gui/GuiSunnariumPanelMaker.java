@@ -2,7 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.tiles.mechanism.TileEntitySunnariumPanelMaker;
+import com.denfop.tiles.mechanism.TileSunnariumPanelMaker;
 import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,15 +23,15 @@ public class GuiSunnariumPanelMaker extends GuiIU<ContainerDoubleElectricMachine
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         String tooltip =
-                "SE: " + ModUtils.getString(((TileEntitySunnariumPanelMaker) this.container.base).sunenergy.getEnergy()) + "/" + ModUtils.getString(
-                        ((TileEntitySunnariumPanelMaker) this.container.base).sunenergy.getCapacity());
+                "SE: " + ModUtils.getString(((TileSunnariumPanelMaker) this.container.base).sunenergy.getEnergy()) + "/" + ModUtils.getString(
+                        ((TileSunnariumPanelMaker) this.container.base).sunenergy.getCapacity());
         new AdvArea(this, 100, 60, 125, 70).withTooltip(tooltip).drawForeground(mouseX, mouseY);
         String tooltip2 =
                 ModUtils.getString(Math.min(
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 26, 56, 37, 71)
                 .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);
@@ -50,8 +50,8 @@ public class GuiSunnariumPanelMaker extends GuiIU<ContainerDoubleElectricMachine
                     14, chargeLevel
             );
         }
-        if (((TileEntitySunnariumPanelMaker) this.container.base).sunenergy.getEnergy() > 0.0D) {
-            int i1 = (int) (24.0D * ((TileEntitySunnariumPanelMaker) this.container.base).sunenergy.getFillRatio());
+        if (((TileSunnariumPanelMaker) this.container.base).sunenergy.getEnergy() > 0.0D) {
+            int i1 = (int) (24.0D * ((TileSunnariumPanelMaker) this.container.base).sunenergy.getFillRatio());
             drawTexturedModalRect(xoffset + 101, yoffset + 57, 176, 49, i1 + 1, 16);
         }
         if (progress > 0) {

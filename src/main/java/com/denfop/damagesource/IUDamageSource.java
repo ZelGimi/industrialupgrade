@@ -2,23 +2,20 @@ package com.denfop.damagesource;
 
 import net.minecraft.util.DamageSource;
 
-public class IUDamageSource extends DamageSource {
+public class IUDamageSource {
 
-    public static final IUDamageSource current;
-    public static final IUDamageSource radiation;
+    public static final DamageSource current;
+    public static final DamageSource radiation;
 
-    public static final IUDamageSource frostbite;
+    public static final DamageSource frostbite;
 
     static {
 
-        current = (IUDamageSource) new IUDamageSource(("current")).setDamageBypassesArmor();
-        radiation = (IUDamageSource) new IUDamageSource(("radiation")).setDamageBypassesArmor().setFireDamage();
-        frostbite = (IUDamageSource) new IUDamageSource(("frostbite")).setDamageBypassesArmor().setFireDamage();
+        current = new DamageSource(("current")).setDamageBypassesArmor();
+        radiation = new DamageSource(("radiation")).setDamageBypassesArmor().setFireDamage();
+        frostbite = new DamageSource(("frostbite")).setDamageBypassesArmor().setFireDamage();
 
     }
 
-    public IUDamageSource(final String s) {
-        super(s);
-    }
 
 }

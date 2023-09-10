@@ -1,7 +1,7 @@
 package com.denfop.tiles.mechanism.blastfurnace.api;
 
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastFurnaceMain;
+import com.denfop.tiles.mechanism.blastfurnace.block.TileBlastFurnaceMain;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -11,8 +11,8 @@ public class InvSlotBlastFurnace extends InvSlot {
 
     private int stackSizeLimit;
 
-    public InvSlotBlastFurnace(TileEntityBlastFurnaceMain base1) {
-        super(base1, "input", InvSlot.Access.I, 1, InvSide.ANY);
+    public InvSlotBlastFurnace(TileBlastFurnaceMain base1) {
+        super(base1, TypeItemSlot.INPUT, 1);
         this.setStackSizeLimit(64);
     }
 

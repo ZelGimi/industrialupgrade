@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -8,8 +9,6 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.items.ItemPaints;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -59,7 +58,7 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 26, 56, 37, 71)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -91,7 +90,7 @@ public class GuiPainting extends GuiIU<ContainerDoubleElectricMachine> {
 
         this.mc.getTextureManager().bindTexture(getTexture());
 
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         this.drawTexturedModalRect(this.guiLeft + 165, this.guiTop, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(this.getTexture());
 

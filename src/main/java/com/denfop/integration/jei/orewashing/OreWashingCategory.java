@@ -2,8 +2,8 @@ package com.denfop.integration.jei.orewashing;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -61,7 +61,7 @@ public class OreWashingCategory extends Gui implements IRecipeCategory<OreWashin
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
+        int energylevel = (int) Math.min(16.0F * energy / 100, 16);
 
         int xScale = 24 * progress / 100;
         if (xScale > 24) {
@@ -77,7 +77,7 @@ public class OreWashingCategory extends Gui implements IRecipeCategory<OreWashin
         drawTexturedModalRect(66 - 1, 12 + 19, 192 + 34 - 16, 14 + 24 * 3, 17, 24);
         drawTexturedModalRect(66 - 1, 12 + 19, 192 + 36, 14 + 24 * 3, 17, xScale + 1);
         drawTexturedModalRect(
-                +2, 44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +4, 42 + 16 - energylevel, 176, 16 - energylevel, 16,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);

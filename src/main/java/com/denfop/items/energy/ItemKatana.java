@@ -1,28 +1,22 @@
 package com.denfop.items.energy;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.AudioSource;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.items.armour.special.ItemSpecialArmor;
+import com.denfop.network.packet.PacketSoundPlayer;
+import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IBoxable;
-import ic2.api.item.IElectricItem;
-import ic2.api.item.IItemHudInfo;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.armor.ItemArmorNanoSuit;
-import ic2.core.item.armor.ItemArmorQuantumSuit;
-import ic2.core.slot.ArmorSlot;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -55,47 +49,37 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem, IBoxable, IItemHudInfo, IModelRegister {
+public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, IModelRegister {
 
     public final int maxCharge;
     public final int transferLimit;
     public final int tier;
-    private final EnumSet<ToolClass> toolClasses;
     private final String name;
     public int damage1;
-    protected AudioSource audioSource;
     private int soundTicker;
 
 
     public ItemKatana(
             String name
     ) {
-        super(0, 2, HarvestLevel.Diamond.toolMaterial, Collections.emptySet());
+        super(0, 2, ToolMaterial.DIAMOND, Collections.emptySet());
         this.soundTicker = 0;
-        this.toolClasses = EnumSet.of(ToolClass.Sword);
         this.maxCharge = 500000;
         this.transferLimit = 5000;
         this.tier = 4;
         this.name = name;
         this.damage1 = 13;
-        setMaxDamage(27);
         setMaxStackSize(1);
         setNoRepair();
         setUnlocalizedName(name);
         setCreativeTab(IUCore.EnergyTab);
-
-        for (final ToolClass aClass : toolClasses) {
-            if (((IToolClass) aClass).getName() != null) {
-                this.setHarvestLevel(((IToolClass) aClass).getName(), HarvestLevel.Diamond.level);
-            }
-        }
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        this.setHarvestLevel("sword", 3);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.SABERS.list);
 
@@ -108,6 +92,24 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
                 "energy_tools" + "/" + name + extraName;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        );
     }
 
     @SideOnly(Side.CLIENT)
@@ -175,29 +177,6 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
     }
 
     public boolean canHarvestBlock(IBlockState state, @Nonnull ItemStack itemStack) {
-        Material material = state.getMaterial();
-        Iterator var4 = this.toolClasses.iterator();
-
-        IToolClass toolClass;
-        do {
-            if (!var4.hasNext()) {
-                return super.canHarvestBlock(state, itemStack);
-            }
-
-            toolClass = (IToolClass) var4.next();
-            if (toolClass.getBlacklist().contains(state.getBlock())) {
-                return false;
-            }
-
-            if (toolClass.getBlacklist().contains(material)) {
-                return false;
-            }
-
-            if (toolClass.getWhitelist().contains(state.getBlock())) {
-                return true;
-            }
-        } while (!toolClass.getWhitelist().contains(material));
-
         return true;
     }
 
@@ -211,7 +190,7 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
     }
 
     @Override
-    public double getMaxCharge(ItemStack itemStack) {
+    public double getMaxEnergy(ItemStack itemStack) {
         return this.maxCharge;
     }
 
@@ -229,7 +208,7 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
 
         this.soundTicker++;
         if (this.soundTicker % 4 == 0) {
-            IC2.platform.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
+            IUCore.proxy.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
         }
         return 4.0F;
 
@@ -265,7 +244,7 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
 
     @Override
     public boolean hitEntity(@Nonnull ItemStack stack, @Nonnull EntityLivingBase target, @Nonnull EntityLivingBase source) {
-        if (IC2.platform.isSimulating()) {
+        if (IUCore.proxy.isSimulating()) {
             if (!drainSaber(stack, 400.0D)) {
                 return false;
             }
@@ -287,11 +266,17 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
             if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.HUNGRY, stack)) {
                 target.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 60));
             }
-
+            if (source instanceof EntityPlayerMP) {
+                new PacketSoundPlayer("katana", (EntityPlayer) source);
+            }
             Iterator<EntityEquipmentSlot> var4;
             if (!(source instanceof EntityPlayerMP) || !(target instanceof EntityPlayer) || ((EntityPlayerMP) source).canAttackPlayer(
                     (EntityPlayer) target)) {
-                var4 = ArmorSlot.getAll().iterator();
+                var4 = Arrays
+                        .stream(EntityEquipmentSlot.values())
+                        .filter(slot -> slot != EntityEquipmentSlot.MAINHAND && slot != EntityEquipmentSlot.OFFHAND)
+                        .iterator();
+
 
                 while (var4.hasNext()) {
                     EntityEquipmentSlot slot = var4.next();
@@ -302,10 +287,8 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
                     ItemStack armor = target.getItemStackFromSlot(slot);
                     if (armor.isEmpty()) {
                         double amount = 0.0D;
-                        if (armor.getItem() instanceof ItemArmorNanoSuit) {
-                            amount = 48000.0D;
-                        } else if (armor.getItem() instanceof ItemArmorQuantumSuit) {
-                            amount = 300000.0D;
+                        if (armor.getItem() instanceof ItemSpecialArmor) {
+                            amount = ((ItemSpecialArmor) armor.getItem()).getArmor().getDamageEnergy();
                         }
 
                         if (amount > 0.0D) {
@@ -321,22 +304,22 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
 
             }
         }
-        if (IC2.platform.isRendering()) {
-            IC2.platform.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
+        if (IUCore.proxy.isRendering()) {
+            IUCore.proxy.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
         }
         return true;
     }
 
     public String getRandomSwingSound() {
-        switch (IC2.random.nextInt(3)) {
+        switch (IUCore.random.nextInt(3)) {
             default:
-                return "Tools/Nanosabre/NanosabreSwing1.ogg";
+                return "nanosabreswing1";
             case 1:
-                return "Tools/Nanosabre/NanosabreSwing2.ogg";
+                return "nanosabreswing2";
             case 2:
                 break;
         }
-        return "Tools/Nanosabre/NanosabreSwing3.ogg";
+        return "nanosabreswing3";
     }
 
     @Override
@@ -374,13 +357,13 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
     }
 
     @Override
-    public int getTier(ItemStack itemStack) {
+    public short getTierItem(ItemStack itemStack) {
 
-        return this.tier;
+        return (short) this.tier;
     }
 
     @Override
-    public double getTransferLimit(ItemStack itemStack) {
+    public double getTransferEnergy(ItemStack itemStack) {
 
         return this.transferLimit;
     }
@@ -393,13 +376,6 @@ public class ItemKatana extends ItemTool implements IElectricItem, IUpgradeItem,
         return false;
     }
 
-    @Override
-    public List<String> getHudInfo(final ItemStack itemStack, final boolean b) {
-        List<String> info = new LinkedList<>();
-        info.add(ElectricItem.manager.getToolTip(itemStack));
-        info.add(Localization.translate("ic2.item.tooltip.PowerTier") + " " + this.tier);
-        return info;
-    }
 
     @Override
     public void registerModels() {

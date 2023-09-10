@@ -2,19 +2,15 @@ package com.denfop.gui;
 
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.EnumTypeComponent;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.TankGauge;
+import com.denfop.Localization;
+import com.denfop.api.gui.*;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.IUpgradeItem;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMatter;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.init.Localization;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -37,8 +33,8 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
     public GuiMultiMatter(ContainerMultiMatter container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-        this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");
-        this.amplifierLabel = Localization.translate("ic2.Matter.gui.info.amplifier");
+        this.progressLabel = Localization.translate("Matter.gui.info.progress");
+        this.amplifierLabel = Localization.translate("Matter.gui.info.amplifier");
         addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
         this.xSize = 200;
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
@@ -67,7 +63,7 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 182 && x <= 190 && y >= 6 && y <= 14) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
     }
 
@@ -75,7 +71,7 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
 
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
-            text.add(Localization.translate("ic2.generic.text.upgrade"));
+            text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
                 text.add(stack.getDisplayName());
@@ -97,8 +93,8 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
         }
         FluidStack fluidstack = (this.container.base).fluidTank.getFluid();
         if (fluidstack != null) {
-            String tooltip = Localization.translate("ic2.uumatter") + ": " + fluidstack.amount
-                    + Localization.translate("ic2.generic.text.mb");
+            String tooltip = Localization.translate("iu.fluiduu_matter") + ": " + fluidstack.amount
+                    + Localization.translate(Constants.ABBREVIATION + ".generic.text.mb");
             new Area(this, 99, 25, 112 - 99, 73 - 25).withTooltip(tooltip).drawForeground(par1, par2);
 
         }

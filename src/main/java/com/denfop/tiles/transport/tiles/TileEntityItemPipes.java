@@ -1,90 +1,96 @@
 package com.denfop.tiles.transport.tiles;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.transport.*;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.transport.FluidHandler;
+import com.denfop.api.transport.ITransportAcceptor;
+import com.denfop.api.transport.ITransportConductor;
+import com.denfop.api.transport.ITransportEmitter;
+import com.denfop.api.transport.ITransportTile;
+import com.denfop.api.transport.TransportFluidItemSinkSource;
+import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.transport.event.TransportTileLoadEvent;
 import com.denfop.api.transport.event.TransportTileUnLoadEvent;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockItemPipes;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.ItemType;
-import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.core.IC2;
-import ic2.core.IWorldTickCallback;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.block.state.Ic2BlockState;
-import ic2.core.block.state.UnlistedProperty;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityItemPipes extends TileEntityBlock implements ITransportConductor, INetworkTileEntityEventListener {
+public class TileEntityItemPipes extends TileEntityMultiCable implements ITransportConductor {
 
-    public static final IUnlistedProperty<CableRenderState> renderStateProperty = (IUnlistedProperty<CableRenderState>) new UnlistedProperty(
-            "renderstate",
-            CableRenderState.class
-    );
-    private final IWorldTickCallback continuousUpdate = null;
+
     public boolean addedToEnergyNet = false;
-    protected ItemType cableType = ItemType.itemcable;
-    private byte connectivity = 0;
-    private byte color = 0;
-    private volatile CableRenderState renderState;
-
-    public TileEntityItemPipes(ItemType cableType) {
-        this();
-        this.cableType = cableType;
-    }
+    protected ItemType cableType;
 
     public TileEntityItemPipes() {
+        super(ItemType.itemcable);
+        this.cableType = ItemType.itemcable;
+        this.active = this.cableType.name();
     }
+
+    public TileEntityItemPipes(ItemType cableType) {
+        super(cableType);
+        this.cableType = cableType;
+        this.active = this.cableType.name();
+    }
+
 
     public static TileEntityItemPipes delegate(ItemType cableType) {
         return new TileEntityItemPipes(cableType);
     }
 
+    public IMultiTileBlock getTeBlock() {
+        return BlockItemPipes.item_pipes;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.blockItemPipes;
+    }
+
+    public ICableItem getCableItem() {
+        return cableType;
+    }
+
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.cableType = ItemType.values[nbt.getByte("cableType") & 0xFF];
-        this.color = nbt.getByte("color");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
-        nbt.setByte("color", this.color);
         return nbt;
     }
 
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
-        if ((getWorld()).isRemote) {
-            updateRenderState();
-        } else {
+        if (!(getWorld()).isRemote) {
             EnumFacing[] var4 = EnumFacing.VALUES;
 
 
@@ -359,8 +365,8 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
         }
     }
 
-    protected void onUnloaded() {
-        if (IC2.platform.isSimulating() && this.addedToEnergyNet) {
+    public void onUnloaded() {
+        if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             EnumFacing[] var4 = EnumFacing.VALUES;
             for (EnumFacing dir : var4) {
                 ITransportTile tile = TransportNetGlobal.instance.getSubTile(this.world, this.pos.offset(dir));
@@ -424,99 +430,11 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
         super.onUnloaded();
     }
 
-    protected SoundType getBlockSound(Entity entity) {
-        return SoundType.CLOTH;
-    }
 
-    public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
-        updateRenderState();
-        super.onPlaced(stack, placer, facing);
-    }
-
-    protected ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
+    public ItemStack getPickBlock(EntityPlayer player, RayTraceResult target) {
         return new ItemStack(IUItem.item_pipes, 1, this.cableType.ordinal());
     }
 
-    protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
-        float th = 0.25F;
-        float sp = (1.0F - th) / 2.0F;
-        List<AxisAlignedBB> ret = new ArrayList<>(7);
-        ret.add(new AxisAlignedBB(sp, sp, sp, (sp + th), (sp + th), (sp + th)));
-        EnumFacing[] var5 = EnumFacing.VALUES;
-        for (EnumFacing facing : var5) {
-            boolean hasConnection = ((this.connectivity & 1 << facing.ordinal()) != 0);
-            if (hasConnection) {
-                float zS = sp;
-                float yS = sp;
-                float xS = sp;
-                float zE = sp + th, yE = zE, xE = yE;
-                switch (facing) {
-                    case DOWN:
-                        yS = 0.0F;
-                        yE = sp;
-                        break;
-                    case UP:
-                        yS = sp + th;
-                        yE = 1.0F;
-                        break;
-                    case NORTH:
-                        zS = 0.0F;
-                        zE = sp;
-                        break;
-                    case SOUTH:
-                        zS = sp + th;
-                        zE = 1.0F;
-                        break;
-                    case WEST:
-                        xS = 0.0F;
-                        xE = sp;
-                        break;
-                    case EAST:
-                        xS = sp + th;
-                        xE = 1.0F;
-                        break;
-                    default:
-                        throw new RuntimeException();
-                }
-                ret.add(new AxisAlignedBB(xS, yS, zS, xE, yE, zE));
-            }
-        }
-        return ret;
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    protected boolean isNormalCube() {
-        return false;
-    }
-
-    protected boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
-
-    protected boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    protected boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
-
-    public Ic2BlockState.Ic2BlockStateInstance getExtendedState(Ic2BlockState.Ic2BlockStateInstance state) {
-        state = super.getExtendedState(state);
-        CableRenderState cableRenderState = this.renderState;
-        if (cableRenderState != null) {
-            state = state.withProperties(renderStateProperty, cableRenderState);
-        }
-        return state;
-    }
 
     public void onNeighborChange(Block neighbor, BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
@@ -528,9 +446,9 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
     private void updateConnectivity() {
         World world = getWorld();
         byte newConnectivity = 0;
-        int mask = 1;
         EnumFacing[] var4 = EnumFacing.VALUES;
         for (EnumFacing dir : var4) {
+            newConnectivity = (byte) (newConnectivity << 1);
             ITransportTile tile = TransportNetGlobal.instance.getSubTile(world, this.pos.offset(dir));
             if ((tile instanceof ITransportAcceptor && ((ITransportAcceptor) tile).acceptsFrom(this, dir
 
@@ -538,39 +456,13 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
                     .emitsTo(this, dir
 
                             .getOpposite()))) {
-                newConnectivity = (byte) (newConnectivity | mask);
+                newConnectivity = (byte) (newConnectivity + 1);
             }
-            mask *= 2;
+
         }
-        if (this.connectivity != newConnectivity) {
-            this.connectivity = newConnectivity;
-            IC2.network.get(true).updateTileEntityField(this, "connectivity");
-        }
+        setConnectivity(newConnectivity);
     }
 
-    protected boolean onActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
-    }
-
-    protected void onClicked(EntityPlayer player) {
-        super.onClicked(player);
-    }
-
-    protected float getHardness() {
-        return super.getHardness();
-    }
-
-    protected int getLightOpacity() {
-        return 0;
-    }
-
-    protected boolean recolor(EnumFacing side, EnumDyeColor mcColor) {
-        return false;
-    }
-
-    protected boolean onRemovedByPlayer(EntityPlayer player, boolean willHarvest) {
-        return super.onRemovedByPlayer(player, willHarvest);
-    }
 
     public boolean wrenchCanRemove(EntityPlayer player) {
         return false;
@@ -588,18 +480,27 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
         return this.cableType.isItem();
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = new ArrayList<>();
-        ret.add("cableType");
-        ret.add("connectivity");
-        ret.addAll(super.getNetworkedFields());
-        return ret;
+
+    public CustomPacketBuffer writePacket() {
+        final CustomPacketBuffer packet = super.writePacket();
+        try {
+            EncoderHandler.encode(packet, cableType);
+            EncoderHandler.encode(packet, connectivity);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
     }
 
-    public void onNetworkUpdate(String field) {
-        updateRenderState();
-        rerender();
-        super.onNetworkUpdate(field);
+    public void readPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        try {
+            cableType = ItemType.values[(int) DecoderHandler.decode(customPacketBuffer)];
+            connectivity = (byte) DecoderHandler.decode(customPacketBuffer);
+            this.rerender();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void onNetworkEvent(int event) {
@@ -615,18 +516,9 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
                         .getY() + 1.2D, this.pos
                         .getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
             }
-        } else {
-            IC2.platform.displayError(
-                    "An unknown event type was received over multiplayer.\nThis could happen due to corrupted data or a bug.\n\n(Technical information: event ID " + event + ", tile entity below)\nT: " + this + " (" + this.pos + ")"
-            );
         }
     }
 
-    private void updateRenderState() {
-        this
-
-                .renderState = new CableRenderState(this.cableType, this.connectivity, getActive());
-    }
 
     public boolean acceptsFrom(ITransportEmitter var1, EnumFacing var2) {
         if (this.cableType.isItem()) {
@@ -653,42 +545,5 @@ public class TileEntityItemPipes extends TileEntityBlock implements ITransportCo
         return this.pos;
     }
 
-    public static class CableRenderState {
-
-        public final ItemType type;
-
-        public final int connectivity;
-
-        public final boolean active;
-
-        public CableRenderState(ItemType type, int connectivity, boolean active) {
-            this.type = type;
-            this.connectivity = connectivity;
-            this.active = active;
-        }
-
-        public int hashCode() {
-            int ret = this.type.hashCode();
-            ret = ret * 31 + this.connectivity;
-            ret = ret << 1 | (this.active ? 1 : 0);
-            return ret;
-        }
-
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof CableRenderState)) {
-                return false;
-            }
-            CableRenderState o = (CableRenderState) obj;
-            return (o.type == this.type && o.connectivity == this.connectivity && o.active == this.active);
-        }
-
-        public String toString() {
-            return "CableState<" + this.type + ", " + this.connectivity + ", " + this.active + '>';
-        }
-
-    }
 
 }

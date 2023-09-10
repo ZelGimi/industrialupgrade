@@ -1,0 +1,16 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"wood": { "model": "industrialupgrade:wood_scaffold" },
+			"reinforced_wood": { "model": "industrialupgrade:reinforced_wood_scaffold" },
+			"iron": { "model": "industrialupgrade:iron_scaffold" },
+			"reinforced_iron": { "model": "industrialupgrade:reinforced_iron_scaffold" }
+		},
+		"inventory": [{}]
+	}
+}
+

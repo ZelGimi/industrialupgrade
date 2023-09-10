@@ -36,7 +36,7 @@ public class TileBaseResearchTable extends TileEntityInventory implements IResea
     }
 
     @Override
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
         MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
     }

@@ -1,11 +1,11 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerBaseMolecular;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
+public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
 
     public final ContainerBaseMolecular container;
 
@@ -34,7 +34,7 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         new AdvArea(this, 7, 3, 58, 17).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3"+ "\n" + (this.container.base.queue ? "x64" : "x1"))).drawForeground(mouseX, mouseY);
+                "iu.molecular_info3") + "\n" + (this.container.base.queue ? "x64" : "x1")).drawForeground(mouseX, mouseY);
         new AdvArea(this, 180, 3, 195, 17)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
@@ -80,7 +80,7 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                 );
                 this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output1.getRecipe().output.metadata.getDouble(
                                 "energy")) +
-                                " EU",
+                                " EF",
                         this.guiLeft + 60, this.guiTop + 25 + 22, 4210752
                 );
                 if (this.container.base.getProgress() * 100 <= 100) {
@@ -96,7 +96,7 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                     );
                 }
                 this.fontRenderer.drawString(
-                        "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
+                        "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
                         this.guiLeft + 60, this.guiTop + 25 + 44, 4210752
                 );
                 double hours = 0;
@@ -150,7 +150,7 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                             this.guiTop + 25 + 11,
                             4210752
                     );
-                    this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(this.container.base.energy.getCapacity()) + " EU",
+                    this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(this.container.base.energy.getCapacity()) + " EF",
                             this.guiLeft + 60, this.guiTop + 25 + 22, 4210752
                     );
                     if (this.container.base.getProgress() * 100 <= 100) {
@@ -167,7 +167,7 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
                     }
 
                     this.fontRenderer.drawString(
-                            "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
+                            "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
                             this.guiLeft + 60, this.guiTop + 25 + 44, 4210752
                     );
                     double hours = 0;
@@ -242,11 +242,11 @@ public class GuiMolecularTransformer extends GuiIC2<ContainerBaseMolecular> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 180 && x <= 197 && y >= 3 && y <= 17) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
 
         if (x >= 7 && x <= 60 && y >= 3 && y <= 17) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            new PacketUpdateServerTile(this.container.base, 1);
         }
 
     }

@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -8,7 +9,6 @@ import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerPlasticPlateCreator;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,7 +35,7 @@ public class GuiPlasticPlateCreator extends GuiIU<ContainerPlasticPlateCreator> 
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 58, 35, 69, 50)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -64,7 +64,7 @@ public class GuiPlasticPlateCreator extends GuiIU<ContainerPlasticPlateCreator> 
             drawTexturedModalRect(xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);
         }
         TankGauge.createNormal(this, 6, 5, container.base.fluidTank).drawBackground(xoffset, yoffset);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 

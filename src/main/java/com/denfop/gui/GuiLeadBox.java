@@ -1,15 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.container.ContainerLeadBox;
-import ic2.core.init.Localization;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiLeadBox extends GuiIC2<ContainerLeadBox> {
+public class GuiLeadBox extends GuiCore<ContainerLeadBox> {
 
     private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png");
     private final String name;

@@ -1,8 +1,9 @@
 package com.denfop.integration.jei.doublemolecular;
 
+import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -51,7 +52,7 @@ public class DoubleMolecularTransformerRecipeWrapper implements IRecipeWrapper {
                 Localization.translate("gui.MolecularTransformer.output") + ": " + container.getOutput().getDisplayName();
         this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation") + ":",
                 ModUtils.getString(container.getEnergy()),
-                Localization.translate("ic2.generic.text.EU")
+                Localization.translate(Constants.ABBREVIATION + ".generic.text.EF")
         );
     }
 

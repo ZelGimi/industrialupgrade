@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
+import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerQuantumQuarry extends ContainerFullInv<TileBaseQuantumQuarry> {
 
-public class ContainerQuantumQuarry extends ContainerFullInv<TileEntityBaseQuantumQuarry> {
-
-    public ContainerQuantumQuarry(EntityPlayer entityPlayer, TileEntityBaseQuantumQuarry tileEntity1) {
+    public ContainerQuantumQuarry(EntityPlayer entityPlayer, TileBaseQuantumQuarry tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
         if (tileEntity1.outputSlot != null) {
 
@@ -47,22 +45,8 @@ public class ContainerQuantumQuarry extends ContainerFullInv<TileEntityBaseQuant
         }
     }
 
-    public ContainerQuantumQuarry(EntityPlayer entityPlayer, TileEntityBaseQuantumQuarry tileEntity1, int height) {
+    public ContainerQuantumQuarry(EntityPlayer entityPlayer, TileBaseQuantumQuarry tileEntity1, int height) {
         super(entityPlayer, tileEntity1, height);
-    }
-
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energyconsume");
-        ret.add("energy");
-        ret.add("progress");
-        ret.add("getblock");
-        ret.add("inputslot");
-        ret.add("outputSlot");
-        ret.add("consume");
-        ret.add("col_tick");
-
-        return ret;
     }
 
 

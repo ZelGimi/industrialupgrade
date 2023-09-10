@@ -2,8 +2,8 @@ package com.denfop.integration.jei.combmac;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -61,7 +61,7 @@ public class CombMacCategory extends Gui implements IRecipeCategory<CombMacRecip
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
+        int energylevel = Math.min(16 * energy / 100, 16);
 
         int xScale = 24 * progress / 100;
         if (xScale > 24) {
@@ -73,15 +73,10 @@ public class CombMacCategory extends Gui implements IRecipeCategory<CombMacRecip
                 14
         );
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66, 12 + 19, 192 - 16, 14, 16, 24);
-
-        drawTexturedModalRect(66, 12 + 19, 192, 14, 16, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 19, 192 - 16, 16, 16, 23);
+        drawTexturedModalRect(66 - 1, 12 + 18, 192, 14, 16, xScale + 1);
         drawTexturedModalRect(
-                +2, 44 + 14 - energylevel, 176, 14 - energylevel, 14,
-                energylevel
-        );
-        drawTexturedModalRect(
-                +2, 44 + 14 - energylevel, 176, 14 - energylevel, 14,
+                +4, 42 + 16 - energylevel, 176, 16 - energylevel, 16,
                 energylevel
         );
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);

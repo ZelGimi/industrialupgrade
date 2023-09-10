@@ -1,11 +1,11 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+import net.minecraft.util.IStringSerializable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum CableType implements IIdProvider {
+public enum CableType implements IStringSerializable, ICableItem {
     glass(0.25F, 0.06D, 32768),
     glass1(0.25F, 0.07D, 131072),
     glass2(0.25F, 0.08D, 524288),
@@ -22,11 +22,8 @@ public enum CableType implements IIdProvider {
     glass_1(0.25F, 0.05D, 8192, 0),
     gold(0.25F, 0.02D, 512),
     gold1(0.25F, 0.02D, 512, 1),
-    gold2(0.25F, 0.02D, 512, 2),
     iron(0.25F, 0.04D, 2048),
     iron1(0.25F, 0.04D, 2048, 1),
-    iron2(0.25F, 0.04D, 2048, 2),
-    iron3(0.25F, 0.04D, 2048, 3),
     tin(0.25F, 0.02D, 32),
     tin1(0.25F, 0.02D, 32, 1),
     ;
@@ -75,5 +72,15 @@ public enum CableType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_cable";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "cable";
     }
 }

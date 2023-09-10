@@ -10,16 +10,4 @@ public interface IModelCustom {
     @SideOnly(Side.CLIENT)
     void renderAll();
 
-    @SideOnly(Side.CLIENT)
-    void renderOnly(String... var1);
-
-    @SideOnly(Side.CLIENT)
-    void renderPart(String var1);
-
-    @SideOnly(Side.CLIENT)
-    void renderAllExcept(String... var1);
-
-    @SideOnly(Side.CLIENT)
-    String[] getPartNames();
-
 }

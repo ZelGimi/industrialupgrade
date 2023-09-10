@@ -1,14 +1,14 @@
 package com.denfop.invslot;
 
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.*;
-import ic2.core.util.StackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -27,7 +27,11 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InvSlotUpgrade extends InvSlot {
 
@@ -40,7 +44,6 @@ public class InvSlotUpgrade extends InvSlot {
     private final List<Fluids.InternalFluidTank> fluidTankList = new ArrayList<>();
     private final IItemHandler main_handler;
     public boolean isUpdate = false;
-    public int augmentation;
     public int extraProcessTime;
     public double processTimeMultiplier;
     public double extraEnergyDemand;
@@ -57,7 +60,6 @@ public class InvSlotUpgrade extends InvSlot {
     List<InvSlotOutput> slots = new ArrayList<>();
     List<InvSlot> inv_slots = new ArrayList<>();
     private EnumFacing[] facings;
-    private List<Redstone.IRedstoneModifier> redstoneModifiers = Collections.emptyList();
     private boolean ejectorUpgrade;
     private boolean fluidEjectorUpgrade;
     private boolean pullingUpgrade;
@@ -65,10 +67,9 @@ public class InvSlotUpgrade extends InvSlot {
 
     public InvSlotUpgrade(
             TileEntityInventory base,
-            String name,
             int count
     ) {
-        super(base, name, Access.I, count);
+        super(base, TypeItemSlot.INPUT, count);
         this.resetRates();
         this.facings = new EnumFacing[count];
         base.getInvSlots().forEach(slot -> {
@@ -92,8 +93,8 @@ public class InvSlotUpgrade extends InvSlot {
         this.iFluidHandlerMap = new HashMap<>();
     }
 
-    private static int applyModifier(int base, int extra, double multiplier) {
-        double ret = (double) Math.round(((double) base + (double) extra) * multiplier);
+    private static int applyModifier(int base, int extra) {
+        double ret = (double) Math.round(((double) base + (double) extra));
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
@@ -102,7 +103,7 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     private static EnumFacing getDirection(ItemStack stack) {
-        int rawDir = StackUtil.getOrCreateNbtData(stack).getByte("dir");
+        int rawDir = ModUtils.nbt(stack).getByte("dir");
         return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
     }
 
@@ -187,36 +188,19 @@ public class InvSlotUpgrade extends InvSlot {
     public void onChanged() {
         this.resetRates();
         IUpgradableBlock block = (IUpgradableBlock) this.base;
-        List<Redstone.IRedstoneModifier> newRedstoneModifiers = new ArrayList<>();
 
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
-            if (!StackUtil.isEmpty(stack)) {
+            if (!ModUtils.isEmpty(stack)) {
                 IUpgradeItem upgrade = (IUpgradeItem) stack.getItem();
-                boolean all = upgrade instanceof IFullUpgrade;
-                int size = StackUtil.getSize(stack);
-                if (all || upgrade instanceof IAugmentationUpgrade) {
-                    this.augmentation += ((IAugmentationUpgrade) upgrade).getAugmentation(stack, block) * size;
-                }
-
-                if (all || upgrade instanceof IProcessingUpgrade) {
-                    IProcessingUpgrade procUpgrade = (IProcessingUpgrade) upgrade;
-                    this.extraProcessTime += procUpgrade.getExtraProcessTime(stack, block) * size;
-                    this.processTimeMultiplier *= Math.pow(procUpgrade.getProcessTimeMultiplier(stack, block), size);
-                    this.extraEnergyDemand += procUpgrade.getExtraEnergyDemand(stack, block) * size;
-                    this.energyDemandMultiplier *= Math.pow(procUpgrade.getEnergyDemandMultiplier(stack, block), size);
-                }
-
-                if (all || upgrade instanceof IEnergyStorageUpgrade) {
-                    IEnergyStorageUpgrade engUpgrade = (IEnergyStorageUpgrade) upgrade;
-                    this.extraEnergyStorage += engUpgrade.getExtraEnergyStorage(stack, block) * size;
-                    this.energyStorageMultiplier *= Math.pow(engUpgrade.getEnergyStorageMultiplier(stack, block), size);
-                }
-
-                if (all || upgrade instanceof ITransformerUpgrade) {
-                    this.extraTier += ((ITransformerUpgrade) upgrade).getExtraTier(stack, block) * size;
-                }
-
+                int size = ModUtils.getSize(stack);
+                this.extraProcessTime += size;
+                this.processTimeMultiplier *= Math.pow(upgrade.getProcessTimeMultiplier(stack), size);
+                this.extraEnergyDemand += size;
+                this.energyDemandMultiplier *= Math.pow(upgrade.getEnergyDemandMultiplier(stack), size);
+                this.extraEnergyStorage += upgrade.getExtraEnergyStorage(stack) * size;
+                this.energyStorageMultiplier *= Math.pow(1, size);
+                this.extraTier += upgrade.getExtraTier(stack) * size;
             }
 
         }
@@ -224,24 +208,21 @@ public class InvSlotUpgrade extends InvSlot {
         for (final AbstractComponent component : this.base.getParent().getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
-                rs.removeRedstoneModifiers(this.redstoneModifiers);
-                rs.addRedstoneModifiers(newRedstoneModifiers);
                 rs.update();
             }
         }
-        this.redstoneModifiers = newRedstoneModifiers;
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
-            if (stack.isItemEqual(Ic2Items.ejectorUpgrade)) {
+            if (stack.isItemEqual(IUItem.ejectorUpgrade)) {
                 this.ejectorUpgrade = true;
                 this.facings[i] = getDirection(stack);
-            } else if (stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
+            } else if (stack.isItemEqual(IUItem.fluidEjectorUpgrade)) {
                 this.fluidEjectorUpgrade = true;
                 this.facings[i] = getDirection(stack);
-            } else if (stack.isItemEqual(Ic2Items.pullingUpgrade)) {
+            } else if (stack.isItemEqual(IUItem.pullingUpgrade)) {
                 this.pullingUpgrade = true;
                 this.facings[i] = getDirection(stack);
-            } else if (stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
+            } else if (stack.isItemEqual(IUItem.fluidpullingUpgrade)) {
                 this.fluidPullingUpgrade = true;
                 this.facings[i] = getDirection(stack);
             }
@@ -249,7 +230,6 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     private void resetRates() {
-        this.augmentation = 0;
         this.extraProcessTime = 0;
         this.processTimeMultiplier = 1.0D;
         this.extraEnergyDemand = 0;
@@ -339,7 +319,7 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     public int getTier(int defaultTier) {
-        return applyModifier(defaultTier, this.extraTier, 1.0D);
+        return applyModifier(defaultTier, this.extraTier);
     }
 
     public boolean tickNoMark() {
@@ -382,15 +362,15 @@ public class InvSlotUpgrade extends InvSlot {
         boolean update = false;
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
-            if (!StackUtil.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
+            if (!ModUtils.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
                 update = true;
-                if (this.tick % 2 == 0 && stack.isItemEqual(Ic2Items.ejectorUpgrade) || stack.isItemEqual(Ic2Items.advejectorUpgrade)) {
+                if (this.tick % 2 == 0 && stack.isItemEqual(IUItem.ejectorUpgrade)) {
                     this.tick(i);
-                } else if (this.tick % 2 == 0 && stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
+                } else if (this.tick % 2 == 0 && stack.isItemEqual(IUItem.fluidEjectorUpgrade)) {
                     this.tick_fluid(i);
-                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.pullingUpgrade) || stack.isItemEqual(Ic2Items.advpullingUpgrade)) {
+                } else if (this.tick % 4 == 0 && stack.isItemEqual(IUItem.pullingUpgrade)) {
                     this.tickPullIn(i);
-                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
+                } else if (this.tick % 4 == 0 && stack.isItemEqual(IUItem.fluidpullingUpgrade)) {
                     this.tickPullIn_fluid(i);
                 }
                 ret = true;
@@ -420,8 +400,9 @@ public class InvSlotUpgrade extends InvSlot {
             for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
                 if (fluidTankProperties.getContents() != null) {
                     for (Fluids.InternalFluidTank tank : this.fluidTankList) {
-                        if(tank.getFluidAmount() >= tank.getCapacity())
+                        if (tank.getFluidAmount() >= tank.getCapacity()) {
                             continue;
+                        }
                         final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
                         if (fluid != null && fluid.amount > 0 && tank.canFillFluidType(fluid)) {
                             tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
@@ -445,8 +426,9 @@ public class InvSlotUpgrade extends InvSlot {
                 for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
                     if (fluidTankProperties.getContents() != null) {
                         for (Fluids.InternalFluidTank tank : this.fluidTankList) {
-                            if(tank.getFluidAmount() >= tank.getCapacity())
+                            if (tank.getFluidAmount() >= tank.getCapacity()) {
                                 continue;
+                            }
                             final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
                             if (fluid != null && fluid.amount > 0 && tank.acceptsFluid(fluid.getFluid())) {
                                 tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
@@ -517,10 +499,12 @@ public class InvSlotUpgrade extends InvSlot {
                     final ItemStack took1 = ModUtils.insertItem(this.main_handler, took, true, this.main_handler.getSlots());
                     if (took1.isEmpty()) {
                         took = handler.getHandler().extractItem(j, took.getCount(), false);
-                        ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
-                    }else if(took1 != took){
-                        took = handler.getHandler().extractItem(j, took1.getCount(), false);
-                        ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
+                        ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
+                    } else if (took1 != took) {
+                        int count = took1.getCount() - took.getCount();
+                        count = Math.abs(count);
+                        took = handler.getHandler().extractItem(j, count, false);
+                        ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
                     }
                 }
             }
@@ -544,10 +528,12 @@ public class InvSlotUpgrade extends InvSlot {
                         final ItemStack took1 = ModUtils.insertItem(this.main_handler, took, true, this.main_handler.getSlots());
                         if (took1.isEmpty()) {
                             took = handler.getHandler().extractItem(j, took.getCount(), false);
-                            ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
-                        }else if(took1 != took){
-                            took = handler.getHandler().extractItem(j, took1.getCount(), false);
-                            ModUtils.insertItem(this.main_handler, took, false,  this.main_handler.getSlots());
+                            ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
+                        } else if (took1 != took) {
+                            int count = took1.getCount() - took.getCount();
+                            count = Math.abs(count);
+                            took = handler.getHandler().extractItem(j, count, false);
+                            ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
                         }
                     }
                 }
@@ -580,8 +566,10 @@ public class InvSlotUpgrade extends InvSlot {
                         if (stack.isEmpty()) {
                             slot.put(j, ItemStack.EMPTY);
                             insertItem1(handler, took, false, slots);
-                        }else if(stack != took){
-                            slot.get(j).shrink(stack.getCount());
+                        } else if (stack != took) {
+                            int col = slot.get(j).getCount() - stack.getCount();
+                            slot.get(j).shrink(col);
+                            stack.setCount(col);
                             insertItem1(handler, stack, false, slots);
                         }
 
@@ -600,8 +588,10 @@ public class InvSlotUpgrade extends InvSlot {
                         if (stack.isEmpty()) {
                             slot.put(j, ItemStack.EMPTY);
                             ModUtils.insertItem(handler.getHandler(), took, false, slots);
-                        }else if(stack != took){
-                            slot.get(j).shrink(stack.getCount());
+                        } else if (stack != took) {
+                            int col = slot.get(j).getCount() - stack.getCount();
+                            slot.get(j).shrink(col);
+                            stack.setCount(col);
                             ModUtils.insertItem(handler.getHandler(), stack, false, slots);
                         }
 
@@ -631,7 +621,7 @@ public class InvSlotUpgrade extends InvSlot {
                             if (stack.isEmpty()) {
                                 slot.put(j, ItemStack.EMPTY);
                                 insertItem1(handler, took, false, slots);
-                            }else if(stack != took){
+                            } else if (stack != took) {
                                 slot.get(j).shrink(stack.getCount());
                                 insertItem1(handler, stack, false, slots);
                             }
@@ -651,7 +641,7 @@ public class InvSlotUpgrade extends InvSlot {
                             if (stack.isEmpty()) {
                                 slot.put(j, ItemStack.EMPTY);
                                 ModUtils.insertItem(handler.getHandler(), took, false, slots);
-                            }else if(stack != took){
+                            } else if (stack != took) {
                                 slot.get(j).shrink(stack.getCount());
                                 ModUtils.insertItem(handler.getHandler(), stack, false, slots);
                             }
@@ -678,7 +668,6 @@ public class InvSlotUpgrade extends InvSlot {
                 if (tank.getFluidAmount() <= 0) {
                     continue;
                 }
-
                 int amount = handler.fill(tank.getFluid(), false);
                 if (amount > 0 && tank.canDrain(facing)) {
                     tank.drain(handler.fill(tank.getFluid(), true), true);
@@ -718,8 +707,9 @@ public class InvSlotUpgrade extends InvSlot {
 
             if (stack2.isEmpty()) {
                 return ItemStack.EMPTY;
-            }else  if(stack2 != stack)
+            } else if (stack2 != stack) {
                 return stack2;
+            }
         }
 
         return stack;
@@ -780,7 +770,7 @@ public class InvSlotUpgrade extends InvSlot {
                     copy.grow(stackInSlot.getCount());
                     inventory.setInventorySlotContents(slot, copy);
                     return stack;
-                }else {
+                } else {
                     stack.shrink(m);
                     return stack;
                 }
@@ -817,22 +807,10 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
 
-    private static class UpgradeRedstoneModifier implements Redstone.IRedstoneModifier {
-
-        private final IRedstoneSensitiveUpgrade upgrade;
-        private final ItemStack stack;
-        private final IUpgradableBlock block;
-
-        UpgradeRedstoneModifier(IRedstoneSensitiveUpgrade upgrade, ItemStack stack, IUpgradableBlock block) {
-            this.upgrade = upgrade;
-            this.stack = stack.copy();
-            this.block = block;
-        }
-
-        public int getRedstoneInput(int redstoneInput) {
-            return this.upgrade.getRedstoneInput(this.stack, this.block, redstoneInput);
-        }
-
+    public double getEnergyStorage(int defaultEnergyStorage, int defaultOperationLength, int defaultEnergyDemand) {
+        int opLen = this.getOperationLength(defaultOperationLength);
+        double energyDemand = this.getEnergyDemand(defaultEnergyDemand);
+        return applyModifier(defaultEnergyStorage, this.extraEnergyStorage + opLen * energyDemand, this.energyStorageMultiplier);
     }
 
 }

@@ -3,10 +3,22 @@
   "variants" : {
     "type" : {
       "cool_pipes_iu" : {
-        "model" : "industrialupgrade:wiring/cool_pipes_iu"
+        "model" : "industrialupgrade:wiring/cool/cool_pipes"
       },
-      "spec_cable" : {
-        "model" : "industrialupgrade:wiring/glass_cable"
+      "cool_pipes_iu_cool" : {
+          "model" : "industrialupgrade:wiring/cool/cool_pipes"
+      },
+      "cool_pipes_iu_cool1" : {
+          "model" : "industrialupgrade:wiring/cool/cool1_pipes"
+      },
+      "cool_pipes_iu_cool2" : {
+          "model" : "industrialupgrade:wiring/cool/cool2_pipes"
+      },
+      "cool_pipes_iu_cool3" : {
+          "model" : "industrialupgrade:wiring/cool/cool3_pipes"
+      },
+      "cool_pipes_iu_cool4" : {
+          "model" : "industrialupgrade:wiring/cool/cool4_pipes"
       }
     },
     "facing" : {

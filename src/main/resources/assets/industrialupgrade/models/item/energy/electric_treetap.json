@@ -1,6 +1,6 @@
 {
-  "parent" : "ic2:item/tool/default",
+  "parent" : "industrialupgrade:item/tool/default",
   "textures" : {
-    "layer0" : "ic2:items/tool/electric/electric_treetap"
+    "layer0" : "industrialupgrade:items/electric_treetap"
   }
 }

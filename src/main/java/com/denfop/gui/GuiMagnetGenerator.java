@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
@@ -8,7 +9,6 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMagnetGenerator;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;

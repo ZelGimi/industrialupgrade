@@ -29,7 +29,7 @@ public class GuiSunnariumMaker extends GuiIU<ContainerSunnariumMaker> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 13, 61, 24, 76)
                 .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);
@@ -56,9 +56,6 @@ public class GuiSunnariumMaker extends GuiIU<ContainerSunnariumMaker> {
         }
     }
 
-    public String getName() {
-        return this.container.base.getInventoryName();
-    }
 
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiSunnariumMaker.png");

@@ -1,7 +1,6 @@
 package com.denfop;
 
-import ic2.core.IC2;
-import ic2.core.util.LogCategory;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTable;
@@ -43,8 +42,7 @@ public class IULoots {
             LootPool pool = table.getPool("industrialupgrade");
 
             event.getTable().addPool(pool);
-        } catch (Throwable var4) {
-            IC2.log.warn(LogCategory.General, var4, "Error loading loot table %s.", event.getName().getResourcePath());
+        } catch (Throwable ignored) {
         }
 
     }

@@ -368,6 +368,63 @@
             }
           ]
         },
+		{
+					"type": "item",
+					"entryName": "copper_ingot",
+					"name": "industrialupgrade:itemingots",
+					"weight": 9,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 2,
+								"max": 6
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 21
+						}
+					]
+				},
+				{
+					"type": "item",
+					"entryName": "tin_ingot",
+					"name": "industrialupgrade:itemingots",
+					"weight": 8,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 1,
+								"max": 5
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 24
+						}
+					]
+				},
+				{
+					"type": "item",
+					"entryName": "iridium_shard",
+					"name": "industrialupgrade:crafting_elements",
+					"weight": 8,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 2,
+								"max": 5
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 291
+						}
+					]
+				},
         {
           "type" : "empty",
           "weight" : 34

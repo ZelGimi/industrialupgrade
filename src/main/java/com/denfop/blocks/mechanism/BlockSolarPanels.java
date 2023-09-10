@@ -2,26 +2,24 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.panels.overtime.TileEntityAdvancedSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityBarionSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityDiffractionSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityGravitonSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityHadronSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityHybridSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityNeutronSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityPhotonicSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityProtonSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityQuantumSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityQuarkSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntitySingularSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntitySpectralSolarPanel;
-import com.denfop.tiles.panels.overtime.TileEntityUltimateSolarPanel;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.panels.overtime.TileAdvancedSolarPanel;
+import com.denfop.tiles.panels.overtime.TileBarionSolarPanel;
+import com.denfop.tiles.panels.overtime.TileDiffractionSolarPanel;
+import com.denfop.tiles.panels.overtime.TileGravitonSolarPanel;
+import com.denfop.tiles.panels.overtime.TileHadronSolarPanel;
+import com.denfop.tiles.panels.overtime.TileHybridSolarPanel;
+import com.denfop.tiles.panels.overtime.TileNeutronSolarPanel;
+import com.denfop.tiles.panels.overtime.TilePhotonicSolarPanel;
+import com.denfop.tiles.panels.overtime.TileProtonSolarPanel;
+import com.denfop.tiles.panels.overtime.TileQuantumSolarPanel;
+import com.denfop.tiles.panels.overtime.TileQuarkSolarPanel;
+import com.denfop.tiles.panels.overtime.TileSingularSolarPanel;
+import com.denfop.tiles.panels.overtime.TileSpectralSolarPanel;
+import com.denfop.tiles.panels.overtime.TileUltimateSolarPanel;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -32,22 +30,22 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockSolarPanels implements ITeBlock {
+public enum BlockSolarPanels implements IMultiTileBlock {
 
-    advanced_solar_paneliu(TileEntityAdvancedSolarPanel.class, 0, EnumRarity.RARE),
-    hybrid_solar_paneliu(TileEntityHybridSolarPanel.class, 1, EnumRarity.RARE),
-    ultimate_solar_paneliu(TileEntityUltimateSolarPanel.class, 2, EnumRarity.EPIC),
-    quantum_solar_paneliu(TileEntityQuantumSolarPanel.class, 3, EnumRarity.EPIC),
-    spectral_solar_panel(TileEntitySpectralSolarPanel.class, 4, EnumRarity.EPIC),
-    proton_solar_panel(TileEntityProtonSolarPanel.class, 5, EnumRarity.EPIC),
-    singular_solar_panel(TileEntitySingularSolarPanel.class, 6, EnumRarity.RARE),
-    admin_solar_panel(TileEntityDiffractionSolarPanel.class, 7, EnumRarity.EPIC),
-    photonic_solar_panel(TileEntityPhotonicSolarPanel.class, 8, EnumRarity.EPIC),
-    neutronium_solar_panel(TileEntityNeutronSolarPanel.class, 9, EnumRarity.EPIC),
-    barion_solar_panel(TileEntityBarionSolarPanel.class, 10, EnumRarity.EPIC),
-    hadron_solar_panel(TileEntityHadronSolarPanel.class, 11, EnumRarity.EPIC),
-    graviton_solar_panel(TileEntityGravitonSolarPanel.class, 12, EnumRarity.EPIC),
-    quark_solar_panel(TileEntityQuarkSolarPanel.class, 13, EnumRarity.EPIC),
+    advanced_solar_paneliu(TileAdvancedSolarPanel.class, 0, EnumRarity.RARE),
+    hybrid_solar_paneliu(TileHybridSolarPanel.class, 1, EnumRarity.RARE),
+    ultimate_solar_paneliu(TileUltimateSolarPanel.class, 2, EnumRarity.EPIC),
+    quantum_solar_paneliu(TileQuantumSolarPanel.class, 3, EnumRarity.EPIC),
+    spectral_solar_panel(TileSpectralSolarPanel.class, 4, EnumRarity.EPIC),
+    proton_solar_panel(TileProtonSolarPanel.class, 5, EnumRarity.EPIC),
+    singular_solar_panel(TileSingularSolarPanel.class, 6, EnumRarity.RARE),
+    admin_solar_panel(TileDiffractionSolarPanel.class, 7, EnumRarity.EPIC),
+    photonic_solar_panel(TilePhotonicSolarPanel.class, 8, EnumRarity.EPIC),
+    neutronium_solar_panel(TileNeutronSolarPanel.class, 9, EnumRarity.EPIC),
+    barion_solar_panel(TileBarionSolarPanel.class, 10, EnumRarity.EPIC),
+    hadron_solar_panel(TileHadronSolarPanel.class, 11, EnumRarity.EPIC),
+    graviton_solar_panel(TileGravitonSolarPanel.class, 12, EnumRarity.EPIC),
+    quark_solar_panel(TileQuarkSolarPanel.class, 13, EnumRarity.EPIC),
 
 
     ;
@@ -76,7 +74,7 @@ public enum BlockSolarPanels implements ITeBlock {
         return values()[ID % values().length];
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -86,17 +84,10 @@ public enum BlockSolarPanels implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -134,7 +125,7 @@ public enum BlockSolarPanels implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -143,26 +134,15 @@ public enum BlockSolarPanels implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override
@@ -173,5 +153,10 @@ public enum BlockSolarPanels implements ITeBlock {
     @Override
     public TileEntityBlock getDummyTe() {
         return this.dummyTe;
+    }
+
+    @Override
+    public String[] getMultiModels() {
+        return new String[]{"aer", "earth", "nether", "end", "night", "day", "rain"};
     }
 }

@@ -1,10 +1,14 @@
 package com.denfop.register;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.multiblock.MultiBlockSystem;
-import com.denfop.tiles.mechanism.blastfurnace.api.*;
+import com.denfop.tiles.mechanism.blastfurnace.api.IBlastHeat;
+import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
+import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputItem;
+import com.denfop.tiles.mechanism.blastfurnace.api.IBlastMain;
+import com.denfop.tiles.mechanism.blastfurnace.api.IBlastOutputItem;
+import com.denfop.tiles.mechanism.blastfurnace.api.IOtherBlastPart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +27,7 @@ public class InitMultiBlockSystem {
                         .setHasActivatedItem(true)
                         .setIgnoreMetadata(true)
                         .setActivateItem(
-                                Ic2Items.ForgeHammer);
+                                new ItemStack(IUItem.ForgeHammer));
 
         blastFurnaceMultiBlock.add(blastFurnaceMultiBlock.getPos(), IBlastMain.class, new ItemStack(IUItem.blastfurnace, 1, 0),
                 EnumFacing.NORTH
@@ -37,6 +41,11 @@ public class InitMultiBlockSystem {
         blastFurnaceMultiBlock.add(blastFurnaceMultiBlock.getPos().add(-1, 0, 1), IBlastOutputItem.class,
                 new ItemStack(IUItem.blastfurnace, 1, 3), EnumFacing.EAST
         );
+        //
+
+
+//
+
 
         blastFurnaceMultiBlock.add(blastFurnaceMultiBlock.getPos().add(1, 0, 1), IBlastHeat.class,
                 new ItemStack(IUItem.blastfurnace, 1, 2), EnumFacing.WEST

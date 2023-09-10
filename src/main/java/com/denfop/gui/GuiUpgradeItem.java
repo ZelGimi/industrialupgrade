@@ -1,10 +1,10 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.container.ContainerHeldUpgradeItem;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL12;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiUpgradeItem extends GuiIC2<ContainerHeldUpgradeItem> {
+public class GuiUpgradeItem extends GuiCore<ContainerHeldUpgradeItem> {
 
     private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guiblacklist.png");
     final List<ItemStack> list;

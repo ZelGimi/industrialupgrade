@@ -1,6 +1,5 @@
 package com.denfop.componets;
 
-import com.denfop.IUCore;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
@@ -63,7 +62,7 @@ public class ComponentProcess extends AbstractComponent {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.componentProgress = this.getParent().getComp(ComponentProgress.class);
+        this.componentProgress = this.getParent().getComp("com.denfop.componets.ComponentProgress");
         this.advEnergy = this.getParent().getComp(AdvEnergy.class);
         this.heatComponent = this.getParent().getComp(HeatComponent.class);
         this.coldComponent = this.getParent().getComp(CoolComponent.class);
@@ -111,7 +110,7 @@ public class ComponentProcess extends AbstractComponent {
     public boolean checkSE() {
         int energy = 5;
         if (this.instant) {
-            energy*=this.operationLength;
+            energy *= this.operationLength;
         }
         return componentSE == null || componentSE.getEnergy() > energy;
     }
@@ -165,7 +164,7 @@ public class ComponentProcess extends AbstractComponent {
         if (this.stack) {
             if (this.updateTick.getRecipeOutput() != null) {
                 final List<Integer> list = this.updateTick.getRecipeOutput().getList();
-                for (int i = 0; i <list.size(); i++) {
+                for (int i = 0; i < list.size(); i++) {
                     size = Math.min(
                             size,
                             this.invSlotRecipes.get(i).getCount() / list.get(i)
@@ -174,11 +173,11 @@ public class ComponentProcess extends AbstractComponent {
                 int count = this.outputSlot.get().isEmpty() ? 64 : 64 - this.outputSlot.get().getCount();
                 count = count / this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getCount();
                 size = Math.min(size, count);
-                if(this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null){
+                if (this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null) {
                     final int size1 = this.invSlotRecipes.getTank().getFluidAmount() / this.updateTick
                             .getRecipeOutput()
                             .getRecipe().input.getFluid().amount;
-                    size =  Math.min(size, size1);
+                    size = Math.min(size, size1);
                 }
             }
         } else {
@@ -199,9 +198,7 @@ public class ComponentProcess extends AbstractComponent {
             }
             if (this.componentProgress.getProgress() == 0 && this.hasAudio) {
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
-                    if (!this.audoFix) {
-                        IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 0, true);
-                    } else {
+                    if (this.audoFix) {
                         ((IAudioFixer) this.getParent()).initiate(0);
                     }
                 }
@@ -216,7 +213,7 @@ public class ComponentProcess extends AbstractComponent {
             if (this.componentSE != null) {
                 int energy = 5;
                 if (this.instant) {
-                    energy*=this.operationLength;
+                    energy *= this.operationLength;
                 }
                 this.componentSE.useEnergy(energy);
             }
@@ -226,19 +223,17 @@ public class ComponentProcess extends AbstractComponent {
             }
             if (this.componentProgress.getProgress() >= this.operationLength) {
                 this.componentProgress.cancellationProgress();
-                for (int i = 0; i < Math.ceil(size * 1D / this.operationsPerTick ); i++) {
+                for (int i = 0; i < Math.ceil(size * 1D / this.operationsPerTick); i++) {
                     operate(this.updateTick.getRecipeOutput());
                 }
                 if (action != null && action.needAction(TypeLoad.AFTER_PROGRESS)) {
                     action.doAction();
                 }
-                     if (this.hasAudio) {
-                        if (!this.audoFix) {
-                            IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 2, true);
-                        } else {
-                            ((IAudioFixer) this.getParent()).initiate(2);
-                        }
+                if (this.hasAudio) {
+                    if (this.audoFix) {
+                        ((IAudioFixer) this.getParent()).initiate(2);
                     }
+                }
 
             }
         } else {
@@ -246,9 +241,7 @@ public class ComponentProcess extends AbstractComponent {
                 this.heatComponent.need = false;
             }
             if (this.componentProgress.getProgress() != 0 && this.getParent().getActive() && this.hasAudio) {
-                if (!this.audoFix) {
-                    IUCore.network.get(true).initiateTileEntityEvent(this.getParent(), 1, true);
-                } else {
+                if (this.audoFix) {
                     ((IAudioFixer) this.getParent()).initiate(1);
                 }
             }

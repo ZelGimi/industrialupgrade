@@ -1,19 +1,17 @@
 package com.denfop.container;
 
 
-import com.denfop.tiles.mechanism.TileEntityBaseGenStone;
+import com.denfop.tiles.mechanism.TileBaseGenStone;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerGenStone extends ContainerFullInv<TileBaseGenStone> {
 
-public class ContainerGenStone extends ContainerFullInv<TileEntityBaseGenStone> {
-
-    public ContainerGenStone(EntityPlayer entityPlayer, TileEntityBaseGenStone tileEntity1) {
+    public ContainerGenStone(EntityPlayer entityPlayer, TileBaseGenStone tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 56 - 48, 53, 152, 8);
     }
 
     public ContainerGenStone(
-            EntityPlayer entityPlayer, TileEntityBaseGenStone tileEntity1, int height, int dischargeX, int dischargeY,
+            EntityPlayer entityPlayer, TileBaseGenStone tileEntity1, int height, int dischargeX, int dischargeY,
             int upgradeX, int upgradeY
     ) {
         super(entityPlayer, tileEntity1, height);
@@ -43,13 +41,5 @@ public class ContainerGenStone extends ContainerFullInv<TileEntityBaseGenStone> 
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("energy");
-        ret.add("mode");
-        ret.add("sound");
-        return ret;
-    }
 
 }

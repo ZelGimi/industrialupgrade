@@ -2,20 +2,21 @@ package com.denfop.items.energy;
 
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.audio.EnumSound;
 import com.denfop.items.EnumInfoUpgradeModules;
+import com.denfop.network.packet.PacketSoundPlayer;
+import com.denfop.register.Register;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -33,7 +34,11 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,7 +54,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeItem, IModelRegister {
+public class ItemEnergyBow extends ItemBow implements IEnergyItem, IUpgradeItem, IModelRegister {
 
 
     static final int[] CHARGE = new int[]{1500, 750, 2000, 5000, 1000};
@@ -63,7 +68,6 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
     private final int maxenergy;
 
     public ItemEnergyBow(String name, double nanoBowBoost, int tier, int transferenergy, int maxenergy, float type) {
-        setMaxDamage(27);
         setFull3D();
         setCreativeTab(IUCore.EnergyTab);
         this.name = name;
@@ -73,7 +77,7 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
         this.maxenergy = maxenergy;
         this.type = type;
         setUnlocalizedName(name);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         this.addPropertyOverride(new ResourceLocation("pulling"), new IItemPropertyGetter() {
             @SideOnly(Side.CLIENT)
@@ -89,7 +93,6 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.BOW.list);
     }
 
-
     public static float getArrowVelocity(int charge) {
         float f = charge / 20.0F;
         f = (f * f + f * 2.0F) / 3.0F;
@@ -103,6 +106,24 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
                 "energy_tools" + "/" + name;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        );
     }
 
     public int getItemEnchantability() {
@@ -153,7 +174,7 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
             nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(stack);
-            ItemStack itemstack = new ItemStack(this, 1, 27);
+            ItemStack itemstack = new ItemStack(this, 1);
             nbt = ModUtils.nbt(itemstack);
             nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(itemstack);
@@ -260,6 +281,7 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
             if (mode == 2) {
                 if (ElectricItem.manager.canUse(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy)) {
                     ElectricItem.manager.use(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy, player);
+                    new PacketSoundPlayer(EnumSound.bow, player);
                     world.spawnEntity(arrow);
                     if (arrow.getIsCritical()) {
                         EntityArrow arrow2 = createArrow(world, stack, player);
@@ -303,30 +325,14 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
                         world.spawnEntity(arrow4);
                         world.spawnEntity(arrow5);
                     }
-                    if (IC2.platform.isRendering()) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                com.denfop.audio.PositionSpec.Hand,
-                                "Tools/bow.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
-                    }
+
                 }
             } else {
                 if (ElectricItem.manager.canUse(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy)) {
                     ElectricItem.manager.use(stack, CHARGE[mode] - CHARGE[mode] * 0.1 * bowenergy, player);
-
+                    new PacketSoundPlayer(EnumSound.bow, player);
                     world.spawnEntity(arrow);
-                    if (IC2.platform.isRendering()) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                com.denfop.audio.PositionSpec.Hand,
-                                "Tools/bow.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
-                    }
+
                 }
             }
         }
@@ -368,8 +374,8 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
                 nbt.setInteger("bowMode", mode);
 
             }
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(player, Localization.translate("info.nanobow." + MODE[mode]));
+            if (IUCore.proxy.isSimulating()) {
+                IUCore.proxy.messagePlayer(player, Localization.translate("info.nanobow." + MODE[mode]));
             }
         } else if (player.capabilities.isCreativeMode || ElectricItem.manager.canUse(
                 stack,
@@ -451,15 +457,15 @@ public class ItemEnergyBow extends ItemBow implements IElectricItem, IUpgradeIte
         return false;
     }
 
-    public double getMaxCharge(ItemStack stack) {
+    public double getMaxEnergy(ItemStack stack) {
         return this.maxenergy;
     }
 
-    public int getTier(ItemStack stack) {
-        return this.tier;
+    public short getTierItem(ItemStack stack) {
+        return (short) this.tier;
     }
 
-    public double getTransferLimit(ItemStack stack) {
+    public double getTransferEnergy(ItemStack stack) {
         return transferenergy;
     }
 

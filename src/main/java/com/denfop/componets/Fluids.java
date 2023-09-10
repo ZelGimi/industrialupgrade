@@ -1,12 +1,16 @@
 package com.denfop.componets;
 
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.ModUtils;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import ic2.api.recipe.ILiquidAcceptManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -17,7 +21,14 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class Fluids extends AbstractComponent {
 
@@ -54,65 +65,47 @@ public class Fluids extends AbstractComponent {
         return acceptedFluids::contains;
     }
 
-    public static Predicate<Fluid> fluidPredicate(final ILiquidAcceptManager manager) {
-        return manager::acceptsFluid;
-    }
 
     public Fluids.InternalFluidTank addTankInsert(String name, int capacity) {
         return this.addTankInsert(name, capacity, Predicates.alwaysTrue());
     }
 
-    public Fluids.InternalFluidTank addTankInsert(String name, int capacity, Predicate<Fluid> acceptedFluids) {
-        return this.addTankInsert(name, capacity, InvSlot.InvSide.ANY, acceptedFluids);
-    }
-
-    public Fluids.InternalFluidTank addTankInsert(String name, int capacity, InvSlot.InvSide side) {
-        return this.addTankInsert(name, capacity, side, Predicates.alwaysTrue());
-    }
 
     public Fluids.InternalFluidTank addTankInsert(
             String name,
             int capacity,
-            InvSlot.InvSide side,
             Predicate<Fluid> acceptedFluids
     ) {
-        return this.addTank(name, capacity, InvSlot.Access.I, side, acceptedFluids);
+        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT, acceptedFluids);
     }
 
     public Fluids.InternalFluidTank addTankExtract(String name, int capacity) {
-        return this.addTankExtract(name, capacity, InvSlot.InvSide.ANY);
+        return this.addTank(name, capacity, InvSlot.TypeItemSlot.OUTPUT, Predicates.alwaysTrue());
     }
 
-    public Fluids.InternalFluidTank addTankExtract(String name, int capacity, InvSlot.InvSide side) {
-        return this.addTank(name, capacity, InvSlot.Access.O, side);
-    }
 
     public Fluids.InternalFluidTank addTank(String name, int capacity) {
-        return this.addTank(name, capacity, InvSlot.Access.IO);
+        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT_OUTPUT);
     }
 
-    public Fluids.InternalFluidTank addTank(String name, int capacity, InvSlot.Access access) {
-        return this.addTank(name, capacity, access, InvSlot.InvSide.ANY);
+    public Fluids.InternalFluidTank addTank(String name, int capacity, InvSlot.TypeItemSlot typeItemSlot) {
+        return this.addTank(name, capacity, typeItemSlot, Predicates.alwaysTrue());
     }
 
     public Fluids.InternalFluidTank addTank(String name, int capacity, Predicate<Fluid> acceptedFluids) {
-        return this.addTank(name, capacity, InvSlot.Access.IO, InvSlot.InvSide.ANY, acceptedFluids);
+        return this.addTank(name, capacity, InvSlot.TypeItemSlot.INPUT_OUTPUT, acceptedFluids);
     }
 
-    public Fluids.InternalFluidTank addTank(String name, int capacity, InvSlot.Access access, InvSlot.InvSide side) {
-        return this.addTank(name, capacity, access, side, Predicates.alwaysTrue());
-    }
 
     public Fluids.InternalFluidTank addTank(
             String name,
             int capacity,
-            InvSlot.Access access,
-            InvSlot.InvSide side,
+            InvSlot.TypeItemSlot typeItemSlot,
             Predicate<Fluid> acceptedFluids
     ) {
         return this.addTank(name, capacity,
-                access.isInput() ? side.getAcceptedSides() : Collections.emptySet(),
-                access.isOutput() ? side.getAcceptedSides() : Collections.emptySet(), acceptedFluids
+                typeItemSlot.isInput() ? ModUtils.allFacings : Collections.emptySet(),
+                typeItemSlot.isOutput() ? ModUtils.allFacings : Collections.emptySet(), acceptedFluids
         );
     }
 
@@ -143,11 +136,11 @@ public class Fluids extends AbstractComponent {
         this.unmanagedTanks.add(suppl);
     }
 
-    public void changeConnectivity(Fluids.InternalFluidTank tank, InvSlot.Access access, InvSlot.InvSide side) {
+    public void changeConnectivity(Fluids.InternalFluidTank tank, InvSlot.TypeItemSlot typeItemSlot) {
         this.changeConnectivity(
                 tank,
-                access.isInput() ? side.getAcceptedSides() : Collections.emptySet(),
-                access.isOutput() ? side.getAcceptedSides() : Collections.emptySet()
+                typeItemSlot.isInput() ? ModUtils.allFacings : Collections.emptySet(),
+                typeItemSlot.isOutput() ? ModUtils.allFacings : Collections.emptySet()
         );
     }
 
@@ -175,6 +168,28 @@ public class Fluids extends AbstractComponent {
         } while (!tank.identifier.equals(name));
 
         return tank;
+    }
+
+    public void onContainerUpdate(EntityPlayerMP player) {
+        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        for (final InternalFluidTank tank : this.managedTanks) {
+            NBTTagCompound subTag = new NBTTagCompound();
+            subTag = tank.writeToNBT(subTag);
+            try {
+                EncoderHandler.encode(buffer, subTag);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        this.setNetworkUpdate(player, buffer);
+    }
+
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
+        for (final InternalFluidTank tank : this.managedTanks) {
+            tank.readFromNBT((NBTTagCompound) DecoderHandler.decode(is));
+        }
+
     }
 
     public void readFromNbt(NBTTagCompound nbt) {

@@ -1,14 +1,14 @@
 package com.denfop.recipes;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
+import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.blocks.FluidName;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.Recipes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -20,17 +20,16 @@ public class CompressorRecipe {
     public static final String[] recipe1 = {"doubleplate", "dust", "smalldust"};
 
     public static void recipe() {
-        addcompressor(ModUtils.setSize(Ic2Items.iridiumShard,9), Ic2Items.iridiumOre);
+        addcompressor(ModUtils.setSize(IUItem.iridiumShard, 9), IUItem.iridiumOre);
 
         addcompressor(new ItemStack(IUItem.sunnarium, 1, 3), new ItemStack(IUItem.sunnarium, 1, 2));
-        addcompressor(Ic2Items.carbonPlate, 9, new ItemStack(IUItem.compresscarbon));
-        addcompressor(Ic2Items.advancedAlloy, 9, new ItemStack(IUItem.compresscarbonultra));
-        addcompressor(Ic2Items.iridiumPlate, 4, new ItemStack(IUItem.compressIridiumplate));
+        addcompressor(IUItem.carbonPlate, 9, new ItemStack(IUItem.compresscarbon));
+        addcompressor(IUItem.advancedAlloy, 9, new ItemStack(IUItem.compressAlloy));
+        addcompressor(IUItem.iridiumPlate, 4, new ItemStack(IUItem.compressIridiumplate));
         addcompressor(new ItemStack(IUItem.cell_all, 1, 1), 1, new ItemStack(IUItem.neutronium));
         addcompressor(new ItemStack(IUItem.compressIridiumplate), 9, new ItemStack(IUItem.doublecompressIridiumplate));
-        addcompressor("doubleplateTungsten", 1, new ItemStack(IUItem.cell_all));
         addcompressor(new ItemStack(IUItem.neutronium), 9, new ItemStack(IUItem.neutroniumingot, 1));
-        addcompressor(new ItemStack(Ic2Items.cell.getItem()), 1, Ic2Items.airCell);
+        addcompressor(IUItem.coalBall, 1, IUItem.compressedCoalBall);
 
         for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 
@@ -75,8 +74,8 @@ public class CompressorRecipe {
 
             }
         }
-        addcompressor(Ic2Items.uraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
-        addcompressor(Ic2Items.crushedUraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
+        addcompressor(IUItem.uraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
+        addcompressor(IUItem.crushedUraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
         addcompressor(
                 "plateCopper",
                 9,
@@ -105,11 +104,6 @@ public class CompressorRecipe {
                 new ItemStack(Blocks.REDSTONE_BLOCK)
         );
         addcompressor(
-                "dustTinyObsidian",
-                9,
-                "dustObsidian"
-        );
-        addcompressor(
                 new ItemStack(Items.BLAZE_POWDER, 5),
                 new ItemStack(Items.BLAZE_ROD)
         );
@@ -118,14 +112,10 @@ public class CompressorRecipe {
                 new ItemStack(Blocks.BRICK_BLOCK)
         );
         addcompressor(
-                Ic2Items.FluidCell,
-                ModUtils.getCellFromFluid("ic2air")
+                IUItem.FluidCell,
+                ModUtils.getCellFromFluid(FluidName.fluidair.getInstance())
         );
-        addcompressor(
-                "dustTinyBronze",
-                9,
-                "dustBronze"
-        );
+
         addcompressor(
                 "dustTinyGold",
                 9,
@@ -146,11 +136,7 @@ public class CompressorRecipe {
                 9,
                 "plateDenseLead"
         );
-        addcompressor(
-                "dustTinyLapis",
-                9,
-                "dustLapis"
-        );
+
         addcompressor(
                 new ItemStack(Items.DYE, 9, 4),
                 new ItemStack(Blocks.LAPIS_BLOCK)
@@ -165,12 +151,12 @@ public class CompressorRecipe {
                 "plateDenseIron"
         );
         addcompressor(
-                Ic2Items.RTGPellets,
-                Ic2Items.Uran235
+                IUItem.RTGPellets,
+                IUItem.Uran235
         );
         addcompressor(
-                Ic2Items.mixedMetalIngot,
-                Ic2Items.advancedAlloy
+                IUItem.mixedMetalIngot,
+                IUItem.advancedAlloy
         );
         addcompressor(
                 "dustTinyTin",
@@ -208,14 +194,9 @@ public class CompressorRecipe {
                 "blockTin"
         );
         addcompressor(
-                Ic2Items.smallPlutonium,
+                IUItem.smallPlutonium,
                 9,
-                Ic2Items.Plutonium
-        );
-        addcompressor(
-                "dustTinyLithium",
-                9,
-                "dustLithium"
+                IUItem.Plutonium
         );
         addcompressor(
                 "ingotLead",
@@ -233,7 +214,7 @@ public class CompressorRecipe {
                 "blockGold"
         );
         addcompressor(
-                Ic2Items.coal_chunk,
+                IUItem.coal_chunk,
                 1,
                 new ItemStack(Items.DIAMOND)
         );
@@ -268,9 +249,9 @@ public class CompressorRecipe {
                 "plateDenseGold"
         );
         addcompressor(
-                Ic2Items.energiumDust,
+                IUItem.energiumDust,
                 9,
-                Ic2Items.energyCrystal
+                new ItemStack(IUItem.energy_crystal)
         );
         addcompressor(
                 new ItemStack(Items.GLOWSTONE_DUST),
@@ -287,15 +268,11 @@ public class CompressorRecipe {
                 1,
                 new ItemStack(Blocks.ICE)
         );
+
         addcompressor(
-                Ic2Items.coalBall,
+                IUItem.carbonMesh,
                 1,
-                Ic2Items.compressedCoalBall
-        );
-        addcompressor(
-                Ic2Items.carbonMesh,
-                1,
-                Ic2Items.carbonPlate
+                IUItem.carbonPlate
         );
     }
 
@@ -303,12 +280,12 @@ public class CompressorRecipe {
     public static void addcompressor(ItemStack input, int n, ItemStack output) {
         input = input.copy();
         input.setCount(n);
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, output)
                 )
@@ -318,12 +295,12 @@ public class CompressorRecipe {
     }
 
     public static void addcompressor(String input, int n, ItemStack output) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forOreDict(input, n)
+                                input1.getInput(input, n)
                         ),
                         new RecipeOutput(null, output)
                 )
@@ -331,12 +308,12 @@ public class CompressorRecipe {
     }
 
     public static void addcompressor(String input, int n, String output) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forOreDict(input, n)
+                                input1.getInput(input, n)
                         ),
                         new RecipeOutput(null, OreDictionary.getOres(output).get(0))
                 )
@@ -344,12 +321,12 @@ public class CompressorRecipe {
     }
 
     public static void addcompressor(ItemStack input, ItemStack output) {
-        final IRecipeInputFactory input1 = Recipes.inputFactory;
+        final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(input)
+                                input1.getInput(input)
                         ),
                         new RecipeOutput(null, output)
                 )

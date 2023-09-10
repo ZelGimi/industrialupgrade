@@ -47,8 +47,5 @@ public final class RecipeOutput {
         return false;
     }
 
-    public String toString() {
-        return "ROutput<" + this.items + "," + this.metadata + ">";
-    }
 
 }

@@ -1,14 +1,12 @@
 package com.denfop.container;
 
 
-import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityHeliumGenerator;
+import com.denfop.tiles.mechanism.generator.things.fluid.TileHeliumGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerHeliumGenerator extends ContainerFullInv<TileHeliumGenerator> {
 
-public class ContainerHeliumGenerator extends ContainerFullInv<TileEntityHeliumGenerator> {
-
-    public ContainerHeliumGenerator(EntityPlayer entityPlayer, TileEntityHeliumGenerator tileEntity1) {
+    public ContainerHeliumGenerator(EntityPlayer entityPlayer, TileHeliumGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
@@ -18,12 +16,5 @@ public class ContainerHeliumGenerator extends ContainerFullInv<TileEntityHeliumG
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-
-        return ret;
-    }
 
 }

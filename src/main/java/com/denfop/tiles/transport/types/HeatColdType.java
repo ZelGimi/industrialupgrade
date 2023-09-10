@@ -1,11 +1,12 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+
+import com.denfop.blocks.ISubEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum HeatColdType implements IIdProvider {
+public enum HeatColdType implements ISubEnum, ICableItem {
     heatcool(0, 0, 0.25F, 0.02D, 4, 1000),
     heatcool1(0, 0, 0.25F, 0.02D, 8, 2000),
     heatcool2(0, 0, 0.25F, 0.2D, 16, 4000),
@@ -52,5 +53,15 @@ public enum HeatColdType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_pipes";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "heatcold";
     }
 }

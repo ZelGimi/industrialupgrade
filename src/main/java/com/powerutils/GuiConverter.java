@@ -1,24 +1,24 @@
 package com.powerutils;
 
 
-import com.denfop.IUCore;
-import com.denfop.gui.GuiIC2;
+import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.gui.GuiCore;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
-public class GuiConverter extends GuiIC2<ContainerConverter> {
+public class GuiConverter extends GuiCore<ContainerConverter> {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.MOD_ID,
             "textures/gui/ec_gui.png"
     );
     private final ContainerConverter container;
-    private final TileEntityConverter tileentity;
+    private final TileConverter tileentity;
 
     public GuiConverter(ContainerConverter container1) {
         super(container1);
@@ -38,11 +38,11 @@ public class GuiConverter extends GuiIC2<ContainerConverter> {
 
         if (x >= 43 && x <= 58 && y >= 77 && y <= 87) {
             if (this.container.base.rf) {
-                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+                new PacketUpdateServerTile(this.container.base, 0);
             }
         } else if (x >= 59 && x <= 73 && y >= 77 && y <= 87) {
             if (!this.container.base.rf) {
-                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+                new PacketUpdateServerTile(this.container.base, 0);
             }
 
         }
@@ -58,7 +58,7 @@ public class GuiConverter extends GuiIC2<ContainerConverter> {
         int nmPos = (this.xSize - this.fontRenderer.getStringWidth(Localization.translate(this.container.base.getName()))) / 2;
         this.fontRenderer.drawString(Localization.translate(this.container.base.getName()), nmPos, 6, 7718655);
         this.fontRenderer.drawString(
-                "EU: " + ModUtils.getString(this.tileentity.energy.getEnergy()) + "/" + ModUtils.getString(
+                "EF: " + ModUtils.getString(this.tileentity.energy.getEnergy()) + "/" + ModUtils.getString(
                         this.tileentity.capacity),
                 9,
                 20,
@@ -69,12 +69,12 @@ public class GuiConverter extends GuiIC2<ContainerConverter> {
         );
         if (this.tileentity.rf) {
             this.fontRenderer.drawString(
-                    "MAX IN: " + ModUtils.getString(EnergyNet.instance.getPowerFromTier(this.tileentity.tier)) + " EU/t",
+                    "MAX IN: " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(this.tileentity.tier)) + " EF/t",
                     9,
                     40,
                     13487565
             );
-            this.fontRenderer.drawString("IN: " + ModUtils.getString(this.tileentity.differenceenergy1) + " EU/t", 9, 50,
+            this.fontRenderer.drawString("IN: " + ModUtils.getString(this.tileentity.differenceenergy1) + " EF/t", 9, 50,
                     13487565
             );
             this.fontRenderer.drawString("OUT: " + ModUtils.getString(this.tileentity.differenceenergy) + " RF/t", 9, 60,
@@ -82,7 +82,7 @@ public class GuiConverter extends GuiIC2<ContainerConverter> {
             );
         } else {
             this.fontRenderer.drawString(
-                    "MAX OUT: " + ModUtils.getString(EnergyNet.instance.getPowerFromTier(this.tileentity.tier)) + " EU/t",
+                    "MAX OUT: " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(this.tileentity.tier)) + " EF/t",
                     9,
                     40,
                     13487565
@@ -90,7 +90,7 @@ public class GuiConverter extends GuiIC2<ContainerConverter> {
             this.fontRenderer.drawString("IN: " + ModUtils.getString(this.tileentity.perenergy) + " RF/t", 9, 50,
                     13487565
             );
-            this.fontRenderer.drawString("OUT: " + ModUtils.getString(this.tileentity.differenceenergy) + " EU/t", 9, 60,
+            this.fontRenderer.drawString("OUT: " + ModUtils.getString(this.tileentity.differenceenergy) + " EF/t", 9, 60,
                     13487565
             );
         }

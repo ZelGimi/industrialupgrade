@@ -1,12 +1,12 @@
 package com.denfop.utils;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockMoreMachine;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
 import com.denfop.blocks.mechanism.BlockMoreMachine2;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
 import com.denfop.tiles.base.EnumMultiMachine;
-import ic2.core.init.Localization;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;

@@ -1,17 +1,17 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.base.TileEntityCombinerMatter;
+import com.denfop.tiles.base.TileCombinerMatter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotMatter extends InvSlot {
 
-    private final TileEntityCombinerMatter tile;
+    private final TileCombinerMatter tile;
     private int stackSizeLimit;
 
-    public InvSlotMatter(TileEntityCombinerMatter base1) {
-        super(base1, "input2", InvSlot.Access.I, 9, InvSide.ANY);
+    public InvSlotMatter(TileCombinerMatter base1) {
+        super(base1, TypeItemSlot.INPUT, 9);
         this.stackSizeLimit = 4;
         this.tile = base1;
     }

@@ -76,6 +76,91 @@
           "fluid" : "iufluidbromine"
         }
       },
+      "fluidair" : {
+        "custom" : {
+          "fluid" : "iufluidair"
+        }
+      },
+      "fluidbiogas" : {
+        "custom" : {
+          "fluid" : "iufluidbiogas"
+        }
+      },
+      "fluidbiomass" : {
+        "custom" : {
+          "fluid" : "iufluidbiomass"
+        }
+      },
+      "fluidconstruction_foam" : {
+        "custom" : {
+          "fluid" : "iufluidconstruction_foam"
+        }
+      },
+      "fluidcoolant" : {
+        "custom" : {
+          "fluid" : "iufluidcoolant"
+        }
+      },
+      "fluiddistilled_water" : {
+        "custom" : {
+          "fluid" : "iufluiddistilled_water"
+        }
+      },
+      "fluidhot_coolant" : {
+        "custom" : {
+          "fluid" : "iufluidhot_coolant"
+        }
+      },
+      "fluidhot_water" : {
+        "custom" : {
+          "fluid" : "iufluidhot_water"
+        }
+      },
+      "fluidpahoehoe_lava" : {
+        "custom" : {
+          "fluid" : "iufluidpahoehoe_lava"
+        }
+      },
+      "fluidsteam" : {
+        "custom" : {
+          "fluid" : "iufluidsteam"
+        }
+      },
+      "fluidsuperheated_steam" : {
+        "custom" : {
+          "fluid" : "iufluidsuperheated_steam"
+        }
+      },
+      "fluiduu_matter" : {
+        "custom" : {
+          "fluid" : "iufluiduu_matter"
+        }
+      },
+      "fluidweed_ex" : {
+        "custom" : {
+          "fluid" : "iufluidweed_ex"
+        }
+      },
+      "fluidheavy_water" : {
+        "custom" : {
+          "fluid" : "iufluidheavy_water"
+        }
+      },
+      "fluiddeuterium" : {
+        "custom" : {
+          "fluid" : "iufluiddeuterium"
+        }
+      },
+      "fluidcreosote" : {
+        "custom" : {
+          "fluid" : "iufluidcreosote"
+        }
+      },
+      "fluidmilk" : {
+        "custom" : {
+          "fluid" : "iufluidmilk"
+        }
+      },
       "fluidiodine" : {
         "custom" : {
           "fluid" : "iufluidiodine"

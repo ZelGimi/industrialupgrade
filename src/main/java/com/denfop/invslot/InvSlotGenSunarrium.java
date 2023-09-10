@@ -3,7 +3,7 @@ package com.denfop.invslot;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
-import com.denfop.tiles.base.TileEntitySolarGeneratorEnergy;
+import com.denfop.tiles.base.TileSolarGeneratorEnergy;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ import java.util.List;
 
 public class InvSlotGenSunarrium extends InvSlot {
 
-    private final TileEntitySolarGeneratorEnergy tile;
+    private final TileSolarGeneratorEnergy tile;
     private int stackSizeLimit;
 
-    public InvSlotGenSunarrium(TileEntitySolarGeneratorEnergy base1) {
-        super(base1, "input", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
+    public InvSlotGenSunarrium(TileSolarGeneratorEnergy base1) {
+        super(base1, TypeItemSlot.INPUT, 4);
         this.stackSizeLimit = 1;
         this.tile = base1;
     }

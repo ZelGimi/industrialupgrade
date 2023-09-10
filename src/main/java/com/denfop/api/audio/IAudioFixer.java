@@ -1,16 +1,17 @@
 package com.denfop.api.audio;
 
-import ic2.api.network.INetworkTileEntityEventListener;
 
-public interface IAudioFixer extends INetworkTileEntityEventListener {
+import net.minecraft.util.SoundEvent;
+
+public interface IAudioFixer {
 
     EnumTypeAudio getType();
 
     void setType(EnumTypeAudio type);
 
-    void initiate(int soundEvent);
+    SoundEvent getSound();
 
-    void changeSound();
+    void initiate(int soundEvent);
 
     boolean getEnable();
 

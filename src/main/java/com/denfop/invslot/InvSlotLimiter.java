@@ -1,17 +1,17 @@
 package com.denfop.invslot;
 
 import com.denfop.items.resource.ItemCraftingElements;
-import com.denfop.tiles.base.TileEntityLimiter;
+import com.denfop.tiles.base.TileLimiter;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotLimiter extends InvSlot {
 
-    private final TileEntityLimiter limiter;
+    private final TileLimiter limiter;
 
     public InvSlotLimiter(
-            final TileEntityLimiter base
+            final TileLimiter base
     ) {
-        super(base, "slot", Access.I, 1);
+        super(base, TypeItemSlot.INPUT, 1);
         this.limiter = base;
     }
 

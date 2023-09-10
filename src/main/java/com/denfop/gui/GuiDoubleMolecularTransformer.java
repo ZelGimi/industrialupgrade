@@ -1,11 +1,11 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerBaseDoubleMolecular;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMolecular> {
+public class GuiDoubleMolecularTransformer extends GuiCore<ContainerBaseDoubleMolecular> {
 
     public final ContainerBaseDoubleMolecular container;
 
@@ -33,7 +33,7 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         new AdvArea(this, 7, 3, 58, 17).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3")+ "\n" + (this.container.base.queue ? "x64" : "x1")).drawForeground(mouseX, mouseY);
+                "iu.molecular_info3") + "\n" + (this.container.base.queue ? "x64" : "x1")).drawForeground(mouseX, mouseY);
         new AdvArea(this, 180, 3, 195, 17)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
@@ -43,15 +43,17 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                 );
 
     }
+
     protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         GlStateManager.pushMatrix();
-        GlStateManager.scale(0.7,0.7,1);
+        GlStateManager.scale(0.7, 0.7, 1);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString((int) ((this.xSize / 2) / 0.48 ), 22, name, 4210752, false);
+        this.drawXCenteredString((int) ((this.xSize / 2) / 0.48), 22, name, 4210752, false);
         GlStateManager.popMatrix();
     }
+
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.bindTexture();
@@ -88,7 +90,7 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                 );
                 this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
                                 "energy")) +
-                                " EU",
+                                " EF",
                         this.guiLeft + 60, this.guiTop + 58, 4210752
                 );
                 if (this.container.base.getProgress() * 100 <= 100) {
@@ -104,7 +106,7 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                     );
                 }
                 this.fontRenderer.drawString(
-                        "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
+                        "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
                         this.guiLeft + 60, this.guiTop + 80, 4210752
                 );
 
@@ -148,7 +150,7 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                             this.guiTop + 47, 4210752
                     );
                     this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
-                                    "energy") * size) + " EU",
+                                    "energy") * size) + " EF",
                             this.guiLeft + 60, this.guiTop + 58, 4210752
                     );
                     if (this.container.base.getProgress() * 100 <= 100) {
@@ -165,7 +167,7 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                     }
 
                     this.fontRenderer.drawString(
-                            "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
+                            "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
                             this.guiLeft + 60, this.guiTop + 80, 4210752
                     );
 
@@ -220,11 +222,11 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 180 && x <= 197 && y >= 3 && y <= 17) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
 
         if (x >= 7 && x <= 60 && y >= 3 && y <= 17) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            new PacketUpdateServerTile(this.container.base, 1);
         }
 
     }

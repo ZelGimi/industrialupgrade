@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseWorldCollector;
+import com.denfop.tiles.base.TileBaseWorldCollector;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerWorldCollector extends ContainerFullInv<TileBaseWorldCollector> {
 
-public class ContainerWorldCollector extends ContainerFullInv<TileEntityBaseWorldCollector> {
-
-    public ContainerWorldCollector(TileEntityBaseWorldCollector tileEntity1, EntityPlayer entityPlayer) {
+    public ContainerWorldCollector(TileBaseWorldCollector tileEntity1, EntityPlayer entityPlayer) {
         super(entityPlayer, tileEntity1, 166);
 
 
@@ -28,14 +26,5 @@ public class ContainerWorldCollector extends ContainerFullInv<TileEntityBaseWorl
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("enumTypeCollector");
-        ret.add("need_matter");
-        ret.add("max_matter_energy");
-        ret.add("matter_energy");
-        return ret;
-    }
 
 }

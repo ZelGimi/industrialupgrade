@@ -4,88 +4,46 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
-import ic2.core.crop.TileEntityCrop;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
-import ic2.core.util.LiquidUtil;
-import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import java.util.List;
+import javax.annotation.Nullable;
 
-public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
+public class ItemCell extends ItemSubTypes<CellType> implements IModelRegister {
 
     protected static final String NAME = "itemcell";
-    public static IItemUseHandler emptyCellFill = (stack, player, pos, hand, side) -> {
-        assert stack.getItem() == IUItem.cell_all;
-
-        World world = player.getEntityWorld();
-        RayTraceResult position = Util.traceBlocks(player, true);
-        if (position == null) {
-            return EnumActionResult.FAIL;
-        } else {
-            if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
-                pos = position.getBlockPos();
-                if (!world.canMineBlockBody(player, pos)) {
-                    return EnumActionResult.FAIL;
-                }
-
-                if (!player.canPlayerEdit(pos, position.sideHit, player.getHeldItem(hand))) {
-                    return EnumActionResult.FAIL;
-                }
-
-                LiquidUtil.LiquidData data = LiquidUtil.getLiquid(world, pos);
-                if (data != null && data.isSource) {
-                    if (IUItem.celltype.containsKey(data.liquid) && stack.getItemDamage() != 0) {
-                        if (IUItem.celltype.containsKey(data.liquid) && StackUtil.storeInventoryItem(
-                                new ItemStack(IUItem.cell_all, 1, IUItem.celltype.get(data.liquid)),
-                                player,
-                                true
-                        )) {
-                            world.setBlockToAir(pos);
-                            StackUtil.consumeOrError(player, hand, 1);
-                            StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1, IUItem.celltype.get(data.liquid)),
-                                    player, false
-                            );
-                            return EnumActionResult.SUCCESS;
-                        }
-                    }
-
-
-                }
-
-            }
-
-            return EnumActionResult.PASS;
-        }
-    };
 
     public ItemCell() {
-        super(null, CellType.class);
+        super(CellType.class);
         this.setCreativeTab(IUCore.ItemTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        this.setMaxStackSize(64);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
-
         IUItem.uuMatterCell = new ItemStack(this, 1, 1);
         IUItem.HeliumCell = new ItemStack(this, 1, 2);
         IUItem.NeftCell = new ItemStack(this, 1, 3);
@@ -95,76 +53,184 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
         IUItem.PolypropCell = new ItemStack(this, 1, 7);
         IUItem.OxyCell = new ItemStack(this, 1, 8);
         IUItem.HybCell = new ItemStack(this, 1, 9);
+
+
+    }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("iu.iucell", "iu.itemcell"));
+    }
+
+    public boolean tryPlaceContainedLiquid(FluidStack fs, @Nullable EntityPlayer player, World worldIn, BlockPos posIn) {
+
+        Block containedBlock;
+        if (fs.getFluid() == FluidRegistry.WATER) {
+            containedBlock = Blocks.FLOWING_WATER;
+        } else if (fs.getFluid() == FluidRegistry.LAVA) {
+            containedBlock = Blocks.FLOWING_LAVA;
+        } else {
+            containedBlock = fs.getFluid().getBlock();
+        }
+        if (containedBlock == Blocks.AIR) {
+            return false;
+        } else {
+            IBlockState iblockstate = worldIn.getBlockState(posIn);
+            Material material = iblockstate.getMaterial();
+            boolean flag = !material.isSolid();
+            boolean flag1 = iblockstate.getBlock().isReplaceable(worldIn, posIn);
+
+            if (!worldIn.isAirBlock(posIn) && !flag && !flag1) {
+                return false;
+            } else {
+                if (worldIn.provider.doesWaterVaporize() && containedBlock == Blocks.FLOWING_WATER) {
+                    int l = posIn.getX();
+                    int i = posIn.getY();
+                    int j = posIn.getZ();
+                    worldIn.playSound(
+                            player,
+                            posIn,
+                            SoundEvents.BLOCK_FIRE_EXTINGUISH,
+                            SoundCategory.BLOCKS,
+                            0.5F,
+                            2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F
+                    );
+
+                    for (int k = 0; k < 8; ++k) {
+                        worldIn.spawnParticle(
+                                EnumParticleTypes.SMOKE_LARGE,
+                                (double) l + Math.random(),
+                                (double) i + Math.random(),
+                                (double) j + Math.random(),
+                                0.0D,
+                                0.0D,
+                                0.0D
+                        );
+                    }
+                } else {
+                    if (!worldIn.isRemote && (flag || flag1) && !material.isLiquid()) {
+                        worldIn.destroyBlock(posIn, true);
+                    }
+
+                    SoundEvent soundevent = containedBlock == Blocks.FLOWING_LAVA
+                            ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA
+                            : SoundEvents.ITEM_BUCKET_EMPTY;
+                    worldIn.playSound(player, posIn, soundevent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    worldIn.setBlockState(posIn, containedBlock.getDefaultState(), 11);
+                }
+                fs.amount -= 1000;
+                return true;
+            }
+        }
+    }
+
+    public ICapabilityProvider initCapabilities(@NotNull ItemStack stack, NBTTagCompound nbt) {
+        CellType type = getType(stack);
+        CellType.CellFluidHandler handler;
+        if (type.isFluidContainer()) {
+            handler = new CellType.CellFluidHandler(stack, type);
+        } else {
+            handler = null;
+        }
+
+        return handler;
     }
 
     @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
-    @Override
-    public EnumActionResult onItemUse(
-            final EntityPlayer player,
-            final World world,
-            final BlockPos pos,
-            final EnumHand hand,
-            final EnumFacing side,
-            final float hitX,
-            final float hitY,
-            final float hitZ
+    public ActionResult<ItemStack> onItemRightClick(
+            World world, EntityPlayer player, EnumHand hand
     ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (stack.getItemDamage() != 0) {
-            Fluid fluid = IUItem.celltype1.get(stack.getItemDamage());
-            if (StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all), player, true)) {
-                if (LiquidUtil.fillBlock(new FluidStack(fluid, 1000), world, pos, false)) {
-                    StackUtil.consumeOrError(player, hand, 1);
-                    StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
+
+        RayTraceResult position = this.rayTrace(world, player, true);
+        if (position == null) {
+            return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
+        }
+        if (position.typeOfHit == RayTraceResult.Type.BLOCK) {
+            final BlockPos pos = position.getBlockPos();
+            final ItemStack stack = player.getHeldItem(hand);
+            if (stack.getItemDamage() != 0) {
+                Fluid fluid = IUItem.celltype1.get(stack.getItemDamage());
+                boolean flag1 = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+                BlockPos blockpos1 = flag1 && position.sideHit == EnumFacing.UP ? pos : pos.offset(position.sideHit);
+
+                if (tryPlaceContainedLiquid(new FluidStack(fluid, 1000), player, world, blockpos1)) {
+                    player.getHeldItem(hand).shrink(1);
+                    if (!ModUtils.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
                             player, false
-                    );
-                    return EnumActionResult.SUCCESS;
-                } else if (LiquidUtil.fillBlock(new FluidStack(fluid, 1000), world, pos.offset(EnumFacing.UP), false)) {
-                    StackUtil.consumeOrError(player, hand, 1);
-                    StackUtil.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
-                            player, false
-                    );
-                    return EnumActionResult.SUCCESS;
+                    )) {
+                        if (!world.isRemote) {
+                            ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.cell_all, 1));
+                        }
+                    }
+                    return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+                }
+
+            } else {
+
+                if (!world.canMineBlockBody(player, pos)) {
+                    return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
+                }
+
+                if (!player.canPlayerEdit(pos, position.sideHit, player.getHeldItem(hand))) {
+                    return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
+                }
+                IBlockState state = world.getBlockState(pos);
+                Block block = state.getBlock();
+
+                if (block instanceof IFluidBlock && ((IFluidBlock) block).canDrain(world, pos)) {
+                    Fluid liquid = ((IFluidBlock) block).getFluid();
+                    if (IUItem.celltype.containsKey(liquid) && player.getHeldItem(hand).getItemDamage() == 0) {
+                        if (IUItem.celltype.containsKey(liquid)) {
+                            world.setBlockToAir(pos);
+                            player.getHeldItem(hand).shrink(1);
+                            if (!player.inventory.addItemStackToInventory(new ItemStack(IUItem.cell_all, 1,
+                                    IUItem.celltype.get(liquid)
+                            ))) {
+                                if (!world.isRemote) {
+                                    ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.cell_all, 1,
+                                            IUItem.celltype.get(liquid)
+                                    ));
+                                }
+
+                            }
+                            return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+                        }
+                    }
+                } else if (state.getMaterial().isLiquid()) {
+
+
+                    final FluidStack ret = new FluidStack(FluidRegistry.getFluid(block.getUnlocalizedName().substring(5)), 1000);
+                    System.out.println(player.getHeldItem(hand).getItemDamage());
+                    if (IUItem.celltype.containsKey(ret.getFluid()) && player.getHeldItem(hand).getItemDamage() == 0) {
+                        world.setBlockToAir(pos);
+                        player.getHeldItem(hand).shrink(1);
+                        if (!player.inventory.addItemStackToInventory(new ItemStack(IUItem.cell_all, 1,
+                                IUItem.celltype.get(ret.getFluid())
+                        ))) {
+                            if (!world.isRemote) {
+                                ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.cell_all, 1,
+                                        IUItem.celltype.get(ret.getFluid())
+                                ));
+                            }
+
+                        }
+                        return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+                    }
                 }
             }
         }
-        return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+
+        return ActionResult.newResult(EnumActionResult.PASS, player.getHeldItem(hand));
 
     }
+
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
-    @Nonnull
-    public EnumActionResult onItemUseFirst(
-            @Nonnull EntityPlayer player,
-            @Nonnull World world,
-            @Nonnull BlockPos pos,
-            @Nonnull EnumFacing side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            @Nonnull EnumHand hand
-    ) {
-        ItemStack stack = StackUtil.get(player, hand);
-        CellType type = this.getType(stack);
-        if (type.hasCropAction()) {
-            TileEntity te = world.getTileEntity(pos);
-            if (te instanceof TileEntityCrop) {
-                return type.doCropAction();
-            }
-        }
-
-        return EnumActionResult.PASS;
-    }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, int meta, String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -175,28 +241,5 @@ public class ItemCell extends ItemMulti<CellType> implements IModelRegister {
         );
     }
 
-    public int getItemStackLimit(@Nonnull ItemStack stack) {
-        CellType type = this.getType(stack);
-        return type != null ? type.getStackSize() : 0;
-    }
-
-    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
-        return this.getType(stack).getUsage() > 0;
-    }
-
-    public double getDurabilityForDisplay(@Nonnull ItemStack stack) {
-        CellType type = this.getType(stack);
-        return (double) type.getUsage() / (double) type.getMaximum();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void addInformation(@Nonnull ItemStack stack, World world, @Nonnull List<String> tooltip, ITooltipFlag advanced) {
-        CellType type = this.getType(stack);
-        if (type.getStackSize() == 1 && advanced.isAdvanced()) {
-            int max = type.getMaximum();
-            tooltip.add(Localization.translate("item.durability", max - type.getUsage(), max));
-        }
-
-    }
 
 }

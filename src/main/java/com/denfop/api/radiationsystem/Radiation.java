@@ -1,6 +1,7 @@
 package com.denfop.api.radiationsystem;
 
-import ic2.core.IC2Potion;
+
+import com.denfop.IUPotion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
@@ -90,10 +91,10 @@ public class Radiation {
                 }
                 break;
             case HIGH:
-                player.addPotionEffect(new PotionEffect(IC2Potion.radiation, 200, 0));
+                player.addPotionEffect(new PotionEffect(IUPotion.radiation, 200, 0));
                 break;
             case VERY_HIGH:
-                player.addPotionEffect(new PotionEffect(IC2Potion.radiation, 432000, 0));
+                player.addPotionEffect(new PotionEffect(IUPotion.radiation, 432000, 0));
                 player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 400, 0));
                 break;
             default:

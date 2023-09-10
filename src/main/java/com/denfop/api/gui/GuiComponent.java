@@ -1,13 +1,9 @@
 package com.denfop.api.gui;
 
 import com.denfop.Constants;
-import com.denfop.componets.ComponentButton;
-import com.denfop.componets.ComponentProcessRender;
-import com.denfop.componets.ComponentRenderInventory;
-import com.denfop.componets.ComponentSoundButton;
-import com.denfop.componets.ProcessMultiComponent;
+import com.denfop.componets.*;
 import com.denfop.container.SlotInvSlot;
-import com.denfop.gui.GuiIC2;
+import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIU;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.client.Minecraft;
@@ -35,7 +31,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
         this.component = component;
     }
 
-    private static void addLines(List<String> list, String str) {
+    public static void addLines(List<String> list, String str) {
         int startPos;
         int pos;
         for (startPos = 0; (pos = str.indexOf(10, startPos)) != -1; startPos = pos + 1) {
@@ -97,7 +93,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
         return type;
     }
 
-    public GuiIC2<?> getGui() {
+    public GuiCore<?> getGui() {
         return this.gui;
     }
 

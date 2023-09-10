@@ -1,14 +1,12 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityMagnet;
+import com.denfop.tiles.mechanism.TileMagnet;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerMagnet extends ContainerFullInv<TileMagnet> {
 
-public class ContainerMagnet extends ContainerFullInv<TileEntityMagnet> {
-
-    public ContainerMagnet(EntityPlayer entityPlayer, TileEntityMagnet tileEntity1) {
-        this(entityPlayer, tileEntity1, 166);
+    public ContainerMagnet(EntityPlayer entityPlayer, TileMagnet tileEntity1) {
+        super(entityPlayer, tileEntity1, 166);
         if (tileEntity1.outputSlot != null) {
 
             for (int j = 0; j < 6; ++j) {
@@ -38,16 +36,5 @@ public class ContainerMagnet extends ContainerFullInv<TileEntityMagnet> {
         }
     }
 
-    public ContainerMagnet(EntityPlayer entityPlayer, TileEntityMagnet tileEntity1, int height) {
-        super(entityPlayer, tileEntity1, height);
-    }
-
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energyconsume");
-        ret.add("energy");
-        ret.add("sound");
-        return ret;
-    }
 
 }

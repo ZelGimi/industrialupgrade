@@ -1,7 +1,7 @@
 package com.denfop.integration.jei.solidmatters;
 
+import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -48,7 +48,7 @@ public class MatterWrapper implements IRecipeWrapper {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         minecraft.fontRenderer.drawSplitString(
-                Localization.translate("cost.name") + " " + ModUtils.getString((double) percent) + "EU",
+                Localization.translate("cost.name") + " " + ModUtils.getString((double) percent) + "EF",
                 10,
                 60,
                 recipeWidth - 10,

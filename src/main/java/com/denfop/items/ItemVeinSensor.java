@@ -2,12 +2,12 @@ package com.denfop.items;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemMulti;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -23,14 +23,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements IModelRegister {
+public class ItemVeinSensor extends ItemSubTypes<ItemVeinSensor.Types> implements IModelRegister {
 
     protected static final String NAME = "sensor";
 
     public ItemVeinSensor() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
@@ -57,7 +57,7 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ItemVeinSensor extends ItemMulti<ItemVeinSensor.Types> implements I
     }
 
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         sensor(0);
 
         private final String name;

@@ -1,16 +1,16 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAnalyzer;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -110,11 +110,11 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                 10, 80 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("cost.name") +
-                        TextFormatting.WHITE + ModUtils.getString(this.container.base.sum * this.container.base.consume) + " EU",
+                        TextFormatting.WHITE + ModUtils.getString(this.container.base.sum * this.container.base.consume) + " EF",
                 10, 80 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("cost.name1") +
-                        TextFormatting.WHITE + ModUtils.getString1(this.container.base.consume) + "EU",
+                        TextFormatting.WHITE + ModUtils.getString1(this.container.base.consume) + "EF",
                 10, 80 + 8 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
 
@@ -122,7 +122,7 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                 .withTooltip(Localization.translate("gui.MolecularTransformer.progress") + ": " + ModUtils.getString(this.container.base.getProgress() * 100) + "%")
                 .drawForeground(par1, par2);
         new AdvArea(this, 148, 159, 186, 170)
-                .withTooltip("EU: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(
+                .withTooltip("EF: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(
                         this.container.base.energy.getCapacity()))
                 .drawForeground(par1, par2);
 
@@ -148,7 +148,7 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                             index < this.container.base.middleheightores.size() ?
                                     this.container.base.middleheightores.get(index) : 0);
                     String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
-                            this.container.base.listnumberore.get(index) * this.container.base.inputslot.getenergycost()) + "EU";
+                            this.container.base.listnumberore.get(index) * this.container.base.inputslot.getenergycost()) + "EF";
 
 
                     handleUpgradeTooltip2(par1, par2 - this.guiTop,
@@ -176,7 +176,7 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                     i2 < this.container.base.middleheightores.size() ? this.container.base.middleheightores.get(i2) : 0) +
                     ".";
             String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
-                    this.container.base.listnumberore.get(i2) * this.container.base.inputslot.getenergycost()) + "EU";
+                    this.container.base.listnumberore.get(i2) * this.container.base.inputslot.getenergycost()) + "EF";
 
 
             handleUpgradeTooltip(
@@ -260,11 +260,11 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
     protected void actionPerformed(GuiButton guibutton) {
 
         if (guibutton.id == 0) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
 
         }
         if (guibutton.id == 1) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            new PacketUpdateServerTile(this.container.base, 1);
 
         }
 
@@ -318,7 +318,7 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
             this.zLevel = 100.0F;
             mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             itemRender.renderItemAndEffectIntoGUI(
-                    OreDictionary.getOres(this.container.base.listore.get(i2)).get(0),
+                    OreDictionary.getOres(this.container.base.listore.get(i2 % this.container.base.listore.size())).get(0),
                     xOffset + 99 + (i2 - (6 * k)) * 18,
                     yOffset + 13 + k * 18
             );

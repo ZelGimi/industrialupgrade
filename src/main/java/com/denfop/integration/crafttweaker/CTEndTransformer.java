@@ -71,7 +71,7 @@ public class CTEndTransformer {
 
             final NBTTagCompound nbt = ModUtils.nbt();
             nbt.setDouble("need", this.matter);
-            final IC2RecipeInput stack = new IC2RecipeInput(this.container);
+            final IC2InputItemStack stack = new IC2InputItemStack(this.container);
 
             Recipes.recipes.addAdderRecipe("endcollector", new BaseMachineRecipe(
                     new Input(

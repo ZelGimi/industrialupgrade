@@ -3,9 +3,8 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,21 +17,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemPurifiedCrushed extends ItemMulti<ItemPurifiedCrushed.Types> implements IModelRegister {
+public class ItemPurifiedCrushed extends ItemSubTypes<ItemPurifiedCrushed.Types> implements IModelRegister {
 
     protected static final String NAME = "purifiedcrushed";
 
     public ItemPurifiedCrushed() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
-            for (final Types type : this.typeProperty.getShownValues()) {
+            for (final Types type : this.typeProperty.getAllowedValues()) {
                 if (type != Types.invar && type != Types.electrium && type != Types.caravky) {
                     subItems.add(this.getItemStackUnchecked(type));
                 }
@@ -42,20 +41,12 @@ public class ItemPurifiedCrushed extends ItemMulti<ItemPurifiedCrushed.Types> im
     }
 
     protected ItemStack getItemStackUnchecked(Types type) {
-        return new ItemStack(this, 1, ((IIdProvider) type).getId());
+        return new ItemStack(this, 1, ((ISubEnum) type).getId());
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
-    }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item stack, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -63,7 +54,7 @@ public class ItemPurifiedCrushed extends ItemMulti<ItemPurifiedCrushed.Types> im
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         mikhail(0),
         aluminium(1),
         vanady(2),
@@ -83,7 +74,12 @@ public class ItemPurifiedCrushed extends ItemMulti<ItemPurifiedCrushed.Types> im
         manganese(16),
         iridium(17),
         germanium(18),
-        ;
+        copper(19),
+        gold(20),
+        iron(21),
+        lead(22),
+        tin(23),
+        uranium(24);
 
         private final String name;
         private final int ID;

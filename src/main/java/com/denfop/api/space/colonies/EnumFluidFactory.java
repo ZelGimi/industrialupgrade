@@ -10,7 +10,7 @@ public enum EnumFluidFactory {
     OIL(12, new FluidStack(FluidName.fluidneft.getInstance(), 1), 6, 12),
     PETROL(14, new FluidStack(FluidName.fluidbenz.getInstance(), 1), 8, 16),
     DIESEL(14, new FluidStack(FluidName.fluiddizel.getInstance(), 1), 8, 16),
-    COOLANT(14, new FluidStack(ic2.core.ref.FluidName.coolant.getInstance(), 1), 8, 16);
+    COOLANT(14, new FluidStack(FluidName.fluidcoolant.getInstance(), 1), 8, 16);
     private final int energy;
     private final FluidStack stack;
     private final int needPeople;

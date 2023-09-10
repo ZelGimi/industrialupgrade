@@ -1,15 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Area;
 import com.denfop.container.ContainerAutoSpawner;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class GuiAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
+public class GuiAutoSpawner extends GuiCore<ContainerAutoSpawner> {
 
     public final ContainerAutoSpawner container;
 
@@ -72,7 +72,7 @@ public class GuiAutoSpawner extends GuiIC2<ContainerAutoSpawner> {
                 74,
                 168 - 133,
                 77 - 74
-        ).withTooltip("EU: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(
+        ).withTooltip("EF: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(
                 this.container.base.energy.getCapacity())).drawForeground(par1, par2);
         new Area(
                 this,

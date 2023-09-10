@@ -1,42 +1,28 @@
 package com.denfop.items.energy;
 
 
-import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.IUItem;
+import com.denfop.*;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IEnergyItem;
+import com.denfop.api.tile.IWrenchable;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.audio.PositionSpec;
+import com.denfop.audio.EnumSound;
+import com.denfop.blocks.BlockRubWood;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.register.Register;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileEntityMultiMachine;
+import com.denfop.tiles.base.TileMultiMachine;
+import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.api.tile.IWrenchable;
-import ic2.core.IC2;
-import ic2.core.block.BlockRubWood;
-import ic2.core.block.TileEntityBarrel;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.init.MainConfig;
-import ic2.core.item.ElectricItemManager;
-import ic2.core.item.type.MiscResourceType;
-import ic2.core.ref.BlockName;
-import ic2.core.ref.ItemName;
-import ic2.core.util.ConfigUtil;
-import ic2.core.util.LogCategory;
-import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockDirt.DirtType;
@@ -61,14 +47,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.*;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -89,7 +70,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegister, IUpgradeItem {
+public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegister, IUpgradeItem {
 
     protected static final double ROTATE = 50.0D;
     protected static final double HOE = 50.0D;
@@ -101,22 +82,22 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
         this.setMaxDamage(27);
         setCreativeTab(IUCore.EnergyTab);
         this.efficiency = 16.0F;
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         this.name = name;
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.GRAVITOOL.list);
     }
 
     public static GraviToolMode readToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode"));
+        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInteger("toolMode"));
     }
 
     public static GraviToolMode readNextToolMode(ItemStack stack) {
-        return GraviToolMode.getFromID(StackUtil.getOrCreateNbtData(stack).getInteger("toolMode") + 1);
+        return GraviToolMode.getFromID(ModUtils.nbt(stack).getInteger("toolMode") + 1);
     }
 
     public static void saveToolMode(ItemStack stack, ItemGraviTool.GraviToolMode mode) {
-        StackUtil.getOrCreateNbtData(stack).setInteger("toolMode", mode.ordinal());
+        ModUtils.nbt(stack).setInteger("toolMode", mode.ordinal());
     }
 
     public static boolean hasNecessaryPower(ItemStack stack, double usage, EntityPlayer player) {
@@ -136,13 +117,8 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
 
         if (ElectricItem.manager.use(stack, usage * coef, player)) {
             if (!supressSound && player.world.isRemote) {
-                IUCore.audioManager.playOnce(
-                        player,
-                        PositionSpec.Hand,
-                        "Tools/wrench.ogg",
-                        true,
-                        IUCore.audioManager.getDefaultVolume()
-                );
+                player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
+
             }
 
             return true;
@@ -172,7 +148,7 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                 ejectX,
                 ejectY,
                 ejectZ,
-                ItemName.misc_resource.getItemStack(MiscResourceType.resin)
+                IUItem.latex.copy()
         );
         entityitem.setDefaultPickupDelay();
         entityitem.getItem().setCount(quantity);
@@ -190,7 +166,7 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
             List<ItemStack> stacks,
             final ItemStack stack
     ) {
-        assert state.getBlock() == BlockName.rubber_wood.getInstance();
+        assert state.getBlock() == IUItem.rubWood;
 
         BlockRubWood.RubberWoodState rwState = state.getValue(BlockRubWood.stateProperty);
         boolean max = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
@@ -199,27 +175,20 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                 if (!world.isRemote) {
                     world.setBlockState(pos, state.withProperty(BlockRubWood.stateProperty, rwState.getDry()));
                     if (stacks != null) {
-                        stacks.add(StackUtil.copyWithSize(
-                                ItemName.misc_resource.getItemStack(MiscResourceType.resin),
+                        stacks.add(ModUtils.setSize(
+                                IUItem.latex,
                                 world.rand.nextInt(3) + 1
                         ));
                     } else {
                         ejectResin(world, pos, side, !max ? world.rand.nextInt(3) + 1 : 3);
                     }
 
-                    if (player != null) {
-                        IC2.achievements.issueAchievement(player, "acquireResin");
-                    }
                 }
 
                 if (world.isRemote && player != null) {
-                    IUCore.audioManager.playOnce(
-                            player,
-                            PositionSpec.Hand,
-                            "Tools/Treetap.ogg",
-                            true,
-                            IC2.audioManager.getDefaultVolume()
-                    );
+                    player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
+
+
                 }
 
                 return true;
@@ -235,20 +204,15 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                     if (!world.isRemote) {
                         ejectResin(world, pos, side, 1);
                         if (stacks != null) {
-                            stacks.add(ItemName.misc_resource.getItemStack(MiscResourceType.resin));
+                            stacks.add(IUItem.latex);
                         } else {
                             ejectResin(world, pos, side, 1);
                         }
                     }
 
                     if (world.isRemote && player != null) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                PositionSpec.Hand,
-                                "Tools/Treetap.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
+                        player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
+
                     }
 
                     return true;
@@ -259,6 +223,24 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
         } else {
             return false;
         }
+    }
+
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        );
     }
 
     public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
@@ -324,15 +306,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
     @Override
     public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
         if (IUCore.keyboard.isChangeKeyDown(player)) {
-            ItemStack stack = StackUtil.get(player, hand);
+            ItemStack stack = ModUtils.get(player, hand);
             if (world.isRemote) {
-                IUCore.audioManager.playOnce(
-                        player,
-                        com.denfop.audio.PositionSpec.Hand,
-                        "Tools/toolchange.ogg",
-                        true,
-                        IUCore.audioManager.getDefaultVolume()
-                );
+                player.playSound(EnumSound.toolchange.getSoundEvent(), 1F, 1);
             } else {
                 ItemGraviTool.GraviToolMode mode = readNextToolMode(stack);
                 saveToolMode(stack, mode);
@@ -357,7 +333,7 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
             float hitZ,
             @Nonnull EnumHand hand
     ) {
-        ItemStack stack = StackUtil.get(player, hand);
+        ItemStack stack = ModUtils.get(player, hand);
         switch (readToolMode(stack)) {
             case WRENCH:
                 return this.onWrenchUse(stack, player, world, pos, side) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
@@ -382,7 +358,7 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
             float hitY,
             float hitZ
     ) {
-        ItemStack stack4 = StackUtil.get(player, hand);
+        ItemStack stack4 = ModUtils.get(player, hand);
         switch (readToolMode(stack4)) {
             case HOE:
                 return this.onHoeUse(stack4, player, world, pos, facing) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
@@ -415,12 +391,12 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                         }
                     }
                 }
-                if (tile instanceof TileEntityMultiMachine) {
+                if (tile instanceof TileMultiMachine) {
                     if (!ElectricItem.manager.canUse(itemstack, 500 * coef)) {
                         return EnumActionResult.PASS;
                     }
                     if (!player.isSneaking()) {
-                        TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
+                        TileMultiMachine base = (TileMultiMachine) tile;
                         ItemStack stack_quickly = ItemStack.EMPTY;
                         ItemStack stack_modulesize = ItemStack.EMPTY;
                         ItemStack panel = ItemStack.EMPTY;
@@ -460,20 +436,14 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                                 item.setPickupDelay(0);
                                 world.spawnEntity(item);
                                 ElectricItem.manager.use(itemstack, 500 * coef, player);
-                                if (IC2.platform.isRendering()) {
-                                    IUCore.audioManager.playOnce(
-                                            player,
-                                            com.denfop.audio.PositionSpec.Hand,
-                                            "Tools/purifier.ogg",
-                                            true,
-                                            IC2.audioManager.getDefaultVolume()
-                                    );
+                                if (IUCore.proxy.isRendering()) {
+                                    player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
                                 }
                                 return EnumActionResult.SUCCESS;
                             }
                         }
                     } else {
-                        TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
+                        TileMultiMachine base = (TileMultiMachine) tile;
                         List<ItemStack> stack_list = new ArrayList<>();
                         if (base.multi_process.quickly) {
                             stack_list.add(new ItemStack(IUItem.module_quickly));
@@ -502,14 +472,8 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                                 item.setPickupDelay(0);
                                 item.setItem(stack);
                                 world.spawnEntity(item);
-                                if (IC2.platform.isRendering()) {
-                                    IUCore.audioManager.playOnce(
-                                            player,
-                                            com.denfop.audio.PositionSpec.Hand,
-                                            "Tools/purifier.ogg",
-                                            true,
-                                            IC2.audioManager.getDefaultVolume()
-                                    );
+                                if (IUCore.proxy.isRendering()) {
+                                    player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
                                 }
 
                             }
@@ -518,6 +482,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                         return EnumActionResult.SUCCESS;
                     }
                 } else {
+                    if (!(tile instanceof IManufacturerBlock)) {
+                        return EnumActionResult.FAIL;
+                    }
                     IManufacturerBlock base = (IManufacturerBlock) tile;
                     if (player.isSneaking()) {
                         int level = base.getLevel();
@@ -533,14 +500,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                             item.setPickupDelay(0);
                             world.spawnEntity(item);
                             ElectricItem.manager.use(itemstack, 500, player);
-                            if (IC2.platform.isRendering()) {
-                                IUCore.audioManager.playOnce(
-                                        player,
-                                        com.denfop.audio.PositionSpec.Hand,
-                                        "Tools/purifier.ogg",
-                                        true,
-                                        IC2.audioManager.getDefaultVolume()
-                                );
+                            if (IUCore.proxy.isRendering()) {
+                                player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
                             }
                             return EnumActionResult.SUCCESS;
                         }
@@ -558,14 +520,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                             item.setPickupDelay(0);
                             world.spawnEntity(item);
                             ElectricItem.manager.use(itemstack, 500, player);
-                            if (IC2.platform.isRendering()) {
-                                IUCore.audioManager.playOnce(
-                                        player,
-                                        com.denfop.audio.PositionSpec.Hand,
-                                        "Tools/purifier.ogg",
-                                        true,
-                                        IC2.audioManager.getDefaultVolume()
-                                );
+                            if (IUCore.proxy.isRendering()) {
+                                player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
                             }
                             return EnumActionResult.SUCCESS;
                         }
@@ -588,9 +545,11 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
             if (event.getResult() == Result.ALLOW) {
                 return checkNecessaryPower(stack, HOE, player, true);
             }
-            IBlockState state = Util.getBlockState(world, pos);
+            IBlockState state = world.getBlockState(pos);
+            state = state.getActualState(world, pos);
             Block block = state.getBlock();
-            IBlockState state1 = Util.getBlockState(world, pos.up());
+            IBlockState state1 = world.getBlockState(pos.up());
+            state1 = state1.getActualState(world, pos.up());
             if (side != EnumFacing.DOWN && state1.getMaterial() == Material.AIR) {
                 if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
                     return this.setHoedBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
@@ -630,24 +589,9 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
     }
 
     protected boolean onTreeTapUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
-        IBlockState state = Util.getBlockState(world, pos);
-        TileEntity te;
-        if (side.getAxis() != Axis.Y && (te = world.getTileEntity(pos)) instanceof TileEntityBarrel) {
-            TileEntityBarrel barrel = (TileEntityBarrel) te;
-            if (!barrel.getActive()) {
-                if (checkNecessaryPower(stack, TAP, player, true)) {
-                    if (!world.isRemote) {
-                        barrel.setActive(true);
-                        barrel.onPlaced(stack, null, side.getOpposite());
-                    }
-
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        }
-        return state.getBlock() == BlockName.rubber_wood.getInstance() && hasNecessaryPower(
+        IBlockState state = world.getBlockState(pos);
+        state = state.getActualState(world, pos);
+        return state.getBlock() == IUItem.rubWood && hasNecessaryPower(
                 stack,
                 TAP,
                 player
@@ -655,7 +599,8 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
     }
 
     protected boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
-        IBlockState state = Util.getBlockState(world, pos);
+        IBlockState state = world.getBlockState(pos);
+        state = state.getActualState(world, pos);
         Block block = state.getBlock();
         if (block.isAir(state, world, pos)) {
             return false;
@@ -664,7 +609,7 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
             IWrenchable wrenchable = (IWrenchable) block;
             EnumFacing current = wrenchable.getFacing(world, pos);
             EnumFacing newFacing;
-            if (!IC2.keyboard.isAltKeyDown(player)) {
+            if (!IUCore.keyboard.isChangeKeyDown(player)) {
                 if (player.isSneaking()) {
                     newFacing = side.getOpposite();
                 } else {
@@ -696,17 +641,6 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
 
                 if (!world.isRemote) {
                     TileEntity te = world.getTileEntity(pos);
-                    if (ConfigUtil.getBool(MainConfig.get(), "protection/wrenchLogging")) {
-                        IC2.log.info(
-                                LogCategory.PlayerActivity,
-                                "Player %s used a wrench to remove the %s (%s) at %s.",
-                                player.getGameProfile().getName() + "/" + player.getGameProfile().getId(),
-                                state,
-                                te != null ? te.getClass().getSimpleName().replace("TileEntity", "") : "no te",
-                                Util.formatPosition(world, pos)
-                        );
-                    }
-
                     int experience;
                     if (player instanceof EntityPlayerMP) {
                         experience = ForgeHooks.onBlockBreakEvent(
@@ -735,10 +669,11 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
                     if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WRENCH, stack)) {
                         fortune = 100;
                     }
-                    for (ItemStack drop : wrenchable.getWrenchDrops(world, pos, state, te, player, fortune)) {
-                        StackUtil.dropAsEntity(world, pos, drop);
-                    }
 
+                    for (ItemStack drop : wrenchable.getWrenchDrops(world, pos, state, te, player, fortune)) {
+                        ModUtils.dropAsEntity(world, pos, drop);
+                    }
+                    wrenchable.wrenchBreak(world, pos);
                     if (!player.capabilities.isCreativeMode && experience > 0) {
                         block.dropXpOnBlockBreak(world, pos, experience);
                     }
@@ -767,7 +702,8 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
     }
 
     protected boolean onScrewdriverUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos) {
-        IBlockState state = Util.getBlockState(world, pos);
+        IBlockState state = world.getBlockState(pos);
+        state = state.getActualState(world, pos);
         Block block = state.getBlock();
         if (!block.isAir(state, world, pos) && block instanceof BlockHorizontal && checkNecessaryPower(stack, 500.0D, player)) {
             EnumFacing facing = state.getValue(BlockHorizontal.FACING);
@@ -845,17 +781,17 @@ public class ItemGraviTool extends ItemTool implements IElectricItem, IModelRegi
     }
 
     @Override
-    public double getMaxCharge(ItemStack stack) {
+    public double getMaxEnergy(ItemStack stack) {
         return 300000.0D;
     }
 
     @Override
-    public int getTier(ItemStack stack) {
+    public short getTierItem(ItemStack stack) {
         return 2;
     }
 
     @Override
-    public double getTransferLimit(ItemStack stack) {
+    public double getTransferEnergy(ItemStack stack) {
         return 10000.0D;
     }
 

@@ -6,31 +6,31 @@
         "model" : "industrialupgrade:basemachine/se_advgen"
       },
       "macerator_iu" : {
-        "model" : "ic2:machine/processing/basic/macerator"
+        "model" : "industrialupgrade:basemachine/macerator"
       },
       "macerator_iu_active" : {
-        "model" : "ic2:machine/processing/basic/macerator_active"
+        "model" : "industrialupgrade:basemachine/macerator_active"
       },
       "compressor_iu" : {
-        "model" : "ic2:machine/processing/basic/compressor"
+        "model" : "industrialupgrade:basemachine/compressor"
       },
       "compressor_iu_active" : {
-        "model" : "ic2:machine/processing/basic/compressor_active"
+        "model" : "industrialupgrade:basemachine/compressor_active"
       },
       "furnace_iu" : {
-        "model" : "ic2:machine/processing/basic/electric_furnace"
+        "model" : "industrialupgrade:basemachine/electric_furnace"
       },
       "furnace_iu_active" : {
-        "model" : "ic2:machine/processing/basic/electric_furnace_active"
+        "model" : "industrialupgrade:basemachine/electric_furnace_active"
       },
       "extractor_iu" : {
-        "model" : "ic2:machine/processing/basic/extractor"
+        "model" : "industrialupgrade:basemachine/extractor"
       },
       "sintezator" : {
         "model" : "industrialupgrade:basemachine/sintezator"
       },
       "extractor_iu_active" : {
-        "model" : "ic2:machine/processing/basic/extractor_active"
+        "model" : "industrialupgrade:basemachine/extractor_active"
       },
       "metalformer_iu" : {
         "model" : "ic2:machine/processing/advanced/metal_former"
@@ -39,16 +39,16 @@
         "model" : "ic2:machine/processing/advanced/metal_former_active"
       },
       "recycler_iu" : {
-        "model" : "ic2:machine/processing/basic/recycler"
+        "model" : "industrialupgrade:basemachine/recycler"
       },
       "recycler_iu_active" : {
-        "model" : "ic2:machine/processing/basic/recycler_active"
+        "model" : "industrialupgrade:basemachine/recycler_active"
       },
       "generator_matter" : {
-        "model" : "ic2:machine/uu/matter_generator"
+        "model" : "industrialupgrade:basemachine/matter_generator"
       },
       "generator_matter_active" : {
-        "model" : "ic2:machine/uu/matter_generator_active"
+        "model" : "industrialupgrade:basemachine/matter_generator_active"
       },
       "modulator" : {
         "model" : "industrialupgrade:basemachine/modulator"

@@ -2,32 +2,14 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleFermer;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleOreWashing;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadFermer;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadOreWashing;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityFermer;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityOreWashing;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleAssamplerScrap;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleCentrifuge;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleFermer;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleGearMachine;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleOreWashing;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.multimechanism.dual.*;
+import com.denfop.tiles.mechanism.multimechanism.quad.*;
+import com.denfop.tiles.mechanism.multimechanism.simple.*;
+import com.denfop.tiles.mechanism.multimechanism.triple.*;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -38,27 +20,27 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockMoreMachine3 implements ITeBlock {
-    farmer(TileEntityFermer.class, 0),
-    double_farmer(TileEntityDoubleFermer.class, 1),
-    triple_farmer(TileEntityTripleFermer.class, 2),
-    quad_farmer(TileEntityQuadFermer.class, 3),
-    assamplerscrap(TileEntityAssamplerScrap.class, 4),
-    double_assamplerscrap(TileEntityDoubleAssamplerScrap.class, 5),
-    triple_assamplerscrap(TileEntityTripleAssamplerScrap.class, 6),
-    quad_assamplerscrap(TileEntityQuadAssamplerScrap.class, 7),
-    orewashing(TileEntityOreWashing.class, 8),
-    doubleorewashing(TileEntityDoubleOreWashing.class, 9),
-    tripleorewashing(TileEntityTripleOreWashing.class, 10),
-    quadorewashing(TileEntityQuadOreWashing.class, 11),
-    centrifuge_iu(TileEntityCentrifuge.class, 12),
-    doublecentrifuge(TileEntityDoubleCentrifuge.class, 13),
-    triplecentrifuge(TileEntityTripleCentrifuge.class, 14),
-    quadcentrifuge(TileEntityQuadCentrifuge.class, 15),
-    gearing(TileEntityGearMachine.class, 16),
-    doublegearing(TileEntityDoubleGearMachine.class, 17),
-    triplegearing(TileEntityTripleGearMachine.class, 18),
-    quadgearing(TileEntityQuadGearMachine.class, 19),
+public enum BlockMoreMachine3 implements IMultiTileBlock {
+    farmer(TileFermer.class, 0),
+    double_farmer(TileDoubleFermer.class, 1),
+    triple_farmer(TileTripleFermer.class, 2),
+    quad_farmer(TileQuadFermer.class, 3),
+    assamplerscrap(TileAssamplerScrap.class, 4),
+    double_assamplerscrap(TileDoubleAssamplerScrap.class, 5),
+    triple_assamplerscrap(TileTripleAssamplerScrap.class, 6),
+    quad_assamplerscrap(TileQuadAssamplerScrap.class, 7),
+    orewashing(TileOreWashing.class, 8),
+    doubleorewashing(TileDoubleOreWashing.class, 9),
+    tripleorewashing(TileTripleOreWashing.class, 10),
+    quadorewashing(TileQuadOreWashing.class, 11),
+    centrifuge_iu(TileCentrifuge.class, 12),
+    doublecentrifuge(TileDoubleCentrifuge.class, 13),
+    triplecentrifuge(TileTripleCentrifuge.class, 14),
+    quadcentrifuge(TileQuadCentrifuge.class, 15),
+    gearing(TileGearMachine.class, 16),
+    doublegearing(TileDoubleGearMachine.class, 17),
+    triplegearing(TileTripleGearMachine.class, 18),
+    quadgearing(TileQuadGearMachine.class, 19),
     ;
 
 
@@ -85,7 +67,7 @@ public enum BlockMoreMachine3 implements ITeBlock {
 
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -95,17 +77,10 @@ public enum BlockMoreMachine3 implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -143,7 +118,7 @@ public enum BlockMoreMachine3 implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -152,26 +127,15 @@ public enum BlockMoreMachine3 implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override

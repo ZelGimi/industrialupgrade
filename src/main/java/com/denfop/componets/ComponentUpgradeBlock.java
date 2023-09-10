@@ -3,6 +3,17 @@ package com.denfop.componets;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.nbt.NBTTagCompound;
 
+enum Type {
+    DEFAULT,
+    ADVANCED,
+    IMPROVED,
+    PERFECT;
+
+    Type() {
+
+    }
+}
+
 public class ComponentUpgradeBlock extends AbstractComponent {
 
     private final Type type;
@@ -30,15 +41,4 @@ public class ComponentUpgradeBlock extends AbstractComponent {
         return nbt;
     }
 
-}
-
-enum Type {
-    DEFAULT,
-    ADVANCED,
-    IMPROVED,
-    PERFECT;
-
-    Type() {
-
-    }
 }

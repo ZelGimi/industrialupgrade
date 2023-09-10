@@ -2,7 +2,12 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
-import com.denfop.api.gui.*;
+import com.denfop.Localization;
+import com.denfop.api.gui.Area;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.GuiElement;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentSoundButton;
@@ -10,7 +15,6 @@ import com.denfop.container.ContainerMultiMachine;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -38,7 +42,7 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
-        this.addComponent(new GuiComponent(this, 12, 48, EnumTypeComponent.ENERGY_CLASSIC,
+        this.addComponent(new GuiComponent(this, 10, 45, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
         ));
         if (this.container.base.getMachine().type != EnumTypeMachines.Centrifuge) {
@@ -115,7 +119,7 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
         drawTexturedModalRect(j, k, 0, 0, 176, this.ySize);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         this.mc.getTextureManager().bindTexture(getTexture());
         int xoffset = (this.width - this.xSize) / 2;
@@ -151,9 +155,8 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
 
 
         for (final GuiElement<?> guiElement : this.elements) {
-            if (guiElement.isEnabled()) {
-                guiElement.drawBackground(x - this.guiLeft, y - this.guiTop);
-            }
+            guiElement.drawBackground(x - this.guiLeft, y - this.guiTop);
+
         }
 
         i = 0;

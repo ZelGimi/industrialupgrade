@@ -45,16 +45,16 @@
         "model" : "industrialupgrade:basemachine/heev_active"
       },
       "lv" : {
-        "model" : "ic2:wiring/transformer/lv_transformer"
+        "model" : "industrialupgrade:basemachine/lv_transformer"
       },
       "mv" : {
-        "model" : "ic2:wiring/transformer/mv_transformer"
+        "model" : "industrialupgrade:basemachine/mv_transformer"
       },
       "hv" : {
-        "model" : "ic2:wiring/transformer/hv_transformer"
+        "model" : "industrialupgrade:basemachine/hv_transformer"
       },
       "ev" : {
-        "model" : "ic2:wiring/transformer/ev_transformer"
+        "model" : "industrialupgrade:basemachine/ev_transformer"
       }
     },
     "facing" : {

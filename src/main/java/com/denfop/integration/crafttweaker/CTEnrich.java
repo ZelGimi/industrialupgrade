@@ -123,8 +123,8 @@ public class CTEnrich {
                     "enrichment",
                     new BaseMachineRecipe(
                             new Input(
-                                    new IC2RecipeInput(this.container),
-                                    new IC2RecipeInput(this.fill)
+                                    new IC2InputItemStack(this.container),
+                                    new IC2InputItemStack(this.fill)
                             ),
                             new RecipeOutput(null, getItemStack(this.output))
                     )

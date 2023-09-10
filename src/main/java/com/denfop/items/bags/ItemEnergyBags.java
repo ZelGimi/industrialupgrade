@@ -1,23 +1,21 @@
 package com.denfop.items.bags;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.container.ContainerBags;
 import com.denfop.items.EnumInfoUpgradeModules;
-import com.denfop.items.IHandHeldInventory;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,11 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -50,7 +44,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgradeItem, IElectricItem, IModelRegister {
+public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgradeItem, IEnergyItem, IModelRegister {
 
     private final int slots;
     private final int maxStorage;
@@ -62,14 +56,13 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
 
         this.setCreativeTab(IUCore.EnergyTab);
         this.setMaxStackSize(1);
-        setMaxDamage(27);
         this.internalName = internalName;
         this.slots = slots;
 
         this.getTransferLimit = getTransferLimit;
         this.maxStorage = maxStorage;
         IUCore.proxy.addIModelRegister(this);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
+        Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.BAGS.list);
 
     }
@@ -81,6 +74,24 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
                 "bags" + "/" + name;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        );
     }
 
     public int getItemEnchantability() {
@@ -104,8 +115,8 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
             EntityPlayer player = (EntityPlayer) entityIn;
             if (nbt.getBoolean("open")) {
                 int slot_id = nbt.getInteger("slot_inventory");
-                if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !StackUtil.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-                    HandHeldBags toolbox = ((ContainerBags) player.openContainer).base;
+                if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
+                    ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
                     if (toolbox.isThisContainer(stack)) {
                         toolbox.saveAsThrown(stack);
                         player.closeScreen();
@@ -181,10 +192,10 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
 
         if (ElectricItem.manager.canUse(player.getHeldItem(hand), 350 * coef)) {
             ElectricItem.manager.use(player.getHeldItem(hand), 350 * coef, player);
-            ItemStack stack = StackUtil.get(player, hand);
-            if (IC2.platform.isSimulating()) {
+            ItemStack stack = ModUtils.get(player, hand);
+            if (IUCore.proxy.isSimulating()) {
                 save(stack, player);
-                IUCore.proxy.launchGui(player, this.getInventory(player, stack));
+                player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
                 return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
             }
@@ -207,7 +218,7 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
         if (player.isSneaking()) {
             if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
                 IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
-                HandHeldBags box = (HandHeldBags) getInventory(player, player.getHeldItem(hand));
+                ItemStackBags box = (ItemStackBags) getInventory(player, player.getHeldItem(hand));
                 ItemStack[] itemStackList = box.getAll();
                 for (ItemStack stack : itemStackList) {
                     if (stack == null || stack.isEmpty()) {
@@ -228,8 +239,8 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
     }
 
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !StackUtil.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
-            HandHeldBags toolbox = ((ContainerBags) player.openContainer).base;
+        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBags) {
+            ItemStackBags toolbox = ((ContainerBags) player.openContainer).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeScreen();
@@ -240,18 +251,18 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
     }
 
     public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        HandHeldBags box = (HandHeldBags) getInventory(player, stack);
+        ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         return box.canAdd(stack1);
     }
 
     public void insert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        HandHeldBags box = (HandHeldBags) getInventory(player, stack);
+        ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         box.add(stack1);
         box.markDirty();
     }
 
-    public IHasGui getInventory(EntityPlayer player, ItemStack stack) {
-        return new HandHeldBags(player, stack, slots);
+    public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
+        return new ItemStackBags(player, stack, slots);
     }
 
     @Override
@@ -260,17 +271,17 @@ public class ItemEnergyBags extends Item implements IHandHeldInventory, IUpgrade
     }
 
     @Override
-    public double getMaxCharge(final ItemStack itemStack) {
+    public double getMaxEnergy(final ItemStack itemStack) {
         return this.maxStorage;
     }
 
     @Override
-    public int getTier(final ItemStack itemStack) {
+    public short getTierItem(final ItemStack itemStack) {
         return 2;
     }
 
     @Override
-    public double getTransferLimit(final ItemStack itemStack) {
+    public double getTransferEnergy(final ItemStack itemStack) {
         return getTransferLimit;
     }
 

@@ -2,18 +2,16 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastFurnaceMain;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.blastfurnace.block.TileBlastFurnaceMain;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastInputItem;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityBlastOutput;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityFluidInput;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityHeatBlock;
 import com.denfop.tiles.mechanism.blastfurnace.block.TileEntityOtherPart;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.utils.ModUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -26,9 +24,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockBlastFurnace implements ITeBlock {
+public enum BlockBlastFurnace implements IMultiTileBlock {
 
-    blast_furnace_main(TileEntityBlastFurnaceMain.class, 0),
+    blast_furnace_main(TileBlastFurnaceMain.class, 0),
     blast_furnace_input(TileEntityBlastInputItem.class, 1),
     blast_furnace_heat(TileEntityHeatBlock.class, 2),
     blast_furnace_output(TileEntityBlastOutput.class, 3),
@@ -60,7 +58,7 @@ public enum BlockBlastFurnace implements ITeBlock {
 
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -70,17 +68,10 @@ public enum BlockBlastFurnace implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -122,7 +113,7 @@ public enum BlockBlastFurnace implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -131,26 +122,15 @@ public enum BlockBlastFurnace implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Pickaxe;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Pickaxe;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override

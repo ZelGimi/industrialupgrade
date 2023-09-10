@@ -1,10 +1,12 @@
 package com.denfop.tiles.mechanism.blastfurnace.block;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
+import com.denfop.Localization;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastOutputItem;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import ic2.core.init.Localization;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,9 +28,16 @@ public class TileEntityBlastOutput extends TileEntityMultiBlockElement implement
                 0
         ).getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + Localization.translate(Ic2Items.ForgeHammer.getUnlocalizedName()));
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + Localization.translate(IUItem.ForgeHammer.getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 
+    public IMultiTileBlock getTeBlock() {
+        return BlockBlastFurnace.blast_furnace_output;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.blastfurnace;
+    }
 
 }

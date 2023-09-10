@@ -20,6 +20,7 @@ public enum EnumType {
     public final ResourceLocation texture;
     public final double coefficient_nether;
     public final double coefficient_end;
+    private final String nameType;
 
     EnumType(
             double coefficient_nether,
@@ -40,6 +41,7 @@ public enum EnumType {
                 Constants.MOD_ID,
                 "textures/gui/GUI" + name + "SolarPanel.png"
         );
+        this.nameType = name;
     }
 
     public static EnumType getFromID(final int ID) {
@@ -47,4 +49,7 @@ public enum EnumType {
         return values[ID % values.length];
     }
 
+    public String getNameType() {
+        return nameType;
+    }
 }

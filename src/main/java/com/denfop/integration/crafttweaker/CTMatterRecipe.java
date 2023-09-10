@@ -5,13 +5,13 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import stanhebben.zenscript.annotations.ZenClass;
@@ -155,10 +155,10 @@ public class CTMatterRecipe {
         }
 
         public void apply() {
-            final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
             if (!this.delete) {
                 Recipes.recipes.addAdderRecipe("converter", new BaseMachineRecipe(
-                                new Input(input.forStack((ItemStack) output.getInternal())), new RecipeOutput(
+                                new Input(input.getInput((ItemStack) output.getInternal())), new RecipeOutput(
                                 this.nbt,
                                 getItemStack(this.output)
                         ))

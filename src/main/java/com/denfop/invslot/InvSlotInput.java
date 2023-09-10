@@ -1,11 +1,11 @@
 package com.denfop.invslot;
 
+import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileEntityAutoDigger;
-import ic2.api.recipe.IRecipeInputFactory;
-import ic2.api.recipe.Recipes;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -18,8 +18,8 @@ public class InvSlotInput extends InvSlot {
 
     private final TileEntityAutoDigger tile;
 
-    public InvSlotInput(TileEntityAutoDigger tileEntityAutoDigger, String input, int i) {
-        super(tileEntityAutoDigger, input, Access.I, i);
+    public InvSlotInput(TileEntityAutoDigger tileEntityAutoDigger, int i) {
+        super(tileEntityAutoDigger, TypeItemSlot.INPUT, i);
         this.tile = tileEntityAutoDigger;
     }
 
@@ -32,7 +32,7 @@ public class InvSlotInput extends InvSlot {
     @Override
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
-        final IRecipeInputFactory input = Recipes.inputFactory;
+        final IInputHandler input = Recipes.inputFactory;
         if (!this.get(index).isEmpty()) {
             final Block block = Block.getBlockFromItem(content.getItem());
             final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
@@ -100,7 +100,7 @@ public class InvSlotInput extends InvSlot {
                 list.addAll(list2);
             }
             this.tile.setBaseMachineRecipe(index, new BaseMachineRecipe(
-                    new Input(input.forStack(this.get(index))),
+                    new Input(input.getInput(this.get(index))),
                     new RecipeOutput(null, list)
             ));
         } else {
@@ -109,7 +109,7 @@ public class InvSlotInput extends InvSlot {
     }
 
     public void update() {
-        final IRecipeInputFactory input = Recipes.inputFactory;
+        final IInputHandler input = Recipes.inputFactory;
         for (int i = 0; i < this.size(); i++) {
             final ItemStack content = this.get(i);
             if (content.isEmpty()) {
@@ -180,7 +180,7 @@ public class InvSlotInput extends InvSlot {
             }
 
             this.tile.setBaseMachineRecipe(i, new BaseMachineRecipe(
-                    new Input(input.forStack(this.get(i))),
+                    new Input(input.getInput(this.get(i))),
                     new RecipeOutput(null, list)
             ));
         }

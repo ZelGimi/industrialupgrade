@@ -1,15 +1,13 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityDoubleElectricMachine;
+import com.denfop.tiles.base.TileDoubleElectricMachine;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
-public abstract class ContainerBaseDoubleElectricMachine extends ContainerFullInv<TileEntityDoubleElectricMachine> {
+public abstract class ContainerBaseDoubleElectricMachine extends ContainerFullInv<TileDoubleElectricMachine> {
 
     public ContainerBaseDoubleElectricMachine(
             EntityPlayer entityPlayer,
-            TileEntityDoubleElectricMachine base1,
+            TileDoubleElectricMachine base1,
             int height,
             int dischargeX,
             int dischargeY,
@@ -21,10 +19,5 @@ public abstract class ContainerBaseDoubleElectricMachine extends ContainerFullIn
         }
     }
 
-    public List<String> getNetworkedFields() {
-
-        return super.getNetworkedFields();
-
-    }
 
 }

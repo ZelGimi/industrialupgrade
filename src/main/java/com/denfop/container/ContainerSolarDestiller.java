@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.mechanism.solardestiller.TileEntityBaseSolarDestiller;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerSolarDestiller extends ContainerFullInv<TileEntityBaseSolarDestiller> {
 
     public ContainerSolarDestiller(EntityPlayer player, TileEntityBaseSolarDestiller tileEntite) {
@@ -20,12 +18,5 @@ public class ContainerSolarDestiller extends ContainerFullInv<TileEntityBaseSola
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("skyLight");
-        ret.add("inputTank");
-        ret.add("outputTank");
-        return ret;
-    }
 
 }

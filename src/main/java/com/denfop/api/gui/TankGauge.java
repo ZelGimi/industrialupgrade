@@ -1,8 +1,8 @@
 package com.denfop.api.gui;
 
-import com.denfop.gui.GuiIC2;
-import ic2.core.init.Localization;
-import ic2.core.util.Util;
+import com.denfop.Localization;
+import com.denfop.gui.GuiCore;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -12,20 +12,12 @@ import java.util.List;
 
 public class TankGauge extends GuiElement<TankGauge> {
 
-    public static final int filledBackgroundU = 6;
-    public static final int filledScaleU = 38;
-    public static final int emptyU = 70;
+
     public static final int v = 100;
-    public static final int normalWidth = 20;
-    public static final int normalHeight = 55;
-    public static final int fluidOffsetX = 4;
-    public static final int fluidOffsetY = 4;
-    public static final int fluidNetWidth = 12;
-    public static final int fluidNetHeight = 47;
     private final IFluidTank tank;
     private final TankGauge.TankGuiStyle style;
 
-    private TankGauge(GuiIC2<?> gui, int x, int y, int width, int height, IFluidTank tank, TankGauge.TankGuiStyle style) {
+    private TankGauge(GuiCore<?> gui, int x, int y, int width, int height, IFluidTank tank, TankGauge.TankGuiStyle style) {
         super(gui, x, y, width, height);
         if (tank == null) {
             throw new NullPointerException("null tank");
@@ -35,15 +27,15 @@ public class TankGauge extends GuiElement<TankGauge> {
         }
     }
 
-    public static TankGauge createNormal(GuiIC2<?> gui, int x, int y, IFluidTank tank) {
+    public static TankGauge createNormal(GuiCore<?> gui, int x, int y, IFluidTank tank) {
         return new TankGauge(gui, x, y, 20, 55, tank, TankGauge.TankGuiStyle.Normal);
     }
 
-    public static TankGauge createPlain(GuiIC2<?> gui, int x, int y, int width, int height, IFluidTank tank) {
+    public static TankGauge createPlain(GuiCore<?> gui, int x, int y, int width, int height, IFluidTank tank) {
         return new TankGauge(gui, x, y, width, height, tank, TankGauge.TankGuiStyle.Plain);
     }
 
-    public static TankGauge createBorderless(GuiIC2<?> gui, int x, int y, IFluidTank tank, boolean mirrored) {
+    public static TankGauge createBorderless(GuiCore<?> gui, int x, int y, IFluidTank tank, boolean mirrored) {
         return new TankGauge(
                 gui,
                 x,
@@ -84,7 +76,7 @@ public class TankGauge extends GuiElement<TankGauge> {
             Fluid fluid = fs.getFluid();
             TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString()) : null;
             int color = fluid != null ? fluid.getColor(fs) : -1;
-            double renderHeight = (double) fluidHeight * Util.limit(
+            double renderHeight = (double) fluidHeight * ModUtils.limit(
                     (double) fs.amount / (double) this.tank.getCapacity(),
                     0.0D,
                     1.0D
@@ -142,12 +134,12 @@ public class TankGauge extends GuiElement<TankGauge> {
         if (fs != null && fs.amount > 0) {
             Fluid fluid = fs.getFluid();
             if (fluid != null) {
-                ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("ic2.generic.text.mb"));
+                ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
             } else {
                 ret.add("invalid fluid stack");
             }
         } else {
-            ret.add(Localization.translate("ic2.generic.text.empty"));
+            ret.add(Localization.translate("iu.generic.text.empty"));
         }
 
         return ret;

@@ -35,15 +35,15 @@ gui.MolecularTransformer.energytick=Energy Tick
 iu.maxCharge=Storage: 
 iu.spectralsaberactive=Damage on Activation: 
 iu.tier=Tier: 
-iu.transferLimit=Power transfer rate (EU/t): 
+iu.transferLimit=Power transfer rate (EF/t): 
 button.rg=⇄
 button.changemode=Change
 inforamtionmolecular=Click to change GUI color
 inforamtionmolecular1=Click to change the operating mode of the transformer
 
 # Standart Panels
-industrialupgrade.machines.advanced_solar_paneliu=§8Advanced Solar Panel
-industrialupgrade.machines.advanced_solar_panel=§8Advanced Solar Panel
+industrialupgrade.machines.advanced_solar_paneliu=§6Advanced Solar Panel
+industrialupgrade.machines.advanced_solar_panel=§6Advanced Solar Panel
 industrialupgrade.machines.hybrid_solar_paneliu=§3Hybrid Solar Panel
 industrialupgrade.machines.hybrid_solar_panel=§3Hybrid Solar Panel
 industrialupgrade.machines.ultimate_solar_paneliu=§9Perfect Hybrid Solar Panel
@@ -56,12 +56,12 @@ industrialupgrade.machines.singular_solar_panel=§8Singular Solar Panel
 industrialupgrade.machines.admin_solar_panel=§cDiffractive Solar Panel
 industrialupgrade.machines.photonic_solar_panel=§aPhotonic Solar Panel
 industrialupgrade.machines.neutronium_solar_panel=§9Neutron Solar Panel
-industrialupgrade.machines.barion_solar_panel=§dBaryon Solar Panel
-industrialupgrade.machines.hadron_solar_panel=§dHadron Solar Panel
-industrialupgrade.machines.graviton_solar_panel=§dGraviton Solar Panel
-industrialupgrade.machines.quark_solar_panel=§dQuark Solar Panel
-blockAdministatorSolarPanel.name=§8Administrative Solar Panel
-industrialupgrade.admpanel.admpanel=§8Administrative Solar Panel
+industrialupgrade.machines.barion_solar_panel=§fBaryon Solar Panel
+industrialupgrade.machines.hadron_solar_panel=§eHadron Solar Panel
+industrialupgrade.machines.graviton_solar_panel=§bGraviton Solar Panel
+industrialupgrade.machines.quark_solar_panel=§8Quark Solar Panel
+blockAdministatorSolarPanel.name=§a§lAdministrative Solar Panel
+industrialupgrade.admpanel.admpanel=§a§lAdministrative Solar Panel
 
 # Draconic Evolution Panels
 industrialupgrade.draconicpanel.draconium_solar_panel=§dDraconic Solar Panel
@@ -97,16 +97,16 @@ iu.itemNanoSaber1=Quantum Saber
 iu.itemNanoSaber=Spectral Saber
 
 # Spectral Quantum Armor
-supersolarpanels.itemArmorQuantumHelmet=§dSpectral Quantum Helmet
-supersolarpanels.itemArmorQuantumChestplate=§dSpectral Quantum Chestplate
-supersolarpanels.itemArmorQuantumLegs=§dSpectral Quantum Leggings
-supersolarpanels.itemArmorQuantumBoots=§dSpectral Quantum Boots
+iu.spectral_helmet=§dSpectral Quantum Helmet
+iu.spectral_chestplate=§dSpectral Quantum Chestplate
+iu.spectral_leggings=§dSpectral Quantum Leggings
+iu.spectral_boots=§dSpectral Quantum Boots
 
 # Reinforced Armor
-supersolarpanels.itemArmorNanoHelmet=Reinforced Nano Helmet
-supersolarpanels.itemArmorNanoChestplate=Reinforced Nano Chestplate
-supersolarpanels.itemArmorNanoLegs=Reinforced Nano Leggings
-supersolarpanels.itemArmorNanoBoots=Reinforced Nano Boots
+iu.adv_nano_helmet=Reinforced Nano Helmet
+iu.adv_nano_chestplate=Reinforced Nano Chestplate
+iu.adv_nano_leggings=Reinforced Nano Leggings
+iu.adv_nano_boots=Reinforced Nano Boots
 
 # Nuclear Fusion Radiation Suit
 item.hazmathelmet.name=Nuclear Fusion Radiation Suit Helmet
@@ -115,8 +115,8 @@ item.hazmatleggins.name=Nuclear Fusion Radiation Suit Leggings
 item.hazmatboosts.name=Nuclear Fusion Radiation Suit Boots
 
 item.itembatlamacrystal.name=Improved Energy Crystal
-iu.quantumitems4.name=§7Improved Compressed Iridium Plate
-iu.quantumitems2.name=§7Compressed Iridium Plate
+iu.quantumitems4.name=§7Dense Compressed Industrial Iridium Plate
+iu.quantumitems2.name=§7Compressed Industrial Iridium Plate
 
 iu.helium.name=Helium
 
@@ -124,7 +124,7 @@ iu.photoniy.name=§3Photon
 iu.photoniy_ingot.name=§3Photon Ingot
 
 # Cores
-iu.itemcore.advcore=§8Advanced Core
+iu.itemcore.advcore=§6Advanced Core
 iu.itemcore.hybcore=§3Hybrid Core
 iu.itemcore.ultcore=§9Perfect Core
 iu.itemcore.quacore=§2Quantum Core
@@ -134,10 +134,10 @@ iu.itemcore.sincore=§8Singular Core
 iu.itemcore.admcore=§cDiffractive Core
 iu.itemcore.phocore=§aPhotonic Core
 iu.itemcore.neucore=§9Neutron Core
-iu.itemcore.barcore=Baryon Core
-iu.itemcore.adrcore=Hadron Core
-iu.itemcore.gracore=Graviton Core
-iu.itemcore.kvrcore=Quark Core
+iu.itemcore.barcore=§fBaryon Core
+iu.itemcore.adrcore=§eHadron Core
+iu.itemcore.gracore=§bGraviton Core
+iu.itemcore.kvrcore=§8Quark Core
 
 # Botania Cores
 iu.manasteel_core.name=§bManasteel Core
@@ -197,11 +197,11 @@ iu.qcable=Quantum Energy Cable
 iu.scable=Solar Energy Cable
 
 iu.chaosingot.name=§7Chaos Ingot
-iu.coal_chunk.name=Coal Chunk
+iu.coal_chunk.name=Compressed Coal Chunk
 iu.compresscarbon.name=Compressed Carbon
 iu.compresscarbonultra.name=Compressed Advanced Alloy
 
-iu.photoniumglass.photoniyglass1=§8Advanced Glass
+iu.photoniumglass.photoniyglass1=§6Advanced Glass
 iu.photoniumglass.photoniyglass2=§3Hybrid Glass
 iu.photoniumglass.photoniyglass3=§9Perfect Glass
 iu.photoniumglass.photoniyglass4=§2Quantum Glass
@@ -210,11 +210,11 @@ iu.photoniumglass.photoniyglass6=§5Protonic Glass
 iu.photoniumglass.photoniyglass7=§8Singular Glass
 iu.photoniumglass.photoniyglass8=§cDiffractive Glass
 iu.photoniumglass.photoniyglass9=§aPhotonic Glass
-iu.photoniumglass.photoniyglass10=Neutron Glass
-iu.photoniumglass.photoniyglass11=Baryon Glass
-iu.photoniumglass.photoniyglass12=Hadron Glass
-iu.photoniumglass.photoniyglass13=Graviton Glass
-iu.photoniumglass.photoniyglass14=Quark Glass
+iu.photoniumglass.photoniyglass10=§9Neutron Glass
+iu.photoniumglass.photoniyglass11=§fBaryon Glass
+iu.photoniumglass.photoniyglass12=§eHadron Glass
+iu.photoniumglass.photoniyglass13=§bGraviton Glass
+iu.photoniumglass.photoniyglass14=§8Quark Glass
 
 iu.proton=§5Proton
 iu.protonshard=§5Proton Shard
@@ -236,7 +236,7 @@ item.quantumdrill.name=Quantum Drill
 item.GraviTool=GraviTool
 item.purifier.name=Purifier
 iu.electric_hoe=Electric Hoe
-iu.electri_treetap=Electric Treetap
+iu.electric_treetap=Electric Treetap
 item.electric_wrench.name=Electric Wrench
 item.chainsaw.name=Chainsaw
 item.frequency_transmitter.name=Frequency Transmitter
@@ -249,6 +249,10 @@ item.charging_re_battery.name=Charging RE Battery
 item.advanced_charging_re_battery.name=Advanced Charging Battery
 item.charging_energy_crystal.name=Charging Energy Crystal
 item.charging_lapotron_crystal.name=Charging Lapotron Crystal
+
+item.batpack.name=Batpack
+item.advanced_batpack.name=Advanced Batpack
+item.lappack.name=Lappack
 
 iu.upgrades.overclockerupgrade1=Improved Overclocker Upgrade
 iu.upgrades.overclockerupgrade2=Advanced Overclocker Upgrade
@@ -263,7 +267,7 @@ iu.modultype.module55=Module: Night Panel
 iu.modultype.module56=Module: Day Panel
 iu.modultype.module57=Module: Rain Panel
 
-iu.modulestype.module61=Module: Advanced Solar Panel
+iu.modulestype.module61=Module: §6Advanced Solar Panel
 iu.modulestype.module62=Module: §3Hybrid Solar Panel
 iu.modulestype.module63=Module: §9Perfect Solar Panel
 iu.modulestype.module64=Module: §2Quantum Solar Panel
@@ -273,10 +277,10 @@ iu.modulestype.module67=Module: §8Singular Solar Panel
 iu.modulestype.module68=Module: §cDiffractive Solar Panel
 iu.modulestype.module69=Module: §aPhotonic Solar Panel
 iu.modulestype.module70=Module: §9Neutron Solar Panel
-iu.modulestype.module91=Module: Baryon Solar Panel
-iu.modulestype.module92=Module: Hadron Solar Panel
-iu.modulestype.module93=Module: Graviton Solar Panel
-iu.modulestype.module94=Module: Quark Solar Panel
+iu.modulestype.module91=Module: §fBaryon Solar Panel
+iu.modulestype.module92=Module: §eHadron Solar Panel
+iu.modulestype.module93=Module: §bGraviton Solar Panel
+iu.modulestype.module94=Module: §8Quark Solar Panel
 
 iu.additionmodule.personality=Module: Privacy
 iu.additionmodule.tier_in=Module: Panel Tier Up
@@ -351,7 +355,7 @@ iu.upgrademodules.upgrademodule11=Modification Module: Damage (Bow)
 iu.upgrademodules.upgrademodule12=Modification Module: Damage (Saber)
 iu.upgrademodules.upgrademodule13=Modification Module: Digging Area
 iu.upgrademodules.upgrademodule14=Modification Module: Flight Speed
-iu.upgrademodules.upgrademodule15=Modification Module: Storage 
+iu.upgrademodules.upgrademodule15=Modification Module: Storage
 iu.upgrademodules.upgrademodule16=Modification Module: Energy Efficiency (Tool)
 iu.upgrademodules.upgrademodule17=Modification Module: Vampirism
 iu.upgrademodules.upgrademodule18=Modification Module: Resistance
@@ -458,16 +462,16 @@ tile.xpgen.energy=Stored
 xpgen.amount.xp=Accumulated
 xpjuice.wv=Liquid Experience
 tile.expGen.name=Electric Experience Generator
-gui.SuperSolarPanel.storage=EU
+gui.SuperSolarPanel.storage=EF
 gui.SuperSolarPanel.maxOutput=Output
 gui.SuperSolarPanel.generating=Generation
-gui.SuperSolarPanel.energyPerTick=EU/t
+gui.SuperSolarPanel.energyPerTick=EF/t
 iu.modules2=§cOnly one upgrade per slot
 gui.iu.tier=Tier
 iu.genday=§2Generation during the day increased by 
 iu.gennight=§3Generation during the night increased by 
 iu.storage=§9Storage capacity increased by 
-iu.output=§6Max output increased by
+iu.output=§6Max output increased by 
 iu.tier1=§aTier increased by 
 iu.tier2=§cTier lowered by 
 
@@ -542,7 +546,6 @@ iu.barionrotor=§5Kinetic Gearbox Rotor (Baryon)
 iu.adronrotor=§3Kinetic Gearbox Rotor (Hadron)
 
 ic3uumatter=Neutron
-death.attack.current=You died from electric shock
 iu.Name=Name
 iu.World=World
 iu.Xcoord=X
@@ -605,7 +608,6 @@ iu.modulewirelles2=§bWireless: §cnot working
 
 iu.fly=§3Flight activated:
 iu.fly1=Press Mode Switch Key + Boost Key to enable flight
-iu.vertical=Press Mode Switch Key + Side Key to enable vertical mode
 iu.effect=Fire resistance enabled:
 storagemodul=Only in energy storage
 storagemodul1=Press SHIFT + Right Click on the storage
@@ -678,13 +680,13 @@ supsolpans.iu.GenerationDay.tooltip=Generation Day:
 supsolpans.iu.GenerationNight.tooltip=Generation Night:
 
 button.rf=Change mode
-iu.rfmodule1=§9Generates EU energy
+iu.rfmodule1=§9Generates EF energy
 gui.SuperSolarPanel.energyPerTick1=RF/t
 iu.yes=Yes
 iu.no=No
 ic2.uumatter=§5UU-matter
-gui.movementcharge=Instant Armor Charge EU
-gui.movementchargeitem=Instant Item Charging EU
+gui.movementcharge=Instant Armor Charge EF
+gui.movementchargeitem=Instant Item Charging EF
 gui.movementchargerf=Instant Armor Charge RF
 gui.movementchargeitemrf=Instant Item Charging RF
 gui.movement=Hold <SHIFT> and Right Click on the block
@@ -714,6 +716,22 @@ iu.fluidgas=Natural Gas
 iu.fluidchlorum=Chlorine
 iu.fluidbromine=Bromine
 iu.fluidiodine=Iodine
+iu.fluidpahoehoe_lava=Pahoehoe Lava
+iu.fluiduu_matter=UU-Matter
+iu.fluidconstruction_foam=Construction Foam
+iu.fluidcoolant=Coolant
+iu.fluidcreosote=Creosote
+iu.fluidhot_coolant=Hot Coolant
+iu.fluidbiogas=Biogas
+iu.fluidbiomass=Biomass
+iu.fluiddistilled_water=Distilled Water
+iu.fluidsuperheated_steam=Superheated Steam
+iu.fluidsteam=Steam
+iu.fluidhot_water=Hotspring Water
+iu.fluidair=Air
+iu.fluidheavy_water=Heavy Water
+iu.fluidweed_ex=Weed-Ex
+iu.fluidmilk=Milk
 
 #Fluids and Gases (in containers)
 fluid.fluidNeutron=Neutron
@@ -731,6 +749,22 @@ fluid.fluidgas=Natural Gas
 fluid.fluidchlorum=Chlorine
 fluid.fluidbromine=Bromine
 fluid.fluidiodine=Iodine
+fluid.fluiduu_matter=UU-Matter
+fluid.fluidconstruction_foam=Construction Foam
+fluid.fluidcoolant=Coolant
+fluid.fluidcreosote=Creosote
+fluid.fluidhot_coolant=Hot Coolant
+fluid.fluidpahoehoe_lava=Pahoehoe Lava
+fluid.fluidbiogas=Biogas
+fluid.fluidbiomass=Biomass
+fluid.fluiddistilled_water=Distilled Water
+fluid.fluidsuperheated_steam=Superheated Steam
+fluid.fluidsteam=Steam
+fluid.fluidhot_water=Hotspring Water
+fluid.fluidair=Air
+fluid.fluidheavy_water=Heavy Water
+fluid.fluidweed_ex=Weed-Ex
+fluid.fluidmilk=Milk
 
 #Bucket. The following lines are aligned with other localizations.
 #item.forge.bucketFilled.iufluidneutron
@@ -748,6 +782,18 @@ fluid.fluidiodine=Iodine
 #item.forge.bucketFilled.iufluidchlorum
 #item.forge.bucketFilled.iufluidbromine
 #item.forge.bucketFilled.iufluidiodine
+#item.forge.bucketFilled.iufluiduu_coolant
+#item.forge.bucketFilled.iufluidconstrution_foam
+#item.forge.bucketFilled.iufluidcoolant
+#item.forge.bucketFilled.iufluidhot_coolant
+#item.forge.bucketFilled.iufluidpahoehoe_lava
+#item.forge.bucketFilled.iufluidbiomass
+#item.forge.bucketFilled.iufluidbiogas
+#item.forge.bucketFilled.iufluiddistilled_water
+#item.forge.bucketFilled.iufluidsuperheated_steam
+#item.forge.bucketFilled.iufluidsteam
+#item.forge.bucketFilled.iufluidhot_water
+#item.forge.bucketFilled.iufluidair
 
 #Cells
 iu.itemcell.empty=Cell
@@ -760,6 +806,29 @@ iu.itemcell.polyeth=Polyethylene Cell
 iu.itemcell.polyprop=Polypropylene Cell
 iu.itemcell.oxy=Oxygen Cell
 iu.itemcell.hyd=Hydrogen Cell
+iu.itemcell.pahoehoe_lava=Pahoehoe Lava Cell
+iu.itemcell.uu_matter=UU-Matter Cell
+iu.itemcell.construction_foam=Construction Foam Cell
+iu.itemcell.coolant=Coolant Cell
+iu.itemcell.creosote=Creosote Cell
+iu.itemcell.hot_coolant=Hot Coolant Cell
+iu.itemcell.biogas=Biogas Cell
+iu.itemcell.biomass=Biomass Cell
+iu.itemcell.distilled_water=Distilled Water Cell
+iu.itemcell.superheated_steam=Superheated Steam Cell
+iu.itemcell.steam=Steam Cell
+iu.itemcell.hot_water=Hotspring Water Cell
+iu.itemcell.air=Air Cell
+iu.itemcell.heavy_water=Heavy Water Cell
+iu.itemcell.weed_ex=Weed-Ex Cell
+iu.itemcell.azot=Nitrogen Cell
+iu.itemcell.co2=Carbon Dioxide Cell
+iu.itemcell.gas=Natural Gas Cell
+iu.itemcell.chlorum=Chlorine Cell
+iu.itemcell.bromine=Bromine Cell
+iu.itemcell.iodine=Iodine Cell
+iu.itemcell.water=Water Cell
+iu.itemcell.lava=Lava Cell
 
 iu.ruby_block.name=Block of Ruby
 iu.sapphire_block.name=Block of Sapphire
@@ -911,20 +980,20 @@ iu.quad_mox_fuel_rod=Quad MOX Fuel Rod
 iu.mox_fuel_rod=MOX Fuel Rod
 
 #Alloy Blocks
-iu.aluminum_bronze_block.name=Block of Aluminium Bronze
+iu.aluminum_bronze_block.name=Block of Aluminum Bronze
 iu.alumel_block.name=Block of Titanium Aluminide
 iu.red_brass_block.name=Block of Red Brass
 iu.muntsa_block.name=Block of Muntz Metal
 iu.nichrome_block.name=Block of Nichrome
 iu.alcled_block.name=Block of Alclad
-iu.vanadoalumite_block.name=Block of Vanadium Aluminium
+iu.vanadoalumite_block.name=Block of Vanadium Aluminum
 iu.vitalium_block.name=Block of Vitallium
 iu.duralumin_block.name=Block of Duralumin
 iu.ferromanganese_block.name=Block of Ferromanganese
 
 #Metal Blocks
 iu.mikhail_block.name=Block of Michalov
-iu.aluminium_block.name=Block of Aluminium
+iu.aluminium_block.name=Block of Aluminum
 iu.vanady_block.name=Block of Vanadium
 iu.wolfram_block.name=Block of Tungsten
 iu.invar_block.name=Block of Invar
@@ -944,20 +1013,20 @@ iu.iridium_block.name=Block of Iridium
 iu.germanium_block.name=Block of Germanium
 
 #Alloy Ingots
-iu.alloysingot.aluminum_bronze=Aluminium Bronze Ingot
+iu.alloysingot.aluminum_bronze=Aluminum Bronze Ingot
 iu.alloysingot.alumel=Titanium Aluminide Ingot
 iu.alloysingot.red_brass=Red Brass Ingot
 iu.alloysingot.muntsa=Muntz Metal Ingot
 iu.alloysingot.nichrome=Nichrome Ingot
 iu.alloysingot.alcled=Alclad Ingot
-iu.alloysingot.vanadoalumite=Vanadium Aluminium Ingot
+iu.alloysingot.vanadoalumite=Vanadium Aluminum Ingot
 iu.alloysingot.vitalium=Vitallium Ingot
 iu.alloysingot.duralumin=Duralumin Ingot
 iu.alloysingot.ferromanganese=Ferromanganese Ingot
 
 #Metal Ingots
 iu.ingot.mikhail_ingot=Michalov Ingot
-iu.ingot.aluminium_ingot=Aluminium Ingot
+iu.ingot.aluminium_ingot=Aluminum Ingot
 iu.ingot.vanady_ingot=Vanadium Ingot
 iu.ingot.wolfram_ingot=Tungsten Ingot
 iu.ingot.invar_ingot=Invar Ingot
@@ -977,13 +1046,13 @@ iu.ingot.iridium_ingot=Iridium Ingot
 iu.ingot.germanium_ingot=Germanium Ingot
 
 #Alloy Plates
-iu.alloysplate.aluminum_bronze=Aluminium Bronze Plate 
+iu.alloysplate.aluminum_bronze=Aluminum Bronze Plate
 iu.alloysplate.alumel=Titanium Aluminide Plate
 iu.alloysplate.red_brass=Red Brass Plate
 iu.alloysplate.muntsa=Muntz Metal Plate
 iu.alloysplate.nichrome=Nichrome Plate
 iu.alloysplate.alcled=Alclad Plate
-iu.alloysplate.vanadoalumite=Vanadium Aluminium Plate
+iu.alloysplate.vanadoalumite=Vanadium Aluminum Plate
 iu.alloysplate.vitalium=Vitallium Plate
 iu.alloysplate.duralumin=Duralumin Plate
 iu.alloysplate.ferromanganese=Ferromanganese Plate
@@ -995,7 +1064,7 @@ iu.elementium_plate.name=§dElementium Plate
 
 #Metal Plates
 iu.plate.mikhail_plate=Michalov Plate
-iu.plate.aluminium_plate=Aluminium Plate
+iu.plate.aluminium_plate=Aluminum Plate
 iu.plate.vanady_plate=Vanadium Plate
 iu.plate.wolfram_plate=Tungsten Plate
 iu.plate.invar_plate=Invar Plate
@@ -1015,20 +1084,20 @@ iu.plate.iridium_plate=Iridium Plate
 iu.plate.germanium_plate=Germanium Plate
 
 #Dense Alloy Plates
-iu.alloysdoubleplate.aluminum_bronze=Dense Aluminium Bronze Plate
+iu.alloysdoubleplate.aluminum_bronze=Dense Aluminum Bronze Plate
 iu.alloysdoubleplate.alumel=Dense Titanium Aluminide Plate
 iu.alloysdoubleplate.red_brass=Dense Red Brass Plate
 iu.alloysdoubleplate.muntsa=Dense Muntz Metal Plate
 iu.alloysdoubleplate.nichrome=Dense Nichrome Plate
 iu.alloysdoubleplate.alcled=Dense Alclad Plate
-iu.alloysdoubleplate.vanadoalumite=Dense Vanadium Aluminium Plate
+iu.alloysdoubleplate.vanadoalumite=Dense Vanadium Aluminum Plate
 iu.alloysdoubleplate.vitalium=Dense Vitallium Plate
 iu.alloysdoubleplate.duralumin=Dense Duralumin Plate
 iu.alloysdoubleplate.ferromanganese=Dense Ferromanganese Plate
 
 #Dense Metal Plates
 iu.doubleplate.mikhail_doubleplate=Dense Michalov Plate
-iu.doubleplate.aluminium_doubleplate=Dense Aluminium Plate
+iu.doubleplate.aluminium_doubleplate=Dense Aluminum Plate
 iu.doubleplate.vanady_doubleplate=Dense Vanadium Plate
 iu.doubleplate.wolfram_doubleplate=Dense Tungsten Plate
 iu.doubleplate.invar_doubleplate=Dense Invar Plate
@@ -1048,20 +1117,20 @@ iu.doubleplate.iridium_doubleplate=Dense Iridium Plate
 iu.doubleplate.germanium_doubleplate=Dense Germanium Plate
 
 #Alloy Item Casings
-iu.alloyscasing.aluminum_bronze=Aluminium Bronze Item Casing
+iu.alloyscasing.aluminum_bronze=Aluminum Bronze Item Casing
 iu.alloyscasing.alumel=Titanium Aluminide Item Casing
 iu.alloyscasing.red_brass=Red Brass Item Casing
 iu.alloyscasing.muntsa=Muntz Metal Item Casing
 iu.alloyscasing.nichrome=Nichrome Item Casing
 iu.alloyscasing.alcled=Alclad Item Casing
-iu.alloyscasing.vanadoalumite=Vanadium Aluminium Item Casing
+iu.alloyscasing.vanadoalumite=Vanadium Aluminum Item Casing
 iu.alloyscasing.vitalium=Vitallium Item Casing
 iu.alloyscasing.duralumin=Duralumin Item Casing
 iu.alloyscasing.ferromanganese=Ferromanganese Item Casing
 
 #Metal Item Casings
 iu.casing.mikhail=Michalov Item Casing
-iu.casing.aluminium=Aluminium Item Casing
+iu.casing.aluminium=Aluminum Item Casing
 iu.casing.vanady=Vanadium Item Casing
 iu.casing.wolfram=Tungsten Item Casing
 iu.casing.invar=Invar Item Casing
@@ -1081,20 +1150,20 @@ iu.casing.iridium=Iridium Item Casing
 iu.casing.germanium=Germanium Item Casing
 
 #Alloy Sticks
-iu.alloysstik.aluminum_bronze=Aluminium Bronze Stick
+iu.alloysstik.aluminum_bronze=Aluminum Bronze Stick
 iu.alloysstik.alumel=Titanium Aluminide Stick
 iu.alloysstik.red_brass=Red Brass Stick
 iu.alloysstik.muntsa=Muntz Metal Stick
 iu.alloysstik.nichrome=Nichrome Stick
 iu.alloysstik.alcled=Alclad Stick
-iu.alloysstik.vanadoalumite=Vanadium Aluminium Stick
+iu.alloysstik.vanadoalumite=Vanadium Aluminum Stick
 iu.alloysstik.vitalium=Vitallium Stick
 iu.alloysstik.duralumin=Duralumin Stick
 iu.alloysstik.ferromanganese=Ferromanganese Stick
 
 #Metal Sticks
 iu.stik.mikhail=Michalov Stick
-iu.stik.aluminium=Aluminium Stick
+iu.stik.aluminium=Aluminum Stick
 iu.stik.vanady=Vanadium Stick
 iu.stik.wolfram=Tungsten Stick
 iu.stik.invar=Invar Stick
@@ -1114,20 +1183,20 @@ iu.stik.iridium=Iridium Stick
 iu.stik.germanium=Germanium Stick
 
 #Alloy Nuggets
-iu.alloysnugget.aluminum_bronze=Aluminium Bronze Nugget
+iu.alloysnugget.aluminum_bronze=Aluminum Bronze Nugget
 iu.alloysnugget.alumel=Titanium Aluminide Nugget
 iu.alloysnugget.red_brass=Red Brass Nugget
 iu.alloysnugget.muntsa=Muntz Metal Nugget
 iu.alloysnugget.nichrome=Nichrome Nugget
 iu.alloysnugget.alcled=Alclad Nugget
-iu.alloysnugget.vanadoalumite=Vanadium Aluminium Nugget
+iu.alloysnugget.vanadoalumite=Vanadium Aluminum Nugget
 iu.alloysnugget.vitalium=Vitallium Nugget
 iu.alloysnugget.duralumin=Duralumin Nugget
 iu.alloysnugget.ferromanganese=Ferromanganese Nugget
 
 #Metal Nuggets
 iu.nugget.mikhail=Michalov Nugget
-iu.nugget.aluminium=Aluminium Nugget
+iu.nugget.aluminium=Aluminum Nugget
 iu.nugget.vanady=Vanadium Nugget
 iu.nugget.wolfram=Tungsten Nugget
 iu.nugget.invar=Invar Nugget
@@ -1147,20 +1216,20 @@ iu.nugget.iridium=Iridium Nugget
 iu.nugget.germanium=Germanium Nugget
 
 #Alloy Dusts
-iu.alloysdust.aluminum_bronze=Aluminium Bronze Dust
+iu.alloysdust.aluminum_bronze=Aluminum Bronze Dust
 iu.alloysdust.alumel=Titanium Aluminide Dust
 iu.alloysdust.red_brass=Red Brass Dust
 iu.alloysdust.muntsa=Muntz Metal Dust
 iu.alloysdust.nichrome=Nichrome Dust
 iu.alloysdust.alcled=Alclad Dust
-iu.alloysdust.vanadoalumite=Vanadium Aluminium Dust
+iu.alloysdust.vanadoalumite=Vanadium Aluminum Dust
 iu.alloysdust.vitalium=Vitallium Dust
 iu.alloysdust.duralumin=Duralumin Dust
 iu.alloysdust.ferromanganese=Ferromanganese Dust
 
 #Metal Dusts
 iu.dust.mikhail=Michalov Dust
-iu.dust.aluminium=Aluminium Dust
+iu.dust.aluminium=Aluminum Dust
 iu.dust.vanady=Vanadium Dust
 iu.dust.wolfram=Tungsten Dust
 iu.dust.invar=Invar Dust
@@ -1181,7 +1250,7 @@ iu.dust.germanium=Germanium Dust
 
 #Small Piles of Metal Dust
 iu.smalldust.mikhail=Small Pile of Michalov Dust
-iu.smalldust.aluminium=Small Pile of Aluminium Dust
+iu.smalldust.aluminium=Small Pile of Aluminum Dust
 iu.smalldust.vanady=Small Pile of Vanadium Dust
 iu.smalldust.wolfram=Small Pile of Tungsten Dust
 iu.smalldust.invar=Small Pile of Invar Dust
@@ -1202,7 +1271,7 @@ iu.smalldust.germanium=Small Pile of Germanium Dust
 
 #Tiny Piles of Metal Dust
 iu.verysmalldust.mikhail=Tiny Pile of Michalov Dust
-iu.verysmalldust.aluminium=Tiny Pile of Aluminium Dust
+iu.verysmalldust.aluminium=Tiny Pile of Aluminum Dust
 iu.verysmalldust.vanady=Tiny Pile of Vanadium Dust
 iu.verysmalldust.wolfram=Tiny Pile of Tungsten Dust
 iu.verysmalldust.invar=Tiny Pile of Invar Dust
@@ -1223,7 +1292,7 @@ iu.verysmalldust.germanium=Tiny Pile of Germanium Dust
 
 #Metal Ores
 iu.mikhail.name=Michalov Ore
-iu.aluminium.name=Aluminium Ore
+iu.aluminium.name=Aluminum Ore
 iu.vanady.name=Vanadium Ore
 iu.wolfram.name=Tungsten Ore
 iu.invar.name=Invar Ore
@@ -1244,7 +1313,7 @@ iu.germanium.name=Germanium Ore
 
 #Crushed Metal Ores
 iu.crushed.mikhail=Crushed Michalov Ore
-iu.crushed.aluminium=Crushed Aluminium Ore
+iu.crushed.aluminium=Crushed Aluminum Ore
 iu.crushed.vanady=Crushed Vanadium Ore
 iu.crushed.wolfram=Crushed Tungsten Ore
 iu.crushed.invar=Crushed Invar Ore
@@ -1265,7 +1334,7 @@ iu.crushed.germanium=Crushed Germanium Ore
 
 #Purified Crushed Metal Ores
 iu.purifiedcrushed.mikhail=Purified Crushed Michalov Ore
-iu.purifiedcrushed.aluminium=Purified Crushed Aluminium Ore
+iu.purifiedcrushed.aluminium=Purified Crushed Aluminum Ore
 iu.purifiedcrushed.vanady=Purified Crushed Vanadium Ore
 iu.purifiedcrushed.wolfram=Purified Crushed Tungsten Ore
 iu.purifiedcrushed.invar=Purified Crushed Invar Ore
@@ -1287,7 +1356,7 @@ iu.purifiedcrushed.germanium=Purified Crushed Germanium Ore
 ##Ex Nihilo Integration
 #Broken Metal Ores
 mikhail_gravelcrushed.name=Broken Michalov Ore
-aluminium_gravelcrushed.name=Broken Aluminium Ore
+aluminium_gravelcrushed.name=Broken Aluminum Ore
 vanady_gravelcrushed.name=Broken Vanadium Ore
 wolfram_gravelcrushed.name=Broken Tungsten Ore
 cobalt_gravelcrushed.name=Broken Cobalt Ore
@@ -1303,7 +1372,7 @@ manganese_gravelcrushed.name=Broken Manganese Ore
 
 #Metal Ores Gravel
 mikhail_gravelore.name=Michalov Ore Gravel
-aluminium_gravelore.name=Aluminium Ore Gravel
+aluminium_gravelore.name=Aluminum Ore Gravel
 vanady_gravelore.name=Vanadium Ore Gravel
 wolfram_gravelore.name=Tungsten Ore Gravel
 cobalt_gravelore.name=Cobalt Ore Gravel
@@ -1319,7 +1388,7 @@ manganese_gravelore.name=Manganese Ore Gravel
 
 #Crushed Metal Ores
 mikhail_sandcrushed.name=Crushed Michalov Ore
-aluminium_sandcrushed.name=Crushed Aluminium Ore
+aluminium_sandcrushed.name=Crushed Aluminum Ore
 vanady_sandcrushed.name=Crushed Vanadium Ore
 wolfram_sandcrushed.name=Crushed Tungsten Ore
 cobalt_sandcrushed.name=Crushed Cobalt Ore
@@ -1335,7 +1404,7 @@ manganese_sandcrushed.name=Crushed Manganese Ore
 
 #Metal Ores Sand
 mikhail_sandore.name=Michalov Ore Sand
-aluminium_sandore.name=Aluminium Ore Sand
+aluminium_sandore.name=Aluminum Ore Sand
 vanady_sandore.name=Vanadium Ore Sand
 wolfram_sandore.name=Tungsten Ore Sand
 cobalt_sandore.name=Cobalt Ore Sand
@@ -1351,7 +1420,7 @@ manganese_sandore.name=Manganese Ore Sand
 
 #Powdered Metal Ores
 mikhail_dustcrushed.name=Powdered Michalov Ore
-aluminium_dustcrushed.name=Powdered Aluminium Ore
+aluminium_dustcrushed.name=Powdered Aluminum Ore
 vanady_dustcrushed.name=Powdered Vanadium Ore
 wolfram_dustcrushed.name=Powdered Tungsten Ore
 cobalt_dustcrushed.name=Powdered Cobalt Ore
@@ -1367,7 +1436,7 @@ manganese_dustcrushed.name=Powdered Manganese Ore
 
 #Metal Ores Dust
 mikhail_dustore.name=Michalov Ore Dust
-aluminium_dustore.name=Aluminium Ore Dust
+aluminium_dustore.name=Aluminum Ore Dust
 vanady_dustore.name=Vanadium Ore Dust
 wolfram_dustore.name=Tungsten Ore Dust
 cobalt_dustore.name=Cobalt Ore Dust
@@ -1385,7 +1454,7 @@ industrialupgrade.transformer_iu.lv=LV-Transformer
 industrialupgrade.transformer_iu.mv=MV-Transformer
 industrialupgrade.transformer_iu.hv=HV-Transformer
 industrialupgrade.transformer_iu.ev=EV-Transformer
-industrialupgrade.transformer_iu.umv=UV-Transformer 
+industrialupgrade.transformer_iu.umv=UV-Transformer
 industrialupgrade.transformer_iu.uhv=LkV-Transformer
 industrialupgrade.transformer_iu.uev=MkV-Transformer
 industrialupgrade.transformer_iu.umhv=HkV-Transformer
@@ -1422,6 +1491,7 @@ item.adv_lappack.name=Improved Lappack
 item.imp_lappack.name=Advanced Lappack
 item.per_lappack.name=Perfect Lappack
 
+jetpack.name=Electric Jetpack
 advjetpack.name=Improved Electric Jetpack
 impjetpack.name=Advanced Electric Jetpack
 perjetpack.name=Perfect Electric Jetpack
@@ -1641,6 +1711,7 @@ industrialupgrade.basemachine3.combiner_se_generators=Solar Energy Generator Com
 industrialupgrade.gen_sunnarium.gen_sunnarium=Solarite Transformer
 industrialupgrade.gen_sunnarium_plate.gen_sunnarium_plate=Solarite Plate Manufacturer
 
+iu.crafting.scrap_box=Opening a Scrap Box
 iu.doublescrapbox.name=Double Scrap Box
 
 iu.itemsunnariumpanel.hsp=Hybrid Solarite Plate
@@ -1791,7 +1862,7 @@ iu.reactoradvvent=Perfect Heat Vent
 
 iu.electricstorageinformation=Storage Information
 iu.electricstorageinformation1=Can store RF energy.
-iu.electricstorageinformation2=If the "RF" module is installed, it is possible to convert energy between EU and RF.
+iu.electricstorageinformation2=If the "RF" module is installed, it is possible to convert energy between EF and RF.
 iu.electricstorageinformation3=If the "RF" module is installed, you can charge items using RF energy.
 iu.electricstorageinformation4=You can use the modules in the slots on the left.
 iu.electricstorageinformation5=To associate the storage with a wireless module, insert it into the module slot.
@@ -1932,8 +2003,8 @@ achievement.start.desc=The beginning
 
 achievement.mikhailore=Mr. Michalov
 achievement.mikhailore.desc=Get Michalov Ore
-achievement.aluminiumore=Aluminium
-achievement.aluminiumore.desc=Get Aluminium Ore
+achievement.aluminiumore=Aluminum
+achievement.aluminiumore.desc=Get Aluminum Ore
 achievement.vanadiumore=Vanadium
 achievement.vanadiumore.desc=Get Vanadium Ore
 achievement.tungstenore=Heavy Stone?
@@ -2131,7 +2202,7 @@ mode.storage=Storage Mode
 mode.panel=Panel Mode 
 iu.empty=Empty
 iu.windgenerator=With the strength of the wind: 
-iu.windgenerator1=generates (EU): 
+iu.windgenerator1=generates (EF): 
 end_stage=The last stage has come
 module.analyze=RBM on drilling rig
 module.wireless=RBM on machines
@@ -2521,7 +2592,7 @@ iu.blast_furnace_recipe.info4=Putting the iron into slot will start the process
 iu.blast_furnace_recipe.info5=Keep your blast furnace running with steam
 iu.blast_furnace_recipe.info6=By increasing the pressure, the furnace will work faster,
 iu.blast_furnace_recipe.info7=but vapor consumption will increase
-iu.magnet_generator.info=Generates 2 EU/t during a real day
+iu.magnet_generator.info=Generates 2 EF/t during a real day
 iu.anti_modification.info=Information about Module Removal Station
 iu.anti_modification.info1=Place your tool in the right center slot
 iu.anti_modification.info2=Select modules on left by clicking on them. Then click the "Remove" button
@@ -2531,12 +2602,12 @@ iu.expierence_module.info=Gives the ability to have a second experience tank for
 item.wind_meter.name=Wind Meter
 iu.upgrade_item.info=Max quantity per item: 
 iu.machines_work_energy=Consumes per tick: 
-iu.machines_work_energy_type_eu= EU/t
+iu.machines_work_energy_type_eu= EF/t
 iu.machines_work_energy_type_qe= QE/t
 iu.machines_work_energy_type_se= SE/t
 iu.machines_work_length=Work duration in ticks: 
-iu.matter_work_info=Consumes EU per 1 MB Matter: 
-iu.matter_solid_work_info=Consumes EU per 1 Matter: 
+iu.matter_work_info=Consumes EF per 1 MB Matter: 
+iu.matter_solid_work_info=Consumes EF per 1 Matter: 
 iu.info_upgrade_energy=Increased energy generation x
 iu.magnet_work_info=Attracts items 11x11x11 blocks away
 iu.wind_level_info=Wind level: 
@@ -2549,7 +2620,7 @@ iu.simplyquarries_info4=Quarry has heating
 iu.simplyquarries_info5=In order for the quarry to dig a vein, click on the button in the form of an ore, 
 iu.simplyquarries_info6=it will write „mode:" Ores and Veins"“
 iu.simplyquarries_info7=Top right buttons to change the lower dig height
-iu.simplyquarries_info7=From the bottom of these buttons, setting the upper dig height
+iu.simplyquarries_info8=From the bottom of these buttons, setting the upper dig height
 iu.quarryvein_info=Information about the Core Search Drilling Rig
 iu.quarryvein_info1=The speed changes depending on the tier.
 iu.quarryvein_info2=To extract oil, use a Pumpjack
@@ -2598,7 +2669,6 @@ iu.sound.disable=Mechanism Sound Disabled
 iu.info.module.sorting=Sorts the items in the mechanism by slots
 iu.info.module.speed=Speeds up the process up to 100%, consuming more power
 iu.info.module.stack=Processes the maximum number of items in one process
-iu.water_level_info=Flow level: 
 iu.water_change_time=The flow will change in: 
 iu.water_generator.info_main=Hydro generator basic information
 iu.water_generator.info1=Depends on the speed of the flow and the direction of the rotor to the direction of the flow
@@ -2615,7 +2685,7 @@ water.auto_info=Allows the hydro generator to turn automatically
 water.need_level3=Right click on a water generator to restore the health of the corresponding rotor
 water.water_speed_info=Increases the water speed in the water generator by 
 water.water_power_info=Increases the water level in the hydro generator by 
-iu.water_level_info=Water level: 
+iu.water_level_info=Flow level: 
 iu.radiation.warning=This item is radioactive!
 iu.crafting_elements.crafting_0_element=Anti-radiation Fabric
 iu.crafting_elements.crafting_1_element=Improved Sensor: Press
@@ -2739,7 +2809,7 @@ iu.crafting_elements.crafting_118_element=Perfect Sensor: Earth
 iu.crafting_elements.crafting_119_element=Perfect Sensor: Plants
 iu.crafting_elements.crafting_120_element=Ultimate Electric Motor
 iu.crafting_elements.crafting_121_element=Technical Fishing Net
-iu.crafting_elements.crafting_122_element=Trube Template
+iu.crafting_elements.crafting_122_element=Pipe Template
 iu.crafting_elements.crafting_123_element=Sensor: Evaporation
 iu.crafting_elements.crafting_124_element=Sensor: Combination
 iu.crafting_elements.crafting_125_element=Improved Sensor: Extruder
@@ -2883,14 +2953,14 @@ iu.crafting_elements.crafting_262_element=Sensor: Welder
 iu.crafting_elements.crafting_263_element=Sensor: Gas Generator
 iu.crafting_elements.crafting_264_element=Sensor: Canning
 iu.crafting_elements.crafting_265_element=Sensor: Filler
-iu.crafting_elements.crafting_266_element=Sensor: RedStone
+iu.crafting_elements.crafting_266_element=Sensor: Redstone
 iu.crafting_elements.crafting_267_element=Sensor: Mixer
 iu.crafting_elements.crafting_268_element=Sensor: Teleportation
 iu.crafting_elements.crafting_269_element=Teleport Crystal
 iu.crafting_elements.crafting_270_element=Teleporter Core
 iu.transport.heat=Transports Heat: 
 iu.transport.cold=Transfers Cold: 
-iu.transport.energy=Transmits EU/RF/FE/TE
+iu.transport.energy=Transmits EF/RF/FE/TE
 
 industrialupgrade.basemachine3.double_handlerho=§eImproved Mineral Separator
 industrialupgrade.basemachine3.triple_handlerho=§eAdvanced Mineral Separator
@@ -2940,7 +3010,7 @@ industrialupgrade.basemachine3.imp_redstone_generator=§eAdvanced Redstone Gener
 industrialupgrade.basemachine3.per_redstone_generator=§ePerfect Redstone Generator
 
 iu.gear.mikhail=Mikhail Gear
-iu.gear.aluminum=Aluminum Gear
+iu.gear.aluminium=Aluminum Gear
 iu.gear.vanady=Vanadium Gear
 iu.gear.wolfram=Tungsten Gear
 iu.gear.invar=Invar Gear
@@ -2964,7 +3034,7 @@ iu.alloysgear.red_brass=Red Brass Gear
 iu.alloysgear.muntsa=Muntz Metal Gear
 iu.alloysgear.nichrome=Nichrome Gear
 iu.alloysgear.alcled=Alclad Gear
-iu.alloysgear.vanadoalumite=Vanadium Aluminium Alloy Gear
+iu.alloysgear.vanadoalumite=Vanadium Aluminum Alloy Gear
 iu.alloysgear.vitalium=Vitallium Gear
 iu.alloysgear.duralumin=Duralumin Gear
 iu.alloysgear.ferromanganese=Ferromanganese Gear
@@ -2991,7 +3061,7 @@ iu.water_rotors_upgrade.water_rotorupgrade13=Water Rotor Module: Auto Repair I
 iu.water_rotors_upgrade.water_rotorupgrade14=Water Rotor Module: Auto Repair II
 iu.water_rotors_upgrade.water_rotorupgrade15=Water Rotor Module: Auto Repair III
 
-iu.water_rotors_upgrade.water_rotorupgrade15=Water Rotor Module: Ocean
+iu.water_rotors_upgrade.water_rotorupgrade16=Water Rotor Module: Ocean
 
 iu.itempipes_transport=Output Item Tube
 iu.itempipes1_transport=Input Item Tube
@@ -3096,9 +3166,9 @@ iu.heat_limiter.info2=Enter temperature up to 10000 (100%)
 iu.heat_limiter.info3=Click "Write" to set limits for the reactor
 iu.heat_limiter.info4=Click "Delete" to reset limits for the reactor
 
-iu.heat_storage=10k Coolant Cell
-iu.tri_heat_storage=30k Coolant Cell
-iu.hex_heat_storage=60k Coolant Cell
+iu.crafting_elements.crafting_298_element=10k Coolant Cell
+iu.crafting_elements.crafting_299_element=30k Coolant Cell
+iu.crafting_elements.crafting_300_element=60k Coolant Cell
 iu.plating=Reactor Plating
 iu.heat_plating=Heat-Capacity Reactor Plating
 iu.containment_plating=Containment Reactor Plating
@@ -3133,7 +3203,7 @@ industrialupgrade.basemachine3.chamber_iu=Reactor Chamber
 industrialupgrade.basemachine3.solar_iu=Solar Panel
 industrialupgrade.basemachine3.crop_harvester_iu=Crop Harvester
 industrialupgrade.basemachine3.crop_matron=Crop-Matron
-iu.meter=EU-Reader
+iu.ef.reader=EF-Reader
 
 iu.upgrades.storageupgrade=Lapotron Energy Storage Upgrade
 iu.upgrades.adv_storageupgrade=Improved Lapotron Energy Storage Upgrade
@@ -3145,11 +3215,11 @@ iu.itemcoppercable1=Insulated Copper Cable
 iu.itemglasscable1=Glass Fibre Cable
 iu.itemgold_cable=Gold Cable
 iu.itemgold_cable1=Insulated Gold Cable
-iu.itemgold_cable2=2x Ins. Gold Cable
+iu.itemgold_cable2=2x Insulated Gold Cable
 iu.itemiron_cable=HV Cable
 iu.itemiron_cable1=Insulated HV Cable
-iu.itemiron_cable2=2x Ins. HV Cable
-iu.itemiron_cable3=3x Ins. HV Cable
+iu.itemiron_cable2=2x Insulated HV Cable
+iu.itemiron_cable3=3x Insulated HV Cable
 iu.itemtin_cable=Tin Cable
 iu.itemtin1_cable=Insulated Tin Cable
 
@@ -3157,6 +3227,610 @@ find.gas_vein=Gas is generated in large quantities underground
 find.oil_vein=Oil is generated in huge quantities in the desert
 iu.replicator_using_matter=To create an item in a replicator, you need: 
 
-iu.cooling_sensor=Mechanism Heating Sensor
-iu.heat_sensor=Mechanism Heat Sensor
+iu.cooling_sensor=Machine Heating Sensor
+iu.heat_sensor=Machine Heat Sensor
 iu.aircollector.info=Generates in %d tick: 
+
+upgrade.advancedGUI.meta=Meta
+upgrade.advancedGUI.damage=Damage
+upgrade.advancedGUI.nbt=NBT
+upgrade.advancedGUI.nbt.desc=Current setting: %s\n%s%s
+upgrade.advancedGUI.energy=Energy
+upgrade.advancedGUI.ore=Ore Dictionary
+upgrade.advancedGUI.back=Back
+upgrade.advancedGUI.ignored=Ignored
+upgrade.advancedGUI.ignored.desc=%s is ignored
+upgrade.advancedGUI.direct=Direct
+upgrade.advancedGUI.direct.desc=%s must match that of any of the filters
+upgrade.advancedGUI.comparison=Comparison
+upgrade.advancedGUI.comparison.desc=%s must be valid given the inequality
+upgrade.advancedGUI.range=Range
+upgrade.advancedGUI.range.desc=%s must be within the defined range
+upgrade.advancedGUI.less=Less than
+upgrade.advancedGUI.less_or_equal=Less than or equal to
+upgrade.advancedGUI.greater=Greater than
+upgrade.advancedGUI.greater_or_equal=Greater than or equal to
+upgrade.advancedGUI.fuzzy=Fuzzy
+upgrade.advancedGUI.fuzzy.desc=Non charge/energy NBT is checked
+upgrade.advancedGUI.exact=Exact
+upgrade.advancedGUI.exact.desc=All NBT is checked
+crop.weed=Weed
+crop.wheat=Wheat
+crop.pumpkin=Pumpkin
+crop.melon=Melon
+crop.dandelion=Dandelion
+crop.rose=Rose
+crop.blackthorn=Blackthorn
+crop.tulip=Tulip
+crop.cyazint=Cyazint
+crop.venomilia=Venomilia
+crop.reed=Reed
+crop.stickreed=Stickreed
+crop.cocoa=Cocoa
+crop.ferru=Ferru
+crop.aurelia=Aurelia
+crop.redwheat=Redwheat
+crop.nether_wart=Nether Wart
+crop.terra_wart=Terra Wart
+crop.coffee=Coffee
+crop.hops=Hops
+crop.carrots=Carrots
+crop.potato=Potato
+crop.red_mushroom=Red Mushroom
+crop.brown_mushroom=Brown Mushroom
+crop.seeds=%1$s Seeds
+crop.eatingplant=Eating Plant
+crop.cyprium=Cyprium
+crop.stagnium=Stagnium
+crop.plumbiscus=Plumbiscus
+crop.shining=Shining
+crop.beetroots=Beetroots
+crop.flax=Flax
+crop.seedling=%1$s Seedling
+crop.acorns=%1$s Acorns
+crop.pine_cones=%1$s Pine Cones
+crop.catkins=%1$s Catkins
+crop.spruce_sapling=Spruce
+crop.oak_sapling=Oak
+crop.acacia_sapling=Acacia
+crop.dark_oak_sapling=Dark Oak
+crop.birch_sapling=Birch
+crop.jungle_sapling=Jungle
+crop.blazereed=Blazereed
+crop.bobs_yer_uncle_ranks_berries=Bobs-Yer-Uncle-Ranks Berries
+crop.corium=Corium
+crop.corpse_plant=Corpse Plant
+crop.creeper_weed=Creeper Weed
+crop.diareed=Diareed
+crop.egg_plant=Egg Plant
+crop.ender_blossom=Ender Blossom
+crop.meat_rose=Meat Rose
+crop.milk_wart=Milk Wart
+crop.oil_berries=Oil Berries
+crop.slime_plant=Slime Plant
+crop.spidernip=Spidernip
+crop.tearstalks=Tearstalks
+crop.withereed=Withereed
+Replicator.gui.info.Stop=Stop
+Replicator.gui.info.single=single run
+Replicator.gui.info.repeat=repeat run
+Replicator.gui.info.last=last Pattern
+Replicator.gui.info.next=next Pattern
+Replicator.gui.info.Waiting=Waiting....
+Scanner.gui.idle=Idle
+Scanner.gui.info1=Scanning....
+Scanner.gui.info2=Waiting..no storage
+Scanner.gui.info3=Error: energy loss
+Scanner.gui.info4=Scan Completed
+Scanner.gui.info5=Scan Result
+Scanner.gui.info6=!! Error !!
+Scanner.gui.info7=transfer error no storage
+Scanner.gui.info8=Error: already recorded
+Scanner.gui.button.delete=delete
+Scanner.gui.button.save=save
+Transformer.gui.switch.mode1=Redstone=step-up
+Transformer.gui.switch.mode2=fixed step-down
+Transformer.gui.switch.mode3=fixed step-up
+ 
+Transformer.gui.Output=Output:
+Transformer.gui.Input=Input:
+Transformer.gui.refresh=force manual refresh only need if no energy flow in Grid
+EUStorage.gui.mod.redstone0=Redstone Behavior: Nothing
+EUStorage.gui.mod.redstone1=Redstone Behavior: Emit if full
+EUStorage.gui.mod.redstone2=Redstone Behavior: Emit if partially filled
+EUStorage.gui.mod.redstone3=Redstone Behavior: Emit if partially filled or empty
+EUStorage.gui.mod.redstone4=Redstone Behavior: Emit if empty
+EUStorage.gui.mod.redstone5=Redstone Behavior: Do not output energy
+EUStorage.gui.mod.redstone6=Redstone Behavior: Do not output energy unless full
+EUStorage.gui.info.armor=Armor
+EUStorage.gui.info.level=Power Level:
+EUStorage.gui.info.output=Out: %1$s EF/t
+NuclearReactor.gui.info.EUoutput=Output: %1$s EF/t
+NuclearReactor.gui.info.HUoutput=Output: %1$s HU/s
+NuclearReactor.gui.info.temp=Core Temperature: %1$.2f%%
+NuclearReactor.gui.mode.fluid=Nuclear Reactor in Fluid Cooling mode: Outputting at 100%
+NuclearReactor.gui.mode.electric=Nuclear Reactor in EF mode: Output throttled by 50%
+
+iu.generic.text.upgrade=Compatible Upgrades:
+iu.generic.text.UUMatte=UU-Matter:
+iu.generic.text.Energy=Energy:
+iu.generic.text.Name=Name:
+iu.generic.text.EF=EF
+iu.generic.text.EUt=EF/t
+iu.generic.text.v=V
+iu.generic.text.mb=mB
+iu.generic.text.bucketUnit=B
+iu.generic.text.empty=Empty
+iu.generic.text.heat=heat:
+iu.generic.text.Buffer=Buffer:
+iu.generic.text.hu=Hu:
+iu.generic.text.bufferEU=Buffer: %1$s EF
+iu.generic.text.C=%1$s C
+iu.generic.text.bar=%1$s bar
+iu.generic.text.tick=/tick
+iu.generic.text.sec =/sec
+ 
+# directions
+iu.dir.top=top
+iu.dir.bottom=bottom
+iu.dir.north=north
+iu.dir.east=east
+iu.dir.south=south
+iu.dir.west=west
+iu.dir.Top=Top
+iu.dir.Bottom=Bottom
+iu.dir.North=North
+iu.dir.East=East
+iu.dir.South=South
+iu.dir.West=West
+
+iu.tooltip.upgrade.overclocker.time=Decrease process time to %1$s%%
+iu.tooltip.upgrade.overclocker.power=Increase power to %1$s%%
+iu.tooltip.upgrade.transformer=Increase energy input tier by %1$s
+iu.tooltip.upgrade.storage=Increase energy storage by %1$s EF
+iu.tooltip.upgrade.ejector=Automatically output to the %1$s side
+iu.tooltip.upgrade.ejector.anyside=first valid
+iu.tooltip.upgrade.redstone=Inverts the current redstone signal
+iu.tooltip.upgrade.pulling=Automatically input from the %1$s side
+iu.tooltip.upgrade.remote_interface=Increase the remote range by 2^%1$s
+iu.tooltip.mode=Mode: %1$s
+iu.tooltip.mode.enabled=Enabled
+iu.tooltip.mode.disabled=Disabled
+iu.tooltip.mode.not_in_hand=Charge Items not in hand
+iu.tooltip.mode.boxable=Only boxable in disabled state
+iu.tooltip.mode.normal=Normal
+iu.tooltip.mode.lossless=Lossless
+iu.tooltip.mode.mining=Mining
+iu.tooltip.mode.lowFocus=Low-Focus
+iu.tooltip.mode.longRange=Long-Range
+iu.tooltip.mode.horizontal=Horizontal
+iu.tooltip.mode.superHeat=Super-Heat
+iu.tooltip.mode.scatter=Scatter
+iu.tooltip.mode.explosive=Explosive
+iu.tooltip.mode.3x3=3x3
+iu.tooltip.mode.single=Single
+iu.tooltip.mode.silkTouch=Silk Touch
+iu.tooltip.mode.noShear=No Shearing
+ 
+#mouse over tool tips
+iu.item.CrystalMemory.tooltip.iu.item=Item:
+iu.item.CrystalMemory.tooltip.UU-Matter=UU-Matter:
+iu.item.CrystalMemory.tooltip.Energy=Energy:
+iu.item.CrystalMemory.tooltip.Empty=<Empty>
+iu.item.tooltip.power=Power
+iu.item.tooltip.max=max
+iu.item.tooltip.Output=Output:
+iu.item.tooltip.Capacity=Capacity:
+iu.item.tooltip.Store=Store:
+iu.item.tooltip.Low=Low:
+iu.item.iu.tooltip.High=High:
+iu.item.tooltip.PowerOutput=Power Output:
+item.itemTool.tooltip.UsesLeft=Uses Left: %s
+iu.item.FluidContainer.Empty=< Empty >
+iu.item.tooltip.PowerTier=Power Tier: %s
+Matter.gui.info.progress=Progress:
+Matter.gui.info.amplifier=Amplifier:
+PatternStorage.gui.info.last=last Pattern
+PatternStorage.gui.info.next=next Pattern
+PatternStorage.gui.info.import=import from Crystal
+PatternStorage.gui.info.export=export to Crystal
+itemToolMEter.mode=Mode:
+itemToolMEter.mode.EnergyIn=EnergyIn
+itemToolMEter.mode.EnergyOut=EnergyOut
+itemToolMEter.mode.EnergyGain=EnergyGain
+itemToolMEter.mode.Voltage=Voltage
+itemToolMEter.mode.switch=Switch to:
+itemToolMEter.mode.reset=Reset
+itemToolMEter.cycle=Cycle: %1$s sec
+itemToolMEter.avg= Avg:
+itemToolMEter.max/min=Max/Min
+iu.reactoritem.durability=Durability:
+Canner.gui.switch.EnrichLiquid=fluid enrich (Tank or Cell)
+Canner.gui.switchTanks=Switch Tanks
+
+iu.foam=Construction Foam
+iu.foam.reinforced=Reinforced Construction Foam
+iu.wall.black=Construction Foam Wall (Black)
+iu.wall.blue=Construction Foam Wall (Blue)
+iu.wall.brown=Construction Foam Wall (Brown)
+iu.wall.cyan=Construction Foam Wall (Cyan)
+iu.wall.gray=Construction Foam Wall (Gray)
+iu.wall.green=Construction Foam Wall (Green)
+iu.wall.light_blue=Construction Foam Wall (Light Blue)
+iu.wall.light_gray=Construction Foam Wall (Light Gray)
+iu.wall.lime=Construction Foam Wall (Lime)
+iu.wall.magenta=Construction Foam Wall (Magenta)
+iu.wall.orange=Construction Foam Wall (Orange)
+iu.wall.pink=Construction Foam Wall (Pink)
+iu.wall.purple=Construction Foam Wall (Purple)
+iu.wall.red=Construction Foam Wall (Red)
+iu.wall.white=Construction Foam Wall (White)
+iu.wall.yellow=Construction Foam Wall (Yellow)
+iu.scaffold.wood=Scaffold
+iu.scaffold.reinforced_wood=Reinforced Scaffold
+iu.scaffold.iron=Iron Scaffold
+iu.scaffold.reinforced_iron=Reinforced Iron Scaffold
+iu.fence.iron=Iron Fence
+iu.glass=Reinforced Glass
+iu.mining_pipe.pipe=Mining Pipe
+iu.mining_pipe.tip=Mining Pipe Tip
+iu.rubber_wood=Rubber Wood
+iu.leaves.rubber=Rubber Tree Leaves
+iu.sapling=Rubber Tree Sapling
+iu.reinforced_door=Reinforced Door
+iu.basalt.name=Basalt
+iu.copper_ore.name=Copper Ore
+iu.lead_ore.name=Lead Ore
+iu.tin_ore.name=Tin Ore
+iu.uranium_ore.name=Uranium Ore
+iu.bronze_block.name=Bronze Block
+iu.copper_block.name=Copper Block
+iu.lead_block.name=Lead Block
+iu.steel_block.name=Steel Block
+iu.tin_block.name=Tin Block
+iu.uranium_block.name=Uranium Block
+iu.reinforced_stone.name=Reinforced Stone
+iu.machine.name=Basic Machine Casing
+iu.advanced_machine.name=Advanced Machine Casing
+
+#Crushed Ore
+iu.crushed.copper=Crushed Copper Ore
+iu.crushed.gold=Crushed Gold Ore
+iu.crushed.iron=Crushed Iron Ore
+iu.crushed.tin=Crushed Tin Ore
+iu.crushed.uranium=Crushed Uranium Ore
+iu.crushed.silver=Crushed Silver Ore
+iu.crushed.lead=Crushed Lead Ore
+
+#Purified Crushed Ore
+iu.purifiedcrushed.copper=Purified Crushed Copper Ore
+iu.purifiedcrushed.gold=Purified Crushed Gold Ore
+iu.purifiedcrushed.iron=Purified Crushed Iron Ore
+iu.purifiedcrushed.tin=Purified Crushed Tin Ore
+iu.purifiedcrushed.uranium=Purified Crushed Uranium Ore
+iu.purifiedcrushed.silver=Purified Crushed Silver Ore
+iu.purifiedcrushed.lead=Purified Crushed Lead Ore
+
+#Plates
+iu.plate.bronze_plate=Bronze Plate
+iu.plate.steel_plate=Steel Plate
+iu.plate.copper_plate=Copper Plate
+iu.plate.gold_plate=Gold Plate
+iu.plate.iron_plate=Iron Plate
+iu.plate.tin_plate=Tin Plate
+iu.plate.lead_plate=Lead Plate
+iu.plate.obsidian_plate=Obsidian Plate
+iu.plate.lapis_plate=Lapis Lazuli Plate
+iu.doubleplate.bronze_doubleplate=Dense Bronze Plate
+iu.doubleplate.steel_doubleplate=Dense Steel Plate
+iu.doubleplate.copper_doubleplate=Dense Copper Plate
+iu.doubleplate.gold_doubleplate=Dense Gold Plate
+iu.doubleplate.iron_doubleplate=Dense Iron Plate
+iu.doubleplate.tin_doubleplate=Dense Tin Plate
+iu.doubleplate.lead_doubleplate=Dense Lead Plate
+iu.doubleplate.obsidian_doubleplate=Dense Obsidian Plate
+iu.doubleplate.lapis_doubleplate= Dense Lapis Lazuli Plate
+
+#Item Casings
+iu.casing.copper=Copper Item Casing
+iu.casing.tin=Tin Item Casing
+iu.casing.bronze=Bronze Item Casing
+iu.casing.gold=Gold Item Casing
+iu.casing.iron=Iron Item Casing
+iu.casing.steel=Steel Item Casing
+iu.casing.lead=Lead Item Casing
+
+#Ingots
+iu.ingot.steel_ingot=Steel Ingot
+iu.ingot.copper_ingot=Copper Ingot
+iu.ingot.tin_ingot=Tin Ingot
+iu.ingot.bronze_ingot=Bronze Ingot
+iu.ingot.alloy_ingot=Mixed Metal Ingot
+iu.ingot.lead_ingot=Lead Ingot
+iu.ingotresource.silver=Silver Ingot
+iu.ingotresource.refined_iron=Refined Iron
+iu.ingotresource.uranium=Refined Uranium
+
+#Dusts
+iu.dust.stone=Stone Dust
+iu.dust.lead=Lead Dust
+iu.dust.obsidian=Obsidian Dust
+iu.dust.lapis=Lapis Lazuli Dust
+iu.dust.lithium=Lithium Dust
+iu.dust.sulfur=Sulfur Dust
+iu.dust.silicon_dioxide=Silicon Dioxide
+iu.dust.diamond=Diamond Dust
+iu.dust.energium=Energium Dust
+iu.dust.coal=Coal Dust
+iu.dust.coal_fuel=Hydrated Coal Dust
+iu.dust.iron=Iron Dust
+iu.dust.gold=Gold Dust
+iu.dust.copper=Copper Dust
+iu.dust.tin=Tin Dust
+iu.dust.tin_hydrated=Hydrated Tin Dust
+iu.dust.bronze=Bronze Dust
+iu.dust.clay=Clay Dust
+iu.dust.silver=Silver Dust
+iu.dust.netherrack=Netherrack Dust
+iu.dust.ender_pearl=Ender Pearl Dust
+iu.dust.ender_eye=Ender Eye Dust
+iu.dust.milk=Milk Powder
+iu.dust.emerald=Emerald Dust
+
+#Small Dusts
+iu.smalldust.copper=Tiny Pile of Copper Dust
+iu.smalldust.diamond=Tiny Pile of Diamond Dust
+iu.smalldust.emerald=Tiny Pile of Emerald Dust
+iu.smalldust.gold=Tiny Pile of Gold Dust
+iu.smalldust.tin=Tiny Pile of Tin Dust
+iu.smalldust.silver=Tiny Pile of Silver Dust
+iu.smalldust.lead=Tiny Pile of Lead Dust
+iu.smalldust.sulfur=Tiny Pile of Sulfur Dust
+iu.smalldust.lithium=Tiny Pile of Lithium Dust
+iu.smalldust.iron=Tiny Pile of Iron Dust
+iu.smalldust.bronze=Tiny Pile of Bronze Dust
+iu.smalldust.lapis=Tiny Pile of Lapis Dust
+iu.smalldust.obsidian=Tiny Pile of Obsidian Dust
+
+iu.bronze_helmet=Bronze Helmet
+iu.bronze_chestplate=Bronze Chestplate
+iu.bronze_leggings=Bronze Leggings
+iu.bronze_boots=Bronze Boots
+item.lappack.name=Energypack
+iu.nano_helmet=NanoSuit Helmet
+iu.nano_chestplate=NanoSuit Bodyarmor
+iu.nano_leggings=NanoSuit Leggings
+iu.nano_boots=NanoSuit Boots
+iu.quantum_helmet=QuantumSuit Helmet
+iu.quantum_chestplate=QuantumSuit Bodyarmor
+iu.quantum_leggings=QuantumSuit Leggings
+iu.quantum_boots=QuantumSuit Boots
+iu.rubber_boots=Rubber Boots
+iu.hazmat_helmet=Scuba Helmet
+iu.hazmat_chestplate=Hazmat Suit
+iu.hazmat_leggings=Hazmat Suit Leggings
+iu.nightvision_goggles=Nightvision Goggles
+iu.solar_helmet=Solar Helmet
+
+iu.itemcrafting.empty_fuel_can=(Empty) Fuel Can
+iu.itemcrafting.compressed_hydrated_coal=H. Coal
+iu.crafting_elements.crafting_295_element=Plantball
+iu.itemcrafting.compressed_plants=Compressed Plants
+iu.crafting_elements.crafting_296_element=Tin Can
+iu.filled_tin_can=(Filled) Tin Can
+iu.iodine_tablet=Iodine Tablet
+iu.crafting_elements.crafting_271_element=Rubber
+iu.crafting_elements.crafting_272_element=Electronic Circuit
+iu.crafting_elements.crafting_273_element=Advanced Circuit
+iu.crafting_elements.crafting_274_element=Advanced Alloy
+iu.crafting_elements.crafting_287_element=Scrap
+iu.crafting_elements.crafting_288_element=Scrap Box
+iu.crafting_elements.crafting_280_element=Raw Carbon Fibre
+iu.crafting_elements.crafting_281_element=Raw Carbon Mesh
+iu.crafting_elements.crafting_282_element=Carbon Plate
+iu.crafting_elements.crafting_285_element=Industrial Iridium Plate
+iu.crafting_elements.crafting_283_element=Coal Ball
+iu.crafting_elements.crafting_297_element=Compressed Coal Ball
+iu.crafting_elements.crafting_286_element=Coal Chunk
+iu.itemcrafting.industrial_diamond=Industrial Diamond
+iu.crafting_elements.crafting_293_element=Bio Chaff
+iu.crafting_elements.crafting_277_element=Heat Conductor
+iu.crafting_elements.crafting_284_element=Copper Boiler
+iu.crafting_elements.crafting_289_element=CF Powder
+iu.itemcrafting.pellet=CF Pellet
+iu.crafting_elements.crafting_294_element=Coil
+iu.crafting_elements.crafting_276_element=Electric Motor
+iu.crafting_elements.crafting_279_element=Power Unit
+iu.crafting_elements.crafting_278_element=Small Power Unit
+iu.crafting_elements.crafting_292_element=Crystal Memory (raw)
+iu.crystal_memory=Crystal Memory
+
+iu.cropres.bobs_yer_uncle_ranks_berry=Bob's-Your-Uncle! Berry
+iu.cropres.coffee_beans=Coffee Beans
+iu.cropres.coffee_powder=Coffee Powder
+iu.cropres.milk_wart=Milk Wart
+iu.cropres.oil_berry=Oil Berry
+iu.cropres.fertilizer=Fertilizer
+iu.cropres.hops=Hops
+iu.cropres.grin_powder=Grin Powder
+iu.cropres.weed=Weed
+
+item.wrench.name=Wrench
+iu.forge_hammer=Forge Hammer
+iu.mining_laser=Mining Laser
+iu.cutter=Cutter
+iu.treetap=Treetap
+iu.foam_sprayer=CF Sprayer
+item.cropanalyzer.name=Cropnalyzer
+iu.single_use_battery=Single-Use Battery
+iu.miscresource.ashes=Ashes
+iu.crafting_elements.crafting_275_element=Industrial Iridium
+iu.crafting_elements.crafting_291_element=Industrial Iridium Shard
+iu.miscresource.matter=UU-Matter
+iu.crafting_elements.crafting_290_element=Sticky Resin
+iu.miscresource.slag=Slag
+iu.miscresource.iodine=Iodine
+iu.miscresource.water_sheet=Water
+iu.miscresource.lava_sheet=Lava
+
+iu.crop_stick=Crop
+iu.crop.unknown=Unknown
+iu.crop.invalid=Invalid
+
+iu.nuclearresource.uranium=Enriched Uranium nuclear Fuel
+iu.nuclearresource.mox=MOX nuclear Fuel
+iu.nuclearresource.plutonium=Plutonium
+iu.nuclearresource.small_plutonium=Tiny Pile of Plutonium
+iu.nuclearresource.uranium_235=Uranium 235
+iu.nuclearresource.small_uranium_235=Tiny Pile of Uranium 235
+iu.nuclearresource.uranium_238=Uranium 238
+iu.nuclearresource.small_uranium_238=Tiny Pile of Uranium 238
+iu.nuclearresource.uranium_pellet=Pellets of Enriched Uranium nuclear Fuel
+iu.nuclearresource.mox_pellet=Pellets of MOX nuclear Fuel
+iu.nuclearresource.rtg_pellet=Pellets of RTG Fuel
+iu.nuclearresource.near_depleted_uranium=Near-depleted Uranium
+iu.fluid_cell=Universal Fluid Cell
+
+iu.potion.radiation=Radiation
+death.attack.current=%1$s died from electric shock
+death.attack.radiation=%1$s died from radiation
+death.attack.frostbite=%1$s died of frostbite
+death.attack.cropEating=%1$s got eaten by an EatingPlant
+
+iu.painter=Painter
+iu.painter.black=Black Painter
+iu.painter.blue=Blue Painter
+iu.painter.brown=Brown Painter
+iu.painter.light_blue=Light Blue Painter
+iu.painter.cyan=Cyan Painter
+iu.painter.gray=Dark Grey Painter
+iu.painter.green=Green Painter
+iu.painter.light_gray=Light Grey Painter
+iu.painter.lime=Lime Painter
+iu.painter.magenta=Magenta Painter
+iu.painter.orange=Orange Painter
+iu.painter.pink=Pink Painter
+iu.painter.purple=Purple Painter
+iu.painter.red=Red Painter
+iu.painter.white=White Painter
+iu.painter.yellow=Yellow Painter
+iu.upgrades.overclocker=Overclocker Upgrade
+iu.upgrades.transformer=Transformer Upgrade
+iu.upgrades.energy_storage=Energy Storage Upgrade
+iu.upgrades.ejector=Ejector Upgrade
+iu.upgrades.advanced_ejector=Advanced Ejector Upgrade
+iu.upgrades.pulling=Pulling Upgrade
+iu.upgrades.advanced_pulling=Advanced Pulling Upgrade
+iu.upgrades.fluid_ejector=Fluid Ejector Upgrade
+iu.upgrades.fluid_pulling=Fluid Pulling Upgrade
+cable.tooltip.loss=Loss: %s EF/Block
+frequency_transmitter.tooltip.blank=Target not set.
+frequency_transmitter.tooltip.target=Target: X=%s Y=%s Z=%s
+iu.bronze_pickaxe=Bronze Pickaxe
+iu.bronze_axe=Bronze Axe
+iu.bronze_sword=Bronze Sword
+iu.bronze_shovel=Bronze Shovel
+iu.bronze_hoe=Bronze Hoe
+iu.item.tooltip.High=High:
+iu.itemcrafting.steam_turbine=Steam Turbine
+iu.itemcrafting.steam_turbine_blade=Steam Turbine Blade
+
+iu.minipanel.bonus=Bonus: 
+iu.minipanel.stable_place=Stable placement: 
+iu.minipanel.stable=Stable
+iu.minipanel.normal=Normal
+iu.minipanel.unstable=Unstable
+iu.minipanel.generating=Generates day and night: 
+iu.minipanel.generating_day=Generates during the day: 
+iu.minipanel.generating_night=Generates during the night: 
+iu.minipanel.storage=Storage: 
+iu.minipanel.output=Output: 
+
+iu.solar_panel_glass.adv=Advanced Day Glass
+iu.solar_panel_glass.hyb=Hybrid Day Glass
+iu.solar_panel_glass.ult=Perfect Day Glass
+iu.solar_panel_glass.qua=Quantum Day Glass
+iu.solar_panel_glass.spe=Spectral Day Glass
+iu.solar_panel_glass.pro=Protonic Day Glass
+iu.solar_panel_glass.sin=Singular Day Glass
+iu.solar_panel_glass.adm=Diffractive Day Glass
+iu.solar_panel_glass.pho=Photonic Day Glass
+iu.solar_panel_glass.neu=Neutron Day Glass
+iu.solar_panel_glass.bar=Baryon Day Glass
+iu.solar_panel_glass.adr=Hadron Day Glass
+iu.solar_panel_glass.gra=Graviton Day Glass
+iu.solar_panel_glass.kvr=Quark Day Glass
+
+iu.night_solar_panel_glass.adv=Advanced Night Glass
+iu.night_solar_panel_glass.hyb=Hybrid Night Glass
+iu.night_solar_panel_glass.ult=Perfect Night Glass
+iu.night_solar_panel_glass.qua=Quantum Night Glass
+iu.night_solar_panel_glass.spe=Spectral Night Glass
+iu.night_solar_panel_glass.pro=Protonic Night Glass
+iu.night_solar_panel_glass.sin=Singular Night Glass
+iu.night_solar_panel_glass.adm=Diffractive Night Glass
+iu.night_solar_panel_glass.pho=Photonic Night Glass
+iu.night_solar_panel_glass.neu=Neutron Night Glass
+iu.night_solar_panel_glass.bar=Baryon Night Glass
+iu.night_solar_panel_glass.adr=Hadron Night Glass
+iu.night_solar_panel_glass.gra=Graviton Night Glass
+iu.night_solar_panel_glass.kvr=Quark Night Glass
+
+iu.daynight_solar_panel_glass.adv=Advanced Daily Glass
+iu.daynight_solar_panel_glass.hyb=Hybrid Daily Glass
+iu.daynight_solar_panel_glass.ult=Perfect Daily Glass
+iu.daynight_solar_panel_glass.qua=Quantum Daily Glass
+iu.daynight_solar_panel_glass.spe=Spectral Daily Glass
+iu.daynight_solar_panel_glass.pro=Protonic Daily Glass
+iu.daynight_solar_panel_glass.sin=Singular Daily Glass
+iu.daynight_solar_panel_glass.adm=Diffractive Daily Glass
+iu.daynight_solar_panel_glass.pho=Photonic Daily Glass
+iu.daynight_solar_panel_glass.neu=Neutron Daily Glass
+iu.daynight_solar_panel_glass.bar=Baryon Daily Glass
+iu.daynight_solar_panel_glass.adr=Hadron Daily Glass
+iu.daynight_solar_panel_glass.gra=Graviton Daily Glass
+iu.daynight_solar_panel_glass.kvr=Quark Daily Glass
+
+iu.solar_panel_battery.adv=Advanced Rechargeable Battery
+iu.solar_panel_battery.hyb=Hybrid Rechargeable Battery
+iu.solar_panel_battery.ult=Perfect Rechargeable Battery
+iu.solar_panel_battery.qua=Quantum Rechargeable Battery
+iu.solar_panel_battery.spe=Spectral Rechargeable Battery
+iu.solar_panel_battery.pro=Protonic Rechargeable Battery
+iu.solar_panel_battery.sin=Singular Rechargeable Battery
+iu.solar_panel_battery.adm=Diffractive Rechargeable Battery
+iu.solar_panel_battery.pho=Photonic Rechargeable Battery
+iu.solar_panel_battery.neu=Neutron Rechargeable Battery
+iu.solar_panel_battery.bar=Baryon Rechargeable Battery
+iu.solar_panel_battery.adr=Hadron Rechargeable Battery
+iu.solar_panel_battery.gra=Graviton Rechargeable Battery
+iu.solar_panel_battery.kvr=Quark RechargeableBattery
+
+iu.solar_panel_output.adv=Advanced Socket
+iu.solar_panel_output.hyb=Hybrid Socket
+iu.solar_panel_output.ult=Perfect Socket
+iu.solar_panel_output.qua=Quantum Socket
+iu.solar_panel_output.spe=Spectral Socket
+iu.solar_panel_output.pro=Protonic Socket
+iu.solar_panel_output.sin=Singular Socket
+iu.solar_panel_output.adm=Diffractive Socket
+iu.solar_panel_output.pho=Photonic Socket
+iu.solar_panel_output.neu=Neutron Socket
+iu.solar_panel_output.bar=Baryon Socket
+iu.solar_panel_output.adr=Hadron Socket
+iu.solar_panel_output.gra=Graviton Socket
+iu.solar_panel_output.kvr=Quark Socket
+
+iu.food_mode_helmet=Automatically consumes food
+iu.jetpack_fly_chestplate=Fly for 30 seconds with a break of 5 minutes
+iu.jetpack_fly_chestplate_1= to activate flight
+iu.jetpack_fly_chestplate_2= before the end of the flight
+iu.special_armor_auto_jump=Automatic jump
+iu.special_armor_active_effect=Removes only the radiation effect
+iu.special_armor_all_active_effect=Removes all default negative effects with radiation
+iu.special armor big jump=Enable big jump: 
+iu.special_armor_nightvision=Enable night vision: 
+iu.special_armor_nightvision_1=Night vision is disabled in the morning with blindness effect
+iu.special_armor_nightvision_2=Night vision is disabled in the morning
+iu.special_armor_nightvision_3=Night vision does not turn off in the morning
+iu.special_armor_speed=Speed

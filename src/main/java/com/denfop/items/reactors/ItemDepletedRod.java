@@ -3,21 +3,17 @@ package com.denfop.items.reactors;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUPotion;
 import com.denfop.api.IModelRegister;
-import com.denfop.items.armour.ItemArmorAdvHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
-import ic2.api.reactor.IReactor;
-import ic2.api.reactor.IReactorComponent;
-import ic2.core.IC2Potion;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemIC2;
-import ic2.core.item.armor.ItemArmorHazmat;
-import ic2.core.item.type.IRadioactiveItemType;
+import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,19 +21,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemDepletedRod extends ItemIC2 implements IReactorComponent, IModelRegister, IRadioactiveItemType {
+public class ItemDepletedRod extends Item implements IReactorComponent, IModelRegister, IRadioactiveItemType {
 
 
     public final String name;
 
     public ItemDepletedRod(String name) {
-        super(null);
+        super();
         this.name = name.toLowerCase(Locale.US);
         setUnlocalizedName(name);
 
 
         this.setCreativeTab(IUCore.ReactorsTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
 
         IUCore.proxy.addIModelRegister(this);
     }
@@ -58,6 +54,10 @@ public class ItemDepletedRod extends ItemIC2 implements IReactorComponent, IMode
             loc.append(name);
         }
         return new ModelResourceLocation(loc.toString(), null);
+    }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
     }
 
     @Override
@@ -81,73 +81,25 @@ public class ItemDepletedRod extends ItemIC2 implements IReactorComponent, IMode
     }
 
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
-    }
-
     public String getUnlocalizedName(ItemStack itemStack) {
         return getUnlocalizedName();
     }
 
 
-    @Override
-    public void processChamber(final ItemStack itemStack, final IReactor iReactor, final int i, final int i1, final boolean b) {
-
-    }
-
-    @Override
-    public boolean acceptUraniumPulse(
-            final ItemStack itemStack,
-            final IReactor iReactor,
-            final ItemStack itemStack1,
-            final int i,
-            final int i1,
-            final int i2,
-            final int i3,
-            final boolean b
-    ) {
-        return false;
-    }
-
-    @Override
-    public boolean canStoreHeat(final ItemStack itemStack, final IReactor iReactor, final int i, final int i1) {
-        return false;
-    }
-
-    @Override
-    public int getMaxHeat(final ItemStack itemStack, final IReactor iReactor, final int i, final int i1) {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentHeat(final ItemStack itemStack, final IReactor iReactor, final int i, final int i1) {
-        return 0;
-    }
-
-    @Override
-    public int alterHeat(final ItemStack itemStack, final IReactor iReactor, final int i, final int i1, final int i2) {
-        return 0;
-    }
-
     public void onUpdate(ItemStack stack, World world, Entity entity, int slotIndex, boolean isCurrentItem) {
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase entityLiving = (EntityLivingBase) entity;
-            if (!ItemArmorHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
-                    entityLiving)) {
-                IC2Potion.radiation.applyTo(entityLiving, this.getRadiationDuration(), this.getRadiationAmplifier());
+            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
+                IUPotion.radiation.applyTo(entityLiving, this.getRadiationDuration(), this.getRadiationAmplifier());
             }
         }
 
     }
 
-    @Override
-    public float influenceExplosion(final ItemStack itemStack, final IReactor iReactor) {
-        return 0;
-    }
 
     @Override
-    public boolean canBePlacedIn(final ItemStack itemStack, final IReactor iReactor) {
+    public boolean canBePlacedIn(final ItemStack itemStack, final IAdvReactor AdvReactor) {
         return false;
     }
 

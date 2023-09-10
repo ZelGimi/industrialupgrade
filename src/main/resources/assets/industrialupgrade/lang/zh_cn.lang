@@ -61,7 +61,7 @@ industrialupgrade.machines.hadron_solar_panel=§d强子太阳能
 industrialupgrade.machines.graviton_solar_panel=§d重力太阳能
 industrialupgrade.machines.quark_solar_panel=§d夸克太阳能
 blockAdministatorSolarPanel.name=§8管理员太阳能
-industrialupgrade.admpanel.admpanel=§8管理员太阳能
+iu.adminpanel_item.adminpanel_item=§8管理员太阳能
 
 # Draconic Evolution Panels
 industrialupgrade.draconicpanel.draconium_solar_panel=§d飞龙太阳能
@@ -96,16 +96,16 @@ iu.itemNanoSaber1=量子原力剑
 iu.itemNanoSaber=光谱原力剑
 
 # Spectral Quantum Armor
-supersolarpanels.itemArmorQuantumHelmet=§d光谱量子头盔
-supersolarpanels.itemArmorQuantumChestplate=§d光谱量子胸甲
-supersolarpanels.itemArmorQuantumLegs=§d光谱量子护腿
-supersolarpanels.itemArmorQuantumBoots=§d光谱量子护靴
+iu.spectral_helmet=§d光谱量子头盔
+iu.spectral_chestplate=§d光谱量子胸甲
+iu.spectral_leggings=§d光谱量子护腿
+iu.spectral_boots=§d光谱量子护靴
 
 # Reinforced Armor
-supersolarpanels.itemArmorNanoHelmet=强化纳米头盔
-supersolarpanels.itemArmorNanoChestplate=强化纳米头盔胸甲
-supersolarpanels.itemArmorNanoLegs=强化纳米护腿
-supersolarpanels.itemArmorNanoBoots=强化纳米靴子
+iu.adv_nano_helmet=强化纳米头盔
+iu.adv_nano_chestplate=强化纳米头盔胸甲
+iu.adv_nano_leggings=强化纳米护腿
+iu.adv_nano_boots=强化纳米靴子
 
 # Nuclear Fusion Radiation Suit
 item.hazmathelmet.name=核聚变辐射服头盔
@@ -399,7 +399,7 @@ ic2.item.tooltip.Store=储存:
 wirelles=§e允许您无线传递电力
 transformator=增加太阳能等级
 transformator1=降低太阳能等级
-industrialupgrade.sintezator.sintezator=太阳能合成器
+iu.sintezator_item.sintezator_item=太阳能合成器
 iu.sintezator=太阳能在里面折叠. 插槽上限: 2
 supsolpans.SpecSP.Output=输出:
 supsolpans.SpecSP.Storage=容量:
@@ -554,7 +554,6 @@ iu.modulewirelles2=§b无线: §c没有运作
 
 iu.fly=§3飞行激活:
 iu.fly1=按模式切换键 + Boost Key 开启飞行
-iu.vertical=按模式切换键 + Side Key 可启用垂直模式
 iu.effect=火焰保护启动:
 storagemodul=仅用于能量储存
 storagemodul1=按 右键单击存储
@@ -1516,7 +1515,7 @@ industrialupgrade.basemachine1.magnet_generator=电磁发电机
 industrialupgrade.basemachine2.fisher=自动钓鱼机
 industrialupgrade.basemachine2.painter=印染机
 industrialupgrade.upgrade_block.upgrade_block=修改站
-industrialupgrade.quarry_vein.quarry_vein=核心钻探装置
+iu.quarry_vein_item.quarry_vein_item=核心钻探装置
 industrialupgrade.petrol_quarry.petrol_quarry=石油钻井
 industrialupgrade.combiner_solid_matter.combiner_solid_matter=固体物质发生组合器
 industrialupgrade.basemachine2.expierence_block=经验储存器

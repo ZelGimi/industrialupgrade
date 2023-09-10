@@ -3,14 +3,14 @@ package com.denfop.invslot;
 
 import com.denfop.api.recipe.ISlotInv;
 import com.denfop.items.ItemSolidMatter;
-import com.denfop.tiles.base.TileEntityConverterSolidMatter;
+import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
-    public InvSlotConverterSolidMatter(TileEntityInventory base1, String string) {
-        super(base1, string, InvSlot.Access.I, 8, InvSlot.InvSide.ANY);
+    public InvSlotConverterSolidMatter(TileEntityInventory base1) {
+        super(base1, TypeItemSlot.INPUT, 8);
 
     }
 
@@ -18,7 +18,7 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
         this.getmatter();
-        TileEntityConverterSolidMatter tile = (TileEntityConverterSolidMatter) base;
+        TileConverterSolidMatter tile = (TileConverterSolidMatter) base;
         if (tile.getRecipeOutput() != null) {
             tile.getrequiredmatter(tile.getRecipeOutput().getRecipe().getOutput());
         }
@@ -28,7 +28,7 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
         for (int i = 0; i < this.size(); i++) {
             if (!get(i).isEmpty()) {
-                TileEntityConverterSolidMatter tile = (TileEntityConverterSolidMatter) base;
+                TileConverterSolidMatter tile = (TileConverterSolidMatter) base;
                 int meta = get(i).getItemDamage();
                 while (!this.get(i).isEmpty() && tile.quantitysolid[meta % tile.quantitysolid.length] <= 99800) {
                     tile.quantitysolid[meta % tile.quantitysolid.length] += 200;

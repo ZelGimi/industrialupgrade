@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.base.TileEntityMatterGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerSolidMatter extends ContainerFullInv<TileEntityMatterGenerator> {
 
     public ContainerSolidMatter(EntityPlayer entityPlayer, TileEntityMatterGenerator tileEntity1) {
@@ -31,11 +29,5 @@ public class ContainerSolidMatter extends ContainerFullInv<TileEntityMatterGener
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("progress");
-        ret.add("energy");
-        return ret;
-    }
 
 }

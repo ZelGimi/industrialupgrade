@@ -1,6 +1,6 @@
 package com.denfop.api;
 
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 
 public interface IItemSoon {
 

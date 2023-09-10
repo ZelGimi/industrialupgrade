@@ -1,18 +1,18 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.IUpgradeItem;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerPlasticCreator;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.init.Localization;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -58,7 +58,7 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 58, 35, 69, 50)
                 .withTooltip(tooltip2)
                 .drawForeground(par1, par2);
@@ -74,7 +74,7 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
     public void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
-            text.add(Localization.translate("ic2.generic.text.upgrade"));
+            text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
                 text.add(stack.getDisplayName());
@@ -101,7 +101,7 @@ public class GuiPlasticCreator extends GuiIU<ContainerPlasticCreator> {
         }
 
         TankGauge.createNormal(this, 6, 5, container.base.fluidTank).drawBackground(xoffset, yoffset);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }

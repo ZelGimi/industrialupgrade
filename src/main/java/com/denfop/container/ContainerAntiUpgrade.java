@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityAntiUpgradeBlock;
+import com.denfop.tiles.base.TileAntiUpgradeBlock;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerAntiUpgrade extends ContainerFullInv<TileAntiUpgradeBlock> {
 
-public class ContainerAntiUpgrade extends ContainerFullInv<TileEntityAntiUpgradeBlock> {
-
-    public ContainerAntiUpgrade(EntityPlayer entityPlayer, TileEntityAntiUpgradeBlock tileEntity1) {
+    public ContainerAntiUpgrade(EntityPlayer entityPlayer, TileAntiUpgradeBlock tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         addSlotToContainer(new SlotInvSlot(tileEntity1.input,
                 0, 106, 34
@@ -19,13 +17,5 @@ public class ContainerAntiUpgrade extends ContainerFullInv<TileEntityAntiUpgrade
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("progress");
-        ret.add("index");
-
-        ret.add("sound");
-        return ret;
-    }
 
 }

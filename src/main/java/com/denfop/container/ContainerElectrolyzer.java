@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityElectrolyzer;
+import com.denfop.tiles.base.TileElectrolyzer;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerElectrolyzer extends ContainerFullInv<TileElectrolyzer> {
 
-public class ContainerElectrolyzer extends ContainerFullInv<TileEntityElectrolyzer> {
-
-    public ContainerElectrolyzer(EntityPlayer entityPlayer, TileEntityElectrolyzer tileEntity1) {
+    public ContainerElectrolyzer(EntityPlayer entityPlayer, TileElectrolyzer tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot[0], 0, 14, 63));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 76, 63));
@@ -23,12 +21,5 @@ public class ContainerElectrolyzer extends ContainerFullInv<TileEntityElectrolyz
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-        ret.add("sound");
-        return ret;
-    }
 
 }

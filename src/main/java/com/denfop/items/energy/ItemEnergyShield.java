@@ -1,12 +1,12 @@
 package com.denfop.items.energy;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.IUpgradeItem;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.core.init.BlocksItems;
+import com.denfop.register.Register;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class ItemEnergyShield extends ItemShield implements IElectricItem, IUpgradeItem, IModelRegister {
+public class ItemEnergyShield extends ItemShield implements IEnergyItem, IUpgradeItem, IModelRegister {
 
     private final double maxCharge;
     private final double transferLimit;
@@ -47,7 +47,7 @@ public class ItemEnergyShield extends ItemShield implements IElectricItem, IUpgr
         this.setCreativeTab(IUCore.EnergyTab);
         this.name = name;
         setUnlocalizedName(name);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         setMaxStackSize(1);
         IUCore.proxy.addIModelRegister(this);
         this.addPropertyOverride(new ResourceLocation("blocking"), new IItemPropertyGetter() {
@@ -111,17 +111,17 @@ public class ItemEnergyShield extends ItemShield implements IElectricItem, IUpgr
     }
 
     @Override
-    public double getMaxCharge(final ItemStack itemStack) {
+    public double getMaxEnergy(final ItemStack itemStack) {
         return this.maxCharge;
     }
 
     @Override
-    public int getTier(final ItemStack itemStack) {
-        return this.tier;
+    public short getTierItem(final ItemStack itemStack) {
+        return (short) this.tier;
     }
 
     @Override
-    public double getTransferLimit(final ItemStack itemStack) {
+    public double getTransferEnergy(final ItemStack itemStack) {
         return this.transferLimit;
     }
 

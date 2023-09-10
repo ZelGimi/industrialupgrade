@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityMultiMachine;
+import com.denfop.tiles.base.TileMultiMachine;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerMultiMachine extends ContainerFullInv<TileMultiMachine> {
 
-public class ContainerMultiMachine extends ContainerFullInv<TileEntityMultiMachine> {
-
-    public ContainerMultiMachine(EntityPlayer entityPlayer, TileEntityMultiMachine tileEntity1, int sizeWorkingSlot) {
+    public ContainerMultiMachine(EntityPlayer entityPlayer, TileMultiMachine tileEntity1, int sizeWorkingSlot) {
         super(entityPlayer, tileEntity1, 166);
         for (int i = 0; i < sizeWorkingSlot; i++) {
             int xDisplayPosition1 = 80 + (32 - sizeWorkingSlot) * i - sizeWorkingSlot * 10;
@@ -40,21 +38,5 @@ public class ContainerMultiMachine extends ContainerFullInv<TileEntityMultiMachi
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("cold");
-        ret.add("solartype");
-        if (this.base.exp != null) {
-            ret.add("exp");
-        }
-        if (this.base.tank != null) {
-            ret.add("tank");
-        }
-        if (this.base.heat != null) {
-            ret.add("heat");
-        }
-        ret.add("sound");
-        return ret;
-    }
 
 }

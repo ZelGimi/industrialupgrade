@@ -1,24 +1,22 @@
 package com.simplequarries;
 
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockQuarry implements ITeBlock {
-    simply_quarry(TileEntitySimplyQuarry.class, 0),
-    adv_simply_quarry(TileEntityAdvSimplyQuarry.class, 1),
-    imp_simply_quarry(TileEntityImpSimplyQuarry.class, 2),
-    per_simply_quarry(TileEntityPerSimplyQuarry.class, 3),
+public enum BlockQuarry implements IMultiTileBlock {
+    simply_quarry(TileSimplyQuarry.class, 0),
+    adv_simply_quarry(TileAdvSimplyQuarry.class, 1),
+    imp_simply_quarry(TileImpSimplyQuarry.class, 2),
+    per_simply_quarry(TilePerSimplyQuarry.class, 3),
 
     ;
 
@@ -46,19 +44,13 @@ public enum BlockQuarry implements ITeBlock {
 
     }
 
-    public static void buildDummies() {
-        final ModContainer mc = Loader.instance().activeModContainer();
-        if (mc == null || !SQConstants.MOD_ID.equals(mc.getModId())) {
-            throw new IllegalAccessError("Don't mess with this please.");
-        }
+    public void buildDummies() {
         for (final BlockQuarry block : BlockQuarry.values()) {
             if (block.teClass != null) {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
@@ -99,7 +91,7 @@ public enum BlockQuarry implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -108,26 +100,15 @@ public enum BlockQuarry implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override

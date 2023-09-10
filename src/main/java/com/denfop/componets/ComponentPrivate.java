@@ -1,11 +1,11 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
-import ic2.core.network.GrowingBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,15 +15,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComponentPrivate extends AbstractComponent {
 
-    boolean activate = false;
     private final List<String> players = new ArrayList<>();
+    boolean activate = false;
 
     public ComponentPrivate(final TileEntityInventory parent) {
         super(parent);
@@ -124,7 +123,7 @@ public class ComponentPrivate extends AbstractComponent {
 
     @Override
     public void onContainerUpdate(EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(this.players.size() + 2);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(this.players.size() + 2);
         buffer.writeShort(this.players.size());
         buffer.writeBoolean(this.activate);
         this.players.forEach(buffer::writeString);
@@ -132,12 +131,12 @@ public class ComponentPrivate extends AbstractComponent {
         this.setNetworkUpdate(player, buffer);
     }
 
-    public void onNetworkUpdate(DataInput is) throws IOException {
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.players.clear();
         short size = is.readShort();
         this.activate = is.readBoolean();
         for (int i = 0; i < size; i++) {
-            this.players.add(is.readLine());
+            this.players.add(is.readString());
         }
     }
 

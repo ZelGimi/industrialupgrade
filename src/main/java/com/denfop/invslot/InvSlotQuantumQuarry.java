@@ -7,7 +7,8 @@ import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
 import com.denfop.items.modules.ItemQuarryModule;
-import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 
@@ -16,11 +17,11 @@ import java.util.ArrayList;
 public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
 
     public final int type;
-    public final TileEntityBaseQuantumQuarry tile;
+    public final TileBaseQuantumQuarry tile;
     public int stackSizeLimit;
 
-    public InvSlotQuantumQuarry(TileEntityBaseQuantumQuarry base1, int oldStartIndex1, String name, int type) {
-        super(base1, name, Access.I, oldStartIndex1, InvSlot.InvSide.ANY);
+    public InvSlotQuantumQuarry(TileBaseQuantumQuarry base1, int oldStartIndex1, int type) {
+        super(base1, TypeItemSlot.INPUT, oldStartIndex1);
         this.tile = base1;
         this.stackSizeLimit = 1;
         this.type = type;
@@ -108,7 +109,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 break;
             case 2:
                 this.tile.analyzer = !this.get().isEmpty();
-                IUCore.network.get(true).updateTileEntityField(this.tile, "analyzer");
+                new PacketUpdateFieldTile(this.tile, "analyzer", tile.analyzer);
                 break;
         }
     }
@@ -185,7 +186,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
                 break;
             case 2:
                 this.tile.analyzer = !this.get().isEmpty();
-                IUCore.network.get(true).updateTileEntityField(this.tile, "analyzer");
+                new PacketUpdateFieldTile(this.tile, "analyzer", tile.analyzer);
                 break;
         }
     }
@@ -198,7 +199,7 @@ public class InvSlotQuantumQuarry extends InvSlot implements ITypeSlot {
         } else if (type == 1) {
             if (itemStack.getItem() instanceof ItemQuarryModule && (EnumQuarryModules.getFromID(itemStack.getItemDamage()).type == EnumQuarryType.WHITELIST || EnumQuarryModules.getFromID(
                     itemStack.getItemDamage()).type == EnumQuarryType.BLACKLIST)) {
-                ((TileEntityBaseQuantumQuarry) this.base).list = ModUtils.getQuarryListFromModule(itemStack);
+                ((TileBaseQuantumQuarry) this.base).list = ModUtils.getQuarryListFromModule(itemStack);
                 return !itemStack.getItem().equals(IUItem.analyzermodule);
             }
 

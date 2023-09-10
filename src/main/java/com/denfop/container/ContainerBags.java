@@ -1,8 +1,7 @@
 package com.denfop.container;
 
-import com.denfop.items.bags.HandHeldBags;
-import ic2.core.slot.SlotHologramSlot;
-import ic2.core.util.StackUtil;
+import com.denfop.items.bags.ItemStackBags;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
@@ -12,14 +11,14 @@ import net.minecraft.network.play.server.SPacketHeldItemChange;
 
 import java.util.Objects;
 
-public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
+public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
 
 
     public final int inventorySize;
-    private final HandHeldBags Toolbox1;
+    private final ItemStackBags Toolbox1;
     private final int current;
 
-    public ContainerBags(EntityPlayer player, HandHeldBags Toolbox1) {
+    public ContainerBags(EntityPlayer player, ItemStackBags Toolbox1) {
         super(Toolbox1);
         this.Toolbox1 = Toolbox1;
         inventorySize = Toolbox1.inventorySize;
@@ -75,7 +74,7 @@ public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
                 if (slot >= 0 && slot < this.inventorySlots.size() && this.base.isThisContainer(this.inventorySlots
                         .get(slot)
                         .getStack())) {
-                    return StackUtil.emptyStack;
+                    return ModUtils.emptyStack;
                 }
                 break;
             case SWAP:
@@ -120,9 +119,7 @@ public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
     }
 
     public ItemStack slotClick1(int slotId, int dragType, ClickType clickType, EntityPlayer player) {
-        Slot slot;
-        return slotId >= 0 && slotId < this.inventorySlots.size() && (slot = this.inventorySlots.get(slotId)) instanceof SlotHologramSlot
-                ? ((SlotHologramSlot) slot).slotClick(dragType, clickType, player) : super.slotClick(
+        return super.slotClick(
                 slotId,
                 dragType,
                 clickType,

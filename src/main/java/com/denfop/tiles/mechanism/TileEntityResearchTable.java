@@ -1,6 +1,10 @@
 package com.denfop.tiles.mechanism;
 
-import ic2.core.block.TileEntityBlock;
+import com.denfop.IUItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -9,28 +13,36 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityResearchTable extends TileEntityBlock {
 
     @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
     }
 
-    protected boolean isNormalCube() {
+    public boolean isNormalCube() {
         return false;
     }
 
-    protected boolean doesSideBlockRendering(EnumFacing side) {
+    public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
 
-    protected boolean isSideSolid(EnumFacing side) {
+    public boolean isSideSolid(EnumFacing side) {
         return false;
     }
 
-    protected boolean clientNeedsExtraModelInfo() {
+    public boolean clientNeedsExtraModelInfo() {
         return true;
     }
 
     public boolean shouldRenderInPass(int pass) {
         return true;
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.research_table;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
     }
 
 }

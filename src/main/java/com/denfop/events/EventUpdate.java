@@ -1,9 +1,9 @@
 package com.denfop.events;
 
 import com.denfop.Constants;
+import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.TextFormatting;
@@ -30,6 +30,7 @@ public class EventUpdate {
 
     @SubscribeEvent
     public void tickStart(TickEvent.PlayerTickEvent event) {
+
         if (event.phase != TickEvent.Phase.START) {
             return;
         }
@@ -45,26 +46,26 @@ public class EventUpdate {
                 return;
             }
             EntityPlayer player = event.player;
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(
+            if (IUCore.proxy.isSimulating()) {
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.AQUA + "" + TextFormatting.BOLD + Localization.translate("updatemod4") + " " + TextFormatting.RESET + TextFormatting.BOLD + Localization.translate(
                                 "updatemod") + TextFormatting.RESET + TextFormatting.GREEN + "" + TextFormatting.BOLD + this.thread.getVersion()
                 );
 
-                IC2.platform.messagePlayer(
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod5")
                 );
 
-                IC2.platform.messagePlayer(player, this.thread.getChangelog());
+                IUCore.proxy.messagePlayer(player, this.thread.getChangelog());
 
-                IC2.platform.messagePlayer(
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod2")
                 );
 
-                IC2.platform.messagePlayer(player, this.thread.getDownload());
+                IUCore.proxy.messagePlayer(player, this.thread.getDownload());
             }
 
 
@@ -72,16 +73,16 @@ public class EventUpdate {
             EntityPlayer player = event.player;
             this.playerNotified = true;
             MinecraftForge.EVENT_BUS.unregister(this);
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(
+            if (IUCore.proxy.isSimulating()) {
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.DARK_PURPLE + Localization.translate("updatemod4") + TextFormatting.RED + Localization.translate(
                                 "updatemod3")
                 );
             }
             if (!StringUtils.isNullOrEmpty(this.thread.getNote()[0])) {
-                if (IC2.platform.isSimulating()) {
-                    IC2.platform.messagePlayer(player, TextFormatting.RED + this.thread.getNote()[0]);
+                if (IUCore.proxy.isSimulating()) {
+                    IUCore.proxy.messagePlayer(player, TextFormatting.RED + this.thread.getNote()[0]);
                 }
             }
         }
@@ -100,7 +101,7 @@ public class EventUpdate {
         public void run() {
             ModUtils.info("[Update Checker] Thread Started");
             try {
-                URL versionURL = new URL("https://raw.githubusercontent.com/ZelGimi/industrialupgrade/1.12.2-dev/version.txt");
+                URL versionURL = new URL("https://raw.githubusercontent.com/ZelGimi/industrialupgrade/main/version.txt");
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(versionURL.openStream()));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {

@@ -19,14 +19,14 @@ public class Storage extends AbstractManagedEnvironment implements ManagedPeriph
     }
 
     public String[] methods() {
-        return new String[]{"getEUCapacity", "getTier", "getRedstoneMode", "shouldEmitRedstone", "shouldEmitEnergy", "getEUStored", "getOutput"};
+        return new String[]{"getEUCapacity", "getTierItem", "getRedstoneMode", "shouldEmitRedstone", "shouldEmitEnergy", "getEUStored", "getOutput"};
     }
 
     public Object[] invoke(String method, Context context, Arguments args) {
         switch (method) {
             case "getEUCapacity":
                 return new Object[]{storage.getEUCapacity()};
-            case "getTier":
+            case "getTierItem":
                 return new Object[]{storage.getTier()};
             case "getRedstoneMode":
                 return new Object[]{storage.getRedstoneMode()};

@@ -1,11 +1,11 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+import com.denfop.blocks.ISubEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum UniversalType implements IIdProvider {
+public enum UniversalType implements ISubEnum, ICableItem {
     glass(0.25F, 0.06D, 32768),
     glass1(0.25F, 0.07D, 131072),
     glass2(0.25F, 0.08D, 524288),
@@ -54,5 +54,15 @@ public enum UniversalType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_cable";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "universal_cable";
     }
 }

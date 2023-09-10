@@ -1,17 +1,16 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerBlastFurnace;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -88,10 +87,10 @@ public class GuiBlastFurnace extends GuiIU<ContainerBlastFurnace> {
         int x = i - xMin;
         int y = j - yMin;
         if (x >= 136 && x <= 146 && y >= 69 && y <= 79) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
         if (x >= 154 && x <= 164 && y >= 69 && y <= 79) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+            new PacketUpdateServerTile(this.container.base, 1);
         }
 
     }
@@ -120,7 +119,7 @@ public class GuiBlastFurnace extends GuiIU<ContainerBlastFurnace> {
         }
         TankGauge.createNormal(this, 27, 5, container.base.tank).drawBackground(xoffset, yoffset);
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
         this.mc.getTextureManager().bindTexture(getTexture());

@@ -3,10 +3,8 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -15,28 +13,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemIngots extends ItemMulti<ItemIngots.ItemIngotsTypes> implements IModelRegister {
+public class ItemIngots extends ItemSubTypes<ItemIngots.ItemIngotsTypes> implements IModelRegister {
 
     protected static final String NAME = "itemingots";
 
     public ItemIngots() {
-        super(null, ItemIngotsTypes.class);
+        super(ItemIngotsTypes.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item stack, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -44,7 +38,7 @@ public class ItemIngots extends ItemMulti<ItemIngots.ItemIngotsTypes> implements
         );
     }
 
-    public enum ItemIngotsTypes implements IIdProvider {
+    public enum ItemIngotsTypes implements ISubEnum {
         mikhail_ingot(0),
         aluminium_ingot(1),
         vanady_ingot(2),
@@ -64,7 +58,12 @@ public class ItemIngots extends ItemMulti<ItemIngots.ItemIngotsTypes> implements
         manganese_ingot(16),
         iridium_ingot(17),
         germanium_ingot(18),
-        ;
+        alloy_ingot(19),
+        bronze_ingot(20),
+        copper_ingot(21),
+        lead_ingot(22),
+        steel_ingot(23),
+        tin_ingot(24);
 
         private final String name;
         private final int ID;

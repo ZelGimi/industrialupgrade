@@ -1,33 +1,29 @@
 package com.denfop.items.energy.instruments;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.Recipes;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.upgrade.IUpgradeWithBlackList;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemBlackListLoad;
+import com.denfop.audio.EnumSound;
 import com.denfop.items.EnumInfoUpgradeModules;
-import com.denfop.items.IHandHeldInventory;
-import com.denfop.items.energy.HandHeldUpgradeItem;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.items.energy.ItemStackUpgradeItem;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.register.Register;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.RetraceDiggingUtils;
-import ic2.api.info.Info;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.init.MainConfig;
-import ic2.core.util.ConfigUtil;
-import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -74,7 +70,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IHandHeldInventory, IUpgradeWithBlackList,
+public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IItemStackInventory, IUpgradeWithBlackList,
         IModelRegister {
 
     private final String name;
@@ -94,10 +90,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
     private final List<EnumOperations> operations;
     private final List<Item> item_tools;
     private final String name_type;
-    private final float fuel_balance = Math.round(10.0F * ConfigUtil.getFloat(
-            MainConfig.get(),
-            "balance/energy/generator/generator"
-    ));
+    private final float fuel_balance = 10.0F;
     Set<String> toolType;
 
     public ItemEnergyInstruments(EnumTypeInstruments type, EnumVarietyInstruments variety, String name) {
@@ -120,10 +113,9 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         this.toolType = type.getToolType();
         this.operations = type.getListOperations();
         this.item_tools = type.getListItems();
-        setMaxDamage(27);
         setCreativeTab(IUCore.EnergyTab);
         this.setUnlocalizedName(name);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         UpgradeSystem.system.addRecipe(this, type.getEnumInfoUpgradeModules());
 
@@ -222,7 +214,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                                     }
                                 }
                                 if (generator) {
-                                    final int fuel = Info.itemInfo.getFuelValue(stack1, false);
+                                    final int fuel = ModUtils.getFuelValue(stack1, false);
                                     final boolean rec = fuel > 0;
                                     if (rec) {
                                         int amount = stack1.getCount();
@@ -341,13 +333,9 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
             int toolMode = readToolMode(itemStack) + 1;
-            if (!IC2.platform.isRendering()) {
-                IUCore.audioManager.playOnce(
-                        player,
-                        com.denfop.audio.PositionSpec.Hand,
-                        "Tools/toolChange.ogg",
-                        true,
-                        IC2.audioManager.getDefaultVolume()
+            if (!IUCore.proxy.isRendering()) {
+                worldIn.playSound(null, player.posX, player.posY, player.posZ, EnumSound.toolchange.getSoundEvent(),
+                        SoundCategory.MASTER, 1F, 1
                 );
             }
             if (toolMode >= this.operations.size()) {
@@ -355,8 +343,8 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             }
             saveToolMode(itemStack, toolMode);
             EnumOperations operation = this.operations.get(toolMode);
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(
+            if (IUCore.proxy.isSimulating()) {
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
                                 + operation.getTextFormatting() + operation.getName_mode()
@@ -434,10 +422,17 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
         if (entity instanceof EntityPlayer) {
             if (IUCore.keyboard.isBlackListModeViewKeyDown((EntityPlayer) entity)) {
-                if (IC2.platform.isSimulating() && !itemStack.isEmpty() && ((EntityPlayer) entity)
+                if (IUCore.proxy.isSimulating() && !itemStack.isEmpty() && ((EntityPlayer) entity)
                         .getHeldItem(EnumHand.MAIN_HAND)
                         .isItemEqual(itemStack)) {
-                    IUCore.proxy.launchGui((EntityPlayer) entity, this.getInventory((EntityPlayer) entity, itemStack));
+                    ((EntityPlayer) entity).openGui(
+                            IUCore.instance,
+                            1,
+                            world,
+                            (int) entity.posX,
+                            (int) entity.posY,
+                            (int) entity.posZ
+                    );
 
                 }
             }
@@ -453,7 +448,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
             nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(stack);
-            ItemStack itemstack = new ItemStack(this, 1, 27);
+            ItemStack itemstack = new ItemStack(this, 1);
             nbt = ModUtils.nbt(itemstack);
             nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(itemstack);
@@ -489,8 +484,26 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         return false;
     }
 
-    public double getMaxCharge(ItemStack itemStack) {
+    public double getMaxEnergy(ItemStack itemStack) {
         return this.maxCharge;
+    }
+
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        );
     }
 
     @SideOnly(Side.CLIENT)
@@ -530,7 +543,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         }
         float energy = energy(par1ItemStack, upgradeItemInforms);
 
-        par3List.add(Localization.translate("iu.instruments.info2") + (int) energy + " EU");
+        par3List.add(Localization.translate("iu.instruments.info2") + (int) energy + " EF");
 
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             par3List.add(Localization.translate("press.lshift"));
@@ -554,11 +567,11 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
     }
 
-    public int getTier(ItemStack itemStack) {
-        return this.tier;
+    public short getTierItem(ItemStack itemStack) {
+        return (short) this.tier;
     }
 
-    public double getTransferLimit(ItemStack itemStack) {
+    public double getTransferEnergy(ItemStack itemStack) {
         return this.transferLimit;
     }
 
@@ -1477,7 +1490,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                                         }
                                     }
                                     if (generator) {
-                                        final int fuel = Info.itemInfo.getFuelValue(stack1, false);
+                                        final int fuel = ModUtils.getFuelValue(stack1, false);
                                         final boolean rec = fuel > 0;
                                         if (rec) {
                                             int amount = stack1.getCount();
@@ -1516,7 +1529,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                     } else {
 
                         for (final ItemStack stack1 : drops1) {
-                            StackUtil.dropAsEntity(world, pos, stack1);
+                            ModUtils.dropAsEntity(world, pos, stack1);
                         }
                         final NBTTagCompound nbt = ModUtils.nbt(stack);
                         List<EntityItem> items = entity.getEntityWorld().getEntitiesWithinAABB(
@@ -1564,7 +1577,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                                         }
                                     }
                                     if (generator) {
-                                        final int fuel = Info.itemInfo.getFuelValue(stack1, false);
+                                        final int fuel = ModUtils.getFuelValue(stack1, false);
                                         final boolean rec = fuel > 0;
                                         if (rec) {
                                             int amount = stack1.getCount();
@@ -1637,9 +1650,10 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
     }
 
     @Override
-    public IHasGui getInventory(final EntityPlayer player, final ItemStack stack) {
-        return new HandHeldUpgradeItem(player, stack);
+    public IAdvInventory getInventory(final EntityPlayer player, final ItemStack stack) {
+        return new ItemStackUpgradeItem(player, stack);
     }
+
 
     public boolean check_list(Block block, int metaFromState, final List<String> blackList) {
 

@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerDigger extends ContainerFullInv<TileEntityAutoDigger> {
 
     public ContainerDigger(TileEntityAutoDigger tileEntity1, EntityPlayer entityPlayer) {
@@ -26,11 +24,5 @@ public class ContainerDigger extends ContainerFullInv<TileEntityAutoDigger> {
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("inputslot");
-        return ret;
-    }
 
 }

@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -8,8 +9,7 @@ import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerTripleElectricMachine;
-import com.denfop.tiles.mechanism.triple.heat.TileEntityAdvAlloySmelter;
-import ic2.core.init.Localization;
+import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +20,7 @@ public class GuiAdvAlloySmelter extends GuiIU<ContainerTripleElectricMachine> {
     public final ContainerTripleElectricMachine container;
 
     public GuiAdvAlloySmelter(ContainerTripleElectricMachine container1) {
-        super(container1, ((TileEntityAdvAlloySmelter) container1.base).getStyle());
+        super(container1, ((TileAdvAlloySmelter) container1.base).getStyle());
         this.container = container1;
         this.invSlotList.add(container.base.outputSlot);
         componentList.clear();
@@ -34,7 +34,7 @@ public class GuiAdvAlloySmelter extends GuiIU<ContainerTripleElectricMachine> {
         componentList.add(inventory);
         componentList.add(slots);
         this.addComponent(new GuiComponent(this, 105, 59, EnumTypeComponent.HEAT,
-                new Component<>(((TileEntityAdvAlloySmelter) this.container.base).heat)
+                new Component<>(((TileAdvAlloySmelter) this.container.base).heat)
         ));
         this.addComponent(new GuiComponent(this, 58, 35, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,

@@ -2,6 +2,7 @@ package com.denfop.recipes;
 
 import com.denfop.IUItem;
 import com.denfop.register.RegisterOreDictionary;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -26,6 +27,22 @@ public class FurnaceRecipes {
         GameRegistry.addSmelting(new ItemStack(IUItem.ore, 1, 14), new ItemStack(IUItem.iuingot, 1, 17), 5);
         GameRegistry.addSmelting(new ItemStack(IUItem.ore, 1, 15), new ItemStack(IUItem.iuingot, 1, 18), 5);
 
+        GameRegistry.addSmelting(IUItem.leadOre, IUItem.leadIngot, 5);
+        GameRegistry.addSmelting(IUItem.copperOre, IUItem.copperIngot, 5);
+        GameRegistry.addSmelting(IUItem.tinOre, IUItem.tinIngot, 5);
+        GameRegistry.addSmelting(IUItem.leadDust, IUItem.leadIngot, 5);
+        GameRegistry.addSmelting(IUItem.copperDust, IUItem.copperIngot, 5);
+        GameRegistry.addSmelting(IUItem.tinDust, IUItem.tinIngot, 5);
+        GameRegistry.addSmelting(IUItem.ironDust, new ItemStack(Items.IRON_INGOT), 5);
+        GameRegistry.addSmelting(IUItem.goldDust, new ItemStack(Items.GOLD_INGOT), 5);
+        GameRegistry.addSmelting(IUItem.bronzeDust, IUItem.bronzeIngot, 5);
+        GameRegistry.addSmelting(IUItem.crushedLeadOre, IUItem.leadIngot, 5);
+        GameRegistry.addSmelting(IUItem.crushedCopperOre, IUItem.copperIngot, 5);
+        GameRegistry.addSmelting(IUItem.crushedTinOre, IUItem.tinIngot, 5);
+        GameRegistry.addSmelting(IUItem.crushedIronOre, new ItemStack(Items.IRON_INGOT), 5);
+        GameRegistry.addSmelting(IUItem.crushedGoldOre, new ItemStack(Items.GOLD_INGOT), 5);
+        GameRegistry.addSmelting(IUItem.rawcrystalmemory, new ItemStack(IUItem.crystalMemory), 5);
+        GameRegistry.addSmelting(IUItem.latex, IUItem.rubber, 5);
         for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
             if (i != 4 && i != 5 && i != 13) {
                 GameRegistry.addSmelting(new ItemStack(IUItem.crushed, 1, i), new ItemStack(IUItem.iuingot, 1, i), 5);

@@ -1,6 +1,6 @@
 package com.denfop.integration.jei.bf;
 
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -24,7 +24,7 @@ public class BlastFWrapper implements IRecipeWrapper {
 
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInput(VanillaTypes.ITEM, new ItemStack(Items.IRON_INGOT));
-        ingredients.setOutput(VanillaTypes.ITEM, Ic2Items.advIronIngot);
+        ingredients.setOutput(VanillaTypes.ITEM, IUItem.advIronIngot);
 
     }
 

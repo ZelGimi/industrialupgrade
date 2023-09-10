@@ -1,16 +1,18 @@
 package com.denfop.tiles.mechanism.generator.energy.coal;
 
+import com.denfop.Localization;
 import com.denfop.api.gui.IType;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerGenerator;
 import com.denfop.gui.GuiGenerator;
-import com.denfop.invslot.InvSlotConsumableFuel;
+import com.denfop.invslot.InvSlot;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.generator.energy.TileEntityBaseGenerator;
-import ic2.core.block.machine.tileentity.TileEntityIronFurnace;
-import ic2.core.init.Localization;
-import ic2.core.init.MainConfig;
-import ic2.core.util.ConfigUtil;
+import com.denfop.utils.DamageHandler;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,11 +22,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements IType {
 
-    public final InvSlotConsumableFuel fuelSlot = new InvSlotConsumableFuel(this, "fuel", 1, false);
+    public final InvSlot fuelSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1);
 
     private final double coef;
 
@@ -33,7 +36,7 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
 
     public TileEntityAdvGenerator(double coef, int maxstorage, int tier) {
         super(
-                coef * (double) Math.round(10.0F * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/generator")),
+                coef * (double) Math.round(10.0F * 1),
                 tier,
                 maxstorage
         );
@@ -41,12 +44,34 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
     }
 
     @SideOnly(Side.CLIENT)
-    protected void updateEntityClient() {
+    public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
-            TileEntityIronFurnace.showFlames(this.getWorld(), this.pos, this.getFacing());
+            ModUtils.showFlames(this.getWorld(), this.pos, this.getFacing());
         }
 
+    }
+
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        try {
+            fuel = (int) DecoderHandler.decode(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        final CustomPacketBuffer packet = super.writeContainerPacket();
+        try {
+            EncoderHandler.encode(packet, fuel);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
     }
 
     @SideOnly(Side.CLIENT)
@@ -60,9 +85,9 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
         if (this.getComp(AdvEnergy.class) != null) {
             AdvEnergy energy = this.getComp(AdvEnergy.class);
             if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
 
@@ -80,8 +105,14 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
         }
     }
 
+    public int consumeFuel() {
+        ItemStack fuel = this.consume(1);
+        return fuel == null ? 0 : ModUtils.getFuelValue(fuel, false);
+    }
+
     public boolean gainFuel() {
-        int fuelValue = this.fuelSlot.consumeFuel() / 4;
+
+        int fuelValue = this.consumeFuel() / 4;
         if (fuelValue == 0) {
             return false;
         } else {
@@ -89,6 +120,38 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
             this.itemFuelTime = fuelValue;
             return true;
         }
+    }
+
+
+    public ItemStack consume(int amount) {
+        ItemStack ret = ItemStack.EMPTY;
+
+
+        ItemStack stack = this.fuelSlot.get(0);
+        if (!stack.isEmpty() && (ModUtils.getSize(stack) == 1 || !stack.getItem().hasContainerItem(stack))) {
+            int currentAmount = Math.min(amount, ModUtils.getSize(stack));
+            amount -= currentAmount;
+            if (ModUtils.getSize(stack) == currentAmount) {
+                if (stack.getItem().hasContainerItem(stack)) {
+                    ItemStack container = stack.getItem().getContainerItem(stack);
+                    if (container.isEmpty() && container.isItemStackDamageable() && DamageHandler.getDamage(container) > DamageHandler.getMaxDamage(
+                            container)) {
+                        container = ItemStack.EMPTY;
+                    }
+
+                    this.fuelSlot.put(0, container);
+                } else {
+                    this.fuelSlot.put(0, ItemStack.EMPTY);
+                }
+            } else {
+                this.fuelSlot.put(0, ModUtils.decSize(stack, currentAmount));
+            }
+
+            ret = ModUtils.setSize(stack, currentAmount);
+        }
+
+
+        return ret;
     }
 
     public int gaugeStorageScaled(int i) {

@@ -2,19 +2,15 @@ package com.denfop.api.recipe;
 
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipesFluidCore implements IFluidRecipes {
 
     private final List<IHasRecipe> recipes = new ArrayList<>();
+    private final List<String> registeredRecipes = new ArrayList<>();
     public Map<String, IBaseRecipe> map_recipe_managers = new HashMap<>();
     public Map<String, List<IRecipeInputFluidStack>> map_recipe_managers_itemStack = new HashMap<>();
     public Map<String, List<BaseFluidMachineRecipe>> map_recipes_fluid = new HashMap<>();
-
 
     public void init() {
         this.addRecipeManager("obsidian", 2, true);
@@ -36,7 +32,12 @@ public class RecipesFluidCore implements IFluidRecipes {
     }
 
     public void initializationRecipes() {
-        this.recipes.forEach(IHasRecipe::init);
+        this.recipes.forEach(iHasRecipe -> {
+            if (!registeredRecipes.contains(iHasRecipe.getName())) {
+                registeredRecipes.add(iHasRecipe.getName());
+                iHasRecipe.init();
+            }
+        });
     }
 
     public void addRecipe(String name, BaseFluidMachineRecipe recipe) {

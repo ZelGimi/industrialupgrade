@@ -1,11 +1,11 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+import com.denfop.blocks.ISubEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum QEType implements IIdProvider {
+public enum QEType implements ISubEnum, ICableItem {
     qcable(0, 0, 0.25F, 0.02D, Integer.MAX_VALUE);
 
     public static final QEType[] values = values();
@@ -44,5 +44,15 @@ public enum QEType implements IIdProvider {
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_qcable";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "qcable";
     }
 }

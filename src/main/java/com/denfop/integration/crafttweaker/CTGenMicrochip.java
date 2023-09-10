@@ -155,11 +155,11 @@ public class CTGenMicrochip {
         public void apply() {
             Recipes.recipes.addAdderRecipe("microchip", new BaseMachineRecipe(
                     new Input(
-                            new IC2RecipeInput(this.container),
-                            new IC2RecipeInput(this.fill),
-                            new IC2RecipeInput(this.fill1),
-                            new IC2RecipeInput(this.fill2),
-                            new IC2RecipeInput(this.fill3)
+                            new IC2InputItemStack(this.container),
+                            new IC2InputItemStack(this.fill),
+                            new IC2InputItemStack(this.fill1),
+                            new IC2InputItemStack(this.fill2),
+                            new IC2InputItemStack(this.fill3)
                     ),
                     new RecipeOutput(this.nbt, getItemStack(this.output))
             ));

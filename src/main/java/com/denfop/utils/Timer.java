@@ -1,10 +1,9 @@
 package com.denfop.utils;
 
-import ic2.core.init.Localization;
-import ic2.core.network.GrowingBuffer;
+import com.denfop.Localization;
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.DataInput;
 import java.io.IOException;
 
 public class Timer {
@@ -21,14 +20,14 @@ public class Timer {
     }
 
 
-    public void readBuffer(DataInput is) throws IOException {
+    public void readBuffer(CustomPacketBuffer is) throws IOException {
         this.hour = is.readInt();
         this.minute = is.readInt();
         this.seconds = is.readInt();
         this.canWork = is.readBoolean();
     }
 
-    public void writeBuffer(GrowingBuffer buffer) {
+    public void writeBuffer(CustomPacketBuffer buffer) {
         buffer.writeInt(this.hour);
         buffer.writeInt(this.minute);
         buffer.writeInt(this.seconds);
@@ -47,6 +46,10 @@ public class Timer {
     public String getDisplay() {
         return this.hour + Localization.translate("iu.hour") + this.minute + Localization.translate("iu.minutes") + this.seconds + Localization.translate(
                 "iu.seconds");
+    }
+
+    public int getTime() {
+        return this.seconds + this.minute * 60 + this.hour * 3600;
     }
 
     public void work() {

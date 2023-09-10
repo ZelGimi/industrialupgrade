@@ -3,10 +3,9 @@ package com.denfop.integration.exnihilo.items;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import com.denfop.items.resource.ItemMulti;
-import ic2.core.init.BlocksItems;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -19,21 +18,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implements IModelRegister {
+public class ItemGravelCrushed extends ItemSubTypes<ItemGravelCrushed.Types> implements IModelRegister {
 
     protected static final String NAME = "gravelcrushed";
 
     public ItemGravelCrushed() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     public String getUnlocalizedName(ItemStack stack) {
         int meta = stack.getItemDamage();
@@ -46,7 +41,7 @@ public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implem
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
-            for (final ItemGravelCrushed.Types type : this.typeProperty.getShownValues()) {
+            for (final ItemGravelCrushed.Types type : this.typeProperty.getAllowedValues()) {
                 if (type != Types.nickel && type != Types.silver && type != Types.platium) {
                     subItems.add(this.getItemStackUnchecked(type));
                 }
@@ -56,7 +51,7 @@ public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implem
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -66,7 +61,7 @@ public class ItemGravelCrushed extends ItemMulti<ItemGravelCrushed.Types> implem
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         mikhail(0),
         aluminium(1),
         vanady(2),

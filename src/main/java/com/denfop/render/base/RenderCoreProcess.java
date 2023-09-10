@@ -3,14 +3,10 @@ package com.denfop.render.base;
 
 import com.denfop.Constants;
 import com.denfop.tiles.base.IIsMolecular;
-import com.denfop.tiles.mechanism.worlcollector.TileEntityCrystallize;
-import ic2.core.block.TileEntityBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -29,11 +25,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpecialRenderer<T> {
 
@@ -228,7 +221,7 @@ public class RenderCoreProcess<T extends TileEntityBlock> extends TileEntitySpec
             int i = this.getModelCount(itemstack);
             float f2 = p_177077_9_.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
 
-            if (!(itemIn instanceof TileEntityCrystallize)) {
+            if (!(itemIn instanceof TileCrystallize)) {
                 GlStateManager.translate((float) p_177077_2_ + 0.5, (float) p_177077_4_ + 0.25F * f2 + 0.2,
                         (float) p_177077_6_ + 0.5
                 );

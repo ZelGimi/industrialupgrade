@@ -1,12 +1,12 @@
 package com.denfop.api.recipe;
 
 
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.api.upgrade.IUpgradeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -28,7 +28,7 @@ public class InvSlotMultiRecipes extends InvSlot {
             final TileEntityInventory base, IBaseRecipe baseRecipe, IMultiUpdateTick tile, int size,
             ProcessMultiComponent processMultiComponent
     ) {
-        super(base, "input", Access.I, size);
+        super(base, TypeItemSlot.INPUT, size);
         this.recipe = baseRecipe;
         this.recipe_list = Recipes.recipes.getRecipeList(this.recipe.getName());
         this.tile = tile;
@@ -37,7 +37,7 @@ public class InvSlotMultiRecipes extends InvSlot {
 
         recycler_output = new MachineRecipe(new BaseMachineRecipe(null, new RecipeOutput(
                 null,
-                Ic2Items.scrap
+                IUItem.scrap
         )), Collections.singletonList(1));
         this.processMultiComponent = processMultiComponent;
     }
@@ -70,7 +70,7 @@ public class InvSlotMultiRecipes extends InvSlot {
         if (this.recipe.getName().equals("recycler")) {
             this.recycler_output = new MachineRecipe(new BaseMachineRecipe(null, new RecipeOutput(
                     null,
-                    Ic2Items.scrap
+                    IUItem.scrap
             )), Collections.singletonList(1));
         }
     }
@@ -94,7 +94,7 @@ public class InvSlotMultiRecipes extends InvSlot {
             }
         }
         List<ItemStack> list = new ArrayList<>();
-        this.forEach(list::add);
+        this.contents.forEach(list::add);
         if (this.tank == null) {
             return Recipes.recipes.getRecipeConsume(this.recipe, recipe, this.recipe.consume(), list);
         } else {
@@ -105,6 +105,9 @@ public class InvSlotMultiRecipes extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack itemStack, final int index) {
+        if (recipe.getName().equals("recycler") && !itemStack.isEmpty()) {
+            return true;
+        }
         return !itemStack.isEmpty() && !(itemStack.getItem() instanceof IUpgradeItem) && (recipe
                 .getName()
                 .equals("painter") || recipe

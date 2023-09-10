@@ -1,18 +1,17 @@
 package com.denfop.items.energy;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
-import com.denfop.items.BaseElectricItem;
+import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.ElectricItem;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -39,14 +38,13 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemMagnet extends BaseElectricItem implements IModelRegister, IUpgradeItem {
+public class ItemMagnet extends BaseEnergyItem implements IModelRegister, IUpgradeItem {
 
 
     private final int radius;
 
     public ItemMagnet(String name, double maxCharge, double transferLimit, int tier, int radius) {
         super(name, maxCharge, transferLimit, tier);
-        this.setMaxDamage(27);
         setMaxStackSize(1);
 
         this.radius = radius;
@@ -197,7 +195,7 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister, IUpg
 
     @Nonnull
     public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
-        if (IC2.platform.isSimulating()) {
+        if (IUCore.proxy.isSimulating()) {
 
             int mode = ModUtils.NBTGetInteger(player.getHeldItem(hand), "mode");
             mode++;
@@ -206,7 +204,7 @@ public class ItemMagnet extends BaseElectricItem implements IModelRegister, IUpg
             }
 
             ModUtils.NBTSetInteger(player.getHeldItem(hand), "mode", mode);
-            IC2.platform.messagePlayer(
+            IUCore.proxy.messagePlayer(
                     player,
                     TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
                             + Localization.translate("message.magnet.mode." + mode)

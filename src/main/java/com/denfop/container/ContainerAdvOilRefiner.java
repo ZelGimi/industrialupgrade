@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
+import com.denfop.tiles.mechanism.TileAdvOilRefiner;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerAdvOilRefiner extends ContainerFullInv<TileAdvOilRefiner> {
 
-public class ContainerAdvOilRefiner extends ContainerFullInv<TileEntityAdvOilRefiner> {
-
-    public ContainerAdvOilRefiner(EntityPlayer entityPlayer, TileEntityAdvOilRefiner tileEntity1) {
+    public ContainerAdvOilRefiner(EntityPlayer entityPlayer, TileAdvOilRefiner tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot[0], 0, 14, 63));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 76, 63));
@@ -21,11 +19,5 @@ public class ContainerAdvOilRefiner extends ContainerFullInv<TileEntityAdvOilRef
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-        return ret;
-    }
 
 }

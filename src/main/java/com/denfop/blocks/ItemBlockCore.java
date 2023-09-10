@@ -1,6 +1,6 @@
 package com.denfop.blocks;
 
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;

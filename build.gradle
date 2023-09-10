@@ -95,13 +95,6 @@ repositories {
         url "http://maven.cil.li"
     }
     maven {
-        name 'progwml6'
-        url 'https://dvs1.progwml6.com/files/maven'
-        content {
-            includeGroup 'mezz.jei'
-        }
-    }
-    maven {
         url "https://www.cursemaven.com"
        content {
             includeGroup "curse.maven"
@@ -118,21 +111,14 @@ dependencies {
     ])
 	  compileOnly "li.cil.oc:OpenComputers:MC1.12.2-1.7.2.67:api"
     runtimeOnly "curse.maven:thaumcraft-223628:2629023"
-    runtimeOnly "curse.maven:wireless-industry-377164:3864415"
     runtimeOnly "curse.maven:botania-225643:2846950"
 	runtimeOnly "curse.maven:baubles-227083:2518667"
-	compileOnly "mezz.jei:jei_1.12.2:4.15.0.272:api"
-	runtimeOnly "mezz.jei:jei_1.12.2:4.15.0.272"
 	compileOnly "curse.maven:thaumcraft-223628:2629023"
     compileOnly "curse.maven:wireless-industry-377164:3864415"
     compileOnly "curse.maven:botania-225643:2846950"
 	compileOnly "curse.maven:baubles-227083:2518667"
-    runtimeOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
-    compileOnly "net.industrial-craft:industrialcraft-2:2.8.221-ex112:dev"
     compileOnly "curse.maven:projecte-226410:2702991"
     runtimeOnly "curse.maven:projecte-226410:2702991"
-    compileOnly "curse.maven:more-electric-tools-366298:3491973"
-    runtimeOnly "curse.maven:more-electric-tools-366298:3491973"
     compileOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
     runtimeOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
     compileOnly "curse.maven:forestry-59751:2684780"
@@ -267,3 +253,17 @@ static def getGitHash() {
 
 // Hack to include resources for Forge 1.12.2 using FG3
 sourceSets { main { output.resourcesDir = output.classesDirs[0] } }
+task devJar(type: Jar) {
+    classifier = 'dev'
+    from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives devJar
+    archives sourcesJar
+}

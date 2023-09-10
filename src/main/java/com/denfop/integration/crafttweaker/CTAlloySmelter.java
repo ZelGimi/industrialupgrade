@@ -5,7 +5,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.invslot.RecipeInputOreDict;
+import com.denfop.recipe.InputOreDict;
 import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
@@ -76,24 +76,24 @@ public class CTAlloySmelter {
             String ore1 = "";
             final NBTTagCompound nbt = ModUtils.nbt();
             nbt.setShort("temperature", this.temperature);
-            ItemStack stack = new IC2RecipeInput(this.container).getInputs().get(0);
-            int amount = new IC2RecipeInput(this.container).getAmount();
+            ItemStack stack = new IC2InputItemStack(this.container).getInputs().get(0);
+            int amount = new IC2InputItemStack(this.container).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            stack = new IC2RecipeInput(this.fill).getInputs().get(0);
-            int amount1 = new IC2RecipeInput(this.fill).getAmount();
+            stack = new IC2InputItemStack(this.fill).getInputs().get(0);
+            int amount1 = new IC2InputItemStack(this.fill).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore1 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
             Recipes.recipes.addAdderRecipe("alloysmelter", new BaseMachineRecipe(
                     new Input(
                             OreDictionary.getOres(ore).isEmpty()
-                                    ? new IC2RecipeInput(this.container)
-                                    : new RecipeInputOreDict(ore, amount),
+                                    ? new IC2InputItemStack(this.container)
+                                    : new InputOreDict(ore, amount),
                             OreDictionary.getOres(ore1).isEmpty()
-                                    ? new IC2RecipeInput(this.fill)
-                                    : new RecipeInputOreDict(ore1, amount1)
+                                    ? new IC2InputItemStack(this.fill)
+                                    : new InputOreDict(ore1, amount1)
                     ),
                     new RecipeOutput(nbt, getItemStack(this.output))
             ));

@@ -6,7 +6,6 @@ import net.minecraft.world.World;
 
 public interface ITransportNet {
 
-    ITransportTile getTile(World var1, BlockPos var2);
 
     ITransportTile getSubTile(World var1, BlockPos var2);
 

@@ -1,15 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.container.ContainerWorldCollector;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiWolrdCollector extends GuiIC2<ContainerWorldCollector> {
+public class GuiWolrdCollector extends GuiCore<ContainerWorldCollector> {
 
     public final ContainerWorldCollector container;
 
@@ -50,7 +50,7 @@ public class GuiWolrdCollector extends GuiIC2<ContainerWorldCollector> {
         if (progress > 0) {
             drawTexturedModalRect(xoffset + 79, yoffset + 34, 176, 14, progress + 1, 16);
         }
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }
 

@@ -1,16 +1,21 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
+import com.denfop.api.gui.Area;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerCanner;
-import ic2.core.init.Localization;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
 public class GuiCanner extends GuiIU<ContainerCanner> {
@@ -21,24 +26,35 @@ public class GuiCanner extends GuiIU<ContainerCanner> {
         super(container);
         this.ySize = 184;
         this.componentList.clear();
-        this.addElement((new CustomButton(this, 77, 64, 22, 13, this.createEventSender(3))).withTooltip("ic2.Canner.gui" +
-                ".switchTanks"));
-
+        this.addElement(new Area(
+                this,
+                77, 64, 22, 13
+        ).withTooltip(Localization.translate("Canner.gui.switchTanks")));
         this.addElement(new AdvArea(
                 this,
                 61,
                 79,
                 114,
                 96
-        ).withTooltip(Localization.translate("ic2.Canner.gui.switch.EnrichLiquid")));
+        ).withTooltip(Localization.translate("Canner.gui.switch.EnrichLiquid")));
         this.addElement(TankGauge.createNormal(this, 39, 42, container.base.fluidTank));
         this.addElement(TankGauge.createNormal(this, 117, 42, container.base.outputTank));
-        this.addComponent(new GuiComponent(this, 12, 62, EnumTypeComponent.ENERGY_CLASSIC,
+        this.addComponent(new GuiComponent(this, 12, 62, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
         ));
 
     }
 
+    @Override
+    protected void mouseClicked(int i, int j, final int k) throws IOException {
+        super.mouseClicked(i, j, k);
+        i -= this.guiLeft;
+        j -= this.guiTop;
+        if (i >= 77 && i <= 77 + 22 && j >= 64 && j <= 64 + 13) {
+            this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            new PacketUpdateServerTile(this.container.base, 3);
+        }
+    }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);

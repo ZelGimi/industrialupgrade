@@ -1,7 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -9,10 +9,9 @@ import com.denfop.api.upgrade.UpgradeModificator;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAntiUpgrade;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -64,15 +63,15 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
         int y = j - yMin;
         for (int m = 0; m < 4; m++) {
             if (x >= 70 && x <= 87 && y >= 10 + 18 * m && y < 27 + 18 * m) {
-                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, m + 1);
+                new PacketUpdateServerTile(this.container.base, m + 1);
             }
         }
         final List<UpgradeModificator> list1 = UpgradeSystem.system.getListModifications(this.container.base.input.get());
         if (x >= 149 && x <= 167 && y >= 10 && y < 27 && list1.size() >= 1) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 5);
+            new PacketUpdateServerTile(this.container.base, 5);
         }
         if (x >= 149 && x <= 167 && y >= 28 && y < 45 && list1.size() > 1) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 6);
+            new PacketUpdateServerTile(this.container.base, 6);
         }
     }
 
@@ -87,7 +86,7 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
     protected void actionPerformed(GuiButton guibutton) {
 
         if (guibutton.id == 0) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+            new PacketUpdateServerTile(this.container.base, 0);
         }
 
 
@@ -107,7 +106,7 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         new AdvArea(this, 26, 56, 37, 71)
                 .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);
@@ -129,7 +128,7 @@ public class GuiAntiUpgradeBlock extends GuiIU<ContainerAntiUpgrade> {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         final int progress = Math.min(29 * this.container.base.progress / 100, 29);
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
         int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());

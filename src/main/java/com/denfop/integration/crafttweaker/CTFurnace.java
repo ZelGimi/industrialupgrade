@@ -33,7 +33,7 @@ public class CTFurnace {
                 "furnace",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2RecipeInput(container)
+                                new IC2InputItemStack(container)
                         ),
                         new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                 )

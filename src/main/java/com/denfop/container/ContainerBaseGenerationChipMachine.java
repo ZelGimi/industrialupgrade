@@ -1,20 +1,18 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseGenerationMicrochip;
+import com.denfop.tiles.base.TileBaseGenerationMicrochip;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerBaseGenerationChipMachine
-        extends ContainerFullInv<TileEntityBaseGenerationMicrochip> {
+        extends ContainerFullInv<TileBaseGenerationMicrochip> {
 
-    public ContainerBaseGenerationChipMachine(EntityPlayer entityPlayer, TileEntityBaseGenerationMicrochip tileEntity1) {
+    public ContainerBaseGenerationChipMachine(EntityPlayer entityPlayer, TileBaseGenerationMicrochip tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerBaseGenerationChipMachine(
             EntityPlayer entityPlayer,
-            TileEntityBaseGenerationMicrochip tileEntity1,
+            TileBaseGenerationMicrochip tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
@@ -44,12 +42,5 @@ public class ContainerBaseGenerationChipMachine
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiChargeLevel");
-        ret.add("tier");
-        ret.add("sound");
-        return ret;
-    }
 
 }

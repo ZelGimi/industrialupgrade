@@ -301,62 +301,6 @@ public class WavefrontObject implements IModelCustom {
         this.groupObjects.forEach(groupObject -> groupObject.render(tessellator));
     }
 
-    @SideOnly(Side.CLIENT)
-    public void renderOnly(String... groupNames) {
-
-        for (final GroupObject groupObject : this.groupObjects) {
-
-            for (String groupName : groupNames) {
-                if (groupName.equalsIgnoreCase(groupObject.name)) {
-                    groupObject.render();
-                }
-            }
-        }
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    public String[] getPartNames() {
-        ArrayList<String> l = new ArrayList<>();
-
-        for (final GroupObject groupObject : this.groupObjects) {
-            l.add(groupObject.name);
-        }
-
-        return l.toArray(new String[0]);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void renderPart(String partName) {
-
-        for (final GroupObject groupObject : this.groupObjects) {
-            if (partName.equalsIgnoreCase(groupObject.name)) {
-                groupObject.render();
-            }
-        }
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void renderAllExcept(String... excludedGroupNames) {
-
-        for (final GroupObject groupObject : this.groupObjects) {
-            boolean skipPart = false;
-
-            for (String excludedGroupName : excludedGroupNames) {
-                if (excludedGroupName.equalsIgnoreCase(groupObject.name)) {
-                    skipPart = true;
-                    break;
-                }
-            }
-
-            if (!skipPart) {
-                groupObject.render();
-            }
-        }
-
-    }
-
     private Vertex parseVertex(String line, int lineCount) throws WavefrontObject.ModelFormatException {
         if (isValidVertexLine(line)) {
             line = line.substring(line.indexOf(" ") + 1);

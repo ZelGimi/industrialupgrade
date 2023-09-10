@@ -2,10 +2,10 @@ package com.denfop.integration.de;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -16,11 +16,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockDESolarPanel implements ITeBlock {
+public enum BlockDESolarPanel implements IMultiTileBlock {
 
-    draconium_solar_panel(TileEntityDraconianSolarPanel.class, 0, EnumRarity.RARE),
-    awakened_solar_panel(TileEntityAwakenedSolarPanel.class, 1, EnumRarity.RARE),
-    chaotic_solar_panel(TileEntityChaoticSolarPanel.class, 2, EnumRarity.EPIC),
+    draconium_solar_panel(TileDraconianSolarPanel.class, 0, EnumRarity.RARE),
+    awakened_solar_panel(TileAwakenedSolarPanel.class, 1, EnumRarity.RARE),
+    chaotic_solar_panel(TileChaoticSolarPanel.class, 2, EnumRarity.EPIC),
 
 
     ;
@@ -49,7 +49,7 @@ public enum BlockDESolarPanel implements ITeBlock {
         return values()[ID % values().length];
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -59,9 +59,7 @@ public enum BlockDESolarPanel implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
@@ -102,7 +100,7 @@ public enum BlockDESolarPanel implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -111,26 +109,15 @@ public enum BlockDESolarPanel implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.denfop.api.render.IModelCustom;
 import com.denfop.api.vein.Type;
 import com.denfop.blocks.BlockHeavyOre;
 import com.denfop.render.base.AdvancedModelLoader;
-import com.denfop.tiles.base.TileEntityQuarryVein;
+import com.denfop.tiles.base.TileQuarryVein;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -15,7 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEntityQuarryVein> {
+public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQuarryVein> {
 
     public static final ResourceLocation texture = new ResourceLocation(
             Constants.TEXTURES,
@@ -42,7 +42,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
 
 
     public void render(
-            TileEntityQuarryVein tile,
+            TileQuarryVein tile,
             double x,
             double y,
             double z,
@@ -54,7 +54,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
 
         GL11.glTranslated(x, y, z);
         GL11.glTranslatef(0.5F, 0F, 0.5F);
-
+        GL11.glEnable(3042);
 
         GL11.glRotatef(0F, 0.0F, 0F, 0F);
         switch (tile.level) {
@@ -74,6 +74,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileEnt
 
 
         model.renderAll();
+        GL11.glDisable(3042);
         GL11.glPopMatrix();
         if (tile.vein != null && tile.vein.get()) {
             if (tile.vein.getType() != Type.EMPTY) {

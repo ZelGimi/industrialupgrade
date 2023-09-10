@@ -1,6 +1,5 @@
 package com.denfop.api.research;
 
-import com.denfop.IUCore;
 import com.denfop.api.research.event.EventDownloadData;
 import com.denfop.api.research.event.EventLoadData;
 import com.denfop.api.research.event.EventLoadResearchItem;
@@ -10,6 +9,9 @@ import com.denfop.api.research.main.EnumLeveling;
 import com.denfop.api.research.main.IResearch;
 import com.denfop.api.research.main.IResearchPages;
 import com.denfop.api.research.main.IResearchPart;
+import com.denfop.network.packet.PacketResearchSystem;
+import com.denfop.network.packet.PacketResearchSystemAdd;
+import com.denfop.network.packet.PacketResearchSystemDelete;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -145,8 +147,8 @@ public class BaseResearchSystem implements IResearchSystem {
                 EntityDamageSource damage = (EntityDamageSource) event.getSource();
                 BaseLevelSystem system = ResearchSystem.instance.getLevel((EntityPlayer) damage.getTrueSource());
                 system.addLevel(EnumLeveling.PVP, 1);
-                IUCore.network.get(true).initiateResearchSystemAdd(EnumLeveling.PVP, 1,
-                        damage.getTrueSource().getName()
+                new PacketResearchSystemAdd(EnumLeveling.PVP, 1,
+                        (EntityPlayer) damage.getTrueSource()
                 );
             }
         } else if (event.getSource().damageType.equals("arrow")) {
@@ -158,8 +160,8 @@ public class BaseResearchSystem implements IResearchSystem {
                 EntityDamageSource damage = (EntityDamageSource) event.getSource();
                 BaseLevelSystem system = ResearchSystem.instance.getLevel((EntityPlayer) damage.getTrueSource());
                 system.addLevel(EnumLeveling.PVP, 1);
-                IUCore.network.get(true).initiateResearchSystemAdd(EnumLeveling.PVP, 1,
-                        damage.getTrueSource().getName()
+                new PacketResearchSystemAdd(EnumLeveling.PVP, 1,
+                        (EntityPlayer) damage.getTrueSource()
                 );
             }
         }
@@ -178,7 +180,7 @@ public class BaseResearchSystem implements IResearchSystem {
         this.map_players.remove(player.getName());
         this.map_level.remove(player.getName());
         this.getUUIDs().remove(player.getName());
-        IUCore.network.get(true).initiateResearchSystemDelete(player.getName());
+        new PacketResearchSystemDelete(player);
     }
 
     @Override
@@ -195,7 +197,7 @@ public class BaseResearchSystem implements IResearchSystem {
         this.map_level.put(player.getName(), levelSystem);
         this.map_players.put(player.getName(), list_researches);
         this.getUUIDs().add(player.getName());
-        IUCore.network.get(true).initiateResearchSystem(levelSystem);
+        new PacketResearchSystem(levelSystem);
     }
 
     @Override

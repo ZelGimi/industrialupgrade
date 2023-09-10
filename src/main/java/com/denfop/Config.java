@@ -404,6 +404,10 @@ public final class Config {
     public static int tickupdateenergysystem;
     public static int ticktransferenergy;
     public static boolean enablelosing;
+    public static boolean CopperOre;
+    public static boolean TinOre;
+    public static boolean LeadOre;
+    public static boolean UraniumOre;
 
 
     public static void loadNormalConfig(final File configFile) {
@@ -527,7 +531,7 @@ public final class Config {
             PerMFSUOutput = config.get("Configuration Energy storages", "Perfectoutput", 242144).getDouble(242144);
             tierPerMFSU = config.get("Configuration Energy storages", "Perfecttier", 7).getDouble(7);
             expstorage = config.get("Basic Mechanisms", "exp storage", 500).getInt(500);
-            enerycost = config.get("Quantum Quarry", "energy consume in QE (1 QE = 16 EU)", 25000).getInt(25000);
+            enerycost = config.get("Quantum Quarry", "energy consume in QE (1 QE = 16 EF)", 25000).getInt(25000);
             coefficientrf = config.get("general", "coefficient rf", 4).getInt(4);
             if (coefficientrf < 1) {
                 coefficientrf = 4;
@@ -576,7 +580,7 @@ public final class Config {
             molecular35 = config.get("Crafts Molecular Transformer", "Magnesium ingot", 700000D).getDouble(700000D);
             molecular36 = config.get("Crafts Molecular Transformer", "Caravky ingot", 900000D).getDouble(900000D);
             molecular37 = config
-                    .get("Crafts Molecular Transformer", "Iridium ingot(from Iridium Ore Ic2)", 50000)
+                    .get("Crafts Molecular Transformer", "Iridium ingot(from Iridium Ore IUCore)", 50000)
                     .getDouble(50000);
 
             disableUpdateCheck = config.get("general", "Disable Update Check ", false).getBoolean(false);
@@ -847,6 +851,10 @@ public final class Config {
             ManganeseOre = config.get("spawn ore", "Enable spawn ManganeseOre", true).getBoolean(true);
             IridiumOre = config.get("spawn ore", "Enable spawn IridiumOre", true).getBoolean(true);
             GermaniumOre = config.get("spawn ore", "Enable spawn GermaniumOre", true).getBoolean(true);
+            CopperOre = config.get("spawn ore", "Enable spawn CopperOre", true).getBoolean(true);
+            TinOre = config.get("spawn ore", "Enable spawn TinOre", true).getBoolean(true);
+            LeadOre = config.get("spawn ore", "Enable spawn LeadOre", true).getBoolean(true);
+            UraniumOre = config.get("spawn ore", "Enable spawn UraniumOre", true).getBoolean(true);
 
             MagnetiteOre = config.get("spawn ore", "Enable spawn MagnetiteOre", true).getBoolean(true);
             CalaveriteOre = config.get("spawn ore", "Enable spawn CalaveriteOre", true).getBoolean(true);

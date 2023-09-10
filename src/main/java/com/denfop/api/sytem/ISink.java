@@ -1,12 +1,10 @@
 package com.denfop.api.sytem;
 
-import net.minecraft.util.EnumFacing;
-
 public interface ISink extends IAcceptor {
 
     double getDemanded();
 
-    double inject(EnumFacing var1, double var2, double var4);
+    void receivedEnergy(double var2);
 
     double getPerEnergy();
 

@@ -138,10 +138,10 @@
         "model" : "industrialupgrade:basemachine/simple_water_generator"
       },
       "simple_wind_generator" : {
-        "model" : "ic2:generator/electric/kinetic_generator"
+        "model" : "industrialupgrade:basemachine/kinetic_generator"
       },
       "simple_wind_generator_active" : {
-        "model" : "ic2:generator/electric/kinetic_generator_active"
+        "model" : "industrialupgrade:basemachine/kinetic_generator_active"
       },
       "adv_wind_generator" : {
         "model" : "industrialupgrade:basemachine/adv_kg"
@@ -181,6 +181,9 @@
       },
       "water_modifier" : {
         "model" : "industrialupgrade:basemachine/water_modifier"
+      },
+      "minipanel" : {
+        "model" : "industrialupgrade:basemachine/minipanel"
       },
       "water_rotor_assembler" : {
         "model" : "industrialupgrade:basemachine/water_rotor_assembler"
@@ -369,65 +372,72 @@
         "model" : "industrialupgrade:basemachine/gas_generator_active"
       },
       "generator_iu" : {
-        "model" : "ic2:generator/electric/generator"
+        "model" : "industrialupgrade:basemachine/generator"
       },
       "generator_iu_active" : {
-        "model" : "ic2:generator/electric/generator_active"
+        "model" : "industrialupgrade:basemachine/generator_active"
       },
       "geogenerator_iu" : {
-        "model" : "ic2:generator/electric/geo_generator"
+        "model" : "industrialupgrade:basemachine/geo_generator"
       },
       "geogenerator_iu_active" : {
-        "model" : "ic2:generator/electric/geo_generator_active"
+        "model" : "industrialupgrade:basemachine/geo_generator_active"
       },
       "solar_iu" : {
-        "model" : "ic2:generator/electric/solar_generator"
+        "model" : "industrialupgrade:basemachine/solar_generator"
       },
       "solar_iu_active" : {
-        "model" : "ic2:generator/electric/solar_generator"
+        "model" : "industrialupgrade:basemachine/solar_generator"
       },
       "reactor_iu" : {
-        "model" : "ic2:generator/reactor/nuclear_reactor"
+        "model" : "industrialupgrade:basemachine/nuclear_reactor"
       },
       "reactor_iu_active" : {
-        "model" : "ic2:generator/reactor/nuclear_reactor_active"
+        "model" : "industrialupgrade:basemachine/nuclear_reactor_active"
       },
       "chamber_iu" : {
-        "model" : "ic2:generator/reactor/reactor_chamber"
+        "model" : "industrialupgrade:basemachine/reactor_chamber"
       },
       "pump_iu" : {
-        "model" : "ic2:machine/fluid/pump"
+        "model" : "industrialupgrade:basemachine/pump"
       },
       "pump_iu_active" : {
-        "model" : "ic2:machine/fluid/pump_active"
+        "model" : "industrialupgrade:basemachine/pump_active"
       },
       "pattern_storage_iu" : {
-        "model" : "ic2:machine/uu/pattern_storage"
+        "model" : "industrialupgrade:basemachine/pattern_storage"
       },
       "teleporter_iu" : {
-        "model" : "ic2:machine/misc/teleporter"
+        "model" : "industrialupgrade:basemachine/teleporter"
       },
       "teleporter_iu_active" : {
-        "model" : "ic2:machine/misc/teleporter_active"
+        "model" : "industrialupgrade:basemachine/teleporter_active"
       },
       "canner_iu" : {
-        "model" : "ic2:machine/processing/basic/canner"
+        "model" : "industrialupgrade:basemachine/canner"
       },
       "canner_iu_active" : {
-        "model" : "ic2:machine/processing/basic/canner_active"
+        "model" : "industrialupgrade:basemachine/canner_active"
       },
       "solid_canner_iu" : {
-        "model" : "ic2:machine/processing/basic/solid_canner"
+        "model" : "industrialupgrade:basemachine/solid_canner"
       },
       "solid_canner_iu_active" : {
-        "model" : "ic2:machine/processing/basic/solid_canner_active"
+        "model" : "industrialupgrade:basemachine/solid_canner_active"
       },
       "crop_harvester_iu" : {
-        "model" : "ic2:machine/resource/crop_harvester"
+        "model" : "industrialupgrade:basemachine/crop_harvester"
       },
       "crop_matron" : {
-        "model" : "ic2:machine/resource/cropmatron"
+        "model" : "industrialupgrade:basemachine/cropmatron"
+      },
+	  "crop_matron_active" : {
+        "model" : "industrialupgrade:basemachine/cropmatron_active"
+      },
+	   "autocrafter" : {
+        "model" : "industrialupgrade:basemachine/autocrafter"
       }
+	  
     },
     "facing" : {
       "down" : {

@@ -9,11 +9,9 @@ import com.denfop.api.heat.IHeatTile;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.IC2;
-import ic2.core.network.GrowingBuffer;
-import ic2.core.util.LogCategory;
-import ic2.core.util.Util;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -26,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +32,6 @@ import java.util.Set;
 
 public class HeatComponent extends AbstractComponent {
 
-    public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
     public final World world;
     public final boolean fullEnergy;
     private final double defaultCapacity;
@@ -102,7 +98,7 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public static HeatComponent asBasicSink(TileEntityInventory parent, double capacity, int tier) {
-        return new HeatComponent(parent, capacity, Util.allFacings, Collections.emptySet(), tier);
+        return new HeatComponent(parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
     public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity) {
@@ -110,7 +106,7 @@ public class HeatComponent extends AbstractComponent {
     }
 
     public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
-        return new HeatComponent(parent, capacity, Collections.emptySet(), Util.allFacings, tier);
+        return new HeatComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
     @Override
@@ -140,24 +136,14 @@ public class HeatComponent extends AbstractComponent {
 
     public void onLoaded() {
         assert this.delegate == null;
-        if(this.capacity < this.defaultCapacity)
+        if (this.capacity < this.defaultCapacity) {
             this.capacity = this.defaultCapacity;
+        }
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
-                if (debugLoad) {
-                    IC2.log.debug(LogCategory.Component, "Skipping Energy onLoaded for %s at %s.",
-                            this.parent,
-                            Util.formatPosition(this.parent)
-                    );
-                }
+
             } else {
-                if (debugLoad) {
-                    IC2.log.debug(
-                            LogCategory.Component,
-                            "Energy onLoaded for %s at %s.",
-                            this.parent, Util.formatPosition(this.parent)
-                    );
-                }
+
 
                 this.createDelegate();
                 MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.parent.getWorld()));
@@ -194,7 +180,6 @@ public class HeatComponent extends AbstractComponent {
 
     private void createDelegate() {
         if (this.delegate != null) {
-            throw new IllegalStateException();
         } else {
             assert !this.sinkDirections.isEmpty() || !this.sourceDirections.isEmpty();
 
@@ -234,27 +219,17 @@ public class HeatComponent extends AbstractComponent {
 
     public void onUnloaded() {
         if (this.delegate != null) {
-            if (debugLoad) {
-                IC2.log.debug(LogCategory.Component, "Energy onUnloaded for %s at %s.",
-                        this.parent,
-                        Util.formatPosition(this.parent)
-                );
-            }
+
 
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this.delegate, this.parent.getWorld()));
             this.delegate = null;
-        } else if (debugLoad) {
-            IC2.log.debug(LogCategory.Component, "Skipping Energy onUnloaded for %s at %s.",
-                    this.parent,
-                    Util.formatPosition(this.parent)
-            );
         }
 
         this.loaded = false;
     }
 
     public void onContainerUpdate(EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeBoolean(this.need);
@@ -262,7 +237,7 @@ public class HeatComponent extends AbstractComponent {
         this.setNetworkUpdate(player, buffer);
     }
 
-    public void onNetworkUpdate(DataInput is) throws IOException {
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
         this.need = is.readBoolean();
@@ -385,13 +360,7 @@ public class HeatComponent extends AbstractComponent {
     public void setDirections(Set<EnumFacing> sinkDirections, Set<EnumFacing> sourceDirections) {
 
         if (this.delegate != null) {
-            if (debugLoad) {
-                IC2.log.debug(
-                        LogCategory.Component,
-                        "Energy setDirections unload for %s at %s.",
-                        this.parent, Util.formatPosition(this.parent)
-                );
-            }
+
 
             assert !this.parent.getWorld().isRemote;
 
@@ -407,23 +376,11 @@ public class HeatComponent extends AbstractComponent {
         }
 
         if (this.delegate != null) {
-            if (debugLoad) {
-                IC2.log.debug(
-                        LogCategory.Component,
-                        "Energy setDirections load for %s at %s, sink: %s, source: %s.",
-                        this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections
-                );
-            }
+
 
             assert !this.parent.getWorld().isRemote;
 
             MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.world));
-        } else if (debugLoad) {
-            IC2.log.debug(
-                    LogCategory.Component,
-                    "Skipping Energy setDirections load for %s at %s, sink: %s, source: %s, loaded: %b.",
-                    this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections, this.loaded
-            );
         }
 
 
@@ -473,20 +430,14 @@ public class HeatComponent extends AbstractComponent {
             return HeatComponent.this.capacity;
         }
 
-        public double injectHeat(EnumFacing directionFrom, double amount, double voltage) {
+        public void receivedHeat(double amount) {
             this.setHeatStored(amount);
-            return 0.0D;
 
         }
 
         @Override
         public boolean needTemperature() {
             return HeatComponent.this.need;
-        }
-
-        @Override
-        public boolean setNeedTemperature(final boolean need) {
-            return HeatComponent.this.need = need;
         }
 
         public void setHeatStored(double amount) {

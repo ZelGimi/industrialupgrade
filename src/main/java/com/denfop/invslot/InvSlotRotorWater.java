@@ -1,6 +1,6 @@
 package com.denfop.invslot;
 
-import com.denfop.items.ItemAdvancedWaterRotor;
+import com.denfop.items.ItemWaterRotor;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotorWater extends InvSlot {
@@ -8,14 +8,14 @@ public class InvSlotRotorWater extends InvSlot {
     private final InvSlotWaterUpgrade slotUpgrade;
 
     public InvSlotRotorWater(InvSlotWaterUpgrade slotUpgrade) {
-        super(slotUpgrade.base, "rotor_slot", InvSlot.Access.I, 1, InvSide.ANY);
+        super(slotUpgrade.base, TypeItemSlot.INPUT, 1);
         this.setStackSizeLimit(1);
         this.slotUpgrade = slotUpgrade;
     }
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-        return stack.getItem() instanceof ItemAdvancedWaterRotor;
+        return stack.getItem() instanceof ItemWaterRotor;
     }
 
     @Override

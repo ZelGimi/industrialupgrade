@@ -1,7 +1,7 @@
 package com.denfop.integration.jei.recycler;
 
 
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -54,7 +54,7 @@ public class RecyclerHandler {
 
             addRecipe(
                     new ItemStack(container),
-                    Ic2Items.scrap
+                    IUItem.scrap
             );
 
 
@@ -64,7 +64,7 @@ public class RecyclerHandler {
 
             addRecipe(
                     new ItemStack(container),
-                    Ic2Items.scrap
+                    IUItem.scrap
             );
 
 

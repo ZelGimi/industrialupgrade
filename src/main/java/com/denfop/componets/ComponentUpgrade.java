@@ -1,6 +1,5 @@
 package com.denfop.componets;
 
-import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,7 +28,6 @@ public class ComponentUpgrade extends AbstractComponent {
     public void setChange(final boolean change) {
         this.change = change;
     }
-
 
 
     public boolean hasUpgrade(TypeUpgrade typeUpgrade) {

@@ -8,8 +8,8 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.space.rovers.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.IRovers;
 import com.denfop.api.space.upgrades.event.EventItemLoad;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
-import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,13 +51,13 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
                 "mode_module",
                 EnumTypeUpgrade.getFromID(fill.getItemDamage()).getUpgrade()
         );
-        final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "upgrade_rovers",
                 new BaseMachineRecipe(
                         new Input(
-                                input.forStack(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
-                                input.forStack(fill)
+                                input.getInput(new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE)),
+                                input.getInput(fill)
                         ),
                         new RecipeOutput(nbt, new ItemStack(container, 1, OreDictionary.WILDCARD_VALUE))
                 )

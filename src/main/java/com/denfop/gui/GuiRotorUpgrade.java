@@ -5,7 +5,7 @@ import com.denfop.container.ContainerRotorUpgrade;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiRotorUpgrade extends GuiIC2<ContainerRotorUpgrade> {
+public class GuiRotorUpgrade extends GuiCore<ContainerRotorUpgrade> {
 
     public final ContainerRotorUpgrade container;
     public final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotorupgrade.png");

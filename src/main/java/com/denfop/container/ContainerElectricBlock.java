@@ -1,18 +1,27 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityElectricBlock;
-import ic2.core.slot.ArmorSlot;
-import ic2.core.slot.SlotArmor;
+import com.denfop.invslot.SlotArmor;
+import com.denfop.tiles.base.TileElectricBlock;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ContainerElectricBlock extends ContainerFullInv<TileEntityElectricBlock> {
+public class ContainerElectricBlock extends ContainerFullInv<TileElectricBlock> {
 
-    public ContainerElectricBlock(EntityPlayer entityPlayer, TileEntityElectricBlock tileEntity) {
+    public ContainerElectricBlock(EntityPlayer entityPlayer, TileElectricBlock tileEntity) {
         super(entityPlayer, tileEntity, 196);
-        for (int col = 0; col < ArmorSlot.getCount(); ++col) {
-            this.addSlotToContainer(new SlotArmor(entityPlayer.inventory, ArmorSlot.get(col), 8 + col * 18, 84));
+        final List<EntityEquipmentSlot> list = Arrays
+                .stream(EntityEquipmentSlot.values())
+                .filter(type -> type.getSlotType() == EntityEquipmentSlot.Type.ARMOR)
+                .collect(
+                        Collectors.toList());
+        Collections.reverse(list);
+        for (int col = 0; col < list.size(); ++col) {
+            this.addSlotToContainer(new SlotArmor(entityPlayer.inventory, list.get(col), 8 + col * 18, 84));
         }
         addSlotToContainer(new SlotInvSlot(tileEntity.inputslotA, 0, 56, 17));
         addSlotToContainer(new SlotInvSlot(tileEntity.inputslotB, 0, 56, 53));
@@ -21,15 +30,5 @@ public class ContainerElectricBlock extends ContainerFullInv<TileEntityElectricB
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("inputslotA");
-        ret.add("inputslotB");
-        ret.add("inputslotC");
-        ret.add("redstoneMode");
-        ret.add("output_plus");
-        return ret;
-    }
 
 }

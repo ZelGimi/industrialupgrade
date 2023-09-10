@@ -4,7 +4,7 @@ package com.denfop.invslot;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.TileEntityPrivatizer;
+import com.denfop.tiles.mechanism.TilePrivatizer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,14 +12,14 @@ import net.minecraft.nbt.NBTTagCompound;
 public class InvSlotPrivatizer extends InvSlot {
 
     private final int type;
-    private final TileEntityPrivatizer tile;
+    private final TilePrivatizer tile;
     private int stackSizeLimit;
 
-    public InvSlotPrivatizer(TileEntityInventory base1, String name, int type, int count) {
-        super(base1, name, InvSlot.Access.IO, count, InvSlot.InvSide.ANY);
+    public InvSlotPrivatizer(TileEntityInventory base1, int type, int count) {
+        super(base1, TypeItemSlot.INPUT_OUTPUT, count);
         this.stackSizeLimit = 1;
         this.type = type;
-        this.tile = (TileEntityPrivatizer) base1;
+        this.tile = (TilePrivatizer) base1;
     }
 
     @Override

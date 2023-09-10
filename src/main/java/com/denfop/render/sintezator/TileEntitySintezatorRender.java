@@ -4,7 +4,7 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.render.IModelCustom;
 import com.denfop.render.base.AdvancedModelLoader;
-import com.denfop.tiles.base.TileEntitySintezator;
+import com.denfop.tiles.base.TileSintezator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileEntitySintezator> {
+public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileSintezator> {
 
     public static final ResourceLocation texture = new ResourceLocation(
             Constants.TEXTURES,
@@ -43,7 +43,7 @@ public class TileEntitySintezatorRender extends TileEntitySpecialRenderer<TileEn
 
 
     public void render(
-            @Nonnull TileEntitySintezator tile,
+            @Nonnull TileSintezator tile,
             double x,
             double y,
             double z,

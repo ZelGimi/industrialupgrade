@@ -1,6 +1,6 @@
 package com.denfop.api.recipe;
 
-import ic2.api.recipe.IRecipeInput;
+import com.denfop.recipe.IInputItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -11,7 +11,7 @@ public class RecipeInputStack implements IRecipeInputStack {
 
     private final List<ItemStack> input;
 
-    public RecipeInputStack(IRecipeInput input) {
+    public RecipeInputStack(IInputItemStack input) {
         this.input = input.getInputs();
 
     }
