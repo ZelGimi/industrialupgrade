@@ -376,7 +376,7 @@ public class RegisterOreDictionary {
         add("machineBlockCasing", IUItem.machine);
         add("machineBlockAdvanced", IUItem.advancedMachine);
         add("machineBlockAdvancedCasing", IUItem.advancedMachine);
-
+        add("dustSiliconDioxide", IUItem.silicondioxideDust);
 
     }
 

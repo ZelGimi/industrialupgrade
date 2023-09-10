@@ -21,7 +21,7 @@ public class ItemAlloysCasing extends ItemSubTypes<ItemAlloysCasing.Types> imple
     protected static final String NAME = "alloycasing";
 
     public ItemAlloysCasing() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

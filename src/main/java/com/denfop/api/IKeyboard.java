@@ -24,4 +24,9 @@ public interface IKeyboard {
 
     boolean isStreakKeyDown(final EntityPlayer player);
 
+    boolean isBootsMode(EntityPlayer player);
+
+    boolean isLeggingsMode(EntityPlayer player);
+
+
 }

@@ -5,7 +5,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.invslot.InputOreDictItemStack;
+import com.denfop.recipe.InputOreDict;
 import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
@@ -90,10 +90,10 @@ public class CTAlloySmelter {
                     new Input(
                             OreDictionary.getOres(ore).isEmpty()
                                     ? new IC2InputItemStack(this.container)
-                                    : new InputOreDictItemStack(ore, amount),
+                                    : new InputOreDict(ore, amount),
                             OreDictionary.getOres(ore1).isEmpty()
                                     ? new IC2InputItemStack(this.fill)
-                                    : new InputOreDictItemStack(ore1, amount1)
+                                    : new InputOreDict(ore1, amount1)
                     ),
                     new RecipeOutput(nbt, getItemStack(this.output))
             ));

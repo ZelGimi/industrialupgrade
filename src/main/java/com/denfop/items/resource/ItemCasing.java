@@ -18,7 +18,7 @@ public class ItemCasing extends ItemSubTypes<ItemCasing.Types> implements IModel
     protected static final String NAME = "casing";
 
     public ItemCasing() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

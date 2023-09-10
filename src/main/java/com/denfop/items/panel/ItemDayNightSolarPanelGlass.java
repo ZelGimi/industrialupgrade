@@ -29,7 +29,7 @@ public class ItemDayNightSolarPanelGlass extends ItemSubTypes<ItemDayNightSolarP
     protected static final String NAME = "daynight_solar_panel_glass";
 
     public ItemDayNightSolarPanelGlass() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

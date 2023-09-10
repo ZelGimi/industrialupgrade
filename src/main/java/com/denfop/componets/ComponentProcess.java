@@ -62,7 +62,7 @@ public class ComponentProcess extends AbstractComponent {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.componentProgress = this.getParent().getComp(ComponentProgress.class);
+        this.componentProgress = this.getParent().getComp("com.denfop.componets.ComponentProgress");
         this.advEnergy = this.getParent().getComp(AdvEnergy.class);
         this.heatComponent = this.getParent().getComp(HeatComponent.class);
         this.coldComponent = this.getParent().getComp(CoolComponent.class);

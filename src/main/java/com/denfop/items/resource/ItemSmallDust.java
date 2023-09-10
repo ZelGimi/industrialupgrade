@@ -18,7 +18,7 @@ public class ItemSmallDust extends ItemSubTypes<ItemSmallDust.Types> implements 
     protected static final String NAME = "smalldust";
 
     public ItemSmallDust() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

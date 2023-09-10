@@ -7,7 +7,11 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.componets.Fluids;
-import com.denfop.invslot.*;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDrainTank;
+import com.denfop.invslot.InvSlotFluid;
+import com.denfop.invslot.InvSlotTank;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
@@ -19,7 +23,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -61,7 +69,8 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
         this.level = 0;
         for (int i = 0; i < fluidTank.length; i++) {
 
-            this.fluidTank[i] = this.fluids.addTank("fluidTank" + i,
+            this.fluidTank[i] = this.fluids.addTank(
+                    "fluidTank" + i,
                     8000,
                     i == 0 ? InvSlot.TypeItemSlot.INPUT : InvSlot.TypeItemSlot.OUTPUT,
                     i == 0 && name1[i].getName().equals(FluidName.fluidneft.getInstance().getName())

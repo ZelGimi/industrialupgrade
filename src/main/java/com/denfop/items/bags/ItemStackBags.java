@@ -28,15 +28,12 @@ public class ItemStackBags extends ItemStackInventory {
     public final ItemStack itemStack1;
     private final double coef;
 
-    ItemEnergyBags bags;
-
     public ItemStackBags(EntityPlayer player, ItemStack stack, int inventorySize) {
         super(player, stack, inventorySize);
         this.inventorySize = inventorySize;
         this.itemStack1 = stack;
         this.coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D : 0);
-        bags = (ItemEnergyBags) stack.getItem();
         this.updatelist();
     }
 

@@ -27,8 +27,6 @@ public abstract class GuiElement<T extends GuiElement<T>> {
             "textures/gui/gui_progressbars.png"
     );
 
-    protected static final int hoverColor = -2130706433;
-    private static final Map<Class<?>, GuiElement.Subscriptions> SUBSCRIPTIONS = new HashMap();
     protected GuiCore<?> gui;
     protected int x;
     protected int y;
@@ -89,15 +87,7 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         return Minecraft.getMinecraft().getTextureMapBlocks();
     }
 
-    private static GuiElement.Method hasMethod(Class<?> cls, String name, Class<?>... params) {
-        try {
-            return !cls.getDeclaredMethod(name, params).isAnnotationPresent(GuiElement.SkippedMethod.class)
-                    ? GuiElement.Method.PRESENT
-                    : GuiElement.Method.SKIPPED;
-        } catch (NoSuchMethodException var4) {
-            return GuiElement.Method.MISSING;
-        }
-    }
+
 
     public GuiCore<?> getGui() {
         return gui;
@@ -208,151 +198,11 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         return this.gui.getContainer().base;
     }
 
-    public final GuiElement.Subscriptions getSubscriptions() {
-        Class<?> cls = this.getClass();
-        GuiElement.Subscriptions subscriptions = SUBSCRIPTIONS.get(cls);
-        if (subscriptions == null) {
-            GuiElement.Method tick = GuiElement.Method.MISSING;
-            GuiElement.Method background = GuiElement.Method.MISSING;
-            GuiElement.Method mouseClick = GuiElement.Method.MISSING;
-            GuiElement.Method mouseDrag = GuiElement.Method.MISSING;
-            GuiElement.Method mouseRelease = GuiElement.Method.MISSING;
-            GuiElement.Method mouseScroll = GuiElement.Method.MISSING;
 
-            GuiElement.Method key;
-            for (key = GuiElement.Method.MISSING; cls != GuiElement.class && (!tick.hasSeen() || !background.hasSeen() || !mouseClick.hasSeen() || !mouseDrag.hasSeen() || !mouseRelease.hasSeen() || !mouseScroll.hasSeen() || !key.hasSeen()); cls = cls.getSuperclass()) {
-                if (!tick.hasSeen()) {
-                    tick = hasMethod(cls, "tick");
-                }
-
-                if (!background.hasSeen()) {
-                    background = hasMethod(cls, "drawBackground", Integer.TYPE, Integer.TYPE);
-                }
-
-                if (!mouseClick.hasSeen()) {
-                    mouseClick = hasMethod(cls, "onMouseClick", Integer.TYPE, Integer.TYPE, MouseButton.class);
-                }
-
-                if (!mouseClick.hasSeen()) {
-                    mouseClick = hasMethod(cls, "onMouseClick", Integer.TYPE, Integer.TYPE, MouseButton.class, Boolean.TYPE);
-                }
-
-                if (!mouseDrag.hasSeen()) {
-                    mouseDrag = hasMethod(cls, "onMouseDrag", Integer.TYPE, Integer.TYPE, MouseButton.class, Long.TYPE);
-                }
-
-                if (!mouseDrag.hasSeen()) {
-                    mouseDrag = hasMethod(
-                            cls,
-                            "onMouseDrag",
-                            Integer.TYPE,
-                            Integer.TYPE,
-                            MouseButton.class,
-                            Long.TYPE,
-                            Boolean.TYPE
-                    );
-                }
-
-                if (!mouseRelease.hasSeen()) {
-                    mouseRelease = hasMethod(cls, "onMouseRelease", Integer.TYPE, Integer.TYPE, MouseButton.class);
-                }
-
-                if (!mouseRelease.hasSeen()) {
-                    mouseRelease = hasMethod(cls, "onMouseRelease", Integer.TYPE, Integer.TYPE, MouseButton.class, Boolean.TYPE);
-                }
-
-                if (!mouseScroll.hasSeen()) {
-                    mouseScroll = hasMethod(cls, "onMouseScroll", Integer.TYPE, Integer.TYPE, ScrollDirection.class);
-                }
-
-                if (!key.hasSeen()) {
-                    key = hasMethod(cls, "onKeyTyped", Character.TYPE, Integer.TYPE);
-                }
-            }
-
-            subscriptions = new GuiElement.Subscriptions(
-                    tick.isPresent(),
-                    background.isPresent(),
-                    mouseClick.isPresent(),
-                    mouseDrag.isPresent(),
-                    mouseRelease.isPresent(),
-                    mouseScroll.isPresent(),
-                    key.isPresent()
-            );
-            SUBSCRIPTIONS.put(this.getClass(), subscriptions);
-        }
-
-        return subscriptions;
-    }
 
     public void addY(int height) {
         this.y += height;
     }
 
-    private enum Method {
-        PRESENT,
-        SKIPPED,
-        MISSING;
-
-        Method() {
-        }
-
-        boolean hasSeen() {
-            return this != MISSING;
-        }
-
-        boolean isPresent() {
-            return this == PRESENT;
-        }
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.METHOD})
-    protected @interface SkippedMethod {
-
-    }
-
-    public static final class Subscriptions {
-
-        public final boolean tick;
-        public final boolean background;
-        public final boolean mouseClick;
-        public final boolean mouseDrag;
-        public final boolean mouseRelease;
-        public final boolean mouseScroll;
-        public final boolean key;
-
-        Subscriptions(
-                boolean tick,
-                boolean background,
-                boolean mouseClick,
-                boolean mouseDrag,
-                boolean mouseRelease,
-                boolean mouseScroll,
-                boolean key
-        ) {
-            this.tick = tick;
-            this.background = background;
-            this.mouseClick = mouseClick;
-            this.mouseDrag = mouseDrag;
-            this.mouseRelease = mouseRelease;
-            this.mouseScroll = mouseScroll;
-            this.key = key;
-        }
-
-        public String toString() {
-            return String.format(
-                    "tick: %s, background: %s, mouseClick: %s, mouseDrag: %s, mouseRelease: %s, mouseScroll: %s, key: %s",
-                    this.tick,
-                    this.background,
-                    this.mouseClick,
-                    this.mouseDrag,
-                    this.mouseRelease,
-                    this.mouseScroll,
-                    this.key
-            );
-        }
-
-    }
 
 }

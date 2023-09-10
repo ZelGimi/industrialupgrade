@@ -21,7 +21,7 @@ public class InputOreDict implements IInputItemStack {
         this(input, 1);
     }
 
-    InputOreDict(String input, int amount) {
+    public InputOreDict(String input, int amount) {
         this(input, amount, null);
     }
 

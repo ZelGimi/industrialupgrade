@@ -107,19 +107,13 @@ public class ExtractorRecipe {
                 IUItem.latex,
                 IUItem.rubber, 3
         );
-        addextractor(
-                new ItemStack(IUItem.rubWood),
-                IUItem.rubber
-        );
+
         addextractor(
                 new ItemStack(Blocks.CLAY),
                 1,
                 new ItemStack(Items.CLAY_BALL, 4)
         );
-        addextractor(
-                new ItemStack(IUItem.rubberSapling),
-                IUItem.rubber
-        );
+
         addextractor(
                 ModUtils.getCellFromFluid(FluidName.fluidair.getInstance()),
                 IUItem.FluidCell

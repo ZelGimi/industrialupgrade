@@ -20,7 +20,7 @@ public class ItemSticks extends ItemSubTypes<ItemSticks.Types> implements IModel
     protected static final String NAME = "stick";
 
     public ItemSticks() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier("stik")).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

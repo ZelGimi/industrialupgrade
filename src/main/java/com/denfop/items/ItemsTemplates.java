@@ -20,7 +20,7 @@ public class ItemsTemplates extends ItemSubTypes<ItemsTemplates.Types> implement
     protected static final String NAME = "templates";
 
     public ItemsTemplates() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

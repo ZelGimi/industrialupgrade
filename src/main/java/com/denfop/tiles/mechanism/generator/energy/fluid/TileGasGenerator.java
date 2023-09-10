@@ -11,6 +11,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGasGenerator;
 import com.denfop.gui.GuiGasGenerator;
 import com.denfop.invslot.InvSlotCharge;
@@ -55,7 +56,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         );
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSource(this, 50000000, 14));
-
+        ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidgas.getInstance()));
     }
 
     public IMultiTileBlock getTeBlock() {

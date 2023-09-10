@@ -6,6 +6,7 @@ import com.denfop.api.IModelRegister;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.gui.GUIEFReader;
 import com.denfop.items.resource.ItemSubTypes;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
@@ -35,7 +36,7 @@ public class ItemEFReader extends ItemSubTypes<ItemEFReader.Types> implements IM
     protected static final String NAME = "ef";
 
     public ItemEFReader() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.EnergyTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

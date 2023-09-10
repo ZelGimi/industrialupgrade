@@ -32,7 +32,7 @@ public class ItemModuleTypePanel extends ItemSubTypes<ItemModuleTypePanel.Crafti
     int number = 0;
 
     public ItemModuleTypePanel() {
-        super(null, CraftingTypes.class);
+        super(CraftingTypes.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

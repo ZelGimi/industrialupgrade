@@ -2,7 +2,11 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.energy.*;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyConductor;
+import com.denfop.api.energy.IEnergyEmitter;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.tile.IMultiTileBlock;

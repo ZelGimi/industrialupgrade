@@ -75,7 +75,7 @@ public class IUItemBase extends Item implements IModelRegister {
             ItemStack stack = player.getHeldItem(hand);
             while (i < 9) {
                 if (!player.getEntityWorld().isRemote) {
-                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox, false);
+                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox);
                     player.dropItem(drop, false);
                 }
                 i++;

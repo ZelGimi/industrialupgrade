@@ -21,7 +21,7 @@ public class ItemAlloysGear extends ItemSubTypes<ItemAlloysGear.Types> implement
     protected static final String NAME = "alloygear";
 
     public ItemAlloysGear() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

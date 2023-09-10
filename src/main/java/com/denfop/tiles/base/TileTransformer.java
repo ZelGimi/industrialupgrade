@@ -195,23 +195,24 @@ public abstract class TileTransformer extends TileEntityInventory implements
                 this.energy.setSinkTier(this.defaultTier);
                 this.energy.setPacketOutput(1);
                 this.energy.setDirections(
-                        Collections.singletonList(this.getFacing()),
                         Arrays
                                 .asList(EnumFacing.VALUES)
                                 .stream()
                                 .filter(facing -> facing != this.getFacing())
-                                .collect(Collectors.toList())
+                                .collect(Collectors.toList()),
+                        Collections.singletonList(this.getFacing())
+
                 );
             } else {
                 this.energy.setSourceTier(this.defaultTier);
                 this.energy.setSinkTier(this.defaultTier + 1);
                 this.energy.setPacketOutput(4);
                 this.energy.setDirections(
-                        Arrays
-                                .asList(EnumFacing.VALUES)
-                                .stream()
+                        Collections.singletonList(this.getFacing()),
+                        Arrays.stream(EnumFacing.VALUES)
                                 .filter(facing -> facing != this.getFacing())
-                                .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
+                                .collect(Collectors.toList())
+                );
 
             }
 
@@ -232,9 +233,9 @@ public abstract class TileTransformer extends TileEntityInventory implements
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, tooltip, advanced);
-        tooltip.add(Localization.translate("iu.item.tooltip.Low") + (int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
-                + Localization.translate("iu.generic.text.EUt") + " " + Localization.translate("iu.item.tooltip.High")
-                + (int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier() + 1) + " " + Localization.translate(
+        tooltip.add(Localization.translate("iu.item.tooltip.Low") + " " + +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
+                + Localization.translate("iu.generic.text.EUt") + " " + Localization.translate("iu.item.tooltip.High") + " " +
+                +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier() + 1) + " " + Localization.translate(
                 "iu" +
                         ".generic.text.EUt"));
 

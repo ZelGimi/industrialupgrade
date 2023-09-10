@@ -96,6 +96,22 @@ public class TileFermer extends TileMultiMachine {
         );
     }
 
+    public static void addrecipe(ItemStack input, ItemStack output, int n) {
+        final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
+        output = output.copy();
+        output.setCount(n);
+        Recipes.recipes.addRecipe(
+                "farmer",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput((input))
+                        ),
+                        new RecipeOutput(null, output
+                        )
+                )
+        );
+    }
+
     public static void addrecipe(Item input, Item output, int n) {
         final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe(
@@ -121,6 +137,9 @@ public class TileFermer extends TileMultiMachine {
     public void init() {
         addrecipe(Items.WHEAT_SEEDS, Items.WHEAT, 2);
         addrecipe(Items.WHEAT, Items.WHEAT_SEEDS, 1);
+        addrecipe(new ItemStack(IUItem.rubberSapling), new ItemStack(IUItem.rubWood), 1);
+        addrecipe(new ItemStack(IUItem.rubWood), IUItem.latex, 2);
+        addrecipe(IUItem.latex, new ItemStack(IUItem.rubberSapling), 1);
         addrecipe(Items.CARROT, Items.CARROT, 2);
         addrecipe(Items.POTATO, Items.POTATO, 2);
         addrecipe(Item.getItemFromBlock(Blocks.PUMPKIN), Items.PUMPKIN_SEEDS, 1);

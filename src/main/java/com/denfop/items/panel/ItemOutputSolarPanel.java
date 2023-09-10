@@ -26,7 +26,7 @@ public class ItemOutputSolarPanel extends ItemSubTypes<ItemOutputSolarPanel.Type
     protected static final String NAME = "solar_panel_output";
 
     public ItemOutputSolarPanel() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

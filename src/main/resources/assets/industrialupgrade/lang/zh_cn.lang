@@ -96,16 +96,16 @@ iu.itemNanoSaber1=量子原力剑
 iu.itemNanoSaber=光谱原力剑
 
 # Spectral Quantum Armor
-supersolarpanels.itemArmorQuantumHelmet=§d光谱量子头盔
-supersolarpanels.itemArmorQuantumChestplate=§d光谱量子胸甲
-supersolarpanels.itemArmorQuantumLegs=§d光谱量子护腿
-supersolarpanels.itemArmorQuantumBoots=§d光谱量子护靴
+iu.spectral_helmet=§d光谱量子头盔
+iu.spectral_chestplate=§d光谱量子胸甲
+iu.spectral_leggings=§d光谱量子护腿
+iu.spectral_boots=§d光谱量子护靴
 
 # Reinforced Armor
-supersolarpanels.itemArmorNanoHelmet=强化纳米头盔
-supersolarpanels.itemArmorNanoChestplate=强化纳米头盔胸甲
-supersolarpanels.itemArmorNanoLegs=强化纳米护腿
-supersolarpanels.itemArmorNanoBoots=强化纳米靴子
+iu.adv_nano_helmet=强化纳米头盔
+iu.adv_nano_chestplate=强化纳米头盔胸甲
+iu.adv_nano_leggings=强化纳米护腿
+iu.adv_nano_boots=强化纳米靴子
 
 # Nuclear Fusion Radiation Suit
 item.hazmathelmet.name=核聚变辐射服头盔

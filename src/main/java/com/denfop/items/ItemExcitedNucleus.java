@@ -19,7 +19,7 @@ public class ItemExcitedNucleus extends ItemSubTypes<ItemExcitedNucleus.Types> i
     protected static final String NAME = "excitednucleus";
 
     public ItemExcitedNucleus() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

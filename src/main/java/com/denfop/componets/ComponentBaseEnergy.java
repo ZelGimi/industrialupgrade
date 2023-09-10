@@ -1,6 +1,14 @@
 package com.denfop.componets;
 
-import com.denfop.api.sytem.*;
+import com.denfop.api.sytem.EnergyEvent;
+import com.denfop.api.sytem.EnergyType;
+import com.denfop.api.sytem.EnumTypeEvent;
+import com.denfop.api.sytem.IAcceptor;
+import com.denfop.api.sytem.IDual;
+import com.denfop.api.sytem.IEmitter;
+import com.denfop.api.sytem.ISink;
+import com.denfop.api.sytem.ISource;
+import com.denfop.api.sytem.ITile;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -176,7 +184,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     private void createDelegate() {
         if (this.delegate != null) {
-            throw new IllegalStateException();
         } else {
 
             if (this.sinkDirections.isEmpty()) {

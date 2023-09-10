@@ -169,7 +169,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
 
         addrecipe(new ItemStack(IUItem.matter, 1, 7), new ItemStack(IUItem.lens, 1), Config.molecular33);
         addrecipe(new ItemStack(Items.IRON_INGOT, 1, 0), IUItem.iridiumOre,
-                Config.molecular2
+                7500000
         );
         addrecipe(
                 IUItem.iridiumOre,

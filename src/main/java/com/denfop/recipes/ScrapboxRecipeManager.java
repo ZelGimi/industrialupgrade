@@ -12,7 +12,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ScrapboxRecipeManager {
 
@@ -85,17 +90,8 @@ public final class ScrapboxRecipeManager {
         this.drops.add(new Drop(drop, rawChance));
     }
 
-    public ItemStack getDrop(ItemStack input, boolean adjustInput) {
-        ItemStack result = this.apply(input);
-        if (result != ItemStack.EMPTY) {
-            if (adjustInput) {
-                input.shrink(1);
-            }
-
-            return result;
-        } else {
-            return ItemStack.EMPTY;
-        }
+    public ItemStack getDrop(ItemStack input) {
+        return this.apply(input);
     }
 
     public Map<ItemStack, Float> getDrops() {

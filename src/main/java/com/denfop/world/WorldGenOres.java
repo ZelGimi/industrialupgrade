@@ -208,11 +208,66 @@ public class WorldGenOres implements IWorldGenerator {
         if (Config.GermaniumOre) {
             this.addOreSpawn(IUItem.ore.getStateFromMeta(15), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
         }
-        this.addOreSpawn(IUItem.classic_ore.getStateFromMeta(0), world, random, x, y, 16, 16, 4 + random.nextInt(4), 32, 0, 70);
-        this.addOreSpawn(IUItem.classic_ore.getStateFromMeta(1), world, random, x, y, 16, 16, 4 + random.nextInt(4), 34, 0, 70);
-        this.addOreSpawn(IUItem.classic_ore.getStateFromMeta(2), world, random, x, y, 16, 16, 3 + random.nextInt(3), 11, 0, 70);
-        this.addOreSpawn(IUItem.classic_ore.getStateFromMeta(3), world, random, x, y, 16, 16, 3 + random.nextInt(2), 11, 0, 70);
-
+        if (Config.CopperOre) {
+            this.addOreSpawn(
+                    IUItem.classic_ore.getStateFromMeta(0),
+                    world,
+                    random,
+                    x,
+                    y,
+                    16,
+                    16,
+                    4 + random.nextInt(4),
+                    32,
+                    0,
+                    70
+            );
+        }
+        if (Config.TinOre) {
+            this.addOreSpawn(
+                    IUItem.classic_ore.getStateFromMeta(1),
+                    world,
+                    random,
+                    x,
+                    y,
+                    16,
+                    16,
+                    4 + random.nextInt(4),
+                    34,
+                    0,
+                    70
+            );
+        }
+        if (Config.LeadOre) {
+            this.addOreSpawn(
+                    IUItem.classic_ore.getStateFromMeta(2),
+                    world,
+                    random,
+                    x,
+                    y,
+                    16,
+                    16,
+                    3 + random.nextInt(3),
+                    11,
+                    0,
+                    70
+            );
+        }
+        if (Config.UraniumOre) {
+            this.addOreSpawn(
+                    IUItem.classic_ore.getStateFromMeta(3),
+                    world,
+                    random,
+                    x,
+                    y,
+                    16,
+                    16,
+                    3 + random.nextInt(2),
+                    11,
+                    0,
+                    70
+            );
+        }
         if (Config.MagnetiteOre) {
             this.addOreSpawn(IUItem.heavyore.getStateFromMeta(0), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
         }

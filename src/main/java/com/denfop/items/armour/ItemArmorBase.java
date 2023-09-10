@@ -1,16 +1,13 @@
 package com.denfop.items.armour;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
@@ -21,7 +18,7 @@ public class ItemArmorBase extends ItemArmor implements IModelRegister {
 
 
     public String armorName;
-    private String name = "";
+    private final String name = "";
 
     public ItemArmorBase(
             ItemArmor.ArmorMaterial armorMaterial,
@@ -32,24 +29,6 @@ public class ItemArmorBase extends ItemArmor implements IModelRegister {
         this.armorName = armorName;
         this.setNoRepair();
         this.setMaxDamage(armorMaterial.getDurability(armorType));
-    }
-
-    public ItemArmorBase(
-            String name,
-            ItemArmor.ArmorMaterial armorMaterial,
-            String armorName,
-            EntityEquipmentSlot armorType
-    ) {
-        super(armorMaterial, -1, armorType);
-        this.armorName = armorName;
-        this.name = name;
-        this.setMaxDamage(armorMaterial.getDurability(armorType));
-        setUnlocalizedName(name);
-        this.setNoRepair();
-        setCreativeTab(IUCore.EnergyTab);
-        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
-
-        IUCore.proxy.addIModelRegister(this);
     }
 
     @SideOnly(Side.CLIENT)

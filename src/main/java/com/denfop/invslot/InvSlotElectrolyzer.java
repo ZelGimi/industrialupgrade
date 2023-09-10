@@ -2,7 +2,6 @@ package com.denfop.invslot;
 
 import com.denfop.IUItem;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotElectrolyzer extends InvSlot {
@@ -43,41 +42,8 @@ public class InvSlotElectrolyzer extends InvSlot {
     }
 
     public void consume(int amount) {
-        consume(amount, false, false);
+        this.contents.get(0).shrink(amount);
     }
 
-    public void consume(int amount, boolean simulate, boolean consumeContainers) {
-        ItemStack ret = null;
-        for (int i = 0; i < size(); i++) {
-            ItemStack stack = get(i);
-            if (stack != null && stack.getCount() >= 1 &&
-
-                    accepts(stack, i) && (ret == null ||
-                    isStackEqualStrict(stack, ret)) && (stack.getCount() == 1 || consumeContainers ||
-                    !stack.getItem().hasContainerItem(stack))) {
-                int currentAmount = Math.min(amount, stack.getCount());
-                amount -= currentAmount;
-                if (!simulate) {
-                    if (stack.getCount() == currentAmount) {
-                        if (!consumeContainers && stack.getItem().hasContainerItem(stack)) {
-                            put(i, stack.getItem().getContainerItem(stack));
-                        } else {
-                            put(i, null);
-                        }
-                    } else {
-                        stack.setCount(stack.getCount() - currentAmount);
-                    }
-                }
-                if (ret == null) {
-                    ret = ModUtils.setSize(stack, currentAmount);
-                } else {
-                    ret.setCount(ret.getCount() + currentAmount);
-                }
-                if (amount == 0) {
-                    break;
-                }
-            }
-        }
-    }
 
 }

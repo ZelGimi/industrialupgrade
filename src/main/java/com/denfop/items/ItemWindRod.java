@@ -25,7 +25,7 @@ public class ItemWindRod extends ItemSubTypes<ItemWindRod.Types> implements IMod
     protected static final String NAME = "windrod";
 
     public ItemWindRod() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

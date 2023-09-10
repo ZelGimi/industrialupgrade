@@ -29,7 +29,7 @@ public class ItemWaterRotorsUpgrade extends ItemSubTypes<ItemWaterRotorsUpgrade.
     protected static final String NAME = "water_rotors_upgrade";
 
     public ItemWaterRotorsUpgrade() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

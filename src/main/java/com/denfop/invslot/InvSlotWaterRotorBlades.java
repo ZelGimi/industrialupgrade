@@ -3,6 +3,7 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWaterRod;
+import com.denfop.items.ItemWaterRotor;
 import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.item.ItemStack;
 
@@ -50,8 +51,12 @@ public class InvSlotWaterRotorBlades extends InvSlot implements ITypeSlot {
                     this.windGenerator.getRotor().getLevel(),
                     this.get().getItemDamage()
             )) {
-                if (stack.getItemDamage() >= stack.getMaxDamage() * 0.25) {
-                    this.windGenerator.slot.damage((int) -(stack.getMaxDamage() * 0.25), 0);
+                if (((ItemWaterRotor) stack.getItem()).getCustomDamage(stack) <= ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(
+                        stack) * 0.75) {
+                    this.windGenerator.slot.damage(
+                            (int) (-1 * ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(stack) * 0.25),
+                            0
+                    );
                     this.get().shrink(1);
                 }
             }

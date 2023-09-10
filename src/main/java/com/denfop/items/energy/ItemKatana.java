@@ -11,8 +11,7 @@ import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
-import com.denfop.items.armour.ItemArmorNanoSuit;
-import com.denfop.items.armour.ItemArmorQuantumSuit;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
@@ -288,10 +287,8 @@ public class ItemKatana extends ItemTool implements IEnergyItem, IUpgradeItem, I
                     ItemStack armor = target.getItemStackFromSlot(slot);
                     if (armor.isEmpty()) {
                         double amount = 0.0D;
-                        if (armor.getItem() instanceof ItemArmorNanoSuit) {
-                            amount = 48000.0D;
-                        } else if (armor.getItem() instanceof ItemArmorQuantumSuit) {
-                            amount = 300000.0D;
+                        if (armor.getItem() instanceof ItemSpecialArmor) {
+                            amount = ((ItemSpecialArmor) armor.getItem()).getArmor().getDamageEnergy();
                         }
 
                         if (amount > 0.0D) {

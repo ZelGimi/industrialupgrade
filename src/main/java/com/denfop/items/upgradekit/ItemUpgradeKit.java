@@ -39,7 +39,7 @@ public class ItemUpgradeKit extends ItemSubTypes<ItemUpgradeKit.Types> implement
     protected static final String NAME = "upgradekitstorage";
 
     public ItemUpgradeKit() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.UpgradeTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

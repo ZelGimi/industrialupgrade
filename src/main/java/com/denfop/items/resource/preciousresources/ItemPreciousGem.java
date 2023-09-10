@@ -19,7 +19,7 @@ public class ItemPreciousGem extends ItemSubTypes<ItemPreciousGem.Types> impleme
     protected static final String NAME = "preciousgem".toLowerCase();
 
     public ItemPreciousGem() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

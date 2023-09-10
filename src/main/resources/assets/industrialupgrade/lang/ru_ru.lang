@@ -97,16 +97,16 @@ iu.itemNanoSaber1=Квантовая сабля
 iu.itemNanoSaber=Спектральная сабля
 
 # Спектральная квантовая броня
-supersolarpanels.itemArmorQuantumHelmet=§dСпектральный квантовый шлем
-supersolarpanels.itemArmorQuantumChestplate=§dСпектральная квантовая кираса
-supersolarpanels.itemArmorQuantumLegs=§dСпектральные квантовые поножи
-supersolarpanels.itemArmorQuantumBoots=§dСпектральные квантовые ботинки
+iu.spectral_helmet=§dСпектральный квантовый шлем
+iu.spectral_chestplate=§dСпектральная квантовая кираса
+iu.spectral_leggings=§dСпектральные квантовые поножи
+iu.spectral_boots=§dСпектральные квантовые ботинки
 
 # Армированная броня
-supersolarpanels.itemArmorNanoHelmet=Армированный нано-шлем
-supersolarpanels.itemArmorNanoChestplate=Армированная нано-кираса
-supersolarpanels.itemArmorNanoLegs=Армированные нано-поножи
-supersolarpanels.itemArmorNanoBoots=Армированные нано-ботинки
+iu.adv_nano_helmet=Армированный нано-шлем
+iu.adv_nano_chestplate=Армированная нано-кираса
+iu.adv_nano_leggings=Армированные нано-поножи
+iu.adv_nano_boots=Армированные нано-ботинки
 
 # Костюм от термоядерного излучения
 item.hazmathelmet.name=Защитный шлем от термоядерного излучения
@@ -3529,7 +3529,7 @@ iu.doubleplate.iron_doubleplate=Плотная железная пластина
 iu.doubleplate.tin_doubleplate=Плотная оловянная пластина
 iu.doubleplate.lead_doubleplate=Плотная свинцовая пластина
 iu.doubleplate.obsidian_doubleplate=Плотная обсидиановая пластина
-iu.doubleplate.lapis_doubleplate= Плотная лазуритовая пластина
+iu.doubleplate.lapis_doubleplate=Плотная лазуритовая пластина
 
 #Item Casings
 iu.casing.copper=Медная оболочка
@@ -3822,3 +3822,18 @@ iu.solar_panel_output.bar=Барионная розетка
 iu.solar_panel_output.adr=Адронная розетка
 iu.solar_panel_output.gra=Гравитонная розетка
 iu.solar_panel_output.kvr=Кварковая розетка
+
+iu.food_mode_helmet=Автоматически потребляет еду
+iu.jetpack_fly_chestplate=Полёт на 30 секунд с перерывом 5 минут
+iu.jetpack_fly_chestplate_1= для активации полёта
+iu.jetpack_fly_chestplate_2= до конца полёта
+iu.special_armor_auto_jump=Автоматический прижок
+iu.special_armor_active_effect=Убирает только эффект радиации
+iu.special_armor_all_active_effect=Убирает все дефолтные негативные эффекты с радиацией
+iu.special_armor_big_jump=Включить большой прижок: 
+iu.special_armor_nightvision=Включить ночное видение: 
+iu.special_armor_nightvision_1=Ночное видение отключается утром с эффектом слепотой 
+iu.special_armor_nightvision_2=Ночное видение отключается утром
+iu.special_armor_nightvision_3=Ночное видение не отключается утром
+iu.special_armor_speed=Быстрый бег
+

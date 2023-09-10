@@ -14,6 +14,7 @@ import com.denfop.items.energy.instruments.ItemEnergyInstruments;
 import com.denfop.recipe.IInputHandler;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lib.LibOreDict;
@@ -59,7 +60,7 @@ public class BotaniaIntegration {
         BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_energy, 1, 0), 12000,
                 LibOreDict.RUNE[0], LibOreDict.RUNE[1], new ItemStack(IUItem.photoniy),
                 new ItemStack(IUItem.itemiu, 1, 0), "ingotIridium",
-                new ItemStack(elementium_plate), new ItemStack(IUItem.compresscarbonultra)
+                new ItemStack(elementium_plate), new ItemStack(IUItem.compressAlloy)
         );
         BotaniaAPI.registerRuneAltarRecipe(new ItemStack(rune_sun, 1, 0), 12000,
                 LibOreDict.RUNE[4], LibOreDict.RUNE[3], new ItemStack(IUItem.photoniy_ingot),
@@ -95,17 +96,48 @@ public class BotaniaIntegration {
                 new ItemStack(ModItems.manaResource, 1, 4), new ItemStack(terrasteel_plate)
         );
 
+        Recipes.recipe.addRecipe(new ItemStack(teraDDrill),
+                " L ", "ODO", "COC", 'O', IUItem.overclockerUpgrade, 'D',
+                new ItemStack(IUItem.diamond_drill), 'C',
+                terrasteel_plate, 'L', ModItems.terraPick
+        );
+        Recipes.recipe.addRecipe(new ItemStack(terrasteel_core),
+                "KLM", "DOD", "CHC", 'C', terrasteel_plate, 'D', new ItemStack(IUItem.itemiu, 1, 1), 'O',
+                terrasteel_plate, 'L', IUItem.advancedAlloy, 'K', rune_night, 'M', rune_sun, 'H',
+                rune_energy
+        );
+        Recipes.recipe.addRecipe(new ItemStack(elementium_core),
+                "KLM", "DOD", "CHC", 'C', elementium_plate, 'D', IUItem.photoniy_ingot, 'O',
+                manasteel_core, 'L', IUItem.advancedCircuit, 'K', rune_night, 'M', rune_sun, 'H',
+                rune_energy
+        );
+        Recipes.recipe.addRecipe(new ItemStack(manasteel_core),
+                "KLM", "DOD", "CHC", 'C', manasteel_plate, 'D', IUItem.photoniy_ingot, 'O',
+                IUItem.core, 'L', IUItem.advancedCircuit, 'K', rune_night, 'M', rune_sun,
+                'H', rune_energy
+        );
+        Recipes.recipe.addRecipe(new ItemStack(blockBotSolarPanel, 1, 0), " B ", "BAB", " B ", 'A',
+                manasteel_core, 'B', new ItemStack(IUItem.blockpanel, 1, 0)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(blockBotSolarPanel, 1, 1), " B ", "BAB", " B ", 'A',
+                elementium_core, 'B', new ItemStack(blockBotSolarPanel, 1, 0)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(blockBotSolarPanel, 1, 2), " B ", "BAB", " B ", 'A',
+                terrasteel_core, 'B', new ItemStack(blockBotSolarPanel, 1, 1)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.upgradepanelkit, 1, 17), "   ", "BAB", " B ", 'A',
+                manasteel_core, 'B', new ItemStack(IUItem.blockpanel, 1, 0)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.upgradepanelkit, 1, 18), "   ", "BAB", " B ", 'A',
+                elementium_core, 'B', new ItemStack(blockBotSolarPanel, 1, 0)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.upgradepanelkit, 1, 19), "   ", "BAB", " B ", 'A',
+                terrasteel_core, 'B', new ItemStack(blockBotSolarPanel, 1, 1)
+        );
 
-        addcompressor(reactorDepletedterastrellSimple, new ItemStack(ModItems.manaResource, 1, 4)
-        );
-        addcompressor(reactorDepletedterastrellDual, new ItemStack(ModItems.manaResource, 2, 4)
-        );
-        addcompressor(reactorDepletedterastrellQuad, new ItemStack(ModItems.manaResource, 4, 4)
-        );
         //
 
-        ItemStack topRod = new ItemStack(IUItem.crafting_elements, 1, 185);
-        ItemStack bottomRod = new ItemStack(IUItem.crafting_elements, 1, 186);
+
 
     }
 

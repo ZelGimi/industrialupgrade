@@ -23,7 +23,7 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
     protected GuiComponent inventory;
     protected GuiComponent slots;
     protected List<InvSlot> invSlotList = new ArrayList<>();
-    List<GuiComponent> componentList = new ArrayList<>();
+    protected List<GuiComponent> componentList = new ArrayList<>();
 
     public GuiIU(final T container) {
         super(container);

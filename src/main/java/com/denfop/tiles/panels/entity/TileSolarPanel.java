@@ -53,7 +53,7 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
 
 
     public final ComponentTimer timer;
-    private final ComponentPollution pollution;
+    public final ComponentPollution pollution;
     public double coef;
     public List<IEnergyTile> list;
     public EnumSolarPanels solarpanels;
@@ -87,9 +87,9 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public double tick;
     public SunCoef sunCoef;
     public int level = 0;
+    public boolean canRain;
+    public boolean hasSky;
     protected double tierPower;
-    protected boolean canRain;
-    protected boolean hasSky;
     protected boolean addedToEnet;
     protected double pastEnergy;
     protected double perenergy;
@@ -133,6 +133,34 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public TileSolarPanel(EnumSolarPanels solarpanels) {
         this(solarpanels.tier, solarpanels.genday, solarpanels.producing, solarpanels.maxstorage, solarpanels);
 
+    }
+
+    @Override
+    public CustomPacketBuffer writeUpdatePacket() {
+        final CustomPacketBuffer packet = super.writeUpdatePacket();
+        try {
+            EncoderHandler.encode(packet, this.pollution);
+            EncoderHandler.encode(packet, this.timer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
+    }
+
+    @Override
+    public void readUpdatePacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readUpdatePacket(customPacketBuffer);
+        try {
+            pollution.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            timer.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean needUpdate() {
+        return true;
     }
 
     @Override

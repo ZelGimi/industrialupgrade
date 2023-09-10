@@ -19,7 +19,7 @@ public class ItemCoreWind extends ItemSubTypes<ItemCoreWind.Types> implements IM
     protected static final String NAME = "corewind";
 
     public ItemCoreWind() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

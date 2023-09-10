@@ -474,6 +474,13 @@ public class CommonProxy implements IGuiHandler {
                 return inventory.getInventory(player, stack).getGuiContainer(player);
             }
         }
+        if (ID == 2) {
+            final ItemStack stack = player.inventory.armorInventory.get(1);
+            if (stack.getItem() instanceof IItemStackInventory) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                return inventory.getInventory(player, stack).getGuiContainer(player);
+            }
+        }
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
         if (tile != null) {
             if (tile instanceof IAdvInventory) {

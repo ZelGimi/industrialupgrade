@@ -49,7 +49,7 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
     protected static final String NAME = "upgradekitpanel";
 
     public ItemUpgradePanelKit() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.UpgradeTab);
         IUCore.proxy.addIModelRegister(this);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);

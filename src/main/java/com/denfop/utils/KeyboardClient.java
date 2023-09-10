@@ -26,6 +26,8 @@ public class KeyboardClient extends KeyboardIU {
     public static final KeyBinding streakmode = new KeyBinding("Streak Key", Keyboard.KEY_V, "IndustrialUpgrade");
 
     public static final KeyBinding armormode = new KeyBinding("Armor Key", Keyboard.KEY_M, "IndustrialUpgrade");
+    public static final KeyBinding bootsmode = new KeyBinding("Boots Key", Keyboard.KEY_B, "IndustrialUpgrade");
+    public static final KeyBinding leggingsmode = new KeyBinding("Leggings Key", Keyboard.KEY_N, "IndustrialUpgrade");
 
     private final Minecraft mc = Minecraft.getMinecraft();
     private int lastKeyState = 0;
@@ -39,6 +41,8 @@ public class KeyboardClient extends KeyboardIU {
         ClientRegistry.registerKeyBinding(blackmode);
         ClientRegistry.registerKeyBinding(streakmode);
         ClientRegistry.registerKeyBinding(armormode);
+        ClientRegistry.registerKeyBinding(bootsmode);
+        ClientRegistry.registerKeyBinding(leggingsmode);
     }
 
     public void sendKeyUpdate() {
@@ -74,6 +78,12 @@ public class KeyboardClient extends KeyboardIU {
             }
             if (GameSettings.isKeyDown(streakmode)) {
                 keys.add(Key.STREAK);
+            }
+            if (GameSettings.isKeyDown(bootsmode)) {
+                keys.add(Key.BOOTS);
+            }
+            if (GameSettings.isKeyDown(leggingsmode)) {
+                keys.add(Key.LEGGINGS);
             }
         }
 

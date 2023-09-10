@@ -18,7 +18,7 @@ public class ItemVerySmallDust extends ItemSubTypes<ItemVerySmallDust.Types> imp
     protected static final String NAME = "verysmalldust";
 
     public ItemVerySmallDust() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

@@ -28,7 +28,7 @@ public class ItemDaySolarPanelGlass extends ItemSubTypes<ItemDaySolarPanelGlass.
     protected static final String NAME = "solar_panel_glass";
 
     public ItemDaySolarPanelGlass() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

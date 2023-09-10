@@ -1,7 +1,18 @@
 package com.denfop.api.space.research;
 
-import com.denfop.api.space.*;
-import com.denfop.api.space.fakebody.*;
+import com.denfop.api.space.IBaseResource;
+import com.denfop.api.space.IBody;
+import com.denfop.api.space.IPlanet;
+import com.denfop.api.space.ISatellite;
+import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.fakebody.Data;
+import com.denfop.api.space.fakebody.EnumOperation;
+import com.denfop.api.space.fakebody.FakePlanet;
+import com.denfop.api.space.fakebody.FakeSatellite;
+import com.denfop.api.space.fakebody.IFakeBody;
+import com.denfop.api.space.fakebody.IFakePlanet;
+import com.denfop.api.space.fakebody.IFakeSatellite;
+import com.denfop.api.space.fakebody.SpaceOperation;
 import com.denfop.api.space.rovers.IRovers;
 
 import java.util.List;

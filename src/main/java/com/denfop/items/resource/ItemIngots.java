@@ -18,7 +18,7 @@ public class ItemIngots extends ItemSubTypes<ItemIngots.ItemIngotsTypes> impleme
     protected static final String NAME = "itemingots";
 
     public ItemIngots() {
-        super(null, ItemIngotsTypes.class);
+        super(ItemIngotsTypes.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

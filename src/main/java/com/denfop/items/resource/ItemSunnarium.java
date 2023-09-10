@@ -20,7 +20,7 @@ public class ItemSunnarium extends ItemSubTypes<ItemSunnarium.Types> implements 
     protected static final String NAME = "itemsunnarium";
 
     public ItemSunnarium() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

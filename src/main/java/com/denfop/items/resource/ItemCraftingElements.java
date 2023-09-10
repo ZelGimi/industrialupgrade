@@ -2,14 +2,21 @@ package com.denfop.items.resource;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,7 +29,7 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
     protected static final String NAME = "crafting_elements";
 
     public ItemCraftingElements() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ElementsTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
@@ -36,6 +43,31 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
                 subItems.add(this.getItemStackUnchecked(type));
 
             }
+
+        }
+    }
+
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(
+            @Nonnull final World world,
+            @Nonnull final EntityPlayer player,
+            @Nonnull final EnumHand hand
+    ) {
+        if (!player.getHeldItem(hand).isItemEqual(IUItem.scrapBox)) {
+            return super.onItemRightClick(world, player, hand);
+        } else {
+            int i = 0;
+            ItemStack stack = player.getHeldItem(hand);
+            while (i < 1) {
+                if (!player.getEntityWorld().isRemote) {
+                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox);
+                    player.dropItem(drop, false);
+                }
+                i++;
+            }
+            stack.shrink(1);
+            return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
         }
     }

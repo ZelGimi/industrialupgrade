@@ -21,7 +21,7 @@ public class ItemCore extends ItemSubTypes<ItemCore.Types> implements IModelRegi
     protected static final String NAME = "itemcore";
 
     public ItemCore() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

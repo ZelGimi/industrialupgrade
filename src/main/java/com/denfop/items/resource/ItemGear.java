@@ -18,7 +18,7 @@ public class ItemGear extends ItemSubTypes<ItemGear.Types> implements IModelRegi
     protected static final String NAME = "gear";
 
     public ItemGear() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

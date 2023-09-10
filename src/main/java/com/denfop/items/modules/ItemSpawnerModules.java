@@ -19,7 +19,7 @@ public class ItemSpawnerModules extends ItemSubTypes<ItemSpawnerModules.Types> i
     protected static final String NAME = "spawnermodules";
 
     public ItemSpawnerModules() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

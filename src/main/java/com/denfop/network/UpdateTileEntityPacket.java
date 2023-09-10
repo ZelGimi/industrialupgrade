@@ -26,10 +26,12 @@ public class UpdateTileEntityPacket {
                     new ArrayList<>()
             );
             commonBuffer.writeBytes(te.writePacket());
+            byte[] bytes = new byte[commonBuffer.writerIndex() - commonBuffer.readerIndex()];
+            commonBuffer.readBytes(bytes);
             for (EntityPlayerMP player : playersInRange) {
                 final CustomPacketBuffer playerBuffer = new CustomPacketBuffer(0);
                 playerBuffer.writeInt(player.getEntityWorld().provider.getDimension());
-                playerBuffer.writeBytes(commonBuffer);
+                playerBuffer.writeBytes(bytes);
                 new PacketUpdateTile(playerBuffer, player);
             }
         }
@@ -43,10 +45,12 @@ public class UpdateTileEntityPacket {
                         new ArrayList<>()
                 );
                 commonBuffer.writeBytes(te.writeUpdatePacket());
+                byte[] bytes = new byte[commonBuffer.writerIndex() - commonBuffer.readerIndex()];
+                commonBuffer.readBytes(bytes);
                 for (EntityPlayerMP player : playersInRange) {
                     final CustomPacketBuffer playerBuffer = new CustomPacketBuffer(0);
                     playerBuffer.writeInt(player.getEntityWorld().provider.getDimension());
-                    playerBuffer.writeBytes(commonBuffer);
+                    playerBuffer.writeBytes(bytes);
                     new PacketUpdateOvertimeTile(playerBuffer, player);
                 }
             }
@@ -75,10 +79,12 @@ public class UpdateTileEntityPacket {
                 CustomPacketBuffer commonBuffer = new CustomPacketBuffer();
                 EncoderHandler.encode(commonBuffer, te.getPos(), false);
                 commonBuffer.writeBytes(buffer);
+                byte[] bytes = new byte[commonBuffer.writerIndex() - commonBuffer.readerIndex()];
+                commonBuffer.readBytes(bytes);
                 for (EntityPlayerMP player : playersInRange) {
                     final CustomPacketBuffer playerBuffer = new CustomPacketBuffer(0);
                     playerBuffer.writeInt(player.getEntityWorld().provider.getDimension());
-                    playerBuffer.writeBytes(commonBuffer);
+                    playerBuffer.writeBytes(bytes);
                     new PacketUpdateFieldTile(playerBuffer, player);
                 }
             }

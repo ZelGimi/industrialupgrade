@@ -252,12 +252,13 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
         addpainting(new ItemStack(IUItem.adv_nano_boots, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.adv_nano_helmet, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.adv_nano_leggings, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nano_chestplate, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nano_boots, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nano_helmet, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nano_leggings, 1, OreDictionary.WILDCARD_VALUE));
 
-        addpainting(new ItemStack(IUItem.advancedSolarHelmet, 1, OreDictionary.WILDCARD_VALUE));
-        addpainting(new ItemStack(IUItem.hybridSolarHelmet, 1, OreDictionary.WILDCARD_VALUE));
-        addpainting(new ItemStack(IUItem.ultimateSolarHelmet, 1, OreDictionary.WILDCARD_VALUE));
-        addpainting(new ItemStack(IUItem.spectralSolarHelmet, 1, OreDictionary.WILDCARD_VALUE));
-        addpainting(new ItemStack(IUItem.singularSolarHelmet, 1, OreDictionary.WILDCARD_VALUE));
+
+
 
     }
 

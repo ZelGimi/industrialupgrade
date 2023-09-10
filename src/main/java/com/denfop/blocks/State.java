@@ -31,6 +31,10 @@ public class State implements Comparable<State> {
         return Objects.equals(teBlock, that.teBlock) && state.equals(that.state);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(teBlock, state);
+    }
 
     public int compareTo(State o) {
         int ret = this.teBlock.getId() - o.teBlock.getId();

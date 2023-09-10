@@ -21,7 +21,7 @@ public class ItemAlloysDust extends ItemSubTypes<ItemAlloysDust.Types> implement
     protected static final String NAME = "alloydust";
 
     public ItemAlloysDust() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

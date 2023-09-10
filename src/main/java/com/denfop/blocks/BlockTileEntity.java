@@ -69,9 +69,9 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     public static final IProperty<EnumFacing> facingProperty = PropertyDirection.create("facing");
     public static TypeProperty currentTypeProperty;
     public final ItemBlockTileEntity item;
-    public final TileBlockCreator.InfoAboutTile<?> teInfo;    public final TypeProperty typeProperty = this.getTypeProperty();
+    public final TileBlockCreator.InfoAboutTile<?> teInfo;
     private final CreativeTabs tab;
-    private StateMapperIU stateMapper;
+    private StateMapperIU stateMapper;    public final TypeProperty typeProperty = this.getTypeProperty();
     public BlockTileEntity(String name, final ResourceLocation identifier, final TileBlockCreator.InfoAboutTile<?> value) {
         super(null, value.getDefaultMaterial());
         this.item = new ItemBlockTileEntity(this, identifier);

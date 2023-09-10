@@ -147,7 +147,6 @@ public class CoolComponent extends AbstractComponent {
 
     private void createDelegate() {
         if (this.delegate != null) {
-            throw new IllegalStateException();
         } else {
             assert !this.sinkDirections.isEmpty() || !this.sourceDirections.isEmpty();
 

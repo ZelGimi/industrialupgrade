@@ -24,7 +24,7 @@ public class CompressorRecipe {
 
         addcompressor(new ItemStack(IUItem.sunnarium, 1, 3), new ItemStack(IUItem.sunnarium, 1, 2));
         addcompressor(IUItem.carbonPlate, 9, new ItemStack(IUItem.compresscarbon));
-        addcompressor(IUItem.advancedAlloy, 9, new ItemStack(IUItem.compresscarbonultra));
+        addcompressor(IUItem.advancedAlloy, 9, new ItemStack(IUItem.compressAlloy));
         addcompressor(IUItem.iridiumPlate, 4, new ItemStack(IUItem.compressIridiumplate));
         addcompressor(new ItemStack(IUItem.cell_all, 1, 1), 1, new ItemStack(IUItem.neutronium));
         addcompressor(new ItemStack(IUItem.compressIridiumplate), 9, new ItemStack(IUItem.doublecompressIridiumplate));

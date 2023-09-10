@@ -94,9 +94,24 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu"));
     }
 
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - this.getCustomDamage(stack) / (this.getMaxCustomDamage(stack) * 1D),
+                        0.0
+                ),
+                1.0
+        );
+    }
+
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
             ItemStack stack = new ItemStack(this);
+            this.setCustomDamage(stack, this.getMaxCustomDamage(stack));
             subItems.add(stack);
         }
     }
@@ -108,6 +123,10 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
         if (!RotorUpgradeSystem.instance.hasInMap(itemStack)) {
             nbt.setBoolean("hasID", false);
             MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(world, this, itemStack));
+        }
+        if (this.getMaxCustomDamage(itemStack) != nbt.getInteger("maxDamage")) {
+            nbt.setInteger("maxDamage", this.getMaxCustomDamage(itemStack));
+            this.setCustomDamage(itemStack, this.getMaxCustomDamage(itemStack));
         }
     }
 
@@ -145,7 +164,7 @@ public class ItemWaterRotor extends ItemDamage implements IWindRotor, IRotorUpgr
         double hours = 0;
         double minutes = 0;
         double seconds = 0;
-        final List<Double> time = ModUtils.Time((this.getMaxDamage(stack) - this.getDamage(stack)));
+        final List<Double> time = ModUtils.Time(this.getCustomDamage(stack));
         if (time.size() > 0) {
             hours = time.get(0);
             minutes = time.get(1);

@@ -2,6 +2,7 @@ package com.denfop.api.crafting;
 
 import com.denfop.api.Recipes;
 import com.denfop.recipe.IInputItemStack;
+import com.denfop.recipe.IngredientInput;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -20,6 +21,7 @@ public class BaseRecipe implements IShapedRecipe {
     private final int[][] inputIndex;
     private final IInputItemStack[][] input;
     private final int size;
+    private final NonNullList<Ingredient> listIngridient;
     private ResourceLocation name;
 
     public BaseRecipe(ItemStack output, RecipeGrid recipeGrid, List<PartRecipe> partRecipe) {
@@ -34,6 +36,16 @@ public class BaseRecipe implements IShapedRecipe {
                     this.inputIndex[j][i] = 1;
                     this.input[j][i] = recipe.getInput();
                 }
+            }
+        }
+        this.listIngridient = NonNullList.create();
+
+
+        for (int x = 0; x < 9; ++x) {
+            if (this.inputIndex[0][x] != 0) {
+                listIngridient.add(new IngredientInput(this.input[0][x]));
+            } else {
+                listIngridient.add(Ingredient.EMPTY);
             }
         }
         Recipes.registerRecipe(this);
@@ -53,18 +65,7 @@ public class BaseRecipe implements IShapedRecipe {
 
 
     public NonNullList<Ingredient> getIngredients() {
-        final NonNullList<Ingredient> list = NonNullList.create();
-
-
-        for (int x = 0; x < 9; ++x) {
-            if (this.inputIndex[0][x] != 0) {
-                list.add(Ingredient.fromStacks(this.input[0][x].getInputs().toArray(new ItemStack[0])));
-            } else {
-                list.add(Ingredient.EMPTY);
-            }
-        }
-
-        return list;
+        return listIngridient;
     }
 
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {

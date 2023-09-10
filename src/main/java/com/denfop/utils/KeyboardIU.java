@@ -42,6 +42,15 @@ public class KeyboardIU implements IKeyboard {
         return this.get(player, Key.VERTICALMODE);
     }
 
+    public boolean isBootsMode(EntityPlayer player) {
+        return this.get(player, Key.BOOTS);
+    }
+
+    public boolean isLeggingsMode(EntityPlayer player) {
+        return this.get(player, Key.LEGGINGS);
+    }
+
+
     public boolean isFlyModeKeyDown(EntityPlayer player) {
         return this.get(player, KeyboardIU.Key.FLYMODE);
     }
@@ -94,7 +103,9 @@ public class KeyboardIU implements IKeyboard {
         BLACKMODE,
         FORWARD,
         JUMP,
-        ARMOR;
+        ARMOR,
+        BOOTS,
+        LEGGINGS;
 
 
         public static final KeyboardIU.Key[] keys = values();

@@ -82,24 +82,6 @@ public class TileCanner extends TileElectricLiquidTankInventory
     }
 
 
-    public static void addEnrichRecipe(Fluid input, String additive, int i, Fluid output) {
-        Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
-                new Input(
-                        com.denfop.api.Recipes.inputFactory.getInput(ModUtils.getCellFromFluid(input)),
-                        com.denfop.api.Recipes.inputFactory.getInput(additive, i)
-                ),
-                new RecipeOutput(null, ModUtils.getCellFromFluid(output))
-        ));
-        Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(input, 1000),
-                        com.denfop.api.Recipes.inputFactory.getInput(IUItem.FluidCell),
-                        com.denfop.api.Recipes.inputFactory.getInput(additive, i)
-                ),
-                new RecipeOutput(null, ModUtils.getCellFromFluid(output))
-        ));
-    }
-
     public static void addEnrichRecipe(FluidStack input, ItemStack additive, Fluid output) {
         Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
                 new Input(
@@ -231,7 +213,9 @@ public class TileCanner extends TileElectricLiquidTankInventory
         addEnrichRecipe(new FluidStack(FluidName.fluiddistilled_water.getInstance(), 1000), 1, "dustLapis",
                 FluidName.fluidcoolant.getInstance()
         );
-
+        addEnrichRecipe(new FluidStack(FluidRegistry.WATER, 1000), IUItem.cfPowder,
+                FluidName.fluidconstruction_foam.getInstance()
+        );
         addEnrichRecipe(new FluidStack(FluidRegistry.WATER, 6000), new ItemStack(
                 Items.STICK), FluidName.fluidhot_water.getInstance());
 

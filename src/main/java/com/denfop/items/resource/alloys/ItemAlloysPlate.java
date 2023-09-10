@@ -21,7 +21,7 @@ public class ItemAlloysPlate extends ItemSubTypes<ItemAlloysPlate.Types> impleme
     protected static final String NAME = "alloyplate";
 
     public ItemAlloysPlate() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

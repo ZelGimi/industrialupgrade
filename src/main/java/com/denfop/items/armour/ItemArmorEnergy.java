@@ -1,7 +1,6 @@
 package com.denfop.items.armour;
 
 import com.denfop.ElectricItem;
-import com.denfop.Localization;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.ModUtils;
@@ -14,9 +13,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.ISpecialArmor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialArmor, IEnergyItem {
 
@@ -69,12 +65,6 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
         return false;
     }
 
-    public List<String> getHudInfo(ItemStack stack, boolean advanced) {
-        List<String> info = new LinkedList<>();
-        info.add(ElectricItem.manager.getToolTip(stack));
-        info.add(Localization.translate("iu.item.tooltip.PowerTier", this.tier));
-        return info;
-    }
 
     public void getSubItems(CreativeTabs tab, @NotNull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
@@ -143,15 +133,6 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
         return false;
     }
 
-    public void setDamage(ItemStack stack, int damage) {
-        int prev = this.getDamage(stack);
-
-
-    }
-
-    public void setStackDamage(ItemStack stack, int damage) {
-        super.setDamage(stack, damage);
-    }
 
     public abstract double getDamageAbsorptionRatio();
 

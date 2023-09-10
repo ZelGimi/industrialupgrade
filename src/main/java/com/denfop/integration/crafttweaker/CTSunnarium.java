@@ -141,7 +141,7 @@ public class CTSunnarium {
         }
 
         public void apply() {
-            Recipes.recipes.addAdderRecipe("microchip", new BaseMachineRecipe(
+            Recipes.recipes.addAdderRecipe("sunnurium", new BaseMachineRecipe(
                     new Input(
                             new IC2InputItemStack(this.container),
                             new IC2InputItemStack(this.fill),

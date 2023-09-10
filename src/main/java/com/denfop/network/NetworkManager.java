@@ -1,6 +1,30 @@
 package com.denfop.network;
 
-import com.denfop.network.packet.*;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.EnumTypePacket;
+import com.denfop.network.packet.IPacket;
+import com.denfop.network.packet.PacketAbstractComponent;
+import com.denfop.network.packet.PacketCableSound;
+import com.denfop.network.packet.PacketColorPicker;
+import com.denfop.network.packet.PacketColorPickerAllLoggIn;
+import com.denfop.network.packet.PacketExplosion;
+import com.denfop.network.packet.PacketItemStackEvent;
+import com.denfop.network.packet.PacketItemStackUpdate;
+import com.denfop.network.packet.PacketKeys;
+import com.denfop.network.packet.PacketLandEffect;
+import com.denfop.network.packet.PacketRadiation;
+import com.denfop.network.packet.PacketRadiationChunk;
+import com.denfop.network.packet.PacketResearchSystem;
+import com.denfop.network.packet.PacketResearchSystemAdd;
+import com.denfop.network.packet.PacketResearchSystemDelete;
+import com.denfop.network.packet.PacketRunParticles;
+import com.denfop.network.packet.PacketSoundPlayer;
+import com.denfop.network.packet.PacketStopSound;
+import com.denfop.network.packet.PacketUpdateFieldContainerTile;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.network.packet.PacketUpdateOvertimeTile;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.network.packet.PacketUpdateTile;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,7 +42,11 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NetworkManager {
 

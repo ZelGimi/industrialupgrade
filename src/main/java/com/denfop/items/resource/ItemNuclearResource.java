@@ -4,8 +4,8 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUPotion;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IHazmatLike;
 import com.denfop.blocks.ISubEnum;
-import com.denfop.items.armour.ItemArmorHazmat;
 import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -27,7 +27,7 @@ public class ItemNuclearResource extends ItemSubTypes<ItemNuclearResource.Types>
     protected static final String NAME = "nuclearresource";
 
     public ItemNuclearResource() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ReactorsTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
@@ -41,7 +41,7 @@ public class ItemNuclearResource extends ItemSubTypes<ItemNuclearResource.Types>
             if (rawType != null) {
                 if (rawEntity instanceof EntityLivingBase) {
                     EntityLivingBase entity = (EntityLivingBase) rawEntity;
-                    if (!ItemArmorHazmat.hasCompleteHazmat(entity)) {
+                    if (!IHazmatLike.hasCompleteHazmat(entity)) {
                         IUPotion.radiation.applyTo(
                                 entity,
                                 ((IRadioactiveItemType) rawType).getRadiationDuration() * 20,

@@ -25,6 +25,7 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotWaterRotor;
 import com.denfop.invslot.InvSlotWaterRotorBlades;
 import com.denfop.items.ItemWindRod;
+import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -372,7 +373,9 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         if (this.tick >= 40) {
             this.tick = 40;
         }
-        if (space && (this.getRotor() != null && this.slot.get(0).getItemDamage() < this.slot.get(0).getMaxDamage() - 1)) {
+        if (space && (this.getRotor() != null && ((ItemDamage) this.slot
+                .get(0)
+                .getItem()).getCustomDamage(this.slot.get(0)) > 0)) {
             if (!this.getActive()) {
                 this.setActive(true);
             }
@@ -600,9 +603,9 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         if (this.getWorld().provider.getDimension() != 0) {
             return 0;
         }
-        if (this.speed != 0.0F && this.work && (this.getRotor() != null && this.slot.get(0).getItemDamage() < this.slot
+        if (this.speed != 0.0F && this.work && (this.getRotor() != null && ((ItemDamage) this.slot
                 .get(0)
-                .getMaxDamage() - 1)) {
+                .getItem()).getCustomDamage(this.slot.get(0)) > 0)) {
             final long k = (System.currentTimeMillis() - this.lastcheck);
             if (this.mind_wind != 0) {
                 this.angle += (float) k * WindSystem.windSystem.getSpeed(Math.min(

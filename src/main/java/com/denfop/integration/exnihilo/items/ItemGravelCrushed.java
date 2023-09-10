@@ -23,7 +23,7 @@ public class ItemGravelCrushed extends ItemSubTypes<ItemGravelCrushed.Types> imp
     protected static final String NAME = "gravelcrushed";
 
     public ItemGravelCrushed() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

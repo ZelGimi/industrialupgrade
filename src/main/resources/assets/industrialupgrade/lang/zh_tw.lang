@@ -99,16 +99,16 @@ iu.itemNanoSaber1=量子軍刀
 iu.itemNanoSaber=光譜軍刀
 
 # 光譜量子盔甲
-supersolarpanels.itemArmorQuantumHelmet=§d光譜量子頭盔
-supersolarpanels.itemArmorQuantumChestplate=§d光譜量子胸甲
-supersolarpanels.itemArmorQuantumLegs=§d光譜量子護腿
-supersolarpanels.itemArmorQuantumBoots=§d光譜量子靴子
+iu.spectral_helmet=§d光譜量子頭盔
+iu.spectral_chestplate=§d光譜量子胸甲
+iu.spectral_leggings=§d光譜量子護腿
+iu.spectral_boots=§d光譜量子靴子
 
 # 增強型盔甲
-supersolarpanels.itemArmorNanoHelmet=增強型奈米頭盔
-supersolarpanels.itemArmorNanoChestplate=增強型奈米胸甲
-supersolarpanels.itemArmorNanoLegs=增強型奈米護腿
-supersolarpanels.itemArmorNanoBoots=增強型奈米靴子
+iu.adv_nano_helmet=增強型奈米頭盔
+iu.adv_nano_chestplate=增強型奈米胸甲
+iu.adv_nano_leggings=增強型奈米護腿
+iu.adv_nano_boots=增強型奈米靴子
 
 # 核輻射防護套裝
 item.hazmathelmet.name=核輻射防護頭盔

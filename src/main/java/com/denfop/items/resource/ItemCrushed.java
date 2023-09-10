@@ -22,7 +22,7 @@ public class ItemCrushed extends ItemSubTypes<ItemCrushed.Types> implements IMod
     protected static final String NAME = "crushed";
 
     public ItemCrushed() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

@@ -404,6 +404,10 @@ public final class Config {
     public static int tickupdateenergysystem;
     public static int ticktransferenergy;
     public static boolean enablelosing;
+    public static boolean CopperOre;
+    public static boolean TinOre;
+    public static boolean LeadOre;
+    public static boolean UraniumOre;
 
 
     public static void loadNormalConfig(final File configFile) {
@@ -847,6 +851,10 @@ public final class Config {
             ManganeseOre = config.get("spawn ore", "Enable spawn ManganeseOre", true).getBoolean(true);
             IridiumOre = config.get("spawn ore", "Enable spawn IridiumOre", true).getBoolean(true);
             GermaniumOre = config.get("spawn ore", "Enable spawn GermaniumOre", true).getBoolean(true);
+            CopperOre = config.get("spawn ore", "Enable spawn CopperOre", true).getBoolean(true);
+            TinOre = config.get("spawn ore", "Enable spawn TinOre", true).getBoolean(true);
+            LeadOre = config.get("spawn ore", "Enable spawn LeadOre", true).getBoolean(true);
+            UraniumOre = config.get("spawn ore", "Enable spawn UraniumOre", true).getBoolean(true);
 
             MagnetiteOre = config.get("spawn ore", "Enable spawn MagnetiteOre", true).getBoolean(true);
             CalaveriteOre = config.get("spawn ore", "Enable spawn CalaveriteOre", true).getBoolean(true);

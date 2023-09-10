@@ -30,7 +30,7 @@ public class ItemQuarryModule extends ItemSubTypes<ItemQuarryModule.CraftingType
     protected static final String NAME = "quarrymodules";
 
     public ItemQuarryModule() {
-        super(null, CraftingTypes.class);
+        super(CraftingTypes.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

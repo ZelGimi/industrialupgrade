@@ -18,7 +18,7 @@ public class ItemDust extends ItemSubTypes<ItemDust.ItemDustTypes> implements IM
     protected static final String NAME = "itemdust";
 
     public ItemDust() {
-        super(null, ItemDustTypes.class);
+        super(ItemDustTypes.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
@@ -74,7 +74,8 @@ public class ItemDust extends ItemSubTypes<ItemDust.ItemDustTypes> implements IM
         obsidian(29),
         stone(30),
         sulfur(31),
-        tin(32);
+        tin(32),
+        silicon_dioxide(33);
 
         private final String name;
         private final int ID;

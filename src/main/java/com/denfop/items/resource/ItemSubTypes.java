@@ -25,18 +25,16 @@ import java.util.Set;
 public class ItemSubTypes<T extends Enum<T> & IStringSerializable> extends Item implements ISubItem<T>, IModelRegister {
 
     protected final PropertyEnum<T> typeProperty;
-    protected final String name;
 
-    private ItemSubTypes(String name, PropertyEnum<T> typeProperty) {
+    private ItemSubTypes(PropertyEnum<T> typeProperty) {
         super();
         this.typeProperty = typeProperty;
         this.setHasSubtypes(true);
-        this.name = name;
     }
 
-    protected ItemSubTypes(String name, Class<T> typeClass) {
+    protected ItemSubTypes(Class<T> typeClass) {
 
-        this(name, PropertyEnum.create("type", typeClass, Arrays.asList(typeClass.getEnumConstants())));
+        this(PropertyEnum.create("type", typeClass, Arrays.asList(typeClass.getEnumConstants())));
 
     }
 

@@ -25,7 +25,7 @@ public class ItemWaterRod extends ItemSubTypes<ItemWaterRod.Types> implements IM
     protected static final String NAME = "waterrod";
 
     public ItemWaterRod() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

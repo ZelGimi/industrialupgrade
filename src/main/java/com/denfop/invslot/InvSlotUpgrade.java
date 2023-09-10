@@ -501,7 +501,9 @@ public class InvSlotUpgrade extends InvSlot {
                         took = handler.getHandler().extractItem(j, took.getCount(), false);
                         ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
                     } else if (took1 != took) {
-                        took = handler.getHandler().extractItem(j, took1.getCount(), false);
+                        int count = took1.getCount() - took.getCount();
+                        count = Math.abs(count);
+                        took = handler.getHandler().extractItem(j, count, false);
                         ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
                     }
                 }
@@ -528,7 +530,9 @@ public class InvSlotUpgrade extends InvSlot {
                             took = handler.getHandler().extractItem(j, took.getCount(), false);
                             ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
                         } else if (took1 != took) {
-                            took = handler.getHandler().extractItem(j, took1.getCount(), false);
+                            int count = took1.getCount() - took.getCount();
+                            count = Math.abs(count);
+                            took = handler.getHandler().extractItem(j, count, false);
                             ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
                         }
                     }
@@ -563,7 +567,9 @@ public class InvSlotUpgrade extends InvSlot {
                             slot.put(j, ItemStack.EMPTY);
                             insertItem1(handler, took, false, slots);
                         } else if (stack != took) {
-                            slot.get(j).shrink(stack.getCount());
+                            int col = slot.get(j).getCount() - stack.getCount();
+                            slot.get(j).shrink(col);
+                            stack.setCount(col);
                             insertItem1(handler, stack, false, slots);
                         }
 
@@ -583,7 +589,9 @@ public class InvSlotUpgrade extends InvSlot {
                             slot.put(j, ItemStack.EMPTY);
                             ModUtils.insertItem(handler.getHandler(), took, false, slots);
                         } else if (stack != took) {
-                            slot.get(j).shrink(stack.getCount());
+                            int col = slot.get(j).getCount() - stack.getCount();
+                            slot.get(j).shrink(col);
+                            stack.setCount(col);
                             ModUtils.insertItem(handler.getHandler(), stack, false, slots);
                         }
 

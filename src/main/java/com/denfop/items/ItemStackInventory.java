@@ -14,8 +14,8 @@ import java.util.Arrays;
 
 public abstract class ItemStackInventory implements IAdvInventory {
 
+    public final EntityPlayer player;
     protected final ItemStack[] inventory;
-    protected final EntityPlayer player;
     protected ItemStack containerStack;
     private boolean cleared;
 

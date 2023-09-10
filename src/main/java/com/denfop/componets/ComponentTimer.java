@@ -98,6 +98,7 @@ public class ComponentTimer extends AbstractComponent {
     @Override
     public NBTTagCompound writeToNbt() {
         NBTTagCompound nbtTagCompound = super.writeToNbt();
+        nbtTagCompound.setInteger("indexWork", indexWork);
         nbtTagCompound.setInteger("size", this.timers.size());
         for (int i = 0; i < this.timers.size(); i++) {
             nbtTagCompound.setTag("Timer_" + i, this.timers.get(i).writeNBT(new NBTTagCompound()));
@@ -108,6 +109,7 @@ public class ComponentTimer extends AbstractComponent {
     @Override
     public void readFromNbt(final NBTTagCompound nbt) {
         super.readFromNbt(nbt);
+        indexWork = nbt.getInteger("indexWork");
         final int size = nbt.getInteger("size");
         for (int i = 0; i < size; i++) {
             this.timers.get(i).readNBT(nbt.getCompoundTag("Timer_" + i));

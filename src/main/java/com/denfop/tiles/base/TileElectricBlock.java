@@ -376,7 +376,9 @@ public class TileElectricBlock extends TileEntityInventory implements
                                             + Localization.translate("iu.sendenergy")
                                             + ModUtils.getString(sent) + " EF"
                             );
+                            entityPlayer.inventoryContainer.detectAndSendChanges();
                         }
+
 
                     }
 
@@ -402,8 +404,9 @@ public class TileElectricBlock extends TileEntityInventory implements
                                             + Localization.translate("iu.sendenergy")
                                             + ModUtils.getString(sent) + " EF"
                             );
+                            entityPlayer.inventoryContainer.detectAndSendChanges();
                         }
-                        entityPlayer.inventoryContainer.detectAndSendChanges();
+
 
                     }
 

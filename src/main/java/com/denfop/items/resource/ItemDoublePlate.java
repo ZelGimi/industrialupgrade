@@ -18,7 +18,7 @@ public class ItemDoublePlate extends ItemSubTypes<ItemDoublePlate.ItemDoublePlat
     protected static final String NAME = "itemdoubleplates";
 
     public ItemDoublePlate() {
-        super(null, ItemDoublePlateTypes.class);
+        super(ItemDoublePlateTypes.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

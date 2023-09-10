@@ -101,7 +101,7 @@ public class EventUpdate {
         public void run() {
             ModUtils.info("[Update Checker] Thread Started");
             try {
-                URL versionURL = new URL("https://raw.githubusercontent.com/ZelGimi/industrialupgrade/1.12.2-dev/version.txt");
+                URL versionURL = new URL("https://raw.githubusercontent.com/ZelGimi/industrialupgrade/main/version.txt");
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(versionURL.openStream()));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {

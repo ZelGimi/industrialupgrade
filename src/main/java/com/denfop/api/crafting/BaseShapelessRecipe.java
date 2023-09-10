@@ -3,6 +3,7 @@ package com.denfop.api.crafting;
 import com.denfop.api.Recipes;
 import com.denfop.items.ItemToolCrafting;
 import com.denfop.recipe.IInputItemStack;
+import com.denfop.recipe.IngredientInput;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -102,7 +103,7 @@ public class BaseShapelessRecipe implements IRecipe {
 
 
         for (IInputItemStack input : this.recipeInputList) {
-            list.add(Ingredient.fromStacks(input.getInputs().toArray(new ItemStack[0])));
+            list.add(new IngredientInput(input));
 
         }
 

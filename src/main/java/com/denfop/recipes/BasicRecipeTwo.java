@@ -3185,24 +3185,8 @@ public class BasicRecipeTwo {
 
                 ('A'), new ItemStack(IUItem.drill, 1, 32767)
         );
-        Recipes.recipe.addRecipe(
-                IUItem.nano_boots
-                ,
-                "   ", "B B", "BAB", ('B'), "plateCarbon", ('A'), new ItemStack(
-                        IUItem.energy_crystal,
-                        1,
-                        32767
-                )
-        );
-        Recipes.recipe.addRecipe(
-                IUItem.nano_leggings
-                ,
-                "BAB", "B B", "B B", ('B'), "plateCarbon", ('A'), new ItemStack(
-                        IUItem.energy_crystal,
-                        1,
-                        32767
-                )
-        );
+
+
         Recipes.recipe.addShapelessRecipe(
                 IUItem.insulatedCopperCableItem,
                 IUItem.copperCableItem, IUItem.rubber
@@ -3210,26 +3194,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addShapelessRecipe(IUItem.insulatedGoldCableItem, IUItem.goldCableItem, IUItem.rubber);
         Recipes.recipe.addShapelessRecipe(IUItem.insulatedIronCableItem, IUItem.ironCableItem, IUItem.rubber);
         Recipes.recipe.addShapelessRecipe(IUItem.insulatedTinCableItem, IUItem.tinCableItem, IUItem.rubber);
-        Recipes.recipe.addRecipe(
-                IUItem.nano_chestplate
-                ,
-                "B B", "BAB", "BBB", ('B'), "plateCarbon", ('A'), new ItemStack(
-                        IUItem.energy_crystal,
-                        1,
-                        32767
-                )
-        );
-        Recipes.recipe.addRecipe(
-                IUItem.nano_helmet
-                ,
-                "   ", "BAB", "BCB", ('B'), "plateCarbon", ('A'), new ItemStack(
-                        IUItem.energy_crystal,
-                        1,
-                        32767
-                ),
 
-                ('C'), new ItemStack(IUItem.nightvision, 1, 32767)
-        );
         Recipes.recipe.addRecipe(IUItem.nightvision
                 , " E ", "CDC", "ABA",
 
@@ -3325,48 +3290,7 @@ public class BasicRecipeTwo {
                 new ItemStack(IUItem.energy_crystal, 1, 32767)
         );
 
-        Recipes.recipe.addRecipe(IUItem.quantum_helmet
-                , "BAB", "CDC", "EFE", ('B'), IUItem.reinforcedGlass,
-                ('A'), new ItemStack(
-                        IUItem.nano_helmet,
-                        1,
-                        32767
-                ), ('C'), IUItem.iridiumPlate,
-                ('D'),
-                new ItemStack(IUItem.lapotron_crystal, 1, 32767), ('E'), IUItem.advancedCircuit,
-                ('F'), IUItem.hazmat_helmet
-        );
-        Recipes.recipe.addRecipe(IUItem.quantum_chestplate
-                , "BAB", "CDC", "EFE", ('B'), IUItem.advancedAlloy,
-                ('A'), new ItemStack(
-                        IUItem.nano_chestplate,
-                        1,
-                        32767
-                ), ('C'), IUItem.iridiumPlate,
-                ('D'),
-                new ItemStack(IUItem.lapotron_crystal, 1, 32767), ('E'), IUItem.iridiumPlate,
-                ('F'), IUItem.electricJetpack
-        );
-        Recipes.recipe.addRecipe(IUItem.quantum_leggings
-                , "BDB", "CAC", "E E", ('B'), IUItem.machine,
-                ('A'), new ItemStack(
-                        IUItem.nano_leggings,
-                        1,
-                        32767
-                ), ('C'), IUItem.iridiumPlate,
-                ('D'),
-                new ItemStack(IUItem.lapotron_crystal, 1, 32767), ('E'), Items.GLOWSTONE_DUST
-        );
-        Recipes.recipe.addRecipe(IUItem.quantum_boots
-                , "   ", "BDB", "CAC", ('B'), IUItem.iridiumPlate,
-                ('D'), new ItemStack(
-                        IUItem.nano_boots,
-                        1,
-                        32767
-                ), ('C'), IUItem.rubber_boots,
-                ('A'),
-                new ItemStack(IUItem.lapotron_crystal, 1, 32767)
-        );
+
         Recipes.recipe.addRecipe(IUItem.mixedMetalIngot, "AAA", "BBB", "CCC",
                 ('A'), "plateIron", ('B'), "plateCopper", ('C'), "plateTin"
         );
@@ -3612,6 +3536,230 @@ public class BasicRecipeTwo {
                 "plateCarbon",
                 ('D'),
                 IUItem.machine
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.nano_helmet,
+                "DCD",
+                "BAB",
+                "EDE",
+                ('A'),
+                IUItem.nightvision,
+                ('B'),
+                IUItem.circuitNano,
+                ('C'),
+                IUItem.energy_crystal,
+                ('D'),
+                IUItem.carbonPlate, 'E', IUItem.nanoBox
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.nano_chestplate,
+                "DCD",
+                "BAB",
+                "EDE",
+                ('A'),
+                Items.DIAMOND_CHESTPLATE,
+                ('B'),
+                IUItem.circuitNano,
+                ('C'),
+                IUItem.energy_crystal,
+                ('D'),
+                IUItem.carbonPlate, 'E', IUItem.nanoBox
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.nano_leggings,
+                "DCD",
+                "BAB",
+                "EDE",
+                ('A'),
+                Items.DIAMOND_LEGGINGS,
+                ('B'),
+                IUItem.circuitNano,
+                ('C'),
+                IUItem.energy_crystal,
+                ('D'),
+                IUItem.carbonPlate, 'E', IUItem.nanoBox
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.nano_boots,
+                "DCD",
+                "BAB",
+                "EDE",
+                ('A'),
+                Items.DIAMOND_BOOTS,
+                ('B'),
+                IUItem.circuitNano,
+                ('C'),
+                IUItem.energy_crystal,
+                ('D'),
+                IUItem.carbonPlate, 'E', IUItem.nanoBox
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.adv_nano_helmet,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.nano_helmet,
+                ('B'),
+                "doubleplateFerromanganese",
+                ('C'),
+                IUItem.lapotron_crystal,
+                ('D'),
+                IUItem.compresscarbon, 'E', IUItem.advnanobox, 'F', IUItem.compresscarbon
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.adv_nano_chestplate,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.nano_chestplate,
+                ('B'),
+                "doubleplateFerromanganese",
+                ('C'),
+                IUItem.lapotron_crystal,
+                ('D'),
+                IUItem.compresscarbon, 'E', IUItem.advnanobox, 'F', IUItem.electricJetpack
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.adv_nano_boots,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.nano_boots,
+                ('B'),
+                "doubleplateFerromanganese",
+                ('C'),
+                IUItem.lapotron_crystal,
+                ('D'),
+                IUItem.compresscarbon, 'E', IUItem.advnanobox, 'F', IUItem.compresscarbon
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.adv_nano_leggings,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.nano_leggings,
+                ('B'),
+                "doubleplateFerromanganese",
+                ('C'),
+                IUItem.lapotron_crystal,
+                ('D'),
+                IUItem.compresscarbon, 'E', IUItem.advnanobox, 'F', IUItem.compresscarbon
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.quantum_helmet,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.adv_nano_helmet,
+                ('B'),
+                IUItem.cirsuitQuantum,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.iridiumPlate, 'E', IUItem.advQuantumtool, 'F', IUItem.hazmat_helmet
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.quantum_chestplate,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.adv_nano_chestplate,
+                ('B'),
+                IUItem.cirsuitQuantum,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.iridiumPlate, 'E', IUItem.advQuantumtool, 'F', IUItem.impjetpack
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.quantum_leggings,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.adv_nano_leggings,
+                ('B'),
+                IUItem.cirsuitQuantum,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.iridiumPlate, 'E', IUItem.advQuantumtool, 'F', IUItem.adv_bags
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.quantum_boots,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.adv_nano_boots,
+                ('B'),
+                IUItem.cirsuitQuantum,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.iridiumPlate, 'E', IUItem.advQuantumtool, 'F', IUItem.rubber_boots
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.spectral_helmet,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.quantum_helmet,
+                ('B'),
+                IUItem.circuitSpectral,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.doublecompressIridiumplate, 'E', IUItem.adv_spectral_box, 'F', IUItem.hazmathelmet
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.spectral_chestplate,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.quantum_chestplate,
+                ('B'),
+                IUItem.circuitSpectral,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.doublecompressIridiumplate, 'E', IUItem.adv_spectral_box, 'F', IUItem.impjetpack
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.spectral_leggings,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.quantum_leggings,
+                ('B'),
+                IUItem.circuitSpectral,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.doublecompressIridiumplate, 'E', IUItem.adv_spectral_box, 'F', IUItem.impmagnet
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.spectral_boots,
+                "DCD",
+                "BAB",
+                "EFE",
+                ('A'),
+                IUItem.quantum_boots,
+                ('B'),
+                IUItem.circuitSpectral,
+                ('C'),
+                IUItem.AdvlapotronCrystal,
+                ('D'),
+                IUItem.doublecompressIridiumplate, 'E', IUItem.adv_spectral_box, 'F', IUItem.compressAlloy
         );
     }
 

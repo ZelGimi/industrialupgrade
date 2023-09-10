@@ -81,6 +81,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     private boolean sound;
     private Fluids fluid = null;
     private int tick;
+    private TileSolarPanel panel;
 
     public TileMultiMachine(int energyconsume, int OperationsPerTick, int type) {
         this(1, energyconsume, OperationsPerTick, type);
@@ -426,43 +427,6 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     }
 
 
-    public void updateVisibility(TileSolarPanel type) {
-        type.wetBiome = this.world.getBiome(this.pos).getRainfall() > 0.0F;
-        type.noSunWorld = this.world.provider.isNether();
-
-        type.rain = type.wetBiome && (this.world.isRaining() || this.world.isThundering());
-        type.sunIsUp = this.world.isDaytime();
-        type.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && !type.noSunWorld;
-
-        if (!type.skyIsVisible) {
-            type.activeState = TileSolarPanel.GenerationState.NONE;
-        }
-        if (type.sunIsUp && type.skyIsVisible) {
-            if (!(type.rain)) {
-                type.activeState = TileSolarPanel.GenerationState.DAY;
-            } else {
-                type.activeState = TileSolarPanel.GenerationState.RAINDAY;
-            }
-
-        }
-        if (!type.sunIsUp && type.skyIsVisible) {
-            if (!(type.rain)) {
-                type.activeState = TileSolarPanel.GenerationState.NIGHT;
-            } else {
-                type.activeState = TileSolarPanel.GenerationState.RAINNIGHT;
-            }
-        }
-        if (type.getWorld().provider.getDimension() == 1) {
-            type.activeState = TileSolarPanel.GenerationState.END;
-        }
-        if (type.getWorld().provider.getDimension() == -1) {
-            type.activeState = TileSolarPanel.GenerationState.NETHER;
-        }
-
-    }
-
     @Override
     public boolean onActivated(
             final EntityPlayer entityPlayer,
@@ -590,26 +554,37 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         super.updateEntityServer();
         if (solartype != null) {
             if (this.energy.getEnergy() < this.energy.getCapacity()) {
-                TileSolarPanel panel = new TileSolarPanel(solartype);
-                if (panel.getWorld() != this.getWorld()) {
+                if (panel == null) {
+                    this.panel = new TileSolarPanel(solartype);
                     panel.setWorld(this.getWorld());
+                    panel.setPos(this.pos);
                     IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
+                    panel.canRain = (this.world.getBiome(this.pos).canRain() || this.world
+                            .getBiome(this.pos)
+                            .getRainfall() > 0.0F);
+                    panel.hasSky = !this.world.provider.isNether();
+                    panel.biome = this.world.getBiome(this.pos);
                     panel.sunCoef = advEnergyNet.getSunCoefficient(this.world);
+                    panel.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
+                            (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
+                                    MapColor.AIR) && !panel.noSunWorld;
+                    panel.wetBiome = panel.getWorld().getBiome(this.pos).getRainfall() > 0.0F;
+                    panel.rain = panel.wetBiome && (this.world.isRaining() || this.world.isThundering());
+                    panel.sunIsUp = this.getWorld().isDaytime();
+
                 }
-                panel.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                        (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                                MapColor.AIR) && !panel.noSunWorld;
-                panel.wetBiome = panel.getWorld().getBiome(this.pos).getRainfall() > 0.0F;
-                panel.rain = panel.wetBiome && (this.world.isRaining() || this.world.isThundering());
-                panel.sunIsUp = this.getWorld().isDaytime();
 
                 if (panel.activeState == null || this.getWorld().provider.getWorldTime() % 40 == 0) {
-                    updateVisibility(panel);
+                    panel.updateVisibility();
                 }
                 panel.gainFuel();
                 if (this.energy.getEnergy() < this.energy.getCapacity()) {
                     this.energy.addEnergy(Math.min(panel.generating, energy.getFreeEnergy()));
                 }
+            }
+        } else {
+            if (panel != null) {
+                panel = null;
             }
         }
         this.tick++;

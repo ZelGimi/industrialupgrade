@@ -19,7 +19,7 @@ public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> impleme
     protected static final String NAME = "circuit";
 
     public ItemBaseCircuit() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

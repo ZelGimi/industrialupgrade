@@ -6,7 +6,11 @@ import com.google.common.base.Suppliers;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class TextBook extends GuiElement<TextBook> {
 

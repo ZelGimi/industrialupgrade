@@ -16,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 public abstract class ContainerBase<T extends IAdvInventory> extends Container {
@@ -192,4 +194,7 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         return amount;
     }
 
+    protected List<String> getNetworkedFields() {
+        return new ArrayList<>();
+    }
 }

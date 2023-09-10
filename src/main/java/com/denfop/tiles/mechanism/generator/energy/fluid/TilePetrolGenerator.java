@@ -11,6 +11,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerPetrolGenerator;
 import com.denfop.gui.GuiPetrolGenerator;
 import com.denfop.invslot.InvSlotCharge;
@@ -59,6 +60,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
                 (double) 50000 * coef,
                 EnergyNetGlobal.instance.getTierFromPower(this.production)
         ).addManagedSlot(chargeSlot));
+        ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidneft.getInstance()));
 
     }
 

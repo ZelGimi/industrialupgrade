@@ -22,7 +22,7 @@ public class ItemPurifiedCrushed extends ItemSubTypes<ItemPurifiedCrushed.Types>
     protected static final String NAME = "purifiedcrushed";
 
     public ItemPurifiedCrushed() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

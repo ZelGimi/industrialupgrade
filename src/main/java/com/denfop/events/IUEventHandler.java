@@ -18,6 +18,8 @@ import com.denfop.container.ContainerBags;
 import com.denfop.container.ContainerLeadBox;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.armour.ItemAdvJetpack;
+import com.denfop.items.armour.special.EnumCapability;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.block.ItemBlockIU;
@@ -257,8 +259,11 @@ public class IUEventHandler {
 
     public boolean canFly(ItemStack stack) {
         return stack
-                .getItem() == IUItem.spectral_chestplate || stack
-                .getItem() == IUItem.adv_nano_chestplate || (stack
+                .getItem() == IUItem.spectral_chestplate ||
+                (stack.getItem() instanceof ItemSpecialArmor && (((ItemSpecialArmor) stack.getItem())
+                        .getListCapability()
+                        .contains(EnumCapability.FLY) || ((ItemSpecialArmor) stack.getItem()).getListCapability().contains(
+                        EnumCapability.JETPACK_FLY))) || (stack
                 .getItem() instanceof ItemAdvJetpack && UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FLY, stack));
     }
 

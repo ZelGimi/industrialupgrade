@@ -20,7 +20,7 @@ public class ItemIUCrafring extends ItemSubTypes<ItemIUCrafring.Types> implement
     protected static final String NAME = "ItemIUCrafring".toLowerCase();
 
     public ItemIUCrafring() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

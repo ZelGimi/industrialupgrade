@@ -37,7 +37,7 @@ public class ItemUpgradeMachinesKit extends ItemSubTypes<ItemUpgradeMachinesKit.
     public static int[] inform = new int[4];
 
     public ItemUpgradeMachinesKit() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.UpgradeTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

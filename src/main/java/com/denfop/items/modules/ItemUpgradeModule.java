@@ -28,7 +28,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
     protected static final String NAME = "upgrademodules";
 
     public ItemUpgradeModule() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

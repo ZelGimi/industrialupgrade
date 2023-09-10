@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IModelRegister, IEnergyItem {
@@ -42,7 +41,6 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IMo
         setCreativeTab(IUCore.EnergyTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(armorName)).setUnlocalizedName(armorName);
         IUCore.proxy.addIModelRegister(this);
-        this.setMaxDamage(27);
         this.setNoRepair();
     }
 
@@ -92,11 +90,6 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements IMo
         return 200.0;
     }
 
-    public List<String> getHudInfo(ItemStack stack, boolean advanced) {
-        List<String> info = new LinkedList();
-        info.add(ElectricItem.manager.getToolTip(stack));
-        return info;
-    }
 
     @Override
     public void registerModels() {

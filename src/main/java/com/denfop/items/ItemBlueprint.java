@@ -19,7 +19,7 @@ public class ItemBlueprint extends ItemSubTypes<ItemBlueprint.Types> implements 
     protected static final String NAME = "blueprint";
 
     public ItemBlueprint() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.BlueprintTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

@@ -20,6 +20,7 @@ import com.denfop.render.multiblock.TileEntityMultiBlockRender;
 import com.denfop.render.oilquarry.TileEntityQuarryOilRender;
 import com.denfop.render.oilrefiner.TileEntityOilRefinerRender;
 import com.denfop.render.panel.TileEntityMiniPanelRender;
+import com.denfop.render.panel.TileEntitySolarPanelRender;
 import com.denfop.render.sintezator.TileEntitySintezatorRender;
 import com.denfop.render.streak.EventSpectralSuitEffect;
 import com.denfop.render.tank.TileEntityTankRender;
@@ -41,6 +42,7 @@ import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
+import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -119,6 +121,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileWindGenerator.class, new KineticGeneratorRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileBaseWaterGenerator.class, new WaterGeneratorRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultiCable.class, new TileEntityCableRender<>());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new TileEntitySolarPanelRender<>());
 
 
         EnumMultiMachine.write();
@@ -187,6 +190,14 @@ public class ClientProxy extends CommonProxy {
     ) {
         if (ID == 1) {
             final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+            if (stack.getItem() instanceof IItemStackInventory) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                this.gui = inventory.getInventory(player, stack).getGui(player, false);
+                return this.gui;
+            }
+        }
+        if (ID == 2) {
+            final ItemStack stack = player.inventory.armorInventory.get(1);
             if (stack.getItem() instanceof IItemStackInventory) {
                 IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
                 this.gui = inventory.getInventory(player, stack).getGui(player, false);

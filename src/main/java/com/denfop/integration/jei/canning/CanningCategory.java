@@ -5,7 +5,11 @@ import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.integration.jei.JEICompat;
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.*;
+import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IDrawableStatic;
+import mezz.jei.api.gui.IGuiFluidStackGroup;
+import mezz.jei.api.gui.IGuiItemStackGroup;
+import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
@@ -65,7 +69,7 @@ public class CanningCategory extends Gui implements IRecipeCategory<CanningRecip
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(13 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(14 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
         drawTexturedModalRect(74 - 5, 22 - 16, 232, 0, (int) (xScale), 16);

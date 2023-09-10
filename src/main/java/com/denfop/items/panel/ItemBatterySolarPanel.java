@@ -26,7 +26,7 @@ public class ItemBatterySolarPanel extends ItemSubTypes<ItemBatterySolarPanel.Ty
     protected static final String NAME = "solar_panel_battery";
 
     public ItemBatterySolarPanel() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

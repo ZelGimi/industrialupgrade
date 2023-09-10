@@ -86,9 +86,6 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
         return this.getCustomDamage(stack) > 0;
     }
 
-    public int getDamage(@Nonnull ItemStack stack) {
-        return this.getCustomDamage(stack);
-    }
 
     public int getCustomDamage(ItemStack stack) {
         if (!stack.hasTagCompound()) {
@@ -99,16 +96,12 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
         }
     }
 
-    public int getMaxDamage(@Nonnull ItemStack stack) {
-        return this.getMaxCustomDamage(stack);
-    }
 
     public int getMaxCustomDamage(ItemStack stack) {
         return this.maxDamage;
     }
 
     public void setDamage(@Nonnull ItemStack stack, int damage) {
-        this.getCustomDamage(stack);
 
     }
 
@@ -118,7 +111,7 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
     }
 
     public boolean applyCustomDamage(ItemStack stack, int damage, EntityLivingBase src) {
-        this.setCustomDamage(stack, this.getCustomDamage(stack) + damage);
+        this.setCustomDamage(stack, this.getCustomDamage(stack) - damage);
         return true;
     }
 

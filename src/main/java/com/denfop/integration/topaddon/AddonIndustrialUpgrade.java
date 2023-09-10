@@ -18,9 +18,8 @@ import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemArmorAdvHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedNano;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
 import com.denfop.items.armour.ItemSolarPanelHelmet;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityLiquedTank;
 import com.denfop.tiles.base.TileMultiMatter;
@@ -159,8 +158,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
 
     public Map<Class<? extends ItemArmor>, EnumChip> getSpecialHelmets() {
         Map<Class<? extends ItemArmor>, EnumChip> map = new HashMap<>();
-        map.put(ItemArmorImprovemedNano.class, EnumChip.IC2);
-        map.put(ItemArmorImprovemedQuantum.class, EnumChip.IC2);
+        map.put(ItemSpecialArmor.class, EnumChip.STANDARD);
         map.put(ItemArmorAdvHazmat.class, EnumChip.IC2);
         map.put(ItemAdvJetpack.class, EnumChip.IC2);
         map.put(ItemSolarPanelHelmet.class, EnumChip.IC2);

@@ -9,10 +9,8 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
 
@@ -359,66 +357,7 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(new ItemStack(IUItem.topaz_helmet), "AAA", "A A", "   ",
                 ('A'), ("gemTopaz")
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.adv_nano_boots, 1, 32767), " A ", "BCB", "DED",
 
-                ('A'), IUItem.circuitNano,
-
-                ('B'),
-                ("doubleplateRedbrass"),
-                ('C'), new ItemStack(IUItem.lapotron_crystal, 1, 32767),
-
-                ('D'),
-                new ItemStack(IUItem.compresscarbon),
-
-                ('E'), new ItemStack(IUItem.nano_boots, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.adv_nano_leggings, 1, 32767), "DED", "BCB", "FAF",
-
-                ('A'), IUItem.circuitNano,
-
-                ('B'),
-                ("plateRedbrass"),
-                ('C'), new ItemStack(IUItem.lapotron_crystal, 1, 32767),
-
-                ('D'),
-                new ItemStack(IUItem.compresscarbon),
-
-                ('E'), new ItemStack(IUItem.nano_leggings, 1, 32767),
-
-                ('F'),
-                ("plateAluminumbronze")
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.adv_nano_chestplate, 1, 32767), "DBD", "CEC", "FAF",
-
-                ('A'), new ItemStack(IUItem.electricJetpack, 1, 32767),
-
-                ('B'), new ItemStack(IUItem.adv_lappack, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.lapotron_crystal, 1, 32767),
-
-                ('D'),
-                new ItemStack(IUItem.compresscarbon),
-
-                ('E'), new ItemStack(IUItem.nano_chestplate, 1, 32767),
-
-                ('F'), new ItemStack(IUItem.compresscarbonultra)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.adv_nano_helmet, 1, 32767), "DCD", "BEB", "FGF",
-
-                ('A'), new ItemStack(IUItem.electricJetpack, 1, 32767),
-
-                ('B'), new ItemStack(IUItem.compresscarbon, 1),
-
-                ('C'), new ItemStack(IUItem.lapotron_crystal, 1, 32767),
-
-                ('D'),
-                ("doubleplateAlcled"),
-                ('E'), new ItemStack(IUItem.nano_helmet, 1, 32767),
-
-                ('F'),
-                ("doubleplateFerromanganese"),
-                ('G'), IUItem.circuitNano
-        );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.electricblock, 1, 2), "ABA", "CCC", "AAA",
                 ('A'), ("plankWood"), ('C'), new ItemStack(IUItem.reBattery, 1, 32767),
 
@@ -531,85 +470,8 @@ public class BaseRecipes {
 
                 ('C'), IUItem.cirsuitQuantum, ('A'), IUItem.overclockerUpgrade_1
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_boots), "C C", " A ", "CDC",
 
-                ('D'), new ItemStack(IUItem.quantum_boots, 1, 32767),
 
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'), new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_boots), "C C", "BAB", "CDC",
-
-                ('B'), IUItem.iridiumPlate,
-
-                ('D'), new ItemStack(IUItem.adv_nano_boots, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'),
-                new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_leggings), "C C", " A ", "CDC",
-
-                ('D'), new ItemStack(IUItem.quantum_leggings, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'), new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_leggings), "CDC", "BAB", "C C",
-
-                ('B'), IUItem.iridiumPlate,
-
-                ('D'), new ItemStack(IUItem.adv_nano_leggings, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'),
-                new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_helmet), "C C", " A ", "CDC",
-
-                ('D'), new ItemStack(IUItem.quantum_helmet, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'), new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_helmet), "CDC", "BAB", "C C",
-
-                ('B'), IUItem.iridiumPlate,
-
-                ('D'), new ItemStack(IUItem.adv_nano_helmet, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'),
-                new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_chestplate), "CDC", "BAB", "C C",
-
-                ('B'), IUItem.iridiumPlate,
-
-                ('D'), new ItemStack(IUItem.adv_nano_chestplate, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'),
-                new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.spectral_chestplate), "CDC", "BAB", "C C",
-
-                ('B'),
-                ("doubleplateVitalium"),
-                ('D'), new ItemStack(IUItem.quantum_chestplate, 1, 32767),
-
-                ('C'), new ItemStack(IUItem.adv_spectral_box, 1),
-
-                ('A'),
-                new ItemStack(IUItem.AdvlapotronCrystal, 1, 32767)
-        );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.advnanobox), " C ", "CAC", " C ",
                 ('C'), new ItemStack(IUItem.photoniy, 1), ('A'), new ItemStack(IUItem.nanoBox)
         );
@@ -638,7 +500,7 @@ public class BaseRecipes {
 
                 ('F'),
                 ("doubleplateIridium"),
-                ('B'), new ItemStack(IUItem.compresscarbonultra, 1),
+                ('B'), new ItemStack(IUItem.compressAlloy, 1),
 
                 ('D'), new ItemStack(IUItem.compresscarbon, 1),
 
@@ -1046,6 +908,9 @@ public class BaseRecipes {
                 ('A'),
                 ("plateVanadium")
         );
+        Recipes.recipe.addRecipe(IUItem.cfPowder, "A", " A", " BC", ('A'), IUItem.casingiron,
+                ('B'), IUItem.cell_all
+        );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.electricJetpack), "ADA", "ACA", "B B", ('A'), IUItem.casingiron,
                 ('B'), Items.GLOWSTONE_DUST, ('C'), new ItemStack(IUItem.electricblock, 1, 2), ('D'),
                 IUItem.advancedCircuit
@@ -1094,7 +959,7 @@ public class BaseRecipes {
 
                 ('B'),
                 ("doubleplateVanadoalumite"),
-                ('A'), new ItemStack(IUItem.compresscarbonultra)
+                ('A'), new ItemStack(IUItem.compressAlloy)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.module7, 1, 5), "ABA",
                 ('B'), IUItem.module8, ('A'), new ItemStack(IUItem.module7, 1, 3)
@@ -1537,7 +1402,7 @@ public class BaseRecipes {
 
                 ('D'), IUItem.circuitNano,
 
-                ('E'), new ItemStack(IUItem.compresscarbonultra),
+                ('E'), new ItemStack(IUItem.compressAlloy),
 
                 ('C'), new ItemStack(IUItem.adv_nano_helmet, 1, 32767),
 
@@ -1550,7 +1415,7 @@ public class BaseRecipes {
 
                 ('D'), IUItem.cirsuitQuantum,
 
-                ('E'), new ItemStack(IUItem.compresscarbonultra),
+                ('E'), new ItemStack(IUItem.compressAlloy),
 
                 ('C'), new ItemStack(IUItem.quantum_helmet, 1, 32767),
 
@@ -1563,7 +1428,7 @@ public class BaseRecipes {
 
                 ('D'), IUItem.cirsuitQuantum,
 
-                ('E'), new ItemStack(IUItem.compresscarbonultra),
+                ('E'), new ItemStack(IUItem.compressAlloy),
 
                 ('C'), new ItemStack(IUItem.hybridSolarHelmet, 1, 32767),
 
@@ -1698,7 +1563,7 @@ public class BaseRecipes {
 
                 ('D'), IUItem.cirsuitQuantum,
 
-                ('E'), new ItemStack(IUItem.compresscarbonultra),
+                ('E'), new ItemStack(IUItem.compressAlloy),
 
                 ('C'), new ItemStack(IUItem.ultimateSolarHelmet, 1, 32767),
 
@@ -1711,7 +1576,7 @@ public class BaseRecipes {
 
                 ('D'), IUItem.circuitSpectral,
 
-                ('E'), new ItemStack(IUItem.compresscarbonultra),
+                ('E'), new ItemStack(IUItem.compressAlloy),
 
                 ('C'), new ItemStack(IUItem.spectralSolarHelmet, 1, 32767),
 
@@ -2611,7 +2476,7 @@ public class BaseRecipes {
                 ('A'), IUItem.cell_all,
 
                 ('B'), new ItemStack(IUItem.denseplateiron
-                .getItem(), 1, 4)
+                        .getItem(), 1, 4)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.tank, 1, 1), "C C", "BAB", "C C",
 
@@ -2674,7 +2539,7 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.katana, 1, 0), "AD ", "AB ", "CC ",
 
-                ('A'), new ItemStack(IUItem.compresscarbonultra),
+                ('A'), new ItemStack(IUItem.compressAlloy),
 
                 ('C'), new ItemStack(Blocks.GLOWSTONE),
 
@@ -3089,7 +2954,7 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 42), "AAA", "CBC", "   ",
 
                 ('B'), new ItemStack(IUItem.cirsuitQuantum
-                .getItem(), 1, 17),
+                        .getItem(), 1, 17),
                 ('C'), Items.REDSTONE,
 
                 ('A'), "ingotTungsten"

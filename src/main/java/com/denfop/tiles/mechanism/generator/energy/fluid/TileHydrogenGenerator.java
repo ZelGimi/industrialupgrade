@@ -11,12 +11,16 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerHydrogenGenerator;
 import com.denfop.gui.GuiHydrogenGenerator;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityLiquidTankInventory;
@@ -29,6 +33,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
+
+import java.io.IOException;
 
 public class TileHydrogenGenerator extends TileEntityLiquidTankInventory implements
         IAudioFixer, IUpdatableTileEvent {
@@ -50,7 +56,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidhyd.getInstance());
         this.outputSlot = new InvSlotOutput(this, "output", 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSource(this, (double) 25000 * coef, 1));
-
+        ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidhyd.getInstance()));
     }
 
     @Override
@@ -65,6 +71,28 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
 
             }
         }
+    }
+
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        try {
+            sound = (boolean) DecoderHandler.decode(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        final CustomPacketBuffer packet = super.writeContainerPacket();
+        try {
+            EncoderHandler.encode(packet, sound);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
     }
 
     @Override

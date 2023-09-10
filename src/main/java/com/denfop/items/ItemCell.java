@@ -39,7 +39,7 @@ public class ItemCell extends ItemSubTypes<CellType> implements IModelRegister {
     protected static final String NAME = "itemcell";
 
     public ItemCell() {
-        super(null, CellType.class);
+        super(CellType.class);
         this.setCreativeTab(IUCore.ItemTab);
         this.setMaxStackSize(64);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
@@ -149,18 +149,21 @@ public class ItemCell extends ItemSubTypes<CellType> implements IModelRegister {
             final ItemStack stack = player.getHeldItem(hand);
             if (stack.getItemDamage() != 0) {
                 Fluid fluid = IUItem.celltype1.get(stack.getItemDamage());
-                if (ModUtils.storeInventoryItem(new ItemStack(IUItem.cell_all), player, true)) {
-                    boolean flag1 = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
-                    BlockPos blockpos1 = flag1 && position.sideHit == EnumFacing.UP ? pos : pos.offset(position.sideHit);
+                boolean flag1 = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+                BlockPos blockpos1 = flag1 && position.sideHit == EnumFacing.UP ? pos : pos.offset(position.sideHit);
 
-                    if (tryPlaceContainedLiquid(new FluidStack(fluid, 1000), player, world, blockpos1)) {
-                        player.getHeldItem(hand).shrink(1);
-                        ModUtils.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
-                                player, false
-                        );
-                        return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+                if (tryPlaceContainedLiquid(new FluidStack(fluid, 1000), player, world, blockpos1)) {
+                    player.getHeldItem(hand).shrink(1);
+                    if (!ModUtils.storeInventoryItem(new ItemStack(IUItem.cell_all, 1),
+                            player, false
+                    )) {
+                        if (!world.isRemote) {
+                            ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.cell_all, 1));
+                        }
                     }
+                    return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
                 }
+
             } else {
 
                 if (!world.canMineBlockBody(player, pos)) {
@@ -179,9 +182,16 @@ public class ItemCell extends ItemSubTypes<CellType> implements IModelRegister {
                         if (IUItem.celltype.containsKey(liquid)) {
                             world.setBlockToAir(pos);
                             player.getHeldItem(hand).shrink(1);
-                            player.inventory.addItemStackToInventory(new ItemStack(IUItem.cell_all, 1,
+                            if (!player.inventory.addItemStackToInventory(new ItemStack(IUItem.cell_all, 1,
                                     IUItem.celltype.get(liquid)
-                            ));
+                            ))) {
+                                if (!world.isRemote) {
+                                    ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.cell_all, 1,
+                                            IUItem.celltype.get(liquid)
+                                    ));
+                                }
+
+                            }
                             return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
                         }
                     }
@@ -193,9 +203,16 @@ public class ItemCell extends ItemSubTypes<CellType> implements IModelRegister {
                     if (IUItem.celltype.containsKey(ret.getFluid()) && player.getHeldItem(hand).getItemDamage() == 0) {
                         world.setBlockToAir(pos);
                         player.getHeldItem(hand).shrink(1);
-                        player.inventory.addItemStackToInventory(new ItemStack(IUItem.cell_all, 1,
+                        if (!player.inventory.addItemStackToInventory(new ItemStack(IUItem.cell_all, 1,
                                 IUItem.celltype.get(ret.getFluid())
-                        ));
+                        ))) {
+                            if (!world.isRemote) {
+                                ModUtils.dropAsEntity(world, pos, new ItemStack(IUItem.cell_all, 1,
+                                        IUItem.celltype.get(ret.getFluid())
+                                ));
+                            }
+
+                        }
                         return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
                     }
                 }

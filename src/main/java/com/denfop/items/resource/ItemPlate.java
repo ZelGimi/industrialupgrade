@@ -18,7 +18,7 @@ public class ItemPlate extends ItemSubTypes<ItemPlate.ItemPlateTypes> implements
     protected static final String NAME = "itemplates";
 
     public ItemPlate() {
-        super(null, ItemPlateTypes.class);
+        super(ItemPlateTypes.class);
         this.setCreativeTab(IUCore.RecourseTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

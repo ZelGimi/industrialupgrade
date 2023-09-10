@@ -33,7 +33,7 @@ public class ItemCoolingUpgrade extends ItemSubTypes<ItemCoolingUpgrade.Types> i
     protected static final String NAME = "itemcoolupgrade";
 
     public ItemCoolingUpgrade() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

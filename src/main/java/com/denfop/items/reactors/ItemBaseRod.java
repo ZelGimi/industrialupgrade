@@ -2,11 +2,15 @@ package com.denfop.items.reactors;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUPotion;
 import com.denfop.Localization;
+import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
@@ -47,6 +51,19 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
                 ':' +
                 "reactors" + "/" + name;
         return new ModelResourceLocation(loc, null);
+    }
+
+    public void onUpdate(ItemStack stack, World world, Entity rawEntity, int slotIndex, boolean isCurrentItem) {
+        if (rawEntity instanceof EntityLivingBase) {
+            EntityLivingBase entity = (EntityLivingBase) rawEntity;
+            if (!IHazmatLike.hasCompleteHazmat(entity)) {
+                IUPotion.radiation.applyTo(
+                        entity,
+                        this.getRadiationDuration(),
+                        this.getRadiationAmplifier()
+                );
+            }
+        }
     }
 
     public String getItemStackDisplayName(ItemStack stack) {

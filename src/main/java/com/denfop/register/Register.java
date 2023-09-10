@@ -107,13 +107,12 @@ import com.denfop.items.armour.BaseArmor;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemArmorAdvHazmat;
 import com.denfop.items.armour.ItemArmorHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedNano;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
-import com.denfop.items.armour.ItemArmorNanoSuit;
 import com.denfop.items.armour.ItemArmorNightvisionGoggles;
-import com.denfop.items.armour.ItemArmorQuantumSuit;
 import com.denfop.items.armour.ItemLappack;
 import com.denfop.items.armour.ItemSolarPanelHelmet;
+import com.denfop.items.armour.special.EnumSubTypeArmor;
+import com.denfop.items.armour.special.EnumTypeArmor;
+import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.items.bags.ItemEnergyBags;
 import com.denfop.items.bags.ItemLeadBox;
 import com.denfop.items.book.ItemBook;
@@ -524,29 +523,7 @@ public class Register {
         IUItem.pipes = new ItemPipes();
 
 
-        if (Config.BotaniaLoaded) {
-            BotaniaIntegration.reactorDepletedterastrellSimple = new ItemStack(
-                    new ItemDepletedRod("reactorDepletedterastrellSimple"));
-            BotaniaIntegration.reactorDepletedterastrellDual = new ItemStack(
-                    new ItemDepletedRod("reactorDepletedterastrellDual"));
-            BotaniaIntegration.reactorDepletedterastrellQuad = new ItemStack(
-                    new ItemDepletedRod("reactorDepletedterastrellQuad"));
-            ItemStack[] stack4 = {BotaniaIntegration.reactorDepletedterastrellSimple, BotaniaIntegration.reactorDepletedterastrellDual, BotaniaIntegration.reactorDepletedterastrellQuad};
 
-            BotaniaIntegration.reactorterastrellSimple = new ItemStack(new ItemBaseRod("reactorterastrellSimple", 1,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
-            ));
-
-            BotaniaIntegration.reactorterastrellDual = new ItemStack(new ItemBaseRod("reactorterastrellDual", 2,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
-            ));
-
-            BotaniaIntegration.reactorterastrellQuad = new ItemStack(new ItemBaseRod("reactorterastrellQuad", 4,
-                    Config.TerrasteelRodCells, Config.TerrasteelRodHeat, Config.TerrasteelPower, stack4
-            ));
-
-
-        }
 
 
         IUItem.ruby_helmet = new BaseArmor("ruby_helmet", RubyMaterial, 3, EntityEquipmentSlot.HEAD, "ruby");
@@ -571,30 +548,10 @@ public class Register {
         IUItem.hazmatchest = new ItemArmorAdvHazmat("hazmatchest", EntityEquipmentSlot.CHEST);
         IUItem.hazmatleggins = new ItemArmorAdvHazmat("hazmatleggins", EntityEquipmentSlot.LEGS);
         IUItem.hazmatboosts = new ItemArmorAdvHazmat("hazmatboosts", EntityEquipmentSlot.FEET);
-        IUItem.adv_nano_helmet = new ItemArmorImprovemedNano(
-                "itemArmorNanoHelmet",
-                EntityEquipmentSlot.HEAD,
-                (float) Config.NanoHelmet,
-                (float) Config.NanoTransfer,
-                Config.Nanotier
-        );
-        IUItem.adv_nano_chestplate = new ItemArmorImprovemedNano("itemArmorNanoChestplate", EntityEquipmentSlot.CHEST,
-                (float) Config.NanoBodyarmor, Config.NanoTransfer, Config.Nanotier
-        );
-        IUItem.adv_nano_leggings = new ItemArmorImprovemedNano(
-                "itemArmorNanoLegs",
-                EntityEquipmentSlot.LEGS,
-                (float) Config.NanoLeggings,
-                (float) Config.NanoTransfer,
-                Config.Nanotier
-        );
-        IUItem.adv_nano_boots = new ItemArmorImprovemedNano(
-                "itemArmorNanoBoots",
-                EntityEquipmentSlot.FEET,
-                (float) Config.NanoBoots,
-                (float) Config.NanoTransfer,
-                Config.Nanotier
-        );
+        IUItem.adv_nano_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.ADV_NANO);
+        IUItem.adv_nano_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.ADV_NANO);
+        IUItem.adv_nano_leggings = new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.ADV_NANO);
+        IUItem.adv_nano_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.ADV_NANO);
         IUItem.bags = new ItemEnergyBags("iu_bags", 27, 50000, 500);
         IUItem.adv_bags = new ItemEnergyBags("adv_iu_bags", 45, 75000, 750);
         IUItem.imp_bags = new ItemEnergyBags("imp_iu_bags", 63, 100000, 1000);
@@ -865,7 +822,7 @@ public class Register {
 
         IUItem.coal_chunk1 = new IUItemBase("coal_chunk");
         IUItem.compresscarbon = new IUItemBase("compresscarbon");
-        IUItem.compresscarbonultra = new IUItemBase("compresscarbonultra");
+        IUItem.compressAlloy = new IUItemBase("compresscarbonultra");
         IUItem.photoniy = new IUItemBase("photoniy");
         IUItem.photoniy_ingot = new IUItemBase("photoniy_ingot");
         IUItem.compressIridiumplate = new IUItemBase("quantumitems2");
@@ -1028,23 +985,17 @@ public class Register {
         IUItem.electric_treetap = new ItemTreetapEnergy();
         IUItem.electric_wrench = new ItemToolWrenchEnergy();
         IUItem.nanosaber = new ItemNanoSaber("nano_saber", 160000, 500, 3, 19, 4);
-        IUItem.spectral_helmet = new ItemArmorImprovemedQuantum(
-                "itemArmorQuantumHelmet",
-                EntityEquipmentSlot.HEAD,
-                Config.armor_maxcharge,
-                Config.armor_transferlimit,
-                Config.tier
+        IUItem.spectral_helmet = new ItemSpecialArmor(
+                EnumSubTypeArmor.HELMET, EnumTypeArmor.SPECTRAL
         );
-        IUItem.spectral_chestplate = new ItemArmorImprovemedQuantum("itemArmorQuantumChestplate", EntityEquipmentSlot.CHEST,
-                Config.armor_maxcharge_body, Config.armor_transferlimit, Config.tier
+        IUItem.spectral_chestplate = new ItemSpecialArmor(
+                EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.SPECTRAL
         );
-        IUItem.spectral_leggings = new ItemArmorImprovemedQuantum("itemArmorQuantumLegs", EntityEquipmentSlot.LEGS,
-                Config.armor_maxcharge,
-                Config.armor_transferlimit, Config.tier
+        IUItem.spectral_leggings = new ItemSpecialArmor(
+                EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.SPECTRAL
         );
-        IUItem.spectral_boots = new ItemArmorImprovemedQuantum("itemArmorQuantumBoots", EntityEquipmentSlot.FEET,
-                Config.armor_maxcharge,
-                Config.armor_transferlimit, Config.tier
+        IUItem.spectral_boots = new ItemSpecialArmor(
+                EnumSubTypeArmor.BOOTS, EnumTypeArmor.SPECTRAL
         );
         IUItem.nanodrill = new ItemEnergyInstruments(EnumTypeInstruments.DRILL, EnumVarietyInstruments.NANO, "nanodrill");
         IUItem.quantumdrill = new ItemEnergyInstruments(
@@ -1160,15 +1111,15 @@ public class Register {
             ExNihiloIntegration.sand_crushed = new ItemSandCrushed();
         }
         IUItem.book = new ItemBook("book_iu");
-        IUItem.nano_boots = new ItemArmorNanoSuit("nano_boots", EntityEquipmentSlot.FEET);
-        IUItem.nano_chestplate = new ItemArmorNanoSuit("nano_chestplate", EntityEquipmentSlot.CHEST);
-        IUItem.nano_helmet = new ItemArmorNanoSuit("nano_helmet", EntityEquipmentSlot.HEAD);
-        IUItem.nano_leggings = new ItemArmorNanoSuit("nano_leggings", EntityEquipmentSlot.LEGS);
+        IUItem.nano_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.NANO);
+        IUItem.nano_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.NANO);
+        IUItem.nano_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.NANO);
+        IUItem.nano_leggings = new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.NANO);
         IUItem.nightvision = new ItemArmorNightvisionGoggles();
-        IUItem.quantum_boots = new ItemArmorQuantumSuit("quantum_boots", EntityEquipmentSlot.FEET);
-        IUItem.quantum_chestplate = new ItemArmorQuantumSuit("quantum_chestplate", EntityEquipmentSlot.CHEST);
-        IUItem.quantum_helmet = new ItemArmorQuantumSuit("quantum_helmet", EntityEquipmentSlot.HEAD);
-        IUItem.quantum_leggings = new ItemArmorQuantumSuit("quantum_leggings", EntityEquipmentSlot.LEGS);
+        IUItem.quantum_boots = new ItemSpecialArmor(EnumSubTypeArmor.BOOTS, EnumTypeArmor.QUANTUM);
+        IUItem.quantum_chestplate = new ItemSpecialArmor(EnumSubTypeArmor.CHESTPLATE, EnumTypeArmor.QUANTUM);
+        IUItem.quantum_helmet = new ItemSpecialArmor(EnumSubTypeArmor.HELMET, EnumTypeArmor.QUANTUM);
+        IUItem.quantum_leggings = new ItemSpecialArmor(EnumSubTypeArmor.LEGGINGS, EnumTypeArmor.QUANTUM);
 
 
         IUItem.electricHoe = IUItem.electric_hoe.getItemStack();
@@ -1271,6 +1222,7 @@ public class Register {
         IUItem.obsidianDust = new ItemStack(IUItem.iudust, 1, 29);
         IUItem.lapiDust = new ItemStack(IUItem.iudust, 1, 27);
         IUItem.sulfurDust = new ItemStack(IUItem.iudust, 1, 31);
+        IUItem.silicondioxideDust = new ItemStack(IUItem.iudust, 1, 33);
         IUItem.diamondDust = new ItemStack(IUItem.iudust, 1, 23);
         IUItem.smallIronDust = new ItemStack(IUItem.smalldust, 1, 22);
         IUItem.smallCopperDust = new ItemStack(IUItem.smalldust, 1, 20);

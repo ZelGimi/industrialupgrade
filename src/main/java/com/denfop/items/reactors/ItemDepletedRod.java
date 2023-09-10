@@ -5,9 +5,8 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUPotion;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.reactors.IAdvReactor;
-import com.denfop.items.armour.ItemArmorAdvHazmat;
-import com.denfop.items.armour.ItemArmorImprovemedQuantum;
 import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -91,8 +90,7 @@ public class ItemDepletedRod extends Item implements IReactorComponent, IModelRe
 
         if (entity instanceof EntityLivingBase) {
             EntityLivingBase entityLiving = (EntityLivingBase) entity;
-            if (!ItemArmorAdvHazmat.hasCompleteHazmat(entityLiving) && !ItemArmorImprovemedQuantum.hasCompleteHazmat(
-                    entityLiving)) {
+            if (!IHazmatLike.hasCompleteHazmat(entityLiving)) {
                 IUPotion.radiation.applyTo(entityLiving, this.getRadiationDuration(), this.getRadiationAmplifier());
             }
         }

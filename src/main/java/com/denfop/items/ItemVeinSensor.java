@@ -28,7 +28,7 @@ public class ItemVeinSensor extends ItemSubTypes<ItemVeinSensor.Types> implement
     protected static final String NAME = "sensor";
 
     public ItemVeinSensor() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

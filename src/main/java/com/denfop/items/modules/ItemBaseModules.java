@@ -27,7 +27,7 @@ public class ItemBaseModules extends ItemSubTypes<ItemBaseModules.CraftingTypes>
     protected static final String NAME = "modules";
 
     public ItemBaseModules() {
-        super(null, CraftingTypes.class);
+        super(CraftingTypes.class);
         this.setCreativeTab(IUCore.ModuleTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);

@@ -45,7 +45,7 @@ public class ItemUpgradeModule extends ItemSubTypes<ItemUpgradeModule.Types> imp
 
 
     public ItemUpgradeModule() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.UpgradeTab);
         IUItem.overclockerUpgrade_1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker1.ordinal()));
         IUItem.overclockerUpgrade1 = UpgradeRegistry.register(new ItemStack(this, 1, Type.Overclocker2.ordinal()));

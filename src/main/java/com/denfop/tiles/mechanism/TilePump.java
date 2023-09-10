@@ -25,7 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -35,7 +34,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -155,42 +153,34 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
 
 
     public boolean canoperate() {
-        return this.operate(false);
+        return this.operate(true);
     }
 
     public boolean operate(boolean sim) {
+
         FluidStack liquid;
-        List<FluidStack> liquid_list = new ArrayList<>();
+        boolean canOperate = false;
         for (int i = this.pos.getX() - 3; i < this.pos.getX() + 3; i++) {
             for (int j = this.pos.getZ() - 3; j < this.pos.getZ() + 3; j++) {
                 for (int k = this.pos.getY() - 3; k < this.pos.getY() + 3; k++) {
                     for (EnumFacing dir : EnumFacing.values()) {
+                        if (this.fluidTank.getFluidAmount() >= this.fluidTank.getCapacity()) {
+                            return false;
+                        }
                         liquid = this.pump(new BlockPos(i + dir.getFrontOffsetX(), k + dir.getFrontOffsetY(),
                                 j + dir.getFrontOffsetZ()
-                        ), sim);
-                        if (liquid != null) {
-                            liquid_list.add(liquid);
+                        ), false);
+                        if (this.getFluidTank().fill(liquid, false) > 0) {
+                            this.getFluidTank().fill(liquid, true);
+                            canOperate = true;
                         }
                     }
                 }
             }
         }
 
-        boolean canoperate = false;
-        for (FluidStack stack : liquid_list) {
 
-            if (!sim) {
-                if (this.getFluidTank().fill(stack, false) > 0) {
-                    this.getFluidTank().fill(stack, true);
-                    canoperate = true;
-                }
-            } else if (this.getFluidTank().fill(stack, false) > 0) {
-                return true;
-            }
-
-
-        }
-        return canoperate;
+        return canOperate;
     }
 
     public FluidStack pump(BlockPos pos, boolean sim) {
@@ -204,7 +194,12 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
 
                 if (block.getBlock() instanceof IFluidBlock) {
                     IFluidBlock liquid = (IFluidBlock) block.getBlock();
-                    if (liquid.canDrain(this.getWorld(), pos)) {
+                    if ((this.fluidTank.getFluid() == null || this.fluidTank
+                            .getFluid()
+                            .getFluid() == liquid.getFluid()) && liquid.canDrain(
+                            this.getWorld(),
+                            pos
+                    )) {
                         if (!sim) {
                             ret = liquid.drain(this.getWorld(), pos, true);
                             this.getWorld().setBlockToAir(pos);
@@ -218,10 +213,12 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
                     }
 
                     ret = new FluidStack(FluidRegistry.getFluid(block.getBlock().getUnlocalizedName().substring(5)), 1000);
-
-
-                    if (!sim) {
-                        this.getWorld().setBlockToAir(pos);
+                    if (this.fluidTank.getFluid() == null || this.fluidTank
+                            .getFluid()
+                            .getFluid() == ret.getFluid()) {
+                        if (!sim) {
+                            this.getWorld().setBlockToAir(pos);
+                        }
                     }
                 }
             }
@@ -294,14 +291,6 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
     }
 
 
-    public boolean canFill(Fluid fluid) {
-        return false;
-    }
-
-    public boolean canDrain(Fluid fluid) {
-        return true;
-    }
-
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Processing,
@@ -309,7 +298,8 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 
