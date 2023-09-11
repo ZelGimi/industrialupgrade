@@ -49,9 +49,11 @@
 <img src=https://i.postimg.cc/1XvJz6xv/iu.png” alt="Second banner">
 
 <div align="center"> <img src=https://i.postimg.cc/3J1dkCfY/Permissions-26-06-2022.png alt="Permissions"> </div>
-<h4 align="center">1. It is forbidden to create your own requests for downloading the mod without having a link to curseforge. </h4>
 
-<h4 align="center">2. It is forbidden to use mods for their own purposes (creating a complete analogue that does not contain the author's nickname) without the author's permission. </h4>
+
+<h4 align="center">1. You are free to redistribute this mod, but you are required to credit the download source as 'CurseForge' or 'Modrinth' if you provide a link or information about the mod. </h4>
+
+<h4 align="center">2. You can freely use, modify and distribute this mod, but to create a complete analogue without the author's nickname, you must obtain written permission from the author of the mod. </h4>
 
 <h4 align="center">3. You can add mod to your modpacks. </h4>
 
