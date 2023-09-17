@@ -21,7 +21,7 @@ public class GuiMiniPanel extends GuiCore<ContainerMiniPanels> {
         super(guiContainer);
         this.tileentity = container.getTileEntity();
         this.xSize = 194;
-        this.ySize = 206;
+        this.ySize = 224;
     }
 
     protected void drawForegroundLayer(int mouseX, int mouseY) {
@@ -45,8 +45,15 @@ public class GuiMiniPanel extends GuiCore<ContainerMiniPanels> {
         this.fontRenderer.drawString(
 
                 maxOutputString + ModUtils.getString(this.tileentity.component.getProdution()) + " " + energyPerTickString,
-                50,
-                113,
+                20,
+                122,
+                13487565
+        );
+        this.fontRenderer.drawString(
+
+                Localization.translate("iu.wind_tier") + ModUtils.getString(this.tileentity.getCoreLevel()),
+                135,
+                122,
                 13487565
         );
         String temptime = Localization.translate("pollutionpnale");
@@ -73,24 +80,30 @@ public class GuiMiniPanel extends GuiCore<ContainerMiniPanels> {
                     100 - (int) this.tileentity.load
             ) + " %").drawForeground(mouseX, mouseY);
         }
-        new Area(this, 154, 20, 16, 16)
-                .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.component.getBonusCapacity() * 100) + " %")
-                .drawForeground(
-                        mouseX,
-                        mouseY
-                );
-        new Area(this, 154, 40, 16, 16)
-                .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.component.getBonusProdution() * 100) + " %")
-                .drawForeground(
-                        mouseX,
-                        mouseY
-                );
-        new Area(this, 154, 60, 16, 16)
-                .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.bonusGeneration * 100) + " %")
-                .drawForeground(
-                        mouseX,
-                        mouseY
-                );
+        if (this.tileentity.component.getBonusCapacity() != 0) {
+            new Area(this, 154, 20, 16, 16)
+                    .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.component.getBonusCapacity() * 100) + " %")
+                    .drawForeground(
+                            mouseX,
+                            mouseY
+                    );
+        }
+        if (this.tileentity.component.getBonusProdution() != 0) {
+            new Area(this, 154, 40, 16, 16)
+                    .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.component.getBonusProdution() * 100) + " %")
+                    .drawForeground(
+                            mouseX,
+                            mouseY
+                    );
+        }
+        if (this.tileentity.bonusGeneration != 0) {
+            new Area(this, 154, 60, 16, 16)
+                    .withTooltip(Localization.translate("iu.minipanel.bonus") + (int) (this.tileentity.bonusGeneration * 100) + " %")
+                    .drawForeground(
+                            mouseX,
+                            mouseY
+                    );
+        }
         if (this.tileentity.pollution.isActive()) {
             new ItemStackImage(this, 170, 93, this.tileentity.pollution::getStack).drawForeground(mouseX, mouseY);
         }

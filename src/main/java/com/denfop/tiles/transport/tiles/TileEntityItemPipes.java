@@ -2,6 +2,10 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.cool.event.CoolTileLoadEvent;
+import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import com.denfop.api.heat.event.HeatTileLoadEvent;
+import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.transport.FluidHandler;
 import com.denfop.api.transport.ITransportAcceptor;
@@ -47,6 +51,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     public boolean addedToEnergyNet = false;
     protected ItemType cableType;
+    private boolean needUpdate;
 
     public TileEntityItemPipes() {
         super(ItemType.itemcable);
@@ -96,6 +101,350 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
             for (EnumFacing dir : var4) {
                 TileEntity tile = getWorld().getTileEntity(this.pos.offset(dir));
+                if (!getBlackList().contains(dir)) {
+                    if (tile != null) {
+
+                        if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir) && tile.hasCapability(
+                                CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+                                dir.getOpposite()
+                        )) {
+                            ITransportTile transportTile = TransportNetGlobal.instance.getSubTile(
+                                    this.world,
+
+                                    getPos().offset(dir)
+                            );
+                            IItemHandler item_storage = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir
+
+                                    .getOpposite());
+                            IFluidHandler fluid_storage = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir
+
+                                    .getOpposite());
+                            boolean isSink = false;
+                            boolean isSource = false;
+                            boolean isSinkFluid = false;
+                            boolean isSourceFluid = false;
+                            if (transportTile == null) {
+                                List<EnumFacing> facingListSink = new ArrayList<>();
+
+                                for (EnumFacing dir1 : var4) {
+                                    TileEntity tile2 = getWorld().getTileEntity(getPos().offset(dir).offset(dir1));
+                                    if (tile2 instanceof ITransportConductor) {
+                                        ITransportConductor transportConductor = (ITransportConductor) tile2;
+                                        if (transportConductor.isItem()) {
+                                            if (!transportConductor.isOutput()) {
+                                                isSink = true;
+                                                facingListSink.add(dir);
+                                            } else {
+                                                isSource = true;
+                                            }
+                                        } else if (!transportConductor.isOutput()) {
+                                            isSinkFluid = true;
+                                            facingListSink.add(dir);
+                                        } else {
+                                            isSourceFluid = true;
+                                        }
+                                    }
+                                }
+                                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                        this.pos
+                                                .offset(dir),
+                                        item_storage,
+                                        fluid_storage,
+                                        isSink,
+                                        isSource,
+                                        isSinkFluid,
+                                        isSourceFluid
+                                );
+                                transport.setFacingListSink(facingListSink);
+                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                        getWorld(), transport
+
+                                ));
+                            } else {
+                                TransportFluidItemSinkSource transportFluidItemSinkSource = (TransportFluidItemSinkSource) transportTile;
+                                if (isItem()) {
+                                    if (isOutput()) {
+                                        transportFluidItemSinkSource.setSource(true);
+                                    } else {
+                                        transportFluidItemSinkSource.setSink(true);
+                                        transportFluidItemSinkSource.canAdd(dir);
+                                    }
+                                } else if (isOutput()) {
+                                    transportFluidItemSinkSource.setSourceFluid(true);
+                                } else {
+                                    transportFluidItemSinkSource.setSinkFluid(true);
+                                    transportFluidItemSinkSource.canAdd(dir);
+                                }
+                                if (transportFluidItemSinkSource.isNeed_update()) {
+                                    transportFluidItemSinkSource.setNeed_update(false);
+                                    isSink = transportFluidItemSinkSource.isSink();
+                                    isSource = transportFluidItemSinkSource.isSource();
+                                    isSinkFluid = transportFluidItemSinkSource.isSinkFluid();
+                                    isSourceFluid = transportFluidItemSinkSource.isSourceFluid();
+                                    BlockPos pos = transportFluidItemSinkSource.getBlockPos();
+                                    IItemHandler handler = transportFluidItemSinkSource.getItemHandler();
+                                    IFluidHandler fluidHandler = transportFluidItemSinkSource.getFluidHandler();
+                                    List<EnumFacing> enumFacings = transportFluidItemSinkSource.getFacingList();
+                                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                                            getWorld(), transportTile));
+                                    final TransportFluidItemSinkSource trasport = new TransportFluidItemSinkSource(
+                                            pos,
+                                            handler,
+                                            fluidHandler,
+                                            isSink,
+                                            isSource,
+                                            isSinkFluid,
+                                            isSourceFluid
+                                    );
+                                    trasport.setFacingListSink(enumFacings);
+                                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                            getWorld(), trasport
+
+                                    ));
+                                }
+                            }
+                        } else if (isItem() && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir)) {
+                            ITransportTile transportTile = TransportNetGlobal.instance.getSubTile(
+                                    this.world,
+
+                                    getPos().offset(dir)
+                            );
+                            IItemHandler item_storage = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir
+
+                                    .getOpposite());
+
+                            boolean isSink = false;
+                            boolean isSource = false;
+                            if (transportTile == null) {
+                                List<EnumFacing> facingListSink = new ArrayList<>();
+
+                                for (EnumFacing dir1 : var4) {
+
+                                    TileEntity tile2 = getWorld().getTileEntity(getPos().offset(dir).offset(dir1));
+                                    if (tile2 instanceof ITransportConductor) {
+                                        ITransportConductor transportConductor = (ITransportConductor) tile2;
+                                        if (transportConductor.isItem()) {
+                                            if (!transportConductor.isOutput()) {
+                                                isSink = true;
+                                                facingListSink.add(dir);
+
+                                            } else {
+                                                isSource = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(this.pos
+                                        .offset(dir), item_storage, null, isSink, isSource, false, false);
+                                transport.setFacingListSink(facingListSink);
+                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                        getWorld(), transport));
+                            } else {
+                                TransportFluidItemSinkSource transportFluidItemSinkSource = (TransportFluidItemSinkSource) transportTile;
+                                if (isItem()) {
+                                    if (isOutput()) {
+                                        transportFluidItemSinkSource.setSource(true);
+                                    } else {
+                                        transportFluidItemSinkSource.setSink(true);
+                                        transportFluidItemSinkSource.canAdd(dir);
+                                    }
+                                }
+                                if (transportFluidItemSinkSource.isNeed_update()) {
+                                    transportFluidItemSinkSource.setNeed_update(false);
+                                    isSink = transportFluidItemSinkSource.isSink();
+                                    isSource = transportFluidItemSinkSource.isSource();
+                                    boolean isSinkFluid = transportFluidItemSinkSource.isSinkFluid();
+                                    boolean isSourceFluid = transportFluidItemSinkSource.isSourceFluid();
+                                    BlockPos pos = transportFluidItemSinkSource.getBlockPos();
+                                    IItemHandler handler = transportFluidItemSinkSource.getItemHandler();
+                                    IFluidHandler fluidHandler = transportFluidItemSinkSource.getFluidHandler();
+                                    List<EnumFacing> enumFacings = transportFluidItemSinkSource.getFacingList();
+
+                                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                                            getWorld(), transportTile));
+                                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                            pos,
+                                            handler,
+                                            fluidHandler,
+                                            isSink,
+                                            isSource,
+                                            isSinkFluid,
+                                            isSourceFluid
+                                    );
+                                    transport.setFacingListSink(enumFacings);
+                                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                            getWorld(), transport
+
+                                    ));
+                                }
+                            }
+                        } else if (!isItem() && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir
+                                .getOpposite())) {
+                            ITransportTile transportTile = TransportNetGlobal.instance.getSubTile(
+                                    this.world,
+
+                                    getPos().offset(dir)
+                            );
+                            IFluidHandler fluid_storage = tile.getCapability(
+                                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+                                    dir
+
+                                            .getOpposite()
+                            );
+                            boolean isSink = false;
+                            boolean isSource = false;
+                            boolean isSinkFluid = false;
+                            boolean isSourceFluid = false;
+                            if (transportTile == null) {
+                                List<EnumFacing> facingListSink = new ArrayList<>();
+
+                                for (EnumFacing dir1 : var4) {
+                                    TileEntity tile2 = getWorld().getTileEntity(getPos().offset(dir).offset(dir1));
+                                    if (tile2 instanceof ITransportConductor) {
+                                        ITransportConductor transportConductor = (ITransportConductor) tile2;
+                                        if (!transportConductor.isItem()) {
+                                            if (!transportConductor.isOutput()) {
+                                                isSinkFluid = true;
+                                                facingListSink.add(dir1);
+                                            } else {
+                                                isSourceFluid = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(this.pos
+                                        .offset(dir), null, fluid_storage, isSink, isSource, isSinkFluid, isSourceFluid);
+                                transport.setFacingListSink(facingListSink);
+                                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                        getWorld(), transport
+
+                                ));
+                            } else {
+                                TransportFluidItemSinkSource transportFluidItemSinkSource = (TransportFluidItemSinkSource) transportTile;
+                                if (!isItem()) {
+                                    if (isOutput()) {
+                                        transportFluidItemSinkSource.setSourceFluid(true);
+                                    } else {
+                                        transportFluidItemSinkSource.setSinkFluid(true);
+                                        transportFluidItemSinkSource.canAdd(dir);
+                                    }
+                                }
+                                if (transportFluidItemSinkSource.isNeed_update()) {
+                                    transportFluidItemSinkSource.setNeed_update(false);
+                                    isSink = transportFluidItemSinkSource.isSink();
+                                    isSource = transportFluidItemSinkSource.isSource();
+                                    isSinkFluid = transportFluidItemSinkSource.isSinkFluid();
+                                    isSourceFluid = transportFluidItemSinkSource.isSourceFluid();
+                                    BlockPos pos = transportFluidItemSinkSource.getBlockPos();
+                                    IItemHandler handler = transportFluidItemSinkSource.getItemHandler();
+                                    IFluidHandler fluidHandler = transportFluidItemSinkSource.getFluidHandler();
+                                    List<EnumFacing> enumFacings = transportFluidItemSinkSource.getFacingList();
+
+                                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                                            getWorld(), transportTile));
+                                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                            pos,
+                                            handler,
+                                            fluidHandler,
+                                            isSink,
+                                            isSource,
+                                            isSinkFluid,
+                                            isSourceFluid
+                                    );
+                                    transport.setFacingListSink(enumFacings);
+                                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                            getWorld(), transport
+
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.cableType.isItem()) {
+                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
+            } else {
+                MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
+            }
+            this.addedToEnergyNet = true;
+            updateConnectivity();
+        }
+    }
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        EnumFacing[] var4 = EnumFacing.VALUES;
+        for (EnumFacing dir : var4) {
+            ITransportTile tile = TransportNetGlobal.instance.getSubTile(this.world, this.pos.offset(dir));
+            if (!(tile instanceof ITransportConductor)) {
+                if (tile != null) {
+                    TransportFluidItemSinkSource transportFluidItemSinkSource = (TransportFluidItemSinkSource) tile;
+                    if (isItem()) {
+                        if (isOutput()) {
+                            transportFluidItemSinkSource.setSource(false);
+                        } else {
+                            transportFluidItemSinkSource.setSink(false);
+                            transportFluidItemSinkSource.removeFacing(dir);
+                        }
+                    } else if (isOutput()) {
+                        transportFluidItemSinkSource.setSourceFluid(false);
+                    } else {
+                        transportFluidItemSinkSource.setSinkFluid(false);
+                        transportFluidItemSinkSource.removeFacing(dir);
+                    }
+                    if (transportFluidItemSinkSource.need_delete()) {
+                        MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                                getWorld(), tile));
+                    } else if (transportFluidItemSinkSource.isNeed_update()) {
+                        transportFluidItemSinkSource.setNeed_update(false);
+                        boolean isSink = transportFluidItemSinkSource.isSink();
+                        boolean isSource = transportFluidItemSinkSource.isSource();
+                        boolean isSinkFluid = transportFluidItemSinkSource.isSinkFluid();
+                        boolean isSourceFluid = transportFluidItemSinkSource.isSourceFluid();
+                        BlockPos pos = transportFluidItemSinkSource.getBlockPos();
+                        IItemHandler handler = transportFluidItemSinkSource.getItemHandler();
+                        IFluidHandler fluidHandler = transportFluidItemSinkSource.getFluidHandler();
+                        List<EnumFacing> enumFacings = transportFluidItemSinkSource.getFacingList();
+
+                        MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                                getWorld(), tile));
+                        final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                                pos,
+                                handler,
+                                fluidHandler,
+                                isSink,
+                                isSource,
+                                isSinkFluid,
+                                isSourceFluid
+                        );
+                        transport.setFacingListSink(enumFacings);
+                        MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                                getWorld(), transport
+
+                        ));
+                    }
+                }
+            }
+        }
+        if (this.cableType.isItem()) {
+            MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
+        } else {
+            MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(getWorld(), this));
+        }
+        this.needUpdate = true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            EnumFacing[] var4 = EnumFacing.VALUES;
+
+
+            for (EnumFacing dir : var4) {
+                TileEntity tile = getWorld().getTileEntity(this.pos.offset(dir));
+
                 if (tile != null) {
 
                     if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir) && tile.hasCapability(
@@ -355,13 +704,15 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
                     }
                 }
             }
+
             if (this.cableType.isItem()) {
                 MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
             } else {
                 MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(getWorld(), this));
             }
-            this.addedToEnergyNet = true;
-            updateConnectivity();
+
+            this.updateConnectivity();
+            this.needUpdate = false;
         }
     }
 
@@ -450,7 +801,8 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             ITransportTile tile = TransportNetGlobal.instance.getSubTile(world, this.pos.offset(dir));
-            if ((tile instanceof ITransportAcceptor && ((ITransportAcceptor) tile).acceptsFrom(this, dir
+            if (!getBlackList().contains(dir))
+                if ((tile instanceof ITransportAcceptor && ((ITransportAcceptor) tile).acceptsFrom(this, dir
 
                     .getOpposite())) || (tile instanceof ITransportEmitter && ((ITransportEmitter) tile)
                     .emitsTo(this, dir
@@ -521,6 +873,8 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
 
     public boolean acceptsFrom(ITransportEmitter var1, EnumFacing var2) {
+        if(getBlackList().contains(var2))
+            return false;
         if (this.cableType.isItem()) {
             return var1.getHandler() instanceof IItemHandler;
         }
@@ -528,6 +882,8 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     }
 
     public boolean emitsTo(ITransportAcceptor var1, EnumFacing var2) {
+        if(getBlackList().contains(var2))
+            return false;
         if (this.cableType.isItem()) {
             return var1.getHandler() instanceof IItemHandler;
         }

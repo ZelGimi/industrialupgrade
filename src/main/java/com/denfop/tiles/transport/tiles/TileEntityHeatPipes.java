@@ -37,6 +37,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
 
     public boolean addedToEnergyNet;
     protected HeatType cableType;
+    private boolean needUpdate;
 
     public TileEntityHeatPipes(HeatType cableType) {
         super(cableType);
@@ -96,6 +97,23 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
 
     }
 
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+        this.needUpdate = true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+    }
+
     public void onUnloaded() {
         if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
@@ -129,15 +147,16 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             IHeatTile tile = HeatNet.instance.getSubTile(world, this.pos.offset(dir));
-
-            if ((tile instanceof IHeatAcceptor && ((IHeatAcceptor) tile).acceptsHeatFrom(
-                    this,
-                    dir.getOpposite()
-            ) || tile instanceof IHeatEmitter && ((IHeatEmitter) tile).emitsHeatTo(
-                    this,
-                    dir.getOpposite()
-            ))) {
-                newConnectivity = (byte) (newConnectivity + 1);
+            if (!getBlackList().contains(dir)) {
+                if ((tile instanceof IHeatAcceptor && ((IHeatAcceptor) tile).acceptsHeatFrom(
+                        this,
+                        dir.getOpposite()
+                ) || tile instanceof IHeatEmitter && ((IHeatEmitter) tile).emitsHeatTo(
+                        this,
+                        dir.getOpposite()
+                ))) {
+                    newConnectivity = (byte) (newConnectivity + 1);
+                }
             }
         }
 
@@ -151,11 +170,11 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
     public boolean acceptsHeatFrom(IHeatEmitter emitter, EnumFacing direction) {
-        return true;
+        return !getBlackList().contains(direction);
     }
 
     public boolean emitsHeatTo(IHeatAcceptor receiver, EnumFacing direction) {
-        return true;
+        return !getBlackList().contains(direction);
     }
 
 

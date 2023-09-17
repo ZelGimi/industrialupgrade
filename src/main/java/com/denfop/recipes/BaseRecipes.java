@@ -3691,6 +3691,42 @@ public class BaseRecipes {
                 IUItem.electronicCircuit
 
         );
+        Recipes.recipe.addRecipe(
+                getBlockStack(BlockBaseMachine3.facademechanism),
+                " C ",
+                "BAB",
+                " D ",
+                'C',
+                new ItemStack(IUItem.crafting_elements,1,90),
+                'A',
+                IUItem.machine,
+                'B',
+                new ItemStack(IUItem.crafting_elements,1,66),
+                'D',
+                new ItemStack(IUItem.crafting_elements,1,44)
+
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.connect_item,
+                "A A",
+                " A ", "C C",'C',
+                "ingotChromium",
+                'A',
+                "ingotTitanium"
+
+        );
+        Recipes.recipe.addRecipe(
+                IUItem.facadeItem,
+                "B B",
+                "CAC",
+                "D D",
+                'C',
+                "ingotChromium",
+                'A',
+               IUItem.electronicCircuit,
+                'B', "ingotIron", 'C',"ingotSteel",'D',"ingotGermanium"
+
+        );
         BasicRecipeTwo.recipe();
     }
 

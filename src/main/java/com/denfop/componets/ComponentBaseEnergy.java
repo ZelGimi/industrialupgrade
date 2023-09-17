@@ -218,7 +218,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
         buffer.writeDouble(this.storage);
         this.setNetworkUpdate(player, buffer);
     }
-
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer buffer = super.updateComponent();
+        buffer.writeDouble(this.capacity);
+        buffer.writeDouble(this.storage);
+        return buffer;
+    }
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();

@@ -3592,10 +3592,10 @@ iu.smalldust.bronze=Tiny Pile of Bronze Dust
 iu.smalldust.lapis=Tiny Pile of Lapis Dust
 iu.smalldust.obsidian=Tiny Pile of Obsidian Dust
 
-iu.bronze_helmet=Bronze Helmet
-iu.bronze_chestplate=Bronze Chestplate
-iu.bronze_leggings=Bronze Leggings
-iu.bronze_boots=Bronze Boots
+iu.bronze_helmet.name=Bronze Helmet
+iu.bronze_chestplate.name=Bronze Chestplate
+iu.bronze_leggings.name=Bronze Leggings
+iu.bronze_boots.name=Bronze Boots
 item.lappack.name=Energypack
 iu.nano_helmet=NanoSuit Helmet
 iu.nano_chestplate=NanoSuit Bodyarmor

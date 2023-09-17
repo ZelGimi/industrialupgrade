@@ -28,8 +28,9 @@ public class RecipeInputStack implements IRecipeInputStack {
 
     @Override
     public boolean matched(final ItemStack stack) {
+        final int damage = stack.getItemDamage();
         for (ItemStack input : getItemStack()) {
-            if (input.getItem() == stack.getItem() && (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == input.getItemDamage())) {
+            if (input.getItem() == stack.getItem() && (damage == OreDictionary.WILDCARD_VALUE || damage == input.getItemDamage())) {
                 if (stack.getTagCompound() == null) {
                     return true;
                 } else {
@@ -50,8 +51,10 @@ public class RecipeInputStack implements IRecipeInputStack {
         }
         RecipeInputStack that = (RecipeInputStack) o;
         for (ItemStack input : getItemStack()) {
+            final int damage = input.getItemDamage();
             for (ItemStack input1 : that.getItemStack()) {
-                if (input.getItem() == input1.getItem() && (input1.getItemDamage() == OreDictionary.WILDCARD_VALUE || input.getItemDamage() == input1.getItemDamage())) {
+                final int damage1 = input1.getItemDamage();
+                if (input.getItem() == input1.getItem() && (damage1 == OreDictionary.WILDCARD_VALUE || damage == damage1)) {
                     if (input.getTagCompound() == null) {
                         return true;
                     } else {

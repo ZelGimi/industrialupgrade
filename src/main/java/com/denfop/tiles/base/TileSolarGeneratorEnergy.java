@@ -143,7 +143,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, sunenergy);
+            EncoderHandler.encode(packet, sunenergy,false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -153,7 +153,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            sunenergy.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            sunenergy.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

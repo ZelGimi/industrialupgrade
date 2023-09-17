@@ -171,7 +171,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.multimachine.info"));
             tooltip.add(Localization.translate("iu.simplyquarries.info") + index);
-            tooltip.add(Localization.translate("iu.simplyquarries.info1") + (int) this.constenergyconsume + " EU/t");
+            tooltip.add(Localization.translate("iu.simplyquarries.info1") + (int) this.constenergyconsume + " EF/t");
             tooltip.add(Localization.translate("iu.simplyquarries.info2") + (int) this.speed + " " + Localization.translate("iu" +
                     ".simplyquarries.info3"));
         }
@@ -191,7 +191,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         if (energy1 != 0) {
             tooltip.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
                     energy.getCapacity())
-                    + " EU");
+                    + " EF");
         }
         final double energy2 = nbt.getDouble("energy1");
         if (energy2 != 0) {

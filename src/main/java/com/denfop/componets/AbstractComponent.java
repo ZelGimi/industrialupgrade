@@ -164,6 +164,10 @@ public abstract class AbstractComponent {
     public void onContainerUpdate(EntityPlayerMP player) {
     }
 
+    public CustomPacketBuffer updateComponent() {
+        return new CustomPacketBuffer();
+    }
+
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
     }
 

@@ -19,6 +19,7 @@ import com.denfop.tiles.mechanism.TileAdvScanner;
 import com.denfop.tiles.mechanism.TileCanner;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
 import com.denfop.tiles.mechanism.TileEntityCreatorSchedules;
+import com.denfop.tiles.mechanism.TileEntityFacadeBlock;
 import com.denfop.tiles.mechanism.TileEntityGasCombiner;
 import com.denfop.tiles.mechanism.TileEntityKineticGeneratorAssembler;
 import com.denfop.tiles.mechanism.TileEntityProbeAssembler;
@@ -187,7 +188,9 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     solar_iu(TileEntitySolarGenerator.class, 81),
     teleporter_iu(TileEntityTeleporter.class, 84),
     canner_iu(TileCanner.class, 89),
-    minipanel(TileEntityMiniPanels.class, 91);
+
+    minipanel(TileEntityMiniPanels.class, 91),
+    facademechanism(TileEntityFacadeBlock.class,92);
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("basemachine3");

@@ -1,5 +1,6 @@
 package com.denfop.render.streak;
 
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PlayerStreakInfo {
@@ -16,7 +17,10 @@ public class PlayerStreakInfo {
         this.rgb = new RGB(nbtTagCompound.getShort("red"), nbtTagCompound.getShort("green"), nbtTagCompound.getShort("blue"));
         this.rainbow = nbtTagCompound.getBoolean("rainbow");
     }
-
+    public PlayerStreakInfo(CustomPacketBuffer customPacketBuffer) {
+        this.rgb = new RGB(customPacketBuffer.readShort(), customPacketBuffer.readShort(), customPacketBuffer.readShort());
+        this.rainbow = customPacketBuffer.readBoolean();
+    }
     public NBTTagCompound writeNBT() {
         final NBTTagCompound nbt = new NBTTagCompound();
         nbt.setShort("red", rgb.getRed());
@@ -25,7 +29,14 @@ public class PlayerStreakInfo {
         nbt.setBoolean("rainbow", rainbow);
         return nbt;
     }
-
+    public CustomPacketBuffer writePacket() {
+        CustomPacketBuffer packetBuffer = new CustomPacketBuffer();
+        packetBuffer.writeShort(rgb.getRed());
+        packetBuffer.writeShort(rgb.getBlue());
+        packetBuffer.writeShort(rgb.getGreen());
+        packetBuffer.writeBoolean(this.rainbow);
+        return packetBuffer;
+    }
     public boolean isRainbow() {
         return rainbow;
     }

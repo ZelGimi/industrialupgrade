@@ -1,7 +1,10 @@
 package com.denfop.componets;
 
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.io.IOException;
 
 enum Type {
     DEFAULT,
@@ -40,5 +43,17 @@ public class ComponentUpgradeBlock extends AbstractComponent {
         nbt.setInteger("level", this.level);
         return nbt;
     }
+    public CustomPacketBuffer updateComponent() {
+        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        buffer.writeInt(this.level);
+        return buffer;
+    }
 
+    @Override
+    public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
+        super.onNetworkUpdate(is);
+        this.level = is.readInt();
+
+
+    }
 }

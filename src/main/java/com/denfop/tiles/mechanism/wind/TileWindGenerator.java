@@ -30,6 +30,7 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.DamageHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -396,7 +397,11 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         }
         this.can_work = this.getWorld().provider.hasSkyLight() &&
                 !this.getWorld().provider.isNether();
-
+        if (!this.slot.get().isEmpty()) {
+            if (DamageHandler.getDamage(this.slot.get()) <= DamageHandler.getMaxDamage(this.slot.get()) * 0.75) {
+                this.need_repair = true;
+            }
+        }
     }
 
     @Override

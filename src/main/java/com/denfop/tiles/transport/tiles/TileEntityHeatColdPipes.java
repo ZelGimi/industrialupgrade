@@ -39,6 +39,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
 
     public boolean addedToEnergyNet;
     protected HeatColdType cableType;
+    private boolean needUpdate;
 
     public TileEntityHeatColdPipes(HeatColdType cableType) {
         super(cableType);
@@ -108,6 +109,25 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
 
     }
 
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+        MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+        this.needUpdate = true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+    }
+
     public void onUnloaded() {
         if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
@@ -149,29 +169,31 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             ICoolTile tile = CoolNet.instance.getSubTile(world, this.pos.offset(dir));
-            if (tile != null) {
-                if ((tile instanceof ICoolAcceptor && ((ICoolAcceptor) tile).acceptsCoolFrom(
-                        this,
-                        dir.getOpposite()
-                ) || tile instanceof ICoolEmitter && ((ICoolEmitter) tile).emitsCoolTo(
-                        this,
-                        dir.getOpposite()
-                )) && this.canInteractWith()) {
-                    newConnectivity = (byte) (newConnectivity + 1);
-                }
-            } else {
-                IHeatTile heatTile = HeatNet.instance.getSubTile(world, this.pos.offset(dir));
+            if (!getBlackList().contains(dir)) {
+                if (tile != null) {
+                    if ((tile instanceof ICoolAcceptor && ((ICoolAcceptor) tile).acceptsCoolFrom(
+                            this,
+                            dir.getOpposite()
+                    ) || tile instanceof ICoolEmitter && ((ICoolEmitter) tile).emitsCoolTo(
+                            this,
+                            dir.getOpposite()
+                    )) && this.canInteractWith()) {
+                        newConnectivity = (byte) (newConnectivity + 1);
+                    }
+                } else {
+                    IHeatTile heatTile = HeatNet.instance.getSubTile(world, this.pos.offset(dir));
 
-                if ((heatTile instanceof IHeatAcceptor && ((IHeatAcceptor) heatTile).acceptsHeatFrom(
-                        this,
-                        dir.getOpposite()
-                ) || heatTile instanceof IHeatEmitter && ((IHeatEmitter) heatTile).emitsHeatTo(
-                        this,
-                        dir.getOpposite()
-                )) && this.canInteractWith()) {
-                    newConnectivity = (byte) (newConnectivity + 1);
-                }
+                    if ((heatTile instanceof IHeatAcceptor && ((IHeatAcceptor) heatTile).acceptsHeatFrom(
+                            this,
+                            dir.getOpposite()
+                    ) || heatTile instanceof IHeatEmitter && ((IHeatEmitter) heatTile).emitsHeatTo(
+                            this,
+                            dir.getOpposite()
+                    )) && this.canInteractWith()) {
+                        newConnectivity = (byte) (newConnectivity + 1);
+                    }
 
+                }
             }
         }
 
@@ -238,22 +260,22 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
 
     @Override
     public boolean acceptsCoolFrom(final ICoolEmitter var1, final EnumFacing var2) {
-        return true;
+        return !getBlackList().contains(var2);
     }
 
     @Override
     public boolean emitsCoolTo(final ICoolAcceptor var1, final EnumFacing var2) {
-        return true;
+        return !getBlackList().contains(var2);
     }
 
     @Override
     public boolean acceptsHeatFrom(final IHeatEmitter var1, final EnumFacing var2) {
-        return true;
+        return !getBlackList().contains(var2);
     }
 
     @Override
     public boolean emitsHeatTo(final IHeatAcceptor var1, final EnumFacing var2) {
-        return true;
+        return !getBlackList().contains(var2);
     }
 
     @Override

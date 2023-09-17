@@ -45,6 +45,7 @@ public class PollutionModel extends ModelBase {
                     }
                 }
             }
+        list.clear();
 
 
     }

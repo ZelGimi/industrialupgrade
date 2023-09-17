@@ -41,6 +41,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
     public boolean addedToEnergyNet;
     public int type;
     protected CableType cableType;
+    private boolean needUpdate;
 
     public TileEntityCable(CableType cableType) {
         super(cableType);
@@ -83,6 +84,23 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         super.writeToNBT(nbt);
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
+    }
+
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+        this.needUpdate = true;
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this, this));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
     }
 
     public void onLoaded() {
@@ -140,15 +158,16 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             IEnergyTile tile = EnergyNetGlobal.instance.getTile(world, this.pos.offset(dir));
-
-            if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
-                    this,
-                    dir.getOpposite()
-            ) || tile instanceof IEnergyEmitter && ((IEnergyEmitter) tile).emitsEnergyTo(
-                    this,
-                    dir.getOpposite()
-            ))) {
-                newConnectivity = (byte) (newConnectivity + 1);
+            if (!this.getBlackList().contains(dir)) {
+                if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
+                        this,
+                        dir.getOpposite()
+                ) || tile instanceof IEnergyEmitter && ((IEnergyEmitter) tile).emitsEnergyTo(
+                        this,
+                        dir.getOpposite()
+                ))) {
+                    newConnectivity = (byte) (newConnectivity + 1);
+                }
             }
 
 
@@ -162,11 +181,11 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing direction) {
-        return true;
+        return !getBlackList().contains(direction);
     }
 
     public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing direction) {
-        return true;
+        return !getBlackList().contains(direction);
     }
 
 

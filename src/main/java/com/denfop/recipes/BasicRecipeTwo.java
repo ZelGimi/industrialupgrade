@@ -2344,7 +2344,7 @@ public class BasicRecipeTwo {
                         1,
                         37
                 ),
-                ('A'), IUItem.coalDust, ('B'),
+                ('A'), "coalDust", ('B'),
                 Blocks.GLASS
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 9), "   ", "CAD", " B ",

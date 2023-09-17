@@ -1,5 +1,10 @@
 package com.denfop.api.sytem;
 
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.IEnergyAcceptor;
+import com.denfop.api.energy.IEnergyConductor;
+import com.denfop.api.energy.IEnergySource;
+import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.NodeStats;
 import com.denfop.api.energy.SystemTick;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +23,8 @@ import java.util.stream.Collectors;
 public class LocalNet implements ILocalNet {
 
     final List<SystemTick<ISource, Path>> senderPath = new ArrayList<>();
-    final List<Logic<ITile>> paths = new ArrayList<>();
+
+    final List<ISource> sourceToUpdateList = new ArrayList<>();
     private final Map<BlockPos, ITile> chunkCoordinatesTileMap;
     private final EnergyType energyType;
     private final EnumFacing[] directions = EnumFacing.values();
@@ -71,14 +77,7 @@ public class LocalNet implements ILocalNet {
         }
     }
 
-    public void removeAllSource1(final List<ISource> par1) {
-        if (par1 == null) {
-            return;
-        }
-        for (ISource iSESource : par1) {
-            this.remove1(iSESource);
-        }
-    }
+ 
 
     public List<Path> getPaths(final IAcceptor par1) {
         final List<Path> paths = new ArrayList<>();
@@ -98,15 +97,13 @@ public class LocalNet implements ILocalNet {
     public List<SystemTick<ISource, Path>> getSources(final IAcceptor par1) {
         final List<SystemTick<ISource, Path>> source = new ArrayList<>();
         for (final SystemTick<ISource, Path> entry : this.senderPath) {
-            if (source.contains(entry)) {
-                continue;
-            }
             if (entry.getList() != null) {
                 for (Path path : entry.getList()) {
                     if ((!(par1 instanceof IConductor) || !path.conductors.contains(par1)) && (!(par1 instanceof ISink) || path.target != par1)) {
                         continue;
                     }
                     source.add(entry);
+                    break;
                 }
             }
         }
@@ -192,17 +189,11 @@ public class LocalNet implements ILocalNet {
 
     @Override
     public void TickEnd() {
-        if (this.hasWork()) {
-            final List<ITile> tiles = this.getPathTiles();
-
-            for (final ITile tile : tiles) {
-                final List<ISource> sources = this.discoverFirstPathOrSources(tile);
-                if (sources.size() > 0) {
-                    this.removeAllSource1(sources);
-                }
+        if (sourceToUpdateList.size() > 0) {
+            for (ISource source : sourceToUpdateList) {
+                remove1(source);
             }
-            this.paths.clear();
-
+            sourceToUpdateList.clear();
         }
 
         for (SystemTick<ISource, Path> tick : this.senderPath) {
@@ -275,36 +266,7 @@ public class LocalNet implements ILocalNet {
         return col == 0 ? ret : ret / col;
     }
 
-    public List<ISource> discoverFirstPathOrSources(final ITile par1) {
-        final Set<ITile> reached = new HashSet<>();
-        final List<ISource> result = new ArrayList<>();
-        final List<ITile> workList = new ArrayList<>();
-        workList.add(par1);
-        while (workList.size() > 0) {
-            final ITile tile = workList.remove(0);
-            final TileEntity te = tile.getTile();
-            if (te == null) {
-                continue;
-            }
-            if (!te.isInvalid()) {
-                final List<InfoTile<ITile>> targets = this.getValidReceivers(tile, true);
-                for (InfoTile<ITile> QETarget : targets) {
-                    final ITile target = QETarget.tileEntity;
-                    if (target != par1) {
-                        if (!reached.contains(target)) {
-                            reached.add(target);
-                            if (target instanceof ISource) {
-                                result.add((ISource) target);
-                            } else if (target instanceof IConductor) {
-                                workList.add(target);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }
+
 
     public double getTotalAccepted(final ITile tileEntity) {
         double ret = 0.0;
@@ -341,7 +303,6 @@ public class LocalNet implements ILocalNet {
 
     public void onUnload() {
         this.senderPath.clear();
-        this.paths.clear();
         this.chunkCoordinatesTileMap.clear();
     }
 
@@ -378,7 +339,7 @@ public class LocalNet implements ILocalNet {
         this.update(coord);
         if (tile instanceof IAcceptor) {
             this.removeAll(this.getSources((IAcceptor) tile));
-            this.onTileEntityRemoved(tile);
+            this.onTileEntityRemoved((IAcceptor) tile);
         }
         if (tile instanceof ISource) {
             this.remove((ISource) tile);
@@ -494,104 +455,40 @@ public class LocalNet implements ILocalNet {
     }
 
     public void onTileEntityAdded(final IAcceptor tile) {
+        final List<ITile> tileEntitiesToCheck = new ArrayList<>();
 
-
-        if (this.paths.isEmpty()) {
-            this.createNewPath(tile);
-            return;
-        }
-        List<Logic<ITile>> logics = new ArrayList<>();
-        paths.removeIf(logic -> {
-            if (logic.contains(tile)) {
-                if (tile instanceof IConductor) {
-                    Logic<ITile> newLogic = new Logic<>();
-                    logics.add(newLogic);
-                    logic.tiles.forEach(toMove -> {
-                        if (!newLogic.contains(toMove)) {
-                            newLogic.add(toMove);
+        final List<BlockPos> blockPosList = new ArrayList<>();
+        blockPosList.add(tile.getBlockPos());
+        tileEntitiesToCheck.add(tile);
+        while (!tileEntitiesToCheck.isEmpty()) {
+            final ITile currentTileEntity = tileEntitiesToCheck.remove(0);
+            for (final EnumFacing direction : EnumFacing.values()) {
+                final ITile target2 = this.getTileEntity(currentTileEntity.getBlockPos().offset(direction));
+                if (target2 != null && !blockPosList.contains(target2.getBlockPos())) {
+                    blockPosList.add(target2.getBlockPos());
+                    if (target2 instanceof ISource) {
+                        if (!sourceToUpdateList.contains((ISource) target2)) {
+                            sourceToUpdateList.add((ISource) target2);
                         }
-                    });
+                        continue;
+                    }
+                    if (target2 instanceof IConductor) {
+                        tileEntitiesToCheck.add(target2);
+                    }
                 }
-                return true;
             }
-            return false;
-        });
-        paths.addAll(logics);
-    }
-
-    public void onTileEntityRemoved(final ITile par1) {
-        List<ITile> toRecalculate = new ArrayList<>(paths).stream()
-                .filter(logic -> logic.contains(par1))
-                .peek(logic -> {
-                    logic.remove(par1);
-                    paths.remove(logic);
-                })
-                .flatMap(logic -> logic.tiles.stream())
-                .collect(Collectors.toList());
-
-        toRecalculate.forEach(tile -> this.onTileEntityAdded((IAcceptor) tile));
-    }
-
-    public void createNewPath(final ITile par1) {
-        final Logic<ITile> logic = new Logic<ITile>();
-        logic.add(par1);
-        this.paths.add(logic);
-    }
 
 
-    public boolean hasWork() {
-        return this.paths.size() > 0;
-    }
-
-    public List<ITile> getPathTiles() {
-        final List<ITile> tiles = new ArrayList<>();
-        for (Logic<ITile> path : this.paths) {
-            final ITile tile = path.getRepresentingTile();
-            if (tile != null) {
-                tiles.add(tile);
-            }
         }
-        return tiles;
+
     }
 
-}
+    public void onTileEntityRemoved(final IAcceptor par1) {
 
-
-class Path {
-
-    final Set<IConductor> conductors;
-    final ISink target;
-    final EnumFacing targetDirection;
-    double min = Double.MAX_VALUE;
-
-    Path(ISink sink, EnumFacing facing) {
-        this.target = sink;
-        this.conductors = new HashSet<>();
-        this.targetDirection = facing;
+        this.onTileEntityAdded(par1);
     }
 
-    public void tick(int tick, double adding) {
-        if (this.target.isSink()) {
-            if (this.target.getTick() != tick) {
-                this.target.addTick(tick);
-                this.target.setPastEnergy(this.target.getPerEnergy());
 
-            }
-            this.target.addPerEnergy(adding);
-        }
-    }
-
-    public double getMin() {
-        return min;
-    }
-
-    public void setMin(final double min) {
-        this.min = min;
-    }
-
-    public Set<IConductor> getConductors() {
-        return conductors;
-    }
 
 }
 

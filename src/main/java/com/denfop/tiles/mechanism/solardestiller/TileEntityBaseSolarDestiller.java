@@ -114,6 +114,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
             updateVisibility();
 
         }
+        this.destiwaterinputSlot.processFromTank(this.outputTank, this.destiwateroutputSlott);
         if (!this.skyLight) {
             return;
         }
@@ -127,7 +128,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
 
         }
 
-        this.destiwaterinputSlot.processFromTank(this.outputTank, this.destiwateroutputSlott);
+
         this.upgradeSlot.tickNoMark();
     }
 
@@ -141,8 +142,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         return new GuiSolarDestiller(new ContainerSolarDestiller(player, this));
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
+
 
     public int getTickRate() {
         Biome biome = world.getBiome(pos);
@@ -197,7 +197,8 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing);
+        return EnumSet.of(UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+                , UpgradableProperty.FluidConsuming);
     }
 
     @Override

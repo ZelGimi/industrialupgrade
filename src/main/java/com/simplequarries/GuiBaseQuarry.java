@@ -118,7 +118,7 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
     private List<String> getStringList() {
         List<String> lst = new ArrayList<>();
         if (this.container.base != null) {
-            lst.add(Localization.translate("iu.machines_work_energy") + this.container.base.energyconsume + "EU/t");
+            lst.add(Localization.translate("iu.machines_work_energy") + this.container.base.energyconsume + "EF/t");
             if (this.container.base.blockpos != null) {
                 lst.add("X: " + this.container.base.blockpos.getX());
                 lst.add("Y: " + this.container.base.blockpos.getY());

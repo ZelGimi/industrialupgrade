@@ -30,7 +30,7 @@ public interface IRecipes {
 
     RecipesFluidCore getRecipeFluid();
 
-    List<IRecipeInputStack> getMap_recipe_managers_itemStack(String name);
+    RecipeArrayList<IRecipeInputStack> getMap_recipe_managers_itemStack(String name);
 
     List<IHasRecipe> getRecipesForInit();
 

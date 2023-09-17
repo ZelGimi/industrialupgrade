@@ -139,7 +139,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
         try {
-            EncoderHandler.encode(packet, cold);
+            EncoderHandler.encode(packet, cold,false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -150,7 +150,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     public void readUpdatePacket(final CustomPacketBuffer customPacketBuffer) {
         super.readUpdatePacket(customPacketBuffer);
         try {
-            cold.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            cold.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -159,7 +159,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, cold);
+            EncoderHandler.encode(packet, cold,false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -169,7 +169,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            cold.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            cold.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -265,10 +265,10 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         }
         if (getEnable()) {
             if (soundEvent == 0) {
-                this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.MASTER, 1F, 1);
+                this.getWorld().playSound(null, this.pos, getSound(), SoundCategory.BLOCKS, 1F, 1);
             } else if (soundEvent == 1) {
                 new PacketStopSound(getWorld(), this.pos);
-                this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.MASTER, 1F, 1);
+                this.getWorld().playSound(null, this.pos, EnumSound.InterruptOne.getSoundEvent(), SoundCategory.BLOCKS, 1F, 1);
             } else {
                 new PacketStopSound(getWorld(), this.pos);
             }

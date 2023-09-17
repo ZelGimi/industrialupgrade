@@ -28,8 +28,8 @@ public class InvSlotSolidMatter extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 this.tile.solid[i] = ItemSolidMatter.getsolidmatter(this.get(i).getItemDamage());
-                this.tile.solid_col[i] = 1;
-                this.tile.energy.addCapacity(Config.SolidMatterStorage);
+                this.tile.solid_col[i] = this.get(i).getCount();
+                this.tile.energy.addCapacity(Config.SolidMatterStorage * this.get(i).getCount());
             }
         }
     }

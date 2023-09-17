@@ -22,7 +22,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     public final IUpdateTick tile;
     private final HashMap<Integer, List<IRecipeInputStack>> map = new HashMap<>();
     private IBaseRecipe recipe;
-    private List<IRecipeInputStack> accepts;
+    private RecipeArrayList<IRecipeInputStack> accepts;
     private List<BaseMachineRecipe> recipe_list;
     private Fluids.InternalFluidTank tank;
 
@@ -123,7 +123,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     .equals("upgradeblock") || recipe
                     .getName()
                     .equals("recycler") || accepts.contains(
-                    new RecipeInputStack(itemStack)));
+                    itemStack));
         } else {
             List<IRecipeInputStack> list = map.get(index);
             if ((itemStack.getItem() instanceof IUpgradeItem)) {

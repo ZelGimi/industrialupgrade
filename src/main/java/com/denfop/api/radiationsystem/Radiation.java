@@ -2,6 +2,7 @@ package com.denfop.api.radiationsystem;
 
 
 import com.denfop.IUPotion;
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +32,21 @@ public class Radiation {
         this.coef = EnumCoefficient.values()[tagCompound.getByte("coef")];
         this.pos = new ChunkPos(tagCompound.getInteger("x"), tagCompound.getInteger("z"));
     }
-
+    public Radiation(CustomPacketBuffer packetBuffer) {
+        this.radiation = packetBuffer.readInt();
+        this.level = EnumLevelRadiation.values()[packetBuffer.readInt()];
+        this.coef = EnumCoefficient.values()[packetBuffer.readInt()];
+        this.pos = new ChunkPos(packetBuffer.readInt(), packetBuffer.readInt());
+    }
+    public CustomPacketBuffer writePacket(){
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
+        customPacketBuffer.writeInt(this.radiation);
+        customPacketBuffer.writeInt(this.level.ordinal());
+        customPacketBuffer.writeInt(this.coef.ordinal());
+        customPacketBuffer.writeInt(this.pos.x);
+        customPacketBuffer.writeInt(this.pos.z);
+        return customPacketBuffer;
+    }
     public ChunkPos getPos() {
         return pos;
     }

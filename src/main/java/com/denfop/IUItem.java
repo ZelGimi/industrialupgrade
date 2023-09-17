@@ -14,27 +14,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.BlocksRadiationOre;
 import com.denfop.blocks.IULeaves;
 import com.denfop.blocks.IUSapling;
-import com.denfop.items.IUItemBase;
-import com.denfop.items.ItemBlueprint;
-import com.denfop.items.ItemCell;
-import com.denfop.items.ItemCoreWater;
-import com.denfop.items.ItemCoreWind;
-import com.denfop.items.ItemCrystalMemory;
-import com.denfop.items.ItemEFReader;
-import com.denfop.items.ItemExcitedNucleus;
-import com.denfop.items.ItemFrequencyTransmitter;
-import com.denfop.items.ItemRotorsUpgrade;
-import com.denfop.items.ItemToolCutter;
-import com.denfop.items.ItemToolHammer;
-import com.denfop.items.ItemVeinSensor;
-import com.denfop.items.ItemWaterRod;
-import com.denfop.items.ItemWaterRotor;
-import com.denfop.items.ItemWaterRotorsUpgrade;
-import com.denfop.items.ItemWindRod;
-import com.denfop.items.ItemWindRotor;
-import com.denfop.items.ItemsCoolingSensor;
-import com.denfop.items.ItemsHeatSensor;
-import com.denfop.items.ItemsTemplates;
+import com.denfop.items.*;
 import com.denfop.items.armour.BaseArmor;
 import com.denfop.items.armour.ItemAdvJetpack;
 import com.denfop.items.armour.ItemArmorHazmat;
@@ -659,7 +639,6 @@ public class IUItem {
     public static ItemDayNightSolarPanelGlass solar_night_day_glass;
     public static ItemBatterySolarPanel solar_battery;
     public static ItemOutputSolarPanel solar_output;
-    public static BlockTileEntity blockInvalid;
     public static BlockTileEntity blockItemPipes;
     public static BlockTileEntity pipesblock;
     public static BlockTileEntity qcableblock;
@@ -675,6 +654,8 @@ public class IUItem {
     public static ItemStack reactorCoolantTriple;
     public static ItemStack reactorCoolantSix;
     public static ItemEFReader efReader;
+    public static ItemFacadeItem facadeItem;
+    public static IUItemBase connect_item;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

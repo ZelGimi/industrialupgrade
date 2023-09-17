@@ -44,6 +44,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public final InvSlotStorageMiniPanels invSlotStorage;
     public final InvSlotOutputMiniPanels invSlotOutput;
     public final ComponentTimer timer;
+    public final InvSlot invSlotCore;
     public ComponentMiniPanel component;
     public InvSlotGlassMiniPanels invSlotGlass;
     public ComponentPollution pollution;
@@ -63,12 +64,26 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public double genNight = 0;
     public double genDayNight = 0;
     public double generating;
+    private int level;
 
     public TileEntityMiniPanels() {
         this.component = this.addComponent(ComponentMiniPanel.asBasicSource(this, 0, 14));
         this.invSlotGlass = new InvSlotGlassMiniPanels(this);
         this.invSlotStorage = new InvSlotStorageMiniPanels(this);
         this.invSlotOutput = new InvSlotOutputMiniPanels(this);
+        this.invSlotCore = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,2){
+            @Override
+            public boolean accepts(final ItemStack stack, final int index) {
+                return stack.getItem() == IUItem.core;
+            }
+
+            @Override
+            public void put(final int index, final ItemStack content) {
+                super.put(index, content);
+                SolarEnergySystem.system.calculateCores( ((TileEntityMiniPanels)this.base));
+                SolarEnergySystem.system.recalculation(((TileEntityMiniPanels)this.base), EnumTypeParts.GENERATION);
+            }
+        };
         this.pollution = this.addComponent(new ComponentPollution(this));
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(3, 0, 0), new Timer(2, 30, 0), new Timer(2, 0, 0)));
         this.pollution.setTimer(timer);
@@ -104,6 +119,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             load = (double) DecoderHandler.decode(customPacketBuffer);
             listStable = (List<List<EnumState>>) DecoderHandler.decode(customPacketBuffer);
             sunIsUp = (boolean) DecoderHandler.decode(customPacketBuffer);
+            level = (int) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -126,6 +142,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             EncoderHandler.encode(packet, load);
             EncoderHandler.encode(packet, listStable);
             EncoderHandler.encode(packet, sunIsUp);
+            EncoderHandler.encode(packet, level);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -157,8 +174,9 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, pollution);
-            EncoderHandler.encode(packet, component);
+            EncoderHandler.encode(packet, this.pollution,false);
+            EncoderHandler.encode(packet, this.timer,false);
+            EncoderHandler.encode(packet, this.component,false);
             EncoderHandler.encode(packet, invSlotGlass);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -169,8 +187,9 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            pollution.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
-            component.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            pollution.onNetworkUpdate(customPacketBuffer);
+            timer.onNetworkUpdate(customPacketBuffer);
+            component.onNetworkUpdate(customPacketBuffer);
             invSlotGlass.readFromNbt(((InvSlot) DecoderHandler.decode(customPacketBuffer)).writeToNbt(new NBTTagCompound()));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -221,6 +240,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
         this.hasSky = !this.world.provider.isNether();
         this.biome = this.world.getBiome(this.pos);
         updateVisibility();
+        SolarEnergySystem.system.calculateCores(this);
         SolarEnergySystem.system.recalculation(this, EnumTypeParts.GENERATION);
         SolarEnergySystem.system.recalculation(this, EnumTypeParts.OUTPUT);
         SolarEnergySystem.system.recalculation(this, EnumTypeParts.CAPACITY);
@@ -380,6 +400,21 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             this.listStable.add(index, enumStateList);
         }
 
+    }
+
+    @Override
+    public void setCoreLevel(final int level) {
+        this.level = level;
+    }
+
+    @Override
+    public List<ItemStack> getCoresItems() {
+        return Arrays.asList(invSlotCore.gets());
+    }
+
+    @Override
+    public int getCoreLevel() {
+        return this.level;
     }
 
     @Override

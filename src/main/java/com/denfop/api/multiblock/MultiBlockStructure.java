@@ -261,7 +261,7 @@ public class MultiBlockStructure {
                 return false;
             } else {
                 IMultiElement element = (IMultiElement) tile;
-                if (element.isMain() && element.getMain() != mainTile) {
+                if ((element.isMain() && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel()) || (!element.canCreateSystem(mainTile))) {
                     return false;
                 }
                 if (element.getMain() != null && element.getMain() != mainTile) {
@@ -312,7 +312,7 @@ public class MultiBlockStructure {
                 return false;
             } else {
                 IMultiElement element = (IMultiElement) tile;
-                if (element.getMain() != null && element.getMain() != mainTile) {
+                if ((element.getMain() != null && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel()) || !element.canCreateSystem(mainTile)) {
                     return false;
                 } else if (element.getMain() == null) {
                     element.setMainMultiElement(mainTile);

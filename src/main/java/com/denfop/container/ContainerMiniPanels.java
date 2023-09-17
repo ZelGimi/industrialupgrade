@@ -8,11 +8,16 @@ public class ContainerMiniPanels extends ContainerFullInv<TileEntityMiniPanels> 
     private final TileEntityMiniPanels tileentity;
 
     public ContainerMiniPanels(TileEntityMiniPanels tileEntityMiniPanels, EntityPlayer var1) {
-        super(var1, tileEntityMiniPanels, 196, 206);
+        super(var1, tileEntityMiniPanels, 196, 224);
         this.tileentity = tileEntityMiniPanels;
         for (int j = 0; j < 4; ++j) {
 
             this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotStorage, j, 121, 21 + j * 18));
+
+        }
+        for (int j = 0; j < 2; ++j) {
+
+            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotCore, j, 135 + j * 18, 103));
 
         }
         for (int j = 0; j < 4; ++j) {

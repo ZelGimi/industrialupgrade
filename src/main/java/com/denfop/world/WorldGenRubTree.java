@@ -31,6 +31,14 @@ public class WorldGenRubTree extends WorldGenAbstractTree {
         if (i <= 2) {
             i = 3;
         }
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
+                IBlockState state = worldIn.getBlockState(position.add(x, 0, z));
+                if (state.getMaterial() == Material.WOOD || state.getBlock() == IUItem.rubWood) {
+                    return false;
+                }
+            }
+        }
         boolean flag = true;
         Block woodBlock = IUItem.rubWood;
         IBlockState leaves = IUItem.leaves.getDefaultState().withProperty(IULeaves.typeProperty, IULeaves.LeavesType.rubber);

@@ -2,7 +2,6 @@ package com.denfop.api.transport;
 
 import com.denfop.api.energy.SystemTick;
 import com.denfop.api.sytem.InfoTile;
-import com.denfop.api.sytem.Logic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,17 +14,14 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TransportNetLocal {
 
     final List<SystemTick<ITransportSource, TransportNetLocal.TransportPath>> senderPath = new ArrayList<>();
-    final List<Logic<ITransportTile>> paths = new ArrayList<>();
+
     private final World world;
     private final Map<BlockPos, ITransportTile> chunkCoordinatesITransportTileMap;
 
@@ -57,27 +53,18 @@ public class TransportNetLocal {
         }
     }
 
-    public void removeAllSource1(List<ITransportSource> par1) {
-        if (par1 == null) {
-            return;
-        }
-        for (ITransportSource iTransportSource : par1) {
-            remove1(iTransportSource);
-        }
-    }
+
 
     public List<SystemTick<ITransportSource, TransportNetLocal.TransportPath>> getSources(ITransportAcceptor par1) {
         List<SystemTick<ITransportSource, TransportNetLocal.TransportPath>> source = new ArrayList<>();
         for (SystemTick<ITransportSource, TransportNetLocal.TransportPath> entry : this.senderPath) {
-            if (source.contains(entry)) {
-                continue;
-            }
             if (entry.getList() != null) {
                 for (TransportNetLocal.TransportPath path : entry.getList()) {
                     if ((!(par1 instanceof ITransportConductor) || !path.conductors.contains(par1)) && (!(par1 instanceof ITransportSink) || path.target != par1)) {
                         continue;
                     }
                     source.add(entry);
+                    break;
                 }
             }
         }
@@ -87,7 +74,9 @@ public class TransportNetLocal {
     public void addTile(ITransportTile tile1) {
         addTileEntity(tile1.getBlockPos(), tile1);
     }
-
+    public boolean containsKey(final  SystemTick<ITransportSource, TransportNetLocal.TransportPath> par1) {
+        return this.senderPath.contains(par1);
+    }
     public void addTileEntity(BlockPos coords, ITransportTile tile) {
         if (this.chunkCoordinatesITransportTileMap.containsKey(coords)) {
             return;
@@ -278,45 +267,17 @@ public class TransportNetLocal {
         return validReceivers;
     }
 
-    public List<ITransportSource> discoverFirstPathOrSources(ITransportTile par1) {
-        Set<ITransportTile> reached = new HashSet<>();
-        List<ITransportSource> result = new ArrayList<>();
-        List<ITransportTile> workList = new ArrayList<>();
-        workList.add(par1);
-        while (workList.size() > 0) {
-            ITransportTile tile = workList.remove(0);
-            List<InfoTile<ITransportTile>> targets = getValidReceivers(tile, true);
-            for (InfoTile<ITransportTile> TransportTarget : targets) {
-                ITransportTile target = TransportTarget.tileEntity;
-                if (target != par1 &&
-                        !reached.contains(target)) {
-                    reached.add(target);
-                    if (target instanceof ITransportSource) {
-                        result.add((ITransportSource) target);
-                        continue;
-                    }
-                    if (target instanceof ITransportConductor) {
-                        workList.add(target);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+
 
     public void onTickEnd() {
-        if (this.paths.size() > 0) {
-            List<ITransportTile> tiles = this.getPathTiles();
-            for (ITransportTile tile : tiles) {
-                List<ITransportSource> sources = discoverFirstPathOrSources(tile);
-                if (sources.size() > 0) {
-                    this.removeAllSource1(sources);
-                }
+        if (sourceToUpdateList.size() > 0) {
+            for (ITransportSource source : sourceToUpdateList) {
+                remove1(source);
             }
-            this.paths.clear();
+            sourceToUpdateList.clear();
         }
         try {
-            if (this.world.getWorldTime() % 5L == 0L) {
+            if (this.world.getWorldTime() % 3L == 0L) {
                 for (SystemTick<ITransportSource, TransportPath> tick : this.senderPath) {
                     if (tick.getSource().isItem()) {
                         ITransportSource<ItemStack, IItemHandler> entry = (ITransportSource<ItemStack, IItemHandler>) tick.getSource();
@@ -391,67 +352,45 @@ public class TransportNetLocal {
             }
         }
     }
+    final List<ITransportSource> sourceToUpdateList = new ArrayList<>();
+    public void onTileEntityAdded(final ITransportAcceptor tile) {
+        final List<ITransportTile> tileEntitiesToCheck = new ArrayList<>();
 
-    public void onTileEntityAdded(ITransportAcceptor tile) {
-        if (this.paths.isEmpty()) {
-            this.createNewPath(tile);
-            return;
-        }
-        List<Logic<ITransportTile>> logics = new ArrayList<>();
-
-        paths.removeIf(logic -> {
-            if (logic.contains(tile)) {
-                if (tile instanceof ITransportConductor) {
-                    Logic<ITransportTile> newLogic = new Logic<>();
-                    logics.add(newLogic);
-                    logic.tiles.forEach(toMove -> {
-                        if (!newLogic.contains(toMove)) {
-                            newLogic.add(toMove);
+        final List<BlockPos> blockPosList = new ArrayList<>();
+        blockPosList.add(tile.getBlockPos());
+        tileEntitiesToCheck.add(tile);
+        while (!tileEntitiesToCheck.isEmpty()) {
+            final ITransportTile currentTileEntity = tileEntitiesToCheck.remove(0);
+            for (final EnumFacing direction : EnumFacing.values()) {
+                final ITransportTile target2 = this.getTileEntity(currentTileEntity.getBlockPos().offset(direction));
+                if (target2 != null && !blockPosList.contains(target2.getBlockPos())) {
+                    blockPosList.add(target2.getBlockPos());
+                    if (target2 instanceof ITransportSource) {
+                        if (!sourceToUpdateList.contains((ITransportSource) target2)) {
+                            sourceToUpdateList.add((ITransportSource) target2);
                         }
-                    });
+                        continue;
+                    }
+                    if (target2 instanceof ITransportConductor) {
+                        tileEntitiesToCheck.add(target2);
+                    }
                 }
-                return true;
             }
-            return false;
-        });
-
-        paths.addAll(logics);
-    }
-
-    public void onTileEntityRemoved(ITransportAcceptor par1) {
-        List<ITransportTile> toRecalculate = new ArrayList<>(paths).stream()
-                .filter(logic -> logic.contains(par1))
-                .peek(logic -> {
-                    logic.remove(par1);
-                    paths.remove(logic);
-                })
-                .flatMap(logic -> logic.tiles.stream())
-                .collect(Collectors.toList());
-
-        toRecalculate.forEach(tile -> this.onTileEntityAdded((ITransportAcceptor) tile));
-    }
-
-    public void createNewPath(ITransportTile par1) {
-        Logic<ITransportTile> logic = new Logic<ITransportTile>();
-        logic.add(par1);
-        this.paths.add(logic);
-    }
 
 
-    public List<ITransportTile> getPathTiles() {
-        List<ITransportTile> tiles = new ArrayList<>();
-        for (Logic<ITransportTile> path : this.paths) {
-            ITransportTile tile = path.getRepresentingTile();
-            if (tile != null) {
-                tiles.add(tile);
-            }
         }
-        return tiles;
+
     }
+
+    public void onTileEntityRemoved(final ITransportAcceptor par1) {
+
+        this.onTileEntityAdded(par1);
+    }
+
+
 
     public void onUnload() {
         this.senderPath.clear();
-        this.paths.clear();
         this.chunkCoordinatesITransportTileMap.clear();
     }
 

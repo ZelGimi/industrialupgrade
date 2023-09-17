@@ -130,7 +130,13 @@ public class ComponentPrivate extends AbstractComponent {
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
-
+    public CustomPacketBuffer updateComponent() {
+        CustomPacketBuffer buffer = new CustomPacketBuffer(this.players.size() + 2);
+        buffer.writeShort(this.players.size());
+        buffer.writeBoolean(this.activate);
+        this.players.forEach(buffer::writeString);
+        return buffer;
+    }
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.players.clear();
         short size = is.readShort();

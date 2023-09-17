@@ -240,6 +240,16 @@ public class ComponentProcess extends AbstractComponent {
             if (this.heatComponent != null && this.updateTick.getRecipeOutput() == null) {
                 this.heatComponent.need = false;
             }
+            if(componentProgress == null){
+                this.componentProgress = this.getParent().getComp("com.denfop.componets.ComponentProgress");
+                this.advEnergy = this.getParent().getComp(AdvEnergy.class);
+                this.heatComponent = this.getParent().getComp(HeatComponent.class);
+                this.coldComponent = this.getParent().getComp(CoolComponent.class);
+                this.componentSE = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergysolarium");
+                this.audoFix = this.getParent() instanceof IAudioFixer;
+                this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
+
+            }
             if (this.componentProgress.getProgress() != 0 && this.getParent().getActive() && this.hasAudio) {
                 if (this.audoFix) {
                     ((IAudioFixer) this.getParent()).initiate(1);

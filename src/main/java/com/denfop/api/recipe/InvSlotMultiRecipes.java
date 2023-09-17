@@ -19,7 +19,7 @@ public class InvSlotMultiRecipes extends InvSlot {
     private final IMultiUpdateTick tile;
     private final ProcessMultiComponent processMultiComponent;
     public MachineRecipe recycler_output;
-    private List<IRecipeInputStack> accepts;
+    private RecipeArrayList<IRecipeInputStack> accepts;
     private List<BaseMachineRecipe> recipe_list;
     private IBaseRecipe recipe;
     private FluidTank tank;
@@ -114,8 +114,11 @@ public class InvSlotMultiRecipes extends InvSlot {
                 .getName()
                 .equals("upgradeblock") || recipe
                 .getName()
-                .equals("recycler") || accepts.contains(
-                new RecipeInputStack(itemStack)));
+                .equals("recycler") || (!recipe
+                .getName()
+                .equals("furnace") ? accepts.contains(
+                itemStack) : accepts.contains(
+                new RecipeInputStack(itemStack))));
     }
 
     public void consume(int number, int amount) {

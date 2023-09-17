@@ -54,7 +54,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
         try {
-            EncoderHandler.encode(packet, cold);
+            EncoderHandler.encode(packet, cold,false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +65,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     public void readUpdatePacket(final CustomPacketBuffer customPacketBuffer) {
         super.readUpdatePacket(customPacketBuffer);
         try {
-            cold.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            cold.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -98,7 +98,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, cold);
+            EncoderHandler.encode(packet, cold,false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -108,7 +108,7 @@ public class TileCooling extends TileElectricMachine implements IUpdatableTileEv
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
-            cold.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            cold.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
