@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class WorldData {
+public class  WorldData {
 
     public static Map<Integer, WorldData> idxClient = FMLCommonHandler.instance().getSide().isClient()
             ? new HashMap<>()

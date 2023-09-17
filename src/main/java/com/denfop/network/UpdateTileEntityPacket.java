@@ -4,6 +4,7 @@ import com.denfop.network.packet.*;
 import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class UpdateTileEntityPacket {
                 new PacketUpdateTile(playerBuffer, player);
             }
         }
-        if (worldData.getWorld().provider.getWorldTime() % 20 == 0) {
+        if (worldData.getWorld().provider.getWorldTime() % 80 == 0) {
             for (TileEntityBlock te : worldData.mapUpdateOvertimeField.values()) {
                 CustomPacketBuffer commonBuffer = new CustomPacketBuffer();
                 EncoderHandler.encode(commonBuffer, te.getPos(), false);

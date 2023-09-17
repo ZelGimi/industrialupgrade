@@ -157,12 +157,14 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
     }
 
     public boolean operate(boolean sim) {
-
+        if (this.fluidTank.getFluidAmount() >= this.fluidTank.getCapacity()) {
+            return false;
+        }
         FluidStack liquid;
         boolean canOperate = false;
-        for (int i = this.pos.getX() - 3; i < this.pos.getX() + 3; i++) {
-            for (int j = this.pos.getZ() - 3; j < this.pos.getZ() + 3; j++) {
-                for (int k = this.pos.getY() - 3; k < this.pos.getY() + 3; k++) {
+        for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {
+            for (int j = this.pos.getZ() - 5; j <= this.pos.getZ() + 5; j++) {
+                for (int k = this.pos.getY() - 5; k <= this.pos.getY() + 5; k++) {
                     for (EnumFacing dir : EnumFacing.values()) {
                         if (this.fluidTank.getFluidAmount() >= this.fluidTank.getCapacity()) {
                             return false;

@@ -245,7 +245,15 @@ public class ComponentMiniPanel extends AbstractComponent {
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
-
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer buffer = super.updateComponent();
+        buffer.writeDouble(this.capacity);
+        buffer.writeDouble(this.storage);
+        buffer.writeDouble(this.bonusCapacity);
+        buffer.writeDouble(this.bonusProdution);
+        buffer.writeDouble(this.prodution);
+        return buffer;
+    }
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
         this.capacity = is.readDouble();

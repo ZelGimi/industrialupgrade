@@ -185,18 +185,14 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.Transformer,
+                UpgradableProperty.Transformer, UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing
         );
     }
 
-    public void onGuiClosed(EntityPlayer player) {
-    }
 
 
-    public String getInventoryName() {
-        return null;
-    }
+
 
 
 }

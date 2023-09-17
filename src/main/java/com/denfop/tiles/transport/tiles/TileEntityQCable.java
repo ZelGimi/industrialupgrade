@@ -3,6 +3,8 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.heat.event.HeatTileLoadEvent;
+import com.denfop.api.heat.event.HeatTileUnloadEvent;
 import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.sytem.EnergyEvent;
 import com.denfop.api.sytem.EnergyType;
@@ -42,6 +44,7 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
 
     public boolean addedToEnergyNet;
     protected QEType cableType;
+    private boolean needUpdate;
 
 
     public TileEntityQCable(QEType cableType) {
@@ -88,7 +91,22 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
     }
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
+        this.needUpdate = true;
+    }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+    }
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
@@ -133,7 +151,7 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             ITile tile = EnergyBase.QE.getSubTile(world, this.pos.offset(dir));
-
+            if (!getBlackList().contains(dir))
             if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                     this,
                     dir.getOpposite()
@@ -155,11 +173,11 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
     }
 
     public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
-        return this.canInteractWith();
+        return  (!getBlackList().contains(direction));
     }
 
     public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
-        return this.canInteractWith();
+        return  (!getBlackList().contains(direction));
     }
 
     public boolean canInteractWith() {

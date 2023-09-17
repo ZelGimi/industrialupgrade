@@ -35,6 +35,7 @@ public class ListInformationUtils {
     public static final List<String> quarryvein = new ArrayList<>();
     public static final List<String> solar = new ArrayList<>();
     public static final List<String> heat_limiter = new ArrayList<>();
+    public static final List<String> facade = new ArrayList<>();
     public static final Map<Integer, List<String>> integerListMap = new HashMap<>();
     public static int tick = 0;
     public static int index = 0;
@@ -156,6 +157,12 @@ public class ListInformationUtils {
         heat_limiter.add(Localization.translate("iu.heat_limiter.info3"));
         heat_limiter.add(Localization.translate("iu.heat_limiter.info4"));
 
+        facade.add(Localization.translate("facademechanism_text"));
+        facade.add(Localization.translate("facademechanism_text1"));
+        facade.add(Localization.translate("facademechanism_text2"));
+        facade.add(Localization.translate("facademechanism_text3"));
+        facade.add(Localization.translate("facademechanism_text4"));
+        facade.add(Localization.translate("facademechanism_text5"));
 
         for (int i = 1; i < 9; i++) {
             quarry.add(Localization.translate("iu.simplyquarries_info" + i));

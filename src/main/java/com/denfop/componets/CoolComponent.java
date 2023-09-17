@@ -177,6 +177,8 @@ public class CoolComponent extends AbstractComponent {
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeInt(this.meta);
+        buffer.writeBoolean(this.upgrade);
+        buffer.writeBoolean(this.allow);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -185,8 +187,18 @@ public class CoolComponent extends AbstractComponent {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
         this.meta = is.readInt();
+        this.upgrade = is.readBoolean();
+        this.allow = is.readBoolean();
     }
-
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer packet = super.updateComponent();
+        packet.writeDouble(this.capacity);
+        packet.writeDouble(this.storage);
+        packet.writeInt(this.meta);
+        packet.writeBoolean(this.upgrade);
+        packet.writeBoolean(this.allow);
+        return packet;
+    }
 
     @Override
     public boolean isServer() {

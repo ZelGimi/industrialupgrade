@@ -236,6 +236,11 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
     @Override
+    public int getLevel() {
+        return 0;
+    }
+
+    @Override
     public boolean wasActivated() {
         return this.activate;
     }

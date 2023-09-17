@@ -566,7 +566,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         final CustomPacketBuffer packet = super.writePacket();
         try {
             EncoderHandler.encode(packet, redstoneMode);
-            EncoderHandler.encode(packet, energy);
+            EncoderHandler.encode(packet, energy,false);
             EncoderHandler.encode(packet, output_stack);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -578,7 +578,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
         super.readPacket(customPacketBuffer);
         try {
             redstoneMode = (byte) DecoderHandler.decode(customPacketBuffer);
-            energy.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            energy.onNetworkUpdate(customPacketBuffer);
             output_stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);

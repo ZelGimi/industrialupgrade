@@ -12,8 +12,8 @@ public class EnergyBase {
     public static List<IGlobalNet> listGlobal = new ArrayList<>();
     public static Map<EnergyType, IGlobalNet> globalNetMap = new HashMap<>();
     public static IGlobalNet SE;
-    private static EnergyHandler handler;
-    private static GlobalNet rad;
+    public static EnergyHandler handler;
+    public static GlobalNet rad;
 
     public static void init() {
         handler = new EnergyHandler();

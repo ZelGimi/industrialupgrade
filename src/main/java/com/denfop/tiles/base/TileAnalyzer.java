@@ -759,18 +759,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
             }
 
         }
-        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-            try {
-                this.getWorld().getChunkFromBlockCoords(new BlockPos(tempx, 0,
-                        tempz
-                )).tileEntities.forEach((pos1, tile1) -> {
-                    if (tile1 instanceof TileEntityBlock) {
-                        ((TileEntityBlock) tile1).rerender();
-                    }
-                });
-            } catch (Exception e) {
-            }
-        }
+
         if (this.getWorld().provider.getWorldTime() % 4 == 0) {
             this.y += 4;
 

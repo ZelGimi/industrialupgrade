@@ -482,8 +482,26 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         }
         buffer.writeDouble(this.energyConsume);
         buffer.writeInt(this.mode);
+        buffer.writeBoolean(this.quickly);
+        buffer.writeBoolean(this.modulesize);
+        buffer.writeBoolean(this.modulestorage);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
+    }
+
+    @Override
+    public CustomPacketBuffer updateComponent() {
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        buffer.writeInt(this.operationLength);
+        for (int i = 0; i < sizeWorkingSlot; i++) {
+            buffer.writeInt(this.progress[i]);
+        }
+        buffer.writeDouble(this.energyConsume);
+        buffer.writeInt(this.mode);
+        buffer.writeBoolean(this.quickly);
+        buffer.writeBoolean(this.modulesize);
+        buffer.writeBoolean(this.modulestorage);
+        return buffer;
     }
 
     @Override
@@ -495,6 +513,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         }
         this.energyConsume = is.readDouble();
         this.mode = is.readInt();
+        this.quickly =is.readBoolean();
+        this.modulesize = is.readBoolean();
+        this.modulestorage = is.readBoolean();
     }
 
     private double getspeed() {

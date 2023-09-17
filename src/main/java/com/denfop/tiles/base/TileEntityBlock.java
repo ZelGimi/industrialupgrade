@@ -11,6 +11,7 @@ import com.denfop.events.TickHandlerIU;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketRemoveUpdateTile;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateTile;
@@ -161,6 +162,18 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
+    @Override
+    public void setWorld(final World worldIn) {
+        super.setWorld(worldIn);
+        new PacketUpdateTile(this);
+    }
+
+    @Override
+    public void setPos(final BlockPos posIn) {
+        super.setPos(posIn);
+        new PacketUpdateTile(this);
+    }
+
     public NBTTagCompound getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
         try {
             InvSlot slot = (InvSlot) DecoderHandler.decode(customPacketBuffer);
@@ -169,6 +182,14 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState, final IBlockState newSate) {
+        if((oldState.getBlock() instanceof BlockTileEntity)){
+            return false;
+        }
+        return newSate.getBlock() != oldState.getBlock();
     }
 
     public boolean onSneakingActivated(EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -265,15 +286,14 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     public void onUnloaded() {
+        IUCore.network.getServer().removeTileToOvertimeUpdate(this);
         this.componentList.forEach(AbstractComponent::onUnloaded);
         try {
 
             new PacketStopSound(getWorld(), this.pos);
         } catch (Exception ignored) {
         }
-        if (this.needUpdate()) {
-            IUCore.network.getServer().removeTileToOvertimeUpdate(this);
-        }
+        new PacketRemoveUpdateTile(this);
     }
 
     public void readFromNBT(NBTTagCompound nbt) {

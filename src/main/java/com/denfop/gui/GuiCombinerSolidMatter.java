@@ -52,9 +52,6 @@ public class GuiCombinerSolidMatter extends GuiCore<ContainerCombinerSolidMatter
                 this.container.base.energy.getCapacity())).drawForeground(par1, par2);
     }
 
-    public String getName() {
-        return container.base.getInventoryName();
-    }
 
     public ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUICombineSolidMatter.png");

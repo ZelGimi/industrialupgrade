@@ -9,7 +9,9 @@ public interface IMultiElement {
     default boolean isMain() {
         return false;
     }
+    default int getLevel(){return 0;};
 
+    default boolean canCreateSystem(IMainMultiBlock mainMultiBlock){return true;}
     default boolean hasOwnInventory() {
         return false;
     }

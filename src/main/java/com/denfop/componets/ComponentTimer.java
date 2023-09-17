@@ -94,7 +94,12 @@ public class ComponentTimer extends AbstractComponent {
         }
         return tagCompound;
     }
-
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer packet = super.updateComponent();
+        this.timers.forEach(timer -> timer.writeBuffer(packet));
+        packet.writeInt(this.indexWork);
+        return packet;
+    }
     @Override
     public NBTTagCompound writeToNbt() {
         NBTTagCompound nbtTagCompound = super.writeToNbt();

@@ -80,7 +80,15 @@ public class ComponentProgress extends AbstractComponent {
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
-
+    public CustomPacketBuffer updateComponent() {
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
+        buffer.writeShort(progress.length);
+        for (final short value : progress) {
+            buffer.writeShort(value);
+        }
+        buffer.writeShort(this.maxValue);
+        return buffer;
+    }
     @Override
     public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
         super.onNetworkUpdate(is);

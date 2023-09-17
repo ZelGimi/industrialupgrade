@@ -1,5 +1,6 @@
 package com.denfop.api.vein;
 
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 
@@ -56,7 +57,61 @@ public class Vein implements IVein {
         }
 
     }
+    public Vein(CustomPacketBuffer is) {
+        int data = is.readInt();
+        int z = data & 2047;
+        data = data >> 11;
+        int x = data & 2047;
+        data = data >> 11;
+        int sign = data & 1;
+        if (sign == 0) {
+            z *= -1;
+        }
+        data = data >> 1;
+        int sign1 = data & 1;
+        if (sign1 == 0) {
+            x *= -1;
+        }
+        data = data >> 1;
+        int find = data & 1;
+        data = data >> 1;
+        int type = data & 3;
+        data = data >> 2;
+        this.meta = data & 15;
+        this.type = Type.getID(type);
+        this.chunk = new ChunkPos(x, z);
+        this.col = is.readInt();
+        this.maxcol =  is.readInt();
+        this.find = find == 1;
+        if (!this.find) {
+            if (this.col != this.maxcol) {
+                this.find = true;
+            }
+        }
 
+    }
+
+    public CustomPacketBuffer writePacket() {
+        CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer(32);
+
+        int m = 0;
+        m += this.meta;
+        m = (m << 2) + this.type.ordinal();
+        m = (m << 1) + (this.find ? 1 : 0);
+        boolean k = chunk.x >= 0;
+        boolean k1 = chunk.z >= 0;
+        m = (m << 1) + (k ? 1 : 0);
+        m = (m << 1) + (k1 ? 1 : 0);
+        int x = Math.min(Math.abs(chunk.x), 2047);
+        int z = Math.min(Math.abs(chunk.z), 2047);
+        m = (m << 11) + x;
+        m = (m << 11) + z;
+        customPacketBuffer.writeInt(m);
+        customPacketBuffer.writeInt(col);
+        customPacketBuffer.writeInt(maxcol);
+
+        return customPacketBuffer;
+    }
     @Override
     public int getMeta() {
         return this.meta;

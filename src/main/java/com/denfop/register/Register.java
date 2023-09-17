@@ -86,6 +86,7 @@ import com.denfop.items.ItemCoreWind;
 import com.denfop.items.ItemCrystalMemory;
 import com.denfop.items.ItemEFReader;
 import com.denfop.items.ItemExcitedNucleus;
+import com.denfop.items.ItemFacadeItem;
 import com.denfop.items.ItemFrequencyTransmitter;
 import com.denfop.items.ItemLens;
 import com.denfop.items.ItemPaints;
@@ -314,6 +315,7 @@ public class Register {
         IUItem.hazmat_helmet = new ItemArmorHazmat("hazmat_helmet", EntityEquipmentSlot.HEAD);
         IUItem.hazmat_leggings = new ItemArmorHazmat("hazmat_leggings", EntityEquipmentSlot.LEGS);
         IUItem.rubber_boots = new ItemArmorHazmat("rubber_boots", EntityEquipmentSlot.FEET);
+        IUItem.facadeItem = new ItemFacadeItem("facadeItem");
         ItemArmor.ArmorMaterial bronzeArmorMaterial = EnumHelper.addArmorMaterial("IU_BRONZE", "IU_BRONZE", 15, new int[]{2, 5,
                 6, 2}, 9, null, 0.0F);
         IUItem.bronze_boots = new BaseArmor(
@@ -488,6 +490,7 @@ public class Register {
         ));
         //TODO:    IUItem.blueprint = new ItemBlueprint();
         IUItem.neutroniumingot = new IUItemBase("neutroniumingot");
+        IUItem.connect_item = new IUItemBase("connect_item");
         IUItem.upgrade_speed_creation = (IUItemBase) new IUItemBase("upgrade_speed_creation").setCreativeTab(IUCore.ModuleTab);
         IUItem.core = new ItemCore();
         UpgradeSystem.system.addModification();

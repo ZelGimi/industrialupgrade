@@ -12,6 +12,14 @@ public class SolarEnergySystem {
     public static SolarEnergySystem system;
     public static int[][] indexes = new int[][]{{1, 3}, {2, 4}, {5}, {4, 6}, {5, 7}, {8}, {7}, {8}, {}};
 
+    public void calculateCores(ISolarTile solarTile){
+        List<ItemStack> stackList = solarTile.getCoresItems();
+        int level = 0;
+        for(ItemStack stack : stackList){
+            level+=(stack.getItemDamage()+1);
+        }
+        solarTile.setCoreLevel(level);
+    }
     public void recalculation(ISolarTile solarTile, EnumTypeParts parts) {
         switch (parts) {
             case OUTPUT:
@@ -119,6 +127,12 @@ public class SolarEnergySystem {
                 }
                 average /= items.size();
                 double load = (max - average) * max * 15;
+
+                if(load >= 99){
+                    if(max <= solarTile.getCoreLevel())
+                        load = 99;
+                }
+
                 solarTile.setLoad(load);
                 average = Math.floor(average);
                 if (average == max) {

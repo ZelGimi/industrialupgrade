@@ -60,7 +60,7 @@ public class WorldGenOres implements IWorldGenerator {
                     rubberTrees += rnd.nextInt(10) + 5;
                 }
 
-                if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.PLAINS) || BiomeDictionary.hasType(
+                if (  BiomeDictionary.hasType(
                         biome,
                         BiomeDictionary.Type.FOREST
                 ) || BiomeDictionary.hasType(

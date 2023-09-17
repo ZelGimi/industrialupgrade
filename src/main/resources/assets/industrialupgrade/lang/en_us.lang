@@ -3592,10 +3592,10 @@ iu.smalldust.bronze=Tiny Pile of Bronze Dust
 iu.smalldust.lapis=Tiny Pile of Lapis Dust
 iu.smalldust.obsidian=Tiny Pile of Obsidian Dust
 
-iu.bronze_helmet=Bronze Helmet
-iu.bronze_chestplate=Bronze Chestplate
-iu.bronze_leggings=Bronze Leggings
-iu.bronze_boots=Bronze Boots
+iu.bronze_helmet.name=Bronze Helmet
+iu.bronze_chestplate.name=Bronze Chestplate
+iu.bronze_leggings.name=Bronze Leggings
+iu.bronze_boots.name=Bronze Boots
 item.lappack.name=Energypack
 iu.nano_helmet=NanoSuit Helmet
 iu.nano_chestplate=NanoSuit Bodyarmor
@@ -3834,3 +3834,15 @@ iu.special_armor_nightvision_1=Night vision is disabled in the morning with blin
 iu.special_armor_nightvision_2=Night vision is disabled in the morning
 iu.special_armor_nightvision_3=Night vision does not turn off in the morning
 iu.special_armor_speed=Speed
+
+industrialupgrade.basemachine3.facademechanism=Facade mechanism
+iu.connect_item.name=Cable Connection Customizer
+iu.facadeItem=Facade Tool
+
+facademechanism_text=Facade mechanism
+facademechanism_text1=Place on any side close to the wires
+facademechanism_text2=Put a block item into the slot
+facademechanism_text3=Press "Write"
+facademechanism_text4=To remove facades
+facademechanism_text5=Press "Clear"
+facademechanism_button=Clear

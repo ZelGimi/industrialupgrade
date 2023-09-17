@@ -32,6 +32,7 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.DamageHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -529,6 +530,11 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         this.timers = WindSystem.windSystem.getTime();
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();
+        if (!this.slot.get().isEmpty()) {
+            if (DamageHandler.getDamage(this.slot.get()) <= DamageHandler.getMaxDamage(this.slot.get()) * 0.75) {
+                this.need_repair = true;
+            }
+        }
     }
 
     @Override

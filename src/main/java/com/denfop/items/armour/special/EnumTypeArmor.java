@@ -32,7 +32,10 @@ public enum EnumTypeArmor {
             NIGHT_VISION_WITHOUT,
             JETPACK, SPEED, BIG_JUMP
     ),
-    QUANTUM("quantum",  Arrays.asList("Zelen","Snow","Desert"), 5, 8192, 50000000, new ArmorMulDamage(0.2, 0.4, 0.3, 0.2), 10000,
+    QUANTUM("quantum",  Arrays.asList("Zelen","Snow","Desert","Demon","Emerald","Cold"), 5, 8192, 50000000, new ArmorMulDamage(0.2
+            , 0.4,
+            0.3, 0.2),
+            10000,
             NIGHT_VISION_AUTO,
             ACTIVE_EFFECT, FOOD,
             JETPACK_FLY, SPEED, BAGS, BIG_JUMP, AUTO_JUMP

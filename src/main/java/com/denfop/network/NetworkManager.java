@@ -8,12 +8,14 @@ import com.denfop.network.packet.PacketCableSound;
 import com.denfop.network.packet.PacketColorPicker;
 import com.denfop.network.packet.PacketColorPickerAllLoggIn;
 import com.denfop.network.packet.PacketExplosion;
+import com.denfop.network.packet.PacketFixedClient;
 import com.denfop.network.packet.PacketItemStackEvent;
 import com.denfop.network.packet.PacketItemStackUpdate;
 import com.denfop.network.packet.PacketKeys;
 import com.denfop.network.packet.PacketLandEffect;
 import com.denfop.network.packet.PacketRadiation;
 import com.denfop.network.packet.PacketRadiationChunk;
+import com.denfop.network.packet.PacketRemoveUpdateTile;
 import com.denfop.network.packet.PacketResearchSystem;
 import com.denfop.network.packet.PacketResearchSystemAdd;
 import com.denfop.network.packet.PacketResearchSystemDelete;
@@ -81,7 +83,8 @@ public class NetworkManager {
         this.registerPacket(new PacketItemStackEvent());
         this.registerPacket(new PacketCableSound());
         this.registerPacket(new PacketStopSound());
-
+        this.registerPacket(new PacketFixedClient());
+        this.registerPacket(new PacketRemoveUpdateTile());
     }
 
     private static FMLProxyPacket makePacket(CustomPacketBuffer buffer) {
@@ -204,7 +207,10 @@ public class NetworkManager {
             worldData.mapUpdateOvertimeField.put(te.getPos(), te);
         }
     }
-
+    public void removeOvertimeUpdate(TileEntityBlock te) {
+        WorldData worldData = WorldData.get(te.getWorld());
+        worldData.mapUpdateOvertimeField.remove(te.getPos());
+    }
     public void removeTileToOvertimeUpdate(TileEntityBlock te) {
         WorldData worldData = WorldData.get(te.getWorld());
         worldData.mapUpdateOvertimeField.remove(te.getPos());

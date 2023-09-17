@@ -185,6 +185,21 @@ public class Fluids extends AbstractComponent {
         this.setNetworkUpdate(player, buffer);
     }
 
+    @Override
+    public CustomPacketBuffer updateComponent() {
+        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        for (final InternalFluidTank tank : this.managedTanks) {
+            NBTTagCompound subTag = new NBTTagCompound();
+            subTag = tank.writeToNBT(subTag);
+            try {
+                EncoderHandler.encode(buffer, subTag);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return buffer;
+    }
+
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         for (final InternalFluidTank tank : this.managedTanks) {
             tank.readFromNBT((NBTTagCompound) DecoderHandler.decode(is));

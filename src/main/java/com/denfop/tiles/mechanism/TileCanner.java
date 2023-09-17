@@ -201,7 +201,8 @@ public class TileCanner extends TileElectricLiquidTankInventory
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing,
+                UpgradableProperty.FluidConsuming, UpgradableProperty.FluidProducing
         );
     }
 

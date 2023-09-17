@@ -44,7 +44,7 @@ public class PacketUpdateFieldTile implements IPacket {
             if (te != null) {
                 ((TileEntityBlock) te).updateField(buf.readString(), buf);
             } else {
-                System.out.println(pos);
+                new PacketFixedClient(world,pos);
             }
 
         }

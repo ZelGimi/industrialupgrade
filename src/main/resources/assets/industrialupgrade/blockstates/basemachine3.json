@@ -436,6 +436,9 @@
       },
 	   "autocrafter" : {
         "model" : "industrialupgrade:basemachine/autocrafter"
+      },
+	   "facademechanism" : {
+        "model" : "industrialupgrade:basemachine/facademechanism"
       }
 	  
     },

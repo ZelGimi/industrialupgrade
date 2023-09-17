@@ -66,7 +66,11 @@ public class ComponentPollution extends AbstractComponent {
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
-
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer packet = super.updateComponent();
+        packet.writeBoolean(this.active);
+        return packet;
+    }
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
 
         this.active = is.readBoolean();

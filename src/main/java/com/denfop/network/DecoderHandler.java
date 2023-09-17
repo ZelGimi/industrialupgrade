@@ -158,57 +158,7 @@ public class DecoderHandler {
         }
     }
 
-    public static <T> boolean copyValue(T src, T dst) {
-        if (src != null && dst != null) {
-            if (dst instanceof ItemStack) {
-                ItemStack srcT = (ItemStack) src;
-                ItemStack dstT = (ItemStack) dst;
-                if (srcT.getItem() == dstT.getItem()) {
-                    dstT.setCount(srcT.getCount());
-                    ModUtils.setRawMeta(dstT, Items.DYE.getDamage(srcT));
-                    dstT.setTagCompound(srcT.getTagCompound());
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if (dst instanceof FluidTank) {
-                    FluidTank srcT = (FluidTank) src;
-                    FluidTank dstT = (FluidTank) dst;
-                    dstT.setFluid(srcT.getFluid());
-                    dstT.setCapacity(srcT.getCapacity());
-                } else if (dst instanceof InvSlot) {
-                    InvSlot srcT = (InvSlot) src;
-                    InvSlot dstT = (InvSlot) dst;
-                    if (srcT.size() != dstT.size()) {
-                        throw new RuntimeException("Can't sync InvSlots with mismatched sizes.");
-                    }
 
-                    for (int i = 0; i < srcT.size(); ++i) {
-                        if (!copyValue(srcT.get(i), dstT.get(i))) {
-                            dstT.put(i, srcT.get(i));
-                        }
-                    }
-                } else if (dst instanceof AbstractComponent) {
-                    NBTTagCompound nbt = (NBTTagCompound) src;
-                    ((AbstractComponent) dst).readFromNbt(nbt);
-                } else {
-                    if (!(dst instanceof Collection)) {
-                        return false;
-                    }
-
-                    Collection<Object> srcT = (Collection) src;
-                    Collection<Object> dstT = (Collection) dst;
-                    dstT.clear();
-                    dstT.addAll(srcT);
-                }
-
-                return true;
-            }
-        } else {
-            return false;
-        }
-    }
 
     public static Block getBlock(ResourceLocation loc) {
         Block ret = Block.REGISTRY.getObject(loc);
@@ -341,7 +291,6 @@ public class DecoderHandler {
                 if (size == 0) {
                     return ModUtils.emptyStack;
                 }
-
                 Item item = decode(is, Item.class);
                 int meta = is.readShort();
                 NBTTagCompound nbt = (NBTTagCompound) decode(is);
@@ -376,13 +325,13 @@ public class DecoderHandler {
             case Vec3:
                 return new Vec3d(is.readDouble(), is.readDouble(), is.readDouble());
             case Vein:
-                return new Vein((NBTTagCompound) decode(is));
+                return new Vein(is);
             case RecipeInfo:
-                return new RecipeInfo((NBTTagCompound) decode(is));
+                return new RecipeInfo(is);
             case PlayerStreakInfo:
                 return new PlayerStreakInfo((NBTTagCompound) decode(is));
             case Radiation:
-                return new Radiation((NBTTagCompound) decode(is));
+                return new Radiation(is);
             case FAKE_PLANET:
                 String planet = is.readString();
                 return new FakePlanet(new FakePlayer(((NBTTagCompound) decode(is))), planet);

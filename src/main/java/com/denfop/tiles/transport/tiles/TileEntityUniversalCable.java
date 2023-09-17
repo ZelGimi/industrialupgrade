@@ -58,6 +58,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
     public boolean addedToEnergyNet;
     protected UniversalType cableType;
+    private boolean needUpdate;
 
     public TileEntityUniversalCable(UniversalType cableType) {
         super(cableType);
@@ -103,7 +104,32 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
     }
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
+        MinecraftForge.EVENT_BUS.post(new HeatTileUnloadEvent(this, this.getWorld()));
+        MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.QUANTUM, this));
+        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.EXPERIENCE, this));
+        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
+        this.needUpdate = true;
+    }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
+            MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.QUANTUM, this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.EXPERIENCE, this));
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+    }
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
@@ -161,7 +187,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
-
+            if (getBlackList().contains(dir))
+                continue;
             Object tile = EnergyNetGlobal.instance.getTile(world, this.pos.offset(dir));
             if (tile != EnergyNetGlobal.EMPTY) {
                 if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
@@ -259,11 +286,11 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     }
 
     public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing direction) {
-        return this.canInteractWith();
+        return  (!getBlackList().contains(direction));
     }
 
     public boolean emitsEnergyTo(IEnergyAcceptor receiver, EnumFacing direction) {
-        return this.canInteractWith();
+        return  (!getBlackList().contains(direction));
     }
 
     public boolean canInteractWith() {

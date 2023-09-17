@@ -9,6 +9,8 @@ import com.denfop.api.cool.ICoolEmitter;
 import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.cool.event.CoolTileLoadEvent;
 import com.denfop.api.cool.event.CoolTileUnloadEvent;
+import com.denfop.api.energy.event.EnergyTileLoadEvent;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCoolPipes;
@@ -40,6 +42,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
 
     public boolean addedToEnergyNet;
     protected CoolType cableType;
+    private boolean needUpdate;
 
     public TileEntityCoolPipes(CoolType cableType) {
         super(cableType);
@@ -101,7 +104,22 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         }
 
     }
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
+        this.needUpdate = true;
+    }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new CoolTileLoadEvent(this, this.getWorld()));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+    }
     public void onUnloaded() {
         if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
@@ -141,7 +159,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             ICoolTile tile = CoolNet.instance.getSubTile(world, this.pos.offset(dir));
-
+            if (!this.getBlackList().contains(dir))
             if ((tile instanceof ICoolAcceptor && ((ICoolAcceptor) tile).acceptsCoolFrom(
                     this,
                     dir.getOpposite()
@@ -164,11 +182,11 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
     }
 
     public boolean acceptsCoolFrom(ICoolEmitter emitter, EnumFacing direction) {
-        return this.canInteractWith();
+        return !getBlackList().contains(direction);
     }
 
     public boolean emitsCoolTo(ICoolAcceptor receiver, EnumFacing direction) {
-        return this.canInteractWith();
+        return !getBlackList().contains(direction);
     }
 
     public boolean canInteractWith() {

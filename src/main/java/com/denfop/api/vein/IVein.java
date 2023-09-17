@@ -1,5 +1,6 @@
 package com.denfop.api.vein;
 
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 
@@ -28,6 +29,8 @@ public interface IVein {
     boolean canMining();
 
     NBTTagCompound writeTag();
+
+    CustomPacketBuffer writePacket();
 
     boolean equals(Object o);
 

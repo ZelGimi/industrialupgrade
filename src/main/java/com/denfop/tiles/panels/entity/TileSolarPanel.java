@@ -139,8 +139,8 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
         try {
-            EncoderHandler.encode(packet, this.pollution);
-            EncoderHandler.encode(packet, this.timer);
+            EncoderHandler.encode(packet, this.pollution,false);
+            EncoderHandler.encode(packet, this.timer,false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -151,8 +151,8 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
     public void readUpdatePacket(final CustomPacketBuffer customPacketBuffer) {
         super.readUpdatePacket(customPacketBuffer);
         try {
-            pollution.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
-            timer.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            pollution.onNetworkUpdate(customPacketBuffer);
+            timer.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -183,6 +183,8 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             k = (double) DecoderHandler.decode(customPacketBuffer);
             m = (double) DecoderHandler.decode(customPacketBuffer);
             tier = (int) DecoderHandler.decode(customPacketBuffer);
+            boolean isNull = (boolean) DecoderHandler.decode(customPacketBuffer);
+            if(!isNull)
             solarpanels = EnumSolarPanels.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             activeState = GenerationState.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             wireless = (boolean) DecoderHandler.decode(customPacketBuffer);
@@ -212,6 +214,8 @@ public class TileSolarPanel extends TileEntityInventory implements IEnergySource
             EncoderHandler.encode(packet, k);
             EncoderHandler.encode(packet, m);
             EncoderHandler.encode(packet, tier);
+            EncoderHandler.encode(packet, solarpanels == null);
+            if(solarpanels != null)
             EncoderHandler.encode(packet, solarpanels);
             EncoderHandler.encode(packet, activeState);
             EncoderHandler.encode(packet, wireless);

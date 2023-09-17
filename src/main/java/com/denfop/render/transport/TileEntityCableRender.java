@@ -1,29 +1,22 @@
 package com.denfop.render.transport;
 
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TileEntityCableRender<T extends TileEntityMultiCable> extends TileEntitySpecialRenderer<T> {
 
-    public static List<ModelBaseCable> modelBaseCableMap = new LinkedList<>();
-    public static ModelBaseCable standard = new ModelBaseCable(null);
+
     private ResourceLocation textures;
 
-    public static <T> List<T> reverseOrder(List<T> list) {
-        int size = list.size();
-        return list.stream()
-                .sorted((a, b) -> -list.indexOf(a) + list.indexOf(b))
-                .collect(Collectors.toList());
-    }
 
     public void render(
             @Nonnull TileEntityMultiCable te,
@@ -37,26 +30,62 @@ public class TileEntityCableRender<T extends TileEntityMultiCable> extends TileE
 
         this.textures = te.getTexture();
 
-        if (modelBaseCableMap.isEmpty()) {
-            final List<EnumFacing> var4 = reverseOrder(Arrays.stream(EnumFacing.VALUES).collect(Collectors.toList()));
-            for (EnumFacing dir : var4) {
-                modelBaseCableMap.add(new ModelBaseCable(dir));
-            }
+
+        DataCable data = te.dataCable;
+        if (data == null) {
+            byte connect = te.connectivity;
+            final ModelBaseCable model = new ModelBaseCable(connect);
+            data = new DataCable(te.connectivity, model, ItemStack.EMPTY, null);
+            te.dataCable = data;
         }
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        this.bindTexture(this.textures);
-        standard.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
         byte connect = te.connectivity;
-        for (ModelBaseCable entry : modelBaseCableMap) {
-            if ((connect & 1) == 1) {
-                entry.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
+        if (data.getConnect() != connect) {
+            final ModelBaseCable model = new ModelBaseCable(connect);
+            data.setConnect(te.connectivity);
+            data.setModelCables(model);
+        }
+        this.bindTexture(this.textures);
+         GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+
+        data.getModelCables().render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
+
+
+
+
+        if (te.stackFacade != null && !te.stackFacade.isEmpty()) {
+            if (data.getItemStack() == ItemStack.EMPTY || !data.getItemStack().isItemEqual(te.stackFacade)) {
+                data.setItemStack(te.stackFacade);
+                RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+                IBakedModel itemModel = renderItem.getItemModelWithOverrides(data.getItemStack(), te.getWorld(), null);
+                data.setBakedModel(itemModel);
             }
-            connect = (byte) (connect >> 1);
+            GlStateManager.pushMatrix();
+            bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            renderBlocks(data);
+            GlStateManager.popMatrix();
+        } else {
+            if (data.getItemStack() != ItemStack.EMPTY) {
+                data.setItemStack(ItemStack.EMPTY);
+                data.setBakedModel(null);
+            }
         }
         GlStateManager.popMatrix();
 
     }
 
+    private void renderBlocks(final DataCable data) {
+
+        renderBlock(data);
+
+    }
+
+    private void renderBlock(DataCable item) {
+        GlStateManager.translate(0.5, 0.5D, 0.5);
+        GlStateManager.scale(1F, 1F, 1F);
+        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+        renderItem.renderItem(item.getItemStack(), item.getBakedModel());
+
+    }
 
 }

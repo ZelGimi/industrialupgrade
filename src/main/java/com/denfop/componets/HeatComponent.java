@@ -123,7 +123,15 @@ public class HeatComponent extends AbstractComponent {
 
 
     }
-
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer packet = super.updateComponent();
+        packet.writeDouble(this.capacity);
+        packet.writeDouble(this.storage);
+        packet.writeBoolean(this.need);
+        packet.writeBoolean(this.allow);
+        packet.writeBoolean(this.auto);
+        return packet;
+    }
     public NBTTagCompound writeToNbt() {
         NBTTagCompound ret = new NBTTagCompound();
         ret.setDouble("storage", this.storage);
@@ -233,6 +241,8 @@ public class HeatComponent extends AbstractComponent {
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
         buffer.writeBoolean(this.need);
+        buffer.writeBoolean(this.allow);
+        buffer.writeBoolean(this.auto);
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -241,6 +251,8 @@ public class HeatComponent extends AbstractComponent {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
         this.need = is.readBoolean();
+        this.allow = is.readBoolean();
+        this.auto = is.readBoolean();
     }
 
 

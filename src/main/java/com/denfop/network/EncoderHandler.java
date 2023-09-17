@@ -226,8 +226,7 @@ public class EncoderHandler {
                 encode(os, ((Collection) o).toArray(), false);
                 break;
             case Component:
-                NBTTagCompound nbt = ((AbstractComponent) o).writeToNbt();
-                encode(os, nbt == null ? new NBTTagCompound() : nbt, false);
+                os.writeBytes(((AbstractComponent) o).updateComponent());
                 break;
             case Double:
                 os.writeDouble((Double) o);
@@ -341,15 +340,15 @@ public class EncoderHandler {
                 break;
             case Vein:
                 Vein vein = (Vein) o;
-                encode(os, vein.writeTag(), true);
+                os.writeBytes(vein.writePacket());
                 break;
             case RecipeInfo:
                 RecipeInfo recipeInfo = (RecipeInfo) o;
-                encode(os, recipeInfo.writeCompound(), true);
+                os.writeBytes(recipeInfo.getPacket());
                 break;
             case Radiation:
                 Radiation radiation = (Radiation) o;
-                encode(os, radiation.writeCompound(), true);
+                os.writeBytes(radiation.writePacket());
                 break;
             case FAKE_PLANET:
                 break;

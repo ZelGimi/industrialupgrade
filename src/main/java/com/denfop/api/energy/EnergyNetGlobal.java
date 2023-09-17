@@ -73,6 +73,7 @@ public class EnergyNetGlobal implements IAdvEnergyNet {
         final EnergyNetLocal local = EnergyNetGlobal.getForWorld(world.provider.getDimension());
         if (local != EnergyNetLocal.EMPTY) {
             local.onUnload();
+            worldToEnergyNetMap.remove(world.provider.getDimension());
         }
 
     }

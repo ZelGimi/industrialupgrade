@@ -34,6 +34,7 @@ public class TileEntitySCable extends TileEntityMultiCable implements IConductor
 
     public boolean addedToEnergyNet;
     protected SEType cableType;
+    private boolean needUpdate;
 
 
     public TileEntitySCable(SEType cableType) {
@@ -80,7 +81,22 @@ public class TileEntitySCable extends TileEntityMultiCable implements IConductor
         nbt.setByte("cableType", (byte) this.cableType.ordinal());
         return nbt;
     }
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        super.updateTileServer(var1, var2);
+        MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.UNLOAD, EnergyType.SOLARIUM, this));
+        this.needUpdate = true;
+    }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.needUpdate) {
+            MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.getWorld(), EnumTypeEvent.LOAD, EnergyType.SOLARIUM, this));
+            this.needUpdate = false;
+            this.updateConnectivity();
+        }
+    }
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
@@ -126,7 +142,7 @@ public class TileEntitySCable extends TileEntityMultiCable implements IConductor
             newConnectivity = (byte) (newConnectivity << 1);
 
             final ITile tile = EnergyBase.SE.getSubTile(world, this.pos.offset(dir));
-
+            if (!getBlackList().contains(dir))
             if (tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
                     this,
                     dir.getOpposite()
@@ -150,11 +166,11 @@ public class TileEntitySCable extends TileEntityMultiCable implements IConductor
     }
 
     public boolean acceptsFrom(IEmitter emitter, EnumFacing direction) {
-        return this.canInteractWith();
+        return  (!getBlackList().contains(direction));
     }
 
     public boolean emitsTo(IAcceptor receiver, EnumFacing direction) {
-        return this.canInteractWith();
+        return  (!getBlackList().contains(direction));
     }
 
     public boolean canInteractWith() {

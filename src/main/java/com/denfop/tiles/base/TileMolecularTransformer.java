@@ -260,7 +260,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
             EncoderHandler.encode(packet, guiProgress);
             EncoderHandler.encode(packet, queue);
             EncoderHandler.encode(packet, redstoneMode);
-            EncoderHandler.encode(packet, energy);
+            EncoderHandler.encode(packet, energy,false);
             EncoderHandler.encode(packet, output_stack);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -274,7 +274,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
             guiProgress = (double) DecoderHandler.decode(customPacketBuffer);
             queue = (boolean) DecoderHandler.decode(customPacketBuffer);
             redstoneMode = (byte) DecoderHandler.decode(customPacketBuffer);
-            energy.readFromNbt((NBTTagCompound) DecoderHandler.decode(customPacketBuffer));
+            energy.onNetworkUpdate(customPacketBuffer);
             output_stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -546,7 +546,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         if (getActive() && output == null) {
             setActive(false);
         }
-        if (!this.outputSlot.isEmpty()) {
+        if (!this.outputSlot.isEmpty() && this.getWorld().provider.getWorldTime() % 10 == 0) {
             ModUtils.tick(this.outputSlot, this);
         }
     }
