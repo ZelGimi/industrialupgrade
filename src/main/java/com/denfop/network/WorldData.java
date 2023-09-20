@@ -39,18 +39,21 @@ public class  WorldData {
     }
 
     public static WorldData get(World world, boolean load) {
-        Map<Integer, WorldData> index = getIndex(!world.isRemote);
-        WorldData ret = index.get(world.provider.getDimension());
-        if (ret == null && load) {
-            ret = new WorldData(world);
-            WorldData prev = index.putIfAbsent(world.provider.getDimension(), ret);
-            if (prev != null) {
-                ret = prev;
+        if(world == null){
+            return null;
+        }else {
+            Map<Integer, WorldData> index = getIndex(!world.isRemote);
+            WorldData ret = index.get(world.provider.getDimension());
+            if (ret == null && load) {
+                ret = new WorldData(world);
+                WorldData prev = index.putIfAbsent(world.provider.getDimension(), ret);
+                if (prev != null) {
+                    ret = prev;
+                }
+
             }
-
+            return ret;
         }
-        return ret;
-
     }
 
     public static void onWorldUnload(World world) {

@@ -3,6 +3,7 @@ package com.denfop.api.gui;
 import com.denfop.Constants;
 import com.denfop.componets.*;
 import com.denfop.container.SlotInvSlot;
+import com.denfop.container.SlotVirtual;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIU;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
@@ -333,6 +334,35 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
+                        }else if(slot instanceof SlotVirtual) {
+                            int xX = slot.xPos;
+                            int yY = slot.yPos;
+                            this.setX(xX - 1);
+                            this.setY(yY - 1);
+
+
+                            int xx = 0;
+                                switch (this.type) {
+                                    case ADVANCED:
+                                        xx = 8;
+                                        break;
+                                    case IMPROVED:
+                                        xx = 16;
+                                        break;
+                                    case PERFECT:
+                                        xx = 24;
+                                        break;
+                                }
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x,
+                                    mouseY + this.y,
+                                    type.getX(),
+                                    type.getY(),
+                                    type.getWeight(),
+                                    type.getHeight()
+                            );
+
+
                         }
                     }
                     break;

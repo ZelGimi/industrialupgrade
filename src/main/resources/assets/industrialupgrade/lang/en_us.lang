@@ -3846,3 +3846,6 @@ facademechanism_text3=Press "Write"
 facademechanism_text4=To remove facades
 facademechanism_text5=Press "Clear"
 facademechanism_button=Clear
+
+iu.whitelist_tube=WhiteList
+iu.blacklist_tube=BlackList

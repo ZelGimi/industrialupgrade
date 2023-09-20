@@ -44,6 +44,7 @@ public class TileEntityCableRender<T extends TileEntityMultiCable> extends TileE
             data.setConnect(te.connectivity);
             data.setModelCables(model);
         }
+
         this.bindTexture(this.textures);
          GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);

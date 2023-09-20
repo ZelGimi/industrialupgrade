@@ -589,7 +589,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
-            progress = (double) DecoderHandler.decode(customPacketBuffer);
+            guiProgress = (double) DecoderHandler.decode(customPacketBuffer);
             queue = (boolean) DecoderHandler.decode(customPacketBuffer);
             redstoneMode = (byte) DecoderHandler.decode(customPacketBuffer);
             perenergy = (double) DecoderHandler.decode(customPacketBuffer);

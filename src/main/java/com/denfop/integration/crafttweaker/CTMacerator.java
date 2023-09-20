@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -55,9 +55,6 @@ public class CTMacerator {
 
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.output);
-        }
 
     }
 

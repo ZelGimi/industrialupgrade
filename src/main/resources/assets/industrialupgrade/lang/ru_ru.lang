@@ -3849,3 +3849,6 @@ facademechanism_text3=Нажмите кнопку записать
 facademechanism_text4=Чтобы убрать фасады
 facademechanism_text5=Нажмите кнопку очистить
 facademechanism_button=Очистить
+
+iu.whitelist_tube=Белый список
+iu.blacklist_tube=Чёрный список

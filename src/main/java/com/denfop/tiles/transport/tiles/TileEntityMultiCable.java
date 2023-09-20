@@ -3,6 +3,9 @@ package com.denfop.tiles.transport.tiles;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.transport.ITransportAcceptor;
+import com.denfop.api.transport.ITransportConductor;
+import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.container.ContainerCable;
@@ -19,6 +22,7 @@ import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -279,7 +283,14 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         } else if (stack.getItem() == IUItem.connect_item) {
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
         }
-        return false;
+        if(this instanceof ITransportConductor){
+            boolean can = TransportNetGlobal.getForWorld(this.world).hasInSystem((ITransportAcceptor) this);
+            if(can)
+                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+            else
+                return false;
+        }
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
 
 
     }
@@ -295,7 +306,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
 
     @Override
     @SideOnly(Side.CLIENT)
-    public GuiCable getGui(final EntityPlayer var1, final boolean var2) {
+    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiCable(getGuiContainer(var1));
     }
 

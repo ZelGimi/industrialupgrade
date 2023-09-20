@@ -165,13 +165,13 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     @Override
     public void setWorld(final World worldIn) {
         super.setWorld(worldIn);
-        new PacketUpdateTile(this);
+
     }
 
     @Override
     public void setPos(final BlockPos posIn) {
         super.setPos(posIn);
-        new PacketUpdateTile(this);
+
     }
 
     public NBTTagCompound getNBTFromSlot(CustomPacketBuffer customPacketBuffer) {
@@ -186,7 +186,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
     @Override
     public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState, final IBlockState newSate) {
-        if((oldState.getBlock() instanceof BlockTileEntity)){
+        if ((oldState.getBlock() instanceof BlockTileEntity)) {
             return false;
         }
         return newSate.getBlock() != oldState.getBlock();

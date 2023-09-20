@@ -32,7 +32,7 @@ public class TileEntityHeatBlock extends TileEntityMultiBlockElement implements 
                 0
         ).getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + Localization.translate(IUItem.ForgeHammer.getUnlocalizedName()));
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 

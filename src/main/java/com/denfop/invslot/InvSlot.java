@@ -37,7 +37,9 @@ public class InvSlot {
     public ItemStack[] gets() {
         return this.contents.toArray(new ItemStack[0]);
     }
-
+    public List<ItemStack> getContents(){
+        return this.contents;
+    }
     public void readFromNbt(NBTTagCompound nbt) {
         NBTTagList contentsTag = nbt.getTagList("Items", 10);
 

@@ -53,7 +53,17 @@ public class TransportNetLocal {
         }
     }
 
-
+    public boolean hasInSystem(ITransportAcceptor par1){
+        for (SystemTick<ITransportSource, TransportNetLocal.TransportPath> entry : this.senderPath) {
+            if (entry.getList() != null) {
+                for (TransportNetLocal.TransportPath path : entry.getList()) {
+                    if(path.first.getBlockPos().equals(par1.getBlockPos()) || path.end.getBlockPos().equals(par1.getBlockPos()))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public List<SystemTick<ITransportSource, TransportNetLocal.TransportPath>> getSources(ITransportAcceptor par1) {
         List<SystemTick<ITransportSource, TransportNetLocal.TransportPath>> source = new ArrayList<>();
@@ -119,7 +129,50 @@ public class TransportNetLocal {
             this.remove((ITransportSource) tile);
         }
     }
+    public boolean canInsertOrExtract(ITransportConductor transportConductor, ItemStack stack){
+        List<ItemStack> BlackItemStacks = transportConductor.getBlackListItems();
+        if(BlackItemStacks.isEmpty()) {
+            List<ItemStack> WhiteItemStacks = transportConductor.getWhiteListItems();
+            if(!WhiteItemStacks.isEmpty()) {
+                for (ItemStack stack1 : WhiteItemStacks) {
+                    if (stack1.isItemEqual(stack)) {
+                        return true;
+                    }
 
+                }
+            }
+        } else{
+            for(ItemStack stack1 : BlackItemStacks) {
+                if(stack1.isItemEqual(stack)) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
+    public boolean canInsertOrExtract(ITransportConductor transportConductor, FluidStack stack){
+        List<FluidStack> BlackItemStacks = transportConductor.getBlackListFluids();
+        if(BlackItemStacks.isEmpty()) {
+            List<FluidStack> WhiteItemStacks = transportConductor.getWhiteListFluids();
+            if(!WhiteItemStacks.isEmpty()) {
+                for (FluidStack stack1 : WhiteItemStacks) {
+                    if (stack1.isFluidEqual(stack)) {
+                        return true;
+                    }
+
+                }
+            }
+        } else{
+            for(FluidStack stack1 : BlackItemStacks) {
+                if(stack1.isFluidEqual(stack)) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
     public void emitTransportFrom(
             ITransportSource<ItemStack, IItemHandler> TransportSource,
             TransportItem<ItemStack> amount,
@@ -127,10 +180,7 @@ public class TransportNetLocal {
             SystemTick<ITransportSource, TransportPath> tick
     ) {
 
-        if (TransportPaths == null) {
-            TransportPaths = discover(TransportSource);
-            tick.setList(TransportPaths);
-        }
+
         List<ItemStack> list = amount.getList();
         List<Integer> list1 = amount.getList1();
 
@@ -148,7 +198,12 @@ public class TransportNetLocal {
                 for (Integer integer : demandedTransport) {
                     for (int i = 0; i < list1.size(); i++) {
                         if (!list.get(i).isEmpty()) {
+                            if(!canInsertOrExtract(TransportPath.first,list.get(i)))
+                                continue;
+                            if(!canInsertOrExtract(TransportPath.end,list.get(i)))
+                                continue;
                             ItemStack stack = TransportSink.getHandler().insertItem(integer, list.get(i), true);
+
                             if (stack.isEmpty() && stack.getCount() != list.get(i).getCount()) {
                                 stack = TransportSink.getHandler().insertItem(integer, list.get(i).copy(), false);
                                 if (!stack.isEmpty()) {
@@ -277,13 +332,22 @@ public class TransportNetLocal {
             sourceToUpdateList.clear();
         }
         try {
-            if (this.world.getWorldTime() % 3L == 0L) {
+            if (this.world.getWorldTime() % 4L == 0L) {
                 for (SystemTick<ITransportSource, TransportPath> tick : this.senderPath) {
                     if (tick.getSource().isItem()) {
                         ITransportSource<ItemStack, IItemHandler> entry = (ITransportSource<ItemStack, IItemHandler>) tick.getSource();
 
 
                         if (entry != null) {
+                            if (tick.getList() == null) {
+                                final List<TransportPath> TransportPaths = discover(entry);
+                                for(TransportPath transportPaths : TransportPaths){
+                                    transportPaths.first = transportPaths.getConductors().get(transportPaths.getConductors().size()-1);
+                                    transportPaths.end = transportPaths.getConductors().get(0);
+
+                                }
+                                tick.setList(TransportPaths);
+                            }
                             TransportItem<ItemStack> offered = entry.getOffered(0);
 
                             if (!offered.getList().isEmpty()) {
@@ -295,6 +359,15 @@ public class TransportNetLocal {
                         ITransportSource<FluidStack, IFluidHandler> entry = (ITransportSource<FluidStack, IFluidHandler>) tick.getSource();
                         if (entry != null) {
                             TransportItem<FluidStack> offered = entry.getOffered(1);
+                            if (tick.getList() == null) {
+                                final List<TransportPath> TransportPaths = discover(entry);
+                                for(TransportPath transportPaths : TransportPaths){
+                                    transportPaths.first = transportPaths.getConductors().get(transportPaths.getConductors().size()-1);
+                                    transportPaths.end = transportPaths.getConductors().get(0);
+
+                                }
+                                tick.setList(TransportPaths);
+                            }
                             if (!offered.getList().isEmpty()) {
                                 emitTransportFluidFrom(entry, offered, tick.getList(), tick);
                             }
@@ -314,6 +387,11 @@ public class TransportNetLocal {
     ) {
         if (TransportPaths == null) {
             TransportPaths = discover(TransportSource);
+            for(TransportPath transportPaths : TransportPaths){
+                transportPaths.first = transportPaths.getConductors().get(transportPaths.getConductors().size()-1);
+                transportPaths.end = transportPaths.getConductors().get(0);
+
+            }
             tick.setList(TransportPaths);
         }
         List<FluidStack> list = transportItem.getList();
@@ -327,6 +405,10 @@ public class TransportNetLocal {
                 }
                 IFluidHandler handler = TransportPath.getHandler();
                 for (FluidStack fluidStack : list) {
+                    if(!canInsertOrExtract(TransportPath.first,fluidStack))
+                        continue;
+                    if(!canInsertOrExtract(TransportPath.end,fluidStack))
+                        continue;
                     if (fluidStack.amount <= 0) {
                         continue;
                     }
@@ -405,7 +487,9 @@ public class TransportNetLocal {
 
         IFluidHandler fluidHandler = null;
 
+        ITransportConductor first = null;
 
+        ITransportConductor end = null;
         TransportPath(ITransportSink sink, EnumFacing facing) {
             this.target = sink;
             this.conductors = new ArrayList<>();

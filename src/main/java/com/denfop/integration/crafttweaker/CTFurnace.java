@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.IUCore;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -62,9 +62,6 @@ public class CTFurnace {
             IUCore.removing_list.add(Arrays.asList(CraftTweakerMC.getItemStacks(output)));
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.output);
-        }
 
     }
 

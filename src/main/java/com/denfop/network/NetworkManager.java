@@ -121,8 +121,10 @@ public class NetworkManager {
 
 
     public void addTileToUpdate(TileEntityBlock te) {
-        WorldData worldData = WorldData.get(te.getWorld());
-        worldData.listUpdateTile.add(te);
+        if (te.hasWorld()) {
+            WorldData worldData = WorldData.get(te.getWorld());
+            worldData.listUpdateTile.add(te);
+        }
     }
 
 

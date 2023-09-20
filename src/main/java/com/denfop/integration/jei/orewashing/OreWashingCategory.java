@@ -85,7 +85,11 @@ public class OreWashingCategory extends Gui implements IRecipeCategory<OreWashin
             drawTexturedModalRect(66 - 1 + 18 * i, 56 - 1, 238, 0, 18, 18);
         }
         drawTexturedModalRect(2, 44 + 16, 238, 0, 18, 18);
-
+        mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        drawTexturedModalRect(
+                5, 42, 0, 0, 12,
+                16
+        );
 
     }
 

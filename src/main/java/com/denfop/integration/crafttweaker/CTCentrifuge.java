@@ -1,6 +1,5 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -59,9 +58,6 @@ public class CTCentrifuge {
             Recipes.recipes.addRemoveRecipe("centrifuge", CraftTweakerMC.getItemStack(input));
         }
 
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.input);
-        }
 
     }
 

@@ -60,7 +60,7 @@ public class MaceratorRecipe {
         addmacerator("plateDenseLead", "dustLead", 9);
         addmacerator(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ, 4));
         addmacerator(new ItemStack(Items.WHEAT_SEEDS, 16), IUItem.biochaff);
-
+        addmacerator(new ItemStack(Blocks.CLAY), "dustClay");
         addmacerator("crushedCopper", "dustCopper");
         addmacerator("oreGold", "crushedGold", 2);
         addmacerator("plateDenseObsidian", "dustObsidian", 9);

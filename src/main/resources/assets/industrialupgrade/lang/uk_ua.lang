@@ -3846,3 +3846,6 @@ facademechanism_text3=Натисніть кнопку записати
 facademechanism_text4=Щоб прибрати фасади
 facademechanism_text5=Натисніть кнопку стерти
 facademechanism_button=Очистити
+
+iu.whitelist_tube=Білий список
+iu.blacklist_tube=Чорний список

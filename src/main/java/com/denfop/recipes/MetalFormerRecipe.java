@@ -113,8 +113,7 @@ public class MetalFormerRecipe {
             }
         }
 
-        addmolot(IUItem.coal_chunk, 9, new ItemStack(IUItem.coal_chunk1)
-        );
+
 
 
         addCutting("plateMuntsa", 4, new ItemStack(IUItem.expcable)

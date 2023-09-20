@@ -83,7 +83,11 @@ public class FarmerCategory extends Gui implements IRecipeCategory<FarmerRecipeW
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
         drawTexturedModalRect(66 - 1, 56 - 1, 238, 0, 18, 18);
         drawTexturedModalRect(2, 44 + 16, 238, 0, 18, 18);
-
+        mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        drawTexturedModalRect(
+                5, 42, 0, 0, 12,
+                16
+        );
     }
 
     @Override

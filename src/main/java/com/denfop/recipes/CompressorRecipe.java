@@ -30,7 +30,8 @@ public class CompressorRecipe {
         addcompressor(new ItemStack(IUItem.compressIridiumplate), 9, new ItemStack(IUItem.doublecompressIridiumplate));
         addcompressor(new ItemStack(IUItem.neutronium), 9, new ItemStack(IUItem.neutroniumingot, 1));
         addcompressor(IUItem.coalBall, 1, IUItem.compressedCoalBall);
-
+        addcompressor(IUItem.coal_chunk, 9, new ItemStack(IUItem.coal_chunk1)
+        );
         for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 
             addcompressor(

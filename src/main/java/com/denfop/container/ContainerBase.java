@@ -69,7 +69,15 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
     }
 
     public @NotNull ItemStack slotClick(int slotId, int dragType, @NotNull ClickType clickType, @NotNull EntityPlayer player) {
-        return super.slotClick(slotId, dragType, clickType, player);
+        if(slotId < 0)
+            return super.slotClick(slotId, dragType, clickType, player);
+        Slot slot = this.inventorySlots.get(slotId);
+        if (!(slot instanceof SlotVirtual)) {
+            return super.slotClick(slotId, dragType, clickType, player);
+        } else {
+            ((SlotVirtual) slot).slotClick(slotId, dragType, clickType, player);
+        }
+        return ItemStack.EMPTY;
     }
 
     public final @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int sourceSlotIndex) {
@@ -100,6 +108,8 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         for (int run = 0; run < 4 && !ModUtils.isEmpty(sourceItemStack); ++run) {
 
             for (final Slot targetSlot : this.inventorySlots) {
+                if(targetSlot instanceof SlotVirtual)
+                    continue;
                 if (targetSlot.inventory != player.inventory && isValidTargetSlot(
                         targetSlot,
                         sourceItemStack,
@@ -123,6 +133,8 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
 
             while (it.hasPrevious()) {
                 Slot targetSlot = it.previous();
+                if(targetSlot instanceof SlotVirtual)
+                    continue;
                 if (targetSlot.inventory == player.inventory && isValidTargetSlot(targetSlot, sourceItemStack, run == 1, false)) {
                     sourceItemStack = this.transfer(sourceItemStack, targetSlot);
                     if (ModUtils.isEmpty(sourceItemStack)) {
@@ -197,4 +209,5 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
     protected List<String> getNetworkedFields() {
         return new ArrayList<>();
     }
+
 }

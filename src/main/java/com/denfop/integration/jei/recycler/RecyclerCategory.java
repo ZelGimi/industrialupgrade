@@ -73,8 +73,8 @@ public class RecyclerCategory extends Gui implements IRecipeCategory<RecyclerWra
                 14
         );
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(66 - 1, 12 + 19, 192 - 16, 15, 16, 24);
-        drawTexturedModalRect(66 - 1, 12 + 19, 192, 15, 16, xScale + 1);
+        drawTexturedModalRect(66 - 1, 12 + 19, 192 - 16, 15, 18, 24);
+        drawTexturedModalRect(66 -2, 12 + 19, 192, 15, 18, xScale + 1);
         drawTexturedModalRect(
                 +4, 42 + 16 - energylevel, 176, 16 - energylevel, 16,
                 energylevel
@@ -82,7 +82,11 @@ public class RecyclerCategory extends Gui implements IRecipeCategory<RecyclerWra
         drawTexturedModalRect(66 - 1, 12 - 1, 238, 0, 18, 18);
         drawTexturedModalRect(66 - 1, 56 - 1, 238, 0, 18, 18);
         drawTexturedModalRect(2, 44 + 16, 238, 0, 18, 18);
-
+        mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        drawTexturedModalRect(
+                5, 42, 0, 0, 12,
+                16
+        );
     }
 
     @Override
