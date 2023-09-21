@@ -32,10 +32,14 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -83,11 +87,21 @@ public class TileCanner extends TileElectricLiquidTankInventory
 
 
     public static void addEnrichRecipe(FluidStack input, ItemStack additive, Fluid output) {
+       int count = input.amount / 1000;
         Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
                 new Input(
                         input,
                         com.denfop.api.Recipes.inputFactory.getInput(IUItem.FluidCell),
                         com.denfop.api.Recipes.inputFactory.getInput(additive)
+                ),
+                new RecipeOutput(null, ModUtils.getCellFromFluid(output))
+        ));
+        ItemStack stack = ModUtils.getCellFromFluid(input.getFluid());
+        stack.setCount(count);
+        Recipes.recipes.addRecipe("cannerenrich", new BaseMachineRecipe(
+                new Input(
+                        com.denfop.api.Recipes.inputFactory.getInput(stack),
+                        com.denfop.api.Recipes.inputFactory.getInput(additive, 1)
                 ),
                 new RecipeOutput(null, ModUtils.getCellFromFluid(output))
         ));
@@ -168,7 +182,25 @@ public class TileCanner extends TileElectricLiquidTankInventory
         }
 
     }
+    @Override
+    public boolean onActivated(
+            final EntityPlayer player,
+            final EnumHand hand,
+            final EnumFacing side,
+            final float hitX,
+            final float hitY,
+            final float hitZ
+    ) {
+        if (!this.getWorld().isRemote && player
+                .getHeldItem(hand)
+                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
 
+            return FluidUtil.interactWithFluidHandler(player, hand,
+                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+            );
+        }
+        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+    }
     public MachineRecipe getOutput() {
         this.output = this.inputSlotA.process();
         return this.output;

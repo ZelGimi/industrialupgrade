@@ -216,13 +216,13 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     public void updateEntityServer() {
         super.updateEntityServer();
         for (FluidTank tank : fluidTank) {
-            if (!tank.equals(fluidTank[0])) {
+
                 for (InvSlotDrainTank slot : this.containerslot) {
                     if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
                         slot.processFromTank(tank, this.outputSlot);
                     }
                 }
-            }
+
         }
         boolean work = false;
         if (this.energy.getEnergy() > 5 + 5 * this.level) {

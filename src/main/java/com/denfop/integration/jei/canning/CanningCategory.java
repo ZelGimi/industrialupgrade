@@ -69,7 +69,7 @@ public class CanningCategory extends Gui implements IRecipeCategory<CanningRecip
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(14 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(15 - 9, 46 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
         drawTexturedModalRect(74 - 5, 22 - 16, 232, 0, (int) (xScale), 16);
