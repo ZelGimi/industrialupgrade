@@ -71,7 +71,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     public final ItemBlockTileEntity item;
     public final TileBlockCreator.InfoAboutTile<?> teInfo;
     private final CreativeTabs tab;
-    private StateMapperIU stateMapper;    public final TypeProperty typeProperty = this.getTypeProperty();
+    public final TypeProperty typeProperty = this.getTypeProperty();
     public BlockTileEntity(String name, final ResourceLocation identifier, final TileBlockCreator.InfoAboutTile<?> value) {
         super(null, value.getDefaultMaterial());
         this.item = new ItemBlockTileEntity(this, identifier);
@@ -109,7 +109,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
-        this.stateMapper = new StateMapperIU();
+        StateMapperIU stateMapper = new StateMapperIU();
         final ModelResourceLocation invalidLocation = stateMapper.getModelResourceLocation(
                 ModUtils.getName(IUItem.invalid),
                 this.blockState
