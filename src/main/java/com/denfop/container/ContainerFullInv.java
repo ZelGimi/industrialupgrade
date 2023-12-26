@@ -9,7 +9,14 @@ public abstract class ContainerFullInv<T extends TileEntityInventory> extends Co
         super(base);
         this.addPlayerInventorySlots(player, height);
     }
-
+    public ContainerFullInv(EntityPlayer player, T base) {
+        super(base);
+        this.addPlayerInventorySlots(player, 166);
+    }
+    public ContainerFullInv( T base,EntityPlayer player) {
+        super(base);
+        this.addPlayerInventorySlots(player, 166);
+    }
     public ContainerFullInv(EntityPlayer player, T base, int width, int height) {
         super(base);
         this.addPlayerInventorySlots(player, width, height);

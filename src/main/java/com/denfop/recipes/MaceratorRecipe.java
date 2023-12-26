@@ -49,12 +49,21 @@ public class MaceratorRecipe {
 
         }
 
-        final IInputHandler input1 = Recipes.inputFactory;
         if (!OreDictionary.getOres("oreYellorite").isEmpty()) {
             addmacerator("oreYellorite", "crushedUranium", 2);
         }
         addmacerator(IUItem.plateobsidian, IUItem.obsidianDust);
         addmacerator(new ItemStack(Blocks.WOOL), new ItemStack(Items.STRING, 2));
+
+        addmacerator("oreOsmium", "crushedOsmium", 2);
+        addmacerator("oreTantalum", "crushedTantalum", 2);
+        addmacerator("oreCadmium", "crushedCadmium",2);
+
+
+        addmacerator("ingotOsmium", "dustOsmium");
+        addmacerator("ingotTantalum", "dustTantalum");
+        addmacerator("ingotCadmium", "dustCadmium");
+
         addmacerator("ingotBronze", "dustBronze");
         addmacerator("ingotLead", "dustLead");
         addmacerator("plateDenseLead", "dustLead", 9);
@@ -85,7 +94,6 @@ public class MaceratorRecipe {
         addmacerator(new ItemStack(Items.PUMPKIN_SEEDS, 16), IUItem.biochaff);
         addmacerator("plateLapis", "dustLapis");
         addmacerator("plateDenseBronze", "dustBronze", 9);
-        addmacerator("plateSteel", "dustIron");
 
         addmacerator(IUItem.biochaff, new ItemStack(Blocks.DIRT));
         addmacerator(new ItemStack(Blocks.PUMPKIN, 8), IUItem.biochaff);

@@ -116,6 +116,9 @@ public class BlockIngots1 extends BlockCore implements IModelRegister {
         iridium(1),
         germanium(2),
 
+        osmium(3),
+        tantalum(4),
+        cadmium(5),
         ;
 
         private final int metadata;

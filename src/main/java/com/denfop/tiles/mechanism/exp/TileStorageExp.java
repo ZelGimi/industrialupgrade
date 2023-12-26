@@ -53,7 +53,7 @@ public class TileStorageExp extends TileEntityInventory implements
     public TileStorageExp() {
         this.inputSlot = new InvSlotExpStorage(this);
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
-
+        this.energy.setDirections(ModUtils.allFacings,ModUtils.allFacings);
     }
 
     @Override

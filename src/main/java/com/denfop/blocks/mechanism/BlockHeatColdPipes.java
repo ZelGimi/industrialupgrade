@@ -65,7 +65,7 @@ public enum BlockHeatColdPipes implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(HeatColdType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);

@@ -52,7 +52,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     public TileEntityCombinerSolidMatter() {
         this.inputSlot = new InvSlotSolidMatter(this);
 
-        this.outputSlot = new InvSlotOutput(this, "output", 9);
+        this.outputSlot = new InvSlotOutput(this, 9);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
 
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14));

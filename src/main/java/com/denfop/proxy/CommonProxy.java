@@ -22,6 +22,7 @@ import com.denfop.api.space.BaseSpaceSystem;
 import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.blocks.TileBlockCreator;
+import com.denfop.entity.EntityNuclearBombPrimed;
 import com.denfop.events.EventUpdate;
 import com.denfop.events.IUEventHandler;
 import com.denfop.integration.ae.AEIntegration;
@@ -41,7 +42,6 @@ import com.denfop.items.upgradekit.ItemUpgradePanelKit;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipes.BaseRecipes;
-import com.denfop.recipes.CannerRecipe;
 import com.denfop.recipes.CentrifugeRecipe;
 import com.denfop.recipes.CompressorRecipe;
 import com.denfop.recipes.ExtractorRecipe;
@@ -55,8 +55,10 @@ import com.denfop.register.Register;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.tiles.base.TileConverterSolidMatter;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
+import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
 import com.denfop.tiles.mechanism.multimechanism.simple.TileCombMacerator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
+import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.MatterRecipe;
@@ -89,14 +91,18 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denfop.IUCore.getIdentifier;
 
 public class CommonProxy implements IGuiHandler {
 
@@ -165,6 +171,10 @@ public class CommonProxy implements IGuiHandler {
         EnumSolarPanels.registerTile();
         ItemUpgradePanelKit.EnumSolarPanelsKit.registerkit();
         IUItem.register_mineral();
+        EntityRegistry.registerModEntity(getIdentifier("nuclear_bomb"), EntityNuclearBombPrimed.class, "NuclearBomb", 0, IUCore.instance,
+                160, 5
+                , true);
+        TileEntityPalletGenerator.init();
 
 
     }
@@ -223,7 +233,6 @@ public class CommonProxy implements IGuiHandler {
         TileBlockCreator.instance.buildBlocks();
         Recipes.recipes.initializationRecipes();
         CompressorRecipe.recipe();
-        CannerRecipe.recipe();
         FurnaceRecipes.recipe();
         CentrifugeRecipe.init();
         MaceratorRecipe.recipe();
@@ -252,6 +261,7 @@ public class CommonProxy implements IGuiHandler {
 
     public void postInit(FMLPostInitializationEvent event) {
         InitMultiBlockSystem.init();
+        WorldGenOres.initVein();
         IUEventHandler sspEventHandler = new IUEventHandler();
         MinecraftForge.EVENT_BUS.register(sspEventHandler);
         Map<List<List<ItemStack>>, MatterRecipe> itemStackMap1 = new HashMap<>();
@@ -274,7 +284,10 @@ public class CommonProxy implements IGuiHandler {
                     itemStackList.add(itemStackList1);
                 }
             }
-            final ItemStack output = r.getRecipeOutput();
+             ItemStack output = ItemStack.EMPTY;
+            output  = r.getRecipeOutput();
+            if(output == ItemStack.EMPTY)
+                continue;
             final NBTTagCompound nbt = ModUtils.nbtOrNull(output);
 
             if ((nbt != null && nbt.hasKey("RSControl")) || output.getItem() instanceof IFluidContainerItem || output.getItem() instanceof IToolPipette) {
@@ -455,7 +468,9 @@ public class CommonProxy implements IGuiHandler {
     public boolean addIModelRegister(IModelRegister modelRegister) {
         return false;
     }
-
+    public boolean addTextureAspire(ICableItem modelRegister){
+        return false;
+    }
 
     @Nullable
     @Override
@@ -512,4 +527,7 @@ public class CommonProxy implements IGuiHandler {
     }
 
 
+    public  List<ICableItem> getTextureAtlas() {
+        return Collections.emptyList();
+    }
 }

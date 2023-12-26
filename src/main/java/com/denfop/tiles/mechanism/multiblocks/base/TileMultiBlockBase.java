@@ -186,16 +186,12 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                 }
             }
             GlStateManager.scale(0.5f, 0.5f, 0.5f); // Scaling down the block
-
-
-            // Calculating offsets for the grid
-
-
-            // Rendering an item
             RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-            IBakedModel itemModel = renderItem.getItemModelWithOverrides(item, tile.getWorld(), null);
-
-
+            IBakedModel itemModel =    this.multiBlockStructure.bakedModelMap.get(entry.getKey());
+            if(itemModel == null){
+                itemModel = renderItem.getItemModelWithOverrides(item, tile.getWorld(), null);
+                this.multiBlockStructure.bakedModelMap.put(entry.getKey(),itemModel);
+            }
             renderItem.renderItem(item, itemModel);
             GlStateManager.popMatrix();
         }
@@ -278,6 +274,26 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         }
     }
 
+    @Override
+    public void loadBeforeFirstClientUpdate() {
+        super.loadBeforeFirstClientUpdate();
+        if (this.activate && this.getWorld().isRemote) {
+            this.updateFull();
+            this.updateAfterAssembly();
+
+        }
+    }
+
+    @Override
+    public void loadBeforeFirstUpdate() {
+        super.loadBeforeFirstUpdate();
+        if (this.activate && !this.getWorld().isRemote) {
+            this.updateFull();
+            this.updateAfterAssembly();
+
+        }
+    }
+
     public void updateFull(EntityPlayer player) {
         setFull(getMultiBlockStucture().getFull(getFacing(), getBlockPos(), getWorld(), player));
         if (isFull()) {
@@ -294,13 +310,14 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             final float hitY,
             final float hitZ
     ) {
-        if (getWorld().isRemote) {
-            return false;
-        }
+
         if (!this.full || !this.activate) {
 
             if (!this.getMultiBlockStucture().isHasActivatedItem()) {
                 this.updateFull(player);
+                if (full) {
+                    this.updateAfterAssembly();
+                }
                 return true;
             }
             if (this.getMultiBlockStucture().isActivateItem(player.getHeldItem(hand))) {
@@ -332,11 +349,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.activate && !this.getWorld().isRemote) {
-            this.updateFull();
-            this.updateAfterAssembly();
 
-        }
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

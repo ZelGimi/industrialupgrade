@@ -61,7 +61,7 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
                 1,
                 InvSlotFluid.TypeFluidSlot.OUTPUT
         );
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.defaultEnergyConsume = this.energyConsume = 1;
         this.defaultOperationLength = this.operationLength = operationLength;

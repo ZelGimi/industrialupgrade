@@ -16,7 +16,7 @@ public class TickHandler {
     @SubscribeEvent
     public void renderTick(TickEvent.RenderTickEvent event) {
         if (event.phase != TickEvent.Phase.START) {
-            //   ClientTickHandler.onTickRender();
+             ClientTickHandler.onTickRender1();
         }
 
     }

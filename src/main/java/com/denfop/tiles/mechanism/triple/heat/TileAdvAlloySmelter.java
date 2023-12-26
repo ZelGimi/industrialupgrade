@@ -45,7 +45,7 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
         Recipes.recipes.addInitRecipes(this);
     }
 
-    public static void addAlloysmelter(String container, String fill, String fill1, ItemStack output, int temperature) {
+    public static void addAlloysmelter(Object container, Object fill, Object fill1, ItemStack output, int temperature) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         final NBTTagCompound nbt = ModUtils.nbt();
         nbt.setShort("temperature", (short) temperature);
@@ -91,6 +91,12 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
                 "ingotTungsten", "ingotNickel",
                 new ItemStack(IUItem.alloysingot, 1, 7), 5000
         );
+
+        addAlloysmelter( new ItemStack(IUItem.alloysingot, 4, 2),new ItemStack(IUItem.alloysingot, 2, 1),new ItemStack(IUItem.crafting_elements
+                        , 1, 310),
+                new ItemStack(IUItem.crafting_elements,
+                1, 355), 3000);
+
     }
 
 

@@ -59,9 +59,11 @@ public class WindSystem implements IWindSystem {
         facing = facingMap.get(facing);
         if (windMechanism instanceof TileWindGenerator) {
             ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
+            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", windMechanism.getFacing());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         } else {
             ((TileBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
+            new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing", windMechanism.getFacing());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         }
     }
@@ -103,15 +105,19 @@ public class WindSystem implements IWindSystem {
 
     public void getNewPositionOfMechanism(IWindMechanism windMechanism) {
         final EnumFacing newFacing = getNewFacing();
-        if (windMechanism instanceof TileWindGenerator) {
-            ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
-            this.changeRotorSide(windMechanism, windMechanism.getFacing());
-            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", windMechanism.getFacing());
-        } else {
-            ((TileBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
-            this.changeRotorSide(windMechanism, windMechanism.getFacing());
-            new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing", windMechanism.getFacing());
+        if (windMechanism instanceof TileWindGenerator ) {
+            if(windMechanism.getFacing() != newFacing) {
+                ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
+                new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", windMechanism.getFacing());
+                this.changeRotorSide(windMechanism, windMechanism.getFacing());
+            }
 
+        } else {
+            if(windMechanism.getFacing() != newFacing) {
+                ((TileBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
+                new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing", windMechanism.getFacing());
+                this.changeRotorSide(windMechanism, windMechanism.getFacing());
+            }
         }
     }
 

@@ -61,7 +61,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public double progress;
     public boolean wetBiome;
     public EnumType type;
-    public TileSolarPanel.GenerationState active;
+    public TileSolarPanel.GenerationState active = TileSolarPanel.GenerationState.NONE;
     public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     private double pastEnergy;
     private double perenergy;
@@ -92,6 +92,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         try {
+            active = TileSolarPanel.GenerationState.values()[(int) DecoderHandler.decode(customPacketBuffer)];
             sunIsUp = (boolean) DecoderHandler.decode(customPacketBuffer);
             skyIsVisible = (boolean) DecoderHandler.decode(customPacketBuffer);
             generating = (double) DecoderHandler.decode(customPacketBuffer);
@@ -116,6 +117,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
     public CustomPacketBuffer writeContainerPacket() {
         final CustomPacketBuffer packet = super.writeContainerPacket();
         try {
+            EncoderHandler.encode(packet, active);
             EncoderHandler.encode(packet, sunIsUp);
             EncoderHandler.encode(packet, skyIsVisible);
             EncoderHandler.encode(packet, generating);
@@ -266,6 +268,7 @@ public class TileSintezator extends TileEntityInventory implements IEnergySource
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = true;
         }
+        this.updateVisibility();
         intialize();
         this.inputslot.update();
         this.inputslotA.update();

@@ -67,7 +67,10 @@ public class ItemSmallDust extends ItemSubTypes<ItemSmallDust.Types> implements 
         obsidian(25),
         sulfur(26),
         tin(27),
-        diamond(28);
+        diamond(28),
+        osmium(29),
+        tantalum(30),
+        cadmium(31);
 
         private final String name;
         private final int ID;

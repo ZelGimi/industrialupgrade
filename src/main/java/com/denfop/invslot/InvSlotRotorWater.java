@@ -1,6 +1,8 @@
 package com.denfop.invslot;
 
 import com.denfop.items.ItemWaterRotor;
+import com.denfop.tiles.mechanism.TileEntityRotorModifier;
+import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotorWater extends InvSlot {
@@ -20,6 +22,11 @@ public class InvSlotRotorWater extends InvSlot {
 
     @Override
     public void put(final int index, final ItemStack content) {
+        if(content.isEmpty()){
+            if(!this.contents.get(index).isEmpty()){
+                ((TileEntityWaterRotorModifier)this.slotUpgrade.base).updateTileServer(null,0);
+            }
+        }
         super.put(index, content);
         if (content.isEmpty()) {
             this.slotUpgrade.update();

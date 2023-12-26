@@ -70,7 +70,7 @@ public enum BlockCable implements IMultiTileBlock, IItemIgnoringNull {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(CableType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);

@@ -54,7 +54,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         this.fluidSlot = new InvSlotFluidByList(this, "fluidSlot", 1, FluidName.fluidgas.getInstance(),
                 InvSlotFluid.TypeFluidSlot.INPUT
         );
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSource(this, 50000000, 14));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidgas.getInstance()));
     }

@@ -5,13 +5,18 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.upgrade.UpgradeSystem;
+import com.denfop.blocks.BlockAnvil;
 import com.denfop.blocks.BlockClassicOre;
+import com.denfop.blocks.BlockDeposits;
+import com.denfop.blocks.BlockDeposits1;
 import com.denfop.blocks.BlockFoam;
 import com.denfop.blocks.BlockHeavyOre;
 import com.denfop.blocks.BlockIUFluid;
 import com.denfop.blocks.BlockIngots1;
+import com.denfop.blocks.BlockNuclearBomb;
 import com.denfop.blocks.BlockOil;
 import com.denfop.blocks.BlockOre;
+import com.denfop.blocks.BlockOres2;
 import com.denfop.blocks.BlockPrecious;
 import com.denfop.blocks.BlockPreciousOre;
 import com.denfop.blocks.BlockResource;
@@ -41,9 +46,12 @@ import com.denfop.blocks.mechanism.BlockCombinerSolid;
 import com.denfop.blocks.mechanism.BlockConverterMatter;
 import com.denfop.blocks.mechanism.BlockCoolPipes;
 import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
+import com.denfop.blocks.mechanism.BlockEarthQuarry;
 import com.denfop.blocks.mechanism.BlockEnergyStorage;
 import com.denfop.blocks.mechanism.BlockExpCable;
+import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.blocks.mechanism.BlockHeatColdPipes;
+import com.denfop.blocks.mechanism.BlockHeatReactor;
 import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
 import com.denfop.blocks.mechanism.BlockItemPipes;
 import com.denfop.blocks.mechanism.BlockMolecular;
@@ -55,6 +63,7 @@ import com.denfop.blocks.mechanism.BlockPetrolQuarry;
 import com.denfop.blocks.mechanism.BlockPipes;
 import com.denfop.blocks.mechanism.BlockQCable;
 import com.denfop.blocks.mechanism.BlockQuarryVein;
+import com.denfop.blocks.mechanism.BlockRadPipes;
 import com.denfop.blocks.mechanism.BlockRefiner;
 import com.denfop.blocks.mechanism.BlockSCable;
 import com.denfop.blocks.mechanism.BlockSimpleMachine;
@@ -68,7 +77,8 @@ import com.denfop.blocks.mechanism.BlockTank;
 import com.denfop.blocks.mechanism.BlockTransformer;
 import com.denfop.blocks.mechanism.BlockUniversalCable;
 import com.denfop.blocks.mechanism.BlockUpgradeBlock;
-import com.denfop.integration.botania.BotaniaIntegration;
+import com.denfop.blocks.mechanism.BlockWaterReactors;
+import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
 import com.denfop.integration.exnihilo.ExNihiloIntegration;
 import com.denfop.integration.exnihilo.blocks.DustBlocks;
 import com.denfop.integration.exnihilo.blocks.GravelBlocks;
@@ -87,6 +97,7 @@ import com.denfop.items.ItemCrystalMemory;
 import com.denfop.items.ItemEFReader;
 import com.denfop.items.ItemExcitedNucleus;
 import com.denfop.items.ItemFacadeItem;
+import com.denfop.items.ItemFeature;
 import com.denfop.items.ItemFrequencyTransmitter;
 import com.denfop.items.ItemLens;
 import com.denfop.items.ItemPaints;
@@ -144,6 +155,7 @@ import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.items.modules.ItemModuleType;
 import com.denfop.items.modules.ItemModuleTypePanel;
 import com.denfop.items.modules.ItemQuarryModule;
+import com.denfop.items.modules.ItemReactorModules;
 import com.denfop.items.modules.ItemSpawnerModules;
 import com.denfop.items.modules.ItemUpgradeModule;
 import com.denfop.items.panel.ItemBatterySolarPanel;
@@ -152,8 +164,18 @@ import com.denfop.items.panel.ItemDaySolarPanelGlass;
 import com.denfop.items.panel.ItemNightSolarPanelGlass;
 import com.denfop.items.panel.ItemOutputSolarPanel;
 import com.denfop.items.reactors.ItemBaseRod;
-import com.denfop.items.reactors.ItemDepletedRod;
+import com.denfop.items.reactors.ItemCapacitor;
+import com.denfop.items.reactors.ItemComponentVent;
+import com.denfop.items.reactors.ItemExchanger;
 import com.denfop.items.reactors.ItemRadioactive;
+import com.denfop.items.reactors.ItemReactorCapacitor;
+import com.denfop.items.reactors.ItemReactorCoolant;
+import com.denfop.items.reactors.ItemReactorHeatExchanger;
+import com.denfop.items.reactors.ItemReactorPlate;
+import com.denfop.items.reactors.ItemReactorVent;
+import com.denfop.items.reactors.ItemsFan;
+import com.denfop.items.reactors.ItemsPumps;
+import com.denfop.items.reactors.RadiationPellets;
 import com.denfop.items.reactors.RadiationResources;
 import com.denfop.items.resource.ItemCasing;
 import com.denfop.items.resource.ItemCraftingElements;
@@ -187,6 +209,7 @@ import com.denfop.items.transport.ItemHeatColdPipes;
 import com.denfop.items.transport.ItemItemPipes;
 import com.denfop.items.transport.ItemPipes;
 import com.denfop.items.transport.ItemQCable;
+import com.denfop.items.transport.ItemRadCable;
 import com.denfop.items.transport.ItemSCable;
 import com.denfop.items.transport.ItemUniversalCable;
 import com.denfop.items.upgradekit.ItemUpgradeKit;
@@ -252,6 +275,11 @@ public class Register {
         registerfluid(FluidName.fluidhot_water, 1000, 1000, false);
         registerfluid(FluidName.fluidair, 0, 500, true);
         IUItem.invalid = TileBlockCreator.instance.create(MultiTileBlock.class);
+        IUItem.water_reactors_component = TileBlockCreator.instance.create(BlockWaterReactors.class);
+
+        IUItem.blockdeposits = new BlockDeposits();
+        IUItem.blockdeposits1 = new BlockDeposits1();
+        IUItem.ore2 = new BlockOres2();
         IUItem.blockpanel = TileBlockCreator.instance.create(BlockSolarPanels.class);
         IUItem.electricblock = TileBlockCreator.instance.create(BlockEnergyStorage.class);
         IUItem.chargepadelectricblock = TileBlockCreator.instance.create(BlockChargepadStorage.class);
@@ -287,9 +315,16 @@ public class Register {
         IUItem.qcableblock = TileBlockCreator.instance.create(BlockQCable.class);
         IUItem.scableblock = TileBlockCreator.instance.create(BlockSCable.class);
         IUItem.expcableblock = TileBlockCreator.instance.create(BlockExpCable.class);
+        IUItem.earthQuarry = TileBlockCreator.instance.create(BlockEarthQuarry.class);
+        IUItem.anvil = TileBlockCreator.instance.create(BlockAnvil.class);
 
+        IUItem.graphite_reactor = TileBlockCreator.instance.create(BlocksGraphiteReactors.class);
+        IUItem.gas_reactor = TileBlockCreator.instance.create(BlockGasReactor.class);
+        IUItem.heat_reactor = TileBlockCreator.instance.create(BlockHeatReactor.class);
         IUItem.blastfurnace = TileBlockCreator.instance.create(BlockBlastFurnace.class);
         IUItem.coolpipesblock = TileBlockCreator.instance.create(BlockCoolPipes.class);
+        IUItem.rad_pipesBlock = TileBlockCreator.instance.create(BlockRadPipes.class);
+
         IUItem.tank = TileBlockCreator.instance.create(BlockTank.class);
         IUItem.convertersolidmatter = TileBlockCreator.instance.create(BlockConverterMatter.class);
         IUItem.heatcoolpipesblock = TileBlockCreator.instance.create(BlockHeatColdPipes.class);
@@ -304,6 +339,8 @@ public class Register {
         IUItem.FluidCell = new ItemStack(IUItem.cell_all);
         IUItem.ForgeHammer = new ItemToolHammer();
         IUItem.cutter = new ItemToolCutter();
+        IUItem.pellets = new RadiationPellets();
+        IUItem.radcable_item = new ItemRadCable();
         IUItem.classic_ore = new BlockClassicOre();
         IUItem.blockResource = new BlockResource();
         IUItem.rubberSapling = new IUSapling();
@@ -311,6 +348,7 @@ public class Register {
         IUItem.glass = new BlockTexGlass();
         IUItem.foam = new BlockFoam();
         IUItem.efReader = new ItemEFReader();
+        IUItem.nuclear_bomb = new BlockNuclearBomb();
         IUItem.hazmat_chestplate = new ItemArmorHazmat("hazmat_chestplate", EntityEquipmentSlot.CHEST);
         IUItem.hazmat_helmet = new ItemArmorHazmat("hazmat_helmet", EntityEquipmentSlot.HEAD);
         IUItem.hazmat_leggings = new ItemArmorHazmat("hazmat_leggings", EntityEquipmentSlot.LEGS);
@@ -333,6 +371,7 @@ public class Register {
             }
 
         };
+        new ItemFeature();
         IUItem.bronze_chestplate = new BaseArmor(
                 "bronze_chestplate",
                 bronzeArmorMaterial, 3, EntityEquipmentSlot.CHEST,
@@ -403,18 +442,18 @@ public class Register {
         ), 1, 0);
         IUItem.rotor_bronze = new ItemWindRotor("rotor_bronze", 7, 86400 / 2, 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/items/rotor/bronze_rotor_model.png"
+                "textures/items/rotor/bronze_rotor_model_1.png"
         ), 2, 1);
         IUItem.rotor_iron = new ItemWindRotor("rotor_iron", 7, (int) (86400 / 1.5), 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/items/rotor/iron_rotor_model.png"
+                "textures/items/rotor/iron_rotor_model_1.png"
         ), 3, 2);
         IUItem.rotor_steel = new ItemWindRotor("rotor_steel", 9, (int) (172800 / 1.5), 0.75F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/items/rotor/steel_rotor_model.png"
+                "textures/items/rotor/steel_rotor_model_1.png"
         ), 4, 3);
         IUItem.rotor_carbon = new ItemWindRotor("rotor_carbon", 11, (int) (604800 / 1.5), 1.0F, new ResourceLocation(
-                Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model.png"), 5, 4);
+                Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model_1.png"), 5, 4);
 
         IUItem.water_rotor_wood = new ItemWaterRotor("water_rotor_wood", 10800 / 2, 0.25F, new ResourceLocation(
                 Constants.MOD_ID,
@@ -423,11 +462,11 @@ public class Register {
         ), 1, 0);
         IUItem.water_rotor_bronze = new ItemWaterRotor("water_rotor_bronze", 86400 / 2, 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/items/rotor/bronze_rotor_model.png"
+                "textures/items/rotor/bronze_rotor_model_1.png"
         ), 2, 1);
         IUItem.water_rotor_iron = new ItemWaterRotor("water_rotor_iron", (int) (86400 / 1.5), 0.5F, new ResourceLocation(
                 Constants.MOD_ID,
-                "textures/items/rotor/iron_rotor_model.png"
+                "textures/items/rotor/iron_rotor_model_1.png"
         ), 3, 2);
         IUItem.water_rotor_steel = new ItemWaterRotor(
                 "water_rotor_steel",
@@ -435,7 +474,7 @@ public class Register {
                 0.75F,
                 new ResourceLocation(
                         Constants.MOD_ID,
-                        "textures/items/rotor/steel_rotor_model.png"
+                        "textures/items/rotor/steel_rotor_model_1.png"
                 ),
                 4,
                 3
@@ -445,13 +484,13 @@ public class Register {
                 (int) (604800 / 1.5),
                 1.0F,
                 new ResourceLocation(
-                        Constants.MOD_ID, "textures/items/rotor/carbon_rotor_model.png"),
+                        Constants.MOD_ID, "textures/items/rotor/carbo_rotor_model1.png"),
                 5,
                 4
         );
         IUItem.water_iridium = new ItemStack(new ItemWaterRotor("water_iridium", Config.durability,
                 Config.efficiency,
-                new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_1.png"), 6, 5
+                new ResourceLocation(Constants.MOD_ID, "textures/items/carbo_rotor_model1.png"), 6, 5
         ));
         IUItem.water_compressiridium = new ItemStack(new ItemWaterRotor("water_compressiridium",
                 Config.durability1, Config.efficiency1,
@@ -602,197 +641,123 @@ public class Register {
         ));
 
 
-        IUItem.reactorDepletedprotonSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedprotonsimple"));
-        IUItem.reactorDepletedprotonDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedprotondual"));
-        IUItem.reactorDepletedprotonQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedprotonquad"));
-        IUItem.reactorDepletedprotoneit = new ItemStack(
-                new ItemDepletedRod("reactordepletedprotoneit"));
-        ItemStack[] stack = {IUItem.reactorDepletedprotonSimple, IUItem.reactorDepletedprotonDual, IUItem.reactorDepletedprotonQuad, IUItem.reactorDepletedprotoneit};
 
         IUItem.reactorprotonSimple = new ItemStack(new ItemBaseRod("reactorprotonsimple", 1,
-                Config.ProtonRodCells, Config.ProtonRodHeat, Config.ProtonPower, stack
+                95, Config.ProtonPower,3
         ));
         IUItem.reactorprotonDual = new ItemStack(new ItemBaseRod("reactorprotondual", 2,
-                Config.ProtonRodCells, Config.ProtonRodHeat, Config.ProtonPower, stack
+                190, Config.ProtonPower,3
         ));
         IUItem.reactorprotonQuad = new ItemStack(new ItemBaseRod("reactorprotonquad", 4,
-                Config.ProtonRodCells, Config.ProtonRodHeat, Config.ProtonPower, stack
-        ));
-        IUItem.reactorprotoneit = new ItemStack(new ItemBaseRod("reactorprotoneit", 8,
-                Config.ProtonRodCells, Config.ProtonRodHeat, Config.ProtonPower, stack
+                380, Config.ProtonPower,3
         ));
 
+
         //
-        IUItem.reactorDepletedtoriySimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedtoriysimple"));
-        IUItem.reactorDepletedtoriyDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedtoriydual"));
-        IUItem.reactorDepletedtoriyQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedtoriyquad"));
-        ItemStack[] stack1 = {IUItem.reactorDepletedtoriySimple, IUItem.reactorDepletedtoriyDual, IUItem.reactorDepletedtoriyQuad};
-        IUItem.reactortoriySimple = new ItemStack(new ItemBaseRod("reactortoriysimple", 1,
-                Config.toriyRodCells, Config.toriyRodHeat, Config.toriyPower, stack1
+       IUItem.reactortoriySimple = new ItemStack(new ItemBaseRod("reactortoriysimple", 1,
+               50, Config.toriyPower,2
         ));
         IUItem.reactortoriyDual = new ItemStack(new ItemBaseRod("reactortoriydual", 2,
-                Config.toriyRodCells, Config.toriyRodHeat, Config.toriyPower, stack1
+                100, Config.toriyPower,2
         ));
         IUItem.reactortoriyQuad = new ItemStack(new ItemBaseRod("reactortoriyquad", 4,
-                Config.toriyRodCells, Config.toriyRodHeat, Config.toriyPower, stack1
+                200, Config.toriyPower,2
         ));
 
         //
 //
-        IUItem.reactorDepletedamericiumSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedamericiumsimple"));
-        IUItem.reactorDepletedamericiumDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedamericiumdual"));
-        IUItem.reactorDepletedamericiumQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedamericiumquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedamericiumSimple, IUItem.reactorDepletedamericiumDual, IUItem.reactorDepletedamericiumQuad};
         IUItem.reactoramericiumSimple = new ItemStack(new ItemBaseRod("reactoramericiumsimple", 1,
-                Config.americiumRodCells, Config.americiumRodHeat, (float) Config.americiumPower, stack1
+                80, (float) Config.americiumPower,2
         ));
         IUItem.reactoramericiumDual = new ItemStack(new ItemBaseRod("reactoramericiumdual", 2,
-                Config.americiumRodCells, Config.americiumRodHeat, (float) Config.americiumPower, stack1
+                160, (float) Config.americiumPower,2
         ));
         IUItem.reactoramericiumQuad = new ItemStack(new ItemBaseRod("reactoramericiumquad", 4,
-                Config.americiumRodCells, Config.americiumRodHeat, (float) Config.americiumPower, stack1
+                320, (float) Config.americiumPower,2
         ));
 
         //
         //
-        IUItem.reactorDepletedneptuniumSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedneptuniumsimple"));
-        IUItem.reactorDepletedneptuniumDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedneptuniumdual"));
-        IUItem.reactorDepletedneptuniumQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedneptuniumquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedneptuniumSimple, IUItem.reactorDepletedneptuniumDual, IUItem.reactorDepletedneptuniumQuad};
-        IUItem.reactorneptuniumSimple = new ItemStack(new ItemBaseRod("reactorneptuniumsimple", 1,
-                Config.neptuniumRodCells, Config.neptuniumRodHeat, (float) Config.neptuniumPower, stack1
+          IUItem.reactorneptuniumSimple = new ItemStack(new ItemBaseRod("reactorneptuniumsimple", 1,
+                  65, (float) Config.neptuniumPower,2
         ));
         IUItem.reactorneptuniumDual = new ItemStack(new ItemBaseRod("reactorneptuniumdual", 2,
-                Config.neptuniumRodCells, Config.neptuniumRodHeat, (float) Config.neptuniumPower, stack1
+                130, (float) Config.neptuniumPower,2
         ));
         IUItem.reactorneptuniumQuad = new ItemStack(new ItemBaseRod("reactorneptuniumquad", 4,
-                Config.neptuniumRodCells, Config.neptuniumRodHeat, (float) Config.neptuniumPower, stack1
+                260, (float) Config.neptuniumPower,2
         ));
 
         //
-        IUItem.reactorDepletedcuriumSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedcuriumsimple"));
-        IUItem.reactorDepletedcuriumDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedcuriumdual"));
-        IUItem.reactorDepletedcuriumQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedcuriumquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedcuriumSimple, IUItem.reactorDepletedcuriumDual, IUItem.reactorDepletedcuriumQuad};
         IUItem.reactorcuriumSimple = new ItemStack(new ItemBaseRod("reactorcuriumsimple", 1,
-                Config.curiumRodCells, Config.curiumRodHeat, (float) Config.curiumPower, stack1
+                100, (float) Config.curiumPower,3
         ));
         IUItem.reactorcuriumDual = new ItemStack(new ItemBaseRod("reactorcuriumdual", 2,
-                Config.curiumRodCells, Config.curiumRodHeat, (float) Config.curiumPower, stack1
+                200, (float) Config.curiumPower,3
         ));
         IUItem.reactorcuriumQuad = new ItemStack(new ItemBaseRod("reactorcuriumquad", 4,
-                Config.curiumRodCells, Config.curiumRodHeat, (float) Config.curiumPower, stack1
+                400, (float) Config.curiumPower,3
         ));
 
         //
         //
-        IUItem.reactorDepletedcaliforniaSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedcaliforniasimple"));
-        IUItem.reactorDepletedcaliforniaDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedcaliforniadual"));
-        IUItem.reactorDepletedcaliforniaQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedcaliforniaquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedcaliforniaSimple, IUItem.reactorDepletedcaliforniaDual, IUItem.reactorDepletedcaliforniaQuad};
         IUItem.reactorcaliforniaSimple = new ItemStack(new ItemBaseRod("reactorcaliforniasimple", 1,
-                Config.californiaRodCells, Config.californiaRodHeat, (float) Config.californiaPower, stack1
+                120, (float) Config.californiaPower,3
         ));
         IUItem.reactorcaliforniaDual = new ItemStack(new ItemBaseRod("reactorcaliforniadual", 2,
-                Config.californiaRodCells, Config.californiaRodHeat, (float) Config.californiaPower, stack1
+                240, (float) Config.californiaPower,3
         ));
         IUItem.reactorcaliforniaQuad = new ItemStack(new ItemBaseRod("reactorcaliforniaquad", 4,
-                Config.californiaRodCells, Config.californiaRodHeat, (float) Config.californiaPower, stack1
+                480, (float) Config.californiaPower,3
         ));
 
         //
 
         //
-        IUItem.reactorDepletedmendeleviumSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedmendeleviumsimple"));
-        IUItem.reactorDepletedmendeleviumDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedmendeleviumdual"));
-        IUItem.reactorDepletedmendeleviumQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedmendeleviumquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedmendeleviumSimple, IUItem.reactorDepletedmendeleviumDual, IUItem.reactorDepletedmendeleviumQuad};
         IUItem.reactormendeleviumSimple = new ItemStack(new ItemBaseRod("reactormendeleviumsimple", 1,
-                Config.mendeleviumRodCells, Config.mendeleviumRodHeat, (float) Config.mendeleviumPower, stack1
+                230, (float) Config.mendeleviumPower,4
         ));
         IUItem.reactormendeleviumDual = new ItemStack(new ItemBaseRod("reactormendeleviumdual", 2,
-                Config.mendeleviumRodCells, Config.mendeleviumRodHeat, (float) Config.mendeleviumPower, stack1
+                460, (float) Config.mendeleviumPower,4
         ));
         IUItem.reactormendeleviumQuad = new ItemStack(new ItemBaseRod("reactormendeleviumquad", 4,
-                Config.mendeleviumRodCells, Config.mendeleviumRodHeat, (float) Config.mendeleviumPower, stack1
+                920, (float) Config.mendeleviumPower,4
         ));
 
         //
         //
-        IUItem.reactorDepletedberkeliumSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedberkeliumsimple"));
-        IUItem.reactorDepletedberkeliumDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedberkeliumdual"));
-        IUItem.reactorDepletedberkeliumQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedberkeliumquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedberkeliumSimple, IUItem.reactorDepletedberkeliumDual, IUItem.reactorDepletedberkeliumQuad};
         IUItem.reactorberkeliumSimple = new ItemStack(new ItemBaseRod("reactorberkeliumsimple", 1,
-                Config.berkeliumRodCells, Config.berkeliumRodHeat, (float) Config.berkeliumPower, stack1
+                150, (float) Config.berkeliumPower,4
         ));
         IUItem.reactorberkeliumDual = new ItemStack(new ItemBaseRod("reactorberkeliumdual", 2,
-                Config.berkeliumRodCells, Config.berkeliumRodHeat, (float) Config.berkeliumPower, stack1
+                300, (float) Config.berkeliumPower,4
         ));
         IUItem.reactorberkeliumQuad = new ItemStack(new ItemBaseRod("reactorberkeliumquad", 4,
-                Config.berkeliumRodCells, Config.berkeliumRodHeat, (float) Config.berkeliumPower, stack1
+                600, (float) Config.berkeliumPower,4
         ));
 
         //
         //
-        IUItem.reactorDepletedeinsteiniumSimple = new ItemStack(
-                new ItemDepletedRod("reactordepletedeinsteiniumsimple"));
-        IUItem.reactorDepletedeinsteiniumDual = new ItemStack(
-                new ItemDepletedRod("reactordepletedeinsteiniumdual"));
-        IUItem.reactorDepletedeinsteiniumQuad = new ItemStack(
-                new ItemDepletedRod("reactordepletedeinsteiniumquad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedeinsteiniumSimple, IUItem.reactorDepletedeinsteiniumDual, IUItem.reactorDepletedeinsteiniumQuad};
         IUItem.reactoreinsteiniumSimple = new ItemStack(new ItemBaseRod("reactoreinsteiniumsimple", 1,
-                Config.einsteiniumRodCells, Config.einsteiniumRodHeat, (float) Config.einsteiniumPower, stack1
+                180, (float) Config.einsteiniumPower,4
         ));
         IUItem.reactoreinsteiniumDual = new ItemStack(new ItemBaseRod("reactoreinsteiniumdual", 2,
-                Config.einsteiniumRodCells, Config.einsteiniumRodHeat, (float) Config.einsteiniumPower, stack1
+                360, (float) Config.einsteiniumPower,4
         ));
         IUItem.reactoreinsteiniumQuad = new ItemStack(new ItemBaseRod("reactoreinsteiniumquad", 4,
-                Config.einsteiniumRodCells, Config.einsteiniumRodHeat, (float) Config.einsteiniumPower, stack1
+                720, (float) Config.einsteiniumPower,4
         ));
 
         //
         //
-        IUItem.reactorDepleteduran233Simple = new ItemStack(
-                new ItemDepletedRod("reactordepleteduran233simple"));
-        IUItem.reactorDepleteduran233Dual = new ItemStack(
-                new ItemDepletedRod("reactordepleteduran233dual"));
-        IUItem.reactorDepleteduran233Quad = new ItemStack(
-                new ItemDepletedRod("reactordepleteduran233quad"));
-        stack1 = new ItemStack[]{IUItem.reactorDepleteduran233Simple, IUItem.reactorDepleteduran233Dual, IUItem.reactorDepleteduran233Quad};
         IUItem.reactoruran233Simple = new ItemStack(new ItemBaseRod("reactoruran233simple", 1,
-                Config.uran233RodCells, Config.uran233RodHeat, (float) Config.uran233Power, stack1
+                35, (float) Config.uran233Power,1
         ));
         IUItem.reactoruran233Dual = new ItemStack(new ItemBaseRod("reactoruran233dual", 2,
-                Config.uran233RodCells, Config.uran233RodHeat, (float) Config.uran233Power, stack1
+                70, (float) Config.uran233Power,1
         ));
         IUItem.reactoruran233Quad = new ItemStack(new ItemBaseRod("reactoruran233quad", 4,
-                Config.uran233RodCells, Config.uran233RodHeat, (float) Config.uran233Power, stack1
+                140, (float) Config.uran233Power,1
         ));
         IUItem.katana = new ItemKatana("katana");
         IUItem.basecircuit = new ItemBaseCircuit();
@@ -867,37 +832,23 @@ public class Register {
         IUItem.preciousgem = new ItemPreciousGem();
 
 
-        IUItem.reactorDepleteduranSimple = new ItemStack(
-                new ItemDepletedRod("depleted_uranium"));
-        IUItem.reactorDepleteduranDual = new ItemStack(
-                new ItemDepletedRod("depleted_dual_uranium"));
-        IUItem.reactorDepleteduranQuad = new ItemStack(
-                new ItemDepletedRod("depleted_quad_uranium"));
-        IUItem.reactorDepletedmoxSimple = new ItemStack(
-                new ItemDepletedRod("depleted_mox"));
-        IUItem.reactorDepletedmoxDual = new ItemStack(
-                new ItemDepletedRod("depleted_dual_mox"));
-        IUItem.reactorDepletedmoxQuad = new ItemStack(
-                new ItemDepletedRod("depleted_quad_mox"));
-        stack1 = new ItemStack[]{IUItem.reactorDepleteduranSimple, IUItem.reactorDepleteduranDual, IUItem.reactorDepleteduranQuad};
         IUItem.uranium_fuel_rod = new ItemStack(new ItemBaseRod("uranium_fuel_rod", 1,
-                10000, 0, (float) 1.5, stack1
+                25, (float) 1.5,1
         ));
         IUItem.dual_uranium_fuel_rod = new ItemStack(new ItemBaseRod("dual_uranium_fuel_rod", 2,
-                10000, 0, (float) 1.5, stack1
+                50, (float) 1.5,1
         ));
         IUItem.quad_uranium_fuel_rod = new ItemStack(new ItemBaseRod("quad_uranium_fuel_rod", 4,
-                10000, 0, (float) 1.5, stack1
+                100, (float) 1.5,1
         ));
-        stack1 = new ItemStack[]{IUItem.reactorDepletedmoxSimple, IUItem.reactorDepletedmoxDual, IUItem.reactorDepletedmoxQuad};
         IUItem.mox_fuel_rod = new ItemStack(new ItemBaseRod("mox_fuel_rod", 1,
-                10000, 2, (float) 3, stack1
+                40, (float) 3.5,1
         ));
         IUItem.dual_mox_fuel_rod = new ItemStack(new ItemBaseRod("dual_mox_fuel_rod", 2,
-                10000, 2, (float) 3, stack1
+                80, (float) 3.5, 1
         ));
         IUItem.quad_mox_fuel_rod = new ItemStack(new ItemBaseRod("quad_mox_fuel_rod", 4,
-                10000, 2, (float) 3, stack1
+                160, (float) 3.5,1
         ));
         IUItem.upgradepanelkit = new ItemUpgradePanelKit();
         IUItem.magnet = new ItemMagnet("magnet", 100000, 5000, 4, 7);
@@ -917,6 +868,7 @@ public class Register {
         IUItem.oilblock = new BlockOil();
         IUItem.toriyore = new BlockThoriumOre();
         IUItem.itemiu = new ItemIUCrafring();
+        IUItem.radiationModule = new ItemReactorModules();
         IUItem.chainsaw = new ItemEnergyInstruments(EnumTypeInstruments.CHAINSAW, EnumVarietyInstruments.CHAINSAW, "chainsaw");
 
         IUItem.drill = new ItemEnergyInstruments(EnumTypeInstruments.SIMPLE_DRILL, EnumVarietyInstruments.SIMPLE, "drill");
@@ -1248,6 +1200,58 @@ public class Register {
         IUItem.reactorCoolantSimple = new ItemStack(IUItem.crafting_elements, 1, 298);
         IUItem.reactorCoolantTriple = new ItemStack(IUItem.crafting_elements, 1, 299);
         IUItem.reactorCoolantSix = new ItemStack(IUItem.crafting_elements, 1, 300);
+
+        IUItem.componentVent = new ItemComponentVent("component_vent",1,3);
+        IUItem.adv_componentVent = new ItemComponentVent("adv_component_vent",2,4);
+        IUItem.imp_componentVent = new ItemComponentVent("imp_component_vent",3,5);
+        IUItem.per_componentVent = new ItemComponentVent("per_component_vent",4,6);
+
+        IUItem.vent = new ItemReactorVent("vent",2500,1,8,0.9,4);
+        IUItem.adv_Vent = new ItemReactorVent("adv_vent",4000,2,10,0.85,7);
+        IUItem.imp_Vent = new ItemReactorVent("imp_vent",5000,3,14,0.8,11);
+        IUItem.per_Vent = new ItemReactorVent("per_vent",6000,4,20,0.75,15);
+
+        IUItem.reactor_plate = new ItemReactorPlate("reactor_plate",1,2);
+        IUItem.adv_reactor_plate = new ItemReactorPlate("adv_reactor_plate",2,1.5);
+        IUItem.imp_reactor_plate = new ItemReactorPlate("imp_reactor_plate",3,1.25);
+        IUItem.per_reactor_plate = new ItemReactorPlate("per_reactor_plate",4,1);
+
+        IUItem.heat_exchange = new ItemReactorHeatExchanger("heat_exchange",2500,1,10,0.8);
+        IUItem.adv_heat_exchange = new ItemReactorHeatExchanger("adv_heat_exchange",5000,2,12,0.75);
+        IUItem.imp_heat_exchange = new ItemReactorHeatExchanger("imp_heat_exchange",7500,3,15,0.6);
+        IUItem.per_heat_exchange = new ItemReactorHeatExchanger("per_heat_exchange",10000,4,20,0.45);
+
+        IUItem.capacitor = new ItemReactorCapacitor("capacitor",25000,1,4);
+        IUItem.adv_capacitor = new ItemReactorCapacitor("adv_capacitor",50000,2,6);
+        IUItem.imp_capacitor = new ItemReactorCapacitor("imp_capacitor",100000,3,8);
+        IUItem.per_capacitor = new ItemReactorCapacitor("per_capacitor",200000,4,12);
+
+        IUItem.coolant = new ItemReactorCoolant("coolant",1,100000,2);
+        IUItem.adv_coolant = new ItemReactorCoolant("adv_coolant",2,250000,4);
+        IUItem.imp_coolant = new ItemReactorCoolant("imp_coolant",3,500000,7);
+
+
+        IUItem.pump = new ItemsPumps("pump",2000,0,1,2);
+        IUItem.adv_pump= new ItemsPumps("adv_pump",5000,1,2,4);
+        IUItem.imp_pump= new ItemsPumps("imp_pump",7500,2,4,9);
+        IUItem.per_pump= new ItemsPumps("per_pump",10000,3,6,15);
+
+        IUItem.fan =new ItemsFan("fan",2000,0,1,2);
+        IUItem.adv_fan= new ItemsFan("adv_fan",5000,1,2,4);
+        IUItem.imp_fan= new ItemsFan("imp_fan",7500,2,4,9);
+        IUItem.per_fan= new ItemsFan("per_fan",10000,3,6,15);
+
+
+        IUItem.simple_capacitor_item = new ItemCapacitor("simple_capacitor",0,0.02);
+        IUItem.adv_capacitor_item = new ItemCapacitor("adv_capacitor",1,0.04);
+        IUItem.imp_capacitor_item = new ItemCapacitor("imp_capacitor",2,0.08);
+        IUItem.per_capacitor_item= new ItemCapacitor("per_capacitor",3,0.12);
+
+
+        IUItem.simple_exchanger_item = new ItemExchanger("simple_exchanger",0,0.05);
+        IUItem.adv_exchanger_item = new ItemExchanger("adv_exchanger",1,0.1);
+        IUItem.imp_exchanger_item = new ItemExchanger("imp_exchanger",2,0.15);
+        IUItem.per_exchanger_item= new ItemExchanger("per_exchanger",3,0.2);
     }
 
     private static void registerfluid(

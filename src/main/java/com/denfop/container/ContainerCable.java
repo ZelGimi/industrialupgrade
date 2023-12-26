@@ -4,6 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.tiles.transport.tiles.TileEntityItemPipes;
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
 public class ContainerCable extends ContainerFullInv<TileEntityMultiCable> {
@@ -23,6 +25,10 @@ public class ContainerCable extends ContainerFullInv<TileEntityMultiCable> {
             }
         }
     }
-
+    public ItemStack slotClick(int slot, int button, ClickType type, EntityPlayer player) {
+        if( type == ClickType.PICKUP_ALL)
+            return ItemStack.EMPTY;
+        return super.slotClick(slot, button, type, player);
+    }
 
 }

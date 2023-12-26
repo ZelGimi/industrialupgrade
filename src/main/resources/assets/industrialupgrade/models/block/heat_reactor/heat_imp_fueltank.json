@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/heat_reactor/imp_fueltank",
+    "down" : "industrialupgrade:blocks/heat_reactor/imp_fueltank_top",
+    "up" : "industrialupgrade:blocks/heat_reactor/imp_fueltank_top",
+    "north" : "industrialupgrade:blocks/heat_reactor/imp_fueltank",
+    "east" : "industrialupgrade:blocks/heat_reactor/imp_casing",
+    "south" : "industrialupgrade:blocks/heat_reactor/imp_fueltank",
+    "west" : "industrialupgrade:blocks/heat_reactor/imp_casing"
+  }
+}

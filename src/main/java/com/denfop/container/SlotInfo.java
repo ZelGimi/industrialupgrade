@@ -21,7 +21,7 @@ public class SlotInfo extends InvSlot {
     List<FluidStack> fluidStackList;
 
     public SlotInfo(TileEntityMultiCable multiCable, int size, boolean fluid) {
-        super(multiCable, TypeItemSlot.INPUT, size);
+        super(multiCable, null, size);
         this.fluid = fluid;
         this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
 

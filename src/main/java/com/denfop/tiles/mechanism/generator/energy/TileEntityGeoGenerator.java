@@ -47,7 +47,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
                 InvSlotFluid.TypeFluidSlot.INPUT,
                 this.fluidTank
         );
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.coef = coef;
     }
 

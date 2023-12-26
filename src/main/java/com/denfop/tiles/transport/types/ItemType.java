@@ -1,6 +1,8 @@
 package com.denfop.tiles.transport.types;
 
+import com.denfop.Constants;
 import com.denfop.blocks.ISubEnum;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +28,18 @@ public enum ItemType implements ISubEnum, ICableItem {
     public final float thickness;
     public final boolean isOutput;
     private final boolean isItem;
+    private final ResourceLocation texture;
 
     ItemType(float thickness, boolean isOutput, boolean isItem) {
 
         this.thickness = thickness;
         this.isOutput = isOutput;
         this.isItem = isItem;
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     public static ItemType get(String name) {
@@ -62,5 +70,10 @@ public enum ItemType implements ISubEnum, ICableItem {
     @Override
     public String getMainPath() {
         return "item_pipes";
+    }
+
+    @Override
+    public ResourceLocation getRecourse() {
+        return texture;
     }
 }

@@ -28,7 +28,7 @@ public final class TileBlockCreator {
 
 
     public <E extends Enum<E> & IMultiTileBlock> BlockTileEntity create(Class<E> enumClass) {
-        InfoAboutTile<E> instance = new InfoAboutTile(enumClass);
+        InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass);
         final BlockTileEntity block = BlockTileEntity.create(
                 "industrialupgrade_" + new ArrayList<>(instance.teBlocks).get(0).getIdentifier().getResourcePath(),
                 new ArrayList<>(instance.teBlocks).get(0).getIdentifier(),
@@ -42,8 +42,11 @@ public final class TileBlockCreator {
 
     public void buildBlocks() {
 
-        dataInfo.values().forEach(info -> info.teBlocks.forEach(IMultiTileBlock::buildDummies));
 
+        for(InfoAboutTile<?> tile : dataInfo.values()){
+            for(IMultiTileBlock multiTileBlock:  tile.teBlocks)
+                multiTileBlock.buildDummies();
+        }
     }
 
 

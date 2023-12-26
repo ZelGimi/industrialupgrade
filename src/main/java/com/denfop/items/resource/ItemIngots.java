@@ -63,7 +63,10 @@ public class ItemIngots extends ItemSubTypes<ItemIngots.ItemIngotsTypes> impleme
         copper_ingot(21),
         lead_ingot(22),
         steel_ingot(23),
-        tin_ingot(24);
+        tin_ingot(24),
+        osmium(25),
+        tantalum(26),
+        cadmium(37);
 
         private final String name;
         private final int ID;

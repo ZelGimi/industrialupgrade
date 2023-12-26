@@ -58,7 +58,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         this.inputSlot = new InvSlotCombinerSEG(this);
         this.input = new InvSlotGenCombinerSunarrium(this);
 
-        this.outputSlot = new InvSlotOutput(this, "output", 9);
+        this.outputSlot = new InvSlotOutput(this, 9);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSource(EnergyType.SOLARIUM, this, 0, 1));

@@ -33,6 +33,7 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
         this.transferLimit = transferLimit;
         this.setMaxStackSize(1);
         this.setNoRepair();
+        this.setMaxDamage(0);
     }
 
     public boolean showDurabilityBar(final ItemStack stack) {

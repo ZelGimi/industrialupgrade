@@ -92,7 +92,6 @@ public enum BlockItemPipes implements IMultiTileBlock {
 
     @Override
     public boolean hasActive() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -102,7 +101,7 @@ public enum BlockItemPipes implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(ItemType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);

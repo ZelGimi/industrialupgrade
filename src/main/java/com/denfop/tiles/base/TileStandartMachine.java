@@ -23,7 +23,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
 
     public TileStandartMachine(int count) {
         if (count != 0) {
-            this.outputSlot = new InvSlotOutput(this, "output", count);
+            this.outputSlot = new InvSlotOutput(this, count);
         }
 
 

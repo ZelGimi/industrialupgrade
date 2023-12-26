@@ -11,7 +11,9 @@ import com.denfop.api.space.fakebody.SpaceOperation;
 import com.denfop.api.vein.Vein;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.render.streak.PlayerStreakInfo;
+import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 
@@ -77,6 +79,20 @@ public class WorldSavedDataIU extends WorldSavedData {
         } else {
             compound.setTag("vein", new NBTTagCompound());
         }
+
+        if (compound.hasKey("earth_quarry")) {
+            final NBTTagCompound tag = compound.getCompoundTag("earth_quarry");
+            int size = tag.getInteger("max");
+            for (int i = 0; i < size; i++) {
+                final NBTTagCompound tag1 = tag.getCompoundTag(String.valueOf(i));
+                TileEntityEarthQuarryController.chunkPos.add(new ChunkPos(tag1.getInteger("x"),tag1.getInteger("z")));
+            }
+
+        } else {
+            compound.setTag("earth_quarry", new NBTTagCompound());
+        }
+
+
         if (compound.hasKey("colonies")) {
             NBTTagCompound tag1 = compound.getCompoundTag("colonies");
             int size = tag1.getInteger("col");
@@ -183,6 +199,21 @@ public class WorldSavedDataIU extends WorldSavedData {
 
         }
         compound.setTag("streaks", tag3);
+
+
+        NBTTagCompound tag4 = new NBTTagCompound();
+        tag4.setInteger("max", TileEntityEarthQuarryController.chunkPos.size());
+        final List<ChunkPos> list4 = TileEntityEarthQuarryController.chunkPos;
+        i = 0;
+        for (ChunkPos chunkPos : list4) {
+            final NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setInteger("x",chunkPos.x);
+            nbt.setInteger("z",chunkPos.z);
+            tag4.setTag(String.valueOf(i),nbt);
+            i++;
+        }
+
+        compound.setTag("earth_quarry", tag4);
 
         this.tagCompound = compound;
         return compound;

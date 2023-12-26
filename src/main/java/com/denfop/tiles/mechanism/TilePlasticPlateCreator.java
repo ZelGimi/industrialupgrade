@@ -22,6 +22,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticPlateCreator;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -47,6 +48,11 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                 new FluidStack(FluidName.fluidoxy.getInstance(), 1000),
                 input.getInput(new ItemStack(IUItem.plast))
         ), new RecipeOutput(null, new ItemStack(IUItem.plastic_plate))));
+
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidName.fluidco2.getInstance(), 500),
+                input.getInput(new ItemStack(Items.FLINT,4))
+        ), new RecipeOutput(null, new ItemStack(IUItem.crafting_elements,1,344))));
     }
 
     public IMultiTileBlock getTeBlock() {

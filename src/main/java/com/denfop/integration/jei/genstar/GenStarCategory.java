@@ -3,7 +3,10 @@ package com.denfop.integration.jei.genstar;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.gui.Area;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
+import com.denfop.gui.GuiIU;
+import com.denfop.tiles.mechanism.TileWitherMaker;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -17,6 +20,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecipeManager> {
 
@@ -67,6 +72,8 @@ public class GenStarCategory extends Gui implements IRecipeCategory<GenStarRecip
         if (xScale > 40) {
             progress = 0;
         }
+
+
 
         mc.getTextureManager().bindTexture(getTexture());
 

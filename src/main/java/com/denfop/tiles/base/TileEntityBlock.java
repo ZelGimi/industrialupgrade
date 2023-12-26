@@ -5,16 +5,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockResource;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.state.TileEntityBlockStateContainer;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Redstone;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
-import com.denfop.network.packet.CustomPacketBuffer;
-import com.denfop.network.packet.PacketRemoveUpdateTile;
-import com.denfop.network.packet.PacketStopSound;
-import com.denfop.network.packet.PacketUpdateFieldTile;
-import com.denfop.network.packet.PacketUpdateTile;
+import com.denfop.network.packet.*;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -46,14 +43,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class TileEntityBlock extends TileEntity implements ITickable {
 
@@ -78,6 +68,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public String active = "";
     public byte facing;
     public boolean isLoaded;
+    private boolean isClientLoaded;
 
     public TileEntityBlock() {
         this.facing = (byte) EnumFacing.DOWN.ordinal();
@@ -241,15 +232,19 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
                     this.active = "";
                 }
             }
-
-            this.blockState = this.block
-                    .getDefaultState()
-                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
-                    .withProperty(
-                            BlockTileEntity.facingProperty,
-                            this.getFacing()
-                    )
-            ;
+            try {
+                this.blockState = this.block
+                        .getDefaultState()
+                        .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                        .withProperty(
+                                BlockTileEntity.facingProperty,
+                                this.getFacing()
+                        )
+                ;
+            } catch (Exception e) {
+                this.blockState = this.block
+                        .getDefaultState();
+            }
             return this.blockState;
         }
         return this.blockState;
@@ -293,7 +288,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             new PacketStopSound(getWorld(), this.pos);
         } catch (Exception ignored) {
         }
-        new PacketRemoveUpdateTile(this);
+        if (!this.getWorld().isRemote) {
+            new PacketRemoveUpdateTile(this);
+        }
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -370,7 +367,14 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     @SideOnly(Side.CLIENT)
     public void updateEntityClient() {
         this.updateClientList.forEach(AbstractComponent::updateEntityClient);
+        if (!isClientLoaded) {
+            this.loadBeforeFirstClientUpdate();
+        }
 
+    }
+
+    public void loadBeforeFirstClientUpdate() {
+        isClientLoaded = true;
     }
 
     public void updateEntityServer() {
@@ -795,7 +799,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     }
 
     public void onBlockBreak(boolean wrench) {
-
+        for (AbstractComponent component : this.componentList) {
+            component.blockBreak();
+        }
     }
 
     public void wrenchBreak() {
@@ -975,7 +981,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         if (state1 == null) {
             state1 = state;
         }
-        this.getWorld().notifyBlockUpdate(this.pos, state, state, 2);
+        this.getWorld().notifyBlockUpdate(this.pos, state1, state, 2);
     }
 
     public boolean clientNeedsExtraModelInfo() {
@@ -996,5 +1002,13 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         return null;
     }
 
+
+    public TileEntityBlockStateContainer.PropertiesStateInstance getExtendedState(TileEntityBlockStateContainer.PropertiesStateInstance state) {
+        return state;
+    }
+
+    public boolean hasSpecialModel() {
+        return false;
+    }
 
 }

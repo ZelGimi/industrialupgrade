@@ -15,46 +15,45 @@ public class CentrifugeRecipe {
 
     public static void init() {
 
-        addcentrifuge(IUItem.reactorDepletedamericiumDual, new ItemStack(IUItem.radiationresources, 2));
-        addcentrifuge(IUItem.reactorDepletedamericiumQuad, new ItemStack(IUItem.radiationresources, 4));
-        addcentrifuge(IUItem.reactorDepletedamericiumSimple, new ItemStack(IUItem.radiationresources, 1));
+        addcentrifuge(IUItem.reactoramericiumDual, new ItemStack(IUItem.radiationresources, 2));
+        addcentrifuge(IUItem.reactoramericiumQuad, new ItemStack(IUItem.radiationresources, 4));
+        addcentrifuge(IUItem.reactoramericiumSimple, new ItemStack(IUItem.radiationresources, 1));
 
-        addcentrifuge(IUItem.reactorDepletedneptuniumDual, new ItemStack(IUItem.radiationresources, 2, 1));
-        addcentrifuge(IUItem.reactorDepletedneptuniumQuad, new ItemStack(IUItem.radiationresources, 4, 1));
-        addcentrifuge(IUItem.reactorDepletedneptuniumSimple, new ItemStack(IUItem.radiationresources, 1, 1));
+        addcentrifuge(IUItem.reactorneptuniumDual, new ItemStack(IUItem.radiationresources, 2, 1));
+        addcentrifuge(IUItem.reactorneptuniumQuad, new ItemStack(IUItem.radiationresources, 4, 1));
+        addcentrifuge(IUItem.reactorneptuniumSimple, new ItemStack(IUItem.radiationresources, 1, 1));
 
-        addcentrifuge(IUItem.reactorDepletedcuriumDual, new ItemStack(IUItem.radiationresources, 2, 2));
-        addcentrifuge(IUItem.reactorDepletedcuriumQuad, new ItemStack(IUItem.radiationresources, 4, 2));
-        addcentrifuge(IUItem.reactorDepletedcuriumSimple, new ItemStack(IUItem.radiationresources, 1, 2));
+        addcentrifuge(IUItem.reactorcuriumDual, new ItemStack(IUItem.radiationresources, 2, 2));
+        addcentrifuge(IUItem.reactorcuriumQuad, new ItemStack(IUItem.radiationresources, 4, 2));
+        addcentrifuge(IUItem.reactorcuriumSimple, new ItemStack(IUItem.radiationresources, 1, 2));
 
-        addcentrifuge(IUItem.reactorDepletedcaliforniaDual, new ItemStack(IUItem.radiationresources, 2, 3));
-        addcentrifuge(IUItem.reactorDepletedcaliforniaQuad, new ItemStack(IUItem.radiationresources, 4, 3));
-        addcentrifuge(IUItem.reactorDepletedcaliforniaSimple, new ItemStack(IUItem.radiationresources, 1, 3));
+        addcentrifuge(IUItem.reactorcaliforniaDual, new ItemStack(IUItem.radiationresources, 2, 3));
+        addcentrifuge(IUItem.reactorcaliforniaQuad, new ItemStack(IUItem.radiationresources, 4, 3));
+        addcentrifuge(IUItem.reactorcaliforniaSimple, new ItemStack(IUItem.radiationresources, 1, 3));
 
-        addcentrifuge(IUItem.reactorDepletedmendeleviumDual, new ItemStack(IUItem.radiationresources, 2, 5));
-        addcentrifuge(IUItem.reactorDepletedmendeleviumQuad, new ItemStack(IUItem.radiationresources, 4, 5));
-        addcentrifuge(IUItem.reactorDepletedmendeleviumSimple, new ItemStack(IUItem.radiationresources, 1, 5));
+        addcentrifuge(IUItem.reactormendeleviumDual, new ItemStack(IUItem.radiationresources, 2, 5));
+        addcentrifuge(IUItem.reactormendeleviumQuad, new ItemStack(IUItem.radiationresources, 4, 5));
+        addcentrifuge(IUItem.reactormendeleviumSimple, new ItemStack(IUItem.radiationresources, 1, 5));
 
-        addcentrifuge(IUItem.reactorDepletedberkeliumDual, new ItemStack(IUItem.radiationresources, 2, 6));
-        addcentrifuge(IUItem.reactorDepletedberkeliumQuad, new ItemStack(IUItem.radiationresources, 4, 6));
-        addcentrifuge(IUItem.reactorDepletedberkeliumSimple, new ItemStack(IUItem.radiationresources, 1, 6));
+        addcentrifuge(IUItem.reactorberkeliumDual, new ItemStack(IUItem.radiationresources, 2, 6));
+        addcentrifuge(IUItem.reactorberkeliumQuad, new ItemStack(IUItem.radiationresources, 4, 6));
+        addcentrifuge(IUItem.reactorberkeliumSimple, new ItemStack(IUItem.radiationresources, 1, 6));
 
-        addcentrifuge(IUItem.reactorDepletedeinsteiniumDual, new ItemStack(IUItem.radiationresources, 2, 7));
-        addcentrifuge(IUItem.reactorDepletedeinsteiniumQuad, new ItemStack(IUItem.radiationresources, 4, 7));
-        addcentrifuge(IUItem.reactorDepletedeinsteiniumSimple, new ItemStack(IUItem.radiationresources, 1, 7));
+        addcentrifuge(IUItem.reactoreinsteiniumDual, new ItemStack(IUItem.radiationresources, 2, 7));
+        addcentrifuge(IUItem.reactoreinsteiniumQuad, new ItemStack(IUItem.radiationresources, 4, 7));
+        addcentrifuge(IUItem.reactoreinsteiniumSimple, new ItemStack(IUItem.radiationresources, 1, 7));
 
-        addcentrifuge(IUItem.reactorDepleteduran233Dual, new ItemStack(IUItem.radiationresources, 2, 8));
-        addcentrifuge(IUItem.reactorDepleteduran233Quad, new ItemStack(IUItem.radiationresources, 4, 8));
-        addcentrifuge(IUItem.reactorDepleteduran233Simple, new ItemStack(IUItem.radiationresources, 1, 8));
+        addcentrifuge(IUItem.reactoruran233Dual, new ItemStack(IUItem.radiationresources, 2, 8));
+        addcentrifuge(IUItem.reactoruran233Quad, new ItemStack(IUItem.radiationresources, 4, 8));
+        addcentrifuge(IUItem.reactoruran233Simple, new ItemStack(IUItem.radiationresources, 1, 8));
 
-        addcentrifuge(IUItem.reactorDepletedtoriyDual, new ItemStack(IUItem.toriy, 2));
-        addcentrifuge(IUItem.reactorDepletedtoriyQuad, new ItemStack(IUItem.toriy, 4));
-        addcentrifuge(IUItem.reactorDepletedtoriySimple, new ItemStack(IUItem.toriy, 1));
+        addcentrifuge(IUItem.reactortoriyDual, new ItemStack(IUItem.toriy, 2));
+        addcentrifuge(IUItem.reactortoriyQuad, new ItemStack(IUItem.toriy, 4));
+        addcentrifuge(IUItem.reactortoriySimple, new ItemStack(IUItem.toriy, 1));
 
-        addcentrifuge(IUItem.reactorDepletedprotonDual, new ItemStack(IUItem.proton, 2));
-        addcentrifuge(IUItem.reactorDepletedprotonQuad, new ItemStack(IUItem.proton, 4));
-        addcentrifuge(IUItem.reactorDepletedprotoneit, new ItemStack(IUItem.proton, 8));
-        addcentrifuge(IUItem.reactorDepletedprotonSimple, new ItemStack(IUItem.proton, 1));
+        addcentrifuge(IUItem.reactorprotonDual, new ItemStack(IUItem.proton, 2));
+        addcentrifuge(IUItem.reactorprotonQuad, new ItemStack(IUItem.proton, 4));
+        addcentrifuge(IUItem.reactorprotonSimple, new ItemStack(IUItem.proton, 1));
 
         addcentrifuge(0, null);
         addcentrifuge(1, new ItemStack(Blocks.SAND));
@@ -101,6 +100,14 @@ public class CentrifugeRecipe {
         addcentrifuge1("Tin", IUItem.smallIronDust);
         addcentrifuge1("Iron", IUItem.smallGoldDust);
         addcentrifuge("Iron", IUItem.smallGoldDust);
+
+        addcentrifuge("Osmium",  new ItemStack(IUItem.smalldust,1,17));
+        addcentrifuge1("Osmium", new ItemStack(IUItem.smalldust,1,17));
+        addcentrifuge("Tantalum",  new ItemStack(IUItem.smalldust,1,11));
+        addcentrifuge1("Tantalum", new ItemStack(IUItem.smalldust,1,11));
+        addcentrifuge("Cadmium",  new ItemStack(IUItem.smalldust,1,18));
+        addcentrifuge1("Cadmium", new ItemStack(IUItem.smalldust,1,18));
+
         addcentrifuge(
                 new ItemStack(IUItem.clayDust.getItem(), 4, IUItem.clayDust.getItemDamage()),
                 IUItem.silicondioxideDust
@@ -111,24 +118,24 @@ public class CentrifugeRecipe {
                 new ItemStack(IUItem.smallIronDust.getItem(), 54, IUItem.smallIronDust.getItemDamage())
         );
 
-        addcentrifuge(IUItem.reactorDepletedmoxSimple, growCount(IUItem.Plutonium, 3),
-                growCount(IUItem.smallPlutonium, 1), growCount(IUItem.ironDust, 1)
+        addcentrifuge(IUItem.mox_fuel_rod, growCount(IUItem.Plutonium, 3),
+               growCount(IUItem.ironDust, 1)
         );
-        addcentrifuge(IUItem.reactorDepletedmoxDual, growCount(IUItem.Plutonium, 6),
-                growCount(IUItem.smallPlutonium, 2), growCount(IUItem.ironDust, 3)
+        addcentrifuge(IUItem.dual_mox_fuel_rod, growCount(IUItem.Plutonium, 6),
+                growCount(IUItem.ironDust, 3)
         );
-        addcentrifuge(IUItem.reactorDepletedmoxQuad, growCount(IUItem.Plutonium, 12),
-                growCount(IUItem.smallPlutonium, 4), growCount(IUItem.ironDust, 7)
+        addcentrifuge(IUItem.quad_mox_fuel_rod, growCount(IUItem.Plutonium, 12),
+                 growCount(IUItem.ironDust, 7)
         );
 
-        addcentrifuge(IUItem.reactorDepleteduranSimple, growCount(IUItem.Uran238, 4),
-                growCount(IUItem.smallPlutonium, 1), growCount(IUItem.ironDust, 1)
+        addcentrifuge(IUItem.uranium_fuel_rod, growCount(IUItem.Uran238, 4),
+                growCount(IUItem.ironDust, 1)
         );
-        addcentrifuge(IUItem.reactorDepleteduranDual, growCount(IUItem.Uran238, 8),
-                growCount(IUItem.smallPlutonium, 2), growCount(IUItem.ironDust, 3)
+        addcentrifuge(IUItem.dual_uranium_fuel_rod, growCount(IUItem.Uran238, 8),
+                growCount(IUItem.ironDust, 3)
         );
-        addcentrifuge(IUItem.reactorDepleteduranQuad, growCount(IUItem.Uran238, 16),
-                growCount(IUItem.smallPlutonium, 4), growCount(IUItem.ironDust, 7)
+        addcentrifuge(IUItem.quad_uranium_fuel_rod, growCount(IUItem.Uran238, 16),
+                 growCount(IUItem.ironDust, 7)
         );
 
         addcentrifuge1("crushedPurifiedUranium", new ItemStack(IUItem.Plutonium.getItem(), 1, 5),

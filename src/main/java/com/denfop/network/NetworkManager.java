@@ -22,9 +22,12 @@ import com.denfop.network.packet.PacketResearchSystemDelete;
 import com.denfop.network.packet.PacketRunParticles;
 import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.network.packet.PacketStopSound;
+import com.denfop.network.packet.PacketStopSoundPlayer;
 import com.denfop.network.packet.PacketUpdateFieldContainerTile;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateOvertimeTile;
+import com.denfop.network.packet.PacketUpdateRadiation;
+import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.network.packet.PacketUpdateTile;
 import com.denfop.tiles.base.TileEntityBlock;
@@ -85,6 +88,10 @@ public class NetworkManager {
         this.registerPacket(new PacketStopSound());
         this.registerPacket(new PacketFixedClient());
         this.registerPacket(new PacketRemoveUpdateTile());
+        this.registerPacket(new PacketUpdateRadiationValue());
+        this.registerPacket(new PacketUpdateRadiation());
+        this.registerPacket(new PacketStopSoundPlayer());
+
     }
 
     private static FMLProxyPacket makePacket(CustomPacketBuffer buffer) {

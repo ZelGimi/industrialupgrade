@@ -71,7 +71,7 @@ public interface IMultiTileBlock extends ISubEnum {
         return IUCore.IUTab;
     }
 
-    default String[] getMultiModels() {
+    default String[] getMultiModels(final IMultiTileBlock teBlock) {
         return new String[0];
     }
 

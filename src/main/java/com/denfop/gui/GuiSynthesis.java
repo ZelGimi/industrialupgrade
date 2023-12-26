@@ -8,6 +8,8 @@ import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.tiles.mechanism.dual.TileEnrichment;
+import com.denfop.tiles.mechanism.dual.TileSynthesis;
 import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -26,6 +28,8 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 10, 65, EnumTypeComponent.RAD,
+                new Component<>(((TileSynthesis)this.container.base).rad_energy)));
     }
 
     @Override
@@ -37,7 +41,7 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
                         "EF";
-        new AdvArea(this, 25, 55, 36, 70)
+        new AdvArea(this, 133, 35, 144, 49)
                 .withTooltip(tooltip2)
                 .drawForeground(mouseX, mouseY);
     }
@@ -52,7 +56,7 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
         int yoffset = (this.height - this.ySize) / 2;
 
         if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 24, yoffset + 56 + 14 - chargeLevel, 176, 14 - chargeLevel,
+            drawTexturedModalRect(xoffset + 132, yoffset + 35 + 14 - chargeLevel, 176, 14 - chargeLevel,
                     14, chargeLevel
             );
         }

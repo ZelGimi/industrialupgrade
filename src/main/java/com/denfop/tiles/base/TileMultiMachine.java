@@ -139,7 +139,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     public CustomPacketBuffer writeUpdatePacket() {
         final CustomPacketBuffer packet = super.writeUpdatePacket();
         try {
-            EncoderHandler.encode(packet, cold,false);
+            EncoderHandler.encode(packet, cold, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -159,7 +159,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, cold,false);
+            EncoderHandler.encode(packet, cold, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -217,7 +217,12 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.multimachine.info"));
+            if (!this.cold.upgrade) {
+                tooltip.add(Localization.translate("iu.multimachine.info"));
+            }
+            if (this.heat != null) {
+                tooltip.add(Localization.translate("iu.heatmachine.info"));
+            }
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.multi_process.defaultEnergyConsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.multi_process.defaultOperationLength);

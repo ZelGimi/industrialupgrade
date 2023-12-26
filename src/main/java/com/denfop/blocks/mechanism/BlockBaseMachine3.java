@@ -17,21 +17,28 @@ import com.denfop.tiles.base.TileRadiationPurifier;
 import com.denfop.tiles.mechanism.TileAdvHandlerHeavyOre;
 import com.denfop.tiles.mechanism.TileAdvScanner;
 import com.denfop.tiles.mechanism.TileCanner;
+import com.denfop.tiles.mechanism.TileEntityEnchanterBooks;
+import com.denfop.tiles.mechanism.TileEntityReactorSafetyDoom;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
 import com.denfop.tiles.mechanism.TileEntityCreatorSchedules;
 import com.denfop.tiles.mechanism.TileEntityFacadeBlock;
 import com.denfop.tiles.mechanism.TileEntityGasCombiner;
 import com.denfop.tiles.mechanism.TileEntityKineticGeneratorAssembler;
+import com.denfop.tiles.mechanism.TileEntityNuclearWasteRecycler;
+import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
 import com.denfop.tiles.mechanism.TileEntityProbeAssembler;
+import com.denfop.tiles.mechanism.TileEntityRefrigeratorCoolant;
 import com.denfop.tiles.mechanism.TileEntityResearchTable;
 import com.denfop.tiles.mechanism.TileEntityResearchTableSpace;
 import com.denfop.tiles.mechanism.TileEntityRocketAssembler;
 import com.denfop.tiles.mechanism.TileEntityRocketLaunchPad;
+import com.denfop.tiles.mechanism.TileEntityRodFactory;
 import com.denfop.tiles.mechanism.TileEntityRodManufacturer;
 import com.denfop.tiles.mechanism.TileEntityRotorAssembler;
 import com.denfop.tiles.mechanism.TileEntityRotorModifier;
 import com.denfop.tiles.mechanism.TileEntitySatelliteAssembler;
 import com.denfop.tiles.mechanism.TileEntitySoilAnalyzer;
+import com.denfop.tiles.mechanism.TileEntityStampMechanism;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorAssembler;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import com.denfop.tiles.mechanism.TileImpHandlerHeavyOre;
@@ -43,6 +50,12 @@ import com.denfop.tiles.mechanism.TilePrivatizer;
 import com.denfop.tiles.mechanism.TileSimplePump;
 import com.denfop.tiles.mechanism.TileSimpleScanner;
 import com.denfop.tiles.mechanism.TileTunerWireless;
+import com.denfop.tiles.mechanism.TileEntityBatteryFactory;
+import com.denfop.tiles.mechanism.TileEntityGraphiteHandler;
+import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
+import com.denfop.tiles.mechanism.TileEntityMatterFactory;
+import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
+import com.denfop.tiles.mechanism.TileEntitySocketFactory;
 import com.denfop.tiles.mechanism.cooling.TileCooling;
 import com.denfop.tiles.mechanism.dual.heat.TileWeldingMachine;
 import com.denfop.tiles.mechanism.energy.TileEnergyController;
@@ -190,7 +203,21 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     canner_iu(TileCanner.class, 89),
 
     minipanel(TileEntityMiniPanels.class, 91),
-    facademechanism(TileEntityFacadeBlock.class,92);
+    facademechanism(TileEntityFacadeBlock.class,92),
+    battery_factory(TileEntityBatteryFactory.class,93),
+    socket_factory(TileEntitySocketFactory.class,94),
+    matter_factory(TileEntityMatterFactory.class,95),
+    laser_polisher(TileEntityLaserPolisher.class,96),
+    graphite_handler(TileEntityGraphiteHandler.class,97),
+    moon_spotter(TileEntityMoonSpotter.class,98),
+    stamp_mechanism(TileEntityStampMechanism.class,99),
+    reactor_rod_factory(TileEntityRodFactory.class,100),
+    nuclear_waste_recycler(TileEntityNuclearWasteRecycler.class,101),
+    reactor_safety_doom(TileEntityReactorSafetyDoom.class,102),
+    pallet_generator(TileEntityPalletGenerator.class,103 ),
+    enchanter_books(TileEntityEnchanterBooks.class,104 ),
+    refrigerator_coolant(TileEntityRefrigeratorCoolant.class,105 ),
+    ;
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("basemachine3");
@@ -224,6 +251,7 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
+
 
                 }
             }

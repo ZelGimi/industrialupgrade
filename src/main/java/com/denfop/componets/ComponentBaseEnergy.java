@@ -11,13 +11,18 @@ import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
+import net.minecraft.entity.item.EntityExpBottle;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
@@ -253,7 +258,25 @@ public class ComponentBaseEnergy extends AbstractComponent {
         return amount;
     }
 
-
+    public void blockBreak() {
+        if(this.getType() == EnergyType.RADIATION){
+            new PacketUpdateRadiationValue(new ChunkPos(this.parent.getPos()), (int) this.storage);
+        }else   if(this.getType() == EnergyType.EXPERIENCE && this.storage > 0){
+            double f = 0.7;
+            double dx = (double) this.parent.getWorld().rand.nextFloat() * 1 + (1.0 - f) * 0.5;
+            double dy = (double) this.parent.getWorld().rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dz = (double) this.parent.getWorld().rand.nextFloat() * f + (1.0 - f) * 0.5;
+            int j = EntityXPOrb.getXPSplit( (int) this.storage);
+            EntityXPOrb entityItem = new EntityXPOrb(
+                    this.parent.getWorld(),
+                    (double) this.parent.getPos().getX() + dx,
+                    (double) this.parent.getPos().getY() + dy,
+                    (double) this.parent.getPos().getZ() + dz,
+                    j
+            );
+            this.parent.getWorld().spawnEntity(entityItem);
+        }
+    }
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
     }

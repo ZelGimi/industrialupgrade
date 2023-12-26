@@ -68,7 +68,10 @@ public class ItemDoublePlate extends ItemSubTypes<ItemDoublePlate.ItemDoublePlat
         lead_doubleplate(24),
         obsidian_doubleplate(25),
         steel_doubleplate(26),
-        tin_doubleplate(27);
+        tin_doubleplate(27),
+        osmium(28),
+        tantalum(29),
+        cadmium(30);
 
         private final String name;
         private final int ID;

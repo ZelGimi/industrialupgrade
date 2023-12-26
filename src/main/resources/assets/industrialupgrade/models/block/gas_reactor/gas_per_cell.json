@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/gas_reactor/per_cell",
+    "down" : "industrialupgrade:blocks/gas_reactor/cell_top",
+    "up" : "industrialupgrade:blocks/gas_reactor/cell_top",
+    "north" : "industrialupgrade:blocks/gas_reactor/per_cell",
+    "east" : "industrialupgrade:blocks/gas_reactor/per_cell",
+    "south" : "industrialupgrade:blocks/gas_reactor/per_cell",
+    "west" : "industrialupgrade:blocks/gas_reactor/per_cell"
+  }
+}

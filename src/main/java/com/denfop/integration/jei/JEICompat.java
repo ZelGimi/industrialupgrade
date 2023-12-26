@@ -21,6 +21,9 @@ import com.denfop.integration.jei.alloysmelter.AlloySmelterRecipeWrapper;
 import com.denfop.integration.jei.antiupgradeblock.AntiUpgradeBlockCategory;
 import com.denfop.integration.jei.antiupgradeblock.AntiUpgradeBlockHandler;
 import com.denfop.integration.jei.antiupgradeblock.AntiUpgradeBlockWrapper;
+import com.denfop.integration.jei.battery_factory.BatteryCategory;
+import com.denfop.integration.jei.battery_factory.BatteryHandler;
+import com.denfop.integration.jei.battery_factory.BatteryRecipeWrapper;
 import com.denfop.integration.jei.bf.BlastFCategory;
 import com.denfop.integration.jei.bf.BlastFHandler;
 import com.denfop.integration.jei.bf.BlastFWrapper;
@@ -51,6 +54,9 @@ import com.denfop.integration.jei.doublemolecular.DoubleMolecularTransformerReci
 import com.denfop.integration.jei.electrolyzer.ElectrolyzerCategory;
 import com.denfop.integration.jei.electrolyzer.ElectrolyzerHandler;
 import com.denfop.integration.jei.electrolyzer.ElectrolyzerRecipeWrapper;
+import com.denfop.integration.jei.enchanter.EnchantCategory;
+import com.denfop.integration.jei.enchanter.EnchantHandler;
+import com.denfop.integration.jei.enchanter.EnchantRecipeWrapper;
 import com.denfop.integration.jei.enrichment.EnrichCategory;
 import com.denfop.integration.jei.enrichment.EnrichHandler;
 import com.denfop.integration.jei.enrichment.EnrichRecipeWrapper;
@@ -105,12 +111,21 @@ import com.denfop.integration.jei.genstar.GenStarRecipeManager;
 import com.denfop.integration.jei.genstone.GenStoneCategory;
 import com.denfop.integration.jei.genstone.GenStoneHandler;
 import com.denfop.integration.jei.genstone.GenStoneRecipeWrapper;
+import com.denfop.integration.jei.graphite_handler.GraphiteCategory;
+import com.denfop.integration.jei.graphite_handler.GraphiteHandler;
+import com.denfop.integration.jei.graphite_handler.GraphiteRecipeWrapper;
 import com.denfop.integration.jei.handlerho.HandlerHOCategory;
 import com.denfop.integration.jei.handlerho.HandlerHOHandler;
 import com.denfop.integration.jei.handlerho.HandlerHORecipeWrapper;
+import com.denfop.integration.jei.laser.LaserCategory;
+import com.denfop.integration.jei.laser.LaserHandler;
+import com.denfop.integration.jei.laser.LaserRecipeWrapper;
 import com.denfop.integration.jei.macerator.MaceratorCategory;
 import com.denfop.integration.jei.macerator.MaceratorHandler;
 import com.denfop.integration.jei.macerator.MaceratorWrapper;
+import com.denfop.integration.jei.mattery_factory.MatteryCategory;
+import com.denfop.integration.jei.mattery_factory.MatteryHandler;
+import com.denfop.integration.jei.mattery_factory.MatteryRecipeWrapper;
 import com.denfop.integration.jei.microchip.MicrochipCategory;
 import com.denfop.integration.jei.microchip.MicrochipHandler;
 import com.denfop.integration.jei.microchip.MicrochipRecipeWrapper;
@@ -118,6 +133,9 @@ import com.denfop.integration.jei.modularator.*;
 import com.denfop.integration.jei.molecular.MolecularTransformerCategory;
 import com.denfop.integration.jei.molecular.MolecularTransformerHandler;
 import com.denfop.integration.jei.molecular.MolecularTransformerRecipeWrapper;
+import com.denfop.integration.jei.moon_spotter.MoonSpooterCategory;
+import com.denfop.integration.jei.moon_spotter.MoonSpooterHandler;
+import com.denfop.integration.jei.moon_spotter.MoonSpooterRecipeWrapper;
 import com.denfop.integration.jei.oilpump.OilPumpCategory;
 import com.denfop.integration.jei.oilpump.OilPumpHandler;
 import com.denfop.integration.jei.oilpump.OilPumpWrapper;
@@ -151,6 +169,9 @@ import com.denfop.integration.jei.recycler.RecyclerWrapper;
 import com.denfop.integration.jei.refiner.RefinerCategory;
 import com.denfop.integration.jei.refiner.RefinerHandler;
 import com.denfop.integration.jei.refiner.RefinerRecipeWrapper;
+import com.denfop.integration.jei.rods_factory.RodFactoryCategory;
+import com.denfop.integration.jei.rods_factory.RodFactoryHandler;
+import com.denfop.integration.jei.rods_factory.RodFactoryRecipeWrapper;
 import com.denfop.integration.jei.rolling.RollingCategory;
 import com.denfop.integration.jei.rolling.RollingHandler;
 import com.denfop.integration.jei.rolling.RollingWrapper;
@@ -166,9 +187,15 @@ import com.denfop.integration.jei.rotorsupgrade.RotorUpgradeWrapper;
 import com.denfop.integration.jei.scrap.ScrapCategory;
 import com.denfop.integration.jei.scrap.ScrapHandler;
 import com.denfop.integration.jei.scrap.ScrapRecipeWrapper;
+import com.denfop.integration.jei.socket_factory.SocketCategory;
+import com.denfop.integration.jei.socket_factory.SocketHandler;
+import com.denfop.integration.jei.socket_factory.SocketRecipeWrapper;
 import com.denfop.integration.jei.solidmatters.MatterCategory;
 import com.denfop.integration.jei.solidmatters.MatterHandler;
 import com.denfop.integration.jei.solidmatters.MatterWrapper;
+import com.denfop.integration.jei.stamp.StampCategory;
+import com.denfop.integration.jei.stamp.StampHandler;
+import com.denfop.integration.jei.stamp.StampRecipeWrapper;
 import com.denfop.integration.jei.sunnarium.SunnariumCategory;
 import com.denfop.integration.jei.sunnarium.SunnariumHandler;
 import com.denfop.integration.jei.sunnarium.SunnariumWrapper;
@@ -310,7 +337,15 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new CanningCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new ScrapboxRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
 
-
+        registry.addRecipeCategories(new BatteryCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new SocketCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new MatteryCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new MoonSpooterCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new LaserCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new GraphiteCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new StampCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new RodFactoryCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new EnchantCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
     public void register(IModRegistry registry) {
@@ -343,6 +378,143 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCatalyst(
                 new ItemStack(IUItem.machines_base3, 1, 11),
                 new OreWashingCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                BatteryHandler.getRecipes(),
+                new BatteryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                BatteryHandler.class, BatteryRecipeWrapper::new,
+                BlockBaseMachine3.battery_factory.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.battery_factory),
+                new BatteryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                SocketHandler.getRecipes(),
+                new SocketCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                SocketHandler.class, SocketRecipeWrapper::new,
+                BlockBaseMachine3.socket_factory.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.socket_factory),
+                new SocketCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                StampHandler.getRecipes(),
+                new StampCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                StampHandler.class, StampRecipeWrapper::new,
+                BlockBaseMachine3.stamp_mechanism.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.stamp_mechanism),
+                new StampCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                RodFactoryHandler.getRecipes(),
+                new RodFactoryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                RodFactoryHandler.class, RodFactoryRecipeWrapper::new,
+                BlockBaseMachine3.reactor_rod_factory.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.reactor_rod_factory),
+                new RodFactoryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                EnchantHandler.getRecipes(),
+                new  EnchantCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                EnchantHandler.class,  EnchantRecipeWrapper::new,
+                BlockBaseMachine3.enchanter_books.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.enchanter_books),
+                new EnchantCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+
+
+        registry.addRecipes(
+                MatteryHandler.getRecipes(),
+                new MatteryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                MatteryHandler.class, MatteryRecipeWrapper::new,
+                BlockBaseMachine3.matter_factory.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.matter_factory),
+                new MatteryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                MoonSpooterHandler.getRecipes(),
+                new MoonSpooterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                MoonSpooterHandler.class, MoonSpooterRecipeWrapper::new,
+                BlockBaseMachine3.moon_spotter.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.moon_spotter),
+                new MoonSpooterCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                GraphiteHandler.getRecipes(),
+                new GraphiteCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                GraphiteHandler.class, GraphiteRecipeWrapper::new,
+                BlockBaseMachine3.graphite_handler.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.graphite_handler),
+                new GraphiteCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                LaserHandler.getRecipes(),
+                new LaserCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                LaserHandler.class, LaserRecipeWrapper::new,
+                BlockBaseMachine3.laser_polisher.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.laser_polisher),
+                new LaserCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
 
         registry.addRecipes(

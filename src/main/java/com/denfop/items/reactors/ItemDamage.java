@@ -107,11 +107,17 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
 
     public void setCustomDamage(ItemStack stack, int damage) {
         NBTTagCompound nbt = ModUtils.nbt(stack);
+        if(damage > maxDamage){
+            damage = maxDamage;
+        }
         nbt.setInteger("damage", damage);
     }
 
     public boolean applyCustomDamage(ItemStack stack, int damage, EntityLivingBase src) {
-        this.setCustomDamage(stack, this.getCustomDamage(stack) - damage);
+        int damage1 = this.getCustomDamage(stack) - damage;
+        if(damage1 <= 0)
+            damage1 = 0;
+        this.setCustomDamage(stack,damage1);
         return true;
     }
 

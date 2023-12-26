@@ -7,11 +7,14 @@ import com.denfop.api.energy.IEnergyAcceptor;
 import com.denfop.api.energy.IEnergyConductor;
 import com.denfop.api.energy.IEnergyEmitter;
 import com.denfop.api.energy.IEnergyTile;
+import com.denfop.api.energy.NodeStats;
 import com.denfop.api.energy.event.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
+import com.denfop.api.item.IHazmatLike;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockCable;
+import com.denfop.damagesource.IUDamageSource;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -48,7 +51,6 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         this.addedToEnergyNet = false;
         this.cableType = cableType;
         this.type = cableType.ordinal();
-        this.active = this.cableType.name();
     }
 
     public TileEntityCable() {
@@ -56,7 +58,28 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         this.addedToEnergyNet = false;
         this.cableType = CableType.glass;
         this.type = cableType.ordinal();
-        this.active = this.cableType.name();
+    }
+
+    @Override
+    public void onEntityCollision(final Entity entity) {
+        super.onEntityCollision(entity);
+        if (!this.getWorld().isRemote && entity instanceof EntityLivingBase) {
+            if (cableType == CableType.tin || cableType == CableType.copper || cableType == CableType.gold || cableType == CableType.iron) {
+                NodeStats stats = EnergyNetGlobal.instance.getNodeStats(this);
+                if (entity instanceof EntityPlayer) {
+                    EntityPlayer player = (EntityPlayer) entity;
+                    if (!IHazmatLike.hasCompleteHazmat(player))
+                        if (stats.getEnergyIn() > 0) {
+                            entity.attackEntityFrom(IUDamageSource.radiation, 0.25f)
+                            ;
+                        }
+                } else if (stats.getEnergyIn() > 0) {
+                    entity.attackEntityFrom(IUDamageSource.radiation, 0.25f)
+                    ;
+                }
+            }
+
+        }
     }
 
     public static TileEntityCable delegate(CableType cableType) {
@@ -118,6 +141,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
         if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), this));
             this.addedToEnergyNet = false;
+            this.updateConnectivity();
         }
 
 
@@ -150,7 +174,7 @@ public class TileEntityCable extends TileEntityMultiCable implements IEnergyCond
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;

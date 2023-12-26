@@ -143,7 +143,7 @@ public class TileEntityQCable extends TileEntityMultiCable implements IConductor
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;

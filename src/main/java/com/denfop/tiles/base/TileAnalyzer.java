@@ -78,6 +78,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
     private int chunkx;
     private int chunkz;
     private int y;
+    private FakePlayerSpawner fake;
 
     public TileAnalyzer() {
         super(10000000, 14, 1);
@@ -604,6 +605,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
             this.zcoord = 0;
             this.xendcoord = size1;
             this.zendcoord = size1;
+            this.fake = new FakePlayerSpawner(world);
             for (int i = 0; i < size1; i++) {
                 for (int j = 0; j < size1; j++) {
                     int m1 = 1;
@@ -745,7 +747,7 @@ public class TileAnalyzer extends TileElectricMachine implements IUpdatableTileE
                                                         blockstate,
                                                         world,
                                                         new BlockPos(x, yy, z),
-                                                        new FakePlayerSpawner(world),
+                                                        this.fake,
                                                         true
                                                 );
                                             }

@@ -80,7 +80,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
             int aDefaultTier,
             EnumDoubleElectricMachine type, boolean register
     ) {
-        this.outputSlot = new InvSlotOutput(this, "output", outputSlots);
+        this.outputSlot = new InvSlotOutput(this, outputSlots);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
         this.energy = this.addComponent(AdvEnergy

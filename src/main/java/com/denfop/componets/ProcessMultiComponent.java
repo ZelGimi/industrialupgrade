@@ -64,7 +64,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 this,
                 enumMultiMachine.sizeWorkingSlot, this
         );
-        this.outputSlot = new InvSlotOutput(parent, "output",
+        this.outputSlot = new InvSlotOutput(parent,
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
         this.upgradeSlot = new InvSlotUpgrade(parent, 4);
@@ -320,6 +320,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     }
                     size1 = size1 / output.getRecipe().output.items.get(0).getCount();
                     size = Math.min(size1, size);
+                    size = Math.min(size, output.getRecipe().output.items.get(0).getItem().getItemStackLimit());
+
                 }
             }
             if (output != null && this.inputSlots.continue_proccess(

@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Vein implements IVein {
 
     private final ChunkPos chunk;
+    private boolean oldMineral;
     boolean find;
     private Type type;
     private int meta;
@@ -21,7 +22,11 @@ public class Vein implements IVein {
         this.chunk = chunk;
         this.col = 0;
         this.maxcol = 0;
+        oldMineral = false;
+    }
 
+    public void setOldMineral(final boolean oldMineral) {
+        this.oldMineral = oldMineral;
     }
 
     public Vein(NBTTagCompound tagCompound) {
@@ -55,7 +60,8 @@ public class Vein implements IVein {
                 this.find = true;
             }
         }
-
+        int data1 = tagCompound.getInteger("data1");
+        this.oldMineral = data1 == 0;
     }
     public Vein(CustomPacketBuffer is) {
         int data = is.readInt();
@@ -88,7 +94,8 @@ public class Vein implements IVein {
                 this.find = true;
             }
         }
-
+        int data2 = is.readInt();
+        this.oldMineral = data2 == 0;
     }
 
     public CustomPacketBuffer writePacket() {
@@ -109,7 +116,7 @@ public class Vein implements IVein {
         customPacketBuffer.writeInt(m);
         customPacketBuffer.writeInt(col);
         customPacketBuffer.writeInt(maxcol);
-
+        customPacketBuffer.writeInt(this.oldMineral ? 0 : 1);
         return customPacketBuffer;
     }
     @Override
@@ -119,7 +126,10 @@ public class Vein implements IVein {
 
     @Override
     public void setMeta(final int meta) {
+        if(oldMineral)
         this.meta = meta;
+        else
+            this.meta = meta - 16;
     }
 
     @Override
@@ -164,6 +174,14 @@ public class Vein implements IVein {
 
     }
 
+    public boolean isFind() {
+        return find;
+    }
+
+    public boolean isOldMineral() {
+        return oldMineral;
+    }
+
     @Override
     public boolean canMining() {
         return this.type == Type.EMPTY || (this.col == 0 && this.maxcol != 0);
@@ -188,7 +206,7 @@ public class Vein implements IVein {
         tagCompound.setInteger("data", m);
         tagCompound.setInteger("col", this.col);
         tagCompound.setInteger("maxcol", this.maxcol);
-
+        tagCompound.setInteger("data1", this.oldMineral ? 0 : 1);
      /* tagCompound.setInteger("meta", this.meta);
        tagCompound.setInteger("id", this.type.ordinal());
       tagCompound.setInteger("x", chunk.x);

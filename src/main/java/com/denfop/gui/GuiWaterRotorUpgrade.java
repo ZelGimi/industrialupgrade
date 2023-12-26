@@ -1,9 +1,12 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.api.gui.ItemImage;
 import com.denfop.container.ContainerWaterRotorUpgrade;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
 
 public class GuiWaterRotorUpgrade extends GuiCore<ContainerWaterRotorUpgrade> {
 
@@ -31,6 +34,7 @@ public class GuiWaterRotorUpgrade extends GuiCore<ContainerWaterRotorUpgrade> {
             int j = (this.width - this.xSize) / 2;
             int k = (this.height - this.ySize) / 2;
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
             setTexture(rotors_gui);
             drawTexturedModalRect(j + 71, k + 5, 32 * (this.container.base.getRotor().getIndex() % 8),
                     55 * (this.container.base.getRotor().getIndex() / 8), 32, 54
@@ -63,6 +67,11 @@ public class GuiWaterRotorUpgrade extends GuiCore<ContainerWaterRotorUpgrade> {
 
         }
 
+    }
+
+    @Override
+    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override

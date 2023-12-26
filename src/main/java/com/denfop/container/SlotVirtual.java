@@ -38,6 +38,9 @@ public class SlotVirtual extends Slot {
         return this.slotInfo.get(this.index);
     }
 
+    public boolean canTakeStack(EntityPlayer par1EntityPlayer) {
+        return false;
+    }
     @Override
     public void putStack(final ItemStack stack) {
         super.putStack(stack);

@@ -6,10 +6,12 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
+import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.Random;
 
 public class TileSynthesis extends TileDoubleElectricMachine implements IHasRecipe {
+
+    public final ComponentBaseEnergy rad_energy;
 
     public TileSynthesis() {
         super(1, 300, 1, EnumDoubleElectricMachine.SYNTHESIS, false);
@@ -58,15 +62,18 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
 
             }
         });
+        this.rad_energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION,this,10000));
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
 
     }
 
-    public static void addsynthesis(ItemStack container, ItemStack fill, int number, ItemStack output) {
+    public static void addsynthesis(ItemStack container, ItemStack fill, int number, ItemStack output,int rad) {
         NBTTagCompound nbt = ModUtils.nbt();
         nbt.setInteger("percent", number);
+        nbt.setInteger("rad_amount", rad);
+
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         Recipes.recipes.addRecipe("synthesis", new BaseMachineRecipe(
                 new Input(
@@ -95,29 +102,29 @@ public class TileSynthesis extends TileDoubleElectricMachine implements IHasReci
                 new ItemStack(IUItem.radiationresources, 1, 2),
                 new ItemStack(IUItem.cell_all, 1, 2),
                 32,
-                new ItemStack(IUItem.radiationresources, 1, 3)
+                new ItemStack(IUItem.radiationresources, 1, 3),200
         );
         addsynthesis(
                 new ItemStack(IUItem.radiationresources, 1, 3),
                 new ItemStack(IUItem.cell_all, 1, 2),
                 27,
-                new ItemStack(IUItem.radiationresources, 1, 6)
+                new ItemStack(IUItem.radiationresources, 1, 6),400
         );
         addsynthesis(
                 new ItemStack(IUItem.radiationresources, 1, 6),
                 new ItemStack(IUItem.cell_all, 1, 2),
                 22,
-                new ItemStack(IUItem.radiationresources, 1, 7)
+                new ItemStack(IUItem.radiationresources, 1, 7),500
         );
         addsynthesis(
                 new ItemStack(IUItem.radiationresources, 1, 7),
                 new ItemStack(IUItem.cell_all, 1, 2),
                 19,
-                new ItemStack(IUItem.radiationresources, 1, 5)
+                new ItemStack(IUItem.radiationresources, 1, 5),750
         );
 
-        addsynthesis(IUItem.uraniumBlock, new ItemStack(IUItem.toriy), 22, new ItemStack(IUItem.radiationresources, 1, 8));
-        addsynthesis(new ItemStack(IUItem.radiationresources, 1, 1), new ItemStack(IUItem.toriy), 20, IUItem.Plutonium);
+        addsynthesis(IUItem.uraniumBlock, new ItemStack(IUItem.toriy), 22, new ItemStack(IUItem.radiationresources, 1, 8),150);
+        addsynthesis(new ItemStack(IUItem.radiationresources, 1, 1), new ItemStack(IUItem.toriy), 20, IUItem.Plutonium,100);
 
     }
 

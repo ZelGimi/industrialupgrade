@@ -71,7 +71,7 @@ public class SynthesisCategory extends Gui implements IRecipeCategory<SynthesisW
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(+21, 53 + 14 - energylevel, 176, 14 - energylevel,
+        drawTexturedModalRect(+129, 32 + 14 - energylevel, 176, 14 - energylevel,
                 14, energylevel
         );
 

@@ -27,7 +27,12 @@ import java.util.List;
 
 public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements IType {
 
-    public final InvSlot fuelSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1);
+    public final InvSlot fuelSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1){
+        @Override
+        public boolean accepts(final ItemStack stack, final int index) {
+            return ModUtils.getFuelValue(stack, false) > 0;
+        }
+    };
 
     private final double coef;
 

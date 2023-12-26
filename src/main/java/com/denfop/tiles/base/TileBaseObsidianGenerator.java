@@ -64,7 +64,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         this.defaultTier = aDefaultTier;
         this.defaultEnergyStorage = energyPerTick * length;
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.outputSlot1 = new InvSlotOutput(this, "output1", 1);
+        this.outputSlot1 = new InvSlotOutput(this, 1);
 
         this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
         this.fluidSlot2 = new InvSlotFluidByList(this, 1, FluidRegistry.LAVA);

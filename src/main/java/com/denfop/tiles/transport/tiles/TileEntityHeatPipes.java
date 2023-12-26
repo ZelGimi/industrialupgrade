@@ -43,14 +43,12 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
         super(cableType);
         this.cableType = cableType;
         this.addedToEnergyNet = false;
-        this.active = this.cableType.name();
     }
 
     public TileEntityHeatPipes() {
         super(HeatType.pipes);
         this.cableType = HeatType.pipes;
         this.addedToEnergyNet = false;
-        this.active = this.cableType.name();
     }
 
     public static TileEntityHeatPipes delegate(HeatType cableType) {
@@ -139,7 +137,7 @@ public class TileEntityHeatPipes extends TileEntityMultiCable implements IHeatCo
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;

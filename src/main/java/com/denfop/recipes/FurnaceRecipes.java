@@ -27,6 +27,17 @@ public class FurnaceRecipes {
         GameRegistry.addSmelting(new ItemStack(IUItem.ore, 1, 14), new ItemStack(IUItem.iuingot, 1, 17), 5);
         GameRegistry.addSmelting(new ItemStack(IUItem.ore, 1, 15), new ItemStack(IUItem.iuingot, 1, 18), 5);
 
+        GameRegistry.addSmelting(new ItemStack(IUItem.ore2, 1, 3), new ItemStack(IUItem.iuingot, 1, 25), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.ore2, 1, 4), new ItemStack(IUItem.iuingot, 1, 26), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.ore2, 1, 5), new ItemStack(IUItem.iuingot, 1, 27), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.iudust, 1, 34), new ItemStack(IUItem.iuingot, 1, 25), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.iudust, 1, 35), new ItemStack(IUItem.iuingot, 1, 26), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.iudust, 1, 36), new ItemStack(IUItem.iuingot, 1, 27), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.crushed, 1, 25), new ItemStack(IUItem.iuingot, 1, 25), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.crushed, 1, 26), new ItemStack(IUItem.iuingot, 1, 26), 5);
+        GameRegistry.addSmelting(new ItemStack(IUItem.crushed, 1, 27), new ItemStack(IUItem.iuingot, 1, 27), 5);
+
+
         GameRegistry.addSmelting(IUItem.leadOre, IUItem.leadIngot, 5);
         GameRegistry.addSmelting(IUItem.copperOre, IUItem.copperIngot, 5);
         GameRegistry.addSmelting(IUItem.tinOre, IUItem.tinIngot, 5);

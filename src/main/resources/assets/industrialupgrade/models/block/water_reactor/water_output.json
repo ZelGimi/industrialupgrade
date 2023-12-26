@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/water_reactor/casing",
+    "down" : "industrialupgrade:blocks/water_reactor/casing",
+    "up" : "industrialupgrade:blocks/water_reactor/casing",
+    "north" : "industrialupgrade:blocks/water_reactor/output",
+    "east" : "industrialupgrade:blocks/water_reactor/casing",
+    "south" : "industrialupgrade:blocks/water_reactor/casing",
+    "west" : "industrialupgrade:blocks/water_reactor/casing"
+  }
+}

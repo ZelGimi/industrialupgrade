@@ -133,7 +133,7 @@ public class TileEntitySCable extends TileEntityMultiCable implements IConductor
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;
@@ -197,7 +197,9 @@ public class TileEntitySCable extends TileEntityMultiCable implements IConductor
 
     @Override
     public void update_render() {
-        this.updateConnectivity();
+        if (!this.getWorld().isRemote) {
+            this.updateConnectivity();
+        }
     }
 
     @Override

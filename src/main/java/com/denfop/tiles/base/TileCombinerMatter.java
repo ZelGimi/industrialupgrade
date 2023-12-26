@@ -59,7 +59,7 @@ public class TileCombinerMatter extends TileElectricLiquidTankInventory implemen
         super(0, 14, 12);
         this.energycost = 0;
         this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1,
                 InvSlotFluid.TypeFluidSlot.OUTPUT, FluidName.fluiduu_matter.getInstance()
         );

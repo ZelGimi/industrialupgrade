@@ -30,7 +30,7 @@ public class TypeProperty implements IProperty<State> {
         for (IMultiTileBlock teBlock : value.getTeBlocks()) {
 
             String stateName = teBlock.hasActive() ? "active" : "";
-            String[] multiModels = teBlock.getMultiModels();
+            String[] multiModels = teBlock.getMultiModels(teBlock);
             locationBlocks.add(new StatesBlocks(teBlock, stateName, multiModels));
             mapStates.put(teBlock, locationBlocks.get(locationBlocks.size() - 1));
         }

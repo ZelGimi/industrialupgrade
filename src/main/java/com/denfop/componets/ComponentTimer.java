@@ -65,12 +65,15 @@ public class ComponentTimer extends AbstractComponent {
     }
 
     public void setCanWork(final boolean canWork) {
+        boolean oldWork = this.canWork;
         this.canWork = canWork;
-        if (!this.canWork) {
+        if (oldWork && !this.canWork) {
             this.resetTime();
         }
     }
-
+    public void setCanWorkWithOut(final boolean canWork) {
+        this.canWork = canWork;
+    }
     public void resetTime() {
         for (int i = 0; i < this.timers.size(); i++) {
             this.timers.get(i).readTimer(this.defaultTimers.get(i));
@@ -86,7 +89,16 @@ public class ComponentTimer extends AbstractComponent {
         }
 
     }
+    public double getTimes() {
+        if (this.indexWork != -1) {
+            final int max = this.getDefaultTimers().get(this.indexWork).getBar();
+            return  (max -this.timers.get(this.indexWork).getBar() )/(max*1D);
+        } else {
+            final int max = this.getDefaultTimers().get(this.timers.size() - 1).getBar();
+            return (max - this.timers.get(this.timers.size() - 1).getBar())  / (max*1D);
+        }
 
+    }
     public NBTTagCompound writeNBTToDrops(NBTTagCompound tagCompound) {
         tagCompound.setInteger("size", this.timers.size());
         for (int i = 0; i < this.timers.size(); i++) {

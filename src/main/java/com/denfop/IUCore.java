@@ -57,7 +57,6 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -77,7 +76,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
@@ -94,6 +92,7 @@ public final class IUCore {
     public static final CreativeTabs UpgradeTab = new TabCore(7, "UpgradeTab");
     public static final CreativeTabs BlueprintTab = new TabCore(8, "BlueprintTab");
     public static final CreativeTabs ElementsTab = new TabCore(9, "CraftingElementsTab");
+    public static final CreativeTabs ReactorsBlockTab = new TabCore(10, "ReactorsBlockTab");
 
     public static final List<IMultiTileBlock> list_teBlocks = new ArrayList<>();
     public static final Map<Integer, EnumModule> modules = new HashMap<>();
@@ -536,14 +535,6 @@ public final class IUCore {
 
     }
 
-    @Mod.EventHandler
-    public void init(final FMLFingerprintViolationEvent event) {
-        java.util.logging.Logger.getLogger(this.getClass().getName()).log(
-                Level.SEVERE,
-                "Invalid fingerprint detected! The file " + event.getSource().getName() +
-                        " may have been tampered with. This version will NOT be supported by the author!"
-        );
-    }
 
     public void addOre(String name) {
         if (OreDictionary.getOres(name).size() >= 1) {

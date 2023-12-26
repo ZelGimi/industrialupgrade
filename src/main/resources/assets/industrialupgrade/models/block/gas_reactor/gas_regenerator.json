@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/gas_reactor/regenerator_main",
+    "down" : "industrialupgrade:blocks/gas_reactor/casing",
+    "up" : "industrialupgrade:blocks/gas_reactor/casing",
+    "north" : "industrialupgrade:blocks/gas_reactor/regenerator_main",
+    "east" : "industrialupgrade:blocks/gas_reactor/regenerator_side",
+    "south" : "industrialupgrade:blocks/gas_reactor/casing",
+    "west" : "industrialupgrade:blocks/gas_reactor/regenerator_side"
+  }
+}

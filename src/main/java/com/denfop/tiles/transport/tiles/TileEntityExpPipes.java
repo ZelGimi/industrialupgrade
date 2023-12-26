@@ -143,7 +143,7 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;
@@ -205,7 +205,9 @@ public class TileEntityExpPipes extends TileEntityMultiCable implements IConduct
 
     @Override
     public void update_render() {
-        this.updateConnectivity();
+        if (!this.getWorld().isRemote) {
+            this.updateConnectivity();
+        }
     }
 
     @Override

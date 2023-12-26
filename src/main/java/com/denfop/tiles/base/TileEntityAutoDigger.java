@@ -42,7 +42,7 @@ public class TileEntityAutoDigger extends TileEntityInventory {
         this.chance = 0;
         this.col = 1;
         this.furnace = false;
-        this.outputSlot = new InvSlotOutput(this, "output", 48);
+        this.outputSlot = new InvSlotOutput(this, 48);
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 500000, 14));
         this.inputslot = new InvSlotInput(this, 16);
 

@@ -115,7 +115,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         this.energy1 = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 200000, 14));
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
 
-        this.outputSlot = new InvSlotOutput(this, "output", 24);
+        this.outputSlot = new InvSlotOutput(this, 24);
         this.work = true;
         this.index = index;
         this.speed = Math.pow(2, index - 1);

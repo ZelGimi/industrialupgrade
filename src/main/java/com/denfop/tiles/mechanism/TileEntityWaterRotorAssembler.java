@@ -17,6 +17,7 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AdvEnergy;
 import com.denfop.container.ContainerWaterRotorAssembler;
 import com.denfop.gui.GuiWaterRotorAssembler;
+import com.denfop.items.reactors.ItemDamage;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
@@ -58,13 +59,14 @@ public class TileEntityWaterRotorAssembler extends TileEntityInventory implement
         this.defaultTier = 14;
         this.defaultEnergyStorage = 2 * 100;
         this.recipe = null;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, defaultEnergyStorage, defaultTier));
         Recipes.recipes.addInitRecipes(this);
     }
 
     public static void addRecipe(int meta, int meta1, ItemStack stack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        ((ItemDamage)stack.getItem()).setCustomDamage(stack,((ItemDamage)stack.getItem()).getMaxCustomDamage(stack));
         Recipes.recipes.addRecipe("water_rotor_assembler", new BaseMachineRecipe(
                 new Input(
                         input.getInput(new ItemStack(IUItem.water_rod, 1, meta)),

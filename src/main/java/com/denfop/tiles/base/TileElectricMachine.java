@@ -56,7 +56,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         }
 
         if (count != 0) {
-            this.outputSlot = new InvSlotOutput(this, "output", count);
+            this.outputSlot = new InvSlotOutput(this, count);
         }
         if (MaxEnergy != 0) {
             this.guiChargeLevel = this.energy.getFillRatio();

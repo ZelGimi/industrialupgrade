@@ -49,7 +49,6 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         this.cableType = cableType;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
-        this.active = this.cableType.name();
     }
 
 
@@ -58,7 +57,6 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         this.cableType = CoolType.cool;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
-        this.active = this.cableType.name();
 
     }
 
@@ -104,6 +102,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         }
 
     }
+
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
         super.updateTileServer(var1, var2);
@@ -120,6 +119,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
             this.updateConnectivity();
         }
     }
+
     public void onUnloaded() {
         if (IUCore.proxy.isSimulating() && this.addedToEnergyNet) {
             MinecraftForge.EVENT_BUS.post(new CoolTileUnloadEvent(this, this.getWorld()));
@@ -151,7 +151,7 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;
@@ -159,15 +159,16 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
         for (EnumFacing dir : var4) {
             newConnectivity = (byte) (newConnectivity << 1);
             ICoolTile tile = CoolNet.instance.getSubTile(world, this.pos.offset(dir));
-            if (!this.getBlackList().contains(dir))
-            if ((tile instanceof ICoolAcceptor && ((ICoolAcceptor) tile).acceptsCoolFrom(
-                    this,
-                    dir.getOpposite()
-            ) || tile instanceof ICoolEmitter && ((ICoolEmitter) tile).emitsCoolTo(
-                    this,
-                    dir.getOpposite()
-            )) && this.canInteractWith()) {
-                newConnectivity = (byte) (newConnectivity + 1);
+            if (!this.getBlackList().contains(dir)) {
+                if ((tile instanceof ICoolAcceptor && ((ICoolAcceptor) tile).acceptsCoolFrom(
+                        this,
+                        dir.getOpposite()
+                ) || tile instanceof ICoolEmitter && ((ICoolEmitter) tile).emitsCoolTo(
+                        this,
+                        dir.getOpposite()
+                )) && this.canInteractWith()) {
+                    newConnectivity = (byte) (newConnectivity + 1);
+                }
             }
 
 
@@ -208,7 +209,9 @@ public class TileEntityCoolPipes extends TileEntityMultiCable implements ICoolCo
 
     @Override
     public void update_render() {
-        updateConnectivity();
+        if (!this.getWorld().isRemote) {
+            this.updateConnectivity();
+        }
     }
 
 

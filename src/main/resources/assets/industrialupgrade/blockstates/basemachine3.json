@@ -439,6 +439,84 @@
       },
 	   "facademechanism" : {
         "model" : "industrialupgrade:basemachine/facademechanism"
+      },
+	   "battery_factory" : {
+        "model" : "industrialupgrade:basemachine/battery_factory"
+      },
+	   "battery_factory_active" : {
+        "model" : "industrialupgrade:basemachine/battery_factory_active"
+      },
+	   "socket_factory" : {
+        "model" : "industrialupgrade:basemachine/socket_factory"
+      },
+	   "socket_factory_active" : {
+        "model" : "industrialupgrade:basemachine/socket_factory_active"
+      },
+	   "matter_factory" : {
+        "model" : "industrialupgrade:basemachine/matter_factory"
+      },
+	   "matter_factory_active" : {
+        "model" : "industrialupgrade:basemachine/matter_factory_active"
+      },
+	   "laser_polisher" : {
+        "model" : "industrialupgrade:basemachine/laser_polisher"
+      },
+	   "laser_polisher_active" : {
+        "model" : "industrialupgrade:basemachine/laser_polisher_active"
+      },
+	   "graphite_handler" : {
+        "model" : "industrialupgrade:basemachine/graphite_handler"
+      },
+	   "graphite_handler_active" : {
+        "model" : "industrialupgrade:basemachine/graphite_handler_active"
+      },
+	   "moon_spotter" : {
+        "model" : "industrialupgrade:basemachine/moon_spotter"
+      },
+	   "moon_spotter_active" : {
+        "model" : "industrialupgrade:basemachine/moon_spotter_active"
+      },
+	   "stamp_mechanism" : {
+        "model" : "industrialupgrade:basemachine/stamp_mechanism"
+      },
+	   "stamp_mechanism_active" : {
+        "model" : "industrialupgrade:basemachine/stamp_mechanism_active"
+      },
+	   "reactor_rod_factory" : {
+        "model" : "industrialupgrade:basemachine/reactor_rod_factory"
+      },
+	   "reactor_rod_factory_active" : {
+        "model" : "industrialupgrade:basemachine/reactor_rod_factory_active"
+      },
+	   "nuclear_waste_recycler" : {
+        "model" : "industrialupgrade:basemachine/nuclear_waste_recycler"
+      },
+	   "nuclear_waste_recycler_active" : {
+        "model" : "industrialupgrade:basemachine/nuclear_waste_recycler_active"
+      },
+	   "reactor_safety_doom" : {
+        "model" : "industrialupgrade:basemachine/reactor_safety_doom"
+      },
+	   "reactor_safety_doom_active" : {
+        "model" : "industrialupgrade:basemachine/reactor_safety_doom_active"
+      },
+	   "pallet_generator" : {
+        "model" : "industrialupgrade:basemachine/pallet_generator"
+      },
+	   "pallet_generator_active" : {
+        "model" : "industrialupgrade:basemachine/pallet_generator_active"
+      },
+	   "enchanter_books" : {
+        "model" : "industrialupgrade:basemachine/enchanter_books"
+      },
+	   "enchanter_books_active" : {
+        "model" : "industrialupgrade:basemachine/enchanter_books_active"
+      },
+	   "refrigerator_coolant" : {
+        "model" : "industrialupgrade:basemachine/refrigerator_coolant"
+      },
+	   "refrigerator_coolant_active" : {
+        "model" : "industrialupgrade:basemachine/refrigerator_coolant_active"
       }
 	  
     },

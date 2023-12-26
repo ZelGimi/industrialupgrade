@@ -58,6 +58,10 @@ public class ItemNugget extends ItemSubTypes<ItemNugget.Types> implements IModel
         manganese(16),
         iridium(17),
         germanium(18),
+
+        osmium(19),
+        tantalum(20),
+        cadmium(21)
         ;
 
         private final String name;

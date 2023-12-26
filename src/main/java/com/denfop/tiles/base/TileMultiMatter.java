@@ -66,7 +66,7 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
         this.amplifierSlot = new InvSlotRecipes(this, "matterAmplifier", this);
 
         this.energycost = storageEnergy * 1;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
@@ -273,7 +273,8 @@ public abstract class TileMultiMatter extends TileElectricMachine implements IUp
                 UpgradableProperty.Transformer,
                 UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

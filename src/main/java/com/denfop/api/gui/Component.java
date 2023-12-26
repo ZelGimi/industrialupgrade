@@ -5,6 +5,8 @@ import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentProcessRender;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentTimer;
 import com.denfop.componets.CoolComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.utils.ModUtils;
@@ -187,7 +189,20 @@ public class Component<T> {
                     )) + "/" + ModUtils.getString(component.getCapacity()) + " " +
                             "EF";
 
-        } else if (this.component instanceof ComponentBaseEnergy) {
+        } else if (this.component instanceof ComponentTimer) {
+
+            text =
+                  ((ComponentTimer) this.component).getTime();
+
+        }else if (this.component instanceof ComponentProgress) {
+
+            text =
+                    ModUtils.getString(Math.min(
+                            100,
+                            ((ComponentProgress) this.component).getBar() * 100
+                    )) + "%" ;
+
+        }else if (this.component instanceof ComponentBaseEnergy) {
 
             ComponentBaseEnergy component = (ComponentBaseEnergy) this.component;
             text =

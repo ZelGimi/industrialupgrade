@@ -50,7 +50,7 @@ public abstract class TileBasePlasticPlateCreator extends TileElectricLiquidTank
     public TileBasePlasticPlateCreator(int energyPerTick, int length, int aDefaultTier) {
         super(energyPerTick * length, 1, 12, Fluids.fluidPredicate(FluidName.fluidoxy.getInstance()));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.outputSlot1 = new InvSlotOutput(this, "output1", 1);
+        this.outputSlot1 = new InvSlotOutput(this, 1);
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidoxy.getInstance());
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,

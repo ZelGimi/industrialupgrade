@@ -210,7 +210,9 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
     public boolean addsProtection(EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack stack) {
         return true;
     }
-
+    public int getLevel() {
+        return 2;
+    }
     public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player) {
         return false;
     }

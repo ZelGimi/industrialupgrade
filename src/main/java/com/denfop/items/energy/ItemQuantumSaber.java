@@ -15,6 +15,7 @@ import com.denfop.audio.SoundHandler;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.network.packet.PacketSoundPlayer;
+import com.denfop.network.packet.PacketStopSoundPlayer;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
@@ -330,7 +331,7 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
             NBTTagCompound nbt = ModUtils.nbt(stack);
             if (isActive(nbt)) {
                 setActive(nbt, false);
-                SoundHandler.stopSound(EnumSound.NanosabreIdle);
+                new PacketStopSoundPlayer(EnumSound.NanosabreIdle,player);
                 return new ActionResult<>(EnumActionResult.SUCCESS, stack);
             } else if (ElectricItem.manager.canUse(stack, 16.0D)) {
                 setActive(nbt, true);

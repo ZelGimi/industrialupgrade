@@ -18,7 +18,7 @@ public class CompressorRecipe {
 
     public static final String[] recipe = {"plate", "smalldust", "verysmalldust"};
     public static final String[] recipe1 = {"doubleplate", "dust", "smalldust"};
-
+    public static final String[] recipe2 = {"Osmium", "Tantalum", "Cadmium"};
     public static void recipe() {
         addcompressor(ModUtils.setSize(IUItem.iridiumShard, 9), IUItem.iridiumOre);
 
@@ -52,6 +52,35 @@ public class CompressorRecipe {
 
 
         }
+
+        addcompressor(
+                "blockOsmium" ,
+                1,
+                "doubleplateOsmium"
+        );
+        addcompressor(
+                "blockTantalum" ,
+                1,
+                "doubleplateTantalum"
+        );
+        addcompressor(
+                "blockCadmium" ,
+                1,
+                "doubleplateCadmium"
+        );
+       
+            for (String s : recipe2) {
+                for (int i = 0; i < recipe1.length; i++) {
+                    addcompressor(
+                            recipe[i] + s,
+                            9,
+                            recipe1[i] + s
+                    );
+
+                }
+            }
+
+
         for (int j = 0; j < recipe.length; j++) {
             for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 

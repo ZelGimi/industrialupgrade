@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/gas_reactor/imp_socket",
+    "down" : "industrialupgrade:blocks/gas_reactor/imp_casing",
+    "up" : "industrialupgrade:blocks/gas_reactor/imp_casing",
+    "north" : "industrialupgrade:blocks/gas_reactor/imp_socket",
+    "east" : "industrialupgrade:blocks/gas_reactor/imp_socket_side",
+    "south" : "industrialupgrade:blocks/gas_reactor/imp_socket_side",
+    "west" : "industrialupgrade:blocks/gas_reactor/imp_socket_side"
+  }
+}

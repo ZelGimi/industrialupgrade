@@ -18,7 +18,9 @@ public class IngredientInput extends Ingredient {
     private IntList list;
 
     public IngredientInput(final IInputItemStack input) {
+        super(0);
         this.input = input;
+
     }
 
     public ItemStack[] getMatchingStacks() {

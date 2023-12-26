@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/graphite_reactor/imp_tank_top",
+    "down" : "industrialupgrade:blocks/graphite_reactor/imp_tank_top",
+    "up" : "industrialupgrade:blocks/graphite_reactor/imp_tank_top",
+    "north" : "industrialupgrade:blocks/graphite_reactor/imp_tank",
+    "east" : "industrialupgrade:blocks/graphite_reactor/imp_tank",
+    "south" : "industrialupgrade:blocks/graphite_reactor/imp_tank",
+    "west" : "industrialupgrade:blocks/graphite_reactor/imp_tank"
+  }
+}

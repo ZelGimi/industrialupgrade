@@ -110,12 +110,12 @@ public class ModelBaseCable extends ModelBase {
             }
         }
 
-
     }
 
 
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float scale) {
-
+        if(this.boxList.size() > 0)
+        this.boxList.remove(0);
         model.render(0.0625F);
     }
 

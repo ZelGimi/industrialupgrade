@@ -64,6 +64,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, IMod
         this.armorName = name;
         setCreativeTab(IUCore.EnergyTab);
         setMaxStackSize(1);
+        this.setMaxDamage(0);
         this.maxStorage = maxStorage;
         this.TransferLimit = TransferLimit;
         this.tier = tier;

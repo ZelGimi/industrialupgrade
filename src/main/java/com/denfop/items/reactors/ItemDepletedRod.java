@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemDepletedRod extends Item implements IReactorComponent, IModelRegister, IRadioactiveItemType {
+public class ItemDepletedRod extends Item implements  IModelRegister, IRadioactiveItemType {
 
 
     public final String name;
@@ -98,10 +98,6 @@ public class ItemDepletedRod extends Item implements IReactorComponent, IModelRe
     }
 
 
-    @Override
-    public boolean canBePlacedIn(final ItemStack itemStack, final IAdvReactor AdvReactor) {
-        return false;
-    }
 
     @Override
     public int getRadiationDuration() {

@@ -205,6 +205,10 @@ public class InvSlot {
         this.stackSizeLimit = stackSizeLimit;
     }
 
+    public void set(int i, ItemStack empty) {
+        this.contents.set(i,empty);
+    }
+
 
     public enum TypeItemSlot {
         INPUT,

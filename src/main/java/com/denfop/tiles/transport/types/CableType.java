@@ -1,6 +1,8 @@
 package com.denfop.tiles.transport.types;
 
+import com.denfop.Constants;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,12 +47,19 @@ public enum CableType implements IStringSerializable, ICableItem {
     public final double capacity;
     public final int insulation;
 
+    private final ResourceLocation texture;
+
     CableType(float thickness, double loss, double capacity) {
 
         this.thickness = thickness;
         this.loss = loss;
         this.capacity = capacity;
         this.insulation = 0;
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     CableType(float thickness, double loss, double capacity, int insulation) {
@@ -59,6 +68,12 @@ public enum CableType implements IStringSerializable, ICableItem {
         this.loss = loss;
         this.capacity = capacity;
         this.insulation = insulation;
+
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     public static CableType get(String name) {
@@ -82,5 +97,12 @@ public enum CableType implements IStringSerializable, ICableItem {
     @Override
     public String getMainPath() {
         return "cable";
+    }
+
+
+
+    @Override
+    public ResourceLocation getRecourse() {
+        return texture;
     }
 }

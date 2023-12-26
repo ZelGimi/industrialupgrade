@@ -1,11 +1,18 @@
 package com.denfop.api.gui;
 
 import com.denfop.Constants;
-import com.denfop.componets.*;
+import com.denfop.componets.ComponentButton;
+import com.denfop.componets.ComponentProcessRender;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.ComponentSoundButton;
+import com.denfop.componets.ComponentTimer;
+import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.container.SlotVirtual;
 import com.denfop.gui.GuiCore;
 import com.denfop.gui.GuiIU;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Slot;
@@ -114,7 +121,36 @@ public class GuiComponent extends GuiElement<GuiComponent> {
         }
 
     }
-
+    public void renderBar(int mouseX, int mouseY, double bar) {
+        this.gui.drawTexturedModalRect(
+                mouseX + this.x,
+                mouseY + this.y,
+                type.getX(),
+                type.getY(),
+                type.getWeight(),
+                type.getHeight()
+        );
+        if (this.type.getRender() == EnumTypeRender.WEIGHT) {
+            this.gui.drawTexturedModalRect(
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    type.getX1(),
+                    type.getY1(),
+                    (int) (bar * type.getWeight()),
+                    type.getHeight()
+            );
+        }
+        if (this.type.getRender() == EnumTypeRender.HEIGHT) {
+            this.gui.drawTexturedModalRect(
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    type.getX1(),
+                    type.getY1(),
+                    (int) ( type.getWeight()),
+                    (int) (bar *type.getHeight())
+            );
+        }
+    }
     public void drawBackground(int mouseX, int mouseY) {
         if (this.component == null || this.component.getComponent() == null) {
             return;
@@ -143,11 +179,20 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                             type.getHeight()
                     );
                 }
+            }else{
+                this.gui.drawTexturedModalRect(
+                        mouseX + this.x,
+                        mouseY + this.y,
+                        type.getX(),
+                        type.getY(),
+                        type.getWeight(),
+                        type.getHeight()
+                );
             }
             return;
         }
 
-        if (!(this.component.getComponent() instanceof ComponentRenderInventory) && !(this.component.getComponent() instanceof ComponentProcessRender)) {
+        if (!(this.component.getComponent() instanceof ComponentRenderInventory) && !(this.component.getComponent() instanceof ComponentProcessRender) && !(this.component.getComponent() instanceof ComponentTimer) && !(this.component.getComponent() instanceof ComponentProgress)) {
             this.gui.drawTexturedModalRect(
                     mouseX + this.x,
                     mouseY + this.y,
@@ -157,6 +202,68 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                     type.getHeight()
             );
             this.component.drawBackground(mouseX, mouseY, this);
+        } else if (this.component.getComponent() instanceof ComponentProgress) {
+            this.gui.drawTexturedModalRect(
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    type.getX(),
+                    type.getY(),
+                    type.getWeight(),
+                    type.getHeight()
+            );
+            ComponentProgress component = (ComponentProgress) this.component.getComponent();
+            final double scale = component.getBar();
+            if (this.type.getRender() == EnumTypeRender.WEIGHT) {
+                this.gui.drawTexturedModalRect(
+                        mouseX + this.x,
+                        mouseY + this.y,
+                        type.getX1(),
+                        type.getY1(),
+                        (int) (scale * type.getWeight()),
+                        type.getHeight()
+                );
+            }
+            if (this.type.getRender() == EnumTypeRender.HEIGHT) {
+                this.gui.drawTexturedModalRect(
+                        mouseX + this.x,
+                        mouseY + this.y,
+                        type.getX1(),
+                        type.getY1(),
+                        (int) ( type.getWeight()),
+                        (int) (scale *type.getHeight())
+                );
+            }
+        } else if (this.component.getComponent() instanceof ComponentTimer) {
+            this.gui.drawTexturedModalRect(
+                    mouseX + this.x,
+                    mouseY + this.y,
+                    type.getX(),
+                    type.getY(),
+                    type.getWeight(),
+                    type.getHeight()
+            );
+            ComponentTimer component = (ComponentTimer) this.component.getComponent();
+            final double scale = component.getTimes();
+            if (this.type.getRender() == EnumTypeRender.WEIGHT) {
+                this.gui.drawTexturedModalRect(
+                        mouseX + this.x,
+                        mouseY + this.y,
+                        type.getX1(),
+                        type.getY1(),
+                        (int) (scale * type.getWeight()),
+                        type.getHeight()
+                );
+            }
+            if (this.type.getRender() == EnumTypeRender.HEIGHT) {
+                this.gui.drawTexturedModalRect(
+                        mouseX + this.x,
+                        mouseY + this.y,
+                        type.getX1(),
+                        type.getY1(),
+                        (int) ( type.getWeight()),
+                        (int) (scale *type.getHeight())
+                );
+            }
         } else if (this.component.getComponent() instanceof ComponentProcessRender) {
             ComponentProcessRender component = (ComponentProcessRender) this.component.getComponent();
             ProcessMultiComponent processMultiComponent = component.getProcess();
@@ -334,7 +441,7 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         type.getHeight()
                                 );
                             }
-                        }else if(slot instanceof SlotVirtual) {
+                        } else if (slot instanceof SlotVirtual) {
                             int xX = slot.xPos;
                             int yY = slot.yPos;
                             this.setX(xX - 1);
@@ -342,6 +449,45 @@ public class GuiComponent extends GuiElement<GuiComponent> {
 
 
                             int xx = 0;
+                            switch (this.type) {
+                                case ADVANCED:
+                                    xx = 8;
+                                    break;
+                                case IMPROVED:
+                                    xx = 16;
+                                    break;
+                                case PERFECT:
+                                    xx = 24;
+                                    break;
+                            }
+                            this.gui.drawTexturedModalRect(
+                                    mouseX + this.x,
+                                    mouseY + this.y,
+                                    type.getX(),
+                                    type.getY(),
+                                    type.getWeight(),
+                                    type.getHeight()
+                            );
+
+
+                        }
+                    }
+                    break;
+                case SLOTS_UPGRADE_JEI:
+                    for (Slot slot : this.gui.getContainer().inventorySlots) {
+                        if (slot instanceof SlotInvSlot) {
+                            if(((SlotInvSlot) slot).invSlot instanceof InvSlotUpgrade)
+                                continue;
+                            int xX = slot.xPos;
+                            int yY = slot.yPos;
+                            this.setX(xX - 1);
+                            this.setY(yY - 1);
+                            SlotInvSlot slotInvSlot = (SlotInvSlot) slot;
+                            if (component.getBlackSlotList().contains(slotInvSlot.invSlot)) {
+                                continue;
+                            }
+                            if (component.getSlotList().contains(slotInvSlot.invSlot)) {
+                                int xx = 0;
                                 switch (this.type) {
                                     case ADVANCED:
                                         xx = 8;
@@ -353,6 +499,67 @@ public class GuiComponent extends GuiElement<GuiComponent> {
                                         xx = 24;
                                         break;
                                 }
+                                this.gui.drawTexturedModalRect(
+                                        mouseX + this.x - 4,
+                                        mouseY + this.y - 4,
+                                        type.getX() - 160 - xx,
+                                        type.getY() + 114,
+                                        26,
+                                        26
+                                );
+                            } else if (!this.gui_iu.isBlack) {
+                                this.gui.drawTexturedModalRect(
+                                        mouseX + this.x,
+                                        mouseY + this.y,
+                                        type.getX(),
+                                        type.getY(),
+                                        type.getWeight(),
+                                        type.getHeight()
+                                );
+                            } else {
+                                this.gui.drawTexturedModalRect(
+                                        mouseX + this.x,
+                                        mouseY + this.y,
+                                        type.getX(),
+                                        type.getY() + 18,
+                                        type.getWeight(),
+                                        type.getHeight()
+                                );
+                            }
+                            if (((SlotInvSlot) slot).invSlot instanceof ITypeSlot) {
+                                ITypeSlot typeSlot = (ITypeSlot) ((SlotInvSlot) slot).invSlot;
+                                final EnumTypeSlot type = typeSlot.getTypeSlot(((SlotInvSlot) slot).index);
+                                if (type == null) {
+                                    continue;
+                                }
+                                this.gui.drawTexturedModalRect(
+                                        mouseX + this.x,
+                                        mouseY + this.y,
+                                        type.getX(),
+                                        type.getY(),
+                                        type.getWeight(),
+                                        type.getHeight()
+                                );
+                            }
+                        } else if (slot instanceof SlotVirtual) {
+                            int xX = slot.xPos;
+                            int yY = slot.yPos;
+                            this.setX(xX - 1);
+                            this.setY(yY - 1);
+
+
+                            int xx = 0;
+                            switch (this.type) {
+                                case ADVANCED:
+                                    xx = 8;
+                                    break;
+                                case IMPROVED:
+                                    xx = 16;
+                                    break;
+                                case PERFECT:
+                                    xx = 24;
+                                    break;
+                            }
                             this.gui.drawTexturedModalRect(
                                     mouseX + this.x,
                                     mouseY + this.y,

@@ -74,6 +74,7 @@ public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, IModelR
         setCreativeTab(IUCore.EnergyTab);
         this.setUnlocalizedName(name);
 
+        this.setMaxDamage(0);
         this.name = name;
         this.tier = Tier;
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);

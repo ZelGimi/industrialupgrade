@@ -5,6 +5,9 @@ import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.api.sytem.IDual;
+import com.denfop.api.sytem.ISink;
+import com.denfop.api.sytem.ISource;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.item.ItemStack;
@@ -34,6 +37,9 @@ public class ComponentProcess extends AbstractComponent {
     private ComponentUpgrade componentUpgrade;
     private boolean instant;
     private boolean stack;
+    private ComponentBaseEnergy componentRad;
+    private boolean exp;
+    private ComponentBaseEnergy componentExp;
 
     public ComponentProcess(
             final TileEntityInventory parent,
@@ -67,6 +73,10 @@ public class ComponentProcess extends AbstractComponent {
         this.heatComponent = this.getParent().getComp(HeatComponent.class);
         this.coldComponent = this.getParent().getComp(CoolComponent.class);
         this.componentSE = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergysolarium");
+        this.componentRad = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergyradiation");
+        if(this.exp){
+            this.componentExp = this.getParent().getComp("com.denfop.componets.ComponentBaseEnergyexperience");
+        }
         this.audoFix = this.getParent() instanceof IAudioFixer;
         this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
     }
@@ -130,7 +140,36 @@ public class ComponentProcess extends AbstractComponent {
                 .getRecipe().input
                 .getFluid().amount));
     }
-
+    public boolean checkRadiation(boolean consume){
+        if(componentRad == null)
+            return true;
+        if(componentRad.getDelegate() instanceof ISource && !(componentRad.getDelegate() instanceof IDual)){
+            return true;
+        }else{
+            if(this.updateTick.getRecipeOutput() == null){
+                return false;
+            }else{
+                final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInteger("rad_amount");
+                if(consume){
+                    this.componentRad.useEnergy(amount);
+                }
+                return this.componentRad.getEnergy() >= amount;
+            }
+        }
+    }
+    public boolean checkExp(boolean consume){
+        if(componentExp == null)
+            return true;
+        if(this.updateTick.getRecipeOutput() == null){
+            return false;
+        }else{
+            final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInteger("exp");
+            if(consume){
+                this.componentExp.useEnergy(amount);
+            }
+            return this.componentExp.getEnergy() >= amount;
+        }
+    }
     public boolean checkHeatRecipe() {
         if (this.heatComponent == null) {
             return true;
@@ -173,6 +212,7 @@ public class ComponentProcess extends AbstractComponent {
                 int count = this.outputSlot.get().isEmpty() ? 64 : 64 - this.outputSlot.get().getCount();
                 count = count / this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getCount();
                 size = Math.min(size, count);
+                size = Math.min(size, this.updateTick.getRecipeOutput().getRecipe().output.items.get(0).getItem().getItemStackLimit());
                 if (this.updateTick.getRecipeOutput().getRecipe().input.getFluid() != null) {
                     final int size1 = this.invSlotRecipes.getTank().getFluidAmount() / this.updateTick
                             .getRecipeOutput()
@@ -189,7 +229,7 @@ public class ComponentProcess extends AbstractComponent {
                 this.updateTick
                         .getRecipeOutput()
                         .getRecipe()
-                        .getOutput().items) && checkFluidRecipe() && checkHeatRecipe() && checkSE()) {
+                        .getOutput().items) && checkExp(false) && checkFluidRecipe() && checkHeatRecipe() && checkSE() && checkRadiation(false) && this.invSlotRecipes.continue_process(this.updateTick.getRecipeOutput())) {
             if (this.heatComponent != null) {
                 this.heatComponent.need = true;
             }
@@ -320,6 +360,8 @@ public class ComponentProcess extends AbstractComponent {
     public void operateOnce(List<ItemStack> processResult) {
         this.invSlotRecipes.consume();
         this.outputSlot.add(processResult);
+        checkRadiation(true);
+        checkExp(true);
     }
 
     public void operate(MachineRecipe output) {
@@ -330,7 +372,7 @@ public class ComponentProcess extends AbstractComponent {
 
             List<ItemStack> processResult = output.getRecipe().output.items;
             operateOnce(processResult);
-            if (!this.invSlotRecipes.continue_process(this.updateTick.getRecipeOutput()) || !this.outputSlot.canAdd(output.getRecipe().output.items)) {
+            if ((!this.invSlotRecipes.continue_process(this.updateTick.getRecipeOutput()) || !this.outputSlot.canAdd(output.getRecipe().output.items)) && !checkRadiation(false) && !checkExp(false)) {
                 getOutput();
                 break;
             }
@@ -343,6 +385,10 @@ public class ComponentProcess extends AbstractComponent {
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    public void setExpSource() {
+        this.exp = true;
     }
 
 }

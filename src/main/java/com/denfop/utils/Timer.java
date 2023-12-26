@@ -47,7 +47,9 @@ public class Timer {
         return this.hour + Localization.translate("iu.hour") + this.minute + Localization.translate("iu.minutes") + this.seconds + Localization.translate(
                 "iu.seconds");
     }
-
+    public int getBar() {
+        return (this.hour * 3600 + this.minute * 60 + this.seconds);
+    }
     public int getTime() {
         return this.seconds + this.minute * 60 + this.hour * 3600;
     }
@@ -66,9 +68,23 @@ public class Timer {
             canWork = false;
         }
     }
-
+    public void rework(){
+        seconds++;
+        if(seconds == 60){
+            seconds = 0;
+            this.minute++;
+            if(minute == 60){
+                minute = 0;
+                this.hour++;
+            }
+        }
+    }
     public boolean canWork() {
         return canWork;
+    }
+
+    public void setCanWork(final boolean canWork) {
+        this.canWork = canWork;
     }
 
     public void readNBT(NBTTagCompound tagCompound) {
@@ -89,6 +105,10 @@ public class Timer {
         Timer timer = new Timer(this.hour, this.minute, this.seconds);
         timer.canWork = this.canWork;
         return timer;
+    }
+
+    public boolean getMinute(int minute) {
+        return this.minute == minute;
     }
 
 }

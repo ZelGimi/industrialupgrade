@@ -67,7 +67,12 @@ public enum EnumSound {
     Treetap(TypePath.Tools, "Treetap"),
     wrench(TypePath.Tools, "wrench"),
     teleporter(TypePath.Machines, "teleporter"),
-    katana(TypePath.Tools, "katana");
+    katana(TypePath.Tools, "katana"),
+    low_radiation(TypePath.Radiation, "low"),
+    default_radiation(TypePath.Radiation, "default"),
+    medium_radiation(TypePath.Radiation, "medium"),
+    high_radiation(TypePath.Radiation, "high"),
+    very_high_radiation(TypePath.Radiation, "very_high"),;
     private final TypePath typePath;
     private final String nameSounds;
     private SoundEvent soundEvent;

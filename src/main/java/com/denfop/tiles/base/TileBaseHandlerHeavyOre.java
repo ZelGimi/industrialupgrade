@@ -61,7 +61,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
     ) {
         super(energyPerTick * length, 1, 1);
         this.enumTypeSlot = enumTypeSlot;
-        this.outputSlot = new InvSlotOutput(this, "output", outputSlots + 2 * enumTypeSlot.ordinal());
+        this.outputSlot = new InvSlotOutput(this, outputSlots + 2 * enumTypeSlot.ordinal());
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.inputSlotA = new InvSlotRecipes(this, "handlerho", this);
         this.heat = this.addComponent(HeatComponent

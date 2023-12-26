@@ -28,8 +28,8 @@ public class WorldGenRubTree extends WorldGenAbstractTree {
     @Override
     public boolean generate(final World worldIn, final Random rand, final BlockPos position) {
         int i = rand.nextInt(5) + rand.nextInt(4) + rand.nextInt(2);
-        if (i <= 2) {
-            i = 3;
+        if (i <= 3) {
+            i = 4;
         }
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
@@ -151,8 +151,14 @@ public class WorldGenRubTree extends WorldGenAbstractTree {
 
                                         if (Math.abs(j1) != l2 || Math.abs(l1) != l2 || rand.nextInt(2) != 0 && k2 != 0) {
                                             BlockPos blockpos = new BlockPos(i3, i2 - 1, k1);
+                                            IBlockState state2 = worldIn.getBlockState(blockpos);
+                                            if (state2.getBlock().isAir(state2, worldIn, blockpos) || state2.getBlock().isAir(
+                                                    state2,
+                                                    worldIn,
+                                                    blockpos
+                                            )) {
                                             this.setBlockAndNotifyAdequately(worldIn, blockpos, Blocks.AIR.getDefaultState());
-
+                                            }
                                         }
                                     }
                                 }
@@ -189,8 +195,14 @@ public class WorldGenRubTree extends WorldGenAbstractTree {
 
                                     if (Math.abs(j1) != l2 || Math.abs(l1) != l2 || rand.nextInt(2) != 0 && k2 != 0) {
                                         BlockPos blockpos = new BlockPos(i3, i2, k1);
+                                        IBlockState state2 = worldIn.getBlockState(blockpos);
+                                        if (state2.getBlock().isAir(state2, worldIn, blockpos) || state2.getBlock().isAir(
+                                                state2,
+                                                worldIn,
+                                                blockpos
+                                        )) {
                                         this.setBlockAndNotifyAdequately(worldIn, blockpos, Blocks.AIR.getDefaultState());
-
+                                        }
                                     }
                                 }
                             }

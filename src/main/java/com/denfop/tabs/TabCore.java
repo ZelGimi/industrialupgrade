@@ -39,6 +39,8 @@ public class TabCore extends CreativeTabs {
                 return new ItemStack(IUItem.templates);
             case 9:
                 return new ItemStack(IUItem.crafting_elements, 1, 21);
+            case 10:
+                return new ItemStack(IUItem.water_reactors_component, 1, 8);
 
         }
         return new ItemStack(IUItem.blockpanel);

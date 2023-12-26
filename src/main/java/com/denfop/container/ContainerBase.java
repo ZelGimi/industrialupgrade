@@ -2,6 +2,7 @@ package com.denfop.container;
 
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.PacketUpdateFieldContainerTile;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -42,8 +43,29 @@ public abstract class ContainerBase<T extends IAdvInventory> extends Container {
         }
 
     }
-
+    public SlotInvSlot findClassSlot(Class<? extends InvSlot> invSlotClass){
+        for(Slot slot : this.inventorySlots){
+            if(slot instanceof SlotInvSlot){
+                if(((SlotInvSlot) slot).invSlot.getClass().equals(invSlotClass)){
+                    return (SlotInvSlot) slot;
+                }
+            }
+        }
+        return null;
+    }
+    public List<SlotInvSlot> findClassSlots(Class<? extends InvSlot> invSlotClass){
+        List<SlotInvSlot> list = new ArrayList<>();
+        for(Slot slot : this.inventorySlots){
+            if(slot instanceof SlotInvSlot){
+                if(((SlotInvSlot) slot).invSlot.getClass().equals(invSlotClass)){
+                    list.add((SlotInvSlot) slot);
+                }
+            }
+        }
+        return list;
+    }
     protected void addPlayerInventorySlots(EntityPlayer player, int height) {
+        if(player != null)
         this.addPlayerInventorySlots(player, 178, height);
     }
 

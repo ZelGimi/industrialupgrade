@@ -73,6 +73,8 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                     ItemStack module = getUpgradeItem(this.invSlotRecipes.get(0))
                             ? this.invSlotRecipes.get(1)
                             : this.invSlotRecipes.get(0);
+                    if(module.isEmpty())
+                        return;
 
 
                     NBTTagCompound nbt1 = ModUtils.nbt(stack1);
@@ -113,9 +115,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
 
 
-                    }
-
-                    if (module.getItem() instanceof ItemQuarryModule && module.getItemDamage() == 12) {
+                    }else if (module.getItem() instanceof ItemQuarryModule && module.getItemDamage() == 12) {
                         int Damage = stack1.getItemDamage();
                         NBTTagCompound nbt2 = ModUtils.nbt(module);
                         double newCharge = ElectricItem.manager.getCharge(stack1);

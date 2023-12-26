@@ -65,7 +65,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         this.defaultTier = 1;
         this.defaultEnergyStorage = 2 * 300;
         this.output = null;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSink(this, defaultEnergyStorage, defaultTier));
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.inputSlotA = new InvSlotRecipes(this, "rod_assembler", this);

@@ -6,6 +6,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.tiles.mechanism.dual.TileEnrichment;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,6 +24,8 @@ public class GuiEnriched extends GuiIU<ContainerDoubleElectricMachine> {
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
         this.addComponent(new GuiComponent(this, 26, 56, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+        this.addComponent(new GuiComponent(this, 70, 60, EnumTypeComponent.RAD,
+                new Component<>(((TileEnrichment)this.container.base).rad_energy)));
 
     }
 

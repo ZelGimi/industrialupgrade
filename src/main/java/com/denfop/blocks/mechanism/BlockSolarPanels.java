@@ -156,7 +156,7 @@ public enum BlockSolarPanels implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         return new String[]{"aer", "earth", "nether", "end", "night", "day", "rain"};
     }
 }

@@ -6,5 +6,7 @@ public enum EnumTypeComponentSlot {
     INVENTORY,
     MAIN_INVENTORY,
     ALL,
-    SLOTS_UPGRADE
+    SLOTS_UPGRADE,
+
+    SLOTS_UPGRADE_JEI
 }

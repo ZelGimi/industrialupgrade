@@ -22,7 +22,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -57,7 +56,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
 
         this.maxSunEnergy = 6500;
         this.cof = cof;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.input = new InvSlotGenSunarrium(this);
         this.lst = new ArrayList<>();
         this.lst.add(0D);

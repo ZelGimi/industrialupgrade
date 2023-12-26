@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/graphite_reactor/per_chamber",
+    "down" : "industrialupgrade:blocks/graphite_reactor/per_chamber",
+    "up" : "industrialupgrade:blocks/graphite_reactor/per_chamber",
+    "north" : "industrialupgrade:blocks/graphite_reactor/per_chamber",
+    "east" : "industrialupgrade:blocks/graphite_reactor/per_chamber",
+    "south" : "industrialupgrade:blocks/graphite_reactor/per_chamber",
+    "west" : "industrialupgrade:blocks/graphite_reactor/per_chamber"
+  }
+}

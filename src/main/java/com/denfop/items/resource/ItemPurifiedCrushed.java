@@ -79,7 +79,10 @@ public class ItemPurifiedCrushed extends ItemSubTypes<ItemPurifiedCrushed.Types>
         iron(21),
         lead(22),
         tin(23),
-        uranium(24);
+        uranium(24),
+        osmium(25),
+        tantalum(26),
+        cadmium(27);
 
         private final String name;
         private final int ID;

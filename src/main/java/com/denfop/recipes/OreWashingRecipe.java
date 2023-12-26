@@ -52,7 +52,15 @@ public class OreWashingRecipe {
         addrecipe("crushedLead", "crushedPurifiedLead",
                 new ItemStack(IUItem.smallLeadDust.getItem(), 2, IUItem.smallSulfurDust.getItemDamage())
         );
-
+        addrecipe("crushedOsmium", "crushedPurifiedOsmium",
+                new ItemStack(IUItem.smalldust,1,17)
+        );
+        addrecipe("crushedTantalum", "crushedPurifiedTantalum",
+                new ItemStack(IUItem.smalldust,1,11)
+        );
+        addrecipe("crushedCadmium", "crushedPurifiedCadmium",
+                new ItemStack(IUItem.smalldust,1,18)
+        );
     }
 
     public static void addrecipe(ItemStack input) {

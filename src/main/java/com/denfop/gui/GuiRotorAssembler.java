@@ -4,6 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ItemImage;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.container.ContainerRotorAssembler;
 import net.minecraft.client.renderer.GlStateManager;

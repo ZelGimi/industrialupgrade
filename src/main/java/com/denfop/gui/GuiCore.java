@@ -32,7 +32,7 @@ import java.util.Set;
 
 public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> extends GuiContainer {
 
-    protected final T container;
+    public final T container;
     protected final List<GuiElement<?>> elements;
     protected final Queue<GuiCore.Tooltip> queuedTooltips;
 

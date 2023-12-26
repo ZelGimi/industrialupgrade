@@ -47,7 +47,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         super((int) (Config.energy * 128), 14, 1);
 
         this.energycost = (float) Config.energy / 100;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,

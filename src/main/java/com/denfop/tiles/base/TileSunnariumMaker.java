@@ -198,6 +198,13 @@ public class TileSunnariumMaker extends TileBaseSunnariumMaker implements IUpdat
                 new ItemStack(IUItem.sunnarium, 1, 0),
                 new ItemStack(IUItem.excitednucleus, 1, 13)
         );
+        addSunnariumMaker(
+                new ItemStack(IUItem.crafting_elements, 4, 282),
+                new ItemStack(IUItem.crafting_elements, 1, 319),
+                new ItemStack(IUItem.crafting_elements, 2, 386),
+                new ItemStack(IUItem.crafting_elements, 1, 434),
+                new ItemStack(IUItem.crafting_elements, 1, 320)
+        );
     }
 
     @Override

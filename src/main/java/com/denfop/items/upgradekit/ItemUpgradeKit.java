@@ -81,17 +81,17 @@ public class ItemUpgradeKit extends ItemSubTypes<ItemUpgradeKit.Types> implement
 
             if (tileEntity instanceof TileElectricBlock) {
                 TileElectricBlock tile = (TileElectricBlock) tileEntity;
-                final EnumElectricBlock enumblock = TileElectricBlock.getElectricBlock();
+                final EnumElectricBlock enumblock = tile.getElectricBlock();
                 if (enumblock != null && enumblock.kit_meta == meta) {
                     ItemStack stack1;
-                    if (TileElectricBlock.getElectricBlock().chargepad) {
+                    if (tile.getElectricBlock().chargepad) {
                         stack1 = new ItemStack(
                                 IUItem.chargepadelectricblock,
                                 1,
-                                TileElectricBlock.getElectricBlock().meta
+                                tile.getElectricBlock().meta
                         );
                     } else {
-                        stack1 = new ItemStack(IUItem.electricblock, 1, TileElectricBlock.getElectricBlock().meta);
+                        stack1 = new ItemStack(IUItem.electricblock, 1, tile.getElectricBlock().meta);
                     }
                     final NBTTagCompound nbt = ModUtils.nbt(stack1);
                     nbt.setDouble("energy", tile.energy.getEnergy());

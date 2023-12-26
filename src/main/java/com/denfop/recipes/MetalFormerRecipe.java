@@ -15,7 +15,46 @@ public class MetalFormerRecipe {
     public static final String[] recipe = {"ingot", "plate", "ingot", "plate", "block"};
     public static final String[] recipe1 = {"plate", "casing", "stick", "stick", "plate"};
 
+    public static final String[] recipe2 = {"Osmium", "Tantalum", "Cadmium"};
     public static void init() {
+        addmolot("ingotLithium", "plateLithium", 1);
+        addmolot("gemBor", "plateBor", 1);
+        addmolot("gemBeryllium", "plateBeryllium", 1);
+        for (String s : recipe2) {
+            for (int j = 0; j < recipe1.length; j++) {
+                if (j == 0) {
+                    addmolot(recipe[j] + s, recipe1[j] + s, 1);
+                }
+                if (j == 1) {
+                    addmolot(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            2
+                    );
+                }
+                if (j == 2) {
+                    addExtruding(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            2
+                    );
+                }
+                if (j == 3) {
+                    addExtruding(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            3
+                    );
+                }
+                if (j == 4) {
+                    addmolot(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            9
+                    );
+                }
+            }
+        }
         for (int j = 0; j < recipe.length; j++) {
             for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
                 if (j == 0) {
@@ -144,6 +183,21 @@ public class MetalFormerRecipe {
         addCutting("plateIron", IUItem.ironCableItem, 4);
         addCutting("plateGold", IUItem.goldCableItem, 4);
         addCutting("plateCopper", IUItem.copperCableItem, 3);
+
+        addExtruding(new ItemStack(IUItem.sunnarium,4,2),new ItemStack(IUItem.crafting_elements,1,422));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,0),new ItemStack(IUItem.crafting_elements,1,312));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,1),new ItemStack(IUItem.crafting_elements,1,400));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,2),new ItemStack(IUItem.crafting_elements,1,347));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,3),new ItemStack(IUItem.crafting_elements,1,408));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,4),new ItemStack(IUItem.crafting_elements,1,383));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,5),new ItemStack(IUItem.crafting_elements,1,390));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,6),new ItemStack(IUItem.crafting_elements,1,331));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,7),new ItemStack(IUItem.crafting_elements,1,431));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,8),new ItemStack(IUItem.crafting_elements,1,360));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,9),new ItemStack(IUItem.crafting_elements,1,308));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,10),new ItemStack(IUItem.crafting_elements,1,303));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,11),new ItemStack(IUItem.crafting_elements,1,317));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,12),new ItemStack(IUItem.crafting_elements,1,351));
     }
 
     public static void addmolot(String input, String output, int n) {
@@ -260,7 +314,18 @@ public class MetalFormerRecipe {
                 )
         );
     }
-
+    public static void addExtruding(ItemStack input,  ItemStack output) {
+        final IInputHandler input1 = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "extruding",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input)
+                        ),
+                        new RecipeOutput(null, output)
+                )
+        );
+    }
     public static void addExtruding(ItemStack input, ItemStack output, int n) {
         final IInputHandler input1 = Recipes.inputFactory;
         ItemStack stack = output.copy();

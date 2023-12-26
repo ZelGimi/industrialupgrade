@@ -131,35 +131,35 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
             if (OreDictionary.getOreIDs(first).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(first)[0])
                     .isEmpty() && first.getItem() instanceof ItemIngots) {
-                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]));
+                first1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(first)[0]),first.getCount());
             } else {
                 first1 = input.getInput(first);
             }
             if (OreDictionary.getOreIDs(second).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(second)[0])
                     .isEmpty() && second.getItem() instanceof ItemIngots) {
-                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]));
+                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(second)[0]),second.getCount());
             } else {
                 second1 = input.getInput(second);
             }
             if (OreDictionary.getOreIDs(three).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(three)[0])
                     .isEmpty() && three.getItem() instanceof ItemIngots) {
-                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]));
+                three1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(three)[0]),three.getCount());
             } else {
                 three1 = input.getInput(three);
             }
             if (OreDictionary.getOreIDs(four).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(four)[0])
                     .isEmpty() && four.getItem() instanceof ItemIngots) {
-                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]));
+                four1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(four)[0]),four.getCount());
             } else {
                 four1 = input.getInput(four);
             }
             if (OreDictionary.getOreIDs(five).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(five)[0])
                     .isEmpty() && five.getItem() instanceof ItemIngots) {
-                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]));
+                five1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(five)[0]),five.getCount());
             } else {
                 five1 = input.getInput(five);
             }
@@ -504,7 +504,44 @@ public class TileGenerationMicrochip extends TileBaseGenerationMicrochip impleme
                 new ItemStack(IUItem.basecircuit, 1, 12),
                 true
         );
+        add(
+                new ItemStack(IUItem.basecircuit, 1, 15),
+                new ItemStack(Items.IRON_INGOT, 2),
+                new ItemStack(IUItem.iuingot, 1, 4),
+                new ItemStack(IUItem.iuingot, 1, 25),
+                new ItemStack(IUItem.iuingot, 1, 3),
+                new ItemStack(IUItem.crafting_elements, 1, 414),
+                (short) 1000, true
+        );
 
+        add(
+                new ItemStack(IUItem.crafting_elements, 1, 414),
+                new ItemStack(Items.GOLD_INGOT, 1),
+                new ItemStack(IUItem.iuingot, 1, 24),
+                new ItemStack(IUItem.iuingot, 1, 26),
+                new ItemStack(IUItem.iuingot, 1, 13),
+                new ItemStack(IUItem.crafting_elements, 1, 426),
+                (short) 2000, true
+        );
+
+        add(
+                new ItemStack(IUItem.crafting_elements, 1, 426),
+                new ItemStack(IUItem.iuingot, 1, 2),
+                new ItemStack(IUItem.iuingot, 2, 0),
+                new ItemStack(IUItem.iuingot, 3, 20),
+                new ItemStack(IUItem.crafting_elements, 1, 274),
+                new ItemStack(IUItem.crafting_elements, 1, 373),
+                (short) 3000, true
+        );
+        add(
+                new ItemStack(IUItem.crafting_elements, 1, 373),
+                new ItemStack(IUItem.iuingot, 2, 12),
+                new ItemStack(IUItem.iuingot, 2, 14),
+                new ItemStack(IUItem.iuingot, 1, 16),
+                new ItemStack(IUItem.iuingot, 1, 7),
+                new ItemStack(IUItem.crafting_elements, 1, 402),
+                (short) 4000, true
+        );
     }
 
 

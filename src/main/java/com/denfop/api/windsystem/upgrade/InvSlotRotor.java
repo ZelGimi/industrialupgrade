@@ -3,6 +3,7 @@ package com.denfop.api.windsystem.upgrade;
 import com.denfop.api.windsystem.InvSlotUpgrade;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemWindRotor;
+import com.denfop.tiles.mechanism.TileEntityRotorModifier;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotor extends InvSlot {
@@ -22,6 +23,11 @@ public class InvSlotRotor extends InvSlot {
 
     @Override
     public void put(final int index, final ItemStack content) {
+        if(content.isEmpty()){
+            if(!this.contents.get(index).isEmpty()){
+                ((TileEntityRotorModifier)this.slotUpgrade.base).updateTileServer(null,0);
+            }
+        }
         super.put(index, content);
         if (content.isEmpty()) {
             this.slotUpgrade.update();

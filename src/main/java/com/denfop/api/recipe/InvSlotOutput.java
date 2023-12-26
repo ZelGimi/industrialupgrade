@@ -10,7 +10,7 @@ import java.util.List;
 public class InvSlotOutput extends InvSlot {
 
 
-    public InvSlotOutput(IAdvInventory<?> base1, String name1, int count) {
+    public InvSlotOutput(IAdvInventory<?> base1, int count) {
         super(base1, TypeItemSlot.OUTPUT, count);
     }
 

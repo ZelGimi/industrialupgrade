@@ -4,7 +4,7 @@ public enum EnergyType {
     SOLARIUM(" SE", false, true, false),
     QUANTUM(" QE", false, true, false),
     EXPERIENCE(" EXP", false, true, false),
-    RADIATION(" ", false, true, false);
+    RADIATION(" ☢", false, true, false);
 
     private final String prefix;
     private final boolean auto_mode;

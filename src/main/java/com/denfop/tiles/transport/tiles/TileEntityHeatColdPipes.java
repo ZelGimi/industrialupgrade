@@ -46,7 +46,6 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         this.cableType = cableType;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
-        this.active = this.cableType.name();
     }
 
     public TileEntityHeatColdPipes() {
@@ -54,7 +53,6 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
         this.cableType = HeatColdType.heatcool;
         this.connectivity = 0;
         this.addedToEnergyNet = false;
-        this.active = this.cableType.name();
 
     }
 
@@ -161,7 +159,7 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
     }
 
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = this.getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;
@@ -231,7 +229,9 @@ public class TileEntityHeatColdPipes extends TileEntityMultiCable implements ICo
 
     @Override
     public void update_render() {
-        this.updateConnectivity();
+        if (!this.getWorld().isRemote) {
+            this.updateConnectivity();
+        }
     }
 
 

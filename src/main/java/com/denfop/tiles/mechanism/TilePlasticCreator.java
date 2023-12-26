@@ -61,6 +61,24 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 270))
         ));
+
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidpolyeth.getInstance(), 500),
+                        input.getInput(new ItemStack(IUItem.crafting_elements,1,344)),
+                        input.getInput("doubleplateTitanium")
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 340))
+        ));
+
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidneft.getInstance(), 5000),
+                        input.getInput(new ItemStack(IUItem.crafting_elements,8,283)),
+                        input.getInput("ingotGermanium",4)
+                ),
+                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 386))
+        ));
     }
 
     public String getInventoryName() {

@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.water.upgrade.RotorUpgradeSystem;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,19 +12,23 @@ import com.denfop.gui.GuiWaterRotorUpgrade;
 import com.denfop.invslot.InvSlotRotorWater;
 import com.denfop.invslot.InvSlotWaterUpgrade;
 import com.denfop.network.EncoderHandler;
+import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
-public class TileEntityWaterRotorModifier extends TileEntityInventory implements IWindUpgradeBlock {
+public class TileEntityWaterRotorModifier extends TileEntityInventory implements IWindUpgradeBlock, IUpdatableTileEvent {
 
     public final InvSlotWaterUpgrade slot;
     public final InvSlotRotorWater rotor_slot;
@@ -110,5 +115,22 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
         return new GuiWaterRotorUpgrade(getGuiContainer(entityPlayer));
     }
 
+
+    @Override
+    public void updateTileServer(final EntityPlayer var1, final double var2) {
+        if(!this.rotor_slot.get().isEmpty())
+            for(int i =0; i < this.slot.size();i++){
+                RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
+                if(!this.slot.get(i).isEmpty()){
+                    NBTTagCompound nbt = ModUtils.nbt(this.getItemStack());
+                    nbt.setString("mode_module" + i,
+                            (com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules.getFromID(this.slot.get(i).getItemDamage())).name);
+                    MinecraftForge.EVENT_BUS.post(new com.denfop.api.water.upgrade.event.EventRotorItemLoad(this
+                            .getParent().getWorld(), (com.denfop.api.water.upgrade.IRotorUpgradeItem) this
+                            .getItemStack().getItem(), this
+                            .getItemStack()));
+                }
+            }
+    }
 
 }

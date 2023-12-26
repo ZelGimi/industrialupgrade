@@ -1,0 +1,28 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "deposits_iridium" : {
+         "model" : "industrialupgrade:deposits/iridium"
+      },
+      "deposits_germanium" : {
+         "model" : "industrialupgrade:deposits/germanium"
+      },
+      "deposits_vanadium" : {
+         "model" : "industrialupgrade:deposits/vanadium"
+      },
+	  "deposits_osmium" : {
+         "model" : "industrialupgrade:deposits/osmium"
+      },
+      "deposits_cadmium" : {
+         "model" : "industrialupgrade:deposits/cadmium"
+      },
+      "deposits_tantalum" : {
+         "model" : "industrialupgrade:deposits/tantalum"
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

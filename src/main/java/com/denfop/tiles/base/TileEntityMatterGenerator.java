@@ -37,7 +37,7 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
 
     public TileEntityMatterGenerator(ItemStack itemstack, String name) {
         this.itemstack = itemstack;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.progress = 0;
         this.name = name;

@@ -3,6 +3,7 @@ package com.denfop.utils;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.radiationsystem.EnumCoefficient;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.items.CellType;
 import com.denfop.items.bags.ItemStackBags;
@@ -556,7 +557,20 @@ public class ModUtils {
         return maxstorage_2;
 
     }
-
+    public static String getUnit(EnumCoefficient coefficient){
+        switch (coefficient){
+            case MICRO:
+                return "µ";
+            case MILI:
+                return "m";
+            case KILO:
+                return "k";
+            case DEFAULT:
+                return "";
+            default:
+                return "n";
+        }
+    }
     public static String getString1(double number) {
         double gg;
         int i;

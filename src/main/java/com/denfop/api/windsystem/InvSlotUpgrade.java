@@ -44,35 +44,22 @@ public class InvSlotUpgrade extends InvSlot {
 
     public void update() {
         for (int i = 0; i < size(); i++) {
-            put(i, ItemStack.EMPTY, false);
+            put(i, ItemStack.EMPTY);
         }
     }
 
     public void update(ItemStack stack) {
         Map<Integer, ItemStack> map = RotorUpgradeSystem.instance.getList(stack);
         for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
-            put(entry.getKey(), entry.getValue(), false);
+            put(entry.getKey(), entry.getValue());
         }
     }
 
-    public void put(int index, ItemStack content, boolean updates) {
-        super.put(index, content);
-    }
+
 
     public void put(int index, ItemStack content) {
         super.put(index, content);
-        if (content.isEmpty()) {
-            if (!this.tile.getItemStack().isEmpty()) {
-                RotorUpgradeSystem.instance.removeUpdate(this.tile.getItemStack(), this.base.getParent().getWorld(), index);
-            }
-        } else {
-            NBTTagCompound nbt = ModUtils.nbt(this.tile.getItemStack());
-            nbt.setString("mode_module" + index, (EnumInfoRotorUpgradeModules.getFromID(content.getItemDamage())).name);
-            MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this.base
-                    .getParent().getWorld(), (IRotorUpgradeItem) this.tile
-                    .getItemStack().getItem(), this.tile
-                    .getItemStack()));
-        }
+
     }
 
 }

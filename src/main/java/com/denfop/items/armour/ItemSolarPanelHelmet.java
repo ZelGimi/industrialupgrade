@@ -140,6 +140,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         potionRemovalCost.put(IUPotion.radiation, 20);
         potionRemovalCost.put(MobEffects.WITHER, 100);
         potionRemovalCost.put(MobEffects.HUNGER, 200);
+        this.setMaxDamage(0);
         this.setUnlocalizedName(name);
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);

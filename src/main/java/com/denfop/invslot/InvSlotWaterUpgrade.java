@@ -61,18 +61,7 @@ public class InvSlotWaterUpgrade extends InvSlot {
 
     public void put(int index, ItemStack content) {
         super.put(index, content);
-        if (content.isEmpty()) {
-            if (!this.tile.getItemStack().isEmpty()) {
-                RotorUpgradeSystem.instance.removeUpdate(this.tile.getItemStack(), this.base.getParent().getWorld(), index);
-            }
-        } else {
-            NBTTagCompound nbt = ModUtils.nbt(this.tile.getItemStack());
-            nbt.setString("mode_module" + index, (EnumInfoRotorUpgradeModules.getFromID(content.getItemDamage())).name);
-            MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this.base
-                    .getParent().getWorld(), (IRotorUpgradeItem) this.tile
-                    .getItemStack().getItem(), this.tile
-                    .getItemStack()));
-        }
+
     }
 
 }

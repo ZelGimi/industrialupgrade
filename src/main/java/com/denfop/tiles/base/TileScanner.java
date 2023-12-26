@@ -48,7 +48,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     Map<BlockPos, IPatternStorage> iPatternStorageMap = new HashMap<>();
     List<IPatternStorage> iPatternStorageList = new ArrayList<>();
     private ItemStack currentStack;
-    private TileScanner.State state;
+    public TileScanner.State state;
 
     public TileScanner(int maxprogress) {
         super(512000, 14, 0);

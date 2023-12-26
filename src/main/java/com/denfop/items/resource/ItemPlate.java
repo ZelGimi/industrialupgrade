@@ -68,6 +68,10 @@ public class ItemPlate extends ItemSubTypes<ItemPlate.ItemPlateTypes> implements
         obsidian_plate(25),
         steel_plate(26),
         tin_plate(27),
+
+        osmium(28),
+        tantalum(29),
+        cadmium(30)
         ;
 
         private final String name;

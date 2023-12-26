@@ -40,7 +40,7 @@ import java.util.Set;
 public class AdvEnergy extends AbstractComponent {
 
     public final boolean fullEnergy;
-    private final double defaultCapacity;
+    public final double defaultCapacity;
     public double tick;
     public boolean upgrade;
     public double capacity;
@@ -218,9 +218,7 @@ public class AdvEnergy extends AbstractComponent {
     }
 
     public void onLoaded() {
-        if (this.capacity < this.defaultCapacity) {
-            this.capacity = this.defaultCapacity;
-        }
+
 
         assert this.delegate == null;
 
@@ -242,7 +240,7 @@ public class AdvEnergy extends AbstractComponent {
         this.limit = limit;
     }
 
-    private void createDelegate() {
+    public void createDelegate() {
         if (this.delegate == null) {
             if (!this.multiSource) {
                 if (this.sinkDirections.isEmpty()) {

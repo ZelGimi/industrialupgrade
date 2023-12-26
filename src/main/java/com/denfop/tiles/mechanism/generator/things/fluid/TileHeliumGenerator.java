@@ -43,7 +43,7 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
         super(50000, 14, 1);
 
         this.energycost = 1000;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
@@ -167,7 +167,8 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
                 UpgradableProperty.Transformer,
                 UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

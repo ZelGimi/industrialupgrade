@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/laser_polisher_main_active",
+    "down" : "industrialupgrade:blocks/laser_polisher_active_all",
+    "up" : "industrialupgrade:blocks/laser_polisher_active_all",
+    "north" : "industrialupgrade:blocks/laser_polisher_main_active",
+    "east" : "industrialupgrade:blocks/laser_polisher_active_all",
+    "south" : "industrialupgrade:blocks/laser_polisher_active_all",
+    "west" : "industrialupgrade:blocks/laser_polisher_active_all"
+  }
+}

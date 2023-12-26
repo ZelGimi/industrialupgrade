@@ -87,7 +87,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         this.inputslot = new InvSlotQuantumQuarry(this, 25, 0);
         this.inputslotA = new InvSlotQuantumQuarry(this, 26, 1);
         this.inputslotB = new InvSlotQuantumQuarry(this, 27, 2);
-        this.outputSlot = new InvSlotOutput(this, "output", 24);
+        this.outputSlot = new InvSlotOutput(this, 24);
         this.list = new ArrayList<>();
         this.analyzer = false;
         this.chance = 0;

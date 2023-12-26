@@ -182,4 +182,6 @@ public abstract class AbstractComponent {
     public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
     }
 
+    public void blockBreak() {
+    }
 }

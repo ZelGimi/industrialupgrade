@@ -43,7 +43,7 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
         super(20000, 14, 1);
 
         this.energycost = 80;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,

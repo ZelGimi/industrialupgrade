@@ -75,7 +75,10 @@ public class ItemDust extends ItemSubTypes<ItemDust.ItemDustTypes> implements IM
         stone(30),
         sulfur(31),
         tin(32),
-        silicon_dioxide(33);
+        silicon_dioxide(33),
+        osmium(34),
+        tantalum(35),
+        cadmium(36);
 
         private final String name;
         private final int ID;

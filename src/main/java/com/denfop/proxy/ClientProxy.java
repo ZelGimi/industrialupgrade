@@ -1,7 +1,6 @@
 package com.denfop.proxy;
 
 
-import com.denfop.Config;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.IFluidModelProvider;
@@ -9,13 +8,17 @@ import com.denfop.api.IModelRegister;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.FluidName;
+import com.denfop.entity.EntityNuclearBombPrimed;
 import com.denfop.events.ElectricItemTooltipHandler;
 import com.denfop.events.TickHandler;
 import com.denfop.gui.GuiColorPicker;
 import com.denfop.items.IItemStackInventory;
 import com.denfop.items.book.core.CoreBook;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
+import com.denfop.render.anvil.RenderItemAnvil;
+import com.denfop.render.base.IUModelLoader;
 import com.denfop.render.base.RenderCoreProcess;
+import com.denfop.render.entity.RenderNuclearBombPrimed;
 import com.denfop.render.multiblock.TileEntityMultiBlockRender;
 import com.denfop.render.oilquarry.TileEntityQuarryOilRender;
 import com.denfop.render.oilrefiner.TileEntityOilRefinerRender;
@@ -25,12 +28,14 @@ import com.denfop.render.sintezator.TileEntitySintezatorRender;
 import com.denfop.render.streak.EventSpectralSuitEffect;
 import com.denfop.render.tank.TileEntityTankRender;
 import com.denfop.render.tile.TileEntityAdminPanelRender;
+import com.denfop.render.transport.ModelCable;
 import com.denfop.render.transport.TileEntityCableRender;
 import com.denfop.render.water.WaterGeneratorRenderer;
 import com.denfop.render.windgenerator.KineticGeneratorRenderer;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileAdminSolarPanel;
 import com.denfop.tiles.base.TileDoubleMolecular;
+import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityLiquedTank;
 import com.denfop.tiles.base.TileMolecularTransformer;
 import com.denfop.tiles.base.TileQuarryVein;
@@ -44,8 +49,21 @@ import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
+import com.denfop.tiles.transport.types.CableType;
+import com.denfop.tiles.transport.types.CoolType;
+import com.denfop.tiles.transport.types.ExpType;
+import com.denfop.tiles.transport.types.HeatColdType;
+import com.denfop.tiles.transport.types.HeatType;
+import com.denfop.tiles.transport.types.ICableItem;
+import com.denfop.tiles.transport.types.ItemType;
+import com.denfop.tiles.transport.types.QEType;
+import com.denfop.tiles.transport.types.RadTypes;
+import com.denfop.tiles.transport.types.SEType;
+import com.denfop.tiles.transport.types.UniversalType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -54,20 +72,26 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
     public static final ArrayList<IModelRegister> modelList = new ArrayList<>();
+
+    public static final ArrayList<ICableItem> cableItemTextureAspire = new ArrayList<>();
     private final Minecraft mc = Minecraft.getMinecraft();
     private GuiScreen gui;
 
@@ -76,9 +100,7 @@ public class ClientProxy extends CommonProxy {
         for (IModelRegister register : modelList) {
             register.registerModels();
         }
-        if (Config.experiment) {
-            new TickHandler();
-        }
+        new TickHandler();
 
         OBJLoader.INSTANCE.addDomain(Constants.MOD_ID);
         FluidName[] var8 = FluidName.values;
@@ -111,7 +133,7 @@ public class ClientProxy extends CommonProxy {
                 new RenderCoreProcess<>()
         );
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniPanels.class, new TileEntityMiniPanelRender<>());
-
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAnvil.class, new RenderItemAnvil());
         ClientRegistry.bindTileEntitySpecialRenderer(TileSintezator.class, new TileEntitySintezatorRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileQuarryVein.class, new TileEntityQuarryOilRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileAdminSolarPanel.class, new TileEntityAdminPanelRender());
@@ -120,12 +142,27 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquedTank.class, new TileEntityTankRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileWindGenerator.class, new KineticGeneratorRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileBaseWaterGenerator.class, new WaterGeneratorRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultiCable.class, new TileEntityCableRender<>());
         ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new TileEntitySolarPanelRender<>());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultiCable.class, new TileEntityCableRender<>());
 
 
         EnumMultiMachine.write();
-
+        RenderingRegistry.registerEntityRenderingHandler(
+                EntityNuclearBombPrimed.class,
+                RenderNuclearBombPrimed::new
+        );
+        IUModelLoader loader = new IUModelLoader();
+        loader.register("models/block/wiring/cable_iu" , new ModelCable(CableType.values()));
+        loader.register("models/block/wiring/cool/cool_pipes" , new ModelCable(CoolType.values()));
+        loader.register("models/block/wiring/universal_cable" , new ModelCable(UniversalType.values()));
+        loader.register("models/block/wiring/scable/scable_scable" , new ModelCable(SEType.values()));
+        loader.register("models/block/wiring/qcable/qcable_qcable" , new ModelCable(QEType.values()));
+        loader.register("models/block/wiring/pipes/pipes_pipes" , new ModelCable(HeatType.values()));
+        loader.register("models/block/wiring/item_pipes/itemcable_pipes" , new ModelCable(ItemType.values()));
+        loader.register("models/block/wiring/heatcold/heatcool_pipes" , new ModelCable(HeatColdType.values()));
+        loader.register("models/block/wiring/radcable/rad_cable_radcable" , new ModelCable(RadTypes.values()));
+        loader.register("models/block/wiring/expcable/expcable_expcable" , new ModelCable(ExpType.values()));
+        ModelLoaderRegistry.registerLoader(loader);
     }
 
     public void requestTick(boolean simulating, Runnable runnable) {
@@ -227,7 +264,6 @@ public class ClientProxy extends CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         super.init(event);
-
         MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());
 
     }
@@ -240,6 +276,14 @@ public class ClientProxy extends CommonProxy {
 
     public boolean addIModelRegister(IModelRegister modelRegister) {
         return modelList.add(modelRegister);
+    }
+
+    public boolean addTextureAspire(ICableItem modelRegister) {
+        return cableItemTextureAspire.add(modelRegister);
+    }
+
+    public List<ICableItem> getTextureAtlas() {
+        return cableItemTextureAspire;
     }
 
 }

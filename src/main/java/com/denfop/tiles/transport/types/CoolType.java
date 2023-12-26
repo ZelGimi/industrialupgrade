@@ -1,6 +1,8 @@
 package com.denfop.tiles.transport.types;
 
+import com.denfop.Constants;
 import com.denfop.blocks.ISubEnum;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,7 @@ public enum CoolType implements ISubEnum, ICableItem {
     public final float thickness;
     public final double loss;
     public final double capacity;
+    private final ResourceLocation texture;
 
     CoolType(int maxInsulation, int minColoredInsulation, float thickness, double loss, double capacity) {
         this.maxInsulation = maxInsulation;
@@ -37,6 +40,11 @@ public enum CoolType implements ISubEnum, ICableItem {
         this.thickness = thickness;
         this.loss = loss;
         this.capacity = capacity;
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     public static CoolType get(String name) {
@@ -60,5 +68,11 @@ public enum CoolType implements ISubEnum, ICableItem {
     @Override
     public String getMainPath() {
         return "cool";
+    }
+
+
+    @Override
+    public ResourceLocation getRecourse() {
+        return texture;
     }
 }

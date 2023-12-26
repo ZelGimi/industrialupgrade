@@ -62,7 +62,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     public final HeatComponent heat;
     public boolean load = false;
     public InvSlotBlastFurnace invSlotBlastFurnace = new InvSlotBlastFurnace(this);
-    public InvSlotOutput output = new InvSlotOutput(this, "output", 1);
+    public InvSlotOutput output = new InvSlotOutput(this, 1);
     public FluidTank tank1 = null;
 
     public IBlastHeat blastHeat;
@@ -85,7 +85,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         );
         this.entityPlayerList = new ArrayList<>();
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
-        this.output1 = new InvSlotOutput(this, "output1", 1);
+        this.output1 = new InvSlotOutput(this, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
     }
 

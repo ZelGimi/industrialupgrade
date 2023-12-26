@@ -1,0 +1,96 @@
+package com.denfop.tiles.reactors.gas.intercooler;
+
+import com.denfop.container.ContainerInterCooler;
+import com.denfop.container.ContainerReCirculationPump;
+import com.denfop.gui.GuiInterCooler;
+import com.denfop.gui.GuiReCirculationPump;
+import com.denfop.invslot.InvSlot;
+import com.denfop.items.reactors.ItemsFan;
+import com.denfop.items.reactors.ItemsPumps;
+import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import com.denfop.tiles.reactors.gas.IInterCooler;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement implements IInterCooler {
+
+    private final int level;
+    private final InvSlot slot;
+    private  int power;
+    private int energy;
+    public TileEntityBaseInterCooler(int level){
+        this.level = level;
+        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,1){
+            @Override
+            public boolean accepts(final ItemStack stack, final int index) {
+                return stack.getItem() instanceof ItemsFan && ((ItemsFan) stack.getItem()).getLevel() <= ((TileEntityBaseInterCooler)this.base).getLevel();
+            }
+
+            @Override
+            public void put(final int index, final ItemStack content) {
+                super.put(index, content);
+                if(content.isEmpty()){
+                    ((TileEntityBaseInterCooler)this.base).setEnergy(0);
+                    ((TileEntityBaseInterCooler)this.base).setPower(0);
+                }else{
+                    ((TileEntityBaseInterCooler)this.base).setEnergy(((ItemsFan) content.getItem()).getEnergy());
+                    ((TileEntityBaseInterCooler)this.base).setPower(((ItemsFan) content.getItem()).getPower());
+                }
+            }
+        };
+    }
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        if(!this.getWorld().isRemote){
+            if(this.getSlot().get().isEmpty()){
+                this.setEnergy(0);
+                this.setPower(0);
+            }else{
+                this.setEnergy(((ItemsFan) this.getSlot().get().getItem()).getEnergy());
+                this.setPower(((ItemsFan) this.getSlot().get().getItem()).getPower());
+            }
+        }
+    }
+    public void setEnergy(final int energy) {
+        this.energy = energy;
+    }
+
+    public void setPower(final int power) {
+        this.power = power;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public InvSlot getSlot() {
+        return slot;
+    }
+
+    @Override
+    public ContainerInterCooler getGuiContainer(final EntityPlayer var1) {
+        return new ContainerInterCooler(this,var1);
+    }
+    @Override
+    public boolean hasOwnInventory() {
+        return true;
+    }
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
+        return new GuiInterCooler(getGuiContainer(var1));
+    }
+}

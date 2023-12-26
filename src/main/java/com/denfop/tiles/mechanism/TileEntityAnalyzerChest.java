@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityAnalyzerChest extends TileEntityInventory {
 
-    public InvSlotOutput outputSlot = new InvSlotOutput(this, "output", 36);
+    public InvSlotOutput outputSlot = new InvSlotOutput(this, 36);
 
     public TileEntityAnalyzerChest() {
 

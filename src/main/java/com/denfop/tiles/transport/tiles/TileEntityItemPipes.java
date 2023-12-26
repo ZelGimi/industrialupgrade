@@ -62,7 +62,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     public TileEntityItemPipes() {
         super(ItemType.itemcable);
         this.cableType = ItemType.itemcable;
-        this.active = this.cableType.name();
         this.list = new SlotInfo(this, 18, !this.cableType.isItem());
 
     }
@@ -70,7 +69,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     public TileEntityItemPipes(ItemType cableType) {
         super(cableType);
         this.cableType = cableType;
-        this.active = this.cableType.name();
         this.list = new SlotInfo(this, 18, !this.cableType.isItem());
 
     }
@@ -114,7 +112,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
                 if (!getBlackList().contains(dir)) {
                     if (tile != null) {
 
-                        if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir) && tile.hasCapability(
+                         if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir) && tile.hasCapability(
                                 CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
                                 dir.getOpposite()
                         )) {
@@ -835,7 +833,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         }
     }
 
-    private void updateConnectivity() {
+    public void updateConnectivity() {
         World world = getWorld();
         byte newConnectivity = 0;
         EnumFacing[] var4 = EnumFacing.VALUES;

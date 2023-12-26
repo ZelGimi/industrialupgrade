@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/graphite_reactor/imp_socket_side",
+    "down" : "industrialupgrade:blocks/graphite_reactor/imp_socket_side",
+    "up" : "industrialupgrade:blocks/graphite_reactor/imp_socket_side",
+    "north" : "industrialupgrade:blocks/graphite_reactor/imp_socket",
+    "east" : "industrialupgrade:blocks/graphite_reactor/imp_socket_side",
+    "south" : "industrialupgrade:blocks/graphite_reactor/imp_socket_side",
+    "west" : "industrialupgrade:blocks/graphite_reactor/imp_socket_side"
+  }
+}

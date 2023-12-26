@@ -103,7 +103,7 @@ public class EnergyNetLocal {
             );
 
             world.setBlockToAir(pos);
-            new PacketExplosion(explosion);
+            new PacketExplosion(explosion,4,false,false);
 
         }
     }

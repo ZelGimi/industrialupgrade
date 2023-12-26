@@ -22,10 +22,18 @@ public class BaseShapelessRecipe implements IRecipe {
     private final ItemStack output;
     private final List<IInputItemStack> recipeInputList;
     private ResourceLocation name;
-
+    final NonNullList<Ingredient> listIngridient;
     public BaseShapelessRecipe(ItemStack output, List<IInputItemStack> recipeInputList) {
         this.output = output;
         this.recipeInputList = recipeInputList;
+        listIngridient = NonNullList.create();
+
+
+        for (IInputItemStack input : this.recipeInputList) {
+            listIngridient.add(new IngredientInput(input));
+
+        }
+
         Recipes.registerRecipe(this);
     }
 
@@ -99,15 +107,8 @@ public class BaseShapelessRecipe implements IRecipe {
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        final NonNullList<Ingredient> list = NonNullList.create();
 
-
-        for (IInputItemStack input : this.recipeInputList) {
-            list.add(new IngredientInput(input));
-
-        }
-
-        return list;
+        return listIngridient;
     }
 
     @Override

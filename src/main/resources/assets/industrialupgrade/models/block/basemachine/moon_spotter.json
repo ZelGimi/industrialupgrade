@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/moon_spotter_main",
+    "down" : "industrialupgrade:blocks/moon_spotter_all",
+    "up" : "industrialupgrade:blocks/moon_spotter_up",
+    "north" : "industrialupgrade:blocks/moon_spotter_main",
+    "east" : "industrialupgrade:blocks/moon_spotter_all",
+    "south" : "industrialupgrade:blocks/moon_spotter_all",
+    "west" : "industrialupgrade:blocks/moon_spotter_all"
+  }
+}

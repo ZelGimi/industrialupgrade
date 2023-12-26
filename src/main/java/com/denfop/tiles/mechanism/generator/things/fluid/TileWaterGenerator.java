@@ -42,7 +42,7 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
         super(10000, 14, 1);
 
         this.energycost = 40;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.containerslot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
@@ -162,7 +162,8 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
                 UpgradableProperty.Transformer,
                 UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

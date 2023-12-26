@@ -9,6 +9,7 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiAlloySmelter;
@@ -19,6 +20,7 @@ import com.denfop.tiles.base.TileDoubleElectricMachine;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,7 +80,16 @@ public class TileAlloySmelter extends TileDoubleElectricMachine implements IHasR
                         OreDictionary.getOres("ingotInvar").get(0).getItemDamage()
                 ), 5000
         );
-
+        addAlloysmelter(
+                input.getInput(new ItemStack(Items.COAL), 1),
+                input.getInput(new ItemStack(Items.QUARTZ), 4),
+                new ItemStack(IUItem.crafting_elements,1,319), 2000
+        );
+        addAlloysmelter(
+                input.getInput("blockSilver", 1),
+                input.getInput(ModUtils.getCellFromFluid(FluidName.fluidpolyprop.getInstance()), 1),
+                new ItemStack(IUItem.crafting_elements,1,434), 2000
+        );
         addAlloysmelter(
                 input.getInput("ingotCopper", 1),
                 input.getInput("ingotZinc", 1),

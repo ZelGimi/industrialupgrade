@@ -80,8 +80,8 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
         this.fluidSlot = new InvSlotFluidByList(this, InvSlot.TypeItemSlot.INPUT, 1,
                 InvSlotFluid.TypeFluidSlot.INPUT, FluidName.fluiduu_matter.getInstance()
         );
-        this.cellSlot = new InvSlotOutput(this, "cell", 1);
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.cellSlot = new InvSlotOutput(this, 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 16000, Fluids.fluidPredicate(FluidName.fluiduu_matter.getInstance()));
@@ -452,7 +452,8 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.FluidConsuming,
+                UpgradableProperty.FluidProducing
         );
     }
 

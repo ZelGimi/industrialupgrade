@@ -1,5 +1,7 @@
 package com.denfop.blocks;
 
+import appeng.block.networking.BlockCableBus;
+import appeng.util.Platform;
 import com.denfop.IUItem;
 import com.denfop.api.item.IItemIgnoringNull;
 import com.denfop.api.item.IMultiBlockItem;
@@ -9,6 +11,7 @@ import com.denfop.blocks.state.TileEntityBlockStateContainer;
 import com.denfop.items.block.ItemBlockTileEntity;
 import com.denfop.network.packet.PacketLandEffect;
 import com.denfop.network.packet.PacketRunParticles;
+import com.denfop.render.base.ISpecialParticleModel;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.ParticleBaseBlockDust;
@@ -27,8 +30,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -71,7 +76,7 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
     public final ItemBlockTileEntity item;
     public final TileBlockCreator.InfoAboutTile<?> teInfo;
     private final CreativeTabs tab;
-    private StateMapperIU stateMapper;    public final TypeProperty typeProperty = this.getTypeProperty();
+    public final TypeProperty typeProperty = this.getTypeProperty();
     public BlockTileEntity(String name, final ResourceLocation identifier, final TileBlockCreator.InfoAboutTile<?> value) {
         super(null, value.getDefaultMaterial());
         this.item = new ItemBlockTileEntity(this, identifier);
@@ -109,9 +114,8 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
-        this.stateMapper = new StateMapperIU();
-        final ModelResourceLocation invalidLocation = stateMapper.getModelResourceLocation(
-                ModUtils.getName(IUItem.invalid),
+        StateMapperIU stateInvalid = new StateMapperIU(ModUtils.getName(IUItem.invalid));
+        final ModelResourceLocation invalidLocation = stateInvalid.getModelResourceLocation(
                 this.blockState
                         .getBaseState()
                         .withProperty(this.typeProperty, TypeProperty.invalid)
@@ -124,11 +128,12 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                         state -> {
                             State stateProperty = state.getValue(this.typeProperty);
                             EnumFacing facing = state.getValue(BlockTileEntity.facingProperty);
+                            StateMapperIU stateMapper = new StateMapperIU(stateProperty.teBlock.getIdentifier());
                             if (!stateProperty.teBlock.getSupportedFacings().contains(facing) &&
                                     (facing != EnumFacing.DOWN || !stateProperty.teBlock.getSupportedFacings().isEmpty())) {
                                 return invalidLocation;
                             } else {
-                                return stateMapper.getModelResourceLocation(stateProperty.teBlock.getIdentifier(), state);
+                                return stateMapper.getModelResourceLocation(state);
                             }
                         }
                 )));
@@ -139,21 +144,43 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
                 return invalidLocation;
             } else if (teInfo.getListBlock().get(0) instanceof IItemIgnoringNull) {
                 teBlock = teInfo.getListBlock().get(0);
+                StateMapperIU stateMapper = new StateMapperIU(teBlock.getIdentifier());
+
                 IBlockState state = BlockTileEntity.this.getDefaultState().withProperty(
                         BlockTileEntity.this.typeProperty,
                         BlockTileEntity.this.typeProperty.getState(teBlock)
-                ).withProperty(BlockTileEntity.facingProperty, EnumFacing.UP);
-                return stateMapper.getModelResourceLocation(teBlock.getIdentifier(), state);
+                );
+                return stateMapper.getModelResourceLocation(state);
 
             } else if (teBlock instanceof IMultiBlockItem && ((IMultiBlockItem) teBlock).hasUniqueRender(stack)) {
                 ModelResourceLocation location = ((IMultiBlockItem) teBlock).getModelLocation(stack);
                 return location == null ? invalidLocation : location;
             } else {
-                IBlockState state = BlockTileEntity.this.getDefaultState().withProperty(
-                        BlockTileEntity.this.typeProperty,
-                        BlockTileEntity.this.typeProperty.getState(teBlock)
-                ).withProperty(BlockTileEntity.facingProperty, BlockTileEntity.getItemFacing(teBlock));
-                return stateMapper.getModelResourceLocation(teBlock.getIdentifier(), state);
+                try {
+                    IBlockState state = BlockTileEntity.this.getDefaultState().withProperty(
+                            BlockTileEntity.this.typeProperty,
+                            BlockTileEntity.this.typeProperty.getState(teBlock)
+                    );
+                    StateMapperIU stateMapper = new StateMapperIU(teBlock.getIdentifier());
+
+                    if (state != null) {
+                        return stateMapper.getModelResourceLocation(state);
+                    } else {
+                        stateMapper = new StateMapperIU( ModUtils.getName(IUItem.invalid));
+                        return stateMapper.getModelResourceLocation(
+                                this.blockState
+                                        .getBaseState()
+                                        .withProperty(this.typeProperty, TypeProperty.invalid)
+                        );
+                    }
+                }catch (Exception e){
+                    final StateMapperIU stateMapper = new StateMapperIU(ModUtils.getName(IUItem.invalid));
+                    return stateMapper.getModelResourceLocation(
+                            this.blockState
+                                    .getBaseState()
+                                    .withProperty(this.typeProperty, TypeProperty.invalid)
+                    );
+                }
             }
         });
 
@@ -163,11 +190,10 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
             if (statesBlocks.hasItem()) {
                 ModelResourceLocation model = checkSpecialModels ? this.getSpecialModel(statesBlocks) : null;
                 if (model == null) {
-                    IBlockState state = this.blockState
-                            .getBaseState()
-                            .withProperty(this.typeProperty, statesBlocks.statesBlocks.get(0))
-                            .withProperty(facingProperty, getItemFacing(statesBlocks.getBlock()));
-                    model = stateMapper.getModelResourceLocation(statesBlocks.getIdentifier(), state);
+                    IBlockState state = BlockTileEntity.this.getDefaultState()
+                            .withProperty(this.typeProperty, statesBlocks.statesBlocks.get(0));
+                    StateMapperIU stateMapper = new StateMapperIU(statesBlocks.getIdentifier());
+                    model = stateMapper.getModelResourceLocation(state);
                 }
                 ModelBakery.registerItemVariants(this.item, model);
             }
@@ -176,6 +202,10 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
 
     }
 
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntityBlock te = getTe(world, pos);
+        return (te == null ? state : te.getExtendedState((TileEntityBlockStateContainer.PropertiesStateInstance)state));
+    }
     @SideOnly(Side.CLIENT)
     public ModelResourceLocation getSpecialModel(TypeProperty.StatesBlocks blockTextures) {
         assert blockTextures.getBlock() instanceof IMultiBlockItem;
@@ -366,6 +396,40 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         return true;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean addDestroyEffects(final World world, final BlockPos pos, final ParticleManager manager) {
+
+        final TileEntityBlock te = getTe(world, pos);
+        if (pos != null && te.hasSpecialModel()) {
+            IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(te.getBlockState());
+            final IBlockState state = te.getBlockState().getBlock().getExtendedState(te.getBlockState(), world, pos);
+            int i = 4;
+
+            for (int j = 0; j < 4; ++j)
+            {
+                for (int k = 0; k < 4; ++k)
+                {
+                    for (int l = 0; l < 4; ++l)
+                    {
+                        double d0 = ((double)j + 0.5D) / 4.0D;
+                        double d1 = ((double)k + 0.5D) / 4.0D;
+                        double d2 = ((double)l + 0.5D) / 4.0D;
+                        ParticleDigging particle = new ParticleBaseBlockDust(world, pos.getX() + d0, (double)pos.getY() + d1,
+                                (double)pos.getZ() + d2, 0, 0, 0, state);
+                        ((ISpecialParticleModel)model).enhanceParticle(particle, (TileEntityBlockStateContainer.PropertiesStateInstance) state);
+                        particle.init();
+                        Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                    }
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     @SideOnly(Side.CLIENT)
     public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager) {
 
@@ -404,6 +468,16 @@ public final class BlockTileEntity extends BlockBase implements IWrenchable, ITi
         particle.setBlockPos(pos);
         particle.multiplyVelocity(0.2F);
         particle.multipleParticleScaleBy(0.6F);
+        if (pos != null && te.hasSpecialModel()) {
+            IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(te.getBlockState());
+            if (model instanceof ISpecialParticleModel) {
+
+                state = te.getBlockState().getBlock().getExtendedState(te.getBlockState(), world, pos);
+
+
+                ((ISpecialParticleModel)model).enhanceParticle(particle, (TileEntityBlockStateContainer.PropertiesStateInstance) state);
+            }
+        }
         particle.init();
 
         Minecraft.getMinecraft().effectRenderer.addEffect(particle);

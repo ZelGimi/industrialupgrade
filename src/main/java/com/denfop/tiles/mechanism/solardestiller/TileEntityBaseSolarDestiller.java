@@ -67,8 +67,8 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                 InvSlotFluid.TypeFluidSlot.OUTPUT,
                 this.outputTank
         );
-        this.wateroutputSlot = new InvSlotOutput(this, "waterOutput", 1);
-        this.destiwateroutputSlott = new InvSlotOutput(this, "destilledWaterOutput", 1);
+        this.wateroutputSlot = new InvSlotOutput(this, 1);
+        this.destiwateroutputSlott = new InvSlotOutput(this, 1);
         this.upgradeSlot = new InvSlotUpgrade(this, 3);
     }
 

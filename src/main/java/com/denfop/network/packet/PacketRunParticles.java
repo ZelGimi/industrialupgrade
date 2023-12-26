@@ -1,13 +1,16 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blocks.state.TileEntityBlockStateContainer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
+import com.denfop.render.base.ISpecialParticleModel;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ParticleBaseBlockDust;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleDigging;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -69,6 +72,7 @@ public class PacketRunParticles implements IPacket {
         final double xSpeed = is.readDouble();
         final double zSpeed = is.readDouble();
         TileEntityBlock block = (TileEntityBlock) entityPlayer.getEntityWorld().getTileEntity(pos);
+        if(block != null)
         IUCore.proxy.requestTick(false, () -> {
             IBlockState state = block.getBlockState();
             ParticleDigging particle = new ParticleBaseBlockDust(
@@ -81,6 +85,16 @@ public class PacketRunParticles implements IPacket {
                     zSpeed,
                     state
             );
+            if (pos != null && block.hasSpecialModel()) {
+                IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(state);
+                if (model instanceof ISpecialParticleModel) {
+
+                    state = state.getBlock().getExtendedState(state,  entityPlayer.getEntityWorld(), pos);
+
+
+                    ((ISpecialParticleModel)model).enhanceParticle(particle, (TileEntityBlockStateContainer.PropertiesStateInstance) state);
+                }
+            }
             particle.init();
             Minecraft.getMinecraft().effectRenderer.addEffect(particle);
         });

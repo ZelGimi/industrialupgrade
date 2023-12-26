@@ -1,11 +1,15 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.blocks.state.TileEntityBlockStateContainer;
+import com.denfop.render.base.ISpecialParticleModel;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ParticleBaseBlockDust;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleDigging;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
@@ -74,6 +78,16 @@ public class PacketLandEffect implements IPacket {
                             mz,
                             state
                     );
+                    if (pos != null && block.hasSpecialModel()) {
+                        IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(state);
+                        if (model instanceof ISpecialParticleModel) {
+
+                            state = state.getBlock().getExtendedState(state,  entityPlayer.getEntityWorld(), pos);
+
+
+                            ((ISpecialParticleModel)model).enhanceParticle(particle, (TileEntityBlockStateContainer.PropertiesStateInstance) state);
+                        }
+                    }
                     particle.init();
                     mc.effectRenderer.addEffect(particle);
                 }

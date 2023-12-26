@@ -129,6 +129,9 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
             if ((itemStack.getItem() instanceof IUpgradeItem)) {
                 return false;
             }
+            if (list == null) {
+                return false;
+            }
             return list.contains(new RecipeInputStack(itemStack));
         }
     }
@@ -185,13 +188,16 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     }
 
     public BaseMachineRecipe consume() {
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 0; i < this.recipe.getSize(); i++) {
             if (this.get(i).isEmpty()) {
                 return null;
             }
         }
         List<ItemStack> list = new ArrayList<>();
-        this.contents.forEach(list::add);
+        for (int i = 0; i < this.recipe.getSize(); i++) {
+            list.add(this.contents.get(i));
+        }
+
         if (this.tank == null) {
             return Recipes.recipes.getRecipeConsume(this.recipe, this.tile.getRecipeOutput(), this.recipe.consume(), list);
         } else {
@@ -239,7 +245,11 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     public void setRecipe(final IBaseRecipe recipe) {
         this.recipe = recipe;
         this.accepts = Recipes.recipes.getMap_recipe_managers_itemStack(this.recipe.getName());
+        this.load();
+    }
 
+    public void setRecipe(final String recipe) {
+        this.setRecipe(Recipes.recipes.getRecipe(recipe));
     }
 
     public List<BaseMachineRecipe> getRecipe_list() {

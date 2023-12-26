@@ -140,7 +140,9 @@ public class TransportNetLocal {
                     }
 
                 }
+                return false;
             }
+            return true;
         } else{
             for(ItemStack stack1 : BlackItemStacks) {
                 if(stack1.isItemEqual(stack)) {
@@ -162,7 +164,9 @@ public class TransportNetLocal {
                     }
 
                 }
+                return false;
             }
+            return true;
         } else{
             for(FluidStack stack1 : BlackItemStacks) {
                 if(stack1.isFluidEqual(stack)) {

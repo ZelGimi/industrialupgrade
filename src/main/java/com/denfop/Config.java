@@ -606,7 +606,7 @@ public final class Config {
             energyPerultraLowPowerOperation1 = config.get("UltimateDrill", "energyPerUltraBigHolesOperation (7x7)", 700).getInt(
                     700);
 
-            maxVein = config.get("general", "Maximum amount of ore in a vein", 30000).getInt(30000);
+            maxVein = config.get("general", "Maximum amount of ore in a vein", 20000).getInt(20000);
             enableIC2EasyMode = config
                     .get("Transformer mode", "unchecking the tier", false)
                     .getBoolean(false);

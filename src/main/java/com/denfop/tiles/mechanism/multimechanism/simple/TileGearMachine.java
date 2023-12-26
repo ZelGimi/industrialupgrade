@@ -61,6 +61,18 @@ public class TileGearMachine extends TileMultiMachine {
 
 
         }
+        addrecipe(
+                "ingotOsmium",
+                "gearOsmium"
+        );
+        addrecipe(
+                "ingotTantalum",
+                "gearTantalum"
+        );
+        addrecipe(
+                "ingotCadmium",
+                "gearCadmium"
+        );
     }
 
     @Override

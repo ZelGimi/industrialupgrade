@@ -105,6 +105,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                 potionRemovalCost.put(MobEffects.WEAKNESS, 200);
             }
         }
+
         this.armor = typeArmor;
         this.name = typeArmor.name().toLowerCase() + "_" + subTypeArmor.name().toLowerCase();
 
@@ -114,6 +115,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         setMaxStackSize(1);
         setNoRepair();
         setUnlocalizedName(name);
+        this.setMaxDamage(0);
         setCreativeTab(IUCore.EnergyTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
@@ -210,7 +212,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
             if (nbt.getString("mode").equals("") || !armor.getSkinsList().contains(mode)) {
                 return getModelLocation1(name, "");
             } else {
-                return getModelLocation1(name + "_"  + mode.toLowerCase(),"" );
+                return getModelLocation1(name + "_" + mode.toLowerCase(), "");
             }
         });
         String[] mode = {"", "_Zelen", "_Demon", "_Dark", "_Cold", "_Ender", "_Ukraine", "_Fire", "_Snow", "_Taiga", "_Desert",
@@ -219,7 +221,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
             if (s.equals("")) {
                 ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
             } else {
-                ModelBakery.registerItemVariants(this, getModelLocation1(name+ s.toLowerCase(),""));
+                ModelBakery.registerItemVariants(this, getModelLocation1(name + s.toLowerCase(), ""));
             }
 
         }
@@ -237,7 +239,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
             } else {
                 return Constants.TEXTURES + ":textures/armor/" + this.armor
                         .name()
-                        .toLowerCase() + "_" + mode.toLowerCase()+ "_2.png";
+                        .toLowerCase() + "_" + mode.toLowerCase() + "_2.png";
             }
         }
 
@@ -322,7 +324,9 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
 
         switch (this.armorType) {
             case HEAD:
-                for (PotionEffect effect : player.getActivePotionEffects()) {
+                List<PotionEffect> effects = new ArrayList<>(player.getActivePotionEffects());
+
+                for (PotionEffect effect : effects) {
 
                     Integer cost = potionRemovalCost.get(effect.getPotion());
                     if (cost != null) {
@@ -360,8 +364,8 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     int skylight = player.getEntityWorld().getLightFromNeighbors(new BlockPos(x, y, z));
                     boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
                     boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
-                    if(without || with) {
-                        if (skylight > 8 || player.getEntityWorld().provider.isDaytime()) {
+                    if (without || with) {
+                        if (skylight > 8) {
                             IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
                             if (with) {
                                 player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0, true, true));
@@ -374,7 +378,7 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                             }
                             player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
                         }
-                    }else{
+                    } else {
                         player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
                     }
                     ret = true;
@@ -832,16 +836,20 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
             boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
             boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
             boolean auto = this.listCapability.contains(EnumCapability.NIGHT_VISION_AUTO);
-            if(listCapability.contains(EnumCapability.SPEED))
+            if (listCapability.contains(EnumCapability.SPEED)) {
                 info.add(Localization.translate("iu.special_armor_speed"));
+            }
             if (with || without || auto) {
                 info.add(Localization.translate("iu.special_armor_nightvision") + Keyboard.getKeyName(Math.abs(KeyboardClient.armormode.getKeyCode())));
-                if(with)
+                if (with) {
                     info.add(Localization.translate("iu.special_armor_nightvision_1"));
-                if(without)
+                }
+                if (without) {
                     info.add(Localization.translate("iu.special_armor_nightvision_2"));
-                if(auto)
+                }
+                if (auto) {
                     info.add(Localization.translate("iu.special_armor_nightvision_3"));
+                }
             }
             if (this.listCapability.contains(EnumCapability.BIG_JUMP)) {
                 info.add(Localization.translate("iu.special armor big jump") + Keyboard.getKeyName(

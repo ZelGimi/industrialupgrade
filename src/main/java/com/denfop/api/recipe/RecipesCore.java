@@ -88,8 +88,27 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("empty", 1, false, true);
         this.addRecipeManager("matterAmplifier", 1, true, true);
         this.addRecipeManager("scrapbox", 1, true, true);
+        this.addRecipeManager("battery_factory", 9, true, true);
+        this.addRecipeManager("socket_factory", 6, true, true);
+        this.addRecipeManager("active_matter_factory", 1, true, true);
+        this.addRecipeManager("laser", 1, true, true);
+        this.addRecipeManager("graphite_recipe", 2, true, true);
+        this.addRecipeManager("solar_glass_recipe", 1, true, true);
+
+        this.addRecipeManager("stamp_vent", 4, true, false);
+        this.addRecipeManager("stamp_plate", 4, true, false);
+        this.addRecipeManager("stamp_exchanger", 4, true, false);
+        this.addRecipeManager("stamp_coolant", 4, true, false);
+        this.addRecipeManager("stamp_capacitor", 4, true, false);
 
 
+        this.addRecipeManager("reactor_simple_rod", 5, true, true);
+        this.addRecipeManager("reactor_dual_rod", 3, true, true);
+        this.addRecipeManager("reactor_quad_rod", 7, true, true);
+
+        this.addRecipeManager("waste_recycler", 1, true, true);
+        this.addRecipeManager("enchanter_books", 2, true, true);
+        this.addRecipeManager("anvil", 1, true, true);
     }
 
     public void setCanAdd(final boolean canAdd) {

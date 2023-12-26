@@ -55,7 +55,7 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
         super(12);
         this.coef = 1;
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluiddizel.getInstance());
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSource(
                 this,
                 (double) 50000 * coef,

@@ -7,6 +7,8 @@ import com.denfop.api.transport.ITransportAcceptor;
 import com.denfop.api.transport.ITransportConductor;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.state.TileEntityBlockStateContainer;
+import com.denfop.blocks.state.UnlistedProperty;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.container.ContainerCable;
 import com.denfop.gui.GuiCable;
@@ -34,7 +36,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -42,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TileEntityMultiCable extends TileEntityInventory implements IUpdatableTileEvent {
@@ -51,8 +56,15 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
     private ResourceLocation texture;
     private List<EnumFacing> blackList = new ArrayList<>();
     public ItemStack stackFacade = ItemStack.EMPTY;
+
+    public static final IUnlistedProperty<RenderState> renderStateProperty = new UnlistedProperty(
+            "renderstate",
+            RenderState.class
+    );
+
     @SideOnly(Side.CLIENT)
     public DataCable dataCable;
+    private RenderState renderState;
 
 
     public TileEntityMultiCable(ICableItem name) {
@@ -72,8 +84,8 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         if (this.texture == null) {
             this.texture = new ResourceLocation(
                     Constants.MOD_ID,
-                    "textures/blocks/wiring/" + getCableItem().getMainPath() + "/" + getCableItem()
-                            .getNameCable() + ".png"
+                    "blocks/wiring/" + getCableItem().getMainPath() + "/" + getCableItem()
+                            .getNameCable()
             );
         }
         return this.texture;
@@ -144,6 +156,13 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         new PacketUpdateFieldTile(this, "stackFacade", this.stackFacade);
     }
 
+    @Override
+    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return super.getPickBlock(player, target);
+    }
+    public List<ItemStack> getAuxDrops(int fortune) {
+        return Collections.emptyList();
+    }
     public SoundType getBlockSound(Entity entity) {
         return SoundType.CLOTH;
     }
@@ -210,6 +229,8 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         }
     }
 
+
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return null;
@@ -250,10 +271,12 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
             this.connectivity = connectivity;
             new PacketUpdateFieldTile(this, "connectivity", this.connectivity);
             new PacketUpdateFieldTile(this, "texture", this.texture);
-
+            this.rerender();
         }
     }
+    public void updateConnectivity(){
 
+    }
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -290,7 +313,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
             else
                 return false;
         }
-        return super.onActivated(player, hand, side, hitX, hitY, hitZ);
+        return false;
 
 
     }
@@ -342,6 +365,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         if (name.equals("connectivity")) {
             try {
                 this.connectivity = (byte) DecoderHandler.decode(is);
+                this.renderState = new RenderState(this.getTexture(),this.connectivity);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -349,6 +373,7 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
         if (name.equals("texture")) {
             try {
                 this.texture = (ResourceLocation) DecoderHandler.decode(is);
+                this.renderState = new RenderState(this.getTexture(),this.connectivity);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -403,7 +428,20 @@ public class TileEntityMultiCable extends TileEntityInventory implements IUpdata
             throw new RuntimeException(e);
         }
     }
+    public boolean hasSpecialModel() {
+        return true;
+    }
+    public TileEntityBlockStateContainer.PropertiesStateInstance getExtendedState(TileEntityBlockStateContainer.PropertiesStateInstance state) {
+        state = super.getExtendedState(state);
+        if (  this.renderState == null) {
 
+            this.renderState = new RenderState(this.getTexture(), this.connectivity);
+
+        }
+        state = state.withProperties(renderStateProperty,   this.renderState);
+
+        return state;
+    }
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
         byte event1 = (byte) var2;

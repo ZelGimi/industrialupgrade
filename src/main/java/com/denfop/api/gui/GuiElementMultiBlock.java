@@ -4,6 +4,7 @@ import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.gui.GuiCore;
 import com.denfop.items.book.GUIBook;
+import com.denfop.register.InitMultiBlockSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -71,10 +72,10 @@ public class GuiElementMultiBlock extends GuiElement<GuiElementFluidToFluids> {
 
     public void drawBackground(int mouseX, int mouseY) {
         bindCommonTexture1();
-        final Map<BlockPos, ItemStack> map = multiblock.ItemStackMap;
-        int structureLength = this.multiblock.getLength();
-        int structureWidth = this.multiblock.getWeight();
-        int structureHeight = this.multiblock.getHeight();
+        final Map<BlockPos, ItemStack> map =multiblock.ItemStackMap;
+        int structureLength =multiblock.getLength();
+        int structureWidth = multiblock.getWeight();
+        int structureHeight = multiblock.getHeight();
         GlStateManager.enableRescaleNormal();
         GlStateManager.pushMatrix();
         RenderHelper.disableStandardItemLighting();
@@ -95,15 +96,20 @@ public class GuiElementMultiBlock extends GuiElement<GuiElementFluidToFluids> {
         GlStateManager.rotate(25, 1.0F, 0.0F, 0.0F);
         GlStateManager.translate(0, 1, 0);
         // scale 20 25 33
-        double tempScale = 31 / scale;
+        double tempScale = 25 / scale;
         double devRotate = rotate % 360;
+        if(structureLength > 3 || structureWidth > 3) {
+            final double devRotate1 = Math.abs(devRotate);
+            GlStateManager.rotate((float) devRotate1, 0.0F, 0.2F, 0.0F);
+        }else{
+            GlStateManager.rotate((float) devRotate, 0.0F, 0.2F, 0.0F);
+        }
         GlStateManager.scale(0.9, 0.9, 1);
-        GlStateManager.rotate(rotate, 0.0F, 1.0F, 0.0F);
 
         if (devRotate == 315 || devRotate == -45) {
             structureWidth = Math.max(structureLength, structureWidth);
             GlStateManager.translate(
-                    2.5,
+                    2.5 - Math.max(2 * (structureHeight - 3),0),
                     (structureHeight - 2) - 1.25 * (structureHeight - 3) * tempScale,
                     -(structureHeight - 3)
             );
@@ -135,7 +141,7 @@ public class GuiElementMultiBlock extends GuiElement<GuiElementFluidToFluids> {
         textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         for (Map.Entry<BlockPos, ItemStack> itemStackBlockPosEntry : map.entrySet()) {
             IBlockState state;
-            EnumFacing facing = this.multiblock.RotationMap.get(itemStackBlockPosEntry.getKey());
+            EnumFacing facing = multiblock.RotationMap.get(itemStackBlockPosEntry.getKey());
             if (facing == EnumFacing.WEST || facing == EnumFacing.EAST) {
                 facing = facing.getOpposite();
             }

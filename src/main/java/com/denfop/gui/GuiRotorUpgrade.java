@@ -5,6 +5,8 @@ import com.denfop.container.ContainerRotorUpgrade;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
+
 public class GuiRotorUpgrade extends GuiCore<ContainerRotorUpgrade> {
 
     public final ContainerRotorUpgrade container;
@@ -15,6 +17,11 @@ public class GuiRotorUpgrade extends GuiCore<ContainerRotorUpgrade> {
         super(guiContainer);
         this.container = guiContainer;
         this.ySize = 206;
+    }
+
+    @Override
+    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override

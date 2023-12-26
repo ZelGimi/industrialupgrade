@@ -63,6 +63,7 @@ public class TileEntityFacadeBlock extends TileEntityInventory implements IUpdat
                 return Block.getBlockFromItem(stack.getItem()) != Blocks.AIR;
             }
         };
+        this.stackSlot.setStackSizeLimit(1);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class TileEntityFacadeBlock extends TileEntityInventory implements IUpdat
                         ((TileEntityMultiCable) tile).rerenderCable(this.stackSlot.get());
                     }
                 }
-                while (tileEntityMultiCables.size() > 1) {
+                while (tileEntityMultiCables.size() > 0) {
                     final TileEntityMultiCable componemt = tileEntityMultiCables.remove(0);
                     for (EnumFacing facing1 : EnumFacing.VALUES) {
                         TileEntity tile = world.getTileEntity(componemt.getBlockPos().offset(facing1));

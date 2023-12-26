@@ -113,6 +113,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
         this.toolType = type.getToolType();
         this.operations = type.getListOperations();
         this.item_tools = type.getListItems();
+        this.setMaxDamage(0);
         setCreativeTab(IUCore.EnergyTab);
         this.setUnlocalizedName(name);
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);

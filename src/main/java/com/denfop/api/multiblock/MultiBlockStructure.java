@@ -2,8 +2,10 @@ package com.denfop.api.multiblock;
 
 import com.denfop.IUCore;
 import com.denfop.Localization;
+import com.denfop.tiles.reactors.graphite.IExchanger;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +23,9 @@ public class MultiBlockStructure {
     public final Map<BlockPos, Class<? extends IMultiElement>> blockPosMap = new HashMap<>();
     public final Map<BlockPos, ItemStack> ItemStackMap = new HashMap<>();
     public final List<ItemStack> itemStackList = new ArrayList<>();
+
     public final Map<BlockPos, EnumFacing> RotationMap = new HashMap<>();
+    public final Map<BlockPos, IBakedModel> bakedModelMap = new HashMap<>();
     public final BlockPos pos;
     private final Map<Class<? extends IMultiElement>, String> reportLaskBlock = new HashMap<>();
     public boolean hasActivatedItem = false;
@@ -243,18 +247,19 @@ public class MultiBlockStructure {
                 }
             } else if (!entry.getValue().isInstance(tile)) {
                 String report = this.reportLaskBlock.get(entry.getValue());
-                if (!report.isEmpty()) {
+
+                if (report != null && !report.isEmpty()) {
                     if (IUCore.proxy.isSimulating()) {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                Localization.translate("iu.not.found") + pos1 + " " + Localization.translate(report)
+                                Localization.translate("iu.not.found") + "x: "+ pos1.getX() + " y: "+ pos1.getY() + " z: "+ pos1.getZ() + " " + Localization.translate(report)
                         );
                     }
                 } else {
                     if (IUCore.proxy.isSimulating()) {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                Localization.translate("iu.not.found") + pos1
+                                Localization.translate("iu.not.found") + "x: "+ pos1.getX() + " y: "+ pos1.getY() + " z: "+ pos1.getZ() + " "+ this.ItemStackMap.get(entry.getKey()).getDisplayName()
                         );
                     }
                 }

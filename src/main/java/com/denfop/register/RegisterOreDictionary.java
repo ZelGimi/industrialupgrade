@@ -377,7 +377,65 @@ public class RegisterOreDictionary {
         add("machineBlockAdvanced", IUItem.advancedMachine);
         add("machineBlockAdvancedCasing", IUItem.advancedMachine);
         add("dustSiliconDioxide", IUItem.silicondioxideDust);
+        add("ingotLithium", new ItemStack(IUItem.crafting_elements,1,447));
+        add("gemBor", new ItemStack(IUItem.crafting_elements,1,448));
+        add("gemBeryllium", new ItemStack(IUItem.crafting_elements,1,449));
+        add("plateLithium", new ItemStack(IUItem.crafting_elements,1,450));
+        add("plateBor", new ItemStack(IUItem.crafting_elements,1,451));
+        add("plateBeryllium", new ItemStack(IUItem.crafting_elements,1,452));
 
+        add("gearOsmium", new ItemStack(IUItem.gear,1,19));
+        add("gearTantalum", new ItemStack(IUItem.gear,1,20));
+        add("gearCadmium", new ItemStack(IUItem.gear,1,21));
+        add("ingotOsmium", new ItemStack(IUItem.iuingot,1,25));
+        add("ingotTantalum", new ItemStack(IUItem.iuingot,1,26));
+        add("ingotCadmium", new ItemStack(IUItem.iuingot,1,27));
+        add("dustOsmium", new ItemStack(IUItem.iudust,1,34));
+        add("dustTantalum", new ItemStack(IUItem.iudust,1,35));
+        add("dustCadmium", new ItemStack(IUItem.iudust,1,36));
+
+        add("casingOsmium", new ItemStack(IUItem.casing,1,26));
+        add("casingTantalum", new ItemStack(IUItem.casing,1,27));
+        add("casingCadmium", new ItemStack(IUItem.casing,1,28));
+
+        add("crushedOsmium", new ItemStack(IUItem.crushed,1,25));
+        add("crushedTantalum", new ItemStack(IUItem.crushed,1,26));
+        add("crushedCadmium", new ItemStack(IUItem.crushed,1,27));
+
+        add("nuggetOsmium", new ItemStack(IUItem.nugget,1,19));
+        add("nuggetTantalum", new ItemStack(IUItem.nugget,1,20));
+        add("nuggetCadmium", new ItemStack(IUItem.nugget,1,21));
+
+        add("plateOsmium", new ItemStack(IUItem.plate,1,28));
+        add("plateTantalum", new ItemStack(IUItem.plate,1,29));
+        add("plateCadmium", new ItemStack(IUItem.plate,1,30));
+
+        add("crushedPurifiedOsmium", new ItemStack(IUItem.purifiedcrushed,1,25));
+        add("crushedPurifiedTantalum", new ItemStack(IUItem.purifiedcrushed,1,26));
+        add("crushedPurifiedCadmium", new ItemStack(IUItem.purifiedcrushed,1,27));
+
+        add("stickOsmium", new ItemStack(IUItem.stik,1,19));
+        add("stickTantalum", new ItemStack(IUItem.stik,1,20));
+        add("stickCadmium", new ItemStack(IUItem.stik,1,21));
+
+        add("doubleplateOsmium", new ItemStack(IUItem.doubleplate,1,28));
+        add("doubleplateTantalum", new ItemStack(IUItem.doubleplate,1,29));
+        add("doubleplateCadmium", new ItemStack(IUItem.doubleplate,1,30));
+
+        add("blockOsmium", new ItemStack(IUItem.block1,1,3));
+        add("blockTantalum", new ItemStack(IUItem.block1,1,4));
+        add("blockCadmium", new ItemStack(IUItem.block1,1,5));
+        add("oreOsmium", new ItemStack(IUItem.ore2,1,3));
+        add("oreTantalum", new ItemStack(IUItem.ore2,1,4));
+        add("oreCadmium", new ItemStack(IUItem.ore2,1,5));
+
+        add("smalldustOsmium", new ItemStack(IUItem.smalldust,1,29));
+        add("smalldustTantalum", new ItemStack(IUItem.smalldust,1,30));
+        add("smalldustCadmium", new ItemStack(IUItem.smalldust,1,31));
+
+        add("verysmalldustOsmium", new ItemStack(IUItem.verysmalldust,1,19));
+        add("verysmalldustTantalum", new ItemStack(IUItem.verysmalldust,1,20));
+        add("verysmalldustCadmium", new ItemStack(IUItem.verysmalldust,1,21));
     }
 
 }

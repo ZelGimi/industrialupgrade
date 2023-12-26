@@ -53,7 +53,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         IUpdatableTileEvent,
         IStorage {
 
-    public static EnumElectricBlock electricblock;
+    public EnumElectricBlock electricblock;
     public final double tier;
     public final boolean chargepad;
     public final String name;
@@ -116,7 +116,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         electricblock = electricBlock;
     }
 
-    public static EnumElectricBlock getElectricBlock() {
+    public  EnumElectricBlock getElectricBlock() {
 
         return electricblock;
     }
@@ -328,7 +328,7 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
     protected void chargeitems(ItemStack itemstack, double chargefactor) {
-        if (!(itemstack.getItem() instanceof IEnergyItem || itemstack.getItem() instanceof IEnergyContainerItem)) {
+        if (!(itemstack.getItem() instanceof IEnergyItem)) {
             return;
         }
         double freeamount = ElectricItem.manager.charge(itemstack, Double.POSITIVE_INFINITY, Integer.MAX_VALUE, true, true);

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_side_1",
+    "down" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_end_1",
+    "up" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_top_1",
+    "north" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_side_1",
+    "east" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_side_2",
+    "south" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_side_1",
+    "west" : "industrialupgrade:blocks/graphite_reactor/per_graphite_controller_side_2"
+  }
+}

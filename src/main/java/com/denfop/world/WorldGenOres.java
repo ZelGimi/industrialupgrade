@@ -3,10 +3,16 @@ package com.denfop.world;
 import com.denfop.Config;
 import com.denfop.IUItem;
 import com.denfop.blocks.FluidName;
+import com.denfop.world.vein.AlgorithmVein;
+import com.denfop.world.vein.ChanceOre;
+import com.denfop.world.vein.TypeVein;
+import com.denfop.world.vein.VeinType;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -18,17 +24,166 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class WorldGenOres implements IWorldGenerator {
 
 
     final Fluid fluid = FluidName.fluidneft.getInstance();
+    public static List<ChunkPos> chunkPosList = new ArrayList<>();
+    public static List<VeinType> veinTypes = new ArrayList<>();
+    public static List<VeinType> veinTypes1 = new ArrayList<>();
     final Block block = fluid.getBlock();
+
+    public static Random random = new Random();
 
     public static void init() {
         GameRegistry.registerWorldGenerator(new WorldGenOres(), 0);
 
+    }
+
+    public static void initVein() {
+        veinTypes.add(new VeinType(IUItem.heavyore, 0, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 75, 0),
+                        new ChanceOre(Blocks.GOLD_ORE.getDefaultState(), 25, 0)}
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 1, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(7), 28, 7),
+                        new ChanceOre(Blocks.GOLD_ORE.getDefaultState(), 44, 0),
+                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(0), 28, 0)}
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 2, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(11), 26, 11),
+                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(2), 74, 2)}
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 3, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 44, 8),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(6), 56, 6)}
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 4, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 80, 0),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(4), 20, 4)}
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 5, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(12), 16, 12),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(11), 26, 11),
+                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(1), 24, 1),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(10), 34, 10),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 6, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getStateFromMeta(3), 60, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState(), 32, 0),
+                        new ChanceOre(IUItem.radiationore.getStateFromMeta(1), 4, 1),
+                        new ChanceOre(IUItem.radiationore.getStateFromMeta(0), 3, 0),
+                        new ChanceOre(IUItem.radiationore.getStateFromMeta(2), 1, 2),
+                }
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 7, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.classic_ore.getStateFromMeta(0), 55, 0),
+                        new ChanceOre(Blocks.LAPIS_ORE.getDefaultState(), 23, 0),
+                        new ChanceOre(Blocks.REDSTONE_ORE.getDefaultState(), 21, 0)
+                }
+
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 8, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(13), 44, 13),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(5), 28, 5),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(0), 28, 0),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 9, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(4), 50, 4),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(6), 50, 6),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 10, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 50, 8),
+                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(3), 25, 3),
+                        new ChanceOre(IUItem.toriyore.getDefaultState(), 25, 0),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 11, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(12), 65, 12),
+                        new ChanceOre(Blocks.COAL_ORE.getDefaultState(), 35, 0)
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 12, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(8), 47, 8),
+                        new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 33, 0),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(2), 33, 2),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 13, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(IUItem.ore.getStateFromMeta(13), 66, 13),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(5), 17, 5),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(1), 17, 1),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 14, TypeVein.SMALL,
+                new ChanceOre[]{new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 30, 0),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(5), 40, 5),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(1), 30, 1),
+                }
+        ));
+        veinTypes.add(new VeinType(IUItem.heavyore, 15, TypeVein.SMALL,
+                new ChanceOre[]{
+                        new ChanceOre(IUItem.ore.getStateFromMeta(3), 80, 3),
+                        new ChanceOre(IUItem.classic_ore.getStateFromMeta(1), 20, 1),
+                }
+        ));
+
+        veinTypes.add(new VeinType(null, 16, TypeVein.SMALL,
+                new ChanceOre[]{
+                        new ChanceOre(IUItem.ore.getStateFromMeta(14), 70, 14),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(7), 30, 7),
+                }
+        ));
+
+        veinTypes.add(new VeinType(null, 17, TypeVein.SMALL,
+                new ChanceOre[]{
+                        new ChanceOre(IUItem.ore.getStateFromMeta(15), 60, 15),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(1), 40, 1),
+                }
+        ));
+
+        veinTypes.add(new VeinType(null, 18, TypeVein.SMALL,
+                new ChanceOre[]{
+                        new ChanceOre(IUItem.ore.getStateFromMeta(2), 50, 2),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(9), 50, 9),
+                }
+        ));
+        veinTypes.add(new VeinType(null, 19, TypeVein.SMALL,
+                new ChanceOre[]{
+                        new ChanceOre(IUItem.ore2.getStateFromMeta(3), 65, 3),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(14), 35, 14),
+
+                }
+        ));
+        veinTypes.add(new VeinType(null, 20, TypeVein.SMALL,
+                new ChanceOre[]{
+
+                        new ChanceOre(IUItem.ore2.getStateFromMeta(4), 70, 4),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(13), 20, 13),
+                        new ChanceOre(Blocks.IRON_ORE.getDefaultState(), 10, 0),
+                }
+        ));
+
+        veinTypes.add(new VeinType(null, 21, TypeVein.SMALL,
+                new ChanceOre[]{
+
+                        new ChanceOre(IUItem.ore2.getStateFromMeta(5), 70, 5),
+                        new ChanceOre(IUItem.ore.getStateFromMeta(4), 30, 4),
+                }
+        ));
     }
 
     private static int randomX(Chunk chunk, Random rnd) {
@@ -39,8 +194,7 @@ public class WorldGenOres implements IWorldGenerator {
         return chunk.z * 16 + rnd.nextInt(16);
     }
 
-    private static void genRubberTree(Random rnd, long seed, Chunk chunk, float baseScale) {
-        rnd.setSeed(seed);
+    private static void genRubberTree(Chunk chunk, float baseScale) {
         Biome[] biomes = new Biome[6];
 
         int rubberTrees;
@@ -57,30 +211,30 @@ public class WorldGenOres implements IWorldGenerator {
         for (Biome biome : biomes) {
             if (biome != null) {
                 if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
-                    rubberTrees += rnd.nextInt(10) + 5;
+                    rubberTrees += random.nextInt(10) + 5;
                 }
 
-                if (  BiomeDictionary.hasType(
+                if (BiomeDictionary.hasType(
                         biome,
                         BiomeDictionary.Type.FOREST
                 ) || BiomeDictionary.hasType(
                         biome,
                         BiomeDictionary.Type.JUNGLE
                 )) {
-                    rubberTrees += rnd.nextInt(5) + 1;
+                    rubberTrees += random.nextInt(5) + 1;
                 }
             }
         }
 
         rubberTrees = Math.round((float) rubberTrees * baseScale);
         rubberTrees /= 2;
-        if (rubberTrees > 0 && rnd.nextInt(100) < rubberTrees) {
+        if (rubberTrees > 0 && random.nextInt(100) < rubberTrees) {
             WorldGenRubTree gen = new WorldGenRubTree(false);
             for (i = 0; i < rubberTrees; ++i) {
                 if (!gen.generate(
                         chunk.getWorld(),
-                        rnd,
-                        new BlockPos(randomX(chunk, rnd), chunk.getWorld().getSeaLevel(), randomZ(chunk, rnd))
+                        random,
+                        new BlockPos(randomX(chunk, random), chunk.getWorld().getSeaLevel(), randomZ(chunk, random))
                 )) {
                     rubberTrees -= 3;
                 }
@@ -99,7 +253,7 @@ public class WorldGenOres implements IWorldGenerator {
             final IChunkGenerator chunkGenerator,
             final IChunkProvider chunkProvider
     ) {
-        if (world.provider.getDimension() == 0) {
+        if (Config.DimensionList.contains(world.provider.getDimension())) {
             int var2;
             int var3;
             int var4;
@@ -113,21 +267,13 @@ public class WorldGenOres implements IWorldGenerator {
                     var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8) + 60;
                     var5 = chunkZ * 16 + random.nextInt(16) + 8;
                     if (block != null) {
-                        new WorldGenOil(block, block)
+                        new WorldGenOil(block)
                                 .generate(world, random, new BlockPos(var3, var4, var5));
                     }
 
                 }
             }
-            if (random.nextInt(1000) + 1 > 900) {
 
-                var3 = chunkX * 16 + random.nextInt(16) + 8;
-                var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8);
-                var5 = chunkZ * 16 + random.nextInt(16) + 8;
-                new WorldGenMinerals().generate(world, random, new BlockPos(var3, var4, var5));
-
-
-            }
             if (random.nextInt(900) + 1 > 800) {
 
                 var3 = chunkX * 16 + random.nextInt(16) + 8;
@@ -137,12 +283,13 @@ public class WorldGenOres implements IWorldGenerator {
 
 
             }
+
+
+            Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
+            generateSurface(world, random, chunkX * 16, chunkZ * 16, chunkGenerator, chunkProvider, chunk);
+
+            genRubberTree(chunk, 2);
         }
-        Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
-        generateSurface(world, random, chunkX * 16, chunkZ * 16, chunkGenerator, chunkProvider, chunk);
-
-        genRubberTree(random, random.nextLong(), chunk, 2);
-
     }
 
     private void generateSurface(
@@ -152,251 +299,6 @@ public class WorldGenOres implements IWorldGenerator {
             final Chunk chunk
     ) {
 
-
-        if (Config.EnableToriyOre) {
-            this.addOreSpawn(
-                    IUItem.toriyore.getStateFromMeta(0), world, random, x, y, 16, 16, 3 + random.nextInt(2), 10, 10,
-                    70
-            );
-        }
-
-        if (Config.MikhailOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(0), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.AluminiumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(1), world, random, x, y, 16, 16, 3 + random.nextInt(3), 16, 0, 70);
-        }
-        if (Config.VanadiumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(2), world, random, x, y, 16, 16, 3 + random.nextInt(3), 17, 0, 70);
-        }
-        if (Config.TungstenOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(3), world, random, x, y, 16, 16, 3 + random.nextInt(3), 17, 0, 70);
-        }
-        if (Config.CobaltOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(4), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.MagnesiumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(5), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.NickelOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(6), world, random, x, y, 16, 16, 3 + random.nextInt(3), 17, 0, 70);
-        }
-        if (Config.PlatiumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(7), world, random, x, y, 16, 16, 3 + random.nextInt(3), 17, 0, 70);
-        }
-        if (Config.TitaniumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(8), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.ChromiumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(9), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.SpinelOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(10), world, random, x, y, 16, 16, 3 + random.nextInt(3), 16, 0, 70);
-        }
-        if (Config.SilverOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(11), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.ZincOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(12), world, random, x, y, 16, 16, 3 + random.nextInt(3), 17, 0, 70);
-        }
-        if (Config.ManganeseOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(13), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.IridiumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(14), world, random, x, y, 16, 16, 3 + random.nextInt(3), 17, 0, 70);
-        }
-        if (Config.GermaniumOre) {
-            this.addOreSpawn(IUItem.ore.getStateFromMeta(15), world, random, x, y, 16, 16, 3 + random.nextInt(3), 15, 0, 70);
-        }
-        if (Config.CopperOre) {
-            this.addOreSpawn(
-                    IUItem.classic_ore.getStateFromMeta(0),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    4 + random.nextInt(4),
-                    32,
-                    0,
-                    70
-            );
-        }
-        if (Config.TinOre) {
-            this.addOreSpawn(
-                    IUItem.classic_ore.getStateFromMeta(1),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    4 + random.nextInt(4),
-                    34,
-                    0,
-                    70
-            );
-        }
-        if (Config.LeadOre) {
-            this.addOreSpawn(
-                    IUItem.classic_ore.getStateFromMeta(2),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(3),
-                    11,
-                    0,
-                    70
-            );
-        }
-        if (Config.UraniumOre) {
-            this.addOreSpawn(
-                    IUItem.classic_ore.getStateFromMeta(3),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(2),
-                    11,
-                    0,
-                    70
-            );
-        }
-        if (Config.MagnetiteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(0), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.CalaveriteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(1), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.GalenaOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(2), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.NickeliteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(3), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.PyriteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(4), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.QuartziteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(5), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.UraniteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(6), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.AzuriteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(7), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.RhodoniteOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(8), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.AlfilditOre) {
-            this.addOreSpawn(IUItem.heavyore.getStateFromMeta(9), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10, 70);
-        }
-        if (Config.EuxeniteOre) {
-            this.addOreSpawn(
-                    IUItem.heavyore.getStateFromMeta(10),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(2),
-                    4,
-                    10,
-                    70
-            );
-        }
-        if (Config.SmithsoniteOre) {
-            this.addOreSpawn(
-                    IUItem.heavyore.getStateFromMeta(11),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(2),
-                    4,
-                    10,
-                    70
-            );
-        }
-        if (Config.IlmeniteOre) {
-            this.addOreSpawn(
-                    IUItem.heavyore.getStateFromMeta(12),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(2),
-                    4,
-                    10,
-                    70
-            );
-        }
-        if (Config.TodorokiteOre) {
-            this.addOreSpawn(
-                    IUItem.heavyore.getStateFromMeta(13),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(2),
-                    4,
-                    10,
-                    70
-            );
-        }
-        if (Config.FerroaugiteOre) {
-            this.addOreSpawn(
-                    IUItem.heavyore.getStateFromMeta(14),
-                    world,
-                    random,
-                    x,
-                    y,
-                    16,
-                    16,
-                    3 + random.nextInt(2),
-                    4,
-                    10,
-                    70
-            );
-        }
-        if (Config.SheeliteeOre) {
-            this.addOreSpawn(
-                    IUItem.heavyore.getStateFromMeta(15), world, random, x, y, 16, 16, 3 + random.nextInt(2), 4, 10,
-                    70
-            );
-        }
-        if (Config.AmericiumOre) {
-            this.addOreSpawn(
-                    IUItem.radiationore.getStateFromMeta(0), world, random, x, y, 16, 16, 2 + random.nextInt(2), 10, 10,
-                    70
-            );
-        }
-        if (Config.NeptuniumOre) {
-            this.addOreSpawn(
-                    IUItem.radiationore.getStateFromMeta(1), world, random, x, y, 16, 16, 2 + random.nextInt(2), 8, 10,
-                    70
-            );
-        }
-        if (Config.CuriumOre) {
-            this.addOreSpawn(
-                    IUItem.radiationore.getStateFromMeta(2), world, random, x, y, 16, 16, 2 + random.nextInt(2), 6, 10,
-                    70
-            );
-        }
 
         if (Config.RubyOre) {
             this.addOreSpawn(
@@ -443,7 +345,16 @@ public class WorldGenOres implements IWorldGenerator {
                     70
             );
         }
-
+        if(WorldGenOres.random.nextInt(4) <= 1) {
+            if (veinTypes1.isEmpty()) {
+                veinTypes1 = new ArrayList<>(veinTypes);
+            }
+            int meta = WorldGenOres.random.nextInt(veinTypes1.size());
+            final VeinType veinType = veinTypes1.remove(meta);
+            AlgorithmVein.generate(world, veinType,
+                    new BlockPos(x + random.nextInt(16), 2, y + random.nextInt(16)), chunk, veinType.getMeta()
+            );
+        }
 
     }
 
@@ -461,74 +372,6 @@ public class WorldGenOres implements IWorldGenerator {
                     )
             );
 
-        }
-    }
-
-    private enum TypeOre {
-        COPPER(13, 7, 0, 68, OreDistribution.UNIFORM),
-        TIN(13, 6, 0, 40, OreDistribution.UNIFORM),
-        LEAD(8, 4, 0, 64, OreDistribution.UNIFORM),
-        URANIUM(23, 3, 0, 64, OreDistribution.UNIFORM);
-        private final int count;
-        private final int minHeight;
-        private final int size;
-        private final int maxHeight;
-        private final OreDistribution oreDistribution;
-
-        TypeOre(int count, int size, int minHeight, int maxHeight, OreDistribution oreDistribution) {
-            this.count = count;
-            this.size = size;
-            this.minHeight = minHeight;
-            this.maxHeight = maxHeight;
-            this.oreDistribution = oreDistribution;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public int getMinHeight() {
-            return minHeight;
-        }
-
-        public int getSize() {
-            return size;
-        }
-
-        public int getMaxHeight() {
-            return maxHeight;
-        }
-
-        public OreDistribution getOreDistribution() {
-            return oreDistribution;
-        }
-    }
-
-    private enum OreDistribution {
-        UNIFORM("uniform"),
-        TRIANGLE("triangle"),
-        RAMP("ramp"),
-        REVRAMP("revramp"),
-        SMOOTH("smooth");
-
-        private static final OreDistribution[] values = values();
-        final String name;
-
-        OreDistribution(String name) {
-            this.name = name;
-        }
-
-        public static OreDistribution of(String name) {
-            OreDistribution[] var1 = values;
-            int var2 = var1.length;
-
-            for (OreDistribution value : var1) {
-                if (value.name.equalsIgnoreCase(name)) {
-                    return value;
-                }
-            }
-
-            throw new RuntimeException("Invalid/unknown worldgen distribution configured: " + name);
         }
     }
 

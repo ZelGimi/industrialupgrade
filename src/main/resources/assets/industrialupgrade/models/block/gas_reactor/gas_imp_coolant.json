@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/gas_reactor/imp_coolant",
+    "down" : "industrialupgrade:blocks/gas_reactor/imp_coolant_top",
+    "up" : "industrialupgrade:blocks/gas_reactor/imp_coolant_top",
+    "north" : "industrialupgrade:blocks/gas_reactor/imp_coolant",
+    "east" : "industrialupgrade:blocks/gas_reactor/imp_coolant_side",
+    "south" : "industrialupgrade:blocks/gas_reactor/imp_casing",
+    "west" : "industrialupgrade:blocks/gas_reactor/imp_coolant_side"
+  }
+}

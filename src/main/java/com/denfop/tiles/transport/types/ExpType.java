@@ -1,7 +1,9 @@
 package com.denfop.tiles.transport.types;
 
 
+import com.denfop.Constants;
 import com.denfop.blocks.ISubEnum;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,7 @@ public enum ExpType implements ISubEnum, ICableItem {
     public final float thickness;
     public final double loss;
     public final double capacity;
+    private final ResourceLocation texture;
 
     ExpType(int maxInsulation, int minColoredInsulation, float thickness, double loss, double capacity) {
         this.maxInsulation = maxInsulation;
@@ -32,6 +35,11 @@ public enum ExpType implements ISubEnum, ICableItem {
         this.thickness = thickness;
         this.loss = loss;
         this.capacity = capacity;
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     public static ExpType get(String name) {
@@ -55,5 +63,11 @@ public enum ExpType implements ISubEnum, ICableItem {
     @Override
     public String getMainPath() {
         return "expcable";
+    }
+
+
+    @Override
+    public ResourceLocation getRecourse() {
+        return texture;
     }
 }

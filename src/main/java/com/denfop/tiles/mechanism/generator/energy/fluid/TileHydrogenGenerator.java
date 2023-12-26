@@ -54,7 +54,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         super(12);
         this.coef = 1;
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidhyd.getInstance());
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.energy = this.addComponent(AdvEnergy.asBasicSource(this, (double) 25000 * coef, 1));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidhyd.getInstance()));
     }

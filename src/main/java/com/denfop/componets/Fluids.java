@@ -292,6 +292,10 @@ public class Fluids extends AbstractComponent {
             return this.acceptedFluids.apply(fluid);
         }
 
+        public Predicate<Fluid> getAcceptedFluids() {
+            return acceptedFluids;
+        }
+
         IFluidTankProperties getTankProperties(final EnumFacing side) {
             assert side == null || this.inputSides.contains(side) || this.outputSides.contains(side);
 

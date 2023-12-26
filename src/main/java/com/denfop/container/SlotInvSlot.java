@@ -17,7 +17,12 @@ public class SlotInvSlot extends Slot {
         this.invSlot = invSlot;
         this.index = index;
     }
-
+    public int getJeiX(){
+        return this.xPos-1;
+    }
+    public int getJeiY(){
+        return this.yPos-1;
+    }
     public boolean isItemValid(ItemStack stack) {
         return this.invSlot.accepts(stack, this.index);
     }

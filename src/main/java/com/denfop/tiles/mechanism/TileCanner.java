@@ -251,7 +251,6 @@ public class TileCanner extends TileElectricLiquidTankInventory
         );
         addEnrichRecipe(new FluidStack(FluidRegistry.WATER, 6000), new ItemStack(
                 Items.STICK), FluidName.fluidhot_water.getInstance());
-
     }
 
     @Override

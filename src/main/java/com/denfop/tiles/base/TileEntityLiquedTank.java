@@ -72,7 +72,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
         );
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
 
     }

@@ -52,6 +52,7 @@ public class VeinSystem implements IVeinSystem {
         } else {
             int meta = rand.nextInt(16);
             vein.setType(Type.VEIN);
+            vein.setOldMineral(meta <= 15);
             vein.setMeta(meta);
             vein.setMaxCol(Config.maxVein);
             vein.setCol(Config.maxVein);

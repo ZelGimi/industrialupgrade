@@ -1,0 +1,150 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "gas_casing" : {
+        "model" : "industrialupgrade:gas_reactor/gas_casing"
+      },
+       "adv_gas_casing" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_casing"
+      },
+      "imp_gas_casing" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_casing"
+      },
+      "per_gas_casing" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_casing"
+      },
+      "gas_chamber" : {
+        "model" : "industrialupgrade:gas_reactor/gas_chamber"
+      },
+       "adv_gas_chamber" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_chamber"
+      },
+      "imp_gas_chamber" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_chamber"
+      },
+      "per_gas_chamber" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_chamber"
+      },
+      "gas_controller" : {
+        "model" : "industrialupgrade:gas_reactor/gas_controller"
+      },
+       "adv_gas_controller" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_controller"
+      },
+      "imp_gas_controller" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_controller"
+      },
+      "per_gas_controller" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_controller"
+      },
+      "gas_cell" : {
+        "model" : "industrialupgrade:gas_reactor/gas_cell"
+      },
+       "adv_gas_cell" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_cell"
+      },
+      "imp_gas_cell" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_cell"
+      },
+      "per_gas_cell" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_cell"
+      },
+      "gas_coolant" : {
+        "model" : "industrialupgrade:gas_reactor/gas_coolant"
+      },
+       "adv_gas_coolant" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_coolant"
+      },
+      "imp_gas_coolant" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_coolant"
+      },
+      "per_gas_coolant" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_coolant"
+      },
+      "gas_intercooler" : {
+        "model" : "industrialupgrade:gas_reactor/gas_intercooler"
+      },
+       "adv_gas_intercooler" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_intercooler"
+      },
+      "imp_gas_intercooler" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_intercooler"
+      },
+      "per_gas_intercooler" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_intercooler"
+      },
+      "gas_compressor" : {
+        "model" : "industrialupgrade:gas_reactor/gas_compressor"
+      },
+       "adv_gas_compressor" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_compressor"
+      },
+      "imp_gas_compressor" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_compressor"
+      },
+      "per_gas_compressor" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_compressor"
+      },
+      "gas_socket" : {
+        "model" : "industrialupgrade:gas_reactor/gas_socket"
+      },
+       "adv_gas_socket" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_socket"
+      },
+      "imp_gas_socket" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_socket"
+      },
+      "per_gas_socket" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_socket"
+      },
+      "gas_regenerator" : {
+        "model" : "industrialupgrade:gas_reactor/gas_regenerator"
+      },
+       "adv_gas_regenerator" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_regenerator"
+      },
+      "imp_gas_regenerator" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_regenerator"
+      },
+      "per_gas_regenerator" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_regenerator"
+      },
+      "gas_recirculation_pump" : {
+        "model" : "industrialupgrade:gas_reactor/gas_recirculation_pump"
+      },
+       "adv_gas_recirculation_pump" : {
+        "model" : "industrialupgrade:gas_reactor/gas_adv_recirculation_pump"
+      },
+      "imp_gas_recirculation_pump" : {
+        "model" : "industrialupgrade:gas_reactor/gas_imp_recirculation_pump"
+      },
+      "per_gas_recirculation_pump" : {
+        "model" : "industrialupgrade:gas_reactor/gas_per_recirculation_pump"
+      }
+    },
+     "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

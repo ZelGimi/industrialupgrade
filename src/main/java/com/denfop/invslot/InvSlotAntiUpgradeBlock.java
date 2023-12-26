@@ -15,7 +15,7 @@ public class InvSlotAntiUpgradeBlock extends InvSlot {
         if (stack.getItem() instanceof IUpgradeItem) {
             return true;
         }
-        return super.accepts(stack, index);
+        return false;
     }
 
 }

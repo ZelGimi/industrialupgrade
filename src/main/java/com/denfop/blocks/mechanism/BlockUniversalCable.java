@@ -130,7 +130,7 @@ public enum BlockUniversalCable implements IMultiTileBlock {
     }
 
     @Override
-    public String[] getMultiModels() {
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
         List<String> stringList = new ArrayList<>();
         Arrays.stream(UniversalType.values).forEach(value -> stringList.add(value.name()));
         return stringList.toArray(new String[0]);

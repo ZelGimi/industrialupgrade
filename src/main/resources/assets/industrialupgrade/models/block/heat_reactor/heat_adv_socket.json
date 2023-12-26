@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/heat_reactor/adv_socket_side",
+    "down" : "industrialupgrade:blocks/heat_reactor/adv_casing",
+    "up" : "industrialupgrade:blocks/heat_reactor/adv_casing",
+    "north" : "industrialupgrade:blocks/heat_reactor/adv_socket",
+    "east" : "industrialupgrade:blocks/heat_reactor/adv_socket_side",
+    "south" : "industrialupgrade:blocks/heat_reactor/adv_socket_side",
+    "west" : "industrialupgrade:blocks/heat_reactor/adv_socket_side"
+  }
+}
