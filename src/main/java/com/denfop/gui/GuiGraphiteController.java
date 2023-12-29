@@ -14,6 +14,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
 
@@ -23,7 +26,24 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
         this.xSize = 248;
         this.ySize = 256;
     }
+    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+        if (mouseX >= 3 && mouseX <= 15 && mouseY >= 5 && mouseY <= 17) {
+            List<String> text = new ArrayList<>();
+            text.add(Localization.translate("reactor.guide.graphite_reactor"));
+            List<String> compatibleUpgrades = new ArrayList<>();
+            for(int i =1;i < 25;i++){
+                compatibleUpgrades.add(Localization.translate("reactor.guide.graphite_reactor"+i));
+            }
+            Iterator<String> var5 = compatibleUpgrades.iterator();
+            String itemstack;
+            while (var5.hasNext()) {
+                itemstack = var5.next();
+                text.add(itemstack);
+            }
 
+            this.drawTooltip(mouseX - 40, mouseY + 10, text);
+        }
+    }
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -76,6 +96,8 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
         new Area(this,(int)(size / 2 - 10),(int)size1, 157, 26).withTooltip("Heat: " + ModUtils.getString(this.container.base.getHeat()) +
                 "/" + ModUtils.getString(this.container.base.getMaxHeat())  + "°C"+ "\n"+"Stable Heat: " + this.container.base.getStableMaxHeat() + "°C").drawForeground(par1,
                 par2);
+
+        handleUpgradeTooltip(par1, par2);
     }
 
     @Override
@@ -192,6 +214,10 @@ public class GuiGraphiteController extends GuiIU<ContainerGraphiteReactor> {
             drawTexturedModalRect(this.guiLeft + 165, this.guiTop + 124
                     , 12, 116, 48-39, 149-116);
         }
+
+        this.mc.getTextureManager()
+                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(this.guiLeft +3 , this.guiTop+5, 0, 0, 10, 10);
     }
 
     @Override

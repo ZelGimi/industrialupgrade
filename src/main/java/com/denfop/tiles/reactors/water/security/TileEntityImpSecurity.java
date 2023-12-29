@@ -46,12 +46,7 @@ public class TileEntityImpSecurity  extends TileEntityMultiBlockElement implemen
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
-        boolean can = customPacketBuffer.readBoolean();
-        if(can){
-            this.security = EnumTypeSecurity.values()[customPacketBuffer.readInt()];
-        }else{
-            this.security = EnumTypeSecurity.NONE;
-        }
+
     }
     @Override
     public void setSecurity(final EnumTypeSecurity typeSecurity) {

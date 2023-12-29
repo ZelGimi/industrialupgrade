@@ -404,7 +404,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
     }
 
     public void updateField(String name, CustomPacketBuffer is) {
-
+        super.updateField(name, is);
         if (name.equals("speed")) {
             try {
                 this.speed = (float) DecoderHandler.decode(is);
@@ -492,7 +492,7 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
                 throw new RuntimeException(e);
             }
         }
-        super.updateField(name, is);
+
     }
 
     @Override
@@ -771,6 +771,9 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         if (this.tick >= 20) {
             WindSystem.windSystem.getNewFacing(this.getFacing(), this);
             this.tick = 0;
+            if (this.getAuto()) {
+                WindSystem.windSystem.getNewPositionOfMechanism(this);
+            }
         }
     }
 

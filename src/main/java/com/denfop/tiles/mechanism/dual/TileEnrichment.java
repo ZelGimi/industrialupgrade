@@ -99,7 +99,11 @@ public class TileEnrichment extends TileDoubleElectricMachine implements IHasRec
                 new ItemStack(IUItem.itemiu, 1, 0),
                 new ItemStack(IUItem.sunnarium, 1, 0),20
         );
-
+        addenrichment(
+                new ItemStack(IUItem.itemiu),
+                IUItem.advancedAlloy,
+                new ItemStack(IUItem.crafting_elements, 1, 453),20
+        );
         addenrichment(
                 new ItemStack(Items.REDSTONE, 4),
                 new ItemStack(IUItem.itemiu, 1, 0),

@@ -39,6 +39,8 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem {
         super.addInformation(stack, world, tooltip, advanced);
         tooltip.add(Localization.translate("reactor.component_vent1") + 150 * level );
         tooltip.add(Localization.translate("reactor.component_vent") + this.autoRepair );
+        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level1"));
 
     }
     public String getItemStackDisplayName(ItemStack stack) {

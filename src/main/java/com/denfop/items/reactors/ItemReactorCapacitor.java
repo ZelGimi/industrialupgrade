@@ -40,6 +40,8 @@ public class ItemReactorCapacitor extends ItemDamage implements IReactorItem {
         tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack)) + "/" + this.getMaxCustomDamage(stack));
         tooltip.add(Localization.translate("reactor.vent1", 1, this.heat_to_damage));
+        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level1"));
 
     }
     public String getItemStackDisplayName(ItemStack stack) {

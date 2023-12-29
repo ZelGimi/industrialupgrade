@@ -47,6 +47,9 @@ public class LogicFluidReactor extends LogicReactor {
                 } else {
                     temp_heat += rand.nextInt(100);
                 }
+            }else {
+
+                temp_heat += rand.nextInt(150);
             }
             if (this.reactorFluid.getCoolantTank().getFluidAmount() >= 5) {
                 if (this.reactorFluid.getHotCoolantTank().getFluidAmount() + 2 <= this.reactorFluid
@@ -69,11 +72,12 @@ public class LogicFluidReactor extends LogicReactor {
         } else {
             if (this.getTemp_heat() > 0 && this.rodsList.isEmpty()) {
                 temp_heat -= rand.nextInt((int) (this.getTemp_heat() + 1));
+            } else if (!this.rodsList.isEmpty()) {
+                temp_heat += rand.nextInt(200);
             }
 
         }
         reactorFluid.setHeat(temp_heat);
-
     }
 
     public void setTemp_heat(final double temp_heat) {

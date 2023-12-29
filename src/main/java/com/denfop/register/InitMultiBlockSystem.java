@@ -138,19 +138,19 @@ public class InitMultiBlockSystem {
                         .setIgnoreMetadata(true);
         advGasReactorMultiBlock =
                 MultiBlockSystem.instance
-                        .add("GasReactorMultiBlock")
+                        .add("AdvGasReactorMultiBlock")
                         .setMain(IGasReactor.class)
                         .setHasActivatedItem(false)
                         .setIgnoreMetadata(true);
         impGasReactorMultiBlock =
                 MultiBlockSystem.instance
-                        .add("GasReactorMultiBlock")
+                        .add("ImpGasReactorMultiBlock")
                         .setMain(IGasReactor.class)
                         .setHasActivatedItem(false)
                         .setIgnoreMetadata(true);
         perGasReactorMultiBlock =
                 MultiBlockSystem.instance
-                        .add("GasReactorMultiBlock")
+                        .add("PerGasReactorMultiBlock")
                         .setMain(IGasReactor.class)
                         .setHasActivatedItem(false)
                         .setIgnoreMetadata(true);

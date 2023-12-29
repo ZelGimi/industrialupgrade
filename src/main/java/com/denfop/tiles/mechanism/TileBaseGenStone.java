@@ -188,7 +188,7 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
         super.updateEntityServer();
 
         MachineRecipe output = this.output;
-        if (output != null && this.outputSlot.canAdd(output.getRecipe().output.items) && this.energy.getEnergy() >= this.energyConsume) {
+        if (output != null && canAdd() && this.energy.getEnergy() >= this.energyConsume) {
             if (!this.getActive()) {
                 setActive(true);
                 if (this.operationLength > this.defaultOperationLength * 0.1) {
@@ -223,6 +223,19 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
             setOverclockRates();
         }
 
+    }
+
+    private boolean canAdd() {
+        switch (this.getMode()) {
+            default:
+                return this.outputSlot.canAdd(this.output.getRecipe().output.items);
+            case SAND:
+                return this.outputSlot.canAdd(this.sand);
+
+            case GRAVEL:
+                return this.outputSlot.canAdd(this.gravel);
+
+        }
     }
 
     public void setOverclockRates() {

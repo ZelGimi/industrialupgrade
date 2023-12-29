@@ -2,6 +2,7 @@ package com.denfop.items.reactors;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IDamageItem;
 import com.denfop.register.Register;
@@ -10,12 +11,17 @@ import com.denfop.tiles.reactors.graphite.ICapacitorItem;
 import com.denfop.tiles.reactors.graphite.IExchanger;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemExchanger  extends Item implements  IModelRegister, IExchangerItem {
 
@@ -71,6 +77,19 @@ public class ItemExchanger  extends Item implements  IModelRegister, IExchangerI
     }
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
+    }
+    @Override
+    public void addInformation(
+            @Nonnull final ItemStack stack,
+            final World world,
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag advanced
+    ) {
+        super.addInformation(stack, world, tooltip, advanced);
+
+        tooltip.add(Localization.translate("reactor.component_level") +  (this.level +1) );
+        tooltip.add(Localization.translate("reactor.component_level1"));
+
     }
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {

@@ -544,6 +544,7 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
         crafting_450_element(),
         crafting_451_element(),
         crafting_452_element(),
+        crafting_453_element(),
         ;
 
         private final String name;

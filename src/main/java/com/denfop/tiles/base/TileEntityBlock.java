@@ -198,11 +198,8 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
             }
         }
         if (name.equals("facing")) {
-            try {
-                this.facing = (byte) DecoderHandler.decode(is);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            is.readUnsignedByte();
+            this.facing = is.readByte();
         }
         this.onNetworkUpdate(name);
     }

@@ -42,21 +42,12 @@ public class TileEntityPerSecurity  extends TileEntityMultiBlockElement implemen
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
-        customPacketBuffer.writeBoolean(this.security == null);
-        if(this.security != null)
-            customPacketBuffer.writeInt(this.security.ordinal());
         return customPacketBuffer;
     }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
-        boolean can = customPacketBuffer.readBoolean();
-        if(can){
-            this.security = EnumTypeSecurity.values()[customPacketBuffer.readInt()];
-        }else{
-            this.security = EnumTypeSecurity.NONE;
-        }
     }
 
     public EnumTypeSecurity getSecurity() {

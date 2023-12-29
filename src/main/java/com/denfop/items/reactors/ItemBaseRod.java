@@ -100,8 +100,11 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
         double temp1 = Math.log10(2);
         double m = temp / temp1;
         tooltip.add(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level) + " EF");
-        tooltip.add(Localization.translate("reactor.rod.radiation") + this.radiation );
+        tooltip.add(Localization.translate("reactor.rod.radiation") + (int)this.radiation );
         tooltip.add(Localization.translate("reactor.rod.heat") + this.heat );
+        tooltip.add(Localization.translate("reactor.rod_level") + this.level );
+        tooltip.add(Localization.translate("reactor.rod_level1"));
+
     }
 
 

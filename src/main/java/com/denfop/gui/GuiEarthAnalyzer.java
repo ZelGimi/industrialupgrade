@@ -34,7 +34,7 @@ public class GuiEarthAnalyzer extends GuiIU<ContainerEarthAnalyzer> {
             this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56));
         }else   if(this.container.base.fullAnalyzed() && this.container.base.isAnalyzed()){
-            this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze1нв "), 60, 34,
+            this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze1"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56));
         } else if (this.container.base.fullAnalyzed() && !this.container.base.isAnalyzed()) {
             this.fontRenderer.drawString(Localization.translate("earth_quarry.full_analyze"), 60, 34,

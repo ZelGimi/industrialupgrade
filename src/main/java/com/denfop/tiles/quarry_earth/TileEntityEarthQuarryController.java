@@ -120,12 +120,10 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                         }
                         this.energy.useEnergy(50);
                         if (dataPos1.state.getBlock() == Blocks.DIRT) {
-                            if (random.nextInt(2) == 1) {
                                 if (random.nextInt(200) == 199) {
                                     world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1));
                                     this.dataPos.add(dataPos1);
                                 }
-                            }
                         } else if (dataPos1.state.getBlock() == Blocks.GRAVEL) {
                                 if (random.nextInt(200) == 199) {
                                     world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2));

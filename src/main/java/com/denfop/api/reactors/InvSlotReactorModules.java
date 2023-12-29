@@ -38,6 +38,8 @@ public class InvSlotReactorModules<T extends IAdvReactor & IAdvInventory> extend
         for (ItemStack stack : this.contents){
             if(stack.isEmpty())
                 continue;
+            if (!(stack.getItem() instanceof  IReactorModule))
+                continue;
             IReactorModule module = (IReactorModule) stack.getItem();
             this.stableHeat*=module.getStableHeat(stack);
             this.radiation*=module.getRadiation(stack);
@@ -60,6 +62,8 @@ public class InvSlotReactorModules<T extends IAdvReactor & IAdvInventory> extend
         capacitor = 1;
         for (ItemStack stack : this.contents){
             if(stack.isEmpty())
+                continue;
+            if (!(stack.getItem() instanceof  IReactorModule))
                 continue;
             IReactorModule module = (IReactorModule) stack.getItem();
             this.stableHeat*=module.getStableHeat(stack);

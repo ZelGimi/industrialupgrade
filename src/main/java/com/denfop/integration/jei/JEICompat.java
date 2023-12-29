@@ -2,7 +2,10 @@ package com.denfop.integration.jei;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.api.multiblock.MultiBlockStructure;
+import com.denfop.api.multiblock.MultiBlockSystem;
 import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockAnvil;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.*;
 import com.denfop.gui.*;
@@ -21,6 +24,9 @@ import com.denfop.integration.jei.alloysmelter.AlloySmelterRecipeWrapper;
 import com.denfop.integration.jei.antiupgradeblock.AntiUpgradeBlockCategory;
 import com.denfop.integration.jei.antiupgradeblock.AntiUpgradeBlockHandler;
 import com.denfop.integration.jei.antiupgradeblock.AntiUpgradeBlockWrapper;
+import com.denfop.integration.jei.anvil.AnvilCategory;
+import com.denfop.integration.jei.anvil.AnvilHandler;
+import com.denfop.integration.jei.anvil.AnvilWrapper;
 import com.denfop.integration.jei.battery_factory.BatteryCategory;
 import com.denfop.integration.jei.battery_factory.BatteryHandler;
 import com.denfop.integration.jei.battery_factory.BatteryRecipeWrapper;
@@ -48,9 +54,15 @@ import com.denfop.integration.jei.convertermatter.ConverterWrapper;
 import com.denfop.integration.jei.cutting.CuttingCategory;
 import com.denfop.integration.jei.cutting.CuttingHandler;
 import com.denfop.integration.jei.cutting.CuttingWrapper;
+import com.denfop.integration.jei.deposits.DepositsCategory;
+import com.denfop.integration.jei.deposits.DepositsHandler;
+import com.denfop.integration.jei.deposits.DepositsWrapper;
+import com.denfop.integration.jei.deposits.EarthQuarryWrapper;
 import com.denfop.integration.jei.doublemolecular.DoubleMolecularTransformerCategory;
 import com.denfop.integration.jei.doublemolecular.DoubleMolecularTransformerHandler;
 import com.denfop.integration.jei.doublemolecular.DoubleMolecularTransformerRecipeWrapper;
+import com.denfop.integration.jei.earthquarry.EarthQuarryCategory;
+import com.denfop.integration.jei.earthquarry.EarthQuarryHandler;
 import com.denfop.integration.jei.electrolyzer.ElectrolyzerCategory;
 import com.denfop.integration.jei.electrolyzer.ElectrolyzerHandler;
 import com.denfop.integration.jei.electrolyzer.ElectrolyzerRecipeWrapper;
@@ -136,6 +148,9 @@ import com.denfop.integration.jei.molecular.MolecularTransformerRecipeWrapper;
 import com.denfop.integration.jei.moon_spotter.MoonSpooterCategory;
 import com.denfop.integration.jei.moon_spotter.MoonSpooterHandler;
 import com.denfop.integration.jei.moon_spotter.MoonSpooterRecipeWrapper;
+import com.denfop.integration.jei.multiblock.MultiBlockCategory;
+import com.denfop.integration.jei.multiblock.MultiBlockHandler;
+import com.denfop.integration.jei.multiblock.MultiBlockWrapper;
 import com.denfop.integration.jei.oilpump.OilPumpCategory;
 import com.denfop.integration.jei.oilpump.OilPumpHandler;
 import com.denfop.integration.jei.oilpump.OilPumpWrapper;
@@ -250,6 +265,7 @@ import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 @JEIPlugin
 public final class JEICompat implements IModPlugin {
@@ -346,6 +362,10 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new StampCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new RodFactoryCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new EnchantCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new MultiBlockCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new DepositsCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new EarthQuarryCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new AnvilCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
     public void register(IModRegistry registry) {
@@ -409,6 +429,64 @@ public final class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3.socket_factory),
                 new SocketCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
+
+        registry.addRecipes(
+                DepositsHandler.getRecipes(),
+                new DepositsCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                DepositsHandler.class, DepositsWrapper::new,
+                "deposists_iu"
+        );
+
+        registry.addRecipes(
+                EarthQuarryHandler.getRecipes(),
+                new EarthQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                EarthQuarryHandler.class, EarthQuarryWrapper::new,
+                "earth_quarry_iu"
+        );
+        registry.addRecipeCatalyst(
+               getBlockStack(BlockEarthQuarry.earth_controller),
+                new EarthQuarryCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                AnvilHandler.getRecipes(),
+                new  AnvilCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                AnvilHandler.class,  AnvilWrapper::new,
+                BlockAnvil.block_anvil.getName()
+        );
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockAnvil.block_anvil),
+                new AnvilCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.addRecipes(
+                MultiBlockHandler.getRecipes(),
+                new MultiBlockCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                MultiBlockHandler.class,  MultiBlockWrapper::new,
+                "multiblock_iu"
+        );
+        for (Map.Entry<String, MultiBlockStructure> entry : MultiBlockSystem.getInstance().mapMultiBlocks.entrySet()) {
+            registry.addRecipeCatalyst(
+                    entry.getValue().itemStackList.get(0),
+                    new MultiBlockCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+            );
+
+
+        }
+
+
 
         registry.addRecipes(
                 StampHandler.getRecipes(),

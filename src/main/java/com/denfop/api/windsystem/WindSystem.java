@@ -59,11 +59,11 @@ public class WindSystem implements IWindSystem {
         facing = facingMap.get(facing);
         if (windMechanism instanceof TileWindGenerator) {
             ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
-            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", windMechanism.getFacing());
+            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", (byte)windMechanism.getFacing().ordinal());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         } else {
             ((TileBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
-            new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing", windMechanism.getFacing());
+            new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing",  (byte)windMechanism.getFacing().ordinal());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         }
     }
@@ -76,6 +76,7 @@ public class WindSystem implements IWindSystem {
             windMechanism.setCoefficient(getCoefficient(windMechanism));
             if (windMechanism.getAuto()) {
                 this.getNewPositionOfMechanism(windMechanism);
+                windMechanism.setCoefficient(getCoefficient(windMechanism));
             }
             if (!mechanismList.contains(windMechanism)) {
                 mechanismList.add(windMechanism);
@@ -108,14 +109,14 @@ public class WindSystem implements IWindSystem {
         if (windMechanism instanceof TileWindGenerator ) {
             if(windMechanism.getFacing() != newFacing) {
                 ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
-                new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", windMechanism.getFacing());
+                new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", (byte)windMechanism.getFacing().ordinal());
                 this.changeRotorSide(windMechanism, windMechanism.getFacing());
             }
 
         } else {
             if(windMechanism.getFacing() != newFacing) {
                 ((TileBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
-                new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing", windMechanism.getFacing());
+                new PacketUpdateFieldTile(((TileBaseWaterGenerator) windMechanism), "facing",  (byte)windMechanism.getFacing().ordinal());
                 this.changeRotorSide(windMechanism, windMechanism.getFacing());
             }
         }
@@ -200,6 +201,7 @@ public class WindSystem implements IWindSystem {
                     windMechanism.setCoefficient(getCoefficient(windMechanism));
                     if (windMechanism.getAuto()) {
                         this.getNewPositionOfMechanism(windMechanism);
+                        windMechanism.setCoefficient(getCoefficient(windMechanism));
                     }
                 }
             }
@@ -214,6 +216,7 @@ public class WindSystem implements IWindSystem {
                 windMechanism.setCoefficient(getCoefficient(windMechanism));
                 if (windMechanism.getAuto()) {
                     this.getNewPositionOfMechanism(windMechanism);
+                    windMechanism.setCoefficient(getCoefficient(windMechanism));
                 }
             }
         }
@@ -224,7 +227,10 @@ public class WindSystem implements IWindSystem {
                 if (!world.isThundering()) {
                     if (world.getWorldInfo().getCleanWeatherTime() > 0) {
                         int time = world.getWorldInfo().getCleanWeatherTime();
-                        if (time < 110000 && time >= 8000) {
+                        if (time > 110000) {
+                            this.time = time - 8000;
+                            this.enumTypeWind = EnumTypeWind.ONE;
+                        }else if (time < 110000 && time >= 8000) {
                             this.time = time - 8000;
                             this.enumTypeWind = EnumTypeWind.ONE;
                         }

@@ -101,6 +101,9 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
         super.addInformation(stack, world, tooltip, advanced);
         tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack)) + "/" + this.getMaxCustomDamage(stack));
+
+        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level1"));
     }
     @Override
     public boolean updatableItem() {

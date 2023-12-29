@@ -65,7 +65,7 @@ public class TileEntityPalletGenerator extends TileElectricMachine {
 
     public static void init(){
         TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res,1,8),1.1);
-        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets,1,9),1.2);
+        TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets,1,8),1.2);
         TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res,1,9),1.3);
         TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.nuclear_res,1,10),1.45);
         TileEntityPalletGenerator.integerMap.put(new ItemStack(IUItem.pellets,1,4),1.6);

@@ -237,31 +237,33 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && this.full) {
+        if (!this.getWorld().isRemote) {
             this.reactorsModules.load();
-            if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
-                this.energy.onUnloaded();
-                this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
-                this.energy.delegate = null;
-                this.energy.createDelegate();
-                this.energy.onLoaded();
-                switch (this.level) {
-                    case 0:
-                        this.energy.setCapacity(4000000);
-                        break;
-                    case 1:
-                        this.energy.setCapacity(50000000);
-                        break;
-                    case 2:
-                        this.energy.setCapacity(200000000);
-                        break;
-                    case 3:
-                        this.energy.setCapacity(500000000);
-                        break;
+            try {
+                if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
+                    this.energy.onUnloaded();
+                    this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
+                    this.energy.delegate = null;
+                    this.energy.createDelegate();
+                    this.energy.onLoaded();
+                    switch (this.level) {
+                        case 0:
+                            this.energy.setCapacity(4000000);
+                            break;
+                        case 1:
+                            this.energy.setCapacity(50000000);
+                            break;
+                        case 2:
+                            this.energy.setCapacity(200000000);
+                            break;
+                        case 3:
+                            this.energy.setCapacity(500000000);
+                            break;
+
+                    }
 
                 }
-
-            }
+            }catch (Exception e){};
             ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
@@ -302,11 +304,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 if (this.typeWork == EnumTypeWork.WORK) {
                     if (this.work) {
                         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
-                            try {
-                                reactor.onTick();
-                            } catch (Exception e) {
-                            }
-                            ;
+                            reactor.onTick();
                             if (this.rad.getEnergy() >= this.rad.getCapacity() * 0.5 && this.rad.getEnergy() < this.rad.getCapacity() * 0.75) {
                                 this.setSecurity(EnumTypeSecurity.UNSTABLE);
                             }
@@ -661,7 +659,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
         } else if (this.heat >= this.getStableMaxHeat() && this.heat <=
-                this.getMaxHeat()) {
+                (this.getMaxHeat() - this.getStableMaxHeat()) / 2 ) {
             this.setSecurity(EnumTypeSecurity.UNSTABLE);
             this.setTime(EnumTypeSecurity.UNSTABLE);
         } else {
@@ -722,7 +720,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         }
         double rad = this.rad.getEnergy() / 9;
 
-
+        this.setFull(false);
         Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
                 this.getPos().getZ() + length, 25, false, true
         );

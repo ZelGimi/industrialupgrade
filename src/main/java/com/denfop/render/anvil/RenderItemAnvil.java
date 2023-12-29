@@ -54,7 +54,11 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
 
 
             if(itemstack.getCount() > 1) {
+                if(tile.facing == 5 || tile.facing == 4) {
+                    GlStateManager.translate(-1.75,0, 0);
+                }else
                 GlStateManager.translate(0,-1.75,0);
+
                 for(int i =0; i < itemstack.getCount() - 1; i++){
                     GlStateManager.translate(0,0,-0.0075);
                     Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
@@ -86,7 +90,11 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
                     GlStateManager.SourceFactor.ONE,
                     GlStateManager.DestFactor.ZERO
             );
-            GlStateManager.translate(0.5,1,1.3);
+            if(tile.facing != 5 && tile.facing != 4) {
+                GlStateManager.translate(0.5, 1, 1.3);
+            }else{
+                GlStateManager.translate(1.3, 1, 0.4);
+            }
             GlStateManager.rotate(90,1,0,0);
             IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
                     itemstack1,

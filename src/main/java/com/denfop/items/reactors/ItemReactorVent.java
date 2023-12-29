@@ -46,7 +46,10 @@ public class ItemReactorVent extends ItemDamage implements IReactorItem {
         tooltip.add(Localization.translate("reactor.vent", this.autoRepair));
         tooltip.add(Localization.translate("reactor.vent1", 1, this.heat_to_damage));
         tooltip.add(Localization.translate("reactor.vent2", (int)Math.ceil((1.0-this.heat_damage)*100),'%'));
+        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level1"));
     }
+
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));

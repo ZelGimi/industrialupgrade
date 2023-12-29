@@ -31,6 +31,7 @@ import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.items.resource.ItemNuclearResource;
 import com.denfop.network.WorldData;
 import com.denfop.network.packet.PacketColorPickerAllLoggIn;
+import com.denfop.tiles.mechanism.TileEntityPalletGenerator;
 import com.denfop.tiles.transport.tiles.TileEntityCoolPipes;
 import com.denfop.tiles.transport.tiles.TileEntityExpPipes;
 import com.denfop.tiles.transport.tiles.TileEntityHeatColdPipes;
@@ -304,6 +305,12 @@ public class IUEventHandler {
                     event.getToolTip().add(Localization.translate("iu.storage_fluid") + 40 + " B");
                     break;
 
+            }
+        }
+        for (Map.Entry<ItemStack,Double> entry : TileEntityPalletGenerator.integerMap.entrySet()){
+            if (entry.getKey().isItemEqual(stack)){
+                event.getToolTip().add(Localization.translate("iu.pellets.info") + entry.getValue());
+                event.getToolTip().add(Localization.translate("iu.pellets.info1"));
             }
         }
         if (item.equals(IUItem.module_quickly)) {

@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -52,7 +53,11 @@ public class BlockDeposits extends BlockCore implements IModelRegister {
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.deposits_Magnetite));
         setHarvestLevel("pickaxe", 1);
     }
-
+    public static final AxisAlignedBB Deposits = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return Deposits;
+    }
     @Nonnull
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, VARIANT);

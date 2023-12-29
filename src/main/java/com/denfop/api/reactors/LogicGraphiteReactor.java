@@ -35,8 +35,9 @@ public class LogicGraphiteReactor extends LogicReactor{
     public void onTick() {
         if(this.graphiteReactor.canWorkWithGraphite()) {
             super.onTick();
-            if(temp_heat < getMaxHeat()){
-                temp_heat += rand.nextInt((int) ( getMaxHeat() - temp_heat ) );
+            if(temp_heat < getMaxHeat() && getMaxHeat() != 0){
+                double temp = getMaxHeat() - temp_heat ;
+                temp_heat += rand.nextInt(Math.max((int) temp,1));
             }
             temp_heat =  this.graphiteReactor.workCoolant(temp_heat);
             for(int i =0; i < reactor.getWidth();i++) {

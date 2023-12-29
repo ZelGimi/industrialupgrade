@@ -274,7 +274,7 @@ public class WorldGenOres implements IWorldGenerator {
                 }
             }
 
-            if (random.nextInt(900) + 1 > 800) {
+            if (WorldGenOres.random.nextInt(900) + 1 > 700) {
 
                 var3 = chunkX * 16 + random.nextInt(16) + 8;
                 var4 = random.nextInt(random.nextInt(random.nextInt(30) + 20) + 8);
@@ -345,6 +345,7 @@ public class WorldGenOres implements IWorldGenerator {
                     70
             );
         }
+        WorldGenOres.random.setSeed(WorldGenOres.random.nextLong());
         if(WorldGenOres.random.nextInt(4) <= 1) {
             if (veinTypes1.isEmpty()) {
                 veinTypes1 = new ArrayList<>(veinTypes);

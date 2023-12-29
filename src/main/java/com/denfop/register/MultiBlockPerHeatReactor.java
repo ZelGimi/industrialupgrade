@@ -14,7 +14,6 @@ import com.denfop.tiles.reactors.heat.ITank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
-import static com.denfop.register.InitMultiBlockSystem.impHeatReactorMultiBlock;
 import static com.denfop.register.InitMultiBlockSystem.perHeatReactorMultiBlock;
 
 public class MultiBlockPerHeatReactor {

@@ -71,7 +71,7 @@ public class GuiCable extends GuiIU<ContainerCable> {
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        handleUpgradeTooltip(par1, par2);
+
         new AdvArea(this, 62, 41, 73, 48).withTooltip(Localization.translate("iu.dir.west")).drawForeground(par1, par2);
         new AdvArea(this, 86, 41, 97, 48).withTooltip(Localization.translate("iu.dir.east")).drawForeground(
                 par1,
@@ -98,9 +98,6 @@ public class GuiCable extends GuiIU<ContainerCable> {
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
 
-        this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
         this.mc.getTextureManager().bindTexture(getTexture());
         for(EnumFacing facing : this.container.base.getBlackList()){

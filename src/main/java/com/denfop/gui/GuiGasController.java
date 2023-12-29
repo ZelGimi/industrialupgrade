@@ -13,6 +13,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class GuiGasController extends GuiIU<ContainerGasMainController> {
 
@@ -22,7 +25,24 @@ public class GuiGasController extends GuiIU<ContainerGasMainController> {
         this.xSize = 256;
         this.ySize = 256;
     }
+    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+        if (mouseX >= 3 && mouseX <= 15 && mouseY >= 5 && mouseY <= 17) {
+            List<String> text = new ArrayList<>();
+            text.add(Localization.translate("reactor.guide.gas_reactor"));
+            List<String> compatibleUpgrades = new ArrayList<>();
+            for(int i =1;i < 20;i++){
+                compatibleUpgrades.add(Localization.translate("reactor.guide.gas_reactor"+i));
+            }
+            Iterator<String> var5 = compatibleUpgrades.iterator();
+            String itemstack;
+            while (var5.hasNext()) {
+                itemstack = var5.next();
+                text.add(itemstack);
+            }
 
+            this.drawTooltip(mouseX - 40, mouseY + 10, text);
+        }
+    }
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -41,6 +61,7 @@ public class GuiGasController extends GuiIU<ContainerGasMainController> {
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
+        handleUpgradeTooltip(par1, par2);
         this.fontRenderer.drawString(String.valueOf(this.container.base.getLevelReactor()),226,75,
                 ModUtils.convertRGBcolorToInt(15,
                         125,205));
@@ -155,6 +176,9 @@ public class GuiGasController extends GuiIU<ContainerGasMainController> {
         bar = Math.min(bar,1);
         drawTexturedModalRect(this.guiLeft + 17, this.guiTop + 143 - 2 * (3 - this.container.base.enumFluidReactors.ordinal())
                 , 1, 20, (int) (bar * 153), 24);
+        this.mc.getTextureManager()
+                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(this.guiLeft +3 , this.guiTop+5, 0, 0, 10, 10);
     }
 
     @Override

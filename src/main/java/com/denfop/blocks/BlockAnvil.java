@@ -99,7 +99,7 @@ public enum BlockAnvil implements IMultiTileBlock {
     @Override
     @Nonnull
     public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Wrench;
+        return MultiTileBlock.HarvestTool.Pickaxe;
     }
 
     @Override

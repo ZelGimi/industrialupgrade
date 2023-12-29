@@ -167,7 +167,8 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
                 UpgradableProperty.Transformer,
                 UpgradableProperty.ItemConsuming,
                 UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidProducing,
+                UpgradableProperty.FluidConsuming
         );
     }
 

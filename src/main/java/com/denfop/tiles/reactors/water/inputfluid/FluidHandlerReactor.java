@@ -34,7 +34,7 @@ public class FluidHandlerReactor implements IFluidHandler {
             if(f != 0)
                 return f;
         }
-        return this.list.get(0).getAllTanks().iterator().next().fill(resource, doFill);
+        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().fill(resource, doFill) : 0;
     }
 
     @Nullable
@@ -46,7 +46,7 @@ public class FluidHandlerReactor implements IFluidHandler {
            if(f != null)
                return f;
         }
-        return this.list.get(0).getAllTanks().iterator().next().drain(resource,doDrain);
+        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(resource,doDrain) : null;
     }
 
     @Nullable
@@ -58,7 +58,7 @@ public class FluidHandlerReactor implements IFluidHandler {
             if(f != null)
                 return f;
         }
-        return this.list.get(0).getAllTanks().iterator().next().drain(maxDrain,doDrain);
+        return  !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(maxDrain,doDrain) : null;
     }
 
 }

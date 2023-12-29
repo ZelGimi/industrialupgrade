@@ -283,19 +283,19 @@ public class MultiBlockPerGraphiteReactor {
 
         perGraphiteReactorMultiBlock.add(perGraphiteReactorMultiBlock.getPos().add(-3,0,2), ICooling.class,
                 new ItemStack(IUItem.graphite_reactor, 1, 39),
-                EnumFacing.WEST
+                EnumFacing.EAST
         );
         perGraphiteReactorMultiBlock.add(perGraphiteReactorMultiBlock.getPos().add(-3,0,4), ICooling.class,
                 new ItemStack(IUItem.graphite_reactor, 1, 39),
-                EnumFacing.WEST
+                EnumFacing.EAST
         );
         perGraphiteReactorMultiBlock.add(perGraphiteReactorMultiBlock.getPos().add(-3,2,2), ICooling.class,
                 new ItemStack(IUItem.graphite_reactor, 1, 39),
-                EnumFacing.WEST
+                EnumFacing.EAST
         );
         perGraphiteReactorMultiBlock.add(perGraphiteReactorMultiBlock.getPos().add(-3,2,4), ICooling.class,
                 new ItemStack(IUItem.graphite_reactor, 1, 39),
-                EnumFacing.WEST
+                EnumFacing.EAST
         );
         perGraphiteReactorMultiBlock.add(perGraphiteReactorMultiBlock.getPos().add(0,-1,0), ISocket.class,
                 new ItemStack(IUItem.graphite_reactor, 1, 35),

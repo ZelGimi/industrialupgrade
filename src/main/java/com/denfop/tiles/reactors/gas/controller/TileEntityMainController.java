@@ -254,8 +254,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && this.full) {
+        if (!this.getWorld().isRemote) {
             this.reactorsModules.load();
+            try {
             if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
                 this.energy.onUnloaded();
                 this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
@@ -279,6 +280,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
                 }
 
             }
+            }catch (Exception e){};
             ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
@@ -609,11 +611,15 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
         this.heat = var1;
         if(this.heat > this.getMaxHeat())
             this.heat = this.getMaxHeat();
-        if (this.heat < this.getStableMaxHeat()) {
+        if(this.getStableMaxHeat() == 0){
+            this.setSecurity(EnumTypeSecurity.STABLE);
+            this.setTime(EnumTypeSecurity.STABLE);
+        }
+        else  if (this.heat < this.getStableMaxHeat()) {
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
         } else if (this.heat >= this.getStableMaxHeat() && this.heat <=
-                this.getMaxHeat()) {
+                this.getStableMaxHeat() +  (this.getMaxHeat() -  this.getStableMaxHeat()) / 2 ) {
             this.setSecurity(EnumTypeSecurity.UNSTABLE);
             this.setTime(EnumTypeSecurity.UNSTABLE);
         } else {
@@ -678,7 +684,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGas
             }
         }
         double rad = this.rad.getEnergy() / 9;
-
+        this.setFull(false);
 
         Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
                 this.getPos().getZ() + length, 25, false, true

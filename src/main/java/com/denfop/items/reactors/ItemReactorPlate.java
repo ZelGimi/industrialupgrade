@@ -1,18 +1,22 @@
 package com.denfop.items.reactors;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.reactors.IReactorItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemReactorPlate extends ItemDamage implements IReactorItem {
 
@@ -68,6 +72,19 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem {
         return 0;
     }
 
+    @Override
+    public void addInformation(
+            @Nonnull final ItemStack stack,
+            final World world,
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag advanced
+    ) {
+        super.addInformation(stack, world, tooltip, advanced);
+
+        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level1"));
+
+    }
     @Override
     public int getDamageCFromHeat(final int heat, final IAdvReactor reactor) {
         return 1;

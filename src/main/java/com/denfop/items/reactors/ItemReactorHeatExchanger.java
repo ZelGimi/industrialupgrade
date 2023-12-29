@@ -43,7 +43,10 @@ public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem
                 stack)) + "/" + this.getMaxCustomDamage(stack));
         tooltip.add(Localization.translate("reactor.vent1", 1, this.heat_to_damage));
         tooltip.add(Localization.translate("reactor.vent2", (int) Math.ceil((1.0-this.heat_damage)*100),'%'));
+        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level1"));
     }
+
     @Override
     public boolean needClear(ItemStack stack) {
         return this.getMaxCustomDamage(stack) - this.getCustomDamage(

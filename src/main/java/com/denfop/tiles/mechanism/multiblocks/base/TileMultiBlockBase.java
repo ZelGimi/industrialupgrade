@@ -279,7 +279,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         super.loadBeforeFirstClientUpdate();
         if (this.activate && this.getWorld().isRemote) {
             this.updateFull();
-            this.updateAfterAssembly();
+            try {
+                this.updateAfterAssembly();
+            }catch (Exception e){};
 
         }
     }

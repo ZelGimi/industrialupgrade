@@ -211,7 +211,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
 
     public boolean setFacingWrench(EnumFacing facing, EntityPlayer player) {
         boolean fac = super.setFacingWrench(facing, player);
-        new PacketUpdateFieldTile(this, "facing", this.facing);
+        new PacketUpdateFieldTile(this, "facing", (byte)this.facing);
         return fac;
     }
 
@@ -569,7 +569,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     }
 
     public void updateField(String name, CustomPacketBuffer is) {
-
+        super.updateField(name, is);
         if (name.equals("speed")) {
             try {
                 this.speed = (float) DecoderHandler.decode(is);
@@ -657,7 +657,7 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
                 throw new RuntimeException(e);
             }
         }
-        super.updateField(name, is);
+
     }
 
     @Override
@@ -726,6 +726,9 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
         if (this.tick >= 20) {
             WindSystem.windSystem.getNewFacing(this.getFacing(), this);
+            if (this.getAuto()) {
+                WindSystem.windSystem.getNewPositionOfMechanism(this);
+            }
             this.tick = 0;
         }
     }

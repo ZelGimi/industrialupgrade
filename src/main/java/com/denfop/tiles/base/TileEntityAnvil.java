@@ -45,7 +45,12 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(0, 0.0D, -1, 1, 1.0D,
             2
     ));
+    private static final List<AxisAlignedBB> aabbs1 = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, 0, 2, 1.0D,
+            1
+    ));
     public List<AxisAlignedBB> getAabbs(boolean forCollision) {
+        if(facing == 4 || facing == 5)
+            return aabbs1;
         return aabbs;
     }
     public TileEntityAnvil() {
@@ -225,6 +230,119 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     )
             );
         }
+        for (String s : RegisterOreDictionary.list_string1) {
+            Recipes.recipes.addRecipe(
+                    "anvil",
+                    new BaseMachineRecipe(
+                            new Input(
+                                    input.getInput("ingot" + s, 1)
+
+                            ),
+                            new RecipeOutput(null, OreDictionary.getOres("plate" + s))
+                    )
+            );
+        }
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotIron"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateIron"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotGold"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateGold"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotLead"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateLead"))
+                )
+        );
+
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotTin"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateTin"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotOsmium"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateOsmium"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotTantalum"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateTantalum"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotCadmium"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateCadmium"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotSteel"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateSteel"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotBronze"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateBronze"))
+                )
+        );
+        Recipes.recipes.addRecipe(
+                "anvil",
+                new BaseMachineRecipe(
+                        new Input(
+                                input.getInput("ingotCopper"  , 1)
+
+                        ),
+                        new RecipeOutput(null, OreDictionary.getOres("plateCopper"))
+                )
+        );
     }
 
 }

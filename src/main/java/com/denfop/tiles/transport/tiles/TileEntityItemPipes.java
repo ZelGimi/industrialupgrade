@@ -2,6 +2,7 @@ package com.denfop.tiles.transport.tiles;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.api.energy.event.EnergyTileUnLoadEvent;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.transport.FluidHandler;
 import com.denfop.api.transport.ITransportAcceptor;
@@ -383,8 +384,6 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
         if (var2 < EnumFacing.VALUES.length) {
-            super.updateTileServer(var1, var2);
-
             super.updateTileServer(var1, var2);
             EnumFacing[] var4 = EnumFacing.VALUES;
 

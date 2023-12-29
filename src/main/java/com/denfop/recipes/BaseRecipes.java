@@ -51,6 +51,7 @@ public class BaseRecipes {
             Recipes.recipe.addShapelessRecipe(
                     new ItemStack(IUItem.plate, 1, i),
                     "craftingToolForgeHammer", "ingot" + RegisterOreDictionary.list_string
+                            .get(i), "ingot" + RegisterOreDictionary.list_string
                             .get(i)
             );
             Recipes.recipe.addShapelessRecipe(
@@ -61,15 +62,15 @@ public class BaseRecipes {
         }
         Recipes.recipe.addShapelessRecipe(
                 new ItemStack(IUItem.plate, 1, 28),
-                "craftingToolForgeHammer", "ingotOsmium"
+                "craftingToolForgeHammer", "ingotOsmium", "ingotOsmium"
         );
         Recipes.recipe.addShapelessRecipe(
                 new ItemStack(IUItem.plate, 1, 29),
-                "craftingToolForgeHammer", "ingotTantalum"
+                "craftingToolForgeHammer", "ingotTantalum", "ingotTantalum"
         );
         Recipes.recipe.addShapelessRecipe(
                 new ItemStack(IUItem.plate, 1, 30),
-                "craftingToolForgeHammer", "ingotCadmium"
+                "craftingToolForgeHammer", "ingotCadmium", "ingotCadmium"
         );
         Recipes.recipe.addShapelessRecipe(
                 new ItemStack(IUItem.casing, 2, 26),
@@ -84,37 +85,37 @@ public class BaseRecipes {
                 "craftingToolForgeHammer", "plateCadmium"
         );
 
-        Recipes.recipe.addShapelessRecipe(IUItem.plateiron, "craftingToolForgeHammer", "ingotIron");
+        Recipes.recipe.addShapelessRecipe(IUItem.plateiron, "craftingToolForgeHammer", "ingotIron", "ingotIron");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casingiron, 2),
                 "craftingToolForgeHammer", "plateIron"
         );
-        Recipes.recipe.addShapelessRecipe(IUItem.plateadviron, "craftingToolForgeHammer", "ingotSteel");
+        Recipes.recipe.addShapelessRecipe(IUItem.plateadviron, "craftingToolForgeHammer", "ingotSteel", "ingotSteel");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casingadviron, 2),
                 "craftingToolForgeHammer", "plateSteel"
         );
-        Recipes.recipe.addShapelessRecipe(IUItem.platecopper, "craftingToolForgeHammer", "ingotCopper");
+        Recipes.recipe.addShapelessRecipe(IUItem.platecopper, "craftingToolForgeHammer", "ingotCopper", "ingotCopper");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casingcopper, 2),
                 "craftingToolForgeHammer", "plateCopper"
         );
-        Recipes.recipe.addShapelessRecipe(IUItem.platetin, "craftingToolForgeHammer", "ingotTin");
+        Recipes.recipe.addShapelessRecipe(IUItem.platetin, "craftingToolForgeHammer", "ingotTin", "ingotTin");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casingtin, 2),
                 "craftingToolForgeHammer", "plateTin"
         );
-        Recipes.recipe.addShapelessRecipe(IUItem.platelead, "craftingToolForgeHammer", "ingotLead");
+        Recipes.recipe.addShapelessRecipe(IUItem.platelead, "craftingToolForgeHammer", "ingotLead", "ingotLead");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casinglead, 2),
                 "craftingToolForgeHammer", "plateLead"
         );
-        Recipes.recipe.addShapelessRecipe(IUItem.plategold, "craftingToolForgeHammer", "ingotGold");
+        Recipes.recipe.addShapelessRecipe(IUItem.plategold, "craftingToolForgeHammer", "ingotGold", "ingotGold");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casinggold, 2),
                 "craftingToolForgeHammer", "plateGold"
         );
-        Recipes.recipe.addShapelessRecipe(IUItem.platebronze, "craftingToolForgeHammer", "ingotBronze");
+        Recipes.recipe.addShapelessRecipe(IUItem.platebronze, "craftingToolForgeHammer", "ingotBronze", "ingotBronze");
         Recipes.recipe.addShapelessRecipe(
                 ModUtils.setSize(IUItem.casingbronze, 2),
                 "craftingToolForgeHammer", "plateBronze"
@@ -208,7 +209,7 @@ public class BaseRecipes {
                 "ingotTantalum"
         );
         Recipes.recipe.addShapelessRecipe(
-                new ItemStack(IUItem.block1,1,6),
+                new ItemStack(IUItem.block1,1,5),
                 "ingotCadmium",
                 "ingotCadmium",
                 "ingotCadmium",
@@ -1157,7 +1158,7 @@ public class BaseRecipes {
                 new ItemStack(IUItem.iuingot, 1, 25)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.iuingot, 1, 25),
-                "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.nugget, 1, 18)
+                "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.nugget, 1, 19)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.smalldust, 1, 29),
                 "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.verysmalldust, 1, 19)
@@ -1176,7 +1177,7 @@ public class BaseRecipes {
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.iuingot, 1, 26),
-                "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.nugget, 1, 19)
+                "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.nugget, 1, 20)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.smalldust, 1, 30),
                 "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.verysmalldust, 1, 20)
@@ -1195,7 +1196,7 @@ public class BaseRecipes {
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.iuingot, 1, 27),
-                "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.nugget, 1, 20)
+                "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.nugget, 1, 21)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.smalldust, 1, 31),
                 "AAA", "AAA", "AAA", 'A', new ItemStack(IUItem.verysmalldust, 1, 21)
@@ -3962,7 +3963,7 @@ public class BaseRecipes {
                 new ItemStack(IUItem.per_capacitor), 'E', IUItem.spectral_box
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,323),
-                "BCB", "BAB", "DDD", 'A', DEFAULT_SENSOR, 'B', "plateSteel", 'D',"ingotMichalov",'C', "gearOsmium"
+                "BCB", "BAB", "DDD", 'A', DEFAULT_SENSOR, 'B', "plateSteel", 'D',"ingotMikhail",'C', "gearOsmium"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,325),
                 " C ", "BAB", "DCD", 'A', DEFAULT_SENSOR, 'B', new ItemStack(IUItem.nuclear_res), 'D',"plateCarbon",'C',
@@ -3979,7 +3980,7 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,441),
                 "CDC", "BAB", "BDB", 'A', DEFAULT_SENSOR, 'B', new ItemStack(IUItem.itemiu,1,2), 'D',
-               "doubleplateLead",'C',
+               "plateDenseLead",'C',
                 "plateSpinel"
         );
 
@@ -4113,52 +4114,57 @@ public class BaseRecipes {
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,2,365),
-                "AB ", "BA ", "   ", 'A', "plateLead", 'B', "plateZinc"
+                "AB ", "BA ", "   ", 'A', "plateLead", 'B', "plateLithium"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,2,366),
-                "AB ", "BA ", "   ", 'A', "plateLead", 'B', "platePlatinum"
+                "AB ", "BC ", "   ", 'A', "plateLead", 'B', "platePlatinum"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,420),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,366), 'B', "plateElectrum"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,366), 'B', "plateElectrum",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,378),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,420), 'B', "plateCobalt"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,420), 'B', "plateCobalt",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,405),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,378), 'B', "plateMagnesium"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,378), 'B', "plateMagnesium",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,419),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,365), 'B', "plateElectrum"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,365), 'B', "plateElectrum",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,377),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,419), 'B', "plateCobalt"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,419), 'B', "plateCobalt",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,394),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,377), 'B', "plateMagnesium"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,377), 'B', "plateMagnesium",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,417),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,363), 'B', "plateElectrum"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,363), 'B', "plateElectrum",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,375),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,417), 'B', "plateCobalt"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,417), 'B', "plateCobalt",'C', new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,392),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,375), 'B', "plateMagnesium"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,375), 'B', "plateMagnesium",'C',new ItemStack(IUItem.crafting_elements,1,453)
         );
 
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,418),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,364), 'B', "plateElectrum"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,364), 'B', "plateElectrum",'C',new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,376),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,418), 'B', "plateCobalt"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,418), 'B', "plateCobalt",'C',new ItemStack(IUItem.crafting_elements,1,453)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,393),
-                "AB ", "BB ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,376), 'B', "plateMagnesium"
+                "AB ", "BC ", "   ", 'A', new ItemStack(IUItem.crafting_elements,1,376), 'B', "plateMagnesium",'C',
+                new ItemStack(IUItem.crafting_elements,1,453)
         );
 
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,439),
+                "CEC ", "EAE", "DBD", 'A',DEFAULT_SENSOR, 'B', IUItem.circuitNano,'C',
+               "plateBronze",'E',"doubleplateOsmium"
+        );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,435),
                 "BСB", "BAB", "BDB", 'A', IUItem.electronicCircuit, 'B', "platePlatinum",'C',
@@ -4209,7 +4215,7 @@ public class BaseRecipes {
                 "plateVanadoalumite",'C', "plateManganese"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,356),
-                " B ", "AAA", " B ", 'A', new ItemStack(IUItem.crafting_elements,1,294), 'B', "plateIron"
+                " B ", " A ", " B ", 'A', new ItemStack(IUItem.crafting_elements,1,294), 'B', "plateIron"
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,424),
@@ -4242,6 +4248,745 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,362),
                 "CDC", "BAB", "CDC", 'A', new ItemStack(IUItem.itemiu,1,3), 'B', new ItemStack(IUItem.neutroniumingot),'C',
                 "plateGermanium",'D',"plateOsmium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 101), "CCC", "BAB", "DED",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('C'), "gearGermanium",
+
+                ('B'), "doubleplateGermanium",
+
+                ('D'),
+                "gearNichrome",
+
+                ('E'), IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 4),
+                "CCC",
+                "BAB",
+                "DED",
+                ('A'),
+                ADV_SENSOR,
+                ('C'),
+                "gearGermanium",
+                ('B'),
+                "doubleplateGermanium",
+                ('D'),
+                "gearNichrome",
+                ('E'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 81),
+                "CCC",
+                "BAB",
+                "DED",
+                ('A'),
+                IMP_SENSOR,
+                ('C'),
+                "gearGermanium",
+                ('B'),
+                "doubleplateGermanium",
+                ('D'),
+                "gearNichrome",
+                ('E'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 105),
+                "CCC",
+                "BAB",
+                "DED",
+                ('A'),
+                PER_SENSOR,
+                ('C'),
+                "gearGermanium",
+                ('B'),
+                "doubleplateGermanium",
+                ('D'),
+                "gearNichrome",
+                ('E'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 112), "BBB", "CAC", "   ",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('B'), IUItem.photoniy_ingot,
+
+                ('C'), "gearZinc"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 124), "CBC", "BAB", " B ",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('B'), "doubleplateVitalium",
+
+                ('C'), "doubleplateInvar"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 135), "CBC", "BAB", " B ",
+                ('A'), ADV_SENSOR, ('B'), "doubleplateVitalium",
+                ('C'), "doubleplateInvar"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 146), "CBC", "BAB", " B ",
+                ('A'), IMP_SENSOR, ('B'), "doubleplateVitalium",
+                ('C'), "doubleplateInvar"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 157), "CBC", "BAB", " B ",
+                ('A'), PER_SENSOR, ('B'), "doubleplateVitalium",
+                ('C'), "doubleplateInvar"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 128), "DCD", "BAB", " E ",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('C'), "workbench",
+
+                ('B'), "platePlatinum",
+
+                ('D'),
+                "plateTin",
+
+                ('E'), "plateIron"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 129), "DCD", "BAB", " E ",
+                ('A'), ADV_SENSOR, ('C'), "workbench",
+                ('B'), "platePlatinum", ('D'),
+                "plateTin", ('E'), "plateIron"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 130), "DCD", "BAB", " E ",
+                ('A'), IMP_SENSOR, ('C'), "workbench",
+                ('B'), "platePlatinum", ('D'),
+                "plateTin", ('E'), "plateIron"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 131), "DCD", "BAB", " E ",
+                ('A'), PER_SENSOR, ('C'), "workbench",
+                ('B'), "platePlatinum", ('D'),
+                "plateTin", ('E'), "plateIron"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 154), "CCC", "BAB", "   ",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('C'), IUItem.FluidCell,
+
+                ('B'), "plateIron"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 155), "CCC", "BAB", "   ",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('C'),
+                ModUtils.getCellFromFluid("ic2coolant"),
+                ('B'), "plateNickel"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 156), " C ", "BAB", " D ",
+                ('A'), DEFAULT_SENSOR, ('B'), "plateGermanium",
+                ('C'), new ItemStack(IUItem.crafting_elements, 1, 60), ('D'),
+                new ItemStack(IUItem.crafting_elements, 1, 11)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 158), "CDE", "BAB", "FFF",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('C'), Items.DIAMOND_AXE,
+
+                ('D'), Items.DIAMOND_PICKAXE,
+
+                ('E'),
+                Items.DIAMOND_SHOVEL,
+
+                ('B'), "gearIridium",
+
+                ('F'), "gearMagnesium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 170), "DCD", "BAB", " C ",
+                ('A'), DEFAULT_SENSOR, ('B'), Blocks.DAYLIGHT_DETECTOR,
+                ('C'), IUItem.advancedMachine, ('D'),
+                IUItem.reinforcedGlass
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 171), "DCD", "BAB", " C ",
+                ('A'), ADV_SENSOR, ('B'), new ItemStack(IUItem.core, 1, 3),
+                ('C'), IUItem.advancedMachine, ('D'),
+                IUItem.reinforcedGlass
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 172), "DCD", "BAB", " C ",
+                ('A'), IMP_SENSOR, ('B'), new ItemStack(IUItem.core, 1, 4),
+                ('C'), IUItem.advancedMachine, ('D'),
+                IUItem.reinforcedGlass
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 173), "DCD", "BAB", " C ",
+                ('A'), PER_SENSOR, ('B'), new ItemStack(IUItem.core, 1, 5),
+                ('C'), IUItem.advancedMachine, ('D'),
+                IUItem.reinforcedGlass
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 90),
+                "BBB",
+                "DAD",
+                "EEE",
+                ('A'),
+                DEFAULT_SENSOR,
+                ('B'),
+                "gearMikhail",
+                ('D'),
+                "gearPlatinum",
+                ('C'),
+                IUItem.carbonPlate,
+                ('E'),
+                "doubleplateRedbrass"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 79), "CCC", "BAB", "EDE",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('B'), IUItem.advancedAlloy,
+
+                ('C'), IUItem.carbonPlate,
+
+                ('D'),
+                IUItem.toriy,
+
+                ('E'), "plateBronze"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 176), "CCC", "BAB", "EDE",
+
+                ('A'), ADV_SENSOR,
+
+                ('B'), IUItem.advancedAlloy,
+
+                ('C'), IUItem.iridiumPlate,
+
+                ('D'),
+                IUItem.toriy,
+
+                ('E'), "plateBronze"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 174), "CCC", "BAB", "EDE",
+
+                ('A'), IMP_SENSOR,
+
+                ('B'), IUItem.advancedAlloy,
+
+                ('C'), IUItem.iridiumPlate,
+
+                ('D'),
+                IUItem.toriy,
+
+                ('E'), "plateBronze"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 175), "CCC", "BAB", "EDE",
+
+                ('A'), PER_SENSOR,
+
+                ('B'), IUItem.advancedAlloy,
+
+                ('C'), IUItem.iridiumPlate,
+
+                ('D'),
+                IUItem.toriy,
+
+                ('E'), "plateBronze"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 217), " C ", "BAB", "DDD",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('B'), "plateAlumel",
+
+                ('C'), Items.FISHING_ROD,
+
+                ('D'),
+                "gearMuntsa"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 219), " C ", "BAB", "DDD",
+                ('A'), DEFAULT_SENSOR, ('B'), "plateIron", ('D'), Items.REDSTONE,
+                ('C'),
+                Blocks.FURNACE
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 225), " C ", "BAB", "DDD",
+                ('A'), ADV_SENSOR, ('B'), "plateIron", ('D'), Items.REDSTONE,
+                ('C'),
+                Blocks.FURNACE
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 221), " C ", "BAB", "DDD",
+                ('A'), IMP_SENSOR, ('B'), "plateIron", ('D'), Items.REDSTONE,
+                ('C'),
+                Blocks.FURNACE
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 223), " C ", "BAB", "DDD",
+                ('A'), PER_SENSOR, ('B'), "plateIron", ('D'), Items.REDSTONE,
+                ('C'),
+                Blocks.FURNACE
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 218), "CCC", "BAB", "DDD",
+                ('A'), DEFAULT_SENSOR, ('B'), "plateIron", ('C'), "plateTin",
+                ('D'),
+                "plateCopper"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 224), "CCC", "BAB", "DDD",
+                ('A'), ADV_SENSOR, ('B'), "plateIron", ('C'), "plateTin",
+                ('D'),
+                "plateCopper"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 220), "CCC", "BAB", "DDD",
+                ('A'), IMP_SENSOR, ('B'), "plateIron", ('C'), "plateTin",
+                ('D'),
+                "plateCopper"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 222), "CCC", "BAB", "DDD",
+                ('A'), PER_SENSOR, ('B'), "plateIron", ('C'), "plateTin",
+                ('D'),
+                "plateCopper"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 205), "CCC", "BAB", "D D",
+                ('A'), DEFAULT_SENSOR,
+                ('B'), "gearCobalt", ('C'), IUItem.advancedAlloy, ('D'),
+                "plateTitanium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 204), "CCC", "BAB", "D D",
+                ('A'), ADV_SENSOR,
+                ('B'), "gearCobalt", ('C'), IUItem.advancedAlloy, ('D'),
+                "plateTitanium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 202), "CCC", "BAB", "D D",
+                ('A'), IMP_SENSOR,
+                ('B'), "gearCobalt", ('C'), IUItem.advancedAlloy, ('D'),
+                "plateTitanium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 203), "CCC", "BAB", "D D",
+                ('A'), PER_SENSOR,
+                ('B'), "gearCobalt", ('C'), IUItem.advancedAlloy, ('D'),
+                "plateTitanium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 38), "CCC", "BAB", "DDD",
+
+                ('A'), DEFAULT_SENSOR,
+
+                ('B'), "doubleplateGermanium",
+
+                ('C'), "gearVitalium",
+
+                ('D'),
+                "gearAlcled"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 14), "CCC", "BAB", "DDD",
+                ('A'), ADV_SENSOR, ('B'), "doubleplateGermanium",
+                ('C'), "gearVitalium", ('D'),
+                "gearAlcled"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 89), "CCC", "BAB", "DDD",
+                ('A'), IMP_SENSOR, ('B'), "doubleplateGermanium",
+                ('C'), "gearVitalium", ('D'),
+                "gearAlcled"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 114), "CCC", "BAB", "DDD",
+
+                ('A'), PER_SENSOR,
+
+                ('B'), "doubleplateGermanium",
+
+                ('C'), "gearVitalium",
+
+                ('D'),
+                "gearAlcled"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 1), " A ", "BCB", " A ",
+
+                ('C'),
+                ("ingotCobalt"),
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 0),
+
+                ('B'), IUItem.denseplatetin
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 2), " A ", "BCB", " A ",
+
+                ('C'), IUItem.denseplatetin,
+
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 1),
+
+                ('B'), IUItem.advancedAlloy
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 3), "DAD", "BCB", "DAD",
+
+                ('D'), IUItem.denseplategold,
+
+                ('C'), IUItem.advancedAlloy,
+
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 2),
+
+                ('B'),
+                IUItem.denseplatelead
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 4), "DAD", "BCB", "DAD",
+
+                ('D'),
+                ("ingotRedbrass"),
+                ('C'), IUItem.carbonPlate,
+
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 3),
+
+                ('B'),
+                ("ingotSpinel")
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 5), " A ", "BCB", " A ",
+
+                ('C'),
+                ("doubleplateVitalium"),
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 4),
+
+                ('B'), IUItem.denseplateadviron
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 6), "DAD", "BCB", "DAD",
+
+                ('D'), IUItem.carbonPlate,
+
+                ('C'),
+                ("ingotAlcled"),
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 5),
+
+                ('B'),
+                ("ingotDuralumin")
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 7), "A A", "BCB", "A A",
+
+                ('C'), new ItemStack(IUItem.photoniy_ingot),
+
+                ('B'), new ItemStack(IUItem.photoniy),
+
+                ('A'), new ItemStack(IUItem.universal_cable, 1, 6)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 8), "BBB", "AAA", "BBB",
+                ('A'), new ItemStack(IUItem.photoniy_ingot), ('B'), new ItemStack(
+                        IUItem.universal_cable,
+                        1,
+                        7
+                )
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.universal_cable, 1, 9), "BBB", "ACA", "BBB",
+
+                ('C'), new ItemStack(IUItem.basecircuit, 1, 10),
+
+                ('A'), new ItemStack(IUItem.photoniy_ingot),
+
+                ('B'), new ItemStack(IUItem.universal_cable, 1, 8)
+        );
+        int i;
+        for (i = 0; i < 11; i++) {
+            Recipes.recipe.addShapelessRecipe(
+                    new ItemStack(IUItem.universal_cable, 1, i),
+                    new ItemStack(IUItem.heatcold_pipes, 1, 4), new ItemStack(
+                            IUItem.cable,
+                            1,
+                            i
+                    ), new ItemStack(IUItem.expcable), new ItemStack(IUItem.scable), new ItemStack(IUItem.qcable)
+            );
+        }
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 0), "CAC", "ABA", " A ",
+
+                ('A'), "logWood",
+
+                ('B'), "plankWood",
+                ('C'), new ItemStack(Items.DYE, 1, 4)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 1), " A ", "ABA", " A ",
+
+                ('A'), "blockBronze",
+
+                ('B'), new ItemStack(IUItem.water_rotor_wood, 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 2), " A ", "ABA", " A ",
+
+                ('A'), "blockIron",
+
+                ('B'), new ItemStack(IUItem.water_rotor_bronze, 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 3), " A ", "ABA", " A ",
+
+                ('A'), "plateSteel",
+
+                ('B'), new ItemStack(IUItem.water_rotor_iron, 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 4), " A ", "ABA", " A ",
+
+                ('A'), "plateCarbon",
+
+                ('B'), new ItemStack(IUItem.water_rotor_steel, 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 5), "CAC", "ABA", "CAC",
+
+                ('C'), IUItem.compressIridiumplate,
+
+                ('A'), IUItem.iridiumPlate,
+
+                ('B'), new ItemStack(IUItem.water_rotor_carbon, 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 6), "CAC", "ABA", "CAC",
+
+                ('C'), IUItem.doublecompressIridiumplate,
+
+                ('A'), new ItemStack(IUItem.compresscarbon),
+
+                ('B'), new ItemStack(IUItem.water_iridium
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 7), "DCD", "ABA", "DCD",
+
+                ('D'), IUItem.circuitSpectral,
+
+                ('C'), new ItemStack(IUItem.compressIridiumplate),
+
+                ('A'), new ItemStack(IUItem.advnanobox),
+
+                ('B'),
+                new ItemStack(IUItem.water_compressiridium
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 8), "DCD", "ABA", " C ",
+
+                ('D'), new ItemStack(IUItem.excitednucleus, 1, 5),
+
+                ('C'), IUItem.cirsuitQuantum,
+
+                ('A'), new ItemStack(IUItem.quantumtool),
+
+                ('B'),
+                new ItemStack(IUItem.water_spectral
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 10), "DCD", "CBC", " C ",
+
+                ('D'), new ItemStack(IUItem.excitednucleus, 1, 6),
+
+                ('C'), new ItemStack(IUItem.quantumtool),
+
+                ('B'), new ItemStack(IUItem.water_myphical
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 9), "DCD", "CBC", "ACA",
+
+                ('D'), new ItemStack(IUItem.neutroniumingot),
+
+                ('A'), IUItem.iridiumPlate,
+
+                ('C'), IUItem.cirsuitQuantum,
+
+                ('B'),
+                new ItemStack(IUItem.water_photon
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 11), "DCD", "CBC", " C ",
+
+                ('D'), new ItemStack(IUItem.excitednucleus, 1, 5),
+
+                ('C'), new ItemStack(IUItem.advQuantumtool),
+
+                ('B'), new ItemStack(IUItem.water_neutron
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 12), "ACA", "CBC", "ACA",
+
+                ('A'), new ItemStack(IUItem.doublecompressIridiumplate),
+
+                ('C'), IUItem.circuitSpectral,
+
+                ('B'), new ItemStack(IUItem.water_barionrotor
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.corewater, 1, 13), "ECE", "CBC", "ACA",
+
+                ('E'), IUItem.circuitSpectral,
+
+                ('A'), new ItemStack(IUItem.doublecompressIridiumplate),
+
+                ('C'), new ItemStack(IUItem.photoniy_ingot),
+
+                ('B'),
+                new ItemStack(IUItem.water_adronrotor
+                        .getItem(), 1, 32767)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 0), "A A", "CBC", "A A",
+
+                ('A'), new ItemStack(IUItem.advnanobox),
+                ('B'), new ItemStack(IUItem.module_schedule), ('C'), "casingNichrome"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 1), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.advQuantumtool), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        3
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 0), ('D'),
+                "casingRedbrass"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 2), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.adv_spectral_box), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        5
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 1), ('D'),
+                "casingMuntsa"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 3), "A A", "CBC", "A A",
+
+                ('A'), new ItemStack(IUItem.advnanobox),
+                ('B'), new ItemStack(IUItem.module_schedule), ('C'), IUItem.iridiumPlate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 4), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.advQuantumtool), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        4
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 3), ('D'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 5), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.adv_spectral_box), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        6
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 4), ('D'),
+                IUItem.doublecompressIridiumplate
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.water_rotors_upgrade, 1, 6),
+                "ADA",
+                "CBC",
+                "ADA",
+
+                ('A'),
+                new ItemStack(IUItem.advnanobox),
+                ('B'),
+                new ItemStack(IUItem.module_schedule),
+                ('C'),
+                IUItem.iridiumPlate,
+                (
+                        'D'),
+                "casingDuralumin"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 7), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.advQuantumtool), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        4
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 6), ('D'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 8), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.adv_spectral_box), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        6
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 7), ('D'),
+                IUItem.doublecompressIridiumplate
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.water_rotors_upgrade, 1, 9),
+                "ADA",
+                "CBC",
+                "ADA",
+
+                ('A'),
+                new ItemStack(IUItem.adv_spectral_box),
+                ('B'),
+                new ItemStack(IUItem.module_schedule),
+                ('C'),
+                IUItem.compressIridiumplate,
+                (
+                        'D'),
+                "doubleplateAlumel"
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.water_rotors_upgrade, 1, 10),
+                "ADA",
+                "CBC",
+                "DED",
+
+                ('A'),
+                new ItemStack(IUItem.advnanobox),
+                ('B'),
+                new ItemStack(IUItem.module_schedule),
+                ('C'),
+                IUItem.iridiumPlate,
+                (
+                        'D'),
+                "doubleplatePlatinum",
+                ('E'),
+                new ItemStack(IUItem.core, 1, 3)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 11), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.advQuantumtool), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        4
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 10), ('D'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 12), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.adv_spectral_box), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        6
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 11), ('D'),
+                IUItem.doublecompressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 13), "ADA", "CBC", "DED",
+
+                ('A'), new ItemStack(IUItem.advnanobox),
+
+                ('B'), new ItemStack(IUItem.module_schedule),
+
+                ('C'), IUItem.iridiumPlate,
+
+                ('D'),
+                "doubleplateRedbrass",
+
+                ('E'), new ItemStack(IUItem.core, 1, 4)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 14), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.advQuantumtool), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        5
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 13), ('D'),
+                IUItem.compressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.water_rotors_upgrade, 1, 15), "ADA", "CBC", "ADA",
+
+                ('A'), new ItemStack(IUItem.adv_spectral_box), ('B'), new ItemStack(
+                        IUItem.core,
+                        1,
+                        6
+                ),
+                ('C'), new ItemStack(IUItem.water_rotors_upgrade, 1, 14), ('D'),
+                IUItem.doublecompressIridiumplate
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 4, 0), "BBB", "CAC", "BBB",
+
+                ('A'), new ItemStack(IUItem.crafting_elements, 1, 122),
+
+                ('B'), "plateTin",
+
+                ('C'), Items.REDSTONE
         );
         BasicRecipeTwo.recipe();
     }

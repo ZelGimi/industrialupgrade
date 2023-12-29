@@ -235,7 +235,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.getWorld().isRemote && this.full) {
+        if (!this.getWorld().isRemote ) {
+            try {
             this.reactorsModules.load();
             if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
                 this.energy.onUnloaded();
@@ -260,6 +261,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                 }
 
             }
+            }catch (Exception e){};
             ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
@@ -299,11 +301,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
             if (this.full) {
                 if (this.typeWork == EnumTypeWork.WORK) {
                     if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.work) {
-                        try {
-                            reactor.onTick();
-                        } catch (Exception ignored) {
-                        }
-                        ;
+                        reactor.onTick();
                         if (this.rad.getEnergy() >= this.rad.getCapacity() * 0.5 && this.rad.getEnergy() < this.rad.getCapacity() * 0.75) {
                             this.setSecurity(EnumTypeSecurity.UNSTABLE);
                         }
@@ -599,11 +597,15 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
         this.heat = var1;
         if(this.heat > this.getMaxHeat())
             this.heat = this.getMaxHeat();
-        if (this.heat < this.getStableMaxHeat()) {
+        if(this.getStableMaxHeat() == 0){
+            this.setSecurity(EnumTypeSecurity.STABLE);
+            this.setTime(EnumTypeSecurity.STABLE);
+        }
+        else  if (this.heat < this.getStableMaxHeat()) {
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
         } else if (this.heat >= this.getStableMaxHeat() && this.heat <=
-                this.getMaxHeat()) {
+                this.getStableMaxHeat() +  (this.getMaxHeat() -  this.getStableMaxHeat()) / 2 ) {
             this.setSecurity(EnumTypeSecurity.UNSTABLE);
             this.setTime(EnumTypeSecurity.UNSTABLE);
         } else {
@@ -669,7 +671,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
         }
         double rad = this.rad.getEnergy() / 9;
 
-
+        this.setFull(false);
         Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
                 this.getPos().getZ() + length, 25, false, true
         );

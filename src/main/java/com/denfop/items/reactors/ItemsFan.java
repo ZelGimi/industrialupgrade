@@ -1,13 +1,19 @@
 package com.denfop.items.reactors;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemsFan  extends ItemDamage{
 
@@ -21,6 +27,19 @@ public class ItemsFan  extends ItemDamage{
         this.level=level;
         this.energy = energy;
         setMaxStackSize(1);
+    }
+    @Override
+    public void addInformation(
+            @Nonnull final ItemStack stack,
+            final World world,
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag advanced
+    ) {
+        super.addInformation(stack, world, tooltip, advanced);
+
+        tooltip.add(Localization.translate("reactor.component_level") + (this.level +1) );
+        tooltip.add(Localization.translate("reactor.component_level1"));
+
     }
 
     public int getLevel() {

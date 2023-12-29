@@ -245,7 +245,7 @@ public class DecoderHandler {
             case Boolean:
                 return is.readBoolean();
             case Byte:
-                return is.readByte();
+                return (byte)is.readByte();
             case Character:
                 return is.readChar();
             case ChunkPos:

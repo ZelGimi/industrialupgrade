@@ -10,6 +10,9 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> {
 
@@ -19,7 +22,24 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
         this.ySize = 259;
         this.xSize = 187;
     }
+    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+        if (mouseX >= 3 && mouseX <= 15 && mouseY >= 5 && mouseY <= 17) {
+            List<String> text = new ArrayList<>();
+            text.add(Localization.translate("reactor.guide.water_reactor"));
+            List<String> compatibleUpgrades = new ArrayList<>();
+            for(int i =1;i < 15;i++){
+                compatibleUpgrades.add(Localization.translate("reactor.guide.water_reactor"+i));
+            }
+            Iterator<String> var5 = compatibleUpgrades.iterator();
+            String itemstack;
+            while (var5.hasNext()) {
+                itemstack = var5.next();
+                text.add(itemstack);
+            }
 
+            this.drawTooltip(mouseX - 40, mouseY + 10, text);
+        }
+    }
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -36,6 +56,7 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
                 "/" + ModUtils.getString(this.container.base.getMaxHeat())  + "°C"+ "\n"+"Stable Heat: " + this.container.base.getStableMaxHeat() + "°C").drawForeground(par1,
                 par2);
 
+        handleUpgradeTooltip(par1, par2);
     }
 
     @Override
@@ -97,6 +118,10 @@ public class GuiWaterMainController extends GuiIU<ContainerWaterMainController> 
             drawTexturedModalRect(this.guiLeft + 11, this.guiTop + 100
                     ,63, 68, 11, 14);
         }
+
+        this.mc.getTextureManager()
+                .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+        drawTexturedModalRect(this.guiLeft +3 , this.guiTop+5, 0, 0, 10, 10);
     }
 
     @Override

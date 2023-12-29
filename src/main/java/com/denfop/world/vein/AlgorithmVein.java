@@ -19,7 +19,6 @@ public class AlgorithmVein {
     static Random random = new Random();
 
     public static void generate(World world, VeinType veinType, BlockPos pos, Chunk chunk, int meta1) {
-        random.setSeed(random.nextLong());
         if (random.nextInt(3) > 0) {
             return;
         }
