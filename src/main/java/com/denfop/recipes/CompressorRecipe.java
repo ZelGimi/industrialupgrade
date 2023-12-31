@@ -243,11 +243,7 @@ public class CompressorRecipe {
                 9,
                 "blockGold"
         );
-        addcompressor(
-                IUItem.coal_chunk,
-                1,
-                new ItemStack(Items.DIAMOND)
-        );
+
         addcompressor(
                 "dustObsidian",
                 1,

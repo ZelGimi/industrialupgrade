@@ -27,6 +27,7 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem {
         super(name, 1);
         this.level = level;
         this.autoRepair = autoRepair;
+        setMaxStackSize(1);
     }
 
     @Override

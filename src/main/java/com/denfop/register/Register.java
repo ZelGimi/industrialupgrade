@@ -806,6 +806,8 @@ public class Register {
         IUItem.module_stack = new IUItemBase("module_stack").setCreativeTab(IUCore.ModuleTab);
         IUItem.module_quickly = new IUItemBase("module_quickly").setCreativeTab(IUCore.ModuleTab);
         IUItem.module_storage = new IUItemBase("module_storage").setCreativeTab(IUCore.ModuleTab);
+        IUItem.module_infinity_water = new IUItemBase("module_infinity_water").setCreativeTab(IUCore.ModuleTab);
+        IUItem.module_separate = new IUItemBase("module_separate").setCreativeTab(IUCore.ModuleTab);
         IUItem.plastic_plate = new IUItemBase("plastic_plate");
 
         IUItem.doublescrapBox = new IUItemBase("doublescrapbox");

@@ -2107,7 +2107,7 @@ public class BasicRecipeTwo {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 250), "EDE", "BAB", "CCC",
 
-                ('E'), IUItem.cirsuitQuantum,
+                ('E'), IUItem.circuitSpectral,
 
                 ('D'), DEFAULT_SENSOR,
 

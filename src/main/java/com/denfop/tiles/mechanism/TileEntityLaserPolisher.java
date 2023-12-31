@@ -87,6 +87,10 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
         addRecipe(new ItemStack(IUItem.ore2),new ItemStack(IUItem.crafting_elements,1,447));
         addRecipe(new ItemStack(IUItem.ore2,1,2),new ItemStack(IUItem.crafting_elements,1,448));
         addRecipe(new ItemStack(IUItem.ore2,1,1),new ItemStack(IUItem.crafting_elements,1,449));
+        addRecipe(
+                IUItem.coal_chunk,
+                new ItemStack(Items.DIAMOND)
+        );
     }
     public static void addRecipe(int container, ItemStack output) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;

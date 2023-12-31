@@ -96,11 +96,11 @@ public class MultiBlockImpGraphiteReactor {
         );
         impGraphiteReactorMultiBlock.add(impGraphiteReactorMultiBlock.getPos().add(3,1,2), IExchanger   .class,
                 new ItemStack(IUItem.graphite_reactor, 1, 10),
-                EnumFacing.EAST
+                EnumFacing.WEST
         );
         impGraphiteReactorMultiBlock.add(impGraphiteReactorMultiBlock.getPos().add(3,2,2), IExchanger   .class,
                 new ItemStack(IUItem.graphite_reactor, 1, 10),
-                EnumFacing.EAST
+                EnumFacing.WEST
         );
 
         impGraphiteReactorMultiBlock.add(impGraphiteReactorMultiBlock.getPos().add(3,3,2), ICapacitor   .class,

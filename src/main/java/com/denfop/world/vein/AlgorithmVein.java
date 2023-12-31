@@ -278,7 +278,7 @@ public class AlgorithmVein {
 
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getMaterial() == Material.AIR && pos.getY() > chunk.getHeight(pos)) {
+        if (state.getMaterial() == Material.AIR || pos.getY() > chunk.getHeight(pos)) {
             return false;
         }
         if (pos.getY() >= 60) {

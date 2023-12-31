@@ -401,6 +401,8 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         ItemStack stack_modulesize = ItemStack.EMPTY;
                         ItemStack panel = ItemStack.EMPTY;
                         ItemStack stack_modulestorage = ItemStack.EMPTY;
+                        ItemStack module_infinity_water = ItemStack.EMPTY;
+                        ItemStack module_separate = ItemStack.EMPTY;
                         if (base.multi_process.quickly) {
                             stack_quickly = new ItemStack(IUItem.module_quickly);
                         }
@@ -413,7 +415,13 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         if (base.multi_process.modulestorage) {
                             stack_modulestorage = new ItemStack(IUItem.module_storage);
                         }
-                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
+                        if (base.multi_process.module_infinity_water) {
+                            module_infinity_water = new ItemStack(IUItem.module_infinity_water);
+                        }
+                        if (base.multi_process.module_separate) {
+                            module_separate = new ItemStack(IUItem.module_separate);
+                        }
+                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty()  || !module_separate.isEmpty()) {
                             final EntityItem item = new EntityItem(world);
                             if (!stack_quickly.isEmpty()) {
                                 item.setItem(stack_quickly);
@@ -422,6 +430,14 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                             } else if (!stack_modulesize.isEmpty()) {
                                 item.setItem(stack_modulesize);
                                 base.multi_process.setModulesize(false);
+                                base.multi_process.shrinkModule(1);
+                            }else if (!module_separate.isEmpty()) {
+                                item.setItem(module_separate);
+                                base.multi_process.module_separate = false;
+                                base.multi_process.shrinkModule(1);
+                            }else if (!module_infinity_water.isEmpty()) {
+                                item.setItem(module_infinity_water);
+                                base.multi_process.module_infinity_water = false;
                                 base.multi_process.shrinkModule(1);
                             } else if (!panel.isEmpty()) {
                                 item.setItem(panel);
@@ -455,6 +471,11 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                             base.multi_process.setModulesize(false);
                             base.multi_process.shrinkModule(1);
                         }
+                        if (base.multi_process.module_separate) {
+                            stack_list.add(new ItemStack(IUItem.module_separate));
+                            base.multi_process.module_separate = false;
+                            base.multi_process.shrinkModule(1);
+                        }
                         if (base.solartype != null) {
                             stack_list.add(new ItemStack(IUItem.module6, 1, base.solartype.meta));
                             base.solartype = null;
@@ -462,6 +483,12 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         if (base.multi_process.modulestorage) {
                             stack_list.add(new ItemStack(IUItem.module_storage));
                             base.multi_process.setModulestorage(false);
+                            base.multi_process.shrinkModule(1);
+
+                        }
+                        if (base.multi_process.module_infinity_water) {
+                            stack_list.add(new ItemStack(IUItem.module_infinity_water));
+                            base.multi_process.module_infinity_water = false;
                             base.multi_process.shrinkModule(1);
 
                         }

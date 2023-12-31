@@ -303,12 +303,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         if (energy1 != 0) {
             this.energy.addEnergy(energy1);
         }
-        final double energy3 = nbt.getDouble("energy1");
-        if (energy1 != 0) {
-            if (this.exp != null) {
-                this.exp.addEnergy(energy3);
-            }
-        }
+
         final double energy4 = nbt.getDouble("energy2");
         if (energy1 != 0) {
             if (this.cold != null) {
@@ -329,13 +324,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                             nbt.setDouble("energy", component.getEnergy());
                         }
                     }
-                    final ComponentBaseEnergy component2 = this.exp;
-                    if (component2 != null) {
-                        if (component2.getEnergy() != 0) {
-                            final NBTTagCompound nbt = ModUtils.nbt(drop);
-                            nbt.setDouble("energy1", component2.getEnergy());
-                        }
-                    }
+
                     final CoolComponent component3 = this.cold;
                     if (component3 != null) {
                         if (component3.getEnergy() != 0) {
@@ -361,13 +350,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                 nbt.setDouble("energy", component.getEnergy());
             }
         }
-        final ComponentBaseEnergy component2 = this.exp;
-        if (component2 != null) {
-            if (component2.getEnergy() != 0) {
-                final NBTTagCompound nbt = ModUtils.nbt(drop);
-                nbt.setDouble("energy1", component2.getEnergy());
-            }
-        }
+
         final CoolComponent component3 = this.cold;
         if (component3 != null) {
             if (component3.getEnergy() != 0) {
@@ -385,6 +368,8 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         ItemStack stack_modulestorage = ItemStack.EMPTY;
         ItemStack panel = ItemStack.EMPTY;
         ItemStack colling = ItemStack.EMPTY;
+        ItemStack module_separate = ItemStack.EMPTY;
+        ItemStack module_infinity_water = ItemStack.EMPTY;
         if (this.multi_process.quickly) {
             stack_quickly = new ItemStack(IUItem.module_quickly);
         }
@@ -394,6 +379,12 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         if (this.multi_process.modulestorage) {
             stack_modulestorage = new ItemStack(IUItem.module_storage);
         }
+        if (this.multi_process.module_separate) {
+            module_separate = new ItemStack(IUItem.module_separate);
+        }
+        if (this.multi_process.module_infinity_water) {
+            module_infinity_water = new ItemStack(IUItem.module_infinity_water);
+        }
         if (solartype != null) {
             panel = new ItemStack(IUItem.module6, 1, solartype.meta);
         }
@@ -402,7 +393,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             colling = new ItemStack(IUItem.coolupgrade, 1, this.cold.meta);
 
         }
-        if (!stack_modulestorage.isEmpty() || !stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !colling.isEmpty()) {
+        if (!stack_modulestorage.isEmpty() || !stack_quickly.isEmpty()  || !module_separate.isEmpty()   || !module_infinity_water.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !colling.isEmpty()) {
             if (!stack_modulestorage.isEmpty()) {
                 ret.add(stack_modulestorage);
                 this.multi_process.shrinkModule(1);
@@ -412,6 +403,16 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                 ret.add(stack_quickly);
                 this.multi_process.shrinkModule(1);
                 this.multi_process.setQuickly(false);
+            }
+            if (!module_separate.isEmpty()) {
+                ret.add(module_separate);
+                this.multi_process.shrinkModule(1);
+                this.multi_process.module_separate = false;
+            }
+            if (!module_infinity_water.isEmpty()) {
+                ret.add(module_infinity_water);
+                this.multi_process.shrinkModule(1);
+                this.multi_process.module_infinity_water = false;
             }
             if (!stack_modulesize.isEmpty()) {
                 ret.add(stack_modulesize);

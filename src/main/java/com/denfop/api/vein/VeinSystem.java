@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeHills;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -46,8 +47,10 @@ public class VeinSystem implements IVeinSystem {
         Random rand = new Random();
         int chance = rand.nextInt(100);
         Vein vein = new Vein(Type.EMPTY, 0, chunk.getPos());
-        if (chance >= 15) {
-            getnumber(chunk, vein);
+        final Biome biome = chunk.getWorld().getBiome(new BlockPos(chunk.x * 16, 0, chunk.z * 16));
+        int col = biome instanceof BiomeHills ? 25 : 0;
+        if (chance >= 15 + col) {
+            getnumber(vein,biome);
 
         } else {
             int meta = rand.nextInt(16);
@@ -84,8 +87,7 @@ public class VeinSystem implements IVeinSystem {
         this.chunkPosVeinMap.clear();
     }
 
-    private void getnumber(Chunk chunk, IVein vein) {
-        final Biome biome = chunk.getWorld().getBiome(new BlockPos(chunk.x * 16, 0, chunk.z * 16));
+    private void getnumber(IVein vein, final Biome biome) {
         int number;
         if (Biome.getIdForBiome(biome) == 2) {
             int random = rand.nextInt(100);

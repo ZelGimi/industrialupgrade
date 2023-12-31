@@ -47,11 +47,14 @@ public interface IHazmatLike {
                         if (!(hazmat.getLevel() >= 1)) {
                             return false;
                         }
+                        break;
                     case HIGH:
                     case VERY_HIGH:
                         if (!(hazmat.getLevel() > 1)) {
                             return false;
                         }
+
+                        break;
                 }
             }
 

@@ -73,6 +73,12 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         if (this.container.base.multi_process.modulestorage) {
             itemStackList.add(new ItemStack(IUItem.module_storage));
         }
+        if (this.container.base.multi_process.module_infinity_water) {
+            itemStackList.add(new ItemStack(IUItem.module_infinity_water));
+        }
+        if (this.container.base.multi_process.module_separate) {
+            itemStackList.add(new ItemStack(IUItem.module_separate));
+        }
         if (this.container.base.solartype != null) {
             itemStackList.add(new ItemStack(IUItem.module6, 1, this.container.base.solartype.meta));
         }

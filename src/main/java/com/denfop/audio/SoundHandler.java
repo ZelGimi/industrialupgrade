@@ -87,7 +87,7 @@ public class SoundHandler {
     public static void playSound(EntityPlayer player, EnumSound sound1) {
         final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
         boolean can = true;
-        if (man.loaded) {
+
             for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
 
                 if (map.getKey().getCategory() == SoundCategory.PLAYERS && map
@@ -102,7 +102,7 @@ public class SoundHandler {
                     break;
                 }
             }
-        }
+
         if (can) {
             player.playSound(sound1.getSoundEvent(), 1, 1);
 
@@ -113,7 +113,7 @@ public class SoundHandler {
     public static void playSound(EntityPlayer player, String sound1) {
         final SoundManager man = Minecraft.getMinecraft().getSoundHandler().sndManager;
         boolean can = true;
-        if (man.loaded) {
+
             for (Map.Entry<ISound, String> map : man.invPlayingSounds.entrySet()) {
 
                 if (map.getKey().getCategory() == SoundCategory.PLAYERS && map
@@ -130,7 +130,7 @@ public class SoundHandler {
                     break;
                 }
             }
-        }
+
         if (can) {
             player.playSound(EnumSound.getSondFromString(sound1), 1, 1);
 

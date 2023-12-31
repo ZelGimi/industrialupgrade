@@ -14,6 +14,8 @@ import com.denfop.tiles.mechanism.EnumTypeMachines;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +50,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public int[] col = new int[4];
     public MachineRecipe[] output;
     public boolean modulesize = false;
+    public boolean module_infinity_water = false;
+    public boolean module_separate = false;
     public boolean modulestorage = false;
     private int mode;
     private int operationsPerTick = 1;
@@ -227,7 +231,36 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     public void updateEntityServer() {
 
         int quickly = 1;
+        if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
+            if (this.module_separate && !this.inputSlots.isEmpty()) {
+                if(sizeWorkingSlot > 1){
 
+                    for (int i = 1; i < sizeWorkingSlot; i++) {
+                        ItemStack stack = this.inputSlots.get(0);
+                        if(!stack.isEmpty()) {
+                            if (stack.getCount() == stack.getMaxStackSize())
+                                break;
+                            ItemStack stack1 = this.inputSlots.get(i);
+                            if (stack.isItemEqual(stack1)) {
+                                int min = stack.getMaxStackSize() - stack.getCount();
+                                min = Math.min(min, stack1.getCount());
+                                if (stack1.getCount() == min) {
+                                    stack.grow(min);
+                                    this.inputSlots.put(i, ItemStack.EMPTY);
+                                } else {
+                                    stack.grow(min);
+                                    stack1.shrink(min);
+                                }
+                            }
+                        }else{
+                            ItemStack stack1 = this.inputSlots.get(i);
+                            this.inputSlots.put(0, stack1);
+                            this.inputSlots.put(i, ItemStack.EMPTY);
+                        }
+                    }
+                }
+            }
+        }
         if (this.parent.getWorld().provider.getWorldTime() % 10 == 0) {
             if (this.modulestorage && !this.inputSlots.isEmpty()) {
                 final ItemStack stack = this.inputSlots.get();
@@ -284,6 +317,11 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
             int size = 1;
             if (this.output[i] != null && !this.inputSlots.get(i).isEmpty()) {
+                if(this.module_infinity_water){
+                    if (this.multimachine.tank != null && this.multimachine.tank.getFluidAmount() < 5000) {
+                        this.multimachine.tank.fill(new FluidStack(FluidRegistry.WATER,10000),true);
+                    }
+                }
                 if (this.multimachine.tank != null) {
                     if (this.multimachine.tank.getFluid() == null || this.multimachine.tank.getFluid().amount < 1000) {
                         return;
@@ -417,6 +455,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.quickly = nbttagcompound.getBoolean("quickly");
         this.modulesize = nbttagcompound.getBoolean("modulesize");
         this.modulestorage = nbttagcompound.getBoolean("modulestorage");
+        this.module_infinity_water = nbttagcompound.getBoolean("module_infinity_water");
+        this.module_separate = nbttagcompound.getBoolean("module_separate");
+
         this.module = nbttagcompound.getInteger("module");
         this.mode = nbttagcompound.getInteger("mode");
     }
@@ -431,6 +472,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         nbttagcompound.setBoolean("quickly", this.quickly);
         nbttagcompound.setBoolean("modulesize", this.modulesize);
         nbttagcompound.setBoolean("modulestorage", this.modulestorage);
+        nbttagcompound.setBoolean("module_infinity_water", this.module_infinity_water);
+        nbttagcompound.setBoolean("module_separate", this.module_separate);
         return nbttagcompound;
     }
 
@@ -487,6 +530,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         buffer.writeBoolean(this.quickly);
         buffer.writeBoolean(this.modulesize);
         buffer.writeBoolean(this.modulestorage);
+        buffer.writeBoolean(this.module_infinity_water);
+        buffer.writeBoolean(this.module_separate);
+
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
@@ -503,6 +549,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         buffer.writeBoolean(this.quickly);
         buffer.writeBoolean(this.modulesize);
         buffer.writeBoolean(this.modulestorage);
+        buffer.writeBoolean(this.module_infinity_water);
+        buffer.writeBoolean(this.module_separate);
         return buffer;
     }
 
@@ -518,6 +566,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.quickly =is.readBoolean();
         this.modulesize = is.readBoolean();
         this.modulestorage = is.readBoolean();
+        this.module_infinity_water = is.readBoolean();
+        this.module_separate = is.readBoolean();
     }
 
     private double getspeed() {
@@ -581,9 +631,25 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 return true;
             }
         }
+        if (this.multimachine.tank != null && heldItem.getItem().equals(IUItem.module_infinity_water)) {
+            if (!this.module_infinity_water && this.module < 2) {
+                this.module_infinity_water = true;
+                this.module++;
+                heldItem.shrink(1);
+                return true;
+            }
+        }
         if (heldItem.getItem().equals(IUItem.module_storage)) {
             if (!this.modulestorage && this.module < 2) {
                 this.modulestorage = true;
+                this.module++;
+                heldItem.shrink(1);
+                return true;
+            }
+        }
+        if (this.enumMultiMachine.type == EnumTypeMachines.COMPRESSOR && heldItem.getItem().equals(IUItem.module_separate)) {
+            if (!this.module_separate && this.module < 2) {
+                this.module_separate = true;
                 this.module++;
                 heldItem.shrink(1);
                 return true;

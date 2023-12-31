@@ -346,7 +346,7 @@ public class WorldGenOres implements IWorldGenerator {
             );
         }
         WorldGenOres.random.setSeed(WorldGenOres.random.nextLong());
-        if(WorldGenOres.random.nextInt(4) <= 1) {
+        if(WorldGenOres.random.nextInt(4) <= 2) {
             if (veinTypes1.isEmpty()) {
                 veinTypes1 = new ArrayList<>(veinTypes);
             }

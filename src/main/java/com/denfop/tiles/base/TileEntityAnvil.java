@@ -183,6 +183,14 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                     }
                     outputSlot.get().setCount(0);
                     return true;
+                } else {
+                    if (!inputSlotA.isEmpty()) {
+                        if (!world.isRemote) {
+                            ModUtils.dropAsEntity(world, pos, inputSlotA.get());
+                        }
+                        inputSlotA.get().setCount(0);
+                        return true;
+                    }
                 }
             }
         }

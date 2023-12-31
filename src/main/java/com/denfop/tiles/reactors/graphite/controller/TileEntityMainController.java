@@ -1,5 +1,7 @@
 package com.denfop.tiles.reactors.graphite.controller;
 
+import com.denfop.Config;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.reactors.EnumTypeComponent;
@@ -40,6 +42,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Explosion;
@@ -51,6 +54,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TileEntityMainController extends TileMultiBlockBase implements IGraphiteReactor, IUpdatableTileEvent {
 
@@ -59,8 +63,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
     private final ComponentBaseEnergy rad;
     public final InvSlotReactorModules<TileEntityMainController> reactorsModules;
     public Timer timer = new Timer(9999, 0, 0);
-    public Timer red_timer = new Timer(0, 5, 0);
-    public Timer yellow_timer = new Timer(0, 30, 0);
+    public Timer red_timer = new Timer(0, 2, 30);
+    public Timer yellow_timer = new Timer(0, 15, 0);
     public AdvEnergy energy;
     public EnumTypeWork typeWork = EnumTypeWork.WORK;
 
@@ -309,15 +313,12 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                         if (!this.timer.canWork()) {
                             this.explode();
                             this.reactor = null;
-                            this.updateFull();
                         } else if (!this.yellow_timer.canWork()) {
                             this.explode();
                             this.reactor = null;
-                            this.updateFull();
                         } else if (!this.red_timer.canWork()) {
                             this.explode();
                             this.reactor = null;
-                            this.updateFull();
                         }
 
                     }
@@ -605,7 +606,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
         } else if (this.heat >= this.getStableMaxHeat() && this.heat <=
-                this.getStableMaxHeat() +  (this.getMaxHeat() -  this.getStableMaxHeat()) / 2 ) {
+                this.getStableMaxHeat() +  (this.getMaxHeat() -  this.getStableMaxHeat()) * 0.75 ) {
             this.setSecurity(EnumTypeSecurity.UNSTABLE);
             this.setTime(EnumTypeSecurity.UNSTABLE);
         } else {
@@ -672,14 +673,42 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
         double rad = this.rad.getEnergy() / 9;
 
         this.setFull(false);
+        this.activate = false;
         Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
                 this.getPos().getZ() + length, 25, false, true
         );
-        if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.getWorld(), explosion)) {
-            return;
+        if(Config.explodeReactor) {
+            if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.getWorld(), explosion)) {
+                return;
+            }
+            explosion.doExplosionA();
+            explosion.doExplosionB(true);
+        }else{
+            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
+                if(world.rand.nextInt(2) == 0){
+                    continue;
+                }
+                BlockPos pos1;
+                switch (EnumFacing.values()[facing]) {
+                    case NORTH:
+                        pos1 = pos.add(entry.getKey());
+                        break;
+                    case EAST:
+                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                        break;
+                    case WEST:
+                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                        break;
+                    case SOUTH:
+                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + facing);
+                }
+                world.setBlockToAir(pos1);
+
+            }
         }
-        explosion.doExplosionA();
-        explosion.doExplosionB(true);
         if (this.world.provider.getDimension() == 0) {
             for (ChunkPos pos1 : chunkPosList) {
                 if (!pos1.equals(chunkPos)) {
@@ -689,7 +718,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                 }
             }
         }
-        new PacketExplosion(explosion, 25, false, true);
+        if(Config.explodeReactor)
+            new PacketExplosion(explosion, 25, false, true);
     }
 
 
@@ -720,10 +750,10 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
                     timer = new Timer(9999, 0, 0);
                     break;
                 case ERROR:
-                    timer = new Timer(0, 5, 0);
+                    timer = new Timer(0, 2, 30);
                     break;
                 case UNSTABLE:
-                    timer = new Timer(0, 30, 0);
+                    timer = new Timer(0, 15, 0);
                     break;
             }
         }
@@ -734,16 +764,16 @@ public class TileEntityMainController extends TileMultiBlockBase implements IGra
         switch (this.security) {
             case UNSTABLE:
                 this.yellow_timer.work();
-                if (!this.red_timer.getMinute(5)) {
+                if (!this.red_timer.getMinute(3)) {
                     this.red_timer.rework();
                 }
                 break;
             case STABLE:
                 this.timer.work();
-                if (!this.yellow_timer.getMinute(30)) {
+                if (!this.yellow_timer.getMinute(15)) {
                     this.yellow_timer.rework();
                 }
-                if (!this.red_timer.getMinute(5)) {
+                if (!this.red_timer.getMinute(3)) {
                     this.red_timer.rework();
                 }
                 break;

@@ -12,6 +12,7 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 
 public class BaseRecipes {
@@ -234,7 +235,18 @@ public class BaseRecipes {
                 IUItem.insulatedCopperCableItem, ('C'), IUItem.electronicCircuit
         );
 
+        Recipes.recipe.addRecipe(IUItem.module_infinity_water, "BBB", "CAC", "DED",
 
+                ('A'), IUItem.module_schedule, ('B'),
+           ModUtils.getCellFromFluid(FluidRegistry.WATER), ('C'), IUItem.circuitNano,'D', IUItem.quantumtool, 'E',
+                "dobuleplateIridium"
+        );
+        Recipes.recipe.addRecipe(IUItem.module_separate, "BBB", "CAC", "DED",
+
+                ('B'), IUItem.module_storage, ('B'),
+               "plateCarbon", ('C'), IUItem.circuitNano,'D',"gearElectrum", 'E',
+                "dobuleplateAluminumbronze"
+        );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.ruby_boots), "   ", "A A", "A A",
                 ('A'), ("gemRuby")

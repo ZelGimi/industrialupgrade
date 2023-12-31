@@ -408,6 +408,7 @@ public final class Config {
     public static boolean TinOre;
     public static boolean LeadOre;
     public static boolean UraniumOre;
+    public static boolean explodeReactor;
 
 
     public static void loadNormalConfig(final File configFile) {
@@ -943,6 +944,8 @@ public final class Config {
             reactorimpVent_reactorvent = config.get("Configuration of upgrade reactors", "reactorimpVent_reactorvent", 25).getInt(
                     25);
 
+
+            explodeReactor = config.get("Configuration of reactors", "Enable explode", true).getBoolean(true);
 
             //
 

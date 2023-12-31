@@ -20,9 +20,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -140,8 +142,15 @@ public class ItemCell extends ItemSubTypes<CellType> implements IModelRegister {
             World world, EntityPlayer player, EnumHand hand
     ) {
 
+
         RayTraceResult position = this.rayTrace(world, player, true);
         if (position == null) {
+            return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
+        }
+        final boolean action = ForgeHooks
+                .onRightClickBlock(player, hand, position.getBlockPos(), position.sideHit, position.hitVec)
+                .isCanceled();
+        if (action) {
             return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(hand));
         }
         if (position.typeOfHit == RayTraceResult.Type.BLOCK) {

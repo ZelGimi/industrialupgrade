@@ -6,6 +6,7 @@ import com.denfop.tiles.base.TileAdminSolarPanel;
 import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -111,6 +112,11 @@ public enum BlockAnvil implements IMultiTileBlock {
     @Override
     public boolean allowWrenchRotating() {
         return true;
+    }
+
+    @Override
+    public Material getMaterial() {
+        return Material.IRON;
     }
 
     @Override

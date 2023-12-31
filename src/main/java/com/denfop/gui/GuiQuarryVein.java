@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeHills;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -72,8 +73,9 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         List<String> lst = new ArrayList<>();
         final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getBlockPos());
         lst.add(Localization.translate("iu.biome") + biome.getBiomeName());
-        lst.add(Localization.translate("iu.gettingvein") + getChance(biome) + "%");
-        lst.add(Localization.translate("iu.gettingvein1") + 15 + "%");
+        int col = biome instanceof BiomeHills ? 25 : 0;
+        lst.add(Localization.translate("iu.gettingvein") + (getChance(biome) - col) + "%");
+        lst.add(Localization.translate("iu.gettingvein1") + 15 + col + "%");
 
         return lst;
     }

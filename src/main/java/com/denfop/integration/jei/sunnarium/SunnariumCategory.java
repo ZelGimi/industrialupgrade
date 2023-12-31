@@ -99,7 +99,7 @@ public class SunnariumCategory extends Gui implements IRecipeCategory<SunnariumW
         isg.init(3, true, 70, 35);
         isg.set(3, recipes.getInput3());
 
-        isg.init(4, false, 111, 30);
+        isg.init(4, false, 112, 31);
         isg.set(4, recipes.getOutput());
     }
 

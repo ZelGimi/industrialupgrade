@@ -3,6 +3,7 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Area;
+import com.denfop.api.reactors.EnumTypeSecurity;
 import com.denfop.container.ContainerWaterSecurity;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.water.ISecurity;
@@ -20,7 +21,12 @@ public class GuiWaterSecurity extends GuiIU<ContainerWaterSecurity> {
         ISecurity security = (ISecurity) getContainer().base;
         String name = ((TileEntityMultiBlockElement)security).active.equals("") ? "none" :
                 ((TileEntityMultiBlockElement)security).active;
-        new Area(this,40,36,10,27).withTooltip(Localization.translate("waterreactor.security."+name)).drawForeground(par1, par2);
+        String time = "" ;
+        if(name.equals("error"))
+            time = security.getRed_timer().getDisplay();
+        if(name.equals("unstable"))
+            time = security.getYellow_timer().getDisplay();
+        new Area(this,40,36,10,27).withTooltip(Localization.translate("waterreactor.security."+name) + (!time.isEmpty() ? ("\n" + time) : time)).drawForeground(par1, par2);
     }
 
     @Override

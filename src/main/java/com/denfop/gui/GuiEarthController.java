@@ -2,6 +2,9 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerEarthAnalyzer;
 import com.denfop.container.ContainerEarthController;
 import com.denfop.network.packet.PacketUpdateServerTile;
@@ -20,6 +23,8 @@ public class GuiEarthController extends GuiIU<ContainerEarthController> {
 
     public GuiEarthController(ContainerEarthController guiContainer) {
         super(guiContainer);
+        this.addComponent(new GuiComponent(this, 32, 55, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+
     }
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {

@@ -10,10 +10,14 @@ import com.denfop.gui.GuiWaterSecurity;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.water.ISecurity;
+import com.denfop.tiles.reactors.water.controller.TileEntityMainController;
+import com.denfop.utils.Timer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.io.IOException;
 
 public class TileEntityAdvSecurity  extends TileEntityMultiBlockElement implements ISecurity {
 
@@ -32,17 +36,46 @@ public class TileEntityAdvSecurity  extends TileEntityMultiBlockElement implemen
     public int getLevel() {
         return 1;
     }
+    private Timer red_timer = new Timer(0,2,30);
+    private Timer yellow_timer= new Timer(0,5,0);
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
+        customPacketBuffer.writeBoolean(this.getMain() != null);
+        if(this.getMain() != null) {
+            TileEntityMainController controller = (TileEntityMainController) this.getMain();
+            controller.getRed_timer().writeBuffer(customPacketBuffer);
+            controller.getYellow_timer().writeBuffer(customPacketBuffer);
+        }
         return customPacketBuffer;
     }
 
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
-
+        boolean can = customPacketBuffer.readBoolean();
+        if(can){
+            try {
+                this.red_timer.readBuffer(customPacketBuffer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                this.yellow_timer.readBuffer(customPacketBuffer);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
+
+    public Timer getYellow_timer() {
+        return yellow_timer;
+    }
+
+    public Timer getRed_timer() {
+        return red_timer;
+    }
+
     public EnumTypeSecurity security;
     @Override
     public void setSecurity(final EnumTypeSecurity typeSecurity) {

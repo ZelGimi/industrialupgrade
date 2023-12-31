@@ -665,6 +665,8 @@ public class IUItem {
     public static ItemReactorCoolant adv_coolant;
     public static ItemReactorCoolant imp_coolant;
     public static BlockTileEntity anvil;
+    public static Item module_infinity_water;
+    public static Item module_separate;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();
