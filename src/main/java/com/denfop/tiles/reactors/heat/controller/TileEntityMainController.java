@@ -107,16 +107,19 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         this.reactorsElements.setStackSizeLimit(1);
         this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation()));
     }
+
     @Override
     public double getModuleExchanger() {
         return reactorsModules.getExchanger();
     }
+
     public LogicReactor getReactor() {
         if (this.reactor == null) {
             this.reactor = new LogicHeatReactor(this);
         }
         return reactor;
     }
+
     @Override
     public double getModuleStableHeat() {
         return reactorsModules.getStableHeat();
@@ -146,6 +149,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     public double getModuleCapacitor() {
         return reactorsModules.getCapacitor();
     }
+
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
@@ -243,30 +247,32 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         if (!this.getWorld().isRemote) {
             this.reactorsModules.load();
             try {
-            if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
-                this.energy.onUnloaded();
-                this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
-                this.energy.delegate = null;
-                this.energy.createDelegate();
-                this.energy.onLoaded();
-                switch (this.level) {
-                    case 0:
-                        this.energy.setCapacity(4000000);
-                        break;
-                    case 1:
-                        this.energy.setCapacity(50000000);
-                        break;
-                    case 2:
-                        this.energy.setCapacity(200000000);
-                        break;
-                    case 3:
-                        this.energy.setCapacity(500000000);
-                        break;
+                if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
+                    this.energy.onUnloaded();
+                    this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
+                    this.energy.delegate = null;
+                    this.energy.createDelegate();
+                    this.energy.onLoaded();
+                    switch (this.level) {
+                        case 0:
+                            this.energy.setCapacity(4000000);
+                            break;
+                        case 1:
+                            this.energy.setCapacity(50000000);
+                            break;
+                        case 2:
+                            this.energy.setCapacity(200000000);
+                            break;
+                        case 3:
+                            this.energy.setCapacity(500000000);
+                            break;
+
+                    }
 
                 }
-
+            } catch (Exception e) {
             }
-            }catch (Exception e){};
+            ;
             ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
@@ -306,11 +312,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
             if (this.full) {
                 if (this.typeWork == EnumTypeWork.WORK) {
                     if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.work) {
-                        try {
-                            reactor.onTick();
-                        } catch (Exception ignored) {
-                        }
-                        ;
+                        reactor.onTick();
                         if (this.rad.getEnergy() >= this.rad.getCapacity() * 0.5 && this.rad.getEnergy() < this.rad.getCapacity() * 0.75) {
                             this.setSecurity(EnumTypeSecurity.UNSTABLE);
                         }
@@ -486,8 +488,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         for (int i = 0; i < pos1.size(); i++) {
             int k = i % 4;
             ITank tank = ((ITank) this.getWorld().getTileEntity(pos1.get(i)));
-            if(tank == null)
+            if (tank == null) {
                 continue;
+            }
             switch (k) {
                 case 0:
                     tank.setFluid(FluidRegistry.WATER);
@@ -559,12 +562,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         this.integerMap.clear();
         for (int i = 0; i < this.getWidth(); i++) {
             List<Integer> list = new ArrayList<>();
-            for (int j =0; j < this.listGraphiteController.size();j++) {
-                if(listGraphiteController.get(j).getIndex() == i)
+            for (int j = 0; j < this.listGraphiteController.size(); j++) {
+                if (listGraphiteController.get(j).getIndex() == i) {
                     list.add(j);
+                }
             }
 
-            this.integerMap.put(i,list.stream().mapToInt(jj->jj).toArray());
+            this.integerMap.put(i, list.stream().mapToInt(jj -> jj).toArray());
         }
         reactor.temp_heat = this.heat;
         new PacketUpdateFieldTile(this, "reactor", this.reactor.getGeneration());
@@ -622,17 +626,17 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
     @Override
     public void setHeat(final double var1) {
         this.heat = var1;
-        if(this.heat > this.getMaxHeat())
+        if (this.heat > this.getMaxHeat()) {
             this.heat = this.getMaxHeat();
-        if(this.getStableMaxHeat() == 0){
+        }
+        if (this.getStableMaxHeat() == 0) {
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
-        }
-        else  if (this.heat < this.getStableMaxHeat()) {
+        } else if (this.heat < this.getStableMaxHeat()) {
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
         } else if (this.heat >= this.getStableMaxHeat() && this.heat <=
-                this.getStableMaxHeat() +  (this.getMaxHeat() -  this.getStableMaxHeat()) * 0.75 ) {
+                this.getStableMaxHeat() + (this.getMaxHeat() - this.getStableMaxHeat()) * 0.75) {
             this.setSecurity(EnumTypeSecurity.UNSTABLE);
             this.setTime(EnumTypeSecurity.UNSTABLE);
         } else {
@@ -648,7 +652,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public void setRad(final double rad) {
-        this.rad.addEnergy(rad  * this.reactorsModules.getRadiation());
+        this.rad.addEnergy(rad * this.reactorsModules.getRadiation());
         if (this.rad.getEnergy() >= this.rad.getCapacity()) {
             this.explode();
         }
@@ -656,7 +660,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public int getMaxHeat() {
-        return (int) (enumFluidReactors.getMaxHeat()  * this.reactorsModules.getStableHeat());
+        return (int) (enumFluidReactors.getMaxHeat() * this.reactorsModules.getStableHeat());
     }
 
     @Override
@@ -702,15 +706,15 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
                 this.getPos().getZ() + length, 25, false, true
         );
-        if(Config.explodeReactor) {
+        if (Config.explodeReactor) {
             if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.getWorld(), explosion)) {
                 return;
             }
             explosion.doExplosionA();
             explosion.doExplosionB(true);
-        }else{
+        } else {
             for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
-                if(world.rand.nextInt(2) == 0){
+                if (world.rand.nextInt(2) == 0) {
                     continue;
                 }
                 BlockPos pos1;
@@ -743,8 +747,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
                 }
             }
         }
-        if(Config.explodeReactor)
+        if (Config.explodeReactor) {
             new PacketExplosion(explosion, 25, false, true);
+        }
     }
 
 
@@ -875,14 +880,14 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public int[] getLengthGraphiteIndex(final int index) {
-        return  this.integerMap.get(index);
+        return this.integerMap.get(index);
     }
 
 
     @Override
     public ItemStack getGraphite(final int index) {
 
-        return    this.listGraphiteController.get(index).getGraphite();
+        return this.listGraphiteController.get(index).getGraphite();
     }
 
 
@@ -969,11 +974,16 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
 
     @Override
     public double getMulOutput(final int x, final int y, final ItemStack stack) {
-
-        IGraphiteController controller = this.listGraphiteController.get(x);
-        double level = 1 + (controller.getLevelGraphite() - 1 / 4D) * 0.05;
-
-        return 1 * level;
+        int[] ints = this.integerMap.get(x);
+        if (ints != null) {
+            double level1 = 1;
+            for (int i : ints) {
+                double level = 1 + (this.listGraphiteController.get(i).getLevelGraphite() - 1 / 4D) * 0.05;
+                level1 *= level;
+            }
+            return level1;
+        }
+        return 1;
     }
 
     @Override
@@ -982,12 +992,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IHea
         this.integerMap.clear();
         for (int i = 0; i < this.getWidth(); i++) {
             List<Integer> list = new ArrayList<>();
-            for (int j =0; j < this.listGraphiteController.size();j++) {
-                if(listGraphiteController.get(j).getIndex() == i)
+            for (int j = 0; j < this.listGraphiteController.size(); j++) {
+                if (listGraphiteController.get(j).getIndex() == i) {
                     list.add(j);
+                }
             }
 
-            this.integerMap.put(i,list.stream().mapToInt(jj->jj).toArray());
+            this.integerMap.put(i, list.stream().mapToInt(jj -> jj).toArray());
         }
     }
 

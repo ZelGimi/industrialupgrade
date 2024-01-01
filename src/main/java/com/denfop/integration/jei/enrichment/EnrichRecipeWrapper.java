@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.enrichment;
 
+import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -18,6 +19,7 @@ public class EnrichRecipeWrapper implements IRecipeWrapper {
     private final ItemStack inputstack;
     private final ItemStack outputstack;
     private final ItemStack inputstack1;
+    private final int radAmount;
 
 
     public EnrichRecipeWrapper(EnrichHandler container) {
@@ -26,6 +28,7 @@ public class EnrichRecipeWrapper implements IRecipeWrapper {
         this.inputstack = container.getInput();
         this.inputstack1 = container.getInput1();
         this.outputstack = container.getOutput();
+        this.radAmount=container.getRadAmount();
 
     }
 
@@ -72,7 +75,9 @@ public class EnrichRecipeWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-
+        minecraft.fontRenderer.drawSplitString(
+                radAmount + " ☢", 65, 60,
+                recipeWidth - 5, 4210752);
     }
 
 }

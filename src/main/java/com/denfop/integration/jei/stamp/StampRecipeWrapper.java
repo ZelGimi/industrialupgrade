@@ -1,5 +1,7 @@
 package com.denfop.integration.jei.stamp;
 
+import com.denfop.IUItem;
+import com.denfop.tiles.mechanism.TileEntityStampMechanism;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -92,7 +94,23 @@ public class StampRecipeWrapper implements IRecipeWrapper {
         } else {
             stack.add(this.inputstack3);
         }
-
+        switch (name){
+            case "stamp_coolant":
+                stack.add(new ItemStack(IUItem.crafting_elements,1,369));
+                break;
+            case "stamp_plate":
+                stack.add(new ItemStack(IUItem.crafting_elements,1,370));
+                break;
+            case "stamp_exchanger":
+                stack.add(new ItemStack(IUItem.crafting_elements,1,412));
+                break;
+            case "stamp_vent":
+                stack.add(new ItemStack(IUItem.crafting_elements,1,413));
+                break;
+            case "stamp_capacitor":
+                stack.add(new ItemStack(IUItem.crafting_elements,1,438));
+                break;
+        }
 
         return inputs.isEmpty() ? Collections.emptyList() : Collections.singletonList(stack);
     }

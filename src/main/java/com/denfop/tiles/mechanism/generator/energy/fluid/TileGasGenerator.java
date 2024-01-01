@@ -43,7 +43,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
     public final InvSlotFluid fluidSlot;
     public final InvSlotOutput outputSlot;
     public final AdvEnergy energy;
-    public final int production = Math.round(200.0F);
+    public final int production = Math.round(450.0F);
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
