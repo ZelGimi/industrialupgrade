@@ -1,629 +1,324 @@
-1.19.2 Changelog
-43.3
-====
- - 43.3.7 Make common DisplayTest registration tasks easier (#9838)
-          Backport of #9822 to 1.19.2
- - 43.3.6 Optimise ForgeConfigSpec and make Range public (#9827)
-          Backport of #9810 to 1.19.2
- - 43.3.5 Update to FG6 and Gradle 8, backport 1.20 MDK (#9754)
- - 43.3.4 Improve mod description formatting in mods screen (#9771)
-          Co-authored-by: Su5eD <su5ed@outlook.com>
- - 43.3.3 Backport CrashReportAnalyser to 1.19.2 (#9758)
- - 43.3.2 Optimise path filter in mod loading (#9712)
-          Co-authored-by: embeddedt <42941056+embeddedt@users.noreply.github.com>
- - 43.3.1 Improve mod loading error message for errors inside mod constructors (#9709)
-          Co-authored-by: Jab125 <67534807+jab125@users.noreply.github.com>
- - 43.3.0 1.19.2 RB 3
-
-43.2
-====
- - 43.2.23 Fix `Level` leak in debug HUD (#9701)
- - 43.2.22 Keep order of sources in PackRepository (#9704)
-           Co-authored-by: dhyces <10985914+dhyces@users.noreply.github.com>
- - 43.2.21 Fix parameter names in IForgeDimensionSpecialEffects.adjustLightmapColors to better describe what they are. (#9658)
- - 43.2.20 Re-add in-game mod menu (#9655)
- - 43.2.19 Fixed FluidUtil#tryFillContainer returning invalid result when simulating (#9358)
- - 43.2.18 AlterGroundEvent for modifying block placement performed by AlterGroundDecorator (#9635)
- - 43.2.17 Bump ASM to 9.5 (#9516)
- - 43.2.16 Improve logging for server connections (#9623)
- - 43.2.15 Log a proper duplicate mod(s) error message (#9625)
- - 43.2.14 Fix erroneous getLevel call when firing SpecialSpawn (#9520)
- - 43.2.13 [1.19.2] Fix the rest of the spawn event calls (#9482)
- - 43.2.12 Loosen access for BucketItem's canBlockContainFluid (#9429)
- - 43.2.11 Fix event result being ignored (#9484)
-           Co-authored-by: Brennan Ward <3682588+Shadows-of-Fire@users.noreply.github.com>
- - 43.2.10 Fix incorrect SpecialSpawn fire location (#9480)
-           Co-authored-by: Brennan Ward <3682588+Shadows-of-Fire@users.noreply.github.com>
- - 43.2.9  [1.19.2] Fix forge grindstone hooks allowing stacks of non-stackable items (#9466)
- - 43.2.8  Fix JSON model root transforms (#9411)
- - 43.2.7  Fix StemBlock not checking canSustainPlant for the correct block
-           It now checks for Melons/Pumpkins instead of the stem itself.
- - 43.2.6  Fix of inconsistent vaporization in BucketItem & FluidType (#9340)
- - 43.2.5  Backport `ClientChatReceivedEvent.System` for 1.19.2. Fixes #9352 (#9355)
- - 43.2.4  Fire TickEvent.LevelTickEvent on ClientLevel tick (#9302)
- - 43.2.3  Disable guiLight3d for generated item models (#9231)
- - 43.2.2  Fix config key used by resource cache (#9253)
-           This bring it in line with the config key defined in the spec and
-           default config file in ResourceManagerBootCacheConfigurationHandler.
-           Fixes #9252
- - 43.2.1  [1.19.2] Fix compatibility checker task configuration (#9233)
-           * Fix compatibility checker task configuration
-           The setupCheckJarCompatibility task exists to configure the main
-           compatibility checker task, checkJarCompatibility, because certain
-           configuration steps for that task could not be done until after the
-           configuration phase of Gradle.
-           However, that setup task previously held all the configuration for the
-           main check task in its task action. This caused problems because the
-           main check task's inputs are linked to other tasks, and the previous
-           situation made it so its configuration (by the setup task) happened
-           _after_ Gradle built the task dependency model/tree.
-           This meant that certain tasks which the main check task depended on did
-           not run before that task, because Gradle was unaware of this inter-task
-           dependency until it was too late (when it was already executing tasks).
-           This fixes the issue by moving the bulk of the configuration for the
-           main check task from the action of the setup task to the main
-           buildscript, therefore allowing Gradle to know about those task
-           dependencies and factor them in to its process of determining what tasks
-           to run and in what order.
-           The remaining configuration step in the setup task for the main check
-           task is linked to the setup task, and does not affect the task's
-           dependencies (because it uses a configuration which it resolves
-           immediately), so it stays in the setup task.
-           * Force checker setup task to never be up-to-date
-           The setup task configures the main check task, so it should always run
-           before that task. However, because it has an input and output, the setup
-           task is affected by Gradle's incremental build feature, which leads to
-           the possibility that Gradle considers the setup task as up-to-date,
-           therefore not executing its action and causing errors with the main
-           check task down the line.
- - 43.2.0  43.2 Recommended Build.
-
-43.1
-====
- - 43.1.65 Allow discovering services from the mods folder that use java's modular definition. (#9143)
- - 43.1.64 Make Datapack Registries support ICondition(s) (#9113)
- - 43.1.63 Enable additional build types to handle pull request validation. (#9159)
- - 43.1.62 Check source permission level before selector permission (#9147)
-           In some situations, such as execution of a function by an advancement as
-           part of its reward, a command source stack may have a backing source of
-           a ServerPlayer which may lack the entity selector permission and have an
-           explicit permission level that should allow the use of entity selectors,
-           through CommandSourceStack#withPermission.
-           We now check if the permission level of the command source stack is
-           sufficient for entity selectors _before_ checking if the source is a
-           player and if they have the requisite permission.
-           This means that an operator permission level of 2 will always override
-           the Forge entity selector permission.
-           Fixes #9137
- - 43.1.61 Fix fires spreading too/igniting custom portal frames. (#9142)
- - 43.1.60 Add supplier to FlowerBlock so it works with custom MobEffects (#9139)
- - 43.1.59 Fix some logical bugs related to the Grindstone Event (#9089)
- - 43.1.58 Call baked model's `getModelData` before `getRenderTypes` (#9163)
- - 43.1.57 Make Util.memoize thread-safe (#9155)
- - 43.1.56 Rendering tweaks and fixes: Part 4 (#9065)
- - 43.1.55 Fix `Transformation` loading `PoseStack` (#9083)
- - 43.1.54 Add simple block appearance API (#9066)
- - 43.1.53 Fix invalidated modded packets when on LAN (#9157)
- - 43.1.52 Improve extensibility of DetectorRailBlock and PoweredRailBlock (#9130)
- - 43.1.51 Fix launch handler minecraft classpath locator (#9120)
- - 43.1.50 Add HitResult to `EntityTeleportEvent$EnderPearl` (#9135)
- - 43.1.49 Throw aggregate exception for erroneous registry event dispatch (#9111)
-           This means that exceptions occurring during the dispatch of the registry
-           events, such as those from the suppliers of RegistryObjects, properly
-           cause a crash rather than merely being logged and allowing the game to
-           reach the main menu.
-           Fixes #8720
- - 43.1.48 Add missing semi-colon near the Dist import statement in example mod.
- - 43.1.47 Fix ClientModEvents example not subscribing to client-sided events (#9097)
- - 43.1.46 Use GitHub action to lock issues with the `spam` label (#9087)
- - 43.1.45 Remove structures slave map to Feature registry (#9091)
- - 43.1.44 Improve logging of missing or unsupported dependencies (#9104)
- - 43.1.43 [1.19.x] Fix ValueSpec caching the return value incorrectly (#9046)
- - 43.1.42 [1.19.x] Add event for registering spawn placements, and modifying existing (#9024)
- - 43.1.41 [1.19.x] Add event for items being stacked or swapped in a GUI. (#9050)
- - 43.1.40 [1.19.x] Fix PlayerInteractEvent.EntityInteractSpecific not cancelling on a server (#9079)
- - 43.1.39 Fix canceling phantom spawns preventing any further attempts that tick. (#9041)
- - 43.1.38 Rename fluid type milk translation keys (#9077)
- - 43.1.37 Fix minecart speed with water (#9076)
- - 43.1.36 Add a cancellable event that gets fired when a Totem of Undying is used (#9069)
- - 43.1.35 Fix performance issue and logging when resource caching is enabled (#9029)
- - 43.1.34 Fix NPE when feeding wolves and cats (#9074)
- - 43.1.33 Fix logically breaking change to ForgeConfigSpec.Builder#comment where modders could not add a empty line to the start of comments. (#9061)
- - 43.1.32 Fix ServiceLoader bug
- - 43.1.31 Fix ClientChatReceivedEvent for system messages
- - 43.1.30 Make ForgeConfigSpec$Builder.comment able to be called multiple times for the same entry. (#9056)
- - 43.1.29 Fix control modifier for mac with `KeyMapping`s  using Alt instead of Super (#9057)
- - 43.1.28 Fix is_desert tag not being applied correctly. (#9051)
- - 43.1.27 Fix mob griefing event for SmallFireballs not using owner entity. (#9038)
- - 43.1.26 Fix minecarts on rails not properly slowing down in water (#9033)
- - 43.1.25 Change codestyle for BookShelves tag. Closes #9027
-           Add IS_CAVE tag Closes #8885
-           Add IS_DESERT tag Closes #8979
-           Simplify Mangrove Swamp tags Closes #8980
- - 43.1.24 Allow faces of an "elements" model to have disabled ambient occlusion (#9019)
- - 43.1.23 [1.19.x] Recipe ID-based grouping between modded and vanilla recipes. (#8876)
- - 43.1.22 Update fence_gates/wooden (#8936)
- - 43.1.21 [1.19.x] Added event for growing fungus (#8981)
- - 43.1.20 Added Bookshelves block tag (#8991)
- - 43.1.19 Create a Forge EntityType Tag for Bosses (#9017)
- - 43.1.18 Allow mods to specify shader import namespace (#9021)
- - 43.1.17 Grindstone Events (#8934)
-           One to modify the output, and one to modify the input.
- - 43.1.16 Fix the serialized names of the enum (#9014)
- - 43.1.15 Fix `tryEmptyContainerAndStow` duping fluids with stackable containers (#9004)
- - 43.1.14 Add mod mismatch event (#8989)
- - 43.1.13 [1.19.x] add methods with more context to tree growers (#8956)
- - 43.1.12 [1.19.X] Adding more precise events for Advancements (#8360)
- - 43.1.11 Default IItemHandler capability for shulker box itemstacks (#8827)
-           Co-authored-by: LexManos <LexManos@gmail.com>
- - 43.1.10 [1.19] Add hook for items to remain in the hotbar when picking blocks/entities (#8872)
- - 43.1.9  [1.19.x] Block Model Builder Root Transform Support (#8860)
-           Co-authored-by: sciwhiz12 <sciwhiz12@gmail.com>
- - 43.1.8  [1.19.x] Make LivingSetAttackTargetEvent compatible with the Brain/Behavior system. (Port of PR #8918) (#8954)
- - 43.1.7  [1.19.x] Add IForgeBlock#onTreeGrow to replace IForgeBlock#onPlantGrow from 1.16 (#8999)
- - 43.1.6  [1.19.x] Moved Player.resetAttackStrengthTicker() to the end of Player.attack() (#9000)
- - 43.1.5  fix misplaced patch in sapling block (#9005)
- - 43.1.4  Fix failed entity interactions consuming the click. (#9007)
- - 43.1.3  Fix entity selector permission check to check original source (#8995)
-           Permission checks should be against the command source and not the
-           target entity, as is done in vanilla.
-           Fixes #8994
- - 43.1.2  Hotfix for 1.19.2 item animation bug (#8987)
-           * [HOT FIX]: Fixes #8985 by no-oping for vanilla models instead of throwing error
- - 43.1.1  Add ability to Auto register capabilities via annotation (#8972)
- - 43.1.0  1.19.2 RB
-
-43.0
-====
- - 43.0.22 Added ItemDecorator API (#8794)
- - 43.0.21 [1.19.x] Custom usage animations for items (#8932)
- - 43.0.20 Allow registering custom `ColorResolver`s (#8880)
- - 43.0.19 [1.19] Allow custom outline rendering on EntityRenderers and BlockEntityRenderers (#8938)
- - 43.0.18 Redirect checks for entity selector use to a permission (#8947)
-           This allows greater flexibility for configuring servers with
-           operator-like permissions to user groups through the permissions API and
-           their permissions handler of choice without needing to grant the
-           vanilla operator permission to any player.
-           The new permission is "forge:use_entity_selectors", which is granted by
-           default to players with permission level 2 (GAMEMASTERS) and above.
-           The hook falls back to checking the permission level if the source of
-           the command is not a ServerPlayer, such as for command blocks and
-           functions.
- - 43.0.17 Allow FakePlayer to report its position (#8963)
- - 43.0.16 Add alternate version of renderEntityInInventory to allow for directly specifying the angles (#8961)
- - 43.0.15 Add cancellable ToastAddEvent (#8952)
- - 43.0.14 Modify ScreenEvent.RenderInventoryMobEffects to allow moving the effect stack left or right (#8951)
- - 43.0.13 Fix Enchantment#doPostHurt and Enchantment#doPostAttack being called twice for players. Fixes MC-248272 (#8948)
- - 43.0.12 Remove reflective implementation of ICustomPacket. (#8973)
-           Make vanilla custom packets able to be sent multiple times. Closes #8969
- - 43.0.11 Filter name spaces to directories only. Closes #8413
- - 43.0.10 Fix a corner case where the UMLB can not extract a version from a library. (#8967)
- - 43.0.9  Fix worlds with removed dimension types unable to load. (#8959) Closes #8800
- - 43.0.8  Fix issue where unknown chunk generators would cause DFU to fail. (#8957)
- - 43.0.7  Fix comments and documentation that were missed during the review of #8712 (#8945)
- - 43.0.6  Make AnvilUpdateEvent fire even if the second input is empty, which means it fires even if only changing the item name. (#8905)
- - 43.0.5  Fix `LivingEntity#isBlocking` to use `ToolActions#SHIELD_BLOCK` instead of `UseAnim#BLOCK` (#8933)
- - 43.0.4  Add Custom HolderSet Types allowing for logical combining of sets. (#8928)
- - 43.0.3  Add values to VersionSupportMatrix to support loading mods that restrict versions to 1.19.1 on 1.19.2 (#8946)
- - 43.0.2  Fix certain particles not updating their bounding box when their position changes (#8925)
- - 43.0.1  Update EventBus to address concurrency issue in ModLauncher Factory. Closes #8924
- - 43.0.0  1.19.2
-
-42.0
-====
- - 42.0.9 Remove calls to getStepHeight in Player#maybeBackOffFromEdge (#8927)
- - 42.0.8 Add forge tags for tools and armors, these DO NOT replace ToolActions, and are designed just for Recipes. (#8914)
- - 42.0.7 Add Biomes.BEACH to Tags (#8892)
- - 42.0.6 Let NetworkInstance.isRemotePresent check minecraft:register for channel IDs.  (#8921)
- - 42.0.5 Add an event for when the chunk ticket level is updated (#8909)
- - 42.0.4 Re-add PotentialSpawns event (#8712)
- - 42.0.3 Fix misplaced patch in ItemEntityRenderer breaking ItemEntityRenderer#shouldBob() (#8919)
- - 42.0.2 [1.19] [HotFix] Fix the dedicated server not having access to the JiJ filesystems. (#8931)
- - 42.0.1 Match Mojang's action bar fix for MC-72687 (#8917)
- - 42.0.0 Forge 1.19.1
-          Load natives from classpath
-          Make command argument types a forge registry
-          Add `EntityMobGriefingEvent` to `Allay#wantsToPickUp`
-          Overhaul `ServerChatEvent` to use `ChatDecorator` system
-          Remove `ClientChatEvent#setMessage` for now
-          Gradle 7.5
-
-41.1
-====
- - 41.1.0 Mark 1.19 RB
-
-41.0
-====
- - 41.0.113 Allow faces of an "elements" model to be made emissive (#8890)
- - 41.0.112 Fix invalid channel names sent from the server causing the network thread to error. (#8902)
- - 41.0.111 Fix PlayerEvent.BreakSpeed using magic block position to signify invalid position. Closes #8906
- - 41.0.110 Fix cases where URIs would not work properly with JarInJar (#8900)
- - 41.0.109 Add new hook to allow modification of lightmap via Dimension special effects (#8863)
- - 41.0.108 Fix Forge's packet handling on play messages. (#8875)
- - 41.0.107 Add API for tab list header/footer (#8803)
- - 41.0.106 Allow modded blocks overriding canStickTo prevent sticking to vanilla blocks/other modded blocks (#8837)
- - 41.0.105 Multiple tweaks and fixes to the recent changes in the client refactor PR: Part 3 (#8864)
-            Fix weighted baked models not respecting children render types
-            Allow fluid container model to use base texture as particle
-            Fix inverted behavior in composite model building. Fixes #8871
- - 41.0.104 Fix crossbows not firing ArrowLooseEvent (#8887)
- - 41.0.103 Add User-Agent header to requests made by the update checker (#8881)
-            Format: Java-http-client/<Java version> MinecraftForge/<ForgeVer> <ModId>/<ModVersion>
- - 41.0.102 Output the full path in a crash report so it is easier to find the outer mod when a crash in Jar-In-Jar occurs. (#8856)
- - 41.0.101 Clean up the pick item ("middle mouse click") patches (#8870)
- - 41.0.100 [1.19.x] Hotfix for test mods while the refactor is ongoing
- - 41.0.99  add event to SugarCaneBlock (#8877)
- - 41.0.98  Fix Global Loot Modifiers not using Dispatch Codec (#8859)
- - 41.0.97  Allow block render types to be set in datagen (#8852)
- - 41.0.96  Fix renderBreakingTexture not using the target's model data (#8849)
- - 41.0.95  Multiple tweaks and fixes to the recent changes in the client refactor PR: Part 2 (#8854)
-            * Add getter for the component names in an unbaked geometry
-            * Fix render type hint not being copied in BlockGeometryBakingContext
-            * Ensure BlockRenderDispatches's renderSingleBlock uses the correct buffer
- - 41.0.94  [1.19.x] Apply general renames, A SRG is provided for modders. (#8840)
-            See https://gist.github.com/SizableShrimp/882a671ff74256d150776da08c89ef72
- - 41.0.93  Fix mob block breaking AI not working correctly when chunk 0,0 is unloaded. Closes #8853
- - 41.0.92  Fix crash when breaking blocks with multipart models and remove caching. Closes #8850
- - 41.0.91  Fixed `CompositeModel.Baked.Builder.build()` passing arguments in the wrong order (#8846)
- - 41.0.90  Make cutout mipmaps explicitly opt-in for item/entity rendering (#8845)
-            * Make cutout mipmaps explicitly opt-in for item/entity rendering
-            * Default render type domain to "minecraft" in model datagens
- - 41.0.89  Fixed multipart block models not using the new model driven render type system. (#8844)
- - 41.0.88  Update to the latest JarJar to fix a collision issue where multiple jars could provide an exact match. (#8847)
- - 41.0.87  Add FML config to disable DFU optimizations client-side. (#8842)
-            * Add client-side command line argument to disable DFU optimizations.
-            * Switch to using FMLConfig value instead.
- - 41.0.86  [1.19] Fixed broken BufferBuilder.putBulkData(ByteBuffer) added by Forge (#8819)
-            * Fixes BufferBuilder.putBulkData(ByteBuffer)
-            * use nextElementByte
-            * Fixed merge conflict
- - 41.0.85  [1.19.x] Fix shulker boxes allowing input of items, that return false for Item#canFitInsideContainerItems, through hoppers. (#8823)
-            * Make ShulkerBoxBlockEntity#canPlaceItemThroughFace delegate to Item#canFitInsideContainerItems.
-            * Switch to using Or and add comment.
-            * Switch Or to And.
- - 41.0.84  [1.19.x] Added RenderLevelStageEvent to replace RenderLevelLastEvent (#8820)
-            * Ported RenderLevelStageEvent from 1.18.2
-            * Updated to fix merge conflicts
- - 41.0.83  [1.19.x] Fix door datagenerator (#8821)
-            * Fix door datagenerator
-            Fix datagenerator for door blocks. Successor to #8687, addresses comments made there about statement complexity.
-            * Fix extra space around parameter
-            Fix extra space before comma around a parameter.
- - 41.0.82  Create PieceBeardifierModifier to re-enable piecewise beardifier definitions (#8798)
- - 41.0.81  Allow blocks to provide a dynamic MaterialColor for display on maps (#8812)
- - 41.0.80  [1.19.x] BiomeTags Fixes/Improvements (#8711)
-            * dimension specific tag fix
-            * remove forge:is_beach cause vanilla has it already
-            * remove forge tags for new 1.19 vanilla tags (savanna, beach, overworld, end)
-            Co-authored-by: Flemmli97 <Flemmli97@users.noreply.github.com>
- - 41.0.79  1.19 - Remove GlobalLootModifierSerializer and move to Codecs (#8721)
-            * convert GLM serializer class to codec
-            * cleanup
-            * GLM list needs to be sorted
-            * datagen
-            * simplify serialization
-            * fix test mods (oops)
-            * properly use suppliers for codec as they are registry obj
- - 41.0.78  Implement item hooks for potions and enchantments (#8718)
-            * Implement item hooks for potions and enchantments
-            * code style fixes
- - 41.0.77  Re-apply missing patch to ServerLevel.EntityCallbacks#onTrackingEnd() (#8828)
- - 41.0.76  Double Bar Rendering fixed (#8806) (#8807)
-            * Double Bar Rendering fixed (#8806)
-            * Added requested changes by sciwhiz12
- - 41.0.75  Multiple tweaks and fixes to the recent changes in the client refactor PR (#8836)
-            * Add an easy way to get the NamedGuiOverlay from a vanilla overlay
-            * Fix static member ordering crash in UnitTextureAtlasSprite
-            * Allow boss bar rendering to be cancelled
-            * Make fluid container datagen use the new name
- - 41.0.74  Add FogMode to ViewportEvent.RenderFog (#8825)
- - 41.0.73  Provide additional context to the getFieldOfView event (#8830)
- - 41.0.72  Pass renderType to IForgeBakedModel.useAmbientOcclusion (#8834)
- - 41.0.71  Load custom ITransformationServices from the classpath in dev (#8818)
-            * Add a classpath transformer discoverer to load custom transformation services from the classpath
-            * Update ClasspathTransformerDiscoverer to 1.18
-            * Update license year
-            * Update license header
-            * Fix the other license headers
-            * Update ClasspathTransformerDiscoverer to 1.19
- - 41.0.70  Handle modded packets on the network thread (#8703)
-            * Handle modded packets on the network thread
-             - On the server we simply need to remove the call to
-               ensureRunningOnSameThread.
-             - On the client side, we now handle the packet at the very start of the
-               call. We make sure we're running from a network thread to prevent
-               calling the handling code twice.
-               While this does mean we no longer call .release(), in practice this
-               doesn't cause any leaks as ClientboundCustomPayloadPacket releases
-               for us.
-            * Clarify behaviour a little in the documentation
-            * Javadoc formatting
-            * Add a helper method for handling packets on the main thread
-            Also rename the network thread one. Should make it clearer the expected
-            behaviour of the two, and make it clearer there's a potentially breaking
-            change.
-            * Add back consumer() methods
-            Also document EventNetworkChannel, to clarify the thread behaviour
-            there.
-            * Add since = "1.19" to deprecated annotations
- - 41.0.69  Cache resource listing calls in resource packs (#8829)
-            * Make the resource lookups cached.
-            * Include configurability and handle patch cleanup.
-            * Document and comment the cache manager.
-            * Make thread selection configurable.
-            * Implement a configurable loading mechanic that falls back to default behaviour when the config is not bound yet.
-            * Use boolean supplier and fix wildcard import.
-            * Clean up the VPR since this is more elegant.
-            * Clean up the VPR since this is more elegant.
-            * Address review comments.
-            * Address more review comments.
-            * Fix formatting on `getSource`
-            * Address comments by ichtt
-            * Adapt to pups requests.
-            * Stupid idea.
-            * Attempt this again with a copy on write list.
-            * Fix a concurrency and loading issue.
-            * Fix #8813
-            Checks if the paths are valid resource paths.
-            * Move the new methods on vanilla Patch.
- - 41.0.68  Update SJH and JIJ
- - 41.0.67  Fix #8833 (#8835)
- - 41.0.66  Fix backwards fabulous check in SimpleBakedModel (#8832)
-            Yet another blunder we missed during the review of #8786.
- - 41.0.65  Make texture atlas in StandaloneGeometryBakingContext configurable (#8831)
- - 41.0.64  [1.19.X] Client code cleanup, updates, and other refactors (#8786)
-            * Revert "Allow safely registering RenderType predicates at any time (#8685)"
-            This reverts commit be7275443fd939db9c58bcad47079c3767789ac1.
-            * Renderable API refactors
-            - Rename "render values" to "context"
-            - Rename SimpleRenderable to CompositeRenderable to better reflect its use
-            - Remove IMultipartRenderValues since it doesn't have any real use
-            - Add extensive customization options to BakedModelRenderable
-            * ClientRegistry and MinecraftForgeClient refactors
-            - Add sprite loader manager and registration event
-            - Add spectator shader manager and registration event
-            - Add client tooltip factory manager and registration event
-            - Add recipe book manager and registration event
-            - Add key mapping registration event
-            - Remove ClientRegistry, as everything has been moved out of it
-            - Remove registration methods from MinecraftForgeClient, as they have dedicated events now
-            * Dimension special effects refactors
-            - Fold handlers into an extension class and remove public mutable fields
-            - Add dimension special effects manager and registration event
-            * HUD overlay refactors
-            - Rename to IGuiOverlay match vanilla (instead of Ingame)
-            - Add overlay manager and registration event
-            - Move vanilla overlays to a standalone enum
-            * Model loader refactors
-            - Rename IModelLoader to IGeometryLoader
-            - Add loader manager and registration event
-            - Fold all model events into one
-            - Move registration of additionally loaded models to an event
-            - Remove ForgeModelBakery and related classes as they served no purpose anymore
-            * Render properties refactors
-            - Rename all render properties to client extensions and relocate accordingly
-            - Move lookups to the respective interfaces
-            * Model data refactors
-            - Convert model data to a final class backed by an immutable map and document mutability requirements. This addresses several thread-safety issues in the current implementation which could result in race conditions
-            - Transfer ownership of the data manager to the client level. This addresses several issues that arise when multiple levels are used at once
-            * GUI and widget refactors
-            - Move all widgets to the correct package
-            - Rename GuiUtils and children to match vanilla naming
-            * New vertex pipeline API
-            - Move to vanilla's VertexConsumer
-            - Roll back recent PR making VertexConsumer format-aware. This is the opposite of what vanilla does, and should not be relevant with the updated lighting pipeline
-            * Lighting pipeline refactors
-            - Move to dedicated lighting package
-            - Separate flat and smooth lighters
-            - Convert from a vertex pipeline transformer to a pure vertex source (input is baked quads)
-            * Model geometry API refactors
-            - Rename IModelGeometry to IUnbakedGeometry
-            - Rename IModelConfiguration to IGeometryBakingContext
-            - Rename other elements to match vanilla naming
-            - Remove current changes to ModelState, as they do not belong there. Transforms should be specified through vanilla's system. ModelState is intended to transfer state from the blockstate JSON
-            - Remove multipart geometries and geometry parts. After some discussion, these should not be exposed. Instead, geometries should be baked with only the necessary parts enabled
-            * Make render types a first-class citizen in baked models
-            - Add named render types (block + entity + fabulous entity)
-            - Add named render type manager + registration event
-            - Make BakedModel aware of render types and transfer control over which ones are used to it instead of ItemBlockRenderTypes (fallback)
-            - (additional) Add concatenated list view. A wrapper for multiple lists that iterates through them in order without the cost of merging them. Useful for merging lists of baked quads
-            * General event refactors
-            - Several renames to either match vanilla or improve clarity
-            - Relocate client chat event dispatching out of common code
-            * Forge model type refactors
-            - Rename SeparatePerspectiveModel to SeparateTransformsModel
-            - Rename ItemModelMesherForge to ForgeItemModelShaper
-            - Rename DynamicBucketModel to DynamicFluidContainerModel
-            - Prefix all OBJ-related classes with "Obj" and decouple parsing from construction
-            - Extract ElementsModel from model loader registry
-            - Add EmptyModel (baked, unbaked and loader)
-            - Refactor CompositeModel to take over ItemMultiLayerBakedModel
-            - Remove FluidModel as it's not used and isn't compatible with the new fluid rendering in modern versions
-            - Move model loader registration to a proper event handler
-            - Update names of several JSON fields (backwards-compatible)
-            - Update datagens to match
-            * Miscellaneous changes and overlapping patches
-            - Dispatch all new registration events
-            - Convert ExtendedServerListData to a record
-            - Add/remove hooks from ForgeHooksClient as necessary
-            * Update test mods
-            * Fix VertexConsumerWrapper returning parent instead of itself
-            * Additional event cleanup pass
-            As discussed on Discord:
-            - Remove "@hidden" and "@see <callsite>" javadoc annotations from all client events and replace them with @ApiStatus.Internal annotation
-            - Make all events that shouldn't be fired directly into abstract classes with protected constructors
-            - Another styling pass, just in case (caught some missed classes)
-            * Add proper deprecation javadocs and de-dupe some vertex consumer code
-            * Replace sets of chunk render types with a faster BitSet-backed collection
-            This largely addresses potential performance concerns that using a plain HashSet might involve by making lookups and iteration as linear as they can likely be (aside from using a plain byte/int/long for bit storage). Further performance concerns related to the implementation may be addressed separately, as all the implementation details are hidden from the end user
-            * Requested changes
-            - Remove MinecraftForgeClient and move members to Minecraft, IForgeMinecraft and StencilManager
-            - Allow non-default elements to be passed into VertexConsumer and add support to derived classes
-            - Move array instantiation out of quad processing in lighting pipeline
-            - Fix flipped fluid container model
-            - Set default UV1 to the correct values in the remapping pipeline
-            - Minor documentation changes
-            * Add/update EXC entries and fix AT comment
-            * Add test mod as per Orion's request
-            * Additional requested changes
-            * Allow custom model types to request the particle texture to be loaded
-            * Even more requested changes
-            * Improve generics in ConcatenatedListView and add missing fallbacks
-            * Fix fluid render types being bound to the fluid and not its holder
-            * Remove non-contractual nullability in ChunkRenderTypeSet and add isEmpty
-            Additionally, introduce chunk render type checks in ItemBlockRenderTypes
-            Co-authored-by: Dennis C <xfacthd@gmx.de>
- - 41.0.63  Implement full support for IPv6 (#8742)
- - 41.0.62  Fix certain user-configured options being overwritten incorrectly due to validators. (#8780)
- - 41.0.61  Allow safely registering RenderType predicates at any time (#8685)
- - 41.0.60  Fix crash after loading error due to fluid texture gathering and config lookup (#8802)
- - 41.0.59  Remove the configuration option for handling empty tags in ingredients. (#8799)
-            Now empty tags are considered broken in all states.
- - 41.0.58  Fix MC-105317 Structure blocks do not rotate entities correctly when loading (#8792)
- - 41.0.57  Fire ChunkWatchEvents after sending packets (#8747)
- - 41.0.56  Add item handler capability to chest boats (#8787)
- - 41.0.55  Add getter for correct BiomeSpecialEffectsBuilder to BiomeInfo$Builder (#8781)
- - 41.0.54  Fix BlockToolModificationEvent missing cancelable annotation (#8778)
- - 41.0.53  Fix ticking chunk tickets from forge's chunk manager not causing chunks to fully tick (#8775)
- - 41.0.52  Fix default audio device config loading string comparison issue (#8767)
- - 41.0.51  Fix missed vanilla method overrides in ForgeRegistry (#8766)
- - 41.0.50  Add MinecraftServer reference to ServerTickEvent (#8765)
- - 41.0.49  Fix TagsProviders for datapack registries not recognizing existing files (#8761)
- - 41.0.48  Add callback after a BlockState was changed and the neighbors were updated (#8686)
- - 41.0.47  Add biome tag entries for 1.19 biomes (#8684)
- - 41.0.46  Make fishing rods use tool actions for relevant logic (#8681)
- - 41.0.45  Update BootstrapLauncher to 1.1.1 and remove the forced
-            merge of text2speech since new BSL does it.
- - 41.0.44  Merge text2speech libs together so the natives are part of the jar
- - 41.0.43  Make Forge ConfigValues implement Supplier. (#8776)
- - 41.0.42  Fix merge derp in AbstractModProvider and logic derp in ModDiscoverer
- - 41.0.41  Add "send to mods in order" method to ModList and use it (#8759)
-            * Add "send to mods in order" method to ModList and use it in RegistryEvents and DataGen..
-            * Also preserve order in runAll
-            * Do better comparator thanks @pupnewfster
-            * postEvent as well.
- - 41.0.40  Update SJH to 2.0.2.. (#8774)
-            * Update SJH to 2.0.3..
- - 41.0.39  Sanity check the version specified in the mod file (#8749)
-            * Sanity check the version specified in the mod file to
-            make sure it's compatible with JPMS standards for
-            version strings.
-            Closes #8748
-            Requires SPI 6
- - 41.0.38  Fix SP-Devtime world loading crash due to missing server configs (#8757)
- - 41.0.37  Remove ForgeWorldPreset and related code (#8756)
-            Vanilla has a working replacement.
- - 41.0.36  Change ConfigValue#get() to throw if called before config loaded  (#8236)
-            This prevents silent issues where a mod gets the value of the setting
-            before configs are loaded, which means the default value is always
-            returned.
-            As there may be situations where the getting the config setting before
-            configs are loaded is needed, and it is not preferable to hardcode the
-            default value, the original behavior is made available through #getRaw.
-            Implements and closes #7716
-            * Remove getRaw() method
-            This is effectively replaced with the expression `spec.isLoaded() ?
-            configValue.get() : configValue.getDefault()`.
-            * Remove forceSystemNanoTime config setting
-            As implemented, it never had any effect as any place where the config
-            value would be queried happens before the configs are loaded.
- - 41.0.35  Fix EnumArgument to use enum names for suggestions (#8728)
-            Previously, the suggestions used the string representation of the enum
-            through Enum#toString, which can differ from the name of the enum as
-            required by Enum#valueOf, causing invalid suggestions (both in gui and
-            through the error message).
- - 41.0.34  Jar-In-Jar (#8715)
- - 41.0.33  [1.19] Fix data-gen output path of custom data-pack registries (#8724)
- - 41.0.32  Fix player dive and surface animations in custom fluids (#8738)
- - 41.0.31  [1.19.x] Affect ItemEntity Motion in Custom Fluids (#8737)
- - 41.0.30  [1.19] Add support for items to add enchantments without setting them in NBT (#8719)
- - 41.0.29  [1.19.x] Add stock biome modifier types for adding features and spawns (#8697)
- - 41.0.28  [1.19.x] Fluid API Overhaul (#8695)
- - 41.0.27  Replace StructureSpawnListGatherEvent with StructureModifiers (#8717)
- - 41.0.26  Use stack sensitive translation key by default for FluidAttributes. (#8707)
- - 41.0.25  Delete LootItemRandomChanceCondition which added looting bonus enchantment incorrectly. (#8733)
- - 41.0.24  Update EventBus to 6.0, ModLauncher to 10.0.1 and BootstrapLauncher to 1.1 (#8725)
- - 41.0.23  Replace support bot with support action (#8700)
- - 41.0.22  Fix Reach Distance / Attack Range being clamped at 6.0 (#8699)
- - 41.0.21  [1.19.x] Fix mods' worldgen data not being loaded when creating new singleplayer worlds (#8693)
- - 41.0.20  [1.19.x] Fix experimental confirmation screen (#8727)
- - 41.0.19  Move is_mountain to forge's tag instead of vanilla's (#8726)
- - 41.0.18  [1.19.x] Add CommandBuildContext to Register Command Events (#8716)
- - 41.0.17  Only rewrite datagen cache when needed (#8709)
- - 41.0.16  Implement a simple feature system for Forge (#8670)
-            * Implement a simple feature system for Forge. Allows mods to demand certain features are available in the loading system. An example for java_version is provided, but not expected to be used widely. This is more targeted to properties of the display, such as GL version and glsl profile.
-            Requires https://github.com/MinecraftForge/ForgeSPI/pull/13 to be merged first in ForgeSPI, and the SPI to be updated appropriately in build.gradle files.
-            * rebase onto 1.19 and add in SPI update
- - 41.0.15  displayTest option in mods.toml (#8656)
-            * displayTest option in mods.toml
-            * "MATCH_VERSION" (or none) is existing match version string behaviour
-            * "IGNORE_SERVER_VERSION" accepts anything and sends special SERVERONLY string
-            * "IGNORE_ALL_VERSION" accepts anything and sends an empty string
-            * "NONE" allows the mod to supply their own displaytest using the IExtensionPoint mechanism.
-            * Update display test with feedback and added the mods.toml discussion in mdk.
- - 41.0.14  Update forgeSPI to v5 (#8696)
- - 41.0.13  Make IVertexConsumers such as the lighting pipeline, be aware of which format they are dealing with. (#8692)
-            Also fix Lighting pipeline ignoring the overlay coords from the block renderer.
- - 41.0.12  Fixed misaligned patch to invalidateCaps in Entity (#8705)
- - 41.0.11  Fix readAdditionalLevelSaveData (#8704)
- - 41.0.10  Fixes setPos to syncPacketPositionCodec (#8702)
- - 41.0.9   Fix wrong param passed to PlayLevelSoundEvent.AtEntity (#8688)
- - 41.0.8   Override initialize in SlotItemHandler, so it uses the itemhandler instead of container (#8679)
- - 41.0.7   Update MDK for 1.19 changes (#8675)
- - 41.0.6   Add helper to RecipeType, and fix eclipse compiler error in test class.
- - 41.0.5   Update modlauncher to latest (#8691)
- - 41.0.4   Fix getting entity data serializer id crashing due to improper port to new registry system (#8678)
- - 41.0.3   Fire registry events in the order vanilla registers to registries (#8677)
-            Custom registries are still fired in alphabetical order, after all vanilla registries.
-            Move forge's data_serializers registry to forge namespace.
- - 41.0.2   Add method with pre/post wrap to allow setting/clearing mod context. (#8682)
-            Fixes ActiveContainer in ModContext not being present in registry events. Closes #8680
- - 41.0.1   Fix the Curlie oopsie
- - 41.0.0   Forge 1.19
-            * Bump pack.mcmeta formats
-            * 1.19 biome modifiers
-            * Mark ClientPlayerNetworkEvent.LoggedOutEvent's getters as nullable
-            * Add docs and package-info to client extension interfaces package
-            * Move RenderBlockOverlayEvent hooks to ForgeHooksClient
-            * Add package-infos to client events package
-            * Rename SoundLoadEvent to SoundEngineLoadEvent
-            This reduces confusion from consumers which may think the
-            name SoundLoadEvent refers to an individual sound being loaded rather
-            than the sound engine.
-            * Document and change SoundLoadEvent to fire on mod bus
-            Previously, it fired on both the mod bus and the Forge bus, which is
-            confusing for consumers.
-            * Delete SoundSetupEvent
-            Looking at its original implementation shows that there isn't an
-            appropriate place in the new sound code to reinsert the event, and the
-            place of 'sound engine/manager initialization event' is taken already by SoundLoadEvent.
-            * Perform some cleanup on client events
-             - Removed nullable annotations from ClientPlayerNetworkEvent
-             - Renamed #getPartialTicks methods to #getPartialTick, to be consistent
-              with vanilla's naming of the partial tick
-             - Cleanup documentation to remove line breaks, use the
-              spelling 'cancelled' over
-              'canceled', and improve docs on existing and
-               new methods.
-            * Remove EntityEvent.CanUpdate
-            Closes MinecraftForge/MinecraftForge#6394
-            * Switch to Jetbrains nullability annotations
-            * New PlayLevelSoundEvent; replaces old PlaySoundAtEntityEvent
-            * Remove ForgeWorldPresetScreens
-            * Remove IForgeRegistryEntry
-            * Remove use of List<Throwable> in FML's CompletableFutures
-            * Add docs to mod loading stages, stages, and phases
-            * Gradle 7.4.2
-            * Use SLF4J in FMLLoader and other subprojects
-            * Switch dynamic versions in subprojects to pinned ones
-            * Switch ForgeRoot and MDK to FG plugin markers
-            * Configure Forge javadoc task
-            The task now uses a custom stylesheet with MCForge elements, and
-            configured to combine the generation from the four FML subprojects
-            (fmlloader, fmlcore, javafmllanguage, mclanguage) and the Forge project
-            into the javadoc output.
-            * Update docs/md files, for 1.19 update and the move away from IRC to Discord.
-            * Make "Potentially dangerous alternative prefix" a debug warning, not info.
-            Co-authored-by: Curle <curle@gemwire.uk>
-            Co-authored-by: sciwhiz12 <arnoldnunag12@gmail.com>
-
+###############################################
+#                  Changelog                  #
+###############################################
+Version:2.5:
+1. The mod has completely moved away from the ic2 power grid
+2. Fixed information of the wattmeter
+3. Transformers transfer 4 times per tick energy
+4. Creation your own main GUI
+5. Creation your own main container
+6. Creation of a system of liquid recipes
+7. Slots depend on indices (this was not the case in ic2)
+8. Reworked the liquid matter system, optimization, abandoning the ic2 batch system
+9. The multistructure system has been reworked
+10. Added Natural Gas
+11. Added Chlorine, Bromine, Iodine
+12. Mechanisms have IC2Material.MACHINE
+13. Recycled almost all energies into one
+14. Optimization of panel rendering in synthesizer by Landex
+15. Fixed crash on planets with Galacticraft
+16. Adding sound to some mechanisms
+17. Adding mute sounds in some mechanisms
+18. Optimization of tighteners (now working)
+19. Added sounds when pressing buttons in mechanisms
+20. Fixed localization
+21. Added effects for a mechanism that is heated, or a refrigerator or hydro generator.
+22. Slots in solid matter transducers are now dependent on matter.
+23. Added an optimized version of redstone for reactors
+24. Added an optimized version of redstone for matter generators
+25. Added an optimized version of redstone for vaults
+26. Switching to a completely custom batch system
+27. Added support for craftweaker with filler
+28. Added support for craftweaker with preserving mechanism
+29. Fixed the robot of some tweakers
+30. Added various jei support
+31. Added support for OpenComputer (Reactors, Storages, Multi-mechanisms, Windmills / Hydrogenerators)
+32. The obsidian generator is the last mechanism that abandoned the ic2 recipe system
+33. Creation your own recipes with the replicator
+34. Support for craftweaker with replicator
+35. Items that can be created in the replicator, when you hover over them, you can see their price in matter
+36. Fixed a bug with the redstone generator
+37. Spectral Armor Optimization
+38. Fixed the cost of damage in spectral armor (was x2)
+39. If a player has a lead box with him, then when he picks up a radioactive element, he will immediately be in the box
+40. Fixed the work of wireless batteries
+41. Creation your own wires from copper to fiberglass
+42. Creation your own analogues of a solar panel, generator, geogenerator, pump, reactor with a camera, teleporter, harvester, auto gardener
+43. When creating a multi-block structure, the main block will draw a diagram of the creation of the structure
+44. Fixed for creating a modification module: Damage
+45. Fixed the load from the shipment of wind / hydro generators
+46. Increased the radius of the pump
+47. Optimization of oil and vein 
+Version:2.4:
+1. Adding your api for sounds, which facilitates the work of the client and server
+2. Adding a cooling system
+3. Adding a unified energy system (now wires and mechs receive / transmit EU / RF / TE / FE)
+4. Energy grid optimization
+5. Create an experience system
+6. Create your own GUI render system
+7. Adding battery life for heaters
+8. Adding a unified crafting system, which is much optimized from the standard system (it was received by all mechanisms except the obsidian generator)
+9. Optimization of multi-mechanisms
+10. Optimization of exit slots
+11. Optimizing the rendering of wires and pipes
+12. Create your own system of transport pipes (both objects and liquids)
+13. Optimization of the module system for items
+14. Adding 7 modules to items
+15. Adding a core system (which is much lighter and optimized core blocks)
+16. Adding wind and water power system modules system
+17. Adding a wind system
+18. Optimization of the system of improvements in mechanisms
+19. Optimization of the ejection system in mechanisms
+20. Adding about 42 mechanisms (later about them)
+21. Adding own blast furnace and system for it
+22. Adding experimental pipes
+23. Adding universal heat pipes (which conduct cold and heat)
+24. Adding transport pipes
+25. Adding Standard Transformers to the Mod
+26. Fix drop transformers
+27. Adding universal wires that conduct everything
+28. Addition of quantum and solarite systems
+29. Sannarium renamed to solarite
+30. Analyzer chest added
+31. Added own wind generators
+32. Energy controller added
+33. Added cable management device
+34. Air/Water/Earth/Hell/Ender converters
+35. Added crystallizer
+36. Added excavator
+37. Added new types of separators
+38. Added wind and water modification stations and rotor assemblers
+39. Added blade collectors
+40. Blades and cores for water and wind rotors
+41. Added new types of scanners
+42. Added new types of replicators
+43. Added new storage types for quantum and solarite energy
+44. Added combiner of solar energy generators
+45. Added refrigerator
+46. Added air separation unit
+47. Added water generator
+48. Added module removal station
+49. Added anti-magnetic machine
+50. Updated models in molecular transducers
+51. Molecular transducer optimization
+52. Optimizing the operation of nuclear reactors
+53. Adding your own types of watermakers
+54. Each type of mechanism has its own interface colors
+55. Wither manufacturer accepts 1 item each
+56. Added the ability to turn off the sound in mechanisms
+57. Adding spawn of a large pile of minerals at one point
+58. Increased the capacity of oil in the vein by 100%
+59. Updated in many mechs their models
+60. Changed the work of an autonomous farm
+61. Added ore washing and thermal centrifuges
+62. Added mechanical stamps
+63. Increased tank capacity
+64. Bellows that have liquid in them, then liquid is not lost during destruction
+65. Module: Manufacturer
+66. Module: Autonomous heater
+67. Optimization of some graphical interfaces
+68. Added a bunch of support for crafttweaker
+69 Added a lot of jei support
+70. Added a lot of descriptions for various items
+71. Addition of chip system for advanced and conventional wiring
+72. Adding new types of skins for tools and armor
+73. Adding a lead box
+74. Fixed crashes, bugs in bags
+75. Added katana
+76. Fixed bugs in sabers
+77. Fixed bugs in bows
+78. Completely rewritten tool system (shovel, pick, drill, ax)
+79. Solarite plate manufacturer and solarite converter require solarite energy
+80. Solar Power Manufacturers Have Module Slots
+81. Autonomous hunter optimization
+82. Autonomous operation of an advanced converter when items that have crafts for the same items are placed in the slot
+83. Increased the number of blocks in the white and black list
+84. Added the ability to view the black list
+85. Optimized quantum careers
+86. Added a lot of sensors and crafting items
+87. Energy wireless system optimization
+88. Added many sounds for different mechanisms
+89. Jetpacks added to the system of pumping modules
+90. Lappaks added to the system of pumping modules
+91. Bags have a description of the items stored there
+92. Adding Your Own Batch System
+93. Plasma renderer added for molecular transducers
+94. Removed information about item modules at the top left
+95. Metalforming mechanism removed
+96. Added the ability to edit the lane for the players
+97. Adding Cooling Modules
+98. Improving performance in mechanisms
+99. Increased generation of ores
+100. Optimizing solar panels
+Version:2.4RC6:
+1. Added Energy Controller
+2. Added Cable Management Device
+3. Added Air Transformer
+4. Added Water Transformer
+5. Added Earth Transformer
+6. Added Nether Transformer
+7. Added Excavator
+8. Added Crystallizer
+9. Added End Transformer
+10. Fixed bugs
+11. Rework network energy (energy is transferred from level 1 to the last)
+12. Fixed drops in blast furnace
+13. Fixed textures armor in spectral boots
+14. Change streak in spectral chestplate
+15. Added changing color streak in spectral chestplate
+16. Fixed oredict in Stick
+17. Fixed oredict in Vanadium
+18. Added new information
+19. Changed gui in heater and refrigerator
+20. Added script for converter solid matter, which processes all the recipes in the workbench and creates recipes based on them
+21. Added new modules for rotors (9 items)
+22. Added to molecular transformer`s shine, when it starts to work (color depends on the interface)
+Version:2.4RCS5:
+1. Fixed all existing bugs
+2. Added more information about the mod
+3. Added crafttweaker support for other mechanisms
+Version:2.4RC4:
+1. Fixed a lot of bugs of the old version
+2. Optimization of many things
+3. Added new blocks, mechanisms and items
+4. Reworked crafts
+5. Removed unnecessary crafts
+6. Added a lot of jei support
+7. Added a lot of hints in the mod so that players can normal play
+Version:2.2:
+1.RF storage is expandable with modules in panels
+2.fixed module "stack"
+3.added the ability of the module "instant"  to work in storages
+4.Purifier can now clean up upgrades in double, triple and quad machines
+5.fixed spectral saber 
+6.fixed of all kits of upgrades
+7.fixed obsidian generator
+8.fixed cable pick up 
+9.removed crafting of 4 iridium ingots in the molecular transformer
+10.fixed textures in lava and neutronium generators
+11.fixed crash when breaking some blocks with tools
+12.flying no consumes energy from other armor
+13.added the ability for the panel combiner to work with a wireless module
+14.fixed of reactor chambers, which could be safely put on blocks
+15.fixed not the appearance of text in the nuclear fusion reactor
+16.The wireless module has types again (panel and storage) 
+Version:2.1:
+1. Fixed the cobblestone generator
+2. Fixed the helium generator
+3. Added some prompts to mechanisms
+4. Added the ability to change the getting of resources in quarries
+5. Added the ability for helmets to eat tin cans
+6. If the player is on the ground, he does not fly.
+7. Added even more jei support
+8. Fixed the work of tools on the server side
+9. Fixed rotate  storages and transformers
+10. Fixed purifier
+11. Fixed crafting improved lappack
+12. Added support for Chinese by 绝绝子
+13. Fixed incompatibility with ASP
+14. When pressed with shift, only one block breaks 
+Version:2.0.2:
+1.fixed localization
+2.fixed the work of the modification station
+3.fixed the models of mechanisms when they work
+4.added blacklist for instruments
+5.added even more integration to jei
+6.added information about rotors
+7.fixed small bugs 
+Version:2.0.1:
+1.fixed of obtaining energy in molecular converters
+2.fixed crash on the server side in heaters
+3.fixed the black and white list in a quantum quarries
+4.added even more blocks to the blacklist of instruments
+5.fixed crash sounds
+Version:2.0:
+1. New panels
+2. Reworked energy generation in 1.12.2
+3. The system of the panels has been redesigned
+4. Added modules to the panel
+5. Changed transformers
+6. Added new generators of matters
+7. Added new double, triple and quad mechanisms,
+8. Added alloy smelter and advanced version
+9. Added manufacturer of microcircuits, transistors, boards and processors
+10. Added new types of generators
+11. Added quantum generators with modules
+12. Added a drilling rig for searching for veins
+13. Added veins of ores and oil
+14. Added generators of solar energy
+15. Added sannarium maker
+16. Added modification station
+17. Added Radiation Purifier
+18. Added privatizer
+19. Added Wireless Configurator
+20. Added an automatic hunter and modules to it
+21. Added own heaters
+22. Added advanced molecular transformer
+23. Redesigned molecular transformer
+24. Added improved versions of geogenerators
+25. Added improved nuclear reactors
+26. Added enrichment
+27. Added synthesis
+28. Added mineral separator
+29. Added manufacturer of withers
+30. Added magnetic trap
+31. Added magnetic generators
+32. Added a combined generator of matter
+33. Added fishing machine
+34. Added analyzer and modules for it are the same as in quarries
+35. Added dyeing machine and skins for items (drills and armor)
+36. Added petrol  and diesel generators
+37. Added improved pumps
+38. Added storage of experience and a module to it
+39. Added hydrogen, obsidian, lava and helium generators
+40. Added chemical plant and plastic automatic machine
+41. Added electrolyzer, with its own hydrogen and oxygen
+42. Added generators of solid matter and a combiner to it
+43. Added refineries
+44. Added own liquid tanks
+45. Added a rocking machine and oil deposits in the desert
+46. Added solids converter
+47. Added panel combiner
+48. Added the ability for double, triple and quad mechanisms to put RF modules, stacks, multipliers and modules of the "Panel" type
+49. Added combined macerators and recyclers
+50. Added rolling machines, extruders and cutting machines
+51. Added standalone farms and scrap collectors
+52. Added maker of Sannarium and Sannarium Plates
+53. Added and improved energy storage and modules for them
+54. Added modules for pumping tools and armor
+55. Added sets of pumping panels, energy storage and mechanisms
+56. Added new improvements for mechanisms
+57. Added wires
+58. Added new rotors
+59. Added new radioactive elements and nuclear rods to them
+60. Added new improvements for reactors
+61. Added panel glass and paint and solid matter
+62. Added new ingots, ores
+63. Added alloys
+64. Added cathode and anode
+65. Added core panels
+66. Added charging energy crystals
+67. Added gravitool
+68. Added purifier
+69. Added ruby, sapphire and topaz and armor to them
+70. Added reinforced nano-armor
+71. Added spectral armor
+72. Added bags
+73. Added magnets
+74. Added plastic and plastic plate
+75. Added nano, quantum and spectral tools (pickaxes, axes, shovels, drills)
+76. Bows added
+77. Added quantum and spectrum saber
+78. Added jetpacks
+79. Added sun helmets
+80. Added energy packs
+81. Added integration with JEI
+82. Added integration with CraftTweaker
+83. Added integration with WirelessIndustry
+84. Added integration with EMC
+85. Added integration with DraconicEvolution
+86. Added integration with CompactSolarPanels
+87. Added integration with Avaritia
+88. Added integration with Forestry
+89. Added integration with ExNihiloReborn
+90. Added integration with Thaumcraft 
