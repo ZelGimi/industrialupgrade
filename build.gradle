@@ -1,265 +1,176 @@
+
 buildscript {
     repositories {
-        maven {
-            name = ":forge"
-            url = 'https://files.minecraftforge.net/maven'
-        }
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-		
-        jcenter()
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
-        classpath "gradle.plugin.net.kyori:blossom:1.1.0"
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: "net.kyori.blossom"
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-
-version = modVersion
-group = modGroup
-archivesBaseName = modBaseName
-//noinspection GroovyAssignabilityCheck
-project.ic2_range= "[${project.ic2_min_ver},${project.ic2_max_ver}]"
-compileJava {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-}
-blossom {
-    replaceToken '%VERSION%', modVersion
-    replaceToken "%IC2_RANGE%", ic2_range
-    replaceToken "%CERTIFICATE%", fingerprint
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ["src/main/java"]
-        }
-        resources {
-            srcDirs = ["src/main/resources"]
-        }
-    }
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
 }
+
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+
 
 minecraft {
-    //noinspection GroovyAssignabilityCheck
-    mappings channel: "snapshot", version: mcp_version
-    runs {
-        client {
-            workingDirectory project.file('run')
-            accessTransformer = file('src/main/resources/tc_at.cfg')
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
-            // Recommended logging level for the console
+    mappings channel: mapping_channel, version: mapping_version
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    copyIdeResources = true
+
+    runs {
+        // applies to all the run configs below
+        configureEach {
+            workingDirectory project.file('run')
+
+            arg "-mixin.config="+archivesBaseName+".mixins.json"
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
             property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', mod_id
+
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         server {
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         data {
-            property 'forge.logging.console.level', 'debug'
-            workingDirectory project.file('run')
-            args '--mod', 'ssp', '--all',
-                    '--existing', '"' + file('src/main/resources/') + '"',
-                    '--existing', '"' + file('src/generated/resources/') + '"',
-                    '--output', '"' + file('src/generated/resources/') + '"'
+            workingDirectory project.file('run-data')
+
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
 
-repositories {
-    maven {
-        name 'IC2'
-        url 'http://maven.ic2.player.to'
-        content {
-            includeGroup 'net.industrial-craft'
-        }
-    }
-	  maven {
-        url "http://maven.cil.li"
-    }
-    maven {
-        url "https://www.cursemaven.com"
-       content {
-            includeGroup "curse.maven"
-        }
-    }
 
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven { url = 'https://maven.minecraftforge.net' }
+    maven {
+        name = "Cursemaven"
+        url = "https://www.cursemaven.com/"
+    }
 }
 
 dependencies {
-    minecraft([
-            group  : "net.minecraftforge",
-            name   : "forge",
-            version: "${minecraft_version}-${forge_version}"
-    ])
-	  compileOnly "li.cil.oc:OpenComputers:MC1.12.2-1.7.2.67:api"
-    runtimeOnly "curse.maven:thaumcraft-223628:2629023"
-    runtimeOnly "curse.maven:botania-225643:2846950"
-	runtimeOnly "curse.maven:baubles-227083:2518667"
-	compileOnly "curse.maven:thaumcraft-223628:2629023"
-    compileOnly "curse.maven:wireless-industry-377164:3864415"
-    compileOnly "curse.maven:botania-225643:2846950"
-	compileOnly "curse.maven:baubles-227083:2518667"
-    compileOnly "curse.maven:projecte-226410:2702991"
-    runtimeOnly "curse.maven:projecte-226410:2702991"
-    compileOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
-    runtimeOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
-    compileOnly "curse.maven:forestry-59751:2684780"
-    runtimeOnly "curse.maven:forestry-59751:2684780"
-    compileOnly "curse.maven:patchouli-306770:3087124"
-    runtimeOnly "curse.maven:patchouli-306770:3087124"
-    compileOnly "curse.maven:avaritia-1-10-261348:3143349"
-    runtimeOnly "curse.maven:avaritia-1-10-261348:3143349"
-	runtimeOnly "curse.maven:cofh-core-69162:2920433"
-	compileOnly "curse.maven:cofh-core-69162:2920433"
-    runtimeOnly "curse.maven:immersive-engineering-231951:2974106"
-    compileOnly "curse.maven:immersive-engineering-231951:2974106"
-	runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
-	compileOnly "curse.maven:thermal-expansion-69163:2926431"
-    runtimeOnly "curse.maven:journeymap-32274:2916002"
-    compileOnly "curse.maven:journeymap-32274:2916002"
-	runtimeOnly "curse.maven:wrapup-275153:2486198"
-    compileOnly "curse.maven:wrapup-266936:3294077"
-    runtimeOnly "curse.maven:shadowfacts-forgelin-248453:2785465"
-    compileOnly "curse.maven:shadowfacts-forgelin-248453:2785465"
-    runtimeOnly "curse.maven:crafttweaker-239197:3587830"
-    compileOnly "curse.maven:crafttweaker-239197:3587830"
-    runtimeOnly "curse.maven:tesla-core-lib-254602:3438487"
-    compileOnly "curse.maven:tesla-core-lib-254602:3438487"
-    runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
-    compileOnly "curse.maven:thermal-expansion-69163:2926431"
-    runtimeOnly "curse.maven:thermal-dynamics-227443:2920505"
-    compileOnly "curse.maven:thermal-dynamics-227443:2920505"
-    runtimeOnly "curse.maven:thermal-foundation-222880:2926428"
-    compileOnly "curse.maven:thermal-foundation-222880:2926428"
-    runtimeOnly "curse.maven:modtweaker-220954:3488553"
-    compileOnly "curse.maven:modtweaker-220954:3488553"
-    runtimeOnly "curse.maven:just-enough-resources-jer-240630:2728585"
-    compileOnly "curse.maven:just-enough-resources-jer-240630:2728585"
-    runtimeOnly "curse.maven:jei-integration-265917:2951731"
-    compileOnly "curse.maven:jei-integration-265917:2951731"
-    runtimeOnly "curse.maven:mtlib-253211:3308160"
-    compileOnly "curse.maven:mtlib-253211:3308160"
-    runtimeOnly "curse.maven:external-tweaker-270558:2452858"
-    compileOnly "curse.maven:external-tweaker-270558:2452858"
-	runtimeOnly "curse.maven:redstone-arsenal-70631:2939416"
-	compileOnly "curse.maven:redstone-arsenal-70631:2939416"
-	runtimeOnly "curse.maven:redstone-flux-270789:2920436"
-	compileOnly "curse.maven:redstone-flux-270789:2920436"
-	runtimeOnly "curse.maven:thermal-dynamics-227443:2920505"
-	compileOnly "curse.maven:thermal-dynamics-227443:2920505"
-	runtimeOnly "curse.maven:thermal-foundation-222880:2926428"
-	compileOnly "curse.maven:thermal-foundation-222880:2926428"
-	runtimeOnly "curse.maven:draconic-evolution-223565:3431261"
-	compileOnly "curse.maven:draconic-evolution-223565:3431261"
-	runtimeOnly "curse.maven:brandons-core-231382:3408276"
-	compileOnly "curse.maven:brandons-core-231382:3408276"
-    runtimeOnly "curse.maven:cofh-world-271384:2920434"
-	compileOnly "curse.maven:cofh-world-271384:2920434"
-    runtimeOnly "curse.maven:cucumber-272335:2645867"
-    compileOnly "curse.maven:cucumber-272335:2645867"
-    runtimeOnly "curse.maven:ae2-extended-life-570458:4323863"
-    compileOnly "curse.maven:ae2-extended-life-570458:4323863"
-    compileOnly "curse.maven:galacticraft-legacy-564236:4052975"
-    compileOnly "curse.maven:ender-io-64578:3328811"
-    runtimeOnly "curse.maven:compact-machines-224218:2707509"
-    compileOnly "curse.maven:compact-machines-224218:2707509"
-    runtimeOnly "curse.maven:the-one-probe-245211:2667280"
-    compileOnly "curse.maven:the-one-probe-245211:2667280"
-    runtimeOnly "curse.maven:top-addons-247111:2887479"
-    compileOnly "curse.maven:top-addons-247111:2887479"
-    runtimeOnly fileTree('lib')
-	compileOnly fileTree('lib')
-	compileOnly fileTree('libs')
+
+   minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+
+
+    runtimeOnly fg.deobf("curse.maven:refined-storage-243076:4861827")
+    compileOnly fg.deobf("curse.maven:refined-storage-243076:4861827")
 }
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft_version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-
-        expand "version": project.version, "mcversion": project.minecraft_version,
-                "ic2_range": project.ic2_range
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
     }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
-	rename '(.+_at.cfg)', 'META-INF/$1'
-}
-def commonManifest = {
-	attributes 'FMLAT': 'tc_at.cfg'
 }
 
-jar {
+tasks.named('jar', Jar).configure {
     manifest {
         attributes([
-                "Specification-Title": project.name,
-                "Specification-Vendor": "ijo42",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": project.version,
-                "Implementation-Vendor" :"Denfop",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "Git-Commit-Hash": getGitHash()
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1', // We are version 1 of ourselves
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    from 'LICENSE'
-    manifest commonManifest
-    from sourceSets.main.output.classesDirs
-    from sourceSets.main.output.resourcesDir
+    finalizedBy 'reobfJar'
+}
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
 }
 
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    options.incremental = true // one flag, and things will get so MUCH faster
-    sourceCompatibility = targetCompatibility = '1.8'
-}
-jar.archiveFileName = "${project.archivesBaseName}-${project.minecraft_version}-${project.version}.jar"
-
-jar.finalizedBy('reobfJar')
-defaultTasks 'build'
-
-static def getGitHash() {
-    try {
-        def process = 'git rev-parse --short HEAD'.execute()
-        process.waitFor()
-        return (process.exitValue() ? 'unknown' : process.text.trim())
-    }catch(IOException ignored){
-        return 'unknown'
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
     }
 }
 
-// Hack to include resources for Forge 1.12.2 using FG3
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.incremental = true // one flag, and things will get so MUCH faster
+}
 sourceSets { main { output.resourcesDir = output.classesDirs[0] } }
+
 task devJar(type: Jar) {
-    classifier = 'dev'
+    archiveClassifier.set('dev')
     from sourceSets.main.output
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 

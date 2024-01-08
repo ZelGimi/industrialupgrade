@@ -1,6 +1,0 @@
-{
-  "parent" : "block/cube_all",
-  "textures" : {
-    "all" : "industrialupgrade:blocks/wiring/cable/copper1_cable"
-  }
-}

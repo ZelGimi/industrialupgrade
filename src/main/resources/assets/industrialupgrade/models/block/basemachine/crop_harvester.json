@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"side": "industrialupgrade:blocks/crop_harvester_sides",
-		"bottom": "industrialupgrade:blocks/crop_harvester_bottom",
-		"top": "industrialupgrade:blocks/crop_harvester_top"
-	}
-}
