@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerDigger extends ContainerFullInv<TileEntityAutoDigger> {
 
     public ContainerDigger(TileEntityAutoDigger tileEntity1, EntityPlayer entityPlayer) {
-        super(entityPlayer, tileEntity1, 255);
+        super(entityPlayer, tileEntity1, 178 + 36, 255);
         for (int i = 0; i < 2; i++) {
             for (int k = 0; k < 8; k++) {
                 addSlotToContainer(new SlotInvSlot((tileEntity1).inputslot, i * 8 + k, 17 + 18 * i

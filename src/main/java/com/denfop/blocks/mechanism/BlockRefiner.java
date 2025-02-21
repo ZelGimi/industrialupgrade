@@ -48,7 +48,14 @@ public enum BlockRefiner implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -132,7 +139,7 @@ public enum BlockRefiner implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasUniqueRender(final ItemStack itemStack) {
-        return true;
+        return false;
     }
 
     @Override

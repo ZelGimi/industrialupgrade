@@ -31,7 +31,7 @@ public class RecipeInputStack implements IRecipeInputStack {
         final int damage = stack.getItemDamage();
         for (ItemStack input : getItemStack()) {
             final int damage1 = input.getItemDamage();
-            if (input.getItem() == stack.getItem() && (damage == OreDictionary.WILDCARD_VALUE || damage == damage1 ||  damage1 == OreDictionary.WILDCARD_VALUE)) {
+            if (input.getItem() == stack.getItem() && (damage == OreDictionary.WILDCARD_VALUE || damage == damage1 || damage1 == OreDictionary.WILDCARD_VALUE)) {
                 if (stack.getTagCompound() == null || input.getTagCompound() == null) {
                     return true;
                 } else {

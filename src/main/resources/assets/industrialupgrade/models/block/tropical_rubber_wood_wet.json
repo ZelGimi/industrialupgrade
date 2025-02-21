@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/tropical_rubber_wood_wet_leftrightback",
+		"down": "industrialupgrade:blocks/tropical_rubber_wood_wet_bottomtop",
+		"up": "industrialupgrade:blocks/tropical_rubber_wood_wet_bottomtop",
+		"north": "industrialupgrade:blocks/tropical_rubber_wood_wet_front",
+		"east": "industrialupgrade:blocks/tropical_rubber_wood_wet_leftrightback",
+		"south": "industrialupgrade:blocks/tropical_rubber_wood_wet_leftrightback",
+		"west": "industrialupgrade:blocks/tropical_rubber_wood_wet_leftrightback"
+	}
+}

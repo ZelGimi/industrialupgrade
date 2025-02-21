@@ -9,7 +9,6 @@ import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
@@ -41,8 +40,8 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
-        super.addInformation(stack, tooltip, advanced);
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
                 IUItem.blastfurnace,
@@ -50,7 +49,7 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
                 0
         ).getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") +  new ItemStack(IUItem.ForgeHammer).getDisplayName());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 

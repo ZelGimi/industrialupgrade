@@ -6,7 +6,6 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerRefrigerator;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiRefrigerator extends GuiIU<ContainerRefrigerator> {
@@ -17,6 +16,7 @@ public class GuiRefrigerator extends GuiIU<ContainerRefrigerator> {
                 new Component<>(this.container.base.energy)
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

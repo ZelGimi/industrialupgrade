@@ -4,37 +4,43 @@ import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.GuiVerticalSliderList;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.api.gui.ImageScreen;
+import com.denfop.api.gui.ItemStackImage;
+import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerAnalyzer;
-import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.tiles.base.DataOre;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
+public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> implements GuiPageButtonList.GuiResponder,
+        GuiVerticalSliderList.FormatHelper {
 
     public final ContainerAnalyzer container;
     public final String name;
     private final ResourceLocation background;
     private int xOffset;
     private int yOffset;
-
+    private GuiVerticalSliderList slider;
+    private int value = 0;
 
     public GuiAnalyzer(ContainerAnalyzer container1) {
         super(container1);
@@ -43,10 +49,128 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
         this.name = Localization.translate("iu.blockAnalyzer.name");
         this.ySize = 256;
         this.xSize = 212;
-        this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 3, 3, EnumTypeComponent.SOUND_BUTTON,
+        this.inventory.setY(this.inventory.getY() + 90);
+        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+
+        this.elements.add(new ImageScreen(this, 6, 13, 90, 18));
+        this.elements.add(new ImageScreen(this, 6, 34, 90, 18));
+        this.elements.add(new ImageScreen(this, 6, 74, 90, 130 - 75));
+        this.addElement(new CustomButton(this, 22, 133, 74, 16, container1.base, 0, Localization.translate("button.analyzer")));
+        this.addElement(new CustomButton(this, 22, 153, 74, 16, container1.base, 1, Localization.translate("button.quarry")));
+
+        this.inventory.setX(this.inventory.getX() + 18);
+        this.addComponent(new GuiComponent(this, 190, 158, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 191, 178, EnumTypeComponent.ENERGY_HEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
+        this.addComponent(new GuiComponent(this, 5, 173, EnumTypeComponent.INFO,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 101, 156, EnumTypeComponent.PROGRESS3,
+                new Component<>(new ComponentProgress(this.container.base, 1, (short) 0) {
+                    @Override
+                    public double getBar() {
+                        return container.base.getProgress();
+                    }
+                })
+        ));
+        this.addElement(new ItemStackImage(this, 5, 133, () -> new ItemStack(IUItem.basemachine1, 1, 2)) {
+            @Override
+            public void drawForeground(final int mouseX, final int mouseY) {
+
+            }
+        });
+        this.addElement(new ItemStackImage(this, 5, 153, () -> new ItemStack(IUItem.machines, 1, 8)) {
+            @Override
+            public void drawForeground(final int mouseX, final int mouseY) {
+
+            }
+        });
+
+        for (int i2 = 0; i2 < 48; i2++) {
+            int k = i2 / 6;
+            final int finalI = i2;
+            componentList.add(new GuiComponent(this, 98 + ((i2) - (6 * k)) * 18,
+                    12 + k * 18, EnumTypeComponent.DEFAULT,
+                    new Component<>(new ComponentEmpty())
+            ));
+            componentList.add(new GuiComponent(this, 99 + ((i2) - (6 * k)) * 18,
+                    13 + k * 18, EnumTypeComponent.EMPTY,
+                    new Component<>(new ComponentEmpty())
+            ) {
+                @Override
+                public boolean visible() {
+                    return finalI + 48 * value >= container.base.getDataOreList().size();
+                }
+            });
+
+            this.addElement(new ItemStackImage(this, 99 + ((finalI) - (6 * k)) * 18, 13 + k * 18, () -> IUItem.pullingUpgrade) {
+                @Override
+                public void drawBackground(final int mouseX, final int mouseY) {
+                    if (!visible()) {
+                        return;
+                    }
+                    DataOre dataOre = container.base.getDataOreList().get(finalI + 48 * value);
+                    if (!ModUtils.isEmpty(dataOre.getStack())) {
+                        RenderHelper.enableGUIStandardItemLighting();
+                        this.gui.drawItemStack(this.x, this.y, dataOre.getStack());
+                        RenderHelper.disableStandardItemLighting();
+                    }
+
+                }
+
+                @Override
+                public void drawForeground(final int mouseX, final int mouseY) {
+                    if (!visible()) {
+                        return;
+                    }
+                    if (this.contains(mouseX, mouseY)) {
+                        DataOre dataOre = container.base.getDataOreList().get(finalI + 48 * value);
+                        String tooltip1 =
+                                TextFormatting.GREEN + Localization.translate("chance.ore") + TextFormatting.WHITE + (dataOre.getNumber()) + ".";
+                        double number = dataOre.getNumber();
+                        double m = (number / (container.base.numberores * 1D)) * 100;
+                        String tooltip2 = TextFormatting.GREEN + Localization.translate("chance.ore1") + TextFormatting.WHITE + (int) m +
+                                "%" + ".";
+
+                        String tooltip =
+                                TextFormatting.GREEN + Localization.translate("name.ore") + TextFormatting.WHITE + dataOre
+                                        .getStack()
+                                        .getDisplayName();
+                        String tooltip3 = TextFormatting.GREEN + Localization.translate("middleheight") + TextFormatting.WHITE + ModUtils.getString1(
+                                dataOre.getAverage()) +
+                                ".";
+                        String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
+                                dataOre.getNumber() * container.base.inputslot.getenergycost()) + "EF";
+
+                        List<String> text = new ArrayList<>();
+                        text.add(tooltip);
+                        List<String> compatibleUpgrades = getInformation1(tooltip1, tooltip2, tooltip3, tooltip4);
+                        Iterator<String> var5 = compatibleUpgrades.iterator();
+                        String itemstack;
+                        while (var5.hasNext()) {
+                            itemstack = var5.next();
+                            text.add(itemstack);
+                        }
+                        ItemStack stack = dataOre.getStack();
+                        if (!ModUtils.isEmpty(stack)) {
+                            gui.drawTooltip(x + 10, y, text);
+                        }
+                    }
+
+                }
+
+                @Override
+                public boolean visible() {
+                    return finalI + 48 * value < container.base.getDataOreList().size();
+
+                }
+            });
+        }
+
+
     }
 
     private static List<String> getInformation1(String name, String name1, String name2, String name3) {
@@ -59,24 +183,53 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
         return ret;
     }
 
-    public void initGui() {
-        super.initGui();
-        this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 22, (this.height - this.ySize) / 2 + 132,
-                74, 16, Localization.translate("button.analyzer")
-        ));
-        this.buttonList.add(new GuiButton(1, (this.width - this.xSize) / 2 + 22, (this.height - this.ySize) / 2 + 152,
-                74, 16, Localization.translate("button.quarry")
-        ));
+    @Override
+    public String getText(final int var1, final String var2, final float var3) {
+        return "";
+    }
+
+    @Override
+    public void setEntryValue(final int i, final boolean b) {
 
     }
 
+    @Override
+    public void setEntryValue(final int i, final float v) {
+        value = (int) v;
+
+    }
+
+    @Override
+    public void setEntryValue(final int i, final String s) {
+
+    }
+
+    public void initGui() {
+        super.initGui();
+
+
+        slider = new GuiVerticalSliderList(this, 2, (this.width - this.xSize) / 2 + 207,
+                (this.height - this.ySize) / 2 + 12,
+                "",
+                0, this.container.base.getDataOreList().size() / 48, 0,
+                this, 133
+        );
+        this.buttonList.add(slider);
+    }
+
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        slider.visible = this.container.base.getDataOreList().size() > 48;
+        slider.setMax(this.container.base.getDataOreList().size() / 48);
+    }
+
     protected void drawForegroundLayer(int par1, int par2) {
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 3, 4210752);
+        super.drawForegroundLayer(par1, par2);
         xOffset = (this.width - this.xSize) / 2;
         yOffset = (this.height - this.ySize) / 2;
 
-        this.drawForeground(par1, par2);
-        int i2;
+
         int chunk = this.container.base.xChunk;
         int chunk1 = this.container.base.zChunk;
         int endchunk = this.container.base.xendChunk;
@@ -97,20 +250,25 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                 10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("ore") +
-                        TextFormatting.WHITE + ModUtils.getString(this.container.base.sum),
+                        TextFormatting.WHITE + ModUtils.getString(this.container.base.numberores),
                 10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
 
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("procent_ore") +
-                        TextFormatting.WHITE + ModUtils.getString1((this.container.base.sum / this.container.base.breakblock) * 100) + "%",
+                        TextFormatting.WHITE + ModUtils.getString1(((this.container.base.numberores / (this.container.base.breakblock * 1D)) * 100)) + "%",
                 10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
+        int average = 0;
+        for (DataOre dataOre : this.container.base.dataOreList) {
+            average += dataOre.getAverage();
+        }
+        average /= Math.max(1, this.container.base.dataOreList.size());
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("middleheight") +
-                        TextFormatting.WHITE + ModUtils.getString1(((double) this.container.base.sum1 / this.container.base.sum)),
+                        TextFormatting.WHITE + ModUtils.getString1(average),
                 10, 80 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("cost.name") +
-                        TextFormatting.WHITE + ModUtils.getString(this.container.base.sum * this.container.base.consume) + " EF",
+                        TextFormatting.WHITE + ModUtils.getString(this.container.base.numberores * this.container.base.consume) + " EF",
                 10, 80 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
         this.fontRenderer.drawString(TextFormatting.GREEN + Localization.translate("cost.name1") +
@@ -118,37 +276,28 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                 10, 80 + 8 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
         );
 
-        new AdvArea(this, 101, 159, 139, 170)
-                .withTooltip(Localization.translate("gui.MolecularTransformer.progress") + ": " + ModUtils.getString(this.container.base.getProgress() * 100) + "%")
-                .drawForeground(par1, par2);
-        new AdvArea(this, 148, 159, 186, 170)
-                .withTooltip("EF: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(
-                        this.container.base.energy.getCapacity()))
-                .drawForeground(par1, par2);
 
         if (!(this.container.base.inputslotA.isEmpty())) {
-            if (!(this.container.base.listore.isEmpty())) {
+            if (!(this.container.base.getDataOreList().isEmpty())) {
                 int id = OreDictionary.getOreIDs(this.container.base.inputslotA.get(0))[0];
                 String name = OreDictionary.getOreName(id);
-                if (this.container.base.listore.contains(name)) {
-                    int index = this.container.base.listore.indexOf(name);
-                    ItemStack stack = OreDictionary.getOres(this.container.base.listore.get(index)).get(0);
+                if (this.container.base.getDataOreList().contains(name)) {
+                    DataOre dataOre = this.container.base.getDataOreList().get(name);
+                    ItemStack stack = dataOre.getStack();
 
                     String tooltip1 =
-                            TextFormatting.GREEN + Localization.translate("chance.ore") + TextFormatting.WHITE + (this.container.base.listnumberore.get(
-                                    index) - 1);
-                    double number = this.container.base.listnumberore.get(index) - 1;
-                    double sum = this.container.base.sum;
+                            TextFormatting.GREEN + Localization.translate("chance.ore") + TextFormatting.WHITE + (dataOre.getNumber());
+                    double number = dataOre.getNumber();
+                    double sum = this.container.base.breakblock;
                     double m = (number / sum) * 100;
-                    String tooltip2 = TextFormatting.GREEN + Localization.translate("chance.ore1") + TextFormatting.WHITE + ModUtils.getString1(
+                    String tooltip2 = TextFormatting.GREEN + Localization.translate("chance.ore1") + TextFormatting.WHITE + (int) (
                             m) + "%";
 
                     String tooltip = TextFormatting.GREEN + Localization.translate("name.ore") + TextFormatting.WHITE + stack.getDisplayName();
                     String tooltip3 = TextFormatting.GREEN + Localization.translate("middleheight") + TextFormatting.WHITE + ModUtils.getString1(
-                            index < this.container.base.middleheightores.size() ?
-                                    this.container.base.middleheightores.get(index) : 0);
+                            dataOre.getAverage());
                     String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
-                            this.container.base.listnumberore.get(index) * this.container.base.inputslot.getenergycost()) + "EF";
+                            dataOre.getNumber() * this.container.base.inputslot.getenergycost()) + "EF";
 
 
                     handleUpgradeTooltip2(par1, par2 - this.guiTop,
@@ -158,40 +307,6 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
                 }
 
             }
-        }
-        for (i2 = 0; i2 < Math.min(this.container.base.numberores, 48); i2++) {
-            int k = i2 / 6;
-            ItemStack stack = OreDictionary.getOres(this.container.base.listore.get(i2)).get(0);
-            String tooltip1 =
-                    TextFormatting.GREEN + Localization.translate("chance.ore") + TextFormatting.WHITE + (this.container.base.listnumberore.get(
-                            i2) - 1) + ".";
-            double number = this.container.base.listnumberore.get(i2) - 1;
-            double sum = this.container.base.sum;
-            double m = (number / sum) * 100;
-            String tooltip2 = TextFormatting.GREEN + Localization.translate("chance.ore1") + TextFormatting.WHITE + ModUtils.getString1(
-                    m) + "%" + ".";
-
-            String tooltip = TextFormatting.GREEN + Localization.translate("name.ore") + TextFormatting.WHITE + stack.getDisplayName();
-            String tooltip3 = TextFormatting.GREEN + Localization.translate("middleheight") + TextFormatting.WHITE + ModUtils.getString1(
-                    i2 < this.container.base.middleheightores.size() ? this.container.base.middleheightores.get(i2) : 0) +
-                    ".";
-            String tooltip4 = TextFormatting.GREEN + Localization.translate("cost.name") + TextFormatting.WHITE + ModUtils.getString(
-                    this.container.base.listnumberore.get(i2) * this.container.base.inputslot.getenergycost()) + "EF";
-
-
-            handleUpgradeTooltip(
-                    par1,
-                    par2,
-                    99 + (i2 - (6 * k)) * 18,
-                    13 + k * 18,
-                    99 + (i2 - (6 * k)) * 18 + 16,
-                    13 + k * 18 + 16,
-                    tooltip,
-                    tooltip1,
-                    tooltip2,
-                    tooltip3,
-                    tooltip4
-            );
         }
         drawUpgradeslotTooltip(par1, par2);
     }
@@ -212,25 +327,6 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
         }
     }
 
-    private void handleUpgradeTooltip(
-            int x, int y, int minX, int minY, int maxX, int maxY,
-            String tooltip, String tooltip1, String tooltip2, String tooltip3, String tooltip4
-    ) {
-        if (x >= minX && x <= maxX && y >= minY && y <= maxY) {
-            List<String> text = new ArrayList<>();
-            text.add(tooltip);
-            List<String> compatibleUpgrades = getInformation1(tooltip1, tooltip2, tooltip3, tooltip4);
-            Iterator<String> var5 = compatibleUpgrades.iterator();
-            String itemstack;
-            while (var5.hasNext()) {
-                itemstack = var5.next();
-                text.add(itemstack);
-            }
-
-            this.drawTooltip(x, y, text);
-        }
-    }
-    //
 
     private void handleUpgradeTooltip2(
             int x,
@@ -256,117 +352,11 @@ public class GuiAnalyzer extends GuiIU<ContainerAnalyzer> {
         }
     }
 
-    //
-    protected void actionPerformed(GuiButton guibutton) {
-
-        if (guibutton.id == 0) {
-            new PacketUpdateServerTile(this.container.base, 0);
-
-        }
-        if (guibutton.id == 1) {
-            new PacketUpdateServerTile(this.container.base, 1);
-
-        }
-
-
-    }
 
     protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
-
+        super.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(this.background);
 
-
-        xOffset = (this.width - this.xSize) / 2;
-        yOffset = (this.height - this.ySize) / 2;
-
-        this.drawTexturedModalRect(xOffset, yOffset, 0, 0, this.xSize, this.ySize);
-        this.drawBackground();
-        this.mc.getTextureManager().bindTexture(this.background);
-
-        double progress = this.container.base.getProgress() * 38;
-
-        if (progress > 0) {
-            drawTexturedModalRect(this.xOffset + 101, this.yOffset + 159, 212,
-                    24, (int) progress, 11
-            );
-        }
-        double energy = (this.container.base.energy.getEnergy() / this.container.base.energy.getCapacity()) * 38;
-        if (energy > 0) {
-            drawTexturedModalRect(this.xOffset + 148, this.yOffset + 159, 212,
-                    36, (int) energy, 11
-            );
-        }
-
-        int i2;
-
-        for (i2 = this.container.base.numberores; i2 < 48; i2++) {
-            int k = i2 / 6;
-
-            this.drawTexturedModalRect(xOffset + 99 + (i2 - (6 * k)) * 18, yOffset + 13 + k * 18, 213, 1, 16, 16);
-
-        }
-        for (i2 = 0; i2 < Math.min(this.container.base.numberores, 48); i2++) {
-            int k = i2 / 6;
-            RenderHelper.enableGUIStandardItemLighting();
-            GL11.glPushMatrix();
-            GL11.glColor4f(0.1F, 1, 0.1F, 1);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GlStateManager.disableLighting();
-            GlStateManager.enableDepth();
-            this.zLevel = 100.0F;
-            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            itemRender.renderItemAndEffectIntoGUI(
-                    OreDictionary.getOres(this.container.base.listore.get(i2 % this.container.base.listore.size())).get(0),
-                    xOffset + 99 + (i2 - (6 * k)) * 18,
-                    yOffset + 13 + k * 18
-            );
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GlStateManager.enableLighting();
-
-            RenderHelper.enableStandardItemLighting();
-            GL11.glColor4f(0.1F, 1, 0.1F, 1);
-            GL11.glPopMatrix();
-
-        }
-
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        itemRender.zLevel = 100;
-
-
-        itemRender.renderItemAndEffectIntoGUI(new ItemStack(IUItem.basemachine1, 1, 2), xOffset + 5,
-                yOffset + 133
-        );
-        GlStateManager.enableLighting();
-        GL11.glEnable(GL11.GL_LIGHTING);
-
-        GL11.glPopMatrix();
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        itemRender.zLevel = 100;
-        itemRender.renderItemAndEffectIntoGUI(new ItemStack(IUItem.machines, 1, 8), xOffset + 5,
-                yOffset + 133 + 20
-        );
-
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
-        GL11.glPopMatrix();
 
     }
 

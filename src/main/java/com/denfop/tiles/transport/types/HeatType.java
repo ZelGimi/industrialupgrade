@@ -61,6 +61,11 @@ public enum HeatType implements ISubEnum, ICableItem {
     }
 
     @Override
+    public float getThickness() {
+        return thickness;
+    }
+
+    @Override
     public String getNameCable() {
         return this.name() + "_pipes";
     }
@@ -69,7 +74,6 @@ public enum HeatType implements ISubEnum, ICableItem {
     public String getMainPath() {
         return "pipes";
     }
-
 
 
     @Override

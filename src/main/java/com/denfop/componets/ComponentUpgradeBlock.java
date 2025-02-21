@@ -43,6 +43,7 @@ public class ComponentUpgradeBlock extends AbstractComponent {
         nbt.setInteger("level", this.level);
         return nbt;
     }
+
     public CustomPacketBuffer updateComponent() {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeInt(this.level);
@@ -56,4 +57,5 @@ public class ComponentUpgradeBlock extends AbstractComponent {
 
 
     }
+
 }

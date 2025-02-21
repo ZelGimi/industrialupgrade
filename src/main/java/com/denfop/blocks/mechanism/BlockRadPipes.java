@@ -5,7 +5,6 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.transport.tiles.TileEntityQCable;
 import com.denfop.tiles.transport.tiles.TileEntityRadPipes;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
@@ -39,7 +38,14 @@ public enum BlockRadPipes implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     @Override
     public Material getMaterial() {
         return IMultiTileBlock.CABLE;

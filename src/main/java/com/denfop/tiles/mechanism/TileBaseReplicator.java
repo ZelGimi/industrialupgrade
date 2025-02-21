@@ -450,10 +450,8 @@ public class TileBaseReplicator extends TileElectricMachine implements IUpgradab
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidConsuming,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.FluidInput
         );
     }
 

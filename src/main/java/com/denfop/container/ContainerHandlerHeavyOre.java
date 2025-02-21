@@ -19,21 +19,21 @@ public class ContainerHandlerHeavyOre extends ContainerFullInv<TileBaseHandlerHe
         super(entityPlayer, tileEntity1, height);
         if (tileEntity1.inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    0, 25, 29
+                    0, 37, 36
             ));
         }
 
         for (int i = 0; i < tileEntity1.outputSlot.size(); i++) {
 
             addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot,
-                    i, 96 + (18 * (i / 3)), 15 + 18 * (i % 3)
+                    i, 111 + (18 * (i / 3)), 18 + 18 * (i % 3)
             ));
 
         }
 
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                    i, upgradeX, upgradeY + i * 18
+                    i, 16, upgradeY + i * 18
             ));
         }
     }

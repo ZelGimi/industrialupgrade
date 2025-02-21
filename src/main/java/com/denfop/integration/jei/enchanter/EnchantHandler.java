@@ -11,10 +11,10 @@ import java.util.List;
 public class EnchantHandler {
 
     private static final List<EnchantHandler> recipes = new ArrayList<>();
-    private final ItemStack input,input1,output;
+    private final ItemStack input, input1, output;
 
     public EnchantHandler(
-            ItemStack input,ItemStack input1,
+            ItemStack input, ItemStack input1,
             ItemStack output
     ) {
         this.input = input;
@@ -30,9 +30,9 @@ public class EnchantHandler {
     }
 
     public static EnchantHandler addRecipe(
-            ItemStack input, ItemStack input1,  ItemStack output
+            ItemStack input, ItemStack input1, ItemStack output
     ) {
-        EnchantHandler recipe = new EnchantHandler(input,input1, output);
+        EnchantHandler recipe = new EnchantHandler(input, input1, output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -54,7 +54,9 @@ public class EnchantHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("enchanter_books")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),container.input.getInputs().get(1).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0)
             );
 
@@ -77,7 +79,7 @@ public class EnchantHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ;
+        return is.isItemEqual(input);
     }
 
 }

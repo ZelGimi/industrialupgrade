@@ -11,7 +11,7 @@ import java.util.List;
 public class BatteryHandler {
 
     private static final List<BatteryHandler> recipes = new ArrayList<>();
-    private final ItemStack input, input1, input2, input3, input4, input5,input6,input7,input8,output;
+    private final ItemStack input, input1, input2, input3, input4, input5, input6, input7, input8, output;
 
     public BatteryHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4, ItemStack input5,
@@ -39,10 +39,10 @@ public class BatteryHandler {
 
     public static BatteryHandler addRecipe(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack input4,ItemStack input5,
+            ItemStack input4, ItemStack input5,
             ItemStack input6, ItemStack input7, ItemStack input8, ItemStack output
     ) {
-        BatteryHandler recipe = new BatteryHandler(input, input1, input2, input3, input4,input5,input6,input7,input8, output);
+        BatteryHandler recipe = new BatteryHandler(input, input1, input2, input3, input4, input5, input6, input7, input8, output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -64,7 +64,8 @@ public class BatteryHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("battery_factory")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
@@ -79,7 +80,6 @@ public class BatteryHandler {
 
         }
     }
-
 
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.

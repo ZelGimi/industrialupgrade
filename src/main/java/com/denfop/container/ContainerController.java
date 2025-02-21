@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerController extends ContainerFullInv<TileEnergyController> {
 
     public ContainerController(TileEnergyController tileEntity1, EntityPlayer entityPlayer) {
-        super(entityPlayer, tileEntity1, 179);
+        super(entityPlayer, tileEntity1);
     }
 
 

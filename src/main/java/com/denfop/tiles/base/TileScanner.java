@@ -45,10 +45,10 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     public double patternEu;
     public ItemStack pattern;
     public BaseMachineRecipe recipe;
+    public TileScanner.State state;
     Map<BlockPos, IPatternStorage> iPatternStorageMap = new HashMap<>();
     List<IPatternStorage> iPatternStorageList = new ArrayList<>();
     private ItemStack currentStack;
-    public TileScanner.State state;
 
     public TileScanner(int maxprogress) {
         super(512000, 14, 0);
@@ -161,10 +161,12 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
                 } else {
                     this.state = TileScanner.State.IDLE;
                     this.reset();
+
                 }
             } else if (ModUtils.isEmpty(this.pattern)) {
                 this.state = TileScanner.State.IDLE;
                 this.progress = 0;
+
             }
         }
 

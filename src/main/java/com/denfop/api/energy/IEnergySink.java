@@ -1,5 +1,7 @@
 package com.denfop.api.energy;
 
+import java.util.List;
+
 public interface IEnergySink extends IEnergyAcceptor {
 
     double getPerEnergy();
@@ -21,5 +23,8 @@ public interface IEnergySink extends IEnergyAcceptor {
     int getSinkTier();
 
     void receiveEnergy(double var2);
+
+    List<Integer> getEnergyTickList();
+
 
 }

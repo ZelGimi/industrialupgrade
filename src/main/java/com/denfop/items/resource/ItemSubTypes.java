@@ -2,6 +2,7 @@ package com.denfop.items.resource;
 
 import com.denfop.Constants;
 import com.denfop.api.IModelRegister;
+import com.denfop.blocks.ISubEnum;
 import com.denfop.items.block.ISubItem;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -22,9 +23,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class ItemSubTypes<T extends Enum<T> & IStringSerializable> extends Item implements ISubItem<T>, IModelRegister {
+public class ItemSubTypes<T extends Enum<T> & ISubEnum> extends Item implements ISubItem<T>, IModelRegister {
 
     protected final PropertyEnum<T> typeProperty;
+    private List<T> list;
 
     private ItemSubTypes(PropertyEnum<T> typeProperty) {
         super();
@@ -41,9 +43,8 @@ public class ItemSubTypes<T extends Enum<T> & IStringSerializable> extends Item 
 
     @SideOnly(Side.CLIENT)
     public void registerModels() {
-        final List<T> list = new ArrayList<>(this.typeProperty.getAllowedValues());
-        for (int i = 0; i < this.typeProperty.getAllowedValues().size(); i++) {
-            this.registerModel(this, i, list.get(i).getName());
+        for (T element : this.typeProperty.getAllowedValues()) {
+            this.registerModel(this,  element.getId(), element.getName());
         }
 
 
@@ -74,7 +75,7 @@ public class ItemSubTypes<T extends Enum<T> & IStringSerializable> extends Item 
     }
 
     protected ItemStack getItemStackUnchecked(T type) {
-        return new ItemStack(this, 1, new ArrayList<>(this.typeProperty.getAllowedValues()).indexOf(type));
+        return new ItemStack(this, 1, type.getId());
     }
 
 
@@ -93,7 +94,12 @@ public class ItemSubTypes<T extends Enum<T> & IStringSerializable> extends Item 
     }
 
     public final T getType(ItemStack stack) {
-        return new ArrayList<>(this.typeProperty.getAllowedValues()).get(stack.getMetadata());
+
+        for (T element : this.typeProperty.getAllowedValues()){
+            if (element.getId() == stack.getMetadata())
+                return element;
+        }
+        return null;
     }
 
 

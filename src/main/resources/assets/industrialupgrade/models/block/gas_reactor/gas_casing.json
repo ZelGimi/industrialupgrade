@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
+  "parent" : "block/cube_all",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/casing",
-    "down" : "industrialupgrade:blocks/gas_reactor/casing",
-    "up" : "industrialupgrade:blocks/gas_reactor/casing",
-    "north" : "industrialupgrade:blocks/gas_reactor/casing",
-    "east" : "industrialupgrade:blocks/gas_reactor/casing",
-    "south" : "industrialupgrade:blocks/gas_reactor/casing",
-    "west" : "industrialupgrade:blocks/gas_reactor/casing"
+    "all" : "industrialupgrade:blocks/gas_reactor/casing/casing_side"
   }
 }

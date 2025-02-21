@@ -11,7 +11,7 @@ import java.util.List;
 public class MoonSpooterHandler {
 
     private static final List<MoonSpooterHandler> recipes = new ArrayList<>();
-    private final ItemStack input,output;
+    private final ItemStack input, output;
 
     public MoonSpooterHandler(
             ItemStack input,
@@ -53,14 +53,14 @@ public class MoonSpooterHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("solar_glass_recipe")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
                     container.getOutput().items.get(0)
             );
 
 
         }
     }
-
 
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
@@ -73,7 +73,7 @@ public class MoonSpooterHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ;
+        return is.isItemEqual(input);
     }
 
 }

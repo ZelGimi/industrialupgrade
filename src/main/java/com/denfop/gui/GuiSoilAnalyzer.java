@@ -11,7 +11,6 @@ import com.denfop.api.radiationsystem.EnumLevelRadiation;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerSoilAnalyzer;
-import com.denfop.recipes.BaseRecipes;
 import com.denfop.recipes.BasicRecipeTwo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.MobEffects;
@@ -65,7 +64,7 @@ public class GuiSoilAnalyzer extends GuiIU<ContainerSoilAnalyzer> {
                         + (this.container.base.radiation.getLevel().ordinal() == 4 ?
                         ("\n" + Localization.translate(
                                 "radiation.info2") + "\n" +
-                                Localization.translate(IUPotion.radiation.getName())+ "\n" +
+                                Localization.translate(IUPotion.radiation.getName()) + "\n" +
                                 Localization.translate(MobEffects.WITHER.getName())) : "")
                         + ((this.container.base.radiation.getLevel().ordinal() == 2) ?
                         ("\n" + Localization.translate(
@@ -74,7 +73,9 @@ public class GuiSoilAnalyzer extends GuiIU<ContainerSoilAnalyzer> {
                         ("\n" + Localization.translate(
                                 "radiation.info5")) : "")
                         + ("\n" + Localization.translate(
-                                "radiation.info4") + "\n"+ BasicRecipeTwo.getBlockStack(BlockBaseMachine3.radiation_purifier).getDisplayName())
+                        "radiation.info4") + "\n" + BasicRecipeTwo
+                        .getBlockStack(BlockBaseMachine3.radiation_purifier)
+                        .getDisplayName())
 
                 ).drawForeground(par1
                         , par2);
@@ -87,7 +88,7 @@ public class GuiSoilAnalyzer extends GuiIU<ContainerSoilAnalyzer> {
                         (int) this.container.base.radiation.getRadiation()
                 ) + " " + getUnit(this.container.base.radiation.getCoef()) + "Sv").drawForeground(par1
                         , par2);
-            }else{
+            } else {
                 new AdvArea(this, 39, 91, 76, 103).withTooltip(Localization.translate("radiation.dose") + Math.max(
                         0.5,
                         0

@@ -1,14 +1,10 @@
 package com.denfop.invslot;
 
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergyTile;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -88,25 +84,20 @@ public class InvSlotElectricBlock extends InvSlot {
             tile.output = tile.l + tile.output_plus;
             tile.movementcharge = this.getstats().get(0);
             tile.movementchargeitem = this.getstats().get(1);
-            tile.wireless = false;
-            tile.wirelessTransferList.clear();
-            for (int i = 0; i < this.size(); i++) {
-                if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                        .get(i)
-                        .getItemDamage() == 10) {
-                    tile.wireless = true;
-                    this.wirelessmodule();
-                    break;
-                }
-            }
+            this.wirelessmodule();
         }
     }
 
     public void wirelessmodule() {
         TileElectricBlock tile = (TileElectricBlock) base;
 
+        tile.wirelessComponent.setUpdate(false);
+
+        tile.wirelessComponent.removeAll();
         for (int i = 0; i < this.size(); i++) {
-            if (this.get(i).getItem() instanceof ItemAdditionModule && this.get(i).getItemDamage() == 10) {
+            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
+                    .get(i)
+                    .getItemDamage() == 10) {
 
                 int x;
                 int y;
@@ -116,15 +107,10 @@ public class InvSlotElectricBlock extends InvSlot {
                 x = nbttagcompound.getInteger("Xcoord");
                 y = nbttagcompound.getInteger("Ycoord");
                 z = nbttagcompound.getInteger("Zcoord");
-                BlockPos pos = new BlockPos(x, y, z);
-                final IEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
-                        .getParent()
-                        .getWorld(), pos);
-                if (energy instanceof IEnergySink) {
-                    tile.wirelessTransferList.add(new WirelessTransfer(
-                            tile.getWorld().getTileEntity(pos),
-                            (IEnergySink) energy
-                    ));
+                if (nbttagcompound.getBoolean("change")) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    tile.wirelessComponent.setUpdate(true);
+                    tile.wirelessComponent.addConnect(pos);
                 }
             }
 

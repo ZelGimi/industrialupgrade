@@ -12,6 +12,7 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.*;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
@@ -22,7 +23,6 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,7 +39,7 @@ import java.util.Set;
 public abstract class TileDoubleElectricMachine extends TileEntityInventory implements
         IAudioFixer, IUpgradableBlock, IUpdateTick, IUpdatableTileEvent {
 
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final InvSlotDischarge dischargeSlot;
     public final InvSlotRecipes inputSlotA;
     public final InvSlotOutput outputSlot;
@@ -83,7 +83,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
         this.outputSlot = new InvSlotOutput(this, outputSlots);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
-        this.energy = this.addComponent(AdvEnergy
+        this.energy = this.addComponent(Energy
                 .asBasicSink(this, (double) energyPerTick * length, aDefaultTier)
                 .addManagedSlot(this.dischargeSlot));
         this.inputSlotA = new InvSlotRecipes(this, type.recipe_name, this);
@@ -161,17 +161,16 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (stack.getItemDamage() == 4 && type == EnumDoubleElectricMachine.ALLOY_SMELTER) {
             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("press.lshift"));
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProgress.getMaxValue());
 
             }
         } else if (stack.getItemDamage() == 0 && EnumDoubleElectricMachine.SUNNARIUM_PANEL == type) {
@@ -180,11 +179,11 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("iu.solarium_energy_sink.info"));
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
                 tooltip.add(Localization.translate("iu.machines_work_energy") + 5 + Localization.translate("iu" +
                         ".machines_work_energy_type_se"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProgress.getMaxValue());
 
             }
         } else {
@@ -192,19 +191,20 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
                 tooltip.add(Localization.translate("press.lshift"));
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
             }
         }
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
+        super.addInformation(stack,tooltip);
     }
 
     public EnumTypeAudio getType() {
@@ -298,8 +298,8 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

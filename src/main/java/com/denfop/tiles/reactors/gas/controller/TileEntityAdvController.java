@@ -5,9 +5,8 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.register.InitMultiBlockSystem;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntityAdvController   extends TileEntityMainController {
+public class TileEntityAdvController extends TileEntityMainController {
 
     public TileEntityAdvController() {
         super(InitMultiBlockSystem.advGasReactorMultiBlock, EnumGasReactors.A);

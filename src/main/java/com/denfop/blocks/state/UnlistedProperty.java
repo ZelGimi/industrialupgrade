@@ -1,10 +1,9 @@
-
 package com.denfop.blocks.state;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
-public class UnlistedProperty<T>  implements IUnlistedProperty<T> {
+public class UnlistedProperty<T> implements IUnlistedProperty<T> {
+
     private final String name;
     private final Class<T> cls;
 
@@ -32,4 +31,5 @@ public class UnlistedProperty<T>  implements IUnlistedProperty<T> {
     public String toString() {
         return this.getClass().getSimpleName() + "{name=" + this.name + ", cls=" + this.cls.getName() + "}";
     }
+
 }

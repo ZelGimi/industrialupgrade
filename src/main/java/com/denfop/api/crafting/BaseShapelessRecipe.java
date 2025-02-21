@@ -19,10 +19,11 @@ import java.util.List;
 
 public class BaseShapelessRecipe implements IRecipe {
 
+    final NonNullList<Ingredient> listIngridient;
     private final ItemStack output;
     private final List<IInputItemStack> recipeInputList;
     private ResourceLocation name;
-    final NonNullList<Ingredient> listIngridient;
+
     public BaseShapelessRecipe(ItemStack output, List<IInputItemStack> recipeInputList) {
         this.output = output;
         this.recipeInputList = recipeInputList;
@@ -47,11 +48,16 @@ public class BaseShapelessRecipe implements IRecipe {
 
     @Override
     public boolean matches(final InventoryCrafting inv, final World worldIn) {
-        return getCraftingResult(inv) != ItemStack.EMPTY;
+        return matches(inv) != ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack getCraftingResult(final InventoryCrafting inv) {
+        return this.output.copy();
+    }
+
+
+    public ItemStack matches(final InventoryCrafting inv) {
         List<IInputItemStack> recipeInputList1 = new ArrayList<>(recipeInputList);
         for (int i = 0; i < 9; i++) {
             ItemStack stack = inv.getStackInSlot(i);
@@ -64,7 +70,7 @@ public class BaseShapelessRecipe implements IRecipe {
                 }
             }
         }
-        if (recipeInputList1.size() != 0) {
+        if (!recipeInputList1.isEmpty()) {
             return ItemStack.EMPTY;
         } else {
             int col = 0;

@@ -28,9 +28,19 @@ public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem
         super(name, maxDamage);
         this.level = level;
         this.heat_to_damage = heat_to_damage;
-        this.heat_damage=heat_damage;
+        this.heat_damage = heat_damage;
         setMaxStackSize(1);
     }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name) {
+
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "reactors" + "/" + name;
+        return new ModelResourceLocation(loc, null);
+    }
+
     @Override
     public void addInformation(
             @Nonnull final ItemStack stack,
@@ -42,8 +52,8 @@ public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem
         tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack)) + "/" + this.getMaxCustomDamage(stack));
         tooltip.add(Localization.translate("reactor.vent1", 1, this.heat_to_damage));
-        tooltip.add(Localization.translate("reactor.vent2", (int) Math.ceil((1.0-this.heat_damage)*100),'%'));
-        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.vent2", (int) Math.ceil((1.0 - this.heat_damage) * 100)));
+        tooltip.add(Localization.translate("reactor.component_level") + this.level);
         tooltip.add(Localization.translate("reactor.component_level1"));
     }
 
@@ -52,21 +62,16 @@ public class ItemReactorHeatExchanger extends ItemDamage implements IReactorItem
         return this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack) == 0;
     }
+
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
     }
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
 
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "reactors" + "/" + name;
-        return new ModelResourceLocation(loc, null);
-    }
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
+
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.HEAT_EXCHANGER;

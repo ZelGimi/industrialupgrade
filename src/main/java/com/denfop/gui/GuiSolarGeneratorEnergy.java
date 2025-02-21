@@ -3,13 +3,10 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.Area;
-import com.denfop.api.gui.Component;
-import com.denfop.api.gui.GuiComponent;
-import com.denfop.componets.ComponentRenderInventory;
-import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerSolarGeneratorEnergy;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,23 +29,8 @@ public class GuiSolarGeneratorEnergy extends GuiIU<ContainerSolarGeneratorEnergy
     public GuiSolarGeneratorEnergy(ContainerSolarGeneratorEnergy container1) {
         super(container1, container1.base.getStyle());
         componentList.clear();
-        invSlotList.add(container1.base.outputSlot);
-        inventory = new GuiComponent(this, 7, 113, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
-        );
-        this.slots = new GuiComponent(this, 0, 0, getComponent(),
-                new Component<>(new ComponentRenderInventory(
-                        EnumTypeComponentSlot.SLOTS_UPGRADE,
-                        new ArrayList<>(),
-                        invSlotList
-                ) {
 
-                })
-        );
 
-        componentList.add(inventory);
-        componentList.add(slots);
-        this.ySize = 196;
         this.container = container1;
         this.name = Localization.translate(container1.base.getName());
 
@@ -60,11 +42,28 @@ public class GuiSolarGeneratorEnergy extends GuiIU<ContainerSolarGeneratorEnergy
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         String name = Localization.translate(this.container.base.getName());
-        if (!this.isBlack) {
-            this.drawXCenteredString((this.xSize / 2) + 15, 6, name, 4210752, false);
-        } else {
-            this.drawXCenteredString(this.xSize / 2 + 10, 6, name, ModUtils.convertRGBcolorToInt(216, 216, 216), false);
+        int textWidth = this.fontRenderer.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
         }
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.xSize / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6)/scale);
+
+
+        this.fontRenderer.drawString(name, textX, textY, 4210752);
+
+
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -72,11 +71,11 @@ public class GuiSolarGeneratorEnergy extends GuiIU<ContainerSolarGeneratorEnergy
         super.drawForegroundLayer(mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
         String tooltip = "SE: " + ModUtils.getString(this.container.base.sunenergy.getEnergy());
-        new Area(this, 123, 38, 146 - 123, 46 - 38).withTooltip(tooltip).drawForeground(mouseX, mouseY);
+        new Area(this, 66, 33, 53, 10).withTooltip(tooltip).drawForeground(mouseX, mouseY);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         fontRenderer.drawString(Localization.translate("gui.SuperSolarPanel.generating") +
                         ": " + (int) this.container.base.generation + Localization.translate("iu.machines_work_energy_type_se"),
-                88, 60, ModUtils.convertRGBcolorToInt(0, 0, 0)
+                29, 61, ModUtils.convertRGBcolorToInt(13, 229, 34)
         );
     }
 
@@ -108,13 +107,33 @@ public class GuiSolarGeneratorEnergy extends GuiIU<ContainerSolarGeneratorEnergy
         this.mc.getTextureManager().bindTexture(background);
 
         if (this.container.base.sunenergy.getEnergy() > 0.0D) {
-            int i1 = (int) (24.0D * this.container.base.sunenergy.getFillRatio());
-            drawTexturedModalRect(j + 123, k + 34, 176, 14, i1 + 1, 16);
+            int i1 = (int) (52.0D * this.container.base.sunenergy.getFillRatio());
+            drawTexturedModalRect(j + 66, k + 33, 179, 3, i1 + 1, 10);
         }
 
-        this.fontRenderer.drawString(this.name, j + (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2 + 5, k + 6,
-                4210752
-        );
+        String name = Localization.translate(this.container.base.getName());
+        int textWidth = this.fontRenderer.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.xSize / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6)/scale);
+
+
+        this.fontRenderer.drawString(name, textX, textY, ModUtils.convertRGBcolorToInt(42,42,42));
+
+
+        GlStateManager.popMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager()
                 .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));

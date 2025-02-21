@@ -4,6 +4,15 @@
     "type" : {
       "block_anvil" : {
         "model" : "industrialupgrade:basemachine/block_anvil"
+      },
+      "block_anvil_1" : {
+        "model" : "industrialupgrade:basemachine/block_anvil_1"
+      },
+      "block_anvil_2" : {
+        "model" : "industrialupgrade:basemachine/block_anvil_2"
+      },
+      "block_anvil_3" : {
+        "model" : "industrialupgrade:basemachine/block_anvil_3"
       }
     },
 	 "facing" : {

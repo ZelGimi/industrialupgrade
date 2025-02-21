@@ -2,14 +2,15 @@ package com.denfop.tiles.base;
 
 public enum EnumDoubleElectricMachine {
     ALLOY_SMELTER("alloysmelter", 38, 17, 74, 17, 56, 53, true, 116, 35, true),
-    SUNNARIUM_PANEL("sunnuriumpanel", 14, 34, 36, 34, 0, 0, false, 106, 34),
-    ENRICH("enrichment", 14, 34, 36, 34, 0, 0, false, 106, 34),
-    SYNTHESIS("synthesis", 14, 34, 64, 34, 0, 0, false, 110, 34),
-    PAINTING("painter", 14, 34, 36, 34, 0, 0, false, 106, 34),
-    UPGRADE("upgradeblock", 14, 34, 64, 34, 0, 0, false, 110, 34),
+    SUNNARIUM_PANEL("sunnuriumpanel", 29, 36, 51, 36, 0, 0, false, 106, 36),
+    ENRICH("enrichment", 16, 36, 38, 36, 0, 0, false, 102, 36),
+    SYNTHESIS("synthesis", 23, 34, 59, 34, 0, 0, false, 111, 34),
+    PAINTING("painter", 29, 36, 51, 36, 0, 0, false, 106, 36),
+    UPGRADE("upgradeblock", 19, 38, 64, 38, 0, 0, false, 113, 38),
     WELDING("welding", 38, 17, 74, 17, 56, 53, true, 116, 35, true),
 
     CANNING("cannerbottle", 67, 36, 37, 36, 8, 62, true, 116, 36),
+    UPGRADE_ROVER("roverupgradeblock", 19, 38, 64, 38, 0, 0, false, 113, 38),
 
     ;
 

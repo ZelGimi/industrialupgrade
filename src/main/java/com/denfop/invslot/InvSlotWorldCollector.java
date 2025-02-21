@@ -30,6 +30,7 @@ public class InvSlotWorldCollector extends InvSlot {
             if (!get(i).isEmpty()) {
                 int col = 5;
                 col -= Math.ceil(this.tile.matter_energy / 200);
+                col = Math.min(col, get(i).getCount());
                 this.tile.matter_energy += 200 * col;
                 this.consume(i, col);
 

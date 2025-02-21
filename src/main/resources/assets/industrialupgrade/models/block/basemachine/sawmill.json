@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/sawmill_front",
+    "down" : "industrialupgrade:blocks/sawmill_sides",
+    "up" : "industrialupgrade:blocks/sawmill_top",
+    "north" : "industrialupgrade:blocks/sawmill_front",
+    "east" : "industrialupgrade:blocks/sawmill_sides",
+    "south" : "industrialupgrade:blocks/sawmill_sides",
+    "west" : "industrialupgrade:blocks/sawmill_sides"
+  }
+}

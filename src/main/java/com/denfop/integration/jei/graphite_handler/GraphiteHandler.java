@@ -11,7 +11,7 @@ import java.util.List;
 public class GraphiteHandler {
 
     private static final List<GraphiteHandler> recipes = new ArrayList<>();
-    private final ItemStack input,input1,output;
+    private final ItemStack input, input1, output;
 
     public GraphiteHandler(
             ItemStack input,
@@ -31,9 +31,9 @@ public class GraphiteHandler {
     }
 
     public static GraphiteHandler addRecipe(
-            ItemStack input, ItemStack input1,ItemStack output
+            ItemStack input, ItemStack input1, ItemStack output
     ) {
-        GraphiteHandler recipe = new GraphiteHandler(input,input1, output);
+        GraphiteHandler recipe = new GraphiteHandler(input, input1, output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -55,7 +55,9 @@ public class GraphiteHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("graphite_recipe")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),container.input.getInputs().get(1).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0)
             );
 
@@ -64,10 +66,10 @@ public class GraphiteHandler {
     }
 
 
-
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
     }
+
     public ItemStack getInput1() { // Получатель входного предмета рецепта.
         return input1;
     }

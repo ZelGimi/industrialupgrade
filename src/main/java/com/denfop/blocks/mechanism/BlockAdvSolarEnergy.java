@@ -49,7 +49,14 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -94,7 +101,6 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasActive() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -106,7 +112,7 @@ public enum BlockAdvSolarEnergy implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public float getHardness() {
-        return 3.0f;
+        return 1.0f;
     }
 
     @Override

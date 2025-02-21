@@ -108,7 +108,14 @@ public enum BlockGasReactor implements IMultiTileBlock {
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
     private TileEntityBlock dummyTe;
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
 
     BlockGasReactor(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
         this.teClass = teClass;
@@ -118,10 +125,12 @@ public enum BlockGasReactor implements IMultiTileBlock {
 
 
     }
+
     @Override
     public CreativeTabs getCreativeTab() {
         return IUCore.ReactorsBlockTab;
     }
+
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {

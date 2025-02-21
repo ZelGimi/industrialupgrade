@@ -1,5 +1,6 @@
 package com.denfop.tiles.reactors.graphite.exchanger;
 
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.reactors.IGraphiteReactor;
 import com.denfop.container.ContainerExchanger;
 import com.denfop.gui.GuiExchanger;
@@ -9,6 +10,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.IExchanger;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
+import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,15 +20,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityExchanger extends TileEntityMultiBlockElement implements IExchanger, IUpdatableTileEvent {
 
-    private final int level;
+    public final int level;
     private final InvSlot slot;
-    private int x = 0;
-
     public double percent = 1;
+    private int x = 0;
+    private IExchangerItem item;
 
     public TileEntityExchanger(int level) {
         this.level = level;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.EXCHANGE;
+            }
+
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((TileEntityExchanger) this.base).getLevel();
@@ -39,9 +46,25 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
                     ((TileEntityExchanger) this.base).percent = 1;
                 } else {
                     ((TileEntityExchanger) this.base).percent = 1 - ((IExchangerItem) content.getItem()).getPercent();
+                    item = (IExchangerItem) content.getItem();
                 }
             }
         };
+        slot.setStackSizeLimit(1);
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getMain() != null) {
+            TileEntityMainController controller = (TileEntityMainController) this.getMain();
+            if (controller.work && !this.slot.isEmpty() && world.provider.getWorldTime() % 20 == 0) {
+                if (item == null) {
+                    this.item = (IExchangerItem) this.slot.get().getItem();
+                }
+                this.item.damageItem(this.slot.get(), -1);
+            }
+        }
     }
 
     @Override
@@ -70,10 +93,12 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
         this.x = customPacketBuffer.readInt();
         this.percent = customPacketBuffer.readDouble();
     }
+
     @Override
     public boolean hasOwnInventory() {
         return true;
     }
+
     @Override
     public void readFromNBT(final NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
@@ -89,7 +114,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
     @Override
     public int getLevel() {
-        return level;
+        return -1;
     }
 
 
@@ -108,7 +133,7 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
     @Override
     public ContainerExchanger getGuiContainer(final EntityPlayer var1) {
-        return new ContainerExchanger(this,var1);
+        return new ContainerExchanger(this, var1);
     }
 
     @Override
@@ -119,14 +144,15 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
 
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
-        if(this.getMain() == null)
+        if (this.getMain() == null) {
             return;
+        }
         IGraphiteReactor reactor = (IGraphiteReactor) this.getMain();
-        if(var2 == 0){
+        if (var2 == 0) {
             this.x = Math.min(this.x + 1, reactor.getWidth() - 1);
             reactor.updateDataReactor();
-        }else{
-            this.x = Math.max(0, this.x-1);
+        } else {
+            this.x = Math.max(0, this.x - 1);
             reactor.updateDataReactor();
         }
     }

@@ -2,21 +2,12 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentButton;
-import com.denfop.componets.ComponentSoundButton;
-import com.denfop.container.ContainerBattery;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.ContainerMatterFactory;
-import com.denfop.container.ContainerMoonSpotter;
 import com.denfop.container.ContainerRodFactory;
-import com.denfop.container.ContainerStamp;
 import com.denfop.network.IUpdatableTileEvent;
-import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,26 +24,28 @@ public class GuiRodFactory extends GuiIU<ContainerRodFactory> {
                 new Component<>(this.container.base.componentProgress)
         ));
         this.addComponent(new GuiComponent(this, 80, 60, EnumTypeComponent.LEFT,
-                new Component<>(new ComponentButton(this.container.base, 0, "-1"){
+                new Component<>(new ComponentButton(this.container.base, 0, "-1") {
                     @Override
                     public void ClickEvent() {
-                        ((IUpdatableTileEvent)this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player,0);
+                        ((IUpdatableTileEvent) this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player, 0);
 
                         super.ClickEvent();
                         this.getEntityBlock().onActivated(Minecraft.getMinecraft().player,
-                                Minecraft.getMinecraft().player.getActiveHand(), EnumFacing.SOUTH,0,0,0);
+                                Minecraft.getMinecraft().player.getActiveHand(), EnumFacing.SOUTH, 0, 0, 0
+                        );
                     }
                 })
         ));
-        this.addComponent(new GuiComponent(this, 81 +  EnumTypeComponent.RIGHT.getWeight() + 10, 60, EnumTypeComponent.RIGHT,
-                new Component<>(new ComponentButton(this.container.base, 1, "+1"){
+        this.addComponent(new GuiComponent(this, 81 + EnumTypeComponent.RIGHT.getWeight() + 10, 60, EnumTypeComponent.RIGHT,
+                new Component<>(new ComponentButton(this.container.base, 1, "+1") {
                     @Override
                     public void ClickEvent() {
-                        ((IUpdatableTileEvent)this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player,1);
+                        ((IUpdatableTileEvent) this.getEntityBlock()).updateTileServer(Minecraft.getMinecraft().player, 1);
 
                         super.ClickEvent();
-                       this.getEntityBlock().onActivated(Minecraft.getMinecraft().player,
-                                Minecraft.getMinecraft().player.getActiveHand(), EnumFacing.SOUTH,0,0,0);
+                        this.getEntityBlock().onActivated(Minecraft.getMinecraft().player,
+                                Minecraft.getMinecraft().player.getActiveHand(), EnumFacing.SOUTH, 0, 0, 0
+                        );
                     }
                 })
         ));
@@ -61,7 +54,7 @@ public class GuiRodFactory extends GuiIU<ContainerRodFactory> {
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(String.valueOf(this.container.base.type), 92,65, 4210752);
+        this.fontRenderer.drawString(String.valueOf(this.container.base.type), 92, 65, 4210752);
     }
 
     @Override

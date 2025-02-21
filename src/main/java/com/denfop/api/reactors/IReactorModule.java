@@ -17,4 +17,5 @@ public interface IReactorModule {
     double getExchanger(ItemStack stack);
 
     double getCapacitor(ItemStack stack);
+
 }

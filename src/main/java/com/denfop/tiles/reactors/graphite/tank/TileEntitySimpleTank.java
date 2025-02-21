@@ -4,9 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntitySimpleTank  extends TileEntityMainTank {
+public class TileEntitySimpleTank extends TileEntityMainTank {
 
     public TileEntitySimpleTank() {
         super(10000);

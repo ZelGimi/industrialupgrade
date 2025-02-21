@@ -16,35 +16,37 @@ public class PollutionModel extends ModelBase {
 
     private final ModelRenderer pollution;
     List<ModelCord> list = new ArrayList<>();
-    public PollutionModel(Random random, int index){
-        this.textureWidth = -2;
-        this.textureHeight = 2;
+
+    public PollutionModel(Random random, int index) {
+        this.textureWidth = 0;
+        this.textureHeight = 0;
         this.pollution = new ModelRenderer(this, 0, 0);
 
-            int maxIterations;
-            if (index == 0) {
-                maxIterations = 0;
-            } else if (index == 1) {
-                maxIterations = 64;
-            } else if (index == 2) {
-                maxIterations = 128;
-            } else {
-                maxIterations = 192;
-            }
+        int maxIterations;
+        if (index == 0) {
+            maxIterations = 0;
+        } else if (index == 1) {
+            maxIterations = 64;
+        } else if (index == 2) {
+            maxIterations = 128;
+        } else {
+            maxIterations = 192;
+        }
 
-            if (maxIterations > 0) {
-                int i = 0;
-                while (i < maxIterations) {
-                    int x = random.nextInt(16);
-                    int z = random.nextInt(16);
-                    final ModelCord modelCord = new ModelCord(x, z);
-                    if (!list.contains(modelCord)) {
-                        list.add(modelCord);
-                        i++;
-                        pollution.addBox(x, 16.001F, z, 1, 0, 1);
-                    }
+        if (maxIterations > 0) {
+            int i = 0;
+            while (i < maxIterations) {
+                int x = random.nextInt(16);
+                int z = random.nextInt(16);
+                final ModelCord modelCord = new ModelCord(x, z);
+                if (!list.contains(modelCord)) {
+                    list.add(modelCord);
+                    i++;
+                    this.pollution.setTextureSize(x, z);
+                    pollution.addBox(x, 16.1F, z, 1, 0, 1);
                 }
             }
+        }
         list.clear();
 
 
@@ -55,13 +57,14 @@ public class PollutionModel extends ModelBase {
     }
 
 }
+
 @SideOnly(Side.CLIENT)
-class ModelCord{
+class ModelCord {
 
     private final int x;
     private final int z;
 
-    public ModelCord(int x, int z){
+    public ModelCord(int x, int z) {
         this.x = x;
         this.z = z;
     }
@@ -76,8 +79,12 @@ class ModelCord{
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ModelCord modelCord = (ModelCord) o;
         return x == modelCord.x && z == modelCord.z;
     }

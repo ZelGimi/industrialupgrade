@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_reactor/imp_tank_main",
-    "down" : "industrialupgrade:blocks/water_reactor/imp_tank_side",
-    "up" : "industrialupgrade:blocks/water_reactor/imp_tank_side",
-    "north" : "industrialupgrade:blocks/water_reactor/imp_tank_main",
-    "east" : "industrialupgrade:blocks/water_reactor/imp_casing",
-    "south" : "industrialupgrade:blocks/water_reactor/imp_casing",
-    "west" : "industrialupgrade:blocks/water_reactor/imp_casing"
+    "particle" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_front-left-right-back",
+    "down" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_top-bottom",
+    "up" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_top-bottom",
+    "north" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_front-left-right-back",
+    "east" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_front-left-right-back",
+    "south" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_front-left-right-back",
+    "west" : "industrialupgrade:blocks/water_reactor/tank/imp_tank_front-left-right-back"
   }
 }

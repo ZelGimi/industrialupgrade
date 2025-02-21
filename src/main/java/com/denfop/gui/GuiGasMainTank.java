@@ -10,10 +10,11 @@ public class GuiGasMainTank extends GuiIU<ContainerGasTank> {
     public GuiGasMainTank(ContainerGasTank guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        elements.add(TankGauge.createNormal(this,80,25,guiContainer.base.tank));
+        elements.add(TankGauge.createNormal(this, 80, 25, guiContainer.base.tank));
         this.xSize = 186;
         this.ySize = 211;
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -32,7 +33,7 @@ public class GuiGasMainTank extends GuiIU<ContainerGasTank> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphitereactor1.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor5.png");
     }
 
 }

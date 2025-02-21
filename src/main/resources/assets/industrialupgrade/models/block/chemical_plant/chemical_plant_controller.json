@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/chemical_plant_controller",
+    "down" : "industrialupgrade:blocks/chemical_plant_casing1",
+    "up" : "industrialupgrade:blocks/chemical_plant_casing1",
+    "north" : "industrialupgrade:blocks/chemical_plant_controller",
+    "east" : "industrialupgrade:blocks/chemical_plant_controller",
+    "south" : "industrialupgrade:blocks/chemical_plant_controller",
+    "west" : "industrialupgrade:blocks/chemical_plant_controller"
+  }
+}

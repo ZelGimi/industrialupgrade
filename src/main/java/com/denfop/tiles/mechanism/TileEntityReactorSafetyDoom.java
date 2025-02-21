@@ -10,15 +10,11 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerSafetyDoom;
 import com.denfop.gui.GuiSafetyDoom;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -90,20 +86,25 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
 
         super.updateEntityServer();
 
-        if (getWorld().provider.getWorldTime() % 300 == 0) {
+        if (getWorld().provider.getWorldTime() % 100 == 0) {
             boolean work = false;
             this.full = false;
-            if( this.rad.getEnergy() < this.rad.getCapacity()) {
+            if (this.rad.getEnergy() < this.rad.getCapacity()) {
                 for (List<IAdvReactor> reactors : this.iAdvReactorList) {
                     for (IAdvReactor reactor : reactors) {
                         this.full = true;
                         double free = this.rad.getFreeEnergy();
-                        if(free == 0 || this.energy.getEnergy() < 1000)
+                        int amount = (reactor.getLevelReactor() + 1);
+                        if (reactor.isWork()) {
+                            amount *= (int) (reactor.getOutput() / (amount * 5D));
+                        }
+                        if (free == 0 || this.energy.getEnergy() < amount) {
                             break;
+                        }
                         final double energy1 = Math.min(reactor.getRadiation().getEnergy(), free);
                         reactor.getRadiation().useEnergy(energy1);
                         this.rad.addEnergy(energy1);
-                        this.energy.useEnergy(1000);
+                        this.energy.useEnergy(amount);
                         work = true;
                     }
 
@@ -115,12 +116,9 @@ public class TileEntityReactorSafetyDoom extends TileElectricMachine {
     }
 
 
-
-
-
     @Override
     public ContainerSafetyDoom getGuiContainer(final EntityPlayer entityPlayer) {
-        return new ContainerSafetyDoom(this,entityPlayer);
+        return new ContainerSafetyDoom(this, entityPlayer);
     }
 
 

@@ -2,6 +2,8 @@ package com.denfop.tiles.mechanism.generator.things.fluid;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.pollution.ChunkLevel;
+import com.denfop.api.pollution.PollutionManager;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -10,6 +12,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAirCollector;
 import com.denfop.gui.GuiAirCollector;
 import com.denfop.invslot.InvSlot;
@@ -19,16 +22,19 @@ import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -48,6 +54,8 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     public final InvSlotDrainTank[] containerslot;
     public FluidTank[] fluidTank;
     private int level;
+    private boolean work;
+    private ChunkPos chunkpos;
 
     public TileAirCollector() {
         super(5000, 1, 3);
@@ -70,7 +78,76 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         }
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.level = 0;
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
 
+    }
+    @Override
+    public void onBlockBreak(boolean wrench) {
+        for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {
+            for (int j = this.pos.getY() - 5; j <= this.pos.getY() + 5; j++) {
+                for (int k = this.pos.getZ() - 5; k <= this.pos.getZ() + 5; k++) {
+                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+                    if (tile instanceof TileAirCollector) {
+                        ((TileAirCollector) tile).update_collector(this.pos);
+                    }
+                }
+            }
+        }
+        super.onBlockBreak(wrench);
+    }
+
+    public void update_collector() {
+        this.work = true;
+        for (int i = this.pos.getX() - 5; i <= this.pos.getX() + 5; i++) {
+            for (int j = this.pos.getY() - 5; j <= this.pos.getY() + 5; j++) {
+                for (int k = this.pos.getZ() - 5; k <= this.pos.getZ() + 5; k++) {
+
+                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
+                        continue;
+                    }
+                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+                    if (tile instanceof TileAirCollector) {
+                        this.work = false;
+                        ((TileAirCollector) tile).work = false;
+                    }
+                }
+            }
+        }
+        new PacketUpdateFieldTile(this, "work", this.work);
+    }
+
+    public void update_collector(BlockPos pos) {
+        this.work = true;
+        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
+            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
+                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
+                    if (this.pos.getX() == i && this.pos.getY() == j && this.pos.getZ() == k) {
+                        continue;
+                    }
+                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
+                        continue;
+                    }
+                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+                    if (tile instanceof TileAirCollector) {
+                        this.work = false;
+                        ((TileAirCollector) tile).work = false;
+                    }
+                }
+            }
+        }
+        new PacketUpdateFieldTile(this, "work", this.work);
+    }
+
+    @Override
+    public void updateField(final String name, final CustomPacketBuffer is) {
+        super.updateField(name, is);
+        if (name.equals("work")) {
+            try {
+                this.work = (boolean) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -104,7 +181,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -125,7 +202,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
             ).getLocalizedName());
 
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     public List<ItemStack> getWrenchDrops(EntityPlayer player, int fortune) {
@@ -177,7 +254,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
             } else {
                 stack.shrink(1);
                 this.level++;
-                return false;
+                return true;
             }
         } else {
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
@@ -208,6 +285,8 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         super.onLoaded();
         if (!this.getWorld().isRemote) {
             this.setUpgradestat();
+            update_collector();
+            this.chunkpos = new ChunkPos(this.pos);
         }
 
     }
@@ -215,13 +294,29 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        for (FluidTank tank : fluidTank) {
-
-                for (InvSlotDrainTank slot : this.containerslot) {
-                    if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
-                        slot.processFromTank(tank, this.outputSlot);
+        if (this.world.provider.getWorldTime() % 60 == 0 && this.energy.getEnergy() > 5) {
+            ChunkLevel chunkLevel = PollutionManager.pollutionManager.getChunkLevelAir(chunkpos);
+            if (chunkLevel != null) {
+                if (chunkLevel.removePollution(5)) {
+                    if (fluidTank[2].getFluidAmount() + 10 <= fluidTank[2].getCapacity()) {
+                        fluidTank[2].fill(new FluidStack(FluidName.fluidco2.getInstance(), Math.min(
+                                10,
+                                fluidTank[2].getCapacity() - fluidTank[2].getFluidAmount()
+                        )), true);
+                        work = true;
+                        this.energy.useEnergy(5);
                     }
                 }
+                ;
+            }
+        }
+        for (FluidTank tank : fluidTank) {
+
+            for (InvSlotDrainTank slot : this.containerslot) {
+                if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
+                    slot.processFromTank(tank, this.outputSlot);
+                }
+            }
 
         }
         boolean work = false;
@@ -264,8 +359,10 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         }
         if (!work) {
             this.initiate(2);
+            this.setActive(false);
         } else {
             this.initiate(0);
+            this.setActive(true);
         }
         if (this.upgradeSlot.tickNoMark()) {
             this.setUpgradestat();
@@ -280,8 +377,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
     @Override
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.FluidExtract
         );
     }
 

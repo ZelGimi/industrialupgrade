@@ -5,6 +5,12 @@
       "blast_furnace_main" : {
         "model" : "industrialupgrade:blastfurnace/blast_furnace_main"
       },
+	  "blast_furnace_main_global" : {
+        "model" : "industrialupgrade:blastfurnace/blast_furnace_main_global"
+      },
+	  "blast_furnace_main_global_active" : {
+        "model" : "industrialupgrade:blastfurnace/blast_furnace_main_global_active"
+      },
       "blast_furnace_main_active" : {
         "model" : "industrialupgrade:blastfurnace/blast_furnace_main_active"
       },

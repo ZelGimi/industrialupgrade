@@ -38,6 +38,9 @@
       "water_per_controller" : {
         "model" : "industrialupgrade:water_reactor/water_per_controller"
       },
+      "water_per_controller_global" : {
+        "model" : "industrialupgrade:water_reactor/water_per_controller_global"
+      },
       "water_input" : {
         "model" : "industrialupgrade:water_reactor/water_input"
       },

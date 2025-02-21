@@ -1,55 +1,51 @@
 package com.denfop.tiles.quarry_earth;
 
 import com.denfop.IUItem;
-import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEarthQuarry;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.container.ContainerBase;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerEarthController;
 import com.denfop.gui.GuiEarthController;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.register.InitMultiBlockSystem;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.tiles.reactors.gas.ICell;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class TileEntityEarthQuarryController extends TileMultiBlockBase implements IEarthQuarry, IUpdatableTileEvent {
 
-    public static List<ChunkPos> chunkPos = new ArrayList<>();
-    public final AdvEnergy energy;
+    public static List<ChunkPos> chunkPos = new LinkedList<>();
+    public static Random random = new Random();
+    public final Energy energy;
     public List<IEarthChest> earthChestList = new ArrayList<>();
-
     public IAnalyzer analyzer;
     public boolean work;
-    public static Random random = new Random();
     public int indexChunk = 0;
     public Map<ChunkPos, List<DataPos>> map;
     public List<ChunkPos> chunkPosList;
-
-    private List<DataPos> dataPos = new ArrayList<>();
-    private IRigDrill quarry;
     public int max = 0;
+    public int block_Col;
+    private List<DataPos> dataPos = new LinkedList<>();
+    private IRigDrill quarry;
 
     public TileEntityEarthQuarryController() {
         super(InitMultiBlockSystem.EarthQuarryMultiBlock);
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 100000, 14));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 100000, 14));
     }
 
     @Override
@@ -62,11 +58,17 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
     public void readFromNBT(final NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         work = nbttagcompound.getBoolean("work");
+        indexChunk = nbttagcompound.getInteger("indexChunk");
+        max = nbttagcompound.getInteger("max");
+        block_Col = nbttagcompound.getInteger("block_Col");
     }
 
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
         nbttagcompound.setBoolean("work", work);
+        nbttagcompound.setInteger("indexChunk", indexChunk);
+        nbttagcompound.setInteger("max", max);
+        nbttagcompound.setInteger("block_Col", block_Col);
         return super.writeToNBT(nbttagcompound);
     }
 
@@ -86,6 +88,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
         customPacketBuffer.writeBoolean(this.work);
         customPacketBuffer.writeInt(this.max);
         customPacketBuffer.writeInt(this.indexChunk);
+        customPacketBuffer.writeInt(this.block_Col);
         return customPacketBuffer;
     }
 
@@ -95,6 +98,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
         work = customPacketBuffer.readBoolean();
         max = customPacketBuffer.readInt();
         indexChunk = customPacketBuffer.readInt();
+        block_Col = customPacketBuffer.readInt();
     }
 
     @Override
@@ -103,6 +107,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
             this.work = !this.work;
             indexChunk = 0;
             dataPos.clear();
+            this.block_Col = 0;
         }
     }
 
@@ -112,7 +117,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
         if (this.work && this.full) {
             if (this.getWorld().provider.getWorldTime() % 10 == 0) {
                 if (this.analyzer.fullAnalyzed() && !chunkPosList.isEmpty()) {
-                    List<DataPos> dataPos = this.map.get(chunkPosList.get(indexChunk));
+                    List<DataPos> dataPos = this.map.getOrDefault(chunkPosList.get(indexChunk), Collections.emptyList());
                     max = chunkPosList.size();
                     for (DataPos dataPos1 : dataPos) {
                         if (energy.getEnergy() < 50) {
@@ -120,24 +125,25 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                         }
                         this.energy.useEnergy(50);
                         if (dataPos1.state.getBlock() == Blocks.DIRT) {
-                                if (random.nextInt(200) == 199) {
-                                    world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1));
-                                    this.dataPos.add(dataPos1);
-                                }
+                            if (random.nextInt(100) >= 90) {
+                                world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(1));
+                                this.dataPos.add(dataPos1);
+                            }
                         } else if (dataPos1.state.getBlock() == Blocks.GRAVEL) {
-                                if (random.nextInt(200) == 199) {
-                                    world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2));
-                                    this.dataPos.add(dataPos1);
-                                }
+                            if (random.nextInt(100) >= 94) {
+                                world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(2));
+                                this.dataPos.add(dataPos1);
+                            }
                         } else if (dataPos1.state.getBlock() == Blocks.SAND) {
 
-                                if (random.nextInt(200) == 199) {
-                                    world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0));
-                                    this.dataPos.add(dataPos1);
-                                }
+                            if (random.nextInt(100) >= 80) {
+                                world.setBlockState(dataPos1.getPos(), IUItem.ore2.getStateFromMeta(0));
+                                this.dataPos.add(dataPos1);
+                            }
 
                         }
                     }
+                    this.block_Col = this.dataPos.size();
                     chunkPos.add(chunkPosList.get(indexChunk));
                     indexChunk++;
                     if (indexChunk == chunkPosList.size()) {
@@ -146,7 +152,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
                         this.work = false;
 
                     }
-                }else{
+                } else {
                     this.work = false;
                     this.indexChunk = this.max;
                 }
@@ -178,9 +184,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
 
     @Override
     public void updateAfterAssembly() {
-        if (this.getWorld().isRemote) {
-            return;
-        }
+
         List<BlockPos> pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
@@ -210,7 +214,7 @@ public class TileEntityEarthQuarryController extends TileMultiBlockBase implemen
 
     }
 
-    public AdvEnergy getEnergy() {
+    public Energy getEnergy() {
         return energy;
     }
 

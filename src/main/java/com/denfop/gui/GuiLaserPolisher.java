@@ -4,9 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerBattery;
 import com.denfop.container.ContainerLaserPolisher;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiLaserPolisher extends GuiIU<ContainerLaserPolisher> {
@@ -16,7 +14,7 @@ public class GuiLaserPolisher extends GuiIU<ContainerLaserPolisher> {
         this.addComponent(new GuiComponent(this, 130, 55, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
         ));
-        this.addComponent(new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
+        this.addComponent(new GuiComponent(this, 68, 34, EnumTypeComponent.LASER_PROCESS,
                 new Component<>(this.container.base.componentProgress)
         ));
     }

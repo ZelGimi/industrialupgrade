@@ -53,6 +53,10 @@ public class GenPetrolHandler {
     public static void initRecipes() {
 
         addRecipe(30000, new FluidStack(FluidName.fluidbenz.getInstance(), 1000));
+        addRecipe(60000, new FluidStack(FluidName.fluidpetrol90.getInstance(), 1000));
+        addRecipe(120000, new FluidStack(FluidName.fluidpetrol95.getInstance(), 1000));
+        addRecipe(240000, new FluidStack(FluidName.fluidpetrol100.getInstance(), 1000));
+        addRecipe(480000, new FluidStack(FluidName.fluidpetrol105.getInstance(), 1000));
 
 
     }

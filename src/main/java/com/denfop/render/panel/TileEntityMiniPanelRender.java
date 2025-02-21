@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class TileEntityMiniPanelRender<T extends TileEntityMiniPanels> extends T
     private static final ModelBase bonusBottom = new BottomModel(10);
 
     public void render(
-            @Nonnull TileEntityMiniPanels te,
+            TileEntityMiniPanels te,
             double x,
             double y,
             double z,

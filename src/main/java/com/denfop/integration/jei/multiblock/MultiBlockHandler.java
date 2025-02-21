@@ -20,14 +20,6 @@ public class MultiBlockHandler {
         this.structure = structure;
     }
 
-    public MultiBlockStructure getStructure() {
-        return structure;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public static List<MultiBlockHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
@@ -46,11 +38,10 @@ public class MultiBlockHandler {
         return recipe;
     }
 
-
-
     public static void initRecipes() {
         for (Map.Entry<String, MultiBlockStructure> entry : MultiBlockSystem.getInstance().mapMultiBlocks.entrySet()) {
-            addRecipe(entry.getKey(),
+            addRecipe(
+                    entry.getKey(),
                     entry.getValue()
             );
 
@@ -58,6 +49,13 @@ public class MultiBlockHandler {
         }
     }
 
+    public MultiBlockStructure getStructure() {
+        return structure;
+    }
+
+    public String getName() {
+        return name;
+    }
 
 
 }

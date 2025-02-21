@@ -1,17 +1,24 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.inv.VirtualSlot;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentPrivate;
 import com.denfop.componets.Redstone;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.container.ContainerBase;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -32,14 +41,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,6 +61,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     protected final List<InvSlot> invSlots = new ArrayList<>();
     protected final List<InfoInvSlots> infoInvSlotsList = new ArrayList<>();
+    protected AirPollutionComponent pollutionAir;
+    protected SoilPollutionComponent pollutionSoil;
+    protected final List<InvSlot> inputSlots = new LinkedList<>();
+
+    protected final List<InvSlot> outputSlots = new LinkedList<>();
+
     protected final IItemHandler[] itemHandler;
     private final ComponentPrivate componentPrivate;
     protected boolean isLoaded = false;
@@ -68,6 +86,10 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
     public void onNetworkEvent(final int var1) {
 
+    }
+
+    public ComponentPrivate getComponentPrivate() {
+        return componentPrivate;
     }
 
     @SideOnly(Side.CLIENT)
@@ -172,11 +194,20 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     public void onLoaded() {
         super.onLoaded();
         infoInvSlotsList.clear();
+        inputSlots.clear();
+        outputSlots.clear();
         for (InvSlot slot : this.invSlots) {
             for (int k = 0; k < slot.size(); k++) {
                 infoInvSlotsList.add(new InfoInvSlots(slot, k));
             }
-
+            if (slot.getTypeItemSlot() != null) {
+                if (slot.getTypeItemSlot().isInput()) {
+                    this.inputSlots.add(slot);
+                }
+                if (slot.getTypeItemSlot().isOutput()) {
+                    this.outputSlots.add(slot);
+                }
+            }
         }
         this.size_inventory = 0;
 
@@ -207,7 +238,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     }
 
     public int getSizeInventory() {
-        if (size_inventory == 0 && this.invSlots.size() != 0) {
+        if (size_inventory == 0 && !this.invSlots.isEmpty()) {
             InvSlot invSlot;
             for (Iterator<InvSlot> var2 = this.invSlots.iterator(); var2.hasNext(); size_inventory += invSlot.size()) {
                 invSlot = var2.next();
@@ -221,6 +252,15 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
         return this.invSlots.isEmpty();
 
+    }
+
+
+    public List<InvSlot> getInputSlots() {
+        return inputSlots;
+    }
+
+    public List<InvSlot> getOutputSlots() {
+        return outputSlots;
     }
 
     @Nonnull
@@ -331,7 +371,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     }
 
     public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
-        return !this.isInvalid() && player.getDistanceSq(this.pos) <= 64.0D;
+        return !this.isInvalid();
     }
 
     public void openInventory(@Nonnull EntityPlayer player) {
@@ -361,7 +401,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         }
         return this.slotsFace;
     }
-
+    public boolean ignoreHooperUp(){
+        return false;
+    }
     public boolean canInsertItem(int index, @Nonnull ItemStack stack, @Nonnull EnumFacing side) {
         if (ModUtils.isEmpty(stack)) {
             return false;
@@ -424,6 +466,10 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         return this;
     }
 
+    public void removeInventorySlot(InvSlot inventorySlot) {
+
+        this.invSlots.remove(inventorySlot);
+    }
 
     public void addInventorySlot(InvSlot inventorySlot) {
         assert this.invSlots.stream().noneMatch((slot) -> slot.equals(inventorySlot));
@@ -457,16 +503,17 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
 
 
     public List<ItemStack> getSelfDrops(int fortune, boolean wrench) {
-        final List<ItemStack> list = super.getSelfDrops(fortune, wrench);
-        return list;
+        return super.getSelfDrops(fortune, wrench);
     }
 
     public List<ItemStack> getAuxDrops(int fortune) {
         List<ItemStack> ret = new ArrayList<>(super.getAuxDrops(fortune));
         for (final InvSlot slot : this.invSlots) {
-            for (final ItemStack stack : slot.gets()) {
-                if (!ModUtils.isEmpty(stack)) {
-                    ret.add(stack);
+            if (!(slot instanceof VirtualSlot)) {
+                for (final ItemStack stack : slot.gets()) {
+                    if (!ModUtils.isEmpty(stack)) {
+                        ret.add(stack);
+                    }
                 }
             }
         }
@@ -479,10 +526,27 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
     }
 
     public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
+        if (ignoreHooperUp() && facing != null && facing != EnumFacing.DOWN){
+            TileEntity tile = world.getTileEntity(pos.offset(facing));
+            if (tile instanceof TileEntityHopper){
+                return  CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new EmptyHandler(){
+                    @Override
+                    public int getSlots() {
+                        return 1;
+                    }
+
+                    @NotNull
+                    @Override
+                    public ItemStack getStackInSlot(final int slot) {
+                        return IUItem.iridium;
+                    }
+                });
+            }
+        }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (facing == null) {
                 if (this.itemHandler[this.itemHandler.length - 1] == null) {
-                    this.itemHandler[this.itemHandler.length - 1] = new InvWrapper(this);
+                    this.itemHandler[this.itemHandler.length - 1] = new SidedInvWrapper(this,EnumFacing.NORTH);
                 }
 
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.itemHandler[this.itemHandler.length - 1]);
@@ -613,6 +677,27 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
             }
         }
         return null;
+    }
+
+    @Override
+    public void readPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        try {
+            this.componentPrivate.onNetworkUpdate((CustomPacketBuffer) DecoderHandler.decode(customPacketBuffer));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public CustomPacketBuffer writePacket() {
+        CustomPacketBuffer packetBuffer = super.writePacket();
+        try {
+            EncoderHandler.encode(packetBuffer, this.componentPrivate);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packetBuffer;
     }
 
     public Map<Capability<?>, AbstractComponent> getCapabilityComponents() {

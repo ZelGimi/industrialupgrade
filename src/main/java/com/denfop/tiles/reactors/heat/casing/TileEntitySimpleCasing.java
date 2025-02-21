@@ -4,11 +4,10 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.ICasing;
 
-public class TileEntitySimpleCasing  extends TileEntityMultiBlockElement  implements ICasing {
+public class TileEntitySimpleCasing extends TileEntityMultiBlockElement implements ICasing {
 
     @Override
     public IMultiTileBlock getTeBlock() {

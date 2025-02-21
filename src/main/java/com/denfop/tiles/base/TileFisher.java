@@ -12,6 +12,8 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerFisher;
 import com.denfop.gui.GuiFisher;
 import com.denfop.invslot.InvSlotFisher;
@@ -20,7 +22,6 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -66,6 +67,8 @@ public class TileFisher extends TileElectricMachine
 
     public final int energyconsume;
     public final InvSlotFisher inputslot;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public int progress;
     protected Random _rand = null;
     protected float _next = (float) (Double.NaN);
@@ -83,6 +86,8 @@ public class TileFisher extends TileElectricMachine
         this.energyconsume = 100;
         this.checkwater = false;
         this.inputslot = new InvSlotFisher(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
     @Override
@@ -131,8 +136,7 @@ public class TileFisher extends TileElectricMachine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -140,7 +144,7 @@ public class TileFisher extends TileElectricMachine
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.energyconsume + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -319,7 +323,7 @@ public class TileFisher extends TileElectricMachine
             } else {
                 stack.shrink(1);
                 this.level++;
-                return false;
+                return true;
             }
         } else {
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
@@ -366,7 +370,7 @@ public class TileFisher extends TileElectricMachine
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemInput
         );
     }
 

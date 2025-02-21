@@ -4,10 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerBattery;
-import com.denfop.container.ContainerLaserPolisher;
 import com.denfop.container.ContainerMatterFactory;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMatterFactory extends GuiIU<ContainerMatterFactory> {

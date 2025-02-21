@@ -21,6 +21,10 @@ public class ComponentButton {
         this.text = text;
     }
 
+    public boolean active() {
+        return false;
+    }
+
     public int getEvent() {
         return event;
     }

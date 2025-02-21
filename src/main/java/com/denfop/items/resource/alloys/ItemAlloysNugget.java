@@ -51,7 +51,30 @@ public class ItemAlloysNugget extends ItemSubTypes<ItemAlloysNugget.Types> imple
         vanadoalumite(6),
         vitalium(7),
         duralumin(8),
-        ferromanganese(9);
+        ferromanganese(9),
+        aluminium_silicon(10),
+        beryllium_bronze(11),
+        zeliber(12),
+        stainless_steel(13),
+        inconel(14),
+        nitenol(15),
+        stellite(16),
+        hafnium_boride_alloy(17),
+        woods(18),
+        nimonic(19),
+        tantalum_tungsten_hafnium(20),
+        permalloy(21),
+        aluminium_lithium_alloy(22),
+        cobalt_chrome(23),
+        hafnium_carbide(24),
+        molybdenum_steel(25),
+        niobium_titanium(26),
+        osmiridium(27),
+        superalloy_haynes(28),
+        superalloy_rene(29),
+        yttrium_aluminium_garnet(30),
+        gallium_arsenic(31),
+        ;
 
         private final String name;
         private final int ID;

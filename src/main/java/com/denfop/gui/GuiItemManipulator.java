@@ -1,0 +1,102 @@
+package com.denfop.gui;
+
+import com.denfop.Constants;
+import com.denfop.Localization;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.container.ContainerItemManipulator;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
+@SideOnly(Side.CLIENT)
+public class GuiItemManipulator extends GuiIU<ContainerItemManipulator> {
+
+    public final ContainerItemManipulator container;
+
+    public GuiItemManipulator(ContainerItemManipulator container1) {
+        super(container1);
+        this.container = container1;
+        this.xSize = 220;
+        this.ySize = 220;
+        this.inventory.setX(7);
+        this.inventory.setY(138);
+        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        //      this.addElement(new CustomButton(this,103,15,68,14,container1.base,0,Localization.translate("button.write")));
+    }
+
+    private static List<String> getInformation() {
+        List<String> ret = new ArrayList<>();
+        ret.add(Localization.translate("iu.moduleinformation1"));
+        ret.add(Localization.translate("iu.moduleinformation2"));
+        ret.add(Localization.translate("iu.moduleinformation3"));
+
+
+        return ret;
+    }
+
+    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        String name = Localization.translate(this.container.base.getName());
+        this.drawXCenteredString(this.xSize / 2, 4, name, 4210752, false);
+    }
+
+    public void initGui() {
+        super.initGui();
+
+    }
+
+    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.bindTexture();
+        int xoffset = (this.width - this.xSize) / 2;
+        int yoffset = (this.height - this.ySize) / 2;
+        String name = Localization.translate(this.container.base.getName());
+        this.drawXCenteredString(this.xSize / 2, 4, name, 4210752, false);
+
+    }
+
+    protected void drawForegroundLayer(int par1, int par2) {
+        super.drawForegroundLayer(par1, par2);
+
+    }
+
+    private void handleUpgradeTooltip(int mouseX, int mouseY) {
+        if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
+            List<String> text = new ArrayList<>();
+            text.add(Localization.translate("iu.moduleinformation"));
+            List<String> compatibleUpgrades = getInformation();
+            Iterator<String> var5 = compatibleUpgrades.iterator();
+            String itemstack;
+            while (var5.hasNext()) {
+                itemstack = var5.next();
+                text.add(itemstack);
+            }
+
+            this.drawTooltip(mouseX, mouseY, text);
+        }
+    }
+
+
+    protected void actionPerformed(GuiButton guibutton) {
+
+        if (guibutton.id == 0) {
+            new PacketUpdateServerTile(this.container.base, 0);
+
+        }
+    }
+
+    public ResourceLocation getTexture() {
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+    }
+
+}

@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,8 @@ public final class TileBlockCreator {
 
 
     public static TileBlockCreator instance;
-    private final Map<ResourceLocation, InfoAboutTile<?>> dataInfo = new HashMap<>();
+    public int index = 0;
+    private List<InfoAboutTile<?>> dataInfo = new LinkedList<>();
 
     public TileBlockCreator() {
         instance = this;
@@ -28,14 +30,15 @@ public final class TileBlockCreator {
 
 
     public <E extends Enum<E> & IMultiTileBlock> BlockTileEntity create(Class<E> enumClass) {
-        InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass);
+        InfoAboutTile<E> instance = new InfoAboutTile<>(enumClass,index);
         final BlockTileEntity block = BlockTileEntity.create(
-                "industrialupgrade_" + new ArrayList<>(instance.teBlocks).get(0).getIdentifier().getResourcePath(),
-                new ArrayList<>(instance.teBlocks).get(0).getIdentifier(),
+                "industrialupgrade_" + instance.teBlocks.get(0).getIdentifier().getResourcePath(),
+                instance.teBlocks.get(0).getIdentifier(),
                 instance
         );
         instance.setBlock(block);
-        dataInfo.put(new ArrayList<>(instance.teBlocks).get(0).getIdentifier(), instance);
+        dataInfo.add(instance);
+        index++;
         return block;
     }
 
@@ -43,39 +46,44 @@ public final class TileBlockCreator {
     public void buildBlocks() {
 
 
-        for(InfoAboutTile<?> tile : dataInfo.values()){
-            for(IMultiTileBlock multiTileBlock:  tile.teBlocks)
+        for (InfoAboutTile<?> tile : dataInfo) {
+            for (IMultiTileBlock multiTileBlock : tile.teBlocks) {
                 multiTileBlock.buildDummies();
+            }
         }
+        dataInfo = new ArrayList<>(dataInfo);
     }
 
 
-    public BlockTileEntity get(ResourceLocation identifier) {
-        return dataInfo.get(identifier).getBlock();
+    public BlockTileEntity get(int index) {
+        return dataInfo.get(index).getBlock();
     }
 
 
     public static class InfoAboutTile<E extends Enum<E> & IMultiTileBlock> {
 
         private final boolean specialModels;
-        private final Set<E> teBlocks;
-        private final List<IMultiTileBlock> idMap;
+        private List<IMultiTileBlock> teBlocks;
+        private final int index;
+        private List<IMultiTileBlock> idMap;
         private final CreativeTabs tab;
         private final Material defaultMaterial;
         private final List<? extends IMultiTileBlock> listBlock;
         private BlockTileEntity block;
 
-        InfoAboutTile(Class<E> universe) {
-            this.idMap = new ArrayList<>();
-            this.teBlocks = new HashSet<>();
-
+        InfoAboutTile(Class<E> universe, int index) {
+            this.idMap = new LinkedList<>();
+            this.index = index;
+            this.teBlocks = new LinkedList<>();
             this.specialModels = IMultiBlockItem.class.isAssignableFrom(universe);
             for (final E e : EnumSet.allOf(universe)) {
                 this.register(e);
             }
-            this.defaultMaterial = new ArrayList<>(this.teBlocks).get(0).getMaterial();
-            this.tab = new ArrayList<>(this.teBlocks).get(0).getCreativeTab();
-            this.listBlock = new ArrayList<>(this.getTeBlocks());
+            this.idMap = new ArrayList<>(idMap);
+            this.teBlocks = new ArrayList<>(this.teBlocks);
+            this.defaultMaterial = teBlocks.get(0).getMaterial();
+            this.tab = teBlocks.get(0).getCreativeTab();
+            this.listBlock = teBlocks;
             listBlock.sort((o1, o2) -> {
                 if (o1.getId() < o2.getId()) {
                     return -1;
@@ -97,8 +105,7 @@ public final class TileBlockCreator {
         }
 
         public Class<? extends TileEntityBlock> getClassFromName(String name) {
-            final ArrayList<E> list = new ArrayList<>(this.teBlocks);
-            for (E e : list) {
+            for (IMultiTileBlock e : listBlock) {
                 if (e.getName().equals(name)) {
                     return e.getTeClass();
                 }
@@ -108,6 +115,7 @@ public final class TileBlockCreator {
 
         void register(E block) {
             this.teBlocks.add(block);
+            block.setIdBlock(index);
             if (block.getId() > -1) {
                 int ID = block.getId();
 
@@ -123,6 +131,10 @@ public final class TileBlockCreator {
             }
 
 
+        }
+
+        public List<IMultiTileBlock> getTeBlocks() {
+            return teBlocks;
         }
 
         public BlockTileEntity getBlock() {
@@ -142,12 +154,8 @@ public final class TileBlockCreator {
             return this.specialModels;
         }
 
-        public Set<? extends IMultiTileBlock> getTeBlocks() {
-            return Collections.unmodifiableSet(this.teBlocks);
-        }
-
         public List<IMultiTileBlock> getIdMap() {
-            return Collections.unmodifiableList(this.idMap);
+            return idMap;
         }
 
     }

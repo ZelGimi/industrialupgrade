@@ -104,16 +104,11 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         return false;
     }
 
-    public String getArmorTexture(
-            @Nonnull ItemStack stack,
-            @Nonnull Entity entity,
-            @Nonnull EntityEquipmentSlot slot,
-            @Nonnull String type
-    ) {
-
-        int suffix = this.armorType.getSlotIndex() == 2 ? 2 : 1;
-        return Constants.TEXTURES + ":textures/armor/" + this.name + "_" + suffix + ".png";
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+        int suffix1 = this.armorType == EntityEquipmentSlot.LEGS ? 2 : 1;
+        return Constants.MOD_ID + ":textures/armor/" + "hazmat1" + '_' + suffix1 + ".png";
     }
+
 
     public ArmorProperties getProperties(
             EntityLivingBase player,
@@ -210,9 +205,11 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
     public boolean addsProtection(EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack stack) {
         return true;
     }
+
     public int getLevel() {
         return 2;
     }
+
     public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player) {
         return false;
     }

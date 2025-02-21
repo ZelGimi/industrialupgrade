@@ -1,7 +1,7 @@
 package com.denfop.api.reactors;
 
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import net.minecraftforge.fluids.FluidTank;
 
 public interface IGasReactor extends IAdvReactor, IMainMultiBlock {
@@ -12,7 +12,7 @@ public interface IGasReactor extends IAdvReactor, IMainMultiBlock {
 
     FluidTank getWaterTank(int i);
 
-    AdvEnergy getEnergy();
+    Energy getEnergy();
 
     FluidTank getHydrogenTank(int i);
 

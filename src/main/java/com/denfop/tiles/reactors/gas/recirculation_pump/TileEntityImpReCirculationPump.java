@@ -4,11 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.reactors.gas.IRecirculationPump;
 
-public class TileEntityImpReCirculationPump   extends TileEntityBaseReCirculationPump   {
+public class TileEntityImpReCirculationPump extends TileEntityBaseReCirculationPump {
 
     public TileEntityImpReCirculationPump() {
         super(2);

@@ -1,6 +1,7 @@
 package com.denfop.invslot;
 
 import com.denfop.ElectricItem;
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.utils.ModUtils;
@@ -19,7 +20,10 @@ public class InvSlotDischarge extends InvSlot {
     public InvSlotDischarge(IAdvInventory<?> base, int tier) {
         this(base, TypeItemSlot.INPUT, tier);
     }
-
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.BATTERY;
+    }
 
     public InvSlotDischarge(
             IAdvInventory<?> base,

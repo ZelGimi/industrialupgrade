@@ -10,8 +10,10 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerHydrogenGenerator;
 import com.denfop.gui.GuiHydrogenGenerator;
 import com.denfop.invslot.InvSlotCharge;
@@ -43,8 +45,10 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
     public final InvSlotFluid fluidSlot;
     public final InvSlotOutput outputSlot;
     public final double coef;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final int production = Math.round(20.0F * 1);
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
@@ -55,8 +59,10 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         this.coef = 1;
         this.fluidSlot = new InvSlotFluidByList(this, 1, FluidName.fluidhyd.getInstance());
         this.outputSlot = new InvSlotOutput(this, 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(this, (double) 25000 * coef, 1));
+        this.energy = this.addComponent(Energy.asBasicSource(this, (double) 25000 * coef, 1));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidhyd.getInstance()));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.3));
     }
 
     @Override

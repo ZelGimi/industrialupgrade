@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/sheep_farm_main",
+    "down" : "industrialupgrade:blocks/sheep_farm_bottom",
+    "up" : "industrialupgrade:blocks/sheep_farm_top",
+    "north" : "industrialupgrade:blocks/sheep_farm_main",
+    "east" : "industrialupgrade:blocks/sheep_farm_side",
+    "south" : "industrialupgrade:blocks/sheep_farm_side",
+    "west" : "industrialupgrade:blocks/sheep_farm_side"
+  }
+}

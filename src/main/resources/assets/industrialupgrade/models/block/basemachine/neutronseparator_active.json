@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/neutronseparator",
+    "down" : "industrialupgrade:blocks/neutronseparator_side",
+    "up" : "industrialupgrade:blocks/neutronseparator_side",
+    "north" : "industrialupgrade:blocks/neutronseparator_active",
+    "east" : "industrialupgrade:blocks/neutronseparator_side",
+    "south" : "industrialupgrade:blocks/neutronseparator_side",
+    "west" : "industrialupgrade:blocks/neutronseparator_side"
+  }
+}

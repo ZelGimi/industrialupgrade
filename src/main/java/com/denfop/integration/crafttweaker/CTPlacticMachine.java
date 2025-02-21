@@ -21,13 +21,15 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class CTPlacticMachine {
 
     @ZenMethod
-    public static void addRecipe(IItemStack output, IIngredient container, ILiquidStack liquidStack) {
+    public static void addRecipe(ILiquidStack liquidStack, IIngredient container, IItemStack output) {
+
+
         Recipes.recipes.addAdderRecipe(
                 "plasticplate",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2FluidRecipeInput(liquidStack).getInputs(),
-                                new IC2InputItemStack(container)
+                                new FluidRecipeInput(liquidStack).getInputs(),
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )

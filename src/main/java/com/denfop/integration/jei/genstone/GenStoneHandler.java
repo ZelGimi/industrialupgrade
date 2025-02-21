@@ -3,6 +3,7 @@ package com.denfop.integration.jei.genstone;
 
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -55,9 +56,18 @@ public class GenStoneHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0)
             );
-
-
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                   new ItemStack(Blocks.GRAVEL, 8)
+            );
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
+                    container.input.getInputs().get(1).getInputs().get(0),
+                    new ItemStack(Blocks.SAND, 8)
+            );
         }
+
     }
 
 

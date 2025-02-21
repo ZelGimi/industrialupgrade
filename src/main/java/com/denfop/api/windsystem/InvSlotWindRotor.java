@@ -1,5 +1,7 @@
 package com.denfop.api.windsystem;
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.ItemWindRotor;
 import com.denfop.tiles.mechanism.wind.TileWindGenerator;
@@ -7,7 +9,7 @@ import com.denfop.utils.DamageHandler;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotWindRotor extends InvSlot {
+public class InvSlotWindRotor extends InvSlot implements ITypeSlot {
 
 
     private final TileWindGenerator windGenerator;
@@ -19,11 +21,15 @@ public class InvSlotWindRotor extends InvSlot {
 
     }
 
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.ROTOR;
+    }
 
     public int damage(int amount, double chance) {
         int damageApplied = 0;
         if (chance > 0) {
-            if (this.windGenerator.getWorld().rand.nextInt(101) <= (int) (chance * 100)) {
+            if (!(this.windGenerator.getWorld().rand.nextInt(101) <= (int) (chance * 100))) {
                 return 0;
             }
         }
@@ -45,8 +51,8 @@ public class InvSlotWindRotor extends InvSlot {
     public boolean accepts(final ItemStack stack, final int index) {
 
         return stack.getItem() instanceof ItemWindRotor && ((IWindRotor) stack.getItem()).getLevel() >= windGenerator
-                .getLevel()
-                .getMin() && ((IWindRotor) stack.getItem()).getLevel() <= windGenerator.getLevel().getMax();
+                .getLevelGenerator()
+                .getMin() && ((IWindRotor) stack.getItem()).getLevel() <= windGenerator.getLevelGenerator().getMax();
     }
 
     @Override

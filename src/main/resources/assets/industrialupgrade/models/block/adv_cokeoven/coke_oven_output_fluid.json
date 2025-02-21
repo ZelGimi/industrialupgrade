@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/adv_coke_oven_part",
+    "down" : "industrialupgrade:blocks/adv_coke_oven_part",
+    "up" : "industrialupgrade:blocks/adv_coke_oven_part",
+    "north" : "industrialupgrade:blocks/adv_coke_oven_output",
+    "east" : "industrialupgrade:blocks/adv_coke_oven_part",
+    "south" : "industrialupgrade:blocks/adv_coke_oven_part",
+    "west" : "industrialupgrade:blocks/adv_coke_oven_part"
+  }
+}

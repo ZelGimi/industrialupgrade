@@ -4,9 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntitySimpleExchanger  extends TileEntityExchanger {
+public class TileEntitySimpleExchanger extends TileEntityExchanger {
 
     public TileEntitySimpleExchanger() {
         super(0);

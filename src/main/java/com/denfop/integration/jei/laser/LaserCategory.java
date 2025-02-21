@@ -11,12 +11,10 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.ContainerMatterFactory;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.tiles.mechanism.TileEntityLaserPolisher;
-import com.denfop.tiles.mechanism.TileEntityMatterFactory;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -29,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class LaserCategory extends GuiIU implements IRecipeCategory<LaserRecipeWrapper> {
@@ -43,18 +40,18 @@ public class LaserCategory extends GuiIU implements IRecipeCategory<LaserRecipeW
     public LaserCategory(
             final IGuiHelper guiHelper
     ) {
-        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        super(((TileEntityLaserPolisher) BlockBaseMachine3.laser_polisher.getDummyTe()).getGuiContainer1(Minecraft.getMinecraft().player));
         bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
                         ".png"), 3, 3, 140,
                 77
         );
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
         this.container1 = (ContainerLaserPolisher) this.getContainer();
         this.componentList.add(slots);
-        progress_bar =new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
+        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
                 new Component<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);

@@ -11,6 +11,8 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerObsidianGenerator;
 import com.denfop.gui.GuiObsidianGenerator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,9 +30,14 @@ import java.util.Set;
 public class TileObsidianGenerator extends TileBaseObsidianGenerator implements IHasRecipe {
 
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+
     public TileObsidianGenerator() {
         super(1, 300, 1);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
     }
 
     public void init() {
@@ -76,8 +83,8 @@ public class TileObsidianGenerator extends TileBaseObsidianGenerator implements 
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.FluidConsuming, UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract,
+                UpgradableProperty.FluidInput
         );
     }
 

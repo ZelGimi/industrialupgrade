@@ -30,23 +30,17 @@ public class PacketUpdateFieldTile implements IPacket {
     }
 
     public PacketUpdateFieldTile(CustomPacketBuffer customPacketBuffer, EntityPlayerMP entityPlayer) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16384);
-        buffer.writeByte(this.getId());
-        buffer.writeBytes(customPacketBuffer);
-        IUCore.network.getServer().sendPacket(buffer, entityPlayer);
+        IUCore.network.getServer().sendPacket(customPacketBuffer, entityPlayer);
     }
 
     public static void apply(BlockPos pos, World world, byte[] is) {
-        if (world.isBlockLoaded(pos, false)) {
-            TileEntity te = world.getTileEntity(pos);
-            final CustomPacketBuffer buf = new CustomPacketBuffer();
-            buf.writeBytes(is);
-            if (te != null) {
-                ((TileEntityBlock) te).updateField(buf.readString(), buf);
-            } else {
-                new PacketFixedClient(world,pos);
-            }
-
+        TileEntity te = world.getTileEntity(pos);
+        final CustomPacketBuffer buf = new CustomPacketBuffer();
+        buf.writeBytes(is);
+        if (te != null) {
+            ((TileEntityBlock) te).updateField(buf.readString().trim(), buf);
+        } else {
+            new PacketFixedClient(world, pos);
         }
     }
 

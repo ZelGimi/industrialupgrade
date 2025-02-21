@@ -8,4 +8,5 @@ public interface IInput extends IMultiElement {
     void addFluids(Fluids fluids);
 
     void clearList();
+
 }

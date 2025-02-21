@@ -49,7 +49,14 @@ public enum BlockQuarryVein implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -133,7 +140,11 @@ public enum BlockQuarryVein implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public boolean hasUniqueRender(final ItemStack itemStack) {
-        return true;
+        return false;
+    }
+
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        return new String[]{"active_2", "active_3", "active_4"};
     }
 
     @Override

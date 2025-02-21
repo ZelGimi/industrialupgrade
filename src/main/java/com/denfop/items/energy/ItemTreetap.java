@@ -4,8 +4,12 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockRubWood;
+import com.denfop.blocks.BlockSwampRubWood;
+import com.denfop.blocks.BlockTropicalRubWood;
+import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.register.Register;
 import com.denfop.utils.DamageHandler;
 import net.minecraft.block.Block;
@@ -56,6 +60,26 @@ public class ItemTreetap extends Item implements IModelRegister {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
+
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu."));
+    }
+
+    @Override
+    public void registerModels() {
+        this.registerModels(this.name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModels(String name) {
+        this.registerModel(0, name);
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void registerModel(int meta, String name) {
+        registerModel(this, meta, name);
+    }
     public static boolean attemptExtract(
             EntityPlayer player,
             World world,
@@ -65,6 +89,10 @@ public class ItemTreetap extends Item implements IModelRegister {
             List<ItemStack> stacks
     ) {
         assert state.getBlock() == IUItem.rubWood;
+        boolean max = false;
+        final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+        if (stack.getItem() instanceof ItemGraviTool)
+            max =  UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
 
         BlockRubWood.RubberWoodState rwState = state.getValue(BlockRubWood.stateProperty);
         if (!rwState.isPlain() && rwState.facing == side) {
@@ -74,7 +102,7 @@ public class ItemTreetap extends Item implements IModelRegister {
                     if (stacks != null) {
 
                     } else {
-                        ejectResin(world, pos, side, world.rand.nextInt(3) + 1);
+                        ejectResin(world, pos, side,!max ? world.rand.nextInt(3) + 1 : 4);
                     }
 
 
@@ -112,6 +140,127 @@ public class ItemTreetap extends Item implements IModelRegister {
         }
     }
 
+    public static boolean attemptSwampExtract(
+            EntityPlayer player,
+            World world,
+            BlockPos pos,
+            EnumFacing side,
+            IBlockState state,
+            List<ItemStack> stacks
+    ) {
+        assert state.getBlock() == IUItem.swampRubWood;
+
+        BlockSwampRubWood.RubberWoodState rwState = state.getValue(BlockSwampRubWood.stateProperty);
+        boolean max = false;
+        final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+        if (stack.getItem() instanceof ItemGraviTool)
+            max =  UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+
+        if (!rwState.isPlain() && rwState.facing == side) {
+            if (rwState.wet) {
+                if (!world.isRemote) {
+                    world.setBlockState(pos, state.withProperty(BlockSwampRubWood.stateProperty, rwState.getDry()));
+                    if (stacks != null) {
+
+                    } else {
+                        ejectResin(world, pos, side,!max ? world.rand.nextInt(3) + 1 : 4);
+                    }
+
+
+                }
+
+                if (world.isRemote && player != null) {
+                    player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
+
+                }
+
+                return true;
+            } else {
+                if (!world.isRemote && world.rand.nextInt(5) == 0) {
+                    world.setBlockState(
+                            pos,
+                            state.withProperty(BlockSwampRubWood.stateProperty, BlockSwampRubWood.RubberWoodState.plain_y)
+                    );
+                }
+
+                if (world.rand.nextInt(5) == 0) {
+                    if (!world.isRemote) {
+                        ejectResin(world, pos, side, 1);
+                        if (stacks != null) {
+                        } else {
+                            ejectResin(world, pos, side, 1);
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean attemptTropicalExtract(
+            EntityPlayer player,
+            World world,
+            BlockPos pos,
+            EnumFacing side,
+            IBlockState state,
+            List<ItemStack> stacks
+    ) {
+        assert state.getBlock() == IUItem.tropicalRubWood;
+        boolean max = false;
+        final ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+        if (stack.getItem() instanceof ItemGraviTool)
+            max =  UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
+
+        BlockTropicalRubWood.RubberWoodState rwState = state.getValue(BlockTropicalRubWood.stateProperty);
+        if (!rwState.isPlain() && rwState.facing == side) {
+            if (rwState.wet) {
+                if (!world.isRemote) {
+                    world.setBlockState(pos, state.withProperty(BlockTropicalRubWood.stateProperty, rwState.getDry()));
+                    if (stacks != null) {
+
+                    } else {
+                        ejectResin(world, pos, side,!max ? world.rand.nextInt(3) + 1 : 4);
+                    }
+
+
+                }
+
+                if (world.isRemote && player != null) {
+                    player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
+
+                }
+
+                return true;
+            } else {
+                if (!world.isRemote && world.rand.nextInt(5) == 0) {
+                    world.setBlockState(
+                            pos,
+                            state.withProperty(BlockTropicalRubWood.stateProperty, BlockTropicalRubWood.RubberWoodState.plain_y)
+                    );
+                }
+
+                if (world.rand.nextInt(5) == 0) {
+                    if (!world.isRemote) {
+                        ejectResin(world, pos, side, 1);
+                        if (stacks != null) {
+                        } else {
+                            ejectResin(world, pos, side, 1);
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
     private static void ejectResin(World world, BlockPos pos, EnumFacing side, int quantity) {
         double ejectX = (double) pos.getX() + 0.5 + (double) side.getFrontOffsetX() * 0.3;
         double ejectY = (double) pos.getY() + 0.5 + (double) side.getFrontOffsetY() * 0.3;
@@ -122,33 +271,13 @@ public class ItemTreetap extends Item implements IModelRegister {
                 ejectX,
                 ejectY,
                 ejectZ,
-                IUItem.latex.copy()
+                new ItemStack(IUItem.rawLatex)
         );
         entityitem.setDefaultPickupDelay();
         entityitem.getItem().setCount(quantity);
         world.spawnEntity(entityitem);
 
     }
-
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu."));
-    }
-
-    @Override
-    public void registerModels() {
-        this.registerModels(this.name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void registerModels(String name) {
-        this.registerModel(0, name);
-    }
-
-    @SideOnly(Side.CLIENT)
-    protected void registerModel(int meta, String name) {
-        registerModel(this, meta, name);
-    }
-
     public EnumActionResult onItemUse(
             EntityPlayer player,
             World world,
@@ -163,6 +292,26 @@ public class ItemTreetap extends Item implements IModelRegister {
         Block block = state.getBlock();
         if (block == IUItem.rubWood) {
             if (attemptExtract(player, world, pos, side, state, null)) {
+                if (!world.isRemote) {
+                    DamageHandler.damage(player.getHeldItem(hand), 1, player);
+                }
+
+                return EnumActionResult.SUCCESS;
+            } else {
+                return EnumActionResult.FAIL;
+            }
+        } else if (block == IUItem.swampRubWood) {
+            if (attemptSwampExtract(player, world, pos, side, state, null)) {
+                if (!world.isRemote) {
+                    DamageHandler.damage(player.getHeldItem(hand), 1, player);
+                }
+
+                return EnumActionResult.SUCCESS;
+            } else {
+                return EnumActionResult.FAIL;
+            }
+        } else if (block == IUItem.tropicalRubWood) {
+            if (attemptTropicalExtract(player, world, pos, side, state, null)) {
                 if (!world.isRemote) {
                     DamageHandler.damage(player.getHeldItem(hand), 1, player);
                 }

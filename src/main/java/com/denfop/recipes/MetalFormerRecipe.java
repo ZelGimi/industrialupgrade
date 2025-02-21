@@ -16,11 +16,88 @@ public class MetalFormerRecipe {
     public static final String[] recipe1 = {"plate", "casing", "stick", "stick", "plate"};
 
     public static final String[] recipe2 = {"Osmium", "Tantalum", "Cadmium"};
+
     public static void init() {
         addmolot("ingotLithium", "plateLithium", 1);
         addmolot("gemBor", "plateBor", 1);
         addmolot("gemBeryllium", "plateBeryllium", 1);
+        addmolot(new ItemStack(IUItem.synthetic_rubber), 1, new ItemStack(IUItem.synthetic_plate, 1));
+        addmolot(new ItemStack(IUItem.graphene), 1, new ItemStack(IUItem.graphene_plate, 1));
+        addCutting(new ItemStack(IUItem.graphene_plate), new ItemStack(IUItem.graphene_wire, 4), 4);
+
+        addmolot(new ItemStack(IUItem.crafting_elements, 1, 504), 1, new ItemStack(IUItem.crafting_elements, 1, 501));
+        addCutting(new ItemStack(IUItem.crafting_elements, 2, 495), new ItemStack(IUItem.crafting_elements, 1, 494), 1);
         for (String s : recipe2) {
+            addcutting("ingot" + s, "stick" + s, 2);
+        }
+        for (String s : RegisterOreDictionary.list_baseore1) {
+            addcutting("ingot" + s, "stick" + s, 2);
+        }
+        addmolot(new ItemStack(IUItem.wolframite),1,new ItemStack(IUItem.crafting_elements,1,655));
+        addmolot(new ItemStack(IUItem.crafting_elements,1,655),1,new ItemStack(IUItem.crafting_elements,2,505));
+        for (String s : recipe2) {
+            for (int j = 0; j < recipe1.length; j++) {
+                if (j == 0) {
+                    addmolot(recipe[j] + s, recipe1[j] + s, 1);
+                }
+                if (j == 1) {
+                    addmolot(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            2
+                    );
+                }
+                if (j == 2) {
+                    addExtruding(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            2
+                    );
+                }
+                if (j == 3) {
+                    addExtruding(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            3
+                    );
+                }
+                if (j == 4) {
+                    addmolot(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            9
+                    );
+                }
+            }
+        }
+        for (String s : RegisterOreDictionary.spaceElementList) {
+            for (int j = 0; j < recipe1.length; j++) {
+                if (j == 0) {
+                    addmolot(recipe[j] + s, recipe1[j] + s, 1);
+                }
+                if (j == 1) {
+                    addmolot(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            2
+                    );
+                }
+                if (j == 2) {
+
+                }
+                if (j == 3) {
+
+                }
+                if (j == 4) {
+                    addmolot(
+                            recipe[j] + s,
+                            recipe1[j] + s,
+                            9
+                    );
+                }
+            }
+        }
+        for (String s : RegisterOreDictionary.list_baseore1) {
             for (int j = 0; j < recipe1.length; j++) {
                 if (j == 0) {
                     addmolot(recipe[j] + s, recipe1[j] + s, 1);
@@ -153,8 +230,6 @@ public class MetalFormerRecipe {
         }
 
 
-
-
         addCutting("plateMuntsa", 4, new ItemStack(IUItem.expcable)
         );
 
@@ -183,21 +258,27 @@ public class MetalFormerRecipe {
         addCutting("plateIron", IUItem.ironCableItem, 4);
         addCutting("plateGold", IUItem.goldCableItem, 4);
         addCutting("plateCopper", IUItem.copperCableItem, 3);
-
-        addExtruding(new ItemStack(IUItem.sunnarium,4,2),new ItemStack(IUItem.crafting_elements,1,422));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,0),new ItemStack(IUItem.crafting_elements,1,312));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,1),new ItemStack(IUItem.crafting_elements,1,400));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,2),new ItemStack(IUItem.crafting_elements,1,347));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,3),new ItemStack(IUItem.crafting_elements,1,408));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,4),new ItemStack(IUItem.crafting_elements,1,383));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,5),new ItemStack(IUItem.crafting_elements,1,390));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,6),new ItemStack(IUItem.crafting_elements,1,331));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,7),new ItemStack(IUItem.crafting_elements,1,431));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,8),new ItemStack(IUItem.crafting_elements,1,360));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,9),new ItemStack(IUItem.crafting_elements,1,308));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,10),new ItemStack(IUItem.crafting_elements,1,303));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,11),new ItemStack(IUItem.crafting_elements,1,317));
-        addExtruding(new ItemStack(IUItem.sunnariumpanel,4,12),new ItemStack(IUItem.crafting_elements,1,351));
+        for (int i = 0; i < 19; i++) {
+            addCutting(
+                    new ItemStack(IUItem.stik, 2, i),
+                    "ingot" + RegisterOreDictionary.list_string
+                            .get(i)
+            );
+        }
+        addExtruding(new ItemStack(IUItem.sunnarium, 4, 2), new ItemStack(IUItem.crafting_elements, 1, 422));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 0), new ItemStack(IUItem.crafting_elements, 1, 312));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 1), new ItemStack(IUItem.crafting_elements, 1, 400));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 2), new ItemStack(IUItem.crafting_elements, 1, 347));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 3), new ItemStack(IUItem.crafting_elements, 1, 408));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 4), new ItemStack(IUItem.crafting_elements, 1, 383));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 5), new ItemStack(IUItem.crafting_elements, 1, 390));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 6), new ItemStack(IUItem.crafting_elements, 1, 331));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 7), new ItemStack(IUItem.crafting_elements, 1, 431));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 8), new ItemStack(IUItem.crafting_elements, 1, 360));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 9), new ItemStack(IUItem.crafting_elements, 1, 308));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 10), new ItemStack(IUItem.crafting_elements, 1, 303));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 11), new ItemStack(IUItem.crafting_elements, 1, 317));
+        addExtruding(new ItemStack(IUItem.sunnariumpanel, 4, 12), new ItemStack(IUItem.crafting_elements, 1, 351));
     }
 
     public static void addmolot(String input, String output, int n) {
@@ -206,6 +287,21 @@ public class MetalFormerRecipe {
         stack.setCount(n);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "rolling",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input, 1)
+                        ),
+                        new RecipeOutput(null, stack)
+                )
+        );
+    }
+
+    public static void addcutting(String input, String output, int n) {
+        ItemStack stack = OreDictionary.getOres(output).get(0).copy();
+        final IInputHandler input1 = Recipes.inputFactory;
+        stack.setCount(n);
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "cutting",
                 new BaseMachineRecipe(
                         new Input(
                                 input1.getInput(input, 1)
@@ -314,7 +410,8 @@ public class MetalFormerRecipe {
                 )
         );
     }
-    public static void addExtruding(ItemStack input,  ItemStack output) {
+
+    public static void addExtruding(ItemStack input, ItemStack output) {
         final IInputHandler input1 = Recipes.inputFactory;
         com.denfop.api.Recipes.recipes.addRecipe(
                 "extruding",
@@ -326,6 +423,7 @@ public class MetalFormerRecipe {
                 )
         );
     }
+
     public static void addExtruding(ItemStack input, ItemStack output, int n) {
         final IInputHandler input1 = Recipes.inputFactory;
         ItemStack stack = output.copy();
@@ -367,6 +465,19 @@ public class MetalFormerRecipe {
                                 input1.getInput(input, 1)
                         ),
                         new RecipeOutput(null, stack)
+                )
+        );
+    }
+
+    public static void addCutting(ItemStack output, String input) {
+        final IInputHandler input1 = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "cutting",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input, 1)
+                        ),
+                        new RecipeOutput(null, output)
                 )
         );
     }

@@ -10,14 +10,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class GuiElement<T extends GuiElement<T>> {
 
@@ -26,7 +20,23 @@ public abstract class GuiElement<T extends GuiElement<T>> {
             Constants.MOD_ID,
             "textures/gui/gui_progressbars.png"
     );
+    public static final ResourceLocation commonTexture2 = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/gui_progressbars1.png"
+    );
+    public static final ResourceLocation commonTexture3 = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/steam_progressbars.png"
+    );
+    public static final ResourceLocation commonTexture4 = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/bio_progressbars.png"
+    );
 
+    public static final ResourceLocation commonTexture5 = new ResourceLocation(
+            Constants.MOD_ID,
+            "textures/gui/guispace_progress.png"
+    );
     protected GuiCore<?> gui;
     protected int x;
     protected int y;
@@ -48,7 +58,7 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         }
     }
 
-    static void addLines(List<String> list, String str) {
+    public static void addLines(List<String> list, String str) {
         int startPos;
         int pos;
         for (startPos = 0; (pos = str.indexOf(10, startPos)) != -1; startPos = pos + 1) {
@@ -79,15 +89,30 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture1);
     }
 
-    protected static void bindBlockTexture() {
+    public static void bindCommonTexture2() {
+        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture2);
+    }
+
+    public static void bindCommonTexture3() {
+        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture3);
+    }
+    public static void bindCommonTexture4() {
+        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture4);
+    }
+    public static void bindCommonTexture5() {
+        Minecraft.getMinecraft().renderEngine.bindTexture(commonTexture5);
+    }
+    public static void bindBlockTexture() {
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
     }
 
-    protected static TextureMap getBlockTextureMap() {
+    public static TextureMap getBlockTextureMap() {
         return Minecraft.getMinecraft().getTextureMapBlocks();
     }
 
-
+    public boolean visible() {
+        return true;
+    }
 
     public GuiCore<?> getGui() {
         return gui;
@@ -100,7 +125,6 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     public boolean contains(int x, int y) {
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
     }
-
 
     public T withTooltip(String tooltip) {
         return this.withTooltip(Suppliers.ofInstance(tooltip));
@@ -115,8 +139,16 @@ public abstract class GuiElement<T extends GuiElement<T>> {
         return height;
     }
 
+    public void setHeight(final int height) {
+        this.height = height;
+    }
+
     public int getWidth() {
         return width;
+    }
+
+    public void setWidth(final int width) {
+        this.width = width;
     }
 
     public int getX() {
@@ -197,7 +229,6 @@ public abstract class GuiElement<T extends GuiElement<T>> {
     protected final IInventory getBase() {
         return this.gui.getContainer().base;
     }
-
 
 
     public void addY(int height) {

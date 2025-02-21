@@ -26,7 +26,7 @@ public class ItemCrystalMemory extends Item implements IModelRegister {
         super();
         this.setMaxStackSize(1);
         String name = "crystal_memory";
-        this.setCreativeTab(IUCore.RecourseTab);
+        this.setCreativeTab(IUCore.ItemTab);
         Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }

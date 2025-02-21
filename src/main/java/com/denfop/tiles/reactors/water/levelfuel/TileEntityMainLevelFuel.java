@@ -10,9 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityMainLevelFuel  extends TileEntityMultiBlockElement implements ILevelFuel {
+public class TileEntityMainLevelFuel extends TileEntityMultiBlockElement implements ILevelFuel {
 
-    public TileEntityMainLevelFuel(){
+    public TileEntityMainLevelFuel() {
 
     }
 
@@ -24,7 +24,7 @@ public class TileEntityMainLevelFuel  extends TileEntityMultiBlockElement implem
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
-        if(this.getMain() != null) {
+        if (this.getMain() != null) {
             return new GuiLevelFuel(getGuiContainer(var1));
         }
         return null;
@@ -32,7 +32,7 @@ public class TileEntityMainLevelFuel  extends TileEntityMultiBlockElement implem
 
     @Override
     public ContainerLevelFuel getGuiContainer(final EntityPlayer var1) {
-        if(this.getMain() != null) {
+        if (this.getMain() != null) {
             return new ContainerLevelFuel((TileEntityMainController) this.getMain(), var1);
         }
         return null;

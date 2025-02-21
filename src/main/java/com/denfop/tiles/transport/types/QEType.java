@@ -1,7 +1,6 @@
 package com.denfop.tiles.transport.types;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
 import com.denfop.blocks.ISubEnum;
 import net.minecraft.util.ResourceLocation;
 
@@ -50,6 +49,10 @@ public enum QEType implements ISubEnum, ICableItem {
         return this.name() + "_qcable";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     public int getId() {
         return this.ordinal();

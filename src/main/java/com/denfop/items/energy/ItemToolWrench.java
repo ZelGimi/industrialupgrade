@@ -118,7 +118,9 @@ public class ItemToolWrench extends Item implements IModelRegister {
                         }
 
                         block.onBlockDestroyedByPlayer(world, pos, state);
-                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player, 0);
+                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player,
+                                player.getEntityWorld().rand.nextInt(100)
+                        );
                         if (drops != null && !drops.isEmpty()) {
 
                             for (final ItemStack drop : drops) {

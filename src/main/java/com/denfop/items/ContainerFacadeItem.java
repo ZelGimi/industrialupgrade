@@ -1,7 +1,6 @@
 package com.denfop.items;
 
 import com.denfop.container.ContainerHandHeldInventory;
-import com.denfop.items.bags.ItemStackLeadBox;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,7 +12,6 @@ import net.minecraft.network.play.server.SPacketHeldItemChange;
 import java.util.Objects;
 
 public class ContainerFacadeItem extends ContainerHandHeldInventory<FacadeItemInventory> {
-
 
 
     private final int current;

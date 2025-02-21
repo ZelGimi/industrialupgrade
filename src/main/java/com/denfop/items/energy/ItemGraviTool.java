@@ -1,7 +1,11 @@
 package com.denfop.items.energy;
 
 
-import com.denfop.*;
+import com.denfop.Constants;
+import com.denfop.ElectricItem;
+import com.denfop.IUCore;
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.tile.IWrenchable;
@@ -47,9 +51,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -223,6 +232,10 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
         } else {
             return false;
         }
+    }
+
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.GRAVITOOL.list;
     }
 
     public boolean showDurabilityBar(final ItemStack stack) {
@@ -421,7 +434,7 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                         if (base.multi_process.module_separate) {
                             module_separate = new ItemStack(IUItem.module_separate);
                         }
-                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty()  || !module_separate.isEmpty()) {
+                        if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                             final EntityItem item = new EntityItem(world);
                             if (!stack_quickly.isEmpty()) {
                                 item.setItem(stack_quickly);
@@ -431,11 +444,11 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                                 item.setItem(stack_modulesize);
                                 base.multi_process.setModulesize(false);
                                 base.multi_process.shrinkModule(1);
-                            }else if (!module_separate.isEmpty()) {
+                            } else if (!module_separate.isEmpty()) {
                                 item.setItem(module_separate);
                                 base.multi_process.module_separate = false;
                                 base.multi_process.shrinkModule(1);
-                            }else if (!module_infinity_water.isEmpty()) {
+                            } else if (!module_infinity_water.isEmpty()) {
                                 item.setItem(module_infinity_water);
                                 base.multi_process.module_infinity_water = false;
                                 base.multi_process.shrinkModule(1);
@@ -618,11 +631,32 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
     protected boolean onTreeTapUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
         IBlockState state = world.getBlockState(pos);
         state = state.getActualState(world, pos);
-        return state.getBlock() == IUItem.rubWood && hasNecessaryPower(
+        return hasNecessaryPower(
                 stack,
                 TAP,
                 player
-        ) && attemptExtract(player, world, pos, side, state, null, stack) && checkNecessaryPower(stack, TAP, player);
+        ) && (state.getBlock() == IUItem.rubWood && ItemTreetap.attemptExtract(
+                player,
+                world,
+                pos,
+                side,
+                state,
+                null
+        ) || state.getBlock() == IUItem.swampRubWood && ItemTreetap.attemptSwampExtract(
+                player,
+                world,
+                pos,
+                side,
+                state,
+                null
+        ) || state.getBlock() == IUItem.tropicalRubWood && ItemTreetap.attemptTropicalExtract(
+                player,
+                world,
+                pos,
+                side,
+                state,
+                null
+        )) && checkNecessaryPower(stack, TAP, player);
     }
 
     protected boolean onWrenchUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side) {
@@ -692,7 +726,7 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
 
                     block.onBlockDestroyedByPlayer(world, pos, state);
 
-                    int fortune = 0;
+                    int fortune = player.getEntityWorld().rand.nextInt(100);
                     if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WRENCH, stack)) {
                         fortune = 100;
                     }

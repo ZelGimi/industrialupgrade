@@ -6,7 +6,7 @@ public interface IReactorItem {
 
     EnumTypeComponent getType();
 
-    default double getRadiation(){
+    default double getRadiation() {
         return 0;
     }
 
@@ -31,4 +31,6 @@ public interface IReactorItem {
     double getEnergyProduction(final IAdvReactor reactor);
 
     boolean needClear(ItemStack stack);
+
+
 }

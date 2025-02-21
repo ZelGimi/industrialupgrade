@@ -2,7 +2,6 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.IUItem;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
@@ -59,7 +58,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Set;
 
 public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
@@ -134,7 +132,14 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
@@ -159,16 +164,16 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
 
     @Override
     public String[] getMultiModels(final IMultiTileBlock teBlock) {
-        if(teBlock == BlockWaterReactors.water_security || teBlock == BlockWaterReactors.water_per_security ||teBlock == BlockWaterReactors.water_adv_security ||teBlock == BlockWaterReactors.water_imp_security){
-            return new String[]{"stable","unstable","error"};
-        }else {
-            if(teBlock == BlockWaterReactors.water_tank || teBlock == BlockWaterReactors.water_per_tank||teBlock == BlockWaterReactors.water_adv_tank ||teBlock == BlockWaterReactors.water_imp_tank){
-                return new String[]{"1","2","3","4","5","6"};
-            }else {
+        if (teBlock == BlockWaterReactors.water_security || teBlock == BlockWaterReactors.water_per_security || teBlock == BlockWaterReactors.water_adv_security || teBlock == BlockWaterReactors.water_imp_security) {
+            return new String[]{"stable", "unstable", "error"};
+        } else {
+            if (teBlock == BlockWaterReactors.water_tank || teBlock == BlockWaterReactors.water_per_tank || teBlock == BlockWaterReactors.water_adv_tank || teBlock == BlockWaterReactors.water_imp_tank) {
+                return new String[]{"1", "2", "3"};
+            } else {
 
-                if(teBlock == BlockWaterReactors.water_controller || teBlock == BlockWaterReactors.water_per_controller||teBlock == BlockWaterReactors.water_adv_controller ||teBlock == BlockWaterReactors.water_imp_controller){
-                    return new String[]{"active"};
-                }else {
+                if (teBlock == BlockWaterReactors.water_controller || teBlock == BlockWaterReactors.water_per_controller || teBlock == BlockWaterReactors.water_adv_controller || teBlock == BlockWaterReactors.water_imp_controller) {
+                    return new String[]{"active","global"};
+                } else {
 
                     return IMultiTileBlock.super.getMultiModels(teBlock);
                 }
@@ -222,13 +227,13 @@ public enum BlockWaterReactors implements IMultiTileBlock, IMultiBlockItem {
     @Override
     @Nonnull
     public MultiTileBlock.HarvestTool getHarvestTool() {
-        return MultiTileBlock.HarvestTool.Wrench;
+        return MultiTileBlock.HarvestTool.Pickaxe;
     }
 
     @Override
     @Nonnull
     public MultiTileBlock.DefaultDrop getDefaultDrop() {
-        return MultiTileBlock.DefaultDrop.Machine;
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override

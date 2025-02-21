@@ -1,7 +1,6 @@
 package com.denfop.tiles.reactors.heat.coolant;
 
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.reactors.gas.IRegenerator;
 import com.denfop.tiles.reactors.heat.ICoolant;
 
 public class TileEntityBaseCoolant extends TileEntityMultiBlockElement implements ICoolant {
@@ -10,7 +9,7 @@ public class TileEntityBaseCoolant extends TileEntityMultiBlockElement implement
     private final int max;
     private int helium;
 
-    public TileEntityBaseCoolant(int level, int max){
+    public TileEntityBaseCoolant(int level, int max) {
         this.level = level;
         this.max = max;
     }
@@ -23,7 +22,7 @@ public class TileEntityBaseCoolant extends TileEntityMultiBlockElement implement
 
     @Override
     public void addHeliumToRegenerate(final double col) {
-        this.helium +=col;
+        this.helium += col;
     }
 
     @Override

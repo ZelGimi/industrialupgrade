@@ -1,10 +1,13 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotElectrolyzer extends InvSlot {
+public class InvSlotElectrolyzer extends InvSlot implements ITypeSlot {
 
     private final int type;
     private int stackSizeLimit;
@@ -23,12 +26,23 @@ public class InvSlotElectrolyzer extends InvSlot {
         return isStackEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        if (type == 1) {
+            return EnumTypeSlot.CATHODE;
+        } else {
+            return EnumTypeSlot.ANODE;
+        }
+    }
+
     public boolean accepts(ItemStack itemStack, final int index) {
         if (type == 0) {
-            return itemStack.getItem().equals(IUItem.anode);
+            Item item = itemStack.getItem();
+            return item.equals(IUItem.anode) || item.equals(IUItem.adv_anode);
         }
         if (type == 1) {
-            return itemStack.getItem().equals(IUItem.cathode);
+            Item item = itemStack.getItem();
+            return item.equals(IUItem.cathode) || item.equals(IUItem.adv_cathode);
         }
         return false;
     }

@@ -30,17 +30,14 @@ public class GuiCanner extends GuiIU<ContainerCanner> {
                 this,
                 77, 64, 22, 13
         ).withTooltip(Localization.translate("Canner.gui.switchTanks")));
-        this.addElement(new AdvArea(
-                this,
-                61,
-                79,
-                114,
-                96
-        ).withTooltip(Localization.translate("Canner.gui.switch.EnrichLiquid")));
-        this.addElement(TankGauge.createNormal(this, 39, 42, container.base.fluidTank));
-        this.addElement(TankGauge.createNormal(this, 117, 42, container.base.outputTank));
-        this.addComponent(new GuiComponent(this, 12, 62, EnumTypeComponent.ENERGY,
+
+        this.addElement(TankGauge.createNormal(this, 40, 39, container.base.fluidTank));
+        this.addElement(TankGauge.createNormal(this, 116, 39, container.base.outputTank));
+        this.addComponent(new GuiComponent(this, 10, 57, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
+        ));
+        this.addComponent(new GuiComponent(this, 74, 23, EnumTypeComponent.PROCESS2,
+                new Component<>(container.base.componentProgress)
         ));
 
     }

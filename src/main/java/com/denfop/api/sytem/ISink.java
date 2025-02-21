@@ -1,5 +1,10 @@
 package com.denfop.api.sytem;
 
+import com.denfop.api.energy.EnergyTick;
+import com.denfop.api.energy.SystemTick;
+
+import java.util.List;
+
 public interface ISink extends IAcceptor {
 
     double getDemanded();
@@ -20,4 +25,5 @@ public interface ISink extends IAcceptor {
 
     boolean isSink();
 
+    List<ISource> getEnergyTickList();
 }

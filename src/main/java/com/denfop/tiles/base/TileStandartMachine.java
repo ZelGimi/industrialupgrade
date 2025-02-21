@@ -4,7 +4,7 @@ import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.PacketStopSound;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +17,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
 
     public InvSlotOutput outputSlot = null;
 
-    public AdvEnergy energy;
+    public Energy energy;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
 

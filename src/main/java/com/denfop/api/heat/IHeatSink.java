@@ -1,5 +1,10 @@
 package com.denfop.api.heat;
 
+import com.denfop.api.cool.CoolTick;
+import com.denfop.api.cool.ICoolSource;
+
+import java.util.List;
+
 public interface IHeatSink extends IHeatAcceptor {
 
     double getDemandedHeat();
@@ -8,4 +13,5 @@ public interface IHeatSink extends IHeatAcceptor {
 
     boolean needTemperature();
 
+    List<IHeatSource> getEnergyTickList();
 }

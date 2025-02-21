@@ -1,10 +1,12 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.mechanism.exp.TileStorageExp;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotExpStorage extends InvSlot {
+public class InvSlotExpStorage extends InvSlot implements ITypeSlot {
 
     private final TileStorageExp base1;
     private int stackSizeLimit;
@@ -14,6 +16,11 @@ public class InvSlotExpStorage extends InvSlot {
 
         this.stackSizeLimit = 1;
         this.base1 = base1;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.EXP_MODULE;
     }
 
     @Override

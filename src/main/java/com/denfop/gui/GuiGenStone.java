@@ -10,7 +10,6 @@ import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.mechanism.TileBaseGenStone;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -36,6 +35,9 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 10, 36, EnumTypeComponent.ENERGY,
+                new Component<>(container.base.energy)
+        ));
     }
 
     protected void mouseClicked(int i, int j, int k) throws IOException {
@@ -52,15 +54,7 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EF";
-        new AdvArea(this, 10, 35, 21, 50)
-                .withTooltip(tooltip2)
-                .drawForeground(mouseX, mouseY);
+
         new Area(this, 63, 64, 18, 18)
                 .withTooltip(Localization.translate("message.text.mode") + ": " +
                         (this.container.base.getMode() == TileBaseGenStone.Mode.SAND ?
@@ -86,13 +80,7 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
         this.mc.getTextureManager().bindTexture(getTexture());
-        int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (16 * this.container.base.getProgress());
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 56 + 1 - 48, yoffset + 36 + 14 - chargeLevel, 176,
-                    14 - chargeLevel, 14, chargeLevel
-            );
-        }
+
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glPushMatrix();
         GL11.glColor4f(1, 1, 1, 1);
@@ -164,6 +152,7 @@ public class GuiGenStone extends GuiIU<ContainerGenStone> {
         RenderHelper.enableStandardItemLighting();
         GL11.glColor4f(0.1F, 1, 0.1F, 1);
         GL11.glPopMatrix();
+        GL11.glColor4f(1F, 1, 1F, 1);
     }
 
 

@@ -31,7 +31,6 @@ import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -46,7 +45,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudioFixer,
         IUpgradableBlock, IType, IUpdatableTileEvent {
@@ -56,6 +59,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
     public final InvSlotOutput outputSlot;
     public final InvSlotQuantumQuarry inputslot;
     public final InvSlotQuantumQuarry inputslotA;
+    public final InvSlotQuantumQuarry inputslotC;
     public int energyconsume;
     public double consume;
     public boolean mac_enabled = false;
@@ -76,6 +80,9 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     public double col_tick;
+    public boolean polisher = false;
+    public boolean separator = false;
+    public boolean plasma;
     private boolean sound = true;
 
     public TileBaseQuantumQuarry(int coef) {
@@ -84,10 +91,11 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         this.getblock = 0;
         this.energyconsume = Config.enerycost * coef;
         this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 5E7D, 14));
-        this.inputslot = new InvSlotQuantumQuarry(this, 25, 0);
-        this.inputslotA = new InvSlotQuantumQuarry(this, 26, 1);
-        this.inputslotB = new InvSlotQuantumQuarry(this, 27, 2);
-        this.outputSlot = new InvSlotOutput(this, 24);
+        this.inputslot = new InvSlotQuantumQuarry(this, 24, 0);
+        this.inputslotA = new InvSlotQuantumQuarry(this, 1, 1);
+        this.inputslotB = new InvSlotQuantumQuarry(this, 1, 2);
+        this.inputslotC = new InvSlotQuantumQuarry(this, 1, 3);
+        this.outputSlot = new InvSlotOutput(this, 49);
         this.list = new ArrayList<>();
         this.analyzer = false;
         this.chance = 0;
@@ -125,7 +133,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -141,7 +149,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
                     energy.getCapacity())
                     + " QE");
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -273,12 +281,19 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         this.inputslot.update();
         this.inputslotA.update();
         this.inputslotB.update();
+        this.inputslotC.update();
         this.vein = VeinSystem.system.getVein(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
         if (this.vein != VeinSystem.system.getEMPTY()) {
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
-            final ItemStack stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+            final ItemStack stack;
+            if (vein.isOldMineral()) {
+                stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+            } else {
+                stack = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+            }
+
             if (list(this.list_modules, stack)) {
                 this.can_dig_vein = false;
             }
@@ -300,7 +315,13 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
             if (this.vein.getType() != Type.VEIN) {
                 return;
             }
-            final ItemStack stack1 = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+            final ItemStack stack1;
+            if (vein.isOldMineral()) {
+                stack1 = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+            } else {
+                stack1 = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+            }
+
             if (list(this.list_modules, stack1)) {
                 this.can_dig_vein = false;
             }
@@ -316,7 +337,13 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
         if (this.vein != null) {
             if (this.analyzer && this.vein.get()) {
                 if (this.vein.getType() == Type.VEIN && this.vein.getCol() > 0 && this.energy.getEnergy() > consume) {
-                    final ItemStack stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                    final ItemStack stack;
+                    if (vein.isOldMineral()) {
+                        stack = new ItemStack(IUItem.heavyore, 1, vein.getMeta());
+                    } else {
+                        stack = new ItemStack(IUItem.mineral, 1, vein.getMeta());
+                    }
+
                     if (this.can_dig_vein) {
                         if (!this.getActive()) {
                             this.setActive(true);
@@ -331,7 +358,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
             }
         }
         this.col_tick = 0;
-        if (this.analyzer && !Config.enableonlyvein) {
+        if (this.analyzer && !Config.enableonlyvein && plasma) {
             double col = this.col;
             int chance2 = this.chance;
             int coble = rand.nextInt((int) col + 1);
@@ -452,9 +479,7 @@ public class TileBaseQuantumQuarry extends TileEntityInventory implements IAudio
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(
-                UpgradableProperty.ItemProducing
-        );
+        return Collections.EMPTY_SET;
     }
 
     @Override

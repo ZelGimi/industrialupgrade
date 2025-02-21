@@ -8,6 +8,7 @@ public interface ICableItem {
 
     String getMainPath();
 
+    float getThickness();
 
     ResourceLocation getRecourse();
 

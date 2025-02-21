@@ -64,6 +64,10 @@ public enum SEType implements ISubEnum, ICableItem {
         return "scable";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     @Override
     public ResourceLocation getRecourse() {

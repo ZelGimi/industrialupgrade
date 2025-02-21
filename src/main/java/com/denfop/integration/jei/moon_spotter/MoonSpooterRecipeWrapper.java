@@ -29,14 +29,14 @@ public class MoonSpooterRecipeWrapper implements IRecipeWrapper {
         this.outputstack = container.getOutput();
 
     }
-    public List<ItemStack> getInputs1(){
+
+    public List<ItemStack> getInputs1() {
         return Arrays.asList(inputstack);
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
-
-
 
 
     public List<List<ItemStack>> getInputs() {

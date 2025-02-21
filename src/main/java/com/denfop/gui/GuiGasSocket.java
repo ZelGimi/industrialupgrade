@@ -18,6 +18,7 @@ public class GuiGasSocket extends GuiIU<ContainerGasSocket> {
         this.xSize = 186;
         this.ySize = 211;
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -36,6 +37,7 @@ public class GuiGasSocket extends GuiIU<ContainerGasSocket> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphitereactor.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigasreactor5.png");
     }
+
 }

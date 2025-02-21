@@ -22,10 +22,8 @@ public class PacketUpdateFieldContainerTile implements IPacket {
     }
 
     public PacketUpdateFieldContainerTile(CustomPacketBuffer customPacketBuffer, EntityPlayerMP entityPlayer) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(16384);
-        buffer.writeByte(this.getId());
-        buffer.writeBytes(customPacketBuffer);
-        IUCore.network.getServer().sendPacket(buffer, entityPlayer);
+
+        IUCore.network.getServer().sendPacket(customPacketBuffer, entityPlayer);
     }
 
     public static void apply(BlockPos pos, World world, byte[] is) {

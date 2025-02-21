@@ -11,12 +11,10 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerBattery;
-import com.denfop.container.ContainerRodFactory;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.tiles.mechanism.TileEntityBatteryFactory;
-import com.denfop.tiles.mechanism.TileEntityRodFactory;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -29,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class RodFactoryCategory extends GuiIU implements IRecipeCategory<RodFactoryRecipeWrapper> {
@@ -50,11 +47,11 @@ public class RodFactoryCategory extends GuiIU implements IRecipeCategory<RodFact
         );
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
         this.container1 = (ContainerBattery) this.getContainer();
         this.componentList.add(slots);
-        progress_bar =  new GuiComponent(this,  70, 36,  EnumTypeComponent.PROCESS,
+        progress_bar = new GuiComponent(this, 70, 36, EnumTypeComponent.PROCESS,
                 new Component<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
@@ -116,19 +113,19 @@ public class RodFactoryCategory extends GuiIU implements IRecipeCategory<RodFact
 
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
         final List<ItemStack> inputs = recipes.getInputs1();
-        if(inputs.size() == 3){
+        if (inputs.size() == 3) {
             slots1.remove(8);
             slots1.remove(7);
             slots1.remove(6);
             slots1.remove(2);
             slots1.remove(1);
             slots1.remove(0);
-        }else if(inputs.size() == 5){
+        } else if (inputs.size() == 5) {
             slots1.remove(8);
             slots1.remove(6);
             slots1.remove(2);
             slots1.remove(0);
-        }  else if(inputs.size() == 7){
+        } else if (inputs.size() == 7) {
             slots1.remove(5);
             slots1.remove(3);
         }

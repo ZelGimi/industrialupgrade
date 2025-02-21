@@ -1,6 +1,6 @@
 package com.denfop.tiles.base;
 
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerHeatMachine;
@@ -43,7 +43,7 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
         this.hasFluid = hasFluid;
         this.fluidTank = new FluidTank(12000);
         if (this.hasFluid) {
-            this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14));
+            this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
         }
         if (this.hasFluid) {
             this.fluids = this.addComponent(new Fluids(this));

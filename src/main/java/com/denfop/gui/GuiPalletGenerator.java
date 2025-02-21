@@ -5,7 +5,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerPalletGenerator;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiPalletGenerator extends GuiIU<ContainerPalletGenerator> {
@@ -20,6 +19,7 @@ public class GuiPalletGenerator extends GuiIU<ContainerPalletGenerator> {
                 new Component<>(this.container.base.energy)
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -29,12 +29,12 @@ public class GuiPalletGenerator extends GuiIU<ContainerPalletGenerator> {
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft + 49, this.guiTop + 17, 179, 30, 18,18);
-        this.drawTexturedModalRect(this.guiLeft + 49, this.guiTop + 35, 179, 30, 18,18);
-        this.drawTexturedModalRect(this.guiLeft + 67, this.guiTop + 17, 179, 30, 18,18);
-        this.drawTexturedModalRect(this.guiLeft + 67, this.guiTop + 35, 179, 30, 18,18);
-        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 17, 179, 30, 18,18);
-        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 35, 179, 30, 18,18);
+        this.drawTexturedModalRect(this.guiLeft + 49, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect(this.guiLeft + 49, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect(this.guiLeft + 67, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect(this.guiLeft + 67, this.guiTop + 35, 179, 30, 18, 18);
+        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 17, 179, 30, 18, 18);
+        this.drawTexturedModalRect(this.guiLeft + 85, this.guiTop + 35, 179, 30, 18, 18);
     }
 
     @Override

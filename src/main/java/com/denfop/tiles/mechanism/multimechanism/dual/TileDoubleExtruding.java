@@ -5,17 +5,23 @@ import com.denfop.Localization;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockMoreMachine2;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
 
 public class TileDoubleExtruding extends TileMultiMachine {
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+
     public TileDoubleExtruding() {
         super(
                 EnumMultiMachine.DOUBLE_Extruding.usagePerTick,
-                EnumMultiMachine.DOUBLE_Extruding.lenghtOperation,
-                2
+                EnumMultiMachine.DOUBLE_Extruding.lenghtOperation
         );
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
     public IMultiTileBlock getTeBlock() {

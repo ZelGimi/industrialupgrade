@@ -1,0 +1,13 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/lightning_rod_casing_1",
+    "down" : "industrialupgrade:blocks/lightning_rod_casing_1",
+    "up" : "industrialupgrade:blocks/lightning_rod_casing_1",
+    "north" : "industrialupgrade:blocks/lightning_rod_controller",
+    "east" : "industrialupgrade:blocks/lightning_rod_casing_2",
+    "south" : "industrialupgrade:blocks/lightning_rod_casing_2",
+    "west" : "industrialupgrade:blocks/lightning_rod_casing_2"
+  }
+}
+

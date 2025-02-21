@@ -2,7 +2,7 @@
 	"parent": "block/cube",
 	"textures": {
 		"particle": "industrialupgrade:blocks/recycler_leftrightback",
-		"down": "industrialupgrade:blocks/recycler_bottom",
+		"down": "industrialupgrade:blocks/recycler_leftrightback",
 		"up": "industrialupgrade:blocks/recycler_top",
 		"north": "industrialupgrade:blocks/recycler_front",
 		"east": "industrialupgrade:blocks/recycler_leftrightback",

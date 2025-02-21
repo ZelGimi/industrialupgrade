@@ -8,31 +8,26 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.item.EntityTNTPrimed;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderNuclearBombPrimed extends Render<EntityNuclearBombPrimed>
-{
-    public RenderNuclearBombPrimed(RenderManager renderManagerIn)
-    {
+public class RenderNuclearBombPrimed extends Render<EntityNuclearBombPrimed> {
+
+    public RenderNuclearBombPrimed(RenderManager renderManagerIn) {
         super(renderManagerIn);
         this.shadowSize = 0.5F;
     }
 
-    public void doRender(EntityNuclearBombPrimed entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(EntityNuclearBombPrimed entity, double x, double y, double z, float entityYaw, float partialTicks) {
         BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float)x, (float)y + 0.5F, (float)z);
+        GlStateManager.translate((float) x, (float) y + 0.5F, (float) z);
 
-        if ((float)entity.getFuse() - partialTicks + 1.0F < 10.0F)
-        {
-            float f = 1.0F - ((float)entity.getFuse() - partialTicks + 1.0F) / 10.0F;
+        if ((float) entity.getFuse() - partialTicks + 1.0F < 10.0F) {
+            float f = 1.0F - ((float) entity.getFuse() - partialTicks + 1.0F) / 10.0F;
             f = MathHelper.clamp(f, 0.0F, 1.0F);
             f = f * f;
             f = f * f;
@@ -40,23 +35,20 @@ public class RenderNuclearBombPrimed extends Render<EntityNuclearBombPrimed>
             GlStateManager.scale(f1, f1, f1);
         }
 
-        float f2 = (1.0F - ((float)entity.getFuse() - partialTicks + 1.0F) / 100.0F) * 0.8F;
+        float f2 = (1.0F - ((float) entity.getFuse() - partialTicks + 1.0F) / 100.0F) * 0.8F;
         this.bindEntityTexture(entity);
         GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(-0.5F, -0.5F, 0.5F);
         blockrendererdispatcher.renderBlockBrightness(IUItem.nuclear_bomb.getDefaultState(), entity.getBrightness());
         GlStateManager.translate(0.0F, 0.0F, 1.0F);
 
-        if (this.renderOutlines)
-        {
+        if (this.renderOutlines) {
             GlStateManager.enableColorMaterial();
             GlStateManager.enableOutlineMode(this.getTeamColor(entity));
             blockrendererdispatcher.renderBlockBrightness(IUItem.nuclear_bomb.getDefaultState(), 1.0F);
             GlStateManager.disableOutlineMode();
             GlStateManager.disableColorMaterial();
-        }
-        else if (entity.getFuse() / 5 % 2 == 0)
-        {
+        } else if (entity.getFuse() / 5 % 2 == 0) {
             GlStateManager.disableTexture2D();
             GlStateManager.disableLighting();
             GlStateManager.enableBlend();
@@ -77,8 +69,8 @@ public class RenderNuclearBombPrimed extends Render<EntityNuclearBombPrimed>
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
-    protected ResourceLocation getEntityTexture(EntityNuclearBombPrimed entity)
-    {
+    protected ResourceLocation getEntityTexture(EntityNuclearBombPrimed entity) {
         return TextureMap.LOCATION_BLOCKS_TEXTURE;
     }
+
 }

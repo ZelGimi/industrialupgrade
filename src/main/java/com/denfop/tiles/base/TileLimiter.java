@@ -8,7 +8,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerBlockLimiter;
 import com.denfop.gui.GuiBlockLimiter;
 import com.denfop.invslot.InvSlotLimiter;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 public class TileLimiter extends TileEntityInventory implements IUpdatableTileEvent, IAudioFixer {
 
-    private final AdvEnergy energy;
+    private final Energy energy;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio;
     public boolean sound = true;
@@ -41,7 +41,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
     public double max_value;
 
     public TileLimiter() {
-        this.energy = this.addComponent(new AdvEnergy(
+        this.energy = this.addComponent(new Energy(
                 this,
                 Double.MAX_VALUE,
                 Arrays
@@ -180,7 +180,7 @@ public class TileLimiter extends TileEntityInventory implements IUpdatableTileEv
         this.max_value = nbtTagCompound.getDouble("max_value");
     }
 
-    public AdvEnergy getEnergy() {
+    public Energy getEnergy() {
         return energy;
     }
 

@@ -9,8 +9,8 @@ import java.util.Objects;
 public class Vein implements IVein {
 
     private final ChunkPos chunk;
-    private boolean oldMineral;
     boolean find;
+    private boolean oldMineral;
     private Type type;
     private int meta;
     private int col;
@@ -23,10 +23,6 @@ public class Vein implements IVein {
         this.col = 0;
         this.maxcol = 0;
         oldMineral = false;
-    }
-
-    public void setOldMineral(final boolean oldMineral) {
-        this.oldMineral = oldMineral;
     }
 
     public Vein(NBTTagCompound tagCompound) {
@@ -63,6 +59,8 @@ public class Vein implements IVein {
         int data1 = tagCompound.getInteger("data1");
         this.oldMineral = data1 == 0;
     }
+
+
     public Vein(CustomPacketBuffer is) {
         int data = is.readInt();
         int z = data & 2047;
@@ -87,7 +85,7 @@ public class Vein implements IVein {
         this.type = Type.getID(type);
         this.chunk = new ChunkPos(x, z);
         this.col = is.readInt();
-        this.maxcol =  is.readInt();
+        this.maxcol = is.readInt();
         this.find = find == 1;
         if (!this.find) {
             if (this.col != this.maxcol) {
@@ -119,6 +117,7 @@ public class Vein implements IVein {
         customPacketBuffer.writeInt(this.oldMineral ? 0 : 1);
         return customPacketBuffer;
     }
+
     @Override
     public int getMeta() {
         return this.meta;
@@ -126,10 +125,11 @@ public class Vein implements IVein {
 
     @Override
     public void setMeta(final int meta) {
-        if(oldMineral)
-        this.meta = meta;
-        else
+        if (oldMineral) {
+            this.meta = meta;
+        } else {
             this.meta = meta - 16;
+        }
     }
 
     @Override
@@ -178,8 +178,17 @@ public class Vein implements IVein {
         return find;
     }
 
+    @Override
+    public void setFind(final boolean find) {
+        this.find = find;
+    }
+
     public boolean isOldMineral() {
         return oldMineral;
+    }
+
+    public void setOldMineral(final boolean oldMineral) {
+        this.oldMineral = oldMineral;
     }
 
     @Override
@@ -207,15 +216,7 @@ public class Vein implements IVein {
         tagCompound.setInteger("col", this.col);
         tagCompound.setInteger("maxcol", this.maxcol);
         tagCompound.setInteger("data1", this.oldMineral ? 0 : 1);
-     /* tagCompound.setInteger("meta", this.meta);
-       tagCompound.setInteger("id", this.type.ordinal());
-      tagCompound.setInteger("x", chunk.x);
-       tagCompound.setInteger("z", chunk.z);
-     tagCompound.setInteger("col", this.col);
-      tagCompound.setInteger("maxcol", this.maxcol);
-        tagCompound.setBoolean("find", this.find);
 
-      */
         return tagCompound;
     }
 
@@ -240,11 +241,6 @@ public class Vein implements IVein {
     @Override
     public boolean get() {
         return this.find;
-    }
-
-    @Override
-    public void setFind(final boolean find) {
-        this.find = find;
     }
 
 

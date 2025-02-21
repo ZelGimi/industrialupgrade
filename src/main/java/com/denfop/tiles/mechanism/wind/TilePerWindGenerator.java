@@ -5,13 +5,18 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.EnumTypeStyle;
 
 public class TilePerWindGenerator extends TileWindGenerator {
 
+    private final AirPollutionComponent pollutionAir;
+
     public TilePerWindGenerator() {
         super(EnumLevelGenerators.FOUR);
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
+
 
     @Override
     public EnumTypeStyle getStyle() {

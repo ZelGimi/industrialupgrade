@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_reactor/imp_controller_side",
-    "down" : "industrialupgrade:blocks/water_reactor/imp_controller_side",
-    "up" : "industrialupgrade:blocks/water_reactor/imp_controller_side",
-    "north" : "industrialupgrade:blocks/water_reactor/imp_controller_main_active",
-    "east" : "industrialupgrade:blocks/water_reactor/imp_controller_left",
-    "south" : "industrialupgrade:blocks/water_reactor/imp_controller_side",
-    "west" : "industrialupgrade:blocks/water_reactor/imp_controller_left"
+    "particle" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active",
+    "down" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active",
+    "up" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active",
+    "north" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active",
+    "east" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active",
+    "south" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active",
+    "west" : "industrialupgrade:blocks/water_reactor/controller/imp_controller_side_active"
   }
 }

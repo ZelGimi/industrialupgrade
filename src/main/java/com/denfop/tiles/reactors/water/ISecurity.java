@@ -6,15 +6,15 @@ import com.denfop.utils.Timer;
 
 public interface ISecurity extends IMultiElement {
 
-   void setActive(String s);
-
-   void setSecurity(EnumTypeSecurity typeSecurity);
+    void setActive(String s);
 
     EnumTypeSecurity getSecurity();
 
-    public Timer getYellow_timer() ;
+    void setSecurity(EnumTypeSecurity typeSecurity);
 
+    public Timer getYellow_timer();
 
 
     public Timer getRed_timer();
+
 }

@@ -5,10 +5,12 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
 
-public class TileEntityPerExchanger  extends TileEntityExchanger {
+public class TileEntityPerExchanger extends TileEntityExchanger {
+
     public TileEntityPerExchanger() {
         super(3);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlocksGraphiteReactors.graphite_per_exchanger;

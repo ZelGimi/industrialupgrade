@@ -25,7 +25,7 @@ public class CTCompressor {
                 "compressor",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )
@@ -54,7 +54,6 @@ public class CTCompressor {
             Recipes.recipes.addRemoveRecipe("compressor", CraftTweakerMC.getItemStack(output));
 
         }
-
 
 
     }

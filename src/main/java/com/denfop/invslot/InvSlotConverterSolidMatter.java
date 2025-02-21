@@ -42,8 +42,12 @@ public class InvSlotConverterSolidMatter extends InvSlot implements ISlotInv {
 
     }
 
+    public boolean acceptAllOrIndex() {
+        return false;
+    }
+
     public boolean accepts(ItemStack itemStack, final int index) {
-        return itemStack.getItem() instanceof ItemSolidMatter;
+        return itemStack.getItem() instanceof ItemSolidMatter && index == itemStack.getItemDamage();
     }
 
     public void consume(int content, int amount) {

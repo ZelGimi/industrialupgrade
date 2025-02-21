@@ -1,14 +1,11 @@
 package com.denfop.tiles.reactors.heat.fueltank;
 
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerGasTank;
-import com.denfop.container.ContainerGraphiteTank;
 import com.denfop.container.ContainerHeatTank;
-import com.denfop.gui.GuiGasMainTank;
-import com.denfop.gui.GuiGraphiteMainTank;
 import com.denfop.gui.GuiHeatMainTank;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.ITank;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -24,16 +21,18 @@ public class TileEntityMainTank extends TileEntityMultiBlockElement implements I
     public final Fluids fluids;
     public final Fluids.InternalFluidTank tank;
 
-    public TileEntityMainTank(int col){
+    public TileEntityMainTank(int col) {
         this.fluids = this.addComponent(new Fluids(this));
-        tank =  this.fluids.addTank("fluidTank",col);
+        tank = this.fluids.addTank("fluidTank", col);
+        tank.setCanAccept(false);
     }
 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        tank.setCanAccept(this.getMain() != null && this.getMain().isFull());
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
@@ -42,7 +41,7 @@ public class TileEntityMainTank extends TileEntityMultiBlockElement implements I
 
     @Override
     public ContainerHeatTank getGuiContainer(final EntityPlayer var1) {
-        return new ContainerHeatTank(this,var1);
+        return new ContainerHeatTank(this, var1);
     }
 
 
@@ -62,9 +61,9 @@ public class TileEntityMainTank extends TileEntityMultiBlockElement implements I
     ) {
         if (!this.getWorld().isRemote && player
                 .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && this.getMain() != null)  {
+                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && this.getMain() != null) {
 
-            return FluidUtil.interactWithFluidHandler(player, hand,
+            return ModUtils.interactWithFluidHandler(player, hand,
                     fluids.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         } else {

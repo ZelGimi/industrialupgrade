@@ -6,15 +6,18 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
+import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerDoubleElectricMachine;
-import com.denfop.tiles.mechanism.dual.TileEnrichment;
 import com.denfop.tiles.mechanism.dual.TileSynthesis;
 import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
@@ -28,51 +31,54 @@ public class GuiSynthesis extends GuiIU<ContainerDoubleElectricMachine> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
-        this.addComponent(new GuiComponent(this, 10, 65, EnumTypeComponent.RAD,
-                new Component<>(((TileSynthesis)this.container.base).rad_energy)));
+        this.addComponent(new GuiComponent(this, 9, 63, EnumTypeComponent.RAD,
+                new Component<>(((TileSynthesis) this.container.base).rad_energy)
+        ));
+        this.addComponent(new GuiComponent(this, 6, 34, EnumTypeComponent.ENERGY,
+                new Component<>(((TileSynthesis) this.container.base).energy)
+        ));
+        componentList.add(new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(
+                        EnumTypeComponentSlot.SLOT,
+                        Collections.singletonList(this.container.base.inputSlotA)
+                ))
+        ));
+        componentList.add(new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(
+                        EnumTypeComponentSlot.SLOT,
+                        Collections.singletonList(((TileSynthesis) this.container.base).input_slot)
+                ))
+        ));
     }
 
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EF";
-        new AdvArea(this, 133, 35, 144, 49)
-                .withTooltip(tooltip2)
-                .drawForeground(mouseX, mouseY);
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
-        int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
-        int progress = (int) (10 * this.container.base.getProgress());
+        int progress = (int) (13 * this.container.base.getProgress());
         int progress1 = (int) (24 * this.container.base.getProgress());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
 
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 132, yoffset + 35 + 14 - chargeLevel, 176, 14 - chargeLevel,
-                    14, chargeLevel
-            );
-        }
+
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 39, yoffset + 37, 177, 35, progress + 1, 9);
+            drawTexturedModalRect(xoffset + 42, yoffset + 35, 177, 33, progress + 1, 14);
         }
         if (progress1 > 0) {
-            drawTexturedModalRect(xoffset + 82, yoffset + 30, 177, 52, progress1 + 1, 23);
+            drawTexturedModalRect(xoffset + 78, yoffset + 33, 177, 52, progress1 + 1, 23);
         }
 
         final MachineRecipe output = this.container.base.output;
         if (output != null) {
             this.fontRenderer.drawString(
                     TextFormatting.GREEN + Localization.translate("chance") + output.getRecipe().output.metadata.getInteger(
-                            "percent") + "%", xoffset + 60,
-                    yoffset + 67, ModUtils.convertRGBcolorToInt(217, 217, 217)
+                            "percent") + "%", xoffset + 66,
+                    yoffset + 66, ModUtils.convertRGBcolorToInt(217, 217, 217)
             );
         }
     }

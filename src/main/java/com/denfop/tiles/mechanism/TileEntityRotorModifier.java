@@ -48,7 +48,10 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
         slot.readFromNbt(getNBTFromSlot(customPacketBuffer));
 
     }
-
+    @Override
+    public boolean ignoreHooperUp() {
+        return true;
+    }
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         final CustomPacketBuffer packet = super.writeContainerPacket();
@@ -121,16 +124,33 @@ public class TileEntityRotorModifier extends TileEntityInventory implements IWin
 
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
-        if(!this.rotor_slot.get().isEmpty())
-        for(int i =0; i < this.slot.size();i++){
-            RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
-            if(!this.slot.get(i).isEmpty()){
-                NBTTagCompound nbt = ModUtils.nbt(this.getItemStack());
-                nbt.setString("mode_module" + i, (EnumInfoRotorUpgradeModules.getFromID(this.slot.get(i).getItemDamage())).name);
-                MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this
-                        .getParent().getWorld(), (IRotorUpgradeItem) this
-                        .getItemStack().getItem(), this
-                        .getItemStack()));
+        if (var2 == 0) {
+            if (!this.rotor_slot.get().isEmpty()) {
+                for (int i = 0; i < this.slot.size(); i++) {
+                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
+                    if (!this.slot.get(i).isEmpty()) {
+                        NBTTagCompound nbt = ModUtils.nbt(this.getItemStack());
+                        nbt.setString(
+                                "mode_module" + i,
+                                (EnumInfoRotorUpgradeModules.getFromID(this.slot.get(i).getItemDamage())).name
+                        );
+                        MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this
+                                .getParent().getWorld(), (IRotorUpgradeItem) this
+                                .getItemStack().getItem(), this
+                                .getItemStack()));
+                    }
+                }
+            }
+        } else {
+            if (!this.rotor_slot.get().isEmpty()) {
+                for (int i = 0; i < this.slot.size(); i++) {
+                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
+                    MinecraftForge.EVENT_BUS.post(new EventRotorItemLoad(this
+                            .getParent().getWorld(), (IRotorUpgradeItem) this
+                            .getItemStack().getItem(), this
+                            .getItemStack()));
+                }
+
             }
         }
     }

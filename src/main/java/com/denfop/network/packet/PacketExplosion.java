@@ -41,7 +41,8 @@ public class PacketExplosion implements IPacket {
     public void readPacket(final CustomPacketBuffer customPacketBuffer, final EntityPlayer entityPlayer) {
         BlockPos pos = customPacketBuffer.readBlockPos();
         new Explosion(entityPlayer.world, entityPlayer, pos.getX(), pos.getY(), pos.getZ(), customPacketBuffer.readInt(),
-                customPacketBuffer.readBoolean(), customPacketBuffer.readBoolean()).doExplosionB(true);
+                customPacketBuffer.readBoolean(), customPacketBuffer.readBoolean()
+        ).doExplosionB(true);
 
     }
 

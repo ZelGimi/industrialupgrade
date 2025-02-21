@@ -3,7 +3,7 @@ package com.denfop.tiles.base;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.energy.ITransformer;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Redstone;
 import com.denfop.componets.RedstoneHandler;
 import com.denfop.container.ContainerTransformer;
@@ -13,7 +13,6 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,7 +35,7 @@ public abstract class TileTransformer extends TileEntityInventory implements
         defaultMode = TileTransformer.Mode.redstone;
     }
 
-    protected final AdvEnergy energy;
+    protected final Energy energy;
     private final int defaultTier;
     private final Redstone redstone;
     private boolean hasRedstone = false;
@@ -49,7 +48,7 @@ public abstract class TileTransformer extends TileEntityInventory implements
         this.configuredMode = defaultMode;
         this.transformMode = null;
         this.defaultTier = tier;
-        this.energy = this.addComponent(new AdvEnergy(
+        this.energy = this.addComponent(new Energy(
                 this,
                 EnergyNetGlobal.instance.getPowerFromTier(tier) * 4.0D,
                 Collections.emptyList(),
@@ -230,9 +229,8 @@ public abstract class TileTransformer extends TileEntityInventory implements
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        super.addInformation(stack, tooltip, advanced);
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.item.tooltip.Low") + " " + +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
                 + Localization.translate("iu.generic.text.EUt") + " " + Localization.translate("iu.item.tooltip.High") + " " +
                 +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier() + 1) + " " + Localization.translate(
@@ -242,12 +240,12 @@ public abstract class TileTransformer extends TileEntityInventory implements
     }
 
     public ContainerTransformer getGuiContainer(EntityPlayer player) {
-        return new ContainerTransformer(player, this, 219);
+        return new ContainerTransformer(player, this, 202);
     }
 
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer player, boolean isAdmin) {
-        return new GuiTransformer(new ContainerTransformer(player, this, 219));
+        return new GuiTransformer(new ContainerTransformer(player, this, 202));
     }
 
     public void onGuiClosed(EntityPlayer player) {

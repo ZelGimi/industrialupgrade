@@ -1,6 +1,10 @@
 package com.denfop.tiles.panels.entity;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
+import com.denfop.api.IAdvEnergyNet;
+import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.energy.SunCoef;
 import com.denfop.api.solar.EnumSolarType;
 import com.denfop.api.solar.EnumTypeParts;
 import com.denfop.api.solar.ISolarTile;
@@ -21,6 +25,7 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,20 +63,21 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public boolean skyIsVisible;
     public List<List<EnumState>> listStable = new ArrayList<>(9);
     public double bonusGeneration;
-    public TileSolarPanel.GenerationState activeState;
+    public TileSolarPanel.GenerationState activeState = TileSolarPanel.GenerationState.NONE;
     public double load;
     public double genDay = 0;
     public double genNight = 0;
     public double genDayNight = 0;
     public double generating;
     private int level;
+    private SunCoef sunCoef;
 
     public TileEntityMiniPanels() {
         this.component = this.addComponent(ComponentMiniPanel.asBasicSource(this, 0, 14));
         this.invSlotGlass = new InvSlotGlassMiniPanels(this);
         this.invSlotStorage = new InvSlotStorageMiniPanels(this);
         this.invSlotOutput = new InvSlotOutputMiniPanels(this);
-        this.invSlotCore = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,2){
+        this.invSlotCore = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 2) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() == IUItem.core;
@@ -80,13 +86,42 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                SolarEnergySystem.system.calculateCores( ((TileEntityMiniPanels)this.base));
-                SolarEnergySystem.system.recalculation(((TileEntityMiniPanels)this.base), EnumTypeParts.GENERATION);
+                SolarEnergySystem.system.calculateCores(((TileEntityMiniPanels) this.base));
+                SolarEnergySystem.system.recalculation(((TileEntityMiniPanels) this.base), EnumTypeParts.GENERATION);
             }
         };
         this.pollution = this.addComponent(new ComponentPollution(this));
         this.timer = this.addComponent(new ComponentTimer(this, new Timer(3, 0, 0), new Timer(2, 30, 0), new Timer(2, 0, 0)));
         this.pollution.setTimer(timer);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(final ItemStack itemStack, final List<String> info) {
+
+
+        if (this.getWorld() != null) {
+
+
+            if (this.world.isDaytime()) {
+                info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                        + ModUtils.getString(this.generating) + " EF/t ");
+                info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                        + ModUtils.getString(this.genNight) + " EF/t ");
+            } else {
+                info.add(Localization.translate("supsolpans.iu.GenerationDay.tooltip") + " "
+                        + ModUtils.getString(this.genDay) + " EF/t ");
+                info.add(Localization.translate("supsolpans.iu.GenerationNight.tooltip") + " "
+                        + ModUtils.getString(this.generating) + " EF/t ");
+            }
+            info.add(Localization.translate("iu.item.tooltip.Output") + " "
+                    + ModUtils.getString(this.component.getProdution()) + " EF/t ");
+            info.add(Localization.translate("iu.item.tooltip.Capacity") + " "
+                    + ModUtils.getString(this.component.storage) + " EF ");
+            info.add(Localization.translate("iu.tier") + ModUtils.getString(this.component.getSourceTier()));
+        }
+
+
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -174,9 +209,9 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, this.pollution,false);
-            EncoderHandler.encode(packet, this.timer,false);
-            EncoderHandler.encode(packet, this.component,false);
+            EncoderHandler.encode(packet, this.pollution, false);
+            EncoderHandler.encode(packet, this.timer, false);
+            EncoderHandler.encode(packet, this.component, false);
             EncoderHandler.encode(packet, invSlotGlass);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -209,6 +244,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
                 coefpollution = 0.5;
                 break;
         }
+
         switch (this.activeState) {
             case DAY:
                 this.generating = (this.genDay + this.genDayNight) * (1 + this.bonusGeneration);
@@ -229,21 +265,32 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
                 break;
 
         }
+        this.generating *= coefpollution * experimental_generating();
+    }
 
-        this.generating *= coefpollution;
+    private double experimental_generating() {
+        if (this.sunCoef == null) {
+            this.sunCoef = EnergyNetGlobal.instance.getSunCoefficient(this.world);
+        }
+        return this.sunCoef.getCoef();
+
     }
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
-        this.hasSky = !this.world.provider.isNether();
-        this.biome = this.world.getBiome(this.pos);
-        updateVisibility();
-        SolarEnergySystem.system.calculateCores(this);
-        SolarEnergySystem.system.recalculation(this, EnumTypeParts.GENERATION);
-        SolarEnergySystem.system.recalculation(this, EnumTypeParts.OUTPUT);
-        SolarEnergySystem.system.recalculation(this, EnumTypeParts.CAPACITY);
+        if (!world.isRemote) {
+            this.canRain = (this.world.getBiome(this.pos).canRain() || this.world.getBiome(this.pos).getRainfall() > 0.0F);
+            this.hasSky = !this.world.provider.isNether();
+            this.biome = this.world.getBiome(this.pos);
+            updateVisibility();
+            SolarEnergySystem.system.calculateCores(this);
+            SolarEnergySystem.system.recalculation(this, EnumTypeParts.GENERATION);
+            SolarEnergySystem.system.recalculation(this, EnumTypeParts.OUTPUT);
+            SolarEnergySystem.system.recalculation(this, EnumTypeParts.CAPACITY);
+            IAdvEnergyNet advEnergyNet = EnergyNetGlobal.instance;
+            this.sunCoef = advEnergyNet.getSunCoefficient(this.world);
+        }
     }
 
     public void updateVisibility() {
@@ -310,6 +357,7 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
         if (this.getWorld().provider.getWorldTime() % 80 == 0) {
             updateVisibility();
         }
+        this.timer.setCanWork(!this.invSlotGlass.isEmpty());
         this.generating = 0;
         if (load >= 100) {
             return;
@@ -403,11 +451,6 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     }
 
     @Override
-    public void setCoreLevel(final int level) {
-        this.level = level;
-    }
-
-    @Override
     public List<ItemStack> getCoresItems() {
         return Arrays.asList(invSlotCore.gets());
     }
@@ -415,6 +458,11 @@ public class TileEntityMiniPanels extends TileEntityInventory implements ISolarT
     @Override
     public int getCoreLevel() {
         return this.level;
+    }
+
+    @Override
+    public void setCoreLevel(final int level) {
+        this.level = level;
     }
 
     @Override

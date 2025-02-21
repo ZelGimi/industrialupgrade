@@ -9,12 +9,12 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerObsidianGenerator;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -69,10 +69,18 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
         this.fluidSlot1 = new InvSlotFluidByList(this, 1, FluidRegistry.WATER);
         this.fluidSlot2 = new InvSlotFluidByList(this, 1, FluidRegistry.LAVA);
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.WATER)
+        this.fluidTank1 = fluids.addTank(
+                "fluidTank1",
+                12 * 1000,
+                Fluids.fluidPredicate(FluidRegistry.WATER),
+                InvSlot.TypeItemSlot.INPUT
 
         );
-        this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA)
+        this.fluidTank2 = fluids.addTank(
+                "fluidTank2",
+                12 * 1000,
+                Fluids.fluidPredicate(FluidRegistry.LAVA),
+                InvSlot.TypeItemSlot.INPUT
 
         );
         this.fluid_handler = new FluidHandlerRecipe("obsidian", fluids);
@@ -90,8 +98,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -100,7 +107,7 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -176,12 +183,17 @@ public abstract class TileBaseObsidianGenerator extends TileElectricMachine
             }
             check = true;
         }
-        if (check || (this.fluid_handler.output() == null && this.fluidTank2.getFluidAmount() >= 1000 && this.fluidTank1.getFluidAmount() >= 1000)) {
+        if (check || (this.fluid_handler.output() == null && this.fluidTank2.getFluidAmount() > 0 && this.fluidTank1.getFluidAmount() > 0)) {
             this.fluid_handler.getOutput();
+        } else {
+            if (this.fluid_handler.output() != null && !this.fluid_handler.checkFluids()) {
+                this.fluid_handler.setOutput(null);
+            }
         }
 
 
-        if (this.fluid_handler.output() != null && this.energy.canUseEnergy(energyConsume)) {
+        if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.energy.canUseEnergy(energyConsume) && this.outputSlot.canAdd(
+                this.fluid_handler.output().getOutput().items.get(0))) {
             if (!this.getActive()) {
                 setActive(true);
             }

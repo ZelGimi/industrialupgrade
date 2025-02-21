@@ -33,6 +33,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -64,7 +66,15 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                 (short) 300
         ));
         this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1) {
-            public void operateOnce(List<ItemStack> processResult) {
+
+            @Override
+            public void operateWithMax(final MachineRecipe output, final int size) {
+                this.operateWithMax(output);
+            }
+
+            @Override
+            public void operateWithMax(final MachineRecipe output) {
+                final List<ItemStack> processResult = this.updateTick.getRecipeOutput().getRecipe().output.items;
                 if (this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("type").isEmpty()) {
 
                     ItemStack stack1 = getUpgradeItem(this.invSlotRecipes.get(0))
@@ -73,8 +83,9 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                     ItemStack module = getUpgradeItem(this.invSlotRecipes.get(0))
                             ? this.invSlotRecipes.get(1)
                             : this.invSlotRecipes.get(0);
-                    if(module.isEmpty())
+                    if (module.isEmpty()) {
                         return;
+                    }
 
 
                     NBTTagCompound nbt1 = ModUtils.nbt(stack1);
@@ -97,43 +108,36 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                         ItemStack stack = this.outputSlot.get();
                         stack.setTagCompound(nbt1);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
-                        String mode = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getString("mode_module");
-                        final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
-                        int k = 0;
-                        for (int i = 0; i < 4 + list.size(); i++) {
-                            if (nbt.getString("mode_module" + i).isEmpty()) {
-                                k = i;
-                                break;
-                            }
-                        }
-                        nbt.setString("mode_module" + k, mode);
+                       final List<UpgradeModificator> list = UpgradeSystem.system.getListModifications(stack);
+                        NBTTagList modesTagList = nbt.getTagList("modes", 10);
+                        NBTTagCompound upgrade = new NBTTagCompound();
+                        upgrade.setInteger("index",module.getItemDamage());
+                        modesTagList.appendTag(upgrade);
+                        nbt.setTag("modes",modesTagList);
                         stack.setItemDamage(Damage);
                         ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                         ElectricItem.manager.use(stack, 1, null);
-
                         EnchantmentHelper.setEnchantments(enchantmentMap, stack);
                         MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, (IUpgradeItem) stack.getItem(), stack));
-
-
-                    }else if (module.getItem() instanceof ItemQuarryModule && module.getItemDamage() == 12) {
+                    } else if (module.getItem() instanceof ItemQuarryModule && module.getItemDamage() == 12) {
                         int Damage = stack1.getItemDamage();
                         NBTTagCompound nbt2 = ModUtils.nbt(module);
                         double newCharge = ElectricItem.manager.getCharge(stack1);
                         final Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack1);
-
                         this.invSlotRecipes.consume();
                         this.outputSlot.add(processResult);
                         ItemStack stack = this.outputSlot.get();
                         stack.setTagCompound(nbt1);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
+                        NBTTagList tagList = nbt.getTagList("blacklist", 8);
                         int size = nbt2.getInteger("size");
                         for (int j = 0; j < size; j++) {
                             String l = "number_" + j;
                             String temp = nbt2.getString(l);
-                            nbt.setString(l, temp);
+                            NBTTagString nbtTagString = new NBTTagString(temp);
+                            tagList.appendTag(nbtTagString);
                         }
-                        nbt.setBoolean("list", true);
-                        nbt.setInteger("size", size);
+                        nbt.setTag("blacklist",tagList);
                         stack.setItemDamage(Damage);
                         ElectricItem.manager.charge(stack, 1, Integer.MAX_VALUE, true, false);
                         ElectricItem.manager.use(stack, 1, null);
@@ -179,6 +183,8 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
                     }
                 }
             }
+
+
         });
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
@@ -291,7 +297,7 @@ public class TileUpgradeBlock extends TileDoubleElectricMachine implements IHasR
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
 

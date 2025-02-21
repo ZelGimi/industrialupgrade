@@ -2,8 +2,8 @@
   "parent" : "block/cube",
   "textures" : {
     "particle" : "industrialupgrade:blocks/limiter_side",
-    "down" : "industrialupgrade:blocks/limiter_bottom",
-    "up" : "industrialupgrade:blocks/limiter_top",
+    "down" : "industrialupgrade:blocks/limiter_side",
+    "up" : "industrialupgrade:blocks/limiter_side",
     "north" : "industrialupgrade:blocks/limiter_front",
     "east" : "industrialupgrade:blocks/limiter_side",
     "south" : "industrialupgrade:blocks/limiter_side",

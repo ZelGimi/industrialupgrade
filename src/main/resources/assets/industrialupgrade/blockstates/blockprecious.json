@@ -20,6 +20,37 @@
         "textures" : {
           "all" : "industrialupgrade:blocks/topaz_block"
         }
+      },
+	  
+	   "adamantite_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/adamantite_block"
+        }
+      },
+      "bloodstone_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/bloodstone_block"
+        }
+      },
+      "draconid_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/draconid_block"
+        }
+      },
+	  "meteoric_iron_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/meteoric_iron_block"
+        }
+      },
+      "mythril_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mythril_block"
+        }
+      },
+      "orichalcum_block" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/orichalcum_block"
+        }
       }
     },
     "inventory" : [

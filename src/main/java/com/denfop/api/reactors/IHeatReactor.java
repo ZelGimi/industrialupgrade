@@ -15,13 +15,14 @@ public interface IHeatReactor extends IAdvReactor, IMainMultiBlock {
     FluidTank getHeliumTank();
 
     int[] getLengthGraphiteIndex(int index);
+
     ItemStack getGraphite(int index);
 
     int getLevelGraphite(int index);
 
     double getFuelGraphite(int index);
 
-    void consumeFuelGraphite(int index,double fuel);
+    void consumeFuelGraphite(int index, double fuel);
 
     void consumeGraphite(int index);
 
@@ -44,4 +45,5 @@ public interface IHeatReactor extends IAdvReactor, IMainMultiBlock {
     double getHeliumToRegenerate();
 
     void updateDataReactor();
+
 }

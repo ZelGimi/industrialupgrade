@@ -27,8 +27,31 @@ public final class Vector3 {
         this(v.x, v.y, v.z);
     }
 
+    public static Vector3 fromEntityCenter(Entity e) {
+        return new Vector3(e.posX, e.posY - e.getYOffset() + e.height / 2, e.posZ);
+    }
+
     public static Vector3 fromEntity(Entity e) {
         return new Vector3(e.posX, e.posY, e.posZ);
+    }
+
+    public Vector3 subtract(double dx, double dy, double dz) {
+        x -= dx;
+        y -= dy;
+        z -= dz;
+        return this;
+    }
+
+    public Vector3 subtract(double d) {
+        return subtract(d, d, d);
+    }
+
+    public Vector3 subtract(Vector3 vec) {
+        return subtract(vec.x, vec.y, vec.z);
+    }
+
+    public double mag() {
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     public Vector3 copy() {

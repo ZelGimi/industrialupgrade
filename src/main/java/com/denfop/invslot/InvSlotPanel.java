@@ -2,9 +2,6 @@ package com.denfop.invslot;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.ElectricItem;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IEnergySink;
-import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
@@ -12,11 +9,9 @@ import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemBaseModules;
 import com.denfop.items.modules.ItemModuleType;
 import com.denfop.items.modules.ItemModuleTypePanel;
-import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.EnumType;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -76,11 +71,11 @@ public class InvSlotPanel extends InvSlot {
     public void checkmodule() {
         TileSolarPanel tile = (TileSolarPanel) base;
 
-        double temp_day = tile.k;
-        double temp_night = tile.m;
-        double temp_storage = tile.p;
-        double temp_producing = tile.u;
-        tile.tier = (int) tile.o;
+        double temp_day = tile.defaultDay;
+        double temp_night = tile.defaultNight;
+        double temp_storage = tile.defaultMaxStorage;
+        double temp_producing = tile.defaultOutoput;
+        tile.tier = (int) tile.defaultTier;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule) {
                 int kk = get(i).getItemDamage();
@@ -120,16 +115,16 @@ public class InvSlotPanel extends InvSlot {
                 double percent = module.percent;
                 switch (type) {
                     case DAY:
-                        temp_day += tile.k * percent;
+                        temp_day += tile.defaultDay * percent;
                         break;
                     case NIGHT:
-                        temp_night += tile.m * percent;
+                        temp_night += tile.defaultNight * percent;
                         break;
                     case STORAGE:
-                        temp_storage += tile.p * percent;
+                        temp_storage += tile.defaultMaxStorage * percent;
                         break;
                     case OUTPUT:
-                        temp_producing += tile.u * percent;
+                        temp_producing += tile.defaultOutoput * percent;
                         break;
                 }
             }
@@ -138,20 +133,10 @@ public class InvSlotPanel extends InvSlot {
         tile.genDay = temp_day;
         tile.genNight = temp_night;
         tile.maxStorage = temp_storage;
-        tile.production = temp_producing;
+        tile.output = temp_producing;
         tile.moonPhase = 1;
         tile.coef = 0;
-        tile.wireless = false;
-        tile.wirelessTransferList.clear();
-        for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
-                    .get(i)
-                    .getItemDamage() == 10) {
-                tile.wireless = true;
-                this.wirelessmodule();
-                break;
-            }
-        }
+        this.wirelessmodule();
 
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && EnumModule.getFromID(this
@@ -200,10 +185,13 @@ public class InvSlotPanel extends InvSlot {
 
     public void wirelessmodule() {
         TileSolarPanel tile = (TileSolarPanel) base;
+        tile.wirelessComponent.setUpdate(false);
+        tile.wirelessComponent.removeAll();
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemAdditionModule && this
                     .get(i)
                     .getItemDamage() == 10) {
+
                 int x;
                 int y;
                 int z;
@@ -212,18 +200,10 @@ public class InvSlotPanel extends InvSlot {
                 x = nbttagcompound.getInteger("Xcoord");
                 y = nbttagcompound.getInteger("Ycoord");
                 z = nbttagcompound.getInteger("Zcoord");
-                BlockPos pos = new BlockPos(x, y, z);
-                if (tile.getWorld().getTileEntity(pos) != null
-                        && tile.getWorld().getTileEntity(pos) instanceof TileEntityInventory && x != 0
-                        && y != 0 && z != 0 && !nbttagcompound.getBoolean("change")) {
-                    TileEntityInventory tile1 = (TileEntityInventory) tile.getWorld().getTileEntity(pos);
-                    final IEnergyTile energy = EnergyNetGlobal.instance.getTile(this.base
-                            .getParent()
-                            .getWorld(), pos);
-                    if (energy instanceof IEnergySink) {
-                        tile.wirelessTransferList.add(new WirelessTransfer(tile1, (IEnergySink) energy));
-                    }
-
+                if (!nbttagcompound.getBoolean("change")) {
+                    tile.wirelessComponent.setUpdate(true);
+                    BlockPos pos = new BlockPos(x, y, z);
+                    tile.wirelessComponent.addConnect(pos);
                 }
             }
 

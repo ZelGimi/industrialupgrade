@@ -32,14 +32,14 @@ public class EnchantRecipeWrapper implements IRecipeWrapper {
         this.outputstack = container.getOutput();
 
     }
-    public List<ItemStack> getInputs1(){
-        return Arrays.asList(inputstack,inputstack1);
+
+    public List<ItemStack> getInputs1() {
+        return Arrays.asList(inputstack, inputstack1);
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
-
-
 
 
     public List<List<ItemStack>> getInputs() {

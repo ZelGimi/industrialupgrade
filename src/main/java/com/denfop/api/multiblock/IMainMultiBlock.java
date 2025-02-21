@@ -11,6 +11,7 @@ public interface IMainMultiBlock extends IMultiElement {
     MultiBlockStructure getMultiBlockStucture();
 
     int getLevel();
+
     boolean wasActivated();
 
     void setActivated(boolean active);

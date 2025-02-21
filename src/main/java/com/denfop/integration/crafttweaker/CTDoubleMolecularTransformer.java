@@ -127,23 +127,23 @@ public class CTDoubleMolecularTransformer {
         public void apply() {
             String ore = "";
             String ore1 = "";
-            ItemStack stack = new IC2InputItemStack(this.container).getInputs().get(0);
-            int amount = new IC2InputItemStack(this.container).getAmount();
+            ItemStack stack = new InputItemStack(this.container).getInputs().get(0);
+            int amount = new InputItemStack(this.container).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            stack = new IC2InputItemStack(this.fill).getInputs().get(0);
-            int amount1 = new IC2InputItemStack(this.fill).getAmount();
+            stack = new InputItemStack(this.fill).getInputs().get(0);
+            int amount1 = new InputItemStack(this.fill).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore1 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
             Recipes.recipes.addAdderRecipe("doublemolecular", new BaseMachineRecipe(
                     new Input(
                             OreDictionary.getOres(ore).isEmpty()
-                                    ? new IC2InputItemStack(this.container)
+                                    ? new InputItemStack(this.container)
                                     : new InputOreDict(ore, amount),
                             OreDictionary.getOres(ore1).isEmpty()
-                                    ? new IC2InputItemStack(this.fill)
+                                    ? new InputItemStack(this.fill)
                                     : new InputOreDict(ore1, amount1)
                     ),
                     new RecipeOutput(this.nbt, getItemStack(this.output))

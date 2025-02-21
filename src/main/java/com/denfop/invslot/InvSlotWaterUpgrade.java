@@ -1,21 +1,17 @@
 package com.denfop.invslot;
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules;
-import com.denfop.api.water.upgrade.IRotorUpgradeItem;
-import com.denfop.api.water.upgrade.RotorUpgradeItemInform;
 import com.denfop.api.water.upgrade.RotorUpgradeSystem;
-import com.denfop.api.water.upgrade.event.EventRotorItemLoad;
 import com.denfop.api.windsystem.IWindUpgradeBlock;
-import com.denfop.utils.ModUtils;
+import com.denfop.tiles.mechanism.TileEntityWaterRotorModifier;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
 
-import java.util.List;
 import java.util.Map;
 
-public class InvSlotWaterUpgrade extends InvSlot {
+public class InvSlotWaterUpgrade extends InvSlot implements ITypeSlot {
 
     private final IWindUpgradeBlock tile;
 
@@ -25,6 +21,11 @@ public class InvSlotWaterUpgrade extends InvSlot {
         this.tile = base1;
     }
 
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.QUARRY1;
+    }
+
     public boolean accepts(ItemStack stack, final int index) {
         if (this.tile.getRotor() == null) {
             return false;
@@ -32,14 +33,21 @@ public class InvSlotWaterUpgrade extends InvSlot {
         if (!(stack.getItem() instanceof com.denfop.items.ItemWaterRotorsUpgrade)) {
             return false;
         }
-        List<RotorUpgradeItemInform> list = RotorUpgradeSystem.instance.getInformation(this.tile
-                .getItemStack());
+
         EnumInfoRotorUpgradeModules enumInfoRotorUpgradeModules = EnumInfoRotorUpgradeModules.getFromID(stack.getItemDamage());
-        RotorUpgradeItemInform modules = RotorUpgradeSystem.instance.getModules(enumInfoRotorUpgradeModules, list);
-        if (modules == null) {
+        int col = 0;
+        for (ItemStack stack1 : this.contents) {
+            if (stack1.isEmpty()) {
+                continue;
+            }
+            if (stack1.isItemEqual(stack)) {
+                col++;
+            }
+        }
+        if (col == 0) {
             return true;
         }
-        return (modules.number < enumInfoRotorUpgradeModules.getMax());
+        return (col < enumInfoRotorUpgradeModules.getMax());
     }
 
     public void update() {
@@ -53,6 +61,7 @@ public class InvSlotWaterUpgrade extends InvSlot {
         for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
             put(entry.getKey(), entry.getValue(), false);
         }
+        ((TileEntityWaterRotorModifier) this.base).updateTileServer(null, 1);
     }
 
     public void put(int index, ItemStack content, boolean updates) {

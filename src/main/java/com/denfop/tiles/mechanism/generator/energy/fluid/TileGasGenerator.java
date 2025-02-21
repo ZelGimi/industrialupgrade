@@ -10,8 +10,10 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerGasGenerator;
 import com.denfop.gui.GuiGasGenerator;
 import com.denfop.invslot.InvSlotCharge;
@@ -42,8 +44,10 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
     public final InvSlotCharge chargeSlot = new InvSlotCharge(this, 14);
     public final InvSlotFluid fluidSlot;
     public final InvSlotOutput outputSlot;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final int production = Math.round(450.0F);
+    private final AirPollutionComponent pollutionAir;
+    private final SoilPollutionComponent pollutionSoil;
     public boolean addedToEnergyNet = false;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
@@ -55,8 +59,10 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
                 InvSlotFluid.TypeFluidSlot.INPUT
         );
         this.outputSlot = new InvSlotOutput(this, 1);
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(this, 50000000, 14));
+        this.energy = this.addComponent(Energy.asBasicSource(this, 50000000, 14));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidgas.getInstance()));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.3));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
     }
 
     public IMultiTileBlock getTeBlock() {

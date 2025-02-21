@@ -9,12 +9,12 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.componets.*;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerTripleElectricMachine;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.PacketStopSound;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,7 +73,7 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
-        this.energy = this.addComponent(AdvEnergy
+        this.energy = this.addComponent(Energy
                 .asBasicSink(this, (double) energyPerTick * length, aDefaultTier)
                 .addManagedSlot(this.dischargeSlot));
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
@@ -85,17 +85,16 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
         return this.sound;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (stack.getItemDamage() == 3 && type == EnumTripleElectricMachine.ADV_ALLOY_SMELTER) {
             if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("press.lshift"));
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
 
             }
         } else {
@@ -103,13 +102,13 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
                 tooltip.add(Localization.translate("press.lshift"));
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+                tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                         "iu.machines_work_energy_type_eu"));
-                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+                tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
             }
         }
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -176,8 +175,8 @@ public abstract class TileTripleElectricMachine extends TileStandartMachine
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

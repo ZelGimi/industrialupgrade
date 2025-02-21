@@ -13,7 +13,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -99,19 +98,36 @@ public class IULeaves extends BlockLeaves implements IModelRegister {
     }
 
     public boolean isOpaqueCube(IBlockState state) {
-        return Blocks.LEAVES.isOpaqueCube(state);
+        return super.isOpaqueCube(state);
+    }
+
+    @Override
+    public boolean isNormalCube(
+            final IBlockState p_isNormalCube_1_,
+            final IBlockAccess p_isNormalCube_2_,
+            final BlockPos p_isNormalCube_3_
+    ) {
+        return false;
     }
 
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
-        return Blocks.LEAVES.getBlockLayer();
+        return BlockRenderLayer.CUTOUT;
     }
 
     public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        BlockPos nPos = pos.offset(side);
-        return (!this.isOpaqueCube(state) || world.getBlockState(nPos) != state) && !world
-                .getBlockState(nPos)
-                .doesSideBlockRendering(world, nPos, side.getOpposite());
+
+        return true;
+    }
+
+    @Override
+    public boolean doesSideBlockRendering(
+            final IBlockState p_doesSideBlockRendering_1_,
+            final IBlockAccess p_doesSideBlockRendering_2_,
+            final BlockPos p_doesSideBlockRendering_3_,
+            final EnumFacing p_doesSideBlockRendering_4_
+    ) {
+        return false;
     }
 
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {

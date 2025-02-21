@@ -26,7 +26,7 @@ public class CTFermer {
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )
@@ -42,7 +42,7 @@ public class CTFermer {
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                 )
@@ -59,7 +59,7 @@ public class CTFermer {
                 "farmer",
                 new BaseMachineRecipe(
                         new Input(
-                                new IC2InputItemStack(container)
+                                new InputItemStack(container)
                         ),
                         new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                 )

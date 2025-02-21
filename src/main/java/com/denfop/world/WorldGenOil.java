@@ -1,6 +1,5 @@
 package com.denfop.world;
 
-import com.denfop.IUItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +23,7 @@ public class WorldGenOil extends WorldGenerator {
 
     @Override
     public boolean generate(@Nonnull final World world, @Nonnull final Random rand, final BlockPos pos) {
-        if (WorldGenOres.random.nextInt(10) > 0) {
+        if (WorldBaseGen.random.nextInt(10) > 0) {
             return false;
         }
         int x = pos.getX();

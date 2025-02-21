@@ -1,7 +1,6 @@
 package com.denfop.render.anvil;
 
 import com.denfop.tiles.base.TileEntityAnvil;
-import com.denfop.tiles.mechanism.TileAdvOilRefiner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -11,7 +10,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 
-public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil> {
+public class RenderItemAnvil extends TileEntitySpecialRenderer<TileEntityAnvil> {
+
     public void render(
             TileEntityAnvil tile,
             double x,
@@ -24,7 +24,7 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
         ItemStack itemstack = tile.inputSlotA.get();
-        if(!itemstack.isEmpty()) {
+        if (!itemstack.isEmpty()) {
             this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             GlStateManager.enableRescaleNormal();
             GlStateManager.alphaFunc(516, 0.1F);
@@ -36,8 +36,8 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
                     GlStateManager.SourceFactor.ONE,
                     GlStateManager.DestFactor.ZERO
             );
-            GlStateManager.translate(0.5,1,0.3);
-            GlStateManager.rotate(90,1,0,0);
+            GlStateManager.translate(0.5, 1, 0.3);
+            GlStateManager.rotate(90, 1, 0, 0);
             IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
                     itemstack,
                     tile.getWorld(),
@@ -52,15 +52,16 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
             Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
 
 
+            if (itemstack.getCount() > 1) {
+                if (tile.facing == 5 || tile.facing == 4) {
+                    GlStateManager.translate(0, -1.75, 0);
 
-            if(itemstack.getCount() > 1) {
-                if(tile.facing == 5 || tile.facing == 4) {
-                    GlStateManager.translate(-1.75,0, 0);
-                }else
-                GlStateManager.translate(0,-1.75,0);
+                } else {
+                    GlStateManager.translate(-1.75, 0, 0);
+                }
 
-                for(int i =0; i < itemstack.getCount() - 1; i++){
-                    GlStateManager.translate(0,0,-0.0075);
+                for (int i = 0; i < itemstack.getCount() - 1; i++) {
+                    GlStateManager.translate(0, 0, -0.0075);
                     Minecraft.getMinecraft().getRenderItem().renderItem(itemstack, transformedModel);
 
 
@@ -77,7 +78,7 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
         final ItemStack itemstack1 = tile.outputSlot.get();
-        if(!itemstack1.isEmpty() && itemstack1.getCount() >0) {
+        if (!itemstack1.isEmpty() && itemstack1.getCount() > 0) {
             GlStateManager.translate(x, y, z);
             this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             GlStateManager.enableRescaleNormal();
@@ -90,12 +91,13 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
                     GlStateManager.SourceFactor.ONE,
                     GlStateManager.DestFactor.ZERO
             );
-            if(tile.facing != 5 && tile.facing != 4) {
-                GlStateManager.translate(0.5, 1, 1.3);
-            }else{
+            if (tile.facing != 5 && tile.facing != 4) {
                 GlStateManager.translate(1.3, 1, 0.4);
+            } else {
+
+                GlStateManager.translate(0.5, 1, 1.3);
             }
-            GlStateManager.rotate(90,1,0,0);
+            GlStateManager.rotate(90, 1, 0, 0);
             IBakedModel ibakedmodel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
                     itemstack1,
                     tile.getWorld(),
@@ -107,8 +109,8 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
                     ItemCameraTransforms.TransformType.GROUND,
                     false
             );
-            for(int i =0; i < itemstack1.getCount(); i++){
-                GlStateManager.translate(0,0,-0.0075);
+            for (int i = 0; i < itemstack1.getCount(); i++) {
+                GlStateManager.translate(0, 0, -0.0075);
 
                 Minecraft.getMinecraft().getRenderItem().renderItem(itemstack1, transformedModel1);
 
@@ -124,4 +126,5 @@ public class RenderItemAnvil  extends TileEntitySpecialRenderer<TileEntityAnvil>
         }
         GlStateManager.popMatrix();
     }
+
 }

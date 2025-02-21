@@ -36,14 +36,14 @@
           "all" : "industrialupgrade:blocks/tantalum_ore"
         }
       },
-      "nickel" : {
+      "saltpeter" : {
         "textures" : {
-          "all" : "industrialupgrade:blocks/nickel_ore"
+          "all" : "industrialupgrade:blocks/saltpeter"
         }
       },
-      "platium" : {
+      "calcium" : {
         "textures" : {
-          "all" : "industrialupgrade:blocks/platium_ore"
+          "all" : "industrialupgrade:blocks/calcium"
         }
       },
       "titanium" : {

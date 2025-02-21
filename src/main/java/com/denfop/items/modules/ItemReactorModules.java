@@ -63,40 +63,40 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
         double exchanger = craftingTypes.exchanger - 1;
         double vent = craftingTypes.vent - 1;
         double componentVent = craftingTypes.componentVent - 1;
-        if(generation > 0){
-            info.add(Localization.translate("reactor.generation_plus") + ((int)(craftingTypes.generation * 100) - 100) + "%");
-        }else if(generation < 0){
-            info.add(Localization.translate("reactor.generation_minus") + (100 - (int)(craftingTypes.generation* 100)) + "%");
+        if (generation > 0) {
+            info.add(Localization.translate("reactor.generation_plus") + ((int) (craftingTypes.generation * 100) - 100) + "%");
+        } else if (generation < 0) {
+            info.add(Localization.translate("reactor.generation_minus") + (100 - (int) (craftingTypes.generation * 100)) + "%");
         }
-        if(radiation > 0){
-            info.add(Localization.translate("reactor.radiation_plus") + ((int)(craftingTypes.radiation * 100) - 100) + "%");
-        }else if(radiation < 0){
-            info.add(Localization.translate("reactor.radiation_minus") + (100 - (int)(craftingTypes.radiation* 100)) + "%");
+        if (radiation > 0) {
+            info.add(Localization.translate("reactor.radiation_plus") + ((int) (craftingTypes.radiation * 100) - 100) + "%");
+        } else if (radiation < 0) {
+            info.add(Localization.translate("reactor.radiation_minus") + (100 - (int) (craftingTypes.radiation * 100)) + "%");
         }
-        if(vent > 0){
-            info.add(Localization.translate("reactor.vent_plus") + ((int)(craftingTypes.vent * 100) - 100) + "%");
-        }else if(vent < 0){
-            info.add(Localization.translate("reactor.vent_minus") + (100 - (int)(craftingTypes.vent* 100)) + "%");
+        if (vent > 0) {
+            info.add(Localization.translate("reactor.vent_plus") + ((int) (craftingTypes.vent * 100) - 100) + "%");
+        } else if (vent < 0) {
+            info.add(Localization.translate("reactor.vent_minus") + (100 - (int) (craftingTypes.vent * 100)) + "%");
         }
-        if(stableHeat > 0){
-            info.add(Localization.translate("reactor.stableheat_plus") + ((int)(craftingTypes.stableHeat * 100) - 100) + "%");
-        }else if(stableHeat < 0){
-            info.add(Localization.translate("reactor.stableheat_minus") + (100 - (int)(craftingTypes.stableHeat* 100)) + "%");
+        if (stableHeat > 0) {
+            info.add(Localization.translate("reactor.stableheat_plus") + ((int) (craftingTypes.stableHeat * 100) - 100) + "%");
+        } else if (stableHeat < 0) {
+            info.add(Localization.translate("reactor.stableheat_minus") + (100 - (int) (craftingTypes.stableHeat * 100)) + "%");
         }
-        if(capacitor > 0){
-            info.add(Localization.translate("reactor.capacitor_plus") + ((int)(craftingTypes.capacitor * 100) - 100) + "%");
-        }else if(capacitor < 0){
-            info.add(Localization.translate("reactor.capacitor_minus") + (100 - (int)(craftingTypes.capacitor* 100)) + "%");
+        if (capacitor > 0) {
+            info.add(Localization.translate("reactor.capacitor_plus") + ((int) (craftingTypes.capacitor * 100) - 100) + "%");
+        } else if (capacitor < 0) {
+            info.add(Localization.translate("reactor.capacitor_minus") + (100 - (int) (craftingTypes.capacitor * 100)) + "%");
         }
-        if(componentVent > 0){
-            info.add(Localization.translate("reactor.componentvent_plus") + ((int)(craftingTypes.componentVent * 100) - 100) + "%");
-        }else if(componentVent < 0){
-            info.add(Localization.translate("reactor.componentvent_minus") + (100 - (int)(craftingTypes.componentVent* 100)) + "%");
+        if (componentVent > 0) {
+            info.add(Localization.translate("reactor.componentvent_plus") + ((int) (craftingTypes.componentVent * 100) - 100) + "%");
+        } else if (componentVent < 0) {
+            info.add(Localization.translate("reactor.componentvent_minus") + (100 - (int) (craftingTypes.componentVent * 100)) + "%");
         }
-        if(exchanger > 0){
-            info.add(Localization.translate("reactor.exchanger_plus") + ((int)(craftingTypes.exchanger * 100) - 100) + "%");
-        }else if(exchanger < 0){
-            info.add(Localization.translate("reactor.exchanger_minus") + (100 - (int)(craftingTypes.exchanger* 100)) + "%");
+        if (exchanger > 0) {
+            info.add(Localization.translate("reactor.exchanger_plus") + ((int) (craftingTypes.exchanger * 100) - 100) + "%");
+        } else if (exchanger < 0) {
+            info.add(Localization.translate("reactor.exchanger_minus") + (100 - (int) (craftingTypes.exchanger * 100)) + "%");
         }
     }
 
@@ -148,37 +148,38 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
     }
 
     public enum CraftingTypes implements ISubEnum {
-        generation0(0.98,1,1.05,1,1,1,1),
-        generation1(0.95,1,1.1,1,1,1,1),
-        generation2(0.92,1,1.15,1,1,1,1),
-        generation3(0.90,1,1.2,1,1,1,1),
-        radiation0(1.02,1.25,1,1,1,1,1),
-        radiation1(1.05,1.5,1,1,1,1,1),
-        radiation2(1.08,2,1,1,1,1,1),
-        radiation3(1.1,4,1,1,1,1,1),
-        stableheat0(1.05,1.25,0.98,1,1,1,1),
-        stableheat1(1.1,2.5,0.95,1,1,1,1),
-        stableheat2(1.15,3,0.9,1,1,1,1),
-        stableheat3(1.2,4,0.85,1,1,1,1),
-        vent0(1.0,1,1,1,1.05,0.95,1),
-        vent1(1,1,1,1,1.1,0.9,1),
-        vent2(1,1,1,0.8,1.15,0.9,1),
-        vent3(1,1,1,0.75,1.2,0.85,1),
-        componentvent0(1.0,1,1,1.25,0.95,0.95,1),
-        componentvent1(1,1,1,1.5,0.925,0.925,1),
-        componentvent2(1,1,1,1.75,0.9,0.9,1),
-        componentvent3(1,1,1,2,0.88,0.88,1),
+        generation0(0.98, 1, 1.05, 1, 1, 1, 1),
+        generation1(0.95, 1, 1.1, 1, 1, 1, 1),
+        generation2(0.92, 1, 1.15, 1, 1, 1, 1),
+        generation3(0.90, 1, 1.2, 1, 1, 1, 1),
+        radiation0(1.02, 1.25, 1, 1, 1, 1, 1),
+        radiation1(1.04, 2.5, 1, 1, 1, 1, 1),
+        radiation2(1.06, 3, 1, 1, 1, 1, 1),
+        radiation3(1.08, 4, 1, 1, 1, 1, 1),
+        stableheat0(1.05, 1.25, 0.98, 1, 1, 1, 1),
+        stableheat1(1.1, 1.5, 0.95, 1, 1, 1, 1),
+        stableheat2(1.15, 1.75, 0.9, 1, 1, 1, 1),
+        stableheat3(1.2, 2, 0.85, 1, 1, 1, 1),
+        vent0(1.0, 1, 1, 1, 1.05, 0.95, 1),
+        vent1(1, 1, 1, 1, 1.1, 0.9, 1),
+        vent2(1, 1, 1, 0.8, 1.15, 0.9, 1),
+        vent3(1, 1, 1, 0.75, 1.2, 0.85, 1),
+        componentvent0(1.0, 1, 1, 1.25, 0.95, 0.95, 1),
+        componentvent1(1, 1, 1, 1.5, 0.925, 0.925, 1),
+        componentvent2(1, 1, 1, 1.75, 0.9, 0.9, 1),
+        componentvent3(1, 1, 1, 2, 0.88, 0.88, 1),
 
-        exchanger0(0.98,1,1,1.1,0.9,1.05,1),
-        exchanger1(0.95,1,1,1.25,0.875,1.1,1),
-        exchanger2(0.925,1,1,1.25,0.85,1.2,1),
-        exchanger3(0.9,1,1,1.25,0.825,1.3,1),
+        exchanger0(0.98, 1, 1, 1.1, 0.9, 1.05, 1),
+        exchanger1(0.95, 1, 1, 1.25, 0.875, 1.1, 1),
+        exchanger2(0.925, 1, 1, 1.25, 0.85, 1.2, 1),
+        exchanger3(0.9, 1, 1, 1.25, 0.825, 1.3, 1),
 
-        capacitor0(1,1,0.975,1.1,1,1.0,1.25),
-        capacitor1(1,1,0.95,1.2,1,1,1.5),
-        capacitor2(1,1,0.925,1.4,1,1,2),
-        capacitor3(1,1,0.9,1.8,1,1,2.5),
+        capacitor0(1, 1, 0.975, 1.1, 1, 1.0, 1.25),
+        capacitor1(1, 1, 0.95, 1.2, 1, 1, 1.5),
+        capacitor2(1, 1, 0.925, 1.4, 1, 1, 2),
+        capacitor3(1, 1, 0.9, 1.8, 1, 1, 2.5),
         ;
+        private final String name;
         private double stableHeat;
         private double radiation;
         private double generation;
@@ -186,19 +187,23 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
         private double vent;
         private double exchanger;
         private double capacitor;
-        private final String name;
 
         CraftingTypes(
-                double stableHeat , double radiation, double generation, double componentVent,
-                double vent, double exchanger, double capacitor) {
+                double stableHeat, double radiation, double generation, double componentVent,
+                double vent, double exchanger, double capacitor
+        ) {
             this.name = this.name().toLowerCase(Locale.US);
             this.stableHeat = stableHeat;
-            this. radiation =radiation;
+            this.radiation = radiation;
             this.generation = generation;
-            this. vent = vent;
+            this.vent = vent;
             this.componentVent = componentVent;
-            this. exchanger = exchanger;
-            this. capacitor = capacitor;
+            this.exchanger = exchanger;
+            this.capacitor = capacitor;
+        }
+
+        public static CraftingTypes getFromID(final int ID) {
+            return values()[ID % values().length];
         }
 
         public double getCapacitor() {
@@ -227,10 +232,6 @@ public class ItemReactorModules extends ItemSubTypes<ItemReactorModules.Crafting
 
         public double getVent() {
             return vent;
-        }
-
-        public static CraftingTypes getFromID(final int ID) {
-            return values()[ID % values().length];
         }
 
         public String getName() {

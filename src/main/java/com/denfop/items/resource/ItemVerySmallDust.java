@@ -57,8 +57,7 @@ public class ItemVerySmallDust extends ItemSubTypes<ItemVerySmallDust.Types> imp
 
         osmium(19),
         tantalum(20),
-        cadmium(21)
-        ;
+        cadmium(21);
 
         private final String name;
         private final int ID;

@@ -42,6 +42,20 @@ public class ItemTreetapEnergy extends ItemEnergyTool {
             } else {
                 return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
             }
+        } else if (block == IUItem.swampRubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
+            if (ItemTreetap.attemptSwampExtract(player, world, pos, side, state, null)) {
+                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
+                return EnumActionResult.SUCCESS;
+            } else {
+                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+            }
+        } else if (block == IUItem.tropicalRubWood && ElectricItem.manager.canUse(stack, this.operationEnergyCost)) {
+            if (ItemTreetap.attemptTropicalExtract(player, world, pos, side, state, null)) {
+                ElectricItem.manager.use(stack, this.operationEnergyCost, player);
+                return EnumActionResult.SUCCESS;
+            } else {
+                return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+            }
         } else {
             return EnumActionResult.PASS;
         }

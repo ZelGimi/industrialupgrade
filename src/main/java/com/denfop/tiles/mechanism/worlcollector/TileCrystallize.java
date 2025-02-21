@@ -8,10 +8,14 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.EnumTypeCollector;
 import com.denfop.tiles.base.IIsMolecular;
 import com.denfop.tiles.base.TileBaseWorldCollector;
 import com.denfop.tiles.base.TileEntityBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -25,6 +29,10 @@ import java.io.IOException;
 public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecular {
 
     protected ItemStack output_stack;
+    @SideOnly(Side.CLIENT)
+    private IBakedModel bakedModel;
+    @SideOnly(Side.CLIENT)
+    private IBakedModel transformedModel;
 
     public TileCrystallize() {
         super(EnumTypeCollector.DEFAULT);
@@ -69,7 +77,7 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
         } else {
             output_stack = new ItemStack(Items.AIR);
         }
-
+        new PacketUpdateFieldTile(this, "output", this.output_stack);
         this.setOverclockRates();
 
     }
@@ -97,13 +105,52 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
         return packet;
     }
 
+    @Override
+    public void updateField(final String name, final CustomPacketBuffer is) {
+        if (name.equals("output")) {
+            try {
+                this.output_stack = (ItemStack) DecoderHandler.decode(is);
+                if (!output_stack.isEmpty()) {
+                    this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                            output_stack,
+                            this.getWorld(),
+                            null
+                    );
+                    this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                            this.bakedModel,
+                            ItemCameraTransforms.TransformType.GROUND,
+                            false
+                    );
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        super.updateField(name, is);
+    }
+
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
             output_stack = (ItemStack) DecoderHandler.decode(customPacketBuffer);
+            this.bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(
+                    output_stack,
+                    this.getWorld(),
+                    null
+            );
+            this.transformedModel = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(
+                    this.bakedModel,
+                    ItemCameraTransforms.TransformType.GROUND,
+                    false
+            );
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IBakedModel getTransformedModel() {
+        return this.transformedModel;
     }
 
     @SideOnly(Side.CLIENT)
@@ -144,6 +191,12 @@ public class TileCrystallize extends TileBaseWorldCollector implements IIsMolecu
     @Override
     public TileEntityBlock getEntityBlock() {
         return this;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IBakedModel getBakedModel() {
+        return bakedModel;
     }
 
 }

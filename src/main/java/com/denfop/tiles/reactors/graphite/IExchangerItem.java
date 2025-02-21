@@ -1,9 +1,13 @@
 package com.denfop.tiles.reactors.graphite;
 
-import com.denfop.api.multiblock.IMultiElement;
+import net.minecraft.item.ItemStack;
 
-public interface IExchangerItem   {
+public interface IExchangerItem {
+
     double getPercent();
 
     int getLevel();
+
+    boolean damageItem(ItemStack stack, int damage);
+
 }

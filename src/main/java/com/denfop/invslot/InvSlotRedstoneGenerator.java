@@ -23,20 +23,7 @@ public class InvSlotRedstoneGenerator extends InvSlot {
     @Override
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
-        if (content.isEmpty()) {
-            if (this.tile.fuel == 0) {
-                tile.redstone_coef = 0;
-            }
-        }
-        if (content.getItem() == Items.REDSTONE) {
-            tile.redstone_coef = 1;
-        } else if (content.getItem() == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK)) {
-            tile.redstone_coef = 9;
-        } else {
-            if (this.tile.fuel == 0) {
-                tile.redstone_coef = 0;
-            }
-        }
+
 
     }
 

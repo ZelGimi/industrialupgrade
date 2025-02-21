@@ -1,37 +1,42 @@
 package com.denfop.api.space.fakebody;
 
 import com.denfop.api.space.IBody;
+import com.denfop.api.space.SpaceNet;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Data implements IData {
 
-    private final FakePlayer player;
+    private final UUID player;
     private final IBody body;
     private double percent;
 
-    public Data(FakePlayer player, IBody body) {
+    public Data(UUID player, IBody body) {
         this.player = player;
         this.body = body;
-        this.init(body);
     }
 
-    private void init(final IBody body) {
-        final NBTTagCompound nbt = this.player.getTag();
-        if (nbt.hasKey("space")) {
-            final NBTTagCompound nbt1 = nbt.getCompoundTag("space");
-            this.percent = nbt1.getDouble(body.getName().toLowerCase());
-
-        } else {
-            final NBTTagCompound nbt1 = ModUtils.nbt();
-            this.percent = 0;
-            nbt1.setDouble(body.getName().toLowerCase(), 0);
-            nbt.setTag("space", nbt1);
-
-        }
+    public IBody getBody() {
+        return body;
     }
+
+    public NBTTagCompound writeNBT() {
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        nbtTagCompound.setDouble("percent",percent);
+        nbtTagCompound.setUniqueId("uuid",player);
+        nbtTagCompound.setString("nameBody", body.getName());
+        return nbtTagCompound;
+    }
+
+    public Data(NBTTagCompound nbtTagCompound) {
+        this.player =nbtTagCompound.getUniqueId("uuid");
+        this.body = SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("nameBody"));
+        this.percent = nbtTagCompound.getDouble("percent");
+    }
+
 
     @Override
     public boolean equals(final Object o) {
@@ -53,27 +58,23 @@ public class Data implements IData {
 
     @Override
     public void addInformation() {
-        final NBTTagCompound nbt = this.player.getTag();
-        final NBTTagCompound nbt1 = nbt.getCompoundTag("space");
-        nbt1.setDouble(this.body.getName().toLowerCase(), Math.min(this.percent + 1, 100));
-
-
+        this.percent+=1;
+        if (percent > 100)
+            percent = 100;
     }
 
     @Override
     public void setInformation(final double information) {
-        final NBTTagCompound nbt = this.player.getTag();
-        final NBTTagCompound nbt1 = nbt.getCompoundTag("space");
-        nbt1.setDouble(this.body.getName().toLowerCase(), Math.min(information, 100));
-
+       this.percent=information;
+        if (percent > 100)
+            percent = 100;
     }
 
     @Override
     public void addInformation(final double information) {
-        final NBTTagCompound nbt = this.player.getTag();
-        final NBTTagCompound nbt1 = nbt.getCompoundTag("space");
-        nbt1.setDouble(this.body.getName().toLowerCase(), Math.min(this.percent + information, 100));
-
+        this.percent+=information;
+        if (percent > 100)
+            percent = 100;
     }
 
 

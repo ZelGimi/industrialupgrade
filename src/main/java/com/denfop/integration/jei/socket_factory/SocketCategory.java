@@ -27,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class SocketCategory extends GuiIU implements IRecipeCategory<SocketRecipeWrapper> {
@@ -48,11 +47,11 @@ public class SocketCategory extends GuiIU implements IRecipeCategory<SocketRecip
         );
         this.componentList.clear();
         this.slots = new GuiComponent(this, 3, 3, getComponent(),
-                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI))
         );
         this.container1 = (ContainerSocket) this.getContainer();
         this.componentList.add(slots);
-        progress_bar =  new GuiComponent(this, 80, 35, EnumTypeComponent.PROCESS,
+        progress_bar = new GuiComponent(this, 80, 35, EnumTypeComponent.PROCESS,
                 new Component<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);

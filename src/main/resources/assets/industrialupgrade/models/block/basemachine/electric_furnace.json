@@ -2,7 +2,7 @@
 	"parent": "block/cube",
 	"textures": {
 		"particle": "industrialupgrade:blocks/electric_furnace_leftrightback",
-		"down": "industrialupgrade:blocks/electric_furnace_bottom",
+		"down": "industrialupgrade:blocks/electric_furnace_leftrightback",
 		"up": "industrialupgrade:blocks/electric_furnace_top",
 		"north": "industrialupgrade:blocks/electric_furnace_front",
 		"east": "industrialupgrade:blocks/electric_furnace_leftrightback",

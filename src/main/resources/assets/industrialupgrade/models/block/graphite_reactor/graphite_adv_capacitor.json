@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
-  "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor_side",
-    "down" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor_side",
-    "up" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor_side",
-    "north" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor",
-    "east" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor_side",
-    "south" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor",
-    "west" : "industrialupgrade:blocks/graphite_reactor/adv_capacitor_side"
-  }
+  "parent" : "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:blocks/graphite_reactor/capacitor/adv_capacitor_side"
+    }
 }

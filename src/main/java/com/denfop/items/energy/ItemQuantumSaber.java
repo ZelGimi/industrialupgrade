@@ -17,12 +17,16 @@ import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.network.packet.PacketSoundPlayer;
 import com.denfop.network.packet.PacketStopSoundPlayer;
 import com.denfop.register.Register;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +34,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -38,6 +43,7 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -47,11 +53,14 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeItem, IModelRegister {
 
@@ -71,13 +80,15 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
     ) {
         super(0, 2, ToolMaterial.DIAMOND, Collections.emptySet());
         this.soundTicker = 0;
-        this.setHarvestLevel("sword", 3);
+        this.setHarvestLevel("sword", 1);
         this.maxCharge = maxCharge;
         this.transferLimit = transferLimit;
         this.tier = tier;
         this.name = name;
         this.activedamage = activedamage1;
         this.damage1 = damage;
+        this.efficiency = 1;
+        this.setMaxDamage(0);
         setMaxStackSize(1);
         setNoRepair();
         setUnlocalizedName(name);
@@ -108,6 +119,25 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
                 "energy_tools" + "/" + name + extraName;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.SABERS.list;
+    }
+
+    @Override
+    public int getHarvestLevel(
+            ItemStack stack,
+            String toolClass,
+            @javax.annotation.Nullable net.minecraft.entity.player.EntityPlayer player,
+            @javax.annotation.Nullable IBlockState blockState
+    ) {
+        int level = super.getHarvestLevel(stack, toolClass, player, blockState);
+        if (level == -1 && toolClass.equals("sword")) {
+            return this.toolMaterial.getHarvestLevel();
+        } else {
+            return level;
+        }
     }
 
     public boolean showDurabilityBar(final ItemStack stack) {
@@ -181,16 +211,16 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
     }
 
     public float getDestroySpeed(@Nonnull ItemStack itemStack, @Nonnull IBlockState state) {
+        Block block = state.getBlock();
 
-        NBTTagCompound nbtData = ModUtils.nbt(itemStack);
-        if (nbtData.getBoolean("active")) {
-            this.soundTicker++;
-            if (this.soundTicker % 4 == 0) {
-                IUCore.proxy.playSoundSp(getRandomSwingSound(), 1.0F, 1.0F);
-            }
-            return 4.0F;
+        if (block == Blocks.WEB) {
+            return 15.0F;
+        } else {
+            Material material = state.getMaterial();
+            return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD
+                    ? 1.0F
+                    : 1.5F;
         }
-        return 1.0F;
     }
 
     @Nonnull
@@ -238,7 +268,19 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.VAMPIRES, stack).number : 0);
             boolean wither = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WITHER, stack);
             boolean poison = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.POISON, stack);
-
+            int saberdamage = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack) ?
+                    UpgradeSystem.system.getModules(EnumInfoUpgradeModules.SABER_DAMAGE, stack).number : 0);
+            int dmg = (int) (damage1 + damage1 * 0.15 * saberdamage);
+            int attackMode = nbtData.getInteger("attackMode");
+            if (ElectricItem.manager.canUse(stack, 400.0D)) {
+                NBTTagCompound nbtData1 = ModUtils.nbt(stack);
+                if (nbtData1.getBoolean("active")) {
+                    dmg = (int) (activedamage + activedamage * 0.15 * saberdamage);
+                }
+                if (attackMode != 0) {
+                    areaAttack(stack, target, source, 2, dmg);
+                }
+            }
 
             if (vampires != 0) {
                 target.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 40, vampires));
@@ -294,7 +336,17 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
 
         return true;
     }
-
+    private void areaAttack(ItemStack stack, EntityLivingBase target, EntityLivingBase source, int radius, double damage) {
+        List<EntityLivingBase> entities = source.world.getEntitiesWithinAABB(
+                EntityLivingBase.class,
+                source.getEntityBoundingBox().grow(radius)
+        );
+        for (EntityLivingBase entity : entities) {
+            if (entity != source && entity != target) {
+                entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) source), (float) damage);
+            }
+        }
+    }
     public String getRandomSwingSound() {
         switch (IUCore.random.nextInt(3)) {
             default:
@@ -329,20 +381,47 @@ public class ItemQuantumSaber extends ItemTool implements IEnergyItem, IUpgradeI
             return new ActionResult<>(EnumActionResult.PASS, stack);
         } else {
             NBTTagCompound nbt = ModUtils.nbt(stack);
-            if (isActive(nbt)) {
-                setActive(nbt, false);
-                new PacketStopSoundPlayer(EnumSound.NanosabreIdle,player);
-                return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-            } else if (ElectricItem.manager.canUse(stack, 16.0D)) {
-                setActive(nbt, true);
-                new PacketSoundPlayer(this.getStartSound(), player);
-                return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            if (!IUCore.keyboard.isChangeKeyDown(player)) {
+                if (isActive(nbt)) {
+                    setActive(nbt, false);
+                    new PacketStopSoundPlayer(EnumSound.NanosabreIdle, player);
+                    return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+                } else if (ElectricItem.manager.canUse(stack, 16.0D)) {
+                    setActive(nbt, true);
+                    new PacketSoundPlayer(this.getStartSound(), player);
+                    return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+                } else {
+                    return super.onItemRightClick(world, player, hand);
+                }
             } else {
-                return super.onItemRightClick(world, player, hand);
+                int mode = nbt.getInteger("attackMode");
+                if (mode == 0) {
+                    nbt.setInteger("attackMode", 1);
+                } else {
+                    nbt.setInteger("attackMode", 0);
+                }
+                return new ActionResult<>(EnumActionResult.SUCCESS, stack);
             }
         }
     }
+    @Override
+    public void addInformation(
+            final ItemStack stack,
+            @Nullable final World worldIn,
+            final List<String> tooltip,
+            final ITooltipFlag flagIn
+    ) {
 
+
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            tooltip.add(Localization.translate("press.lshift"));
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            tooltip.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(Math.abs(KeyboardClient.changemode.getKeyCode())) + Localization.translate(
+                    "iu.changemode_rcm"));
+        }
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
     protected String getIdleSound() {
         return "NanosabreIdle";
     }

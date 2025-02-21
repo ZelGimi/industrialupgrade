@@ -17,7 +17,7 @@ public class ContainerEFReader extends ContainerHandHeldInventory<EFReaderInvent
 
     public ContainerEFReader(EFReaderInventory efReaderInventory, final ItemStack itemStack1) {
         super(efReaderInventory);
-        addPlayerInventorySlots(efReaderInventory.player, 218);
+
         BlockPos pos = new BlockPos(ModUtils.nbt(itemStack1).getInteger("x"), ModUtils.nbt(itemStack1).getInteger("y"),
                 ModUtils.nbt(itemStack1).getInteger("z")
         );

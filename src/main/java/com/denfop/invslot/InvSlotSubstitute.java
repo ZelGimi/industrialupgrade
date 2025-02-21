@@ -45,43 +45,8 @@ public class InvSlotSubstitute extends InvSlot {
         }
     }
 
-    private boolean add(List<ItemStack> stacks, boolean simulate) {
-        if (stacks != null && !stacks.isEmpty()) {
-
-            for (ItemStack stack : stacks) {
-                for (int i = 0; i < this.size(); i++) {
-                    if (this.get(i).isEmpty()) {
-                        if (!simulate) {
-                            this.put(i, stack.copy());
-
-                        }
-                        return true;
-                    } else {
-                        if (this.get(i).isItemEqual(stack)) {
-                            if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
-                                    if (!simulate) {
-                                        this.get(i).grow(stack.getCount());
-                                    }
-                                    return true;
-                                } else {
-                                    if (stack.getTagCompound() != null &&
-                                            stack.getTagCompound().equals(this.get(i).getTagCompound())) {
-                                        if (!simulate) {
-                                            this.get(i).grow(stack.getCount());
-
-                                        }
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        return true;
+    public boolean add(List<ItemStack> stacks, boolean simulate) {
+        return super.add(stacks, simulate);
     }
 
     @Override

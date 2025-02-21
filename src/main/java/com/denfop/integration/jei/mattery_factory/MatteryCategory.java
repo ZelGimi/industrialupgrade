@@ -27,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class MatteryCategory extends GuiIU implements IRecipeCategory<MatteryRecipeWrapper> {

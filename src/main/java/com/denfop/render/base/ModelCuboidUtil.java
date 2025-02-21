@@ -1,23 +1,30 @@
-
 package com.denfop.render.base;
 
 import com.denfop.utils.ModUtils;
-import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
+
+import java.nio.IntBuffer;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class ModelCuboidUtil {
 
     public static final VertexFormat vertexFormat;
     public static final int dataStride;
     private static final int[] faceShades;
+
+    static {
+        vertexFormat = DefaultVertexFormats.ITEM;
+        dataStride = vertexFormat.getNextOffset() / 4;
+        faceShades = getFaceShades();
+    }
 
     public ModelCuboidUtil() {
     }
@@ -26,37 +33,190 @@ public class ModelCuboidUtil {
         return IntBuffer.allocate(4 * dataStride);
     }
 
-    public static void addCuboid(float xS, float yS, float zS, float xE, float yE, float zE, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads) {
+    public static void addCuboid(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads
+    ) {
         float spriteU = sprite.getMinU();
         float spriteV = sprite.getMinV();
-        addCuboid(xS, yS, zS, xE, yE, zE, spriteU, spriteV, sprite.getMaxU() - spriteU, sprite.getMaxV() - spriteV, faces, sprite, faceQuads, generalQuads);
+        addCuboid(
+                xS,
+                yS,
+                zS,
+                xE,
+                yE,
+                zE,
+                spriteU,
+                spriteV,
+                sprite.getMaxU() - spriteU,
+                sprite.getMaxV() - spriteV,
+                faces,
+                sprite,
+                faceQuads,
+                generalQuads
+        );
     }
 
-    public static void addCuboid(float xS, float yS, float zS, float xE, float yE, float zE, int color, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads) {
+    public static void addCuboid(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            int color,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads
+    ) {
         float spriteU = sprite.getMinU();
         float spriteV = sprite.getMinV();
-        addCuboid(xS, yS, zS, xE, yE, zE, color, spriteU, spriteV, sprite.getMaxU() - spriteU, sprite.getMaxV() - spriteV, faces, sprite, faceQuads, generalQuads);
+        addCuboid(
+                xS,
+                yS,
+                zS,
+                xE,
+                yE,
+                zE,
+                color,
+                spriteU,
+                spriteV,
+                sprite.getMaxU() - spriteU,
+                sprite.getMaxV() - spriteV,
+                faces,
+                sprite,
+                faceQuads,
+                generalQuads
+        );
     }
 
-    public static void addFlippedCuboid(float xS, float yS, float zS, float xE, float yE, float zE, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads) {
+    public static void addFlippedCuboid(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads
+    ) {
         float spriteU = sprite.getMaxU();
         float spriteV = sprite.getMaxV();
-        addCuboid(xS, yS, zS, xE, yE, zE, spriteU, spriteV, sprite.getMinU() - spriteU, sprite.getMinV() - spriteV, faces, sprite, faceQuads, generalQuads);
+        addCuboid(
+                xS,
+                yS,
+                zS,
+                xE,
+                yE,
+                zE,
+                spriteU,
+                spriteV,
+                sprite.getMinU() - spriteU,
+                sprite.getMinV() - spriteV,
+                faces,
+                sprite,
+                faceQuads,
+                generalQuads
+        );
     }
 
-    public static void addFlippedCuboid(float xS, float yS, float zS, float xE, float yE, float zE, int colour, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads) {
+    public static void addFlippedCuboid(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            int colour,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads
+    ) {
         float spriteU = sprite.getMaxU();
         float spriteV = sprite.getMaxV();
-        addCuboid(xS, yS, zS, xE, yE, zE, colour, spriteU, spriteV, sprite.getMinU() - spriteU, sprite.getMinV() - spriteV, faces, sprite, faceQuads, generalQuads);
+        addCuboid(
+                xS,
+                yS,
+                zS,
+                xE,
+                yE,
+                zE,
+                colour,
+                spriteU,
+                spriteV,
+                sprite.getMinU() - spriteU,
+                sprite.getMinV() - spriteV,
+                faces,
+                sprite,
+                faceQuads,
+                generalQuads
+        );
     }
 
-    public static void addFlippedCuboidWithYOffset(float xS, float yS, float zS, float xE, float yE, float zE, int colour, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads, float offset) {
+    public static void addFlippedCuboidWithYOffset(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            int colour,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads,
+            float offset
+    ) {
         float spriteU = sprite.getMaxU();
         float spriteV = sprite.getMaxV();
-        addCuboidWithYOffset(xS, yS, zS, xE, yE, zE, colour, spriteU, spriteV, sprite.getMinU() - spriteU, sprite.getMinV() - spriteV, faces, sprite, faceQuads, generalQuads, offset);
+        addCuboidWithYOffset(
+                xS,
+                yS,
+                zS,
+                xE,
+                yE,
+                zE,
+                colour,
+                spriteU,
+                spriteV,
+                sprite.getMinU() - spriteU,
+                sprite.getMinV() - spriteV,
+                faces,
+                sprite,
+                faceQuads,
+                generalQuads,
+                offset
+        );
     }
 
-    private static void addCuboid(float xS, float yS, float zS, float xE, float yE, float zE, float spriteU, float spriteV, float spriteWidth, float spriteHeight, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads) {
+    private static void addCuboid(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            float spriteU,
+            float spriteV,
+            float spriteWidth,
+            float spriteHeight,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads
+    ) {
         IntBuffer quadBuffer = getQuadBuffer();
 
         for (EnumFacing facing : faces) {
@@ -133,7 +293,11 @@ public class ModelCuboidUtil {
             }
 
             if (quadBuffer.position() > 0) {
-                BakedQuad quad = BasicBakedBlockModel.createQuad(Arrays.copyOf(quadBuffer.array(), quadBuffer.position()), facing, sprite);
+                BakedQuad quad = BakedBlockModel.createQuad(
+                        Arrays.copyOf(quadBuffer.array(), quadBuffer.position()),
+                        facing,
+                        sprite
+                );
                 if (isFace) {
                     faceQuads[facing.ordinal()].add(quad);
                 } else {
@@ -146,7 +310,23 @@ public class ModelCuboidUtil {
 
     }
 
-    private static void addCuboid(float xS, float yS, float zS, float xE, float yE, float zE, int color, float spriteU, float spriteV, float spriteWidth, float spriteHeight, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads) {
+    private static void addCuboid(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            int color,
+            float spriteU,
+            float spriteV,
+            float spriteWidth,
+            float spriteHeight,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads
+    ) {
         IntBuffer quadBuffer = getQuadBuffer();
 
         for (EnumFacing facing : faces) {
@@ -157,10 +337,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zS, facing, quadBuffer);
-                    generateBlockVertex(xE, yS, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zS, facing, quadBuffer);
-                    generateBlockVertex(xE, yS, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zE, facing, quadBuffer);
-                    generateBlockVertex(xS, yS, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zE, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yS,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = yS == 0.0F;
                     break;
                 case UP:
@@ -168,10 +384,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yE, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zS, facing, quadBuffer);
-                    generateBlockVertex(xS, yE, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zS, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yE,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = yE == 1.0F;
                     break;
                 case NORTH:
@@ -179,10 +431,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xS, yE, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yS, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yS, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = zS == 0.0F;
                     break;
                 case SOUTH:
@@ -190,10 +478,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xE, yS, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xE, yE, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xS, yE, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yE, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = zE == 1.0F;
                     break;
                 case WEST:
@@ -201,10 +525,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xS, yS, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xS, yE, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xS, yE, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yE, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yS,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = xS == 0.0F;
                     break;
                 case EAST:
@@ -212,10 +572,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xE, yS, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xE, yE, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yS, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yS, facing, quadBuffer);
+                    generateBlockVertex(
+                            xE,
+                            yS,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = xE == 1.0F;
                     break;
                 default:
@@ -223,7 +619,11 @@ public class ModelCuboidUtil {
             }
 
             if (quadBuffer.position() > 0) {
-                BakedQuad quad = BasicBakedBlockModel.createQuad(Arrays.copyOf(quadBuffer.array(), quadBuffer.position()), facing, sprite);
+                BakedQuad quad = BakedBlockModel.createQuad(
+                        Arrays.copyOf(quadBuffer.array(), quadBuffer.position()),
+                        facing,
+                        sprite
+                );
                 if (isFace) {
                     faceQuads[facing.ordinal()].add(quad);
                 } else {
@@ -236,7 +636,24 @@ public class ModelCuboidUtil {
 
     }
 
-    private static void addCuboidWithYOffset(float xS, float yS, float zS, float xE, float yE, float zE, int color, float spriteU, float spriteV, float spriteWidth, float spriteHeight, Set<EnumFacing> faces, TextureAtlasSprite sprite, List<BakedQuad>[] faceQuads, List<BakedQuad> generalQuads, float offset) {
+    public static void addCuboidWithYOffset(
+            float xS,
+            float yS,
+            float zS,
+            float xE,
+            float yE,
+            float zE,
+            int color,
+            float spriteU,
+            float spriteV,
+            float spriteWidth,
+            float spriteHeight,
+            Set<EnumFacing> faces,
+            TextureAtlasSprite sprite,
+            List<BakedQuad>[] faceQuads,
+            List<BakedQuad> generalQuads,
+            float offset
+    ) {
         IntBuffer quadBuffer = getQuadBuffer();
 
         for (EnumFacing facing : faces) {
@@ -247,10 +664,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS + offset, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zS, facing, quadBuffer);
-                    generateBlockVertex(xE, yS + offset, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zS, facing, quadBuffer);
-                    generateBlockVertex(xE, yS + offset, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zE, facing, quadBuffer);
-                    generateBlockVertex(xS, yS + offset, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zE, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yS + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = yS == 0.0F;
                     break;
                 case UP:
@@ -258,10 +711,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yE + offset, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zS, facing, quadBuffer);
-                    generateBlockVertex(xS, yE + offset, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * zE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE + offset, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE + offset, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * zS, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yE + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * zS,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = yE == 1.0F;
                     break;
                 case NORTH:
@@ -269,10 +758,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS + offset, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xS, yE + offset, zS, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE + offset, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yS + offset, zS, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yS, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = zS == 0.0F;
                     break;
                 case SOUTH:
@@ -280,10 +805,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS + offset, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xE, yS + offset, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xE, yE + offset, zE, color, spriteU + spriteWidth * xE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xS, yE + offset, zE, color, spriteU + spriteWidth * xS, spriteV + spriteHeight * yE, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * xS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = zE == 1.0F;
                     break;
                 case WEST:
@@ -291,10 +852,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xS, yS + offset, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xS, yS + offset, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xS, yE + offset, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xS, yE + offset, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yE, facing, quadBuffer);
+                    generateBlockVertex(
+                            xS,
+                            yS + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yS + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xS,
+                            yE + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = xS == 0.0F;
                     break;
                 case EAST:
@@ -302,10 +899,46 @@ public class ModelCuboidUtil {
                         continue;
                     }
 
-                    generateBlockVertex(xE, yS + offset, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yS, facing, quadBuffer);
-                    generateBlockVertex(xE, yE + offset, zS, color, spriteU + spriteWidth * zS, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yE + offset, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yE, facing, quadBuffer);
-                    generateBlockVertex(xE, yS + offset, zE, color, spriteU + spriteWidth * zE, spriteV + spriteHeight * yS, facing, quadBuffer);
+                    generateBlockVertex(
+                            xE,
+                            yS + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE + offset,
+                            zS,
+                            color,
+                            spriteU + spriteWidth * zS,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yE + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yE,
+                            facing,
+                            quadBuffer
+                    );
+                    generateBlockVertex(
+                            xE,
+                            yS + offset,
+                            zE,
+                            color,
+                            spriteU + spriteWidth * zE,
+                            spriteV + spriteHeight * yS,
+                            facing,
+                            quadBuffer
+                    );
                     isFace = xE == 1.0F;
                     break;
                 default:
@@ -313,7 +946,11 @@ public class ModelCuboidUtil {
             }
 
             if (quadBuffer.position() > 0) {
-                BakedQuad quad = BasicBakedBlockModel.createQuad(Arrays.copyOf(quadBuffer.array(), quadBuffer.position()), facing, sprite);
+                BakedQuad quad = BakedBlockModel.createQuad(
+                        Arrays.copyOf(quadBuffer.array(), quadBuffer.position()),
+                        facing,
+                        sprite
+                );
                 if (isFace) {
                     faceQuads[facing.ordinal()].add(quad);
                 } else {
@@ -327,10 +964,32 @@ public class ModelCuboidUtil {
     }
 
     public static void generateVertex(float x, float y, float z, int color, float u, float v, EnumFacing facing, IntBuffer out) {
-        generateVertex(x, y, z, color, u, v, (float)facing.getFrontOffsetX(), (float)facing.getFrontOffsetY(), (float)facing.getFrontOffsetZ(), out);
+        generateVertex(
+                x,
+                y,
+                z,
+                color,
+                u,
+                v,
+                (float) facing.getFrontOffsetX(),
+                (float) facing.getFrontOffsetY(),
+                (float) facing.getFrontOffsetZ(),
+                out
+        );
     }
 
-    public static void generateVertex(float x, float y, float z, int color, float u, float v, float nx, float ny, float nz, IntBuffer out) {
+    public static void generateVertex(
+            float x,
+            float y,
+            float z,
+            int color,
+            float u,
+            float v,
+            float nx,
+            float ny,
+            float nz,
+            IntBuffer out
+    ) {
         out.put(Float.floatToRawIntBits(x));
         out.put(Float.floatToRawIntBits(y));
         out.put(Float.floatToRawIntBits(z));
@@ -340,12 +999,43 @@ public class ModelCuboidUtil {
         out.put(packNormals(nx, ny, nz));
     }
 
-    public static void generateBlockVertex(float x, float y, float z, int color, float u, float v, EnumFacing facing, IntBuffer out) {
-        generateVertex(x, y, z, color, u, v, (float)facing.getFrontOffsetX(), (float)facing.getFrontOffsetY(), (float)facing.getFrontOffsetZ(), out);
+    public static void generateBlockVertex(
+            float x,
+            float y,
+            float z,
+            int color,
+            float u,
+            float v,
+            EnumFacing facing,
+            IntBuffer out
+    ) {
+        generateVertex(
+                x,
+                y,
+                z,
+                color,
+                u,
+                v,
+                (float) facing.getFrontOffsetX(),
+                (float) facing.getFrontOffsetY(),
+                (float) facing.getFrontOffsetZ(),
+                out
+        );
     }
 
     public static void generateBlockVertex(float x, float y, float z, float u, float v, EnumFacing facing, IntBuffer out) {
-        generateVertex(x, y, z, faceShades[facing.ordinal()], u, v, (float)facing.getFrontOffsetX(), (float)facing.getFrontOffsetY(), (float)facing.getFrontOffsetZ(), out);
+        generateVertex(
+                x,
+                y,
+                z,
+                faceShades[facing.ordinal()],
+                u,
+                v,
+                (float) facing.getFrontOffsetX(),
+                (float) facing.getFrontOffsetY(),
+                (float) facing.getFrontOffsetZ(),
+                out
+        );
     }
 
     private static int packNormals(float nx, float ny, float nz) {
@@ -371,9 +1061,9 @@ public class ModelCuboidUtil {
         return ret;
     }
 
-    static {
-        vertexFormat = DefaultVertexFormats.ITEM;
-        dataStride = vertexFormat.getNextOffset() / 4;
-        faceShades = getFaceShades();
+    public static IBakedModel getMissingModel() {
+        return Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager().getMissingModel();
     }
+
+
 }

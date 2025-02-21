@@ -4,9 +4,8 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntitySimpleCoolant  extends TileEntityBaseCoolant {
+public class TileEntitySimpleCoolant extends TileEntityBaseCoolant {
 
     public TileEntitySimpleCoolant() {
         super(0, 5000);

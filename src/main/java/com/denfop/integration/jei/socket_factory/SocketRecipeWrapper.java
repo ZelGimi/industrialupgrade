@@ -39,9 +39,11 @@ public class SocketRecipeWrapper implements IRecipeWrapper {
         this.outputstack = container.getOutput();
 
     }
-    public List<ItemStack> getInputs1(){
-        return Arrays.asList(inputstack,inputstack1,inputstack2,inputstack3,inputstack4,inputstack5);
+
+    public List<ItemStack> getInputs1() {
+        return Arrays.asList(inputstack, inputstack1, inputstack2, inputstack3, inputstack4, inputstack5);
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
@@ -66,8 +68,6 @@ public class SocketRecipeWrapper implements IRecipeWrapper {
     public ItemStack getInput5() {
         return inputstack5;
     }
-
-
 
 
     public List<List<ItemStack>> getInputs() {

@@ -6,17 +6,34 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class WorldGenGas extends WorldGenerator {
 
-    private final Block block = FluidName.fluidgas.getInstance().getBlock();
+    public static Map<ChunkPos, GenData> gasMap = new HashMap<>();
+    public static Map<TypeGas, FluidName> gasFluidMap = new HashMap<>();
+    private final TypeGas typeGas;
 
-    public WorldGenGas() {
+    private Block block = FluidName.fluidgas.getInstance().getBlock();
+
+    public WorldGenGas(TypeGas typeGas) {
+        block = gasFluidMap.get(typeGas).getInstance().getBlock();
+        this.typeGas = typeGas;
+    }
+
+    public static void registerFluid() {
+        gasFluidMap.put(TypeGas.GAS, FluidName.fluidgas);
+        gasFluidMap.put(TypeGas.BROMIDE, FluidName.fluidbromine);
+        gasFluidMap.put(TypeGas.CHLORINE, FluidName.fluidchlorum);
+        gasFluidMap.put(TypeGas.FLUORINE, FluidName.fluidfluor);
+        gasFluidMap.put(TypeGas.IODINE, FluidName.fluidiodine);
     }
 
     @Override
@@ -24,6 +41,12 @@ public class WorldGenGas extends WorldGenerator {
         int x = pos.getX() - 8;
         int z = pos.getZ() - 8;
         int y = pos.getY();
+        int xmin = Integer.MAX_VALUE;
+        int xmax = Integer.MIN_VALUE;
+        int zmin = Integer.MAX_VALUE;
+        int zmax = Integer.MIN_VALUE;
+        int ymin = 255;
+        int ymax = 0;
         if (rand.nextInt(500) <= 450) {
             return false;
         }
@@ -34,7 +57,7 @@ public class WorldGenGas extends WorldGenerator {
         if (y <= 4) {
             return false;
         }
-
+        boolean can = false;
         boolean[] arrayOfBoolean = new boolean[2048];
         int i = rand.nextInt(4) + 4;
 
@@ -99,6 +122,25 @@ public class WorldGenGas extends WorldGenerator {
                         final BlockPos pos1 = new BlockPos(x + j, y + m, z + k);
                         world.setBlockState(pos1, m >= 4 ? Blocks.AIR.getDefaultState() :
                                 this.block.getDefaultState(), 2);
+                        can = true;
+                        if (xmin > x + j) {
+                            xmin = x + j;
+                        }
+                        if (xmax < x + j) {
+                            xmax = x + j;
+                        }
+                        if (zmin > z + k) {
+                            zmin = z + k;
+                        }
+                        if (zmax < z + k) {
+                            zmax = z + k;
+                        }
+                        if (ymin > y + m) {
+                            ymin = y + m;
+                        }
+                        if (ymax < y + m) {
+                            ymax = y + m;
+                        }
                     }
                 }
             }
@@ -116,6 +158,7 @@ public class WorldGenGas extends WorldGenerator {
                             .getBlock() == Blocks.WATER)
                             && world.getSkylightSubtracted() > 0) {
                         world.setBlockState(new BlockPos(x + j, y + m - 1, z + k), Blocks.GRASS.getDefaultState());
+
                     }
 
                 }
@@ -140,13 +183,36 @@ public class WorldGenGas extends WorldGenerator {
                                     new BlockPos(x + j, y + m, z + k),
                                     this.block.getDefaultState()
                             );
-
+                            if (xmin > x + j) {
+                                xmin = x + j;
+                            }
+                            if (xmax < x + j) {
+                                xmax = x + j;
+                            }
+                            if (zmin > z + k) {
+                                zmin = z + k;
+                            }
+                            if (zmax < z + k) {
+                                zmax = z + k;
+                            }
+                            if (ymin > y + m) {
+                                ymin = y + m;
+                            }
+                            if (ymax < y + m) {
+                                ymax = y + m;
+                            }
+                            can = true;
                         }
                     }
                 }
             }
         }
-
+        if (can) {
+            gasMap.put(
+                    new ChunkPos(((xmin + xmax) / 2) >> 4, ((zmin + zmax) / 2) >> 4),
+                    new GenData((ymin + ymax) / 2, typeGas)
+            );
+        }
         return true;
     }
 

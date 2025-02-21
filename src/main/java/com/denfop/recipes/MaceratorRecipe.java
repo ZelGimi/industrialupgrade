@@ -5,6 +5,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.items.resource.ItemRawMetals;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import net.minecraft.init.Blocks;
@@ -15,7 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class MaceratorRecipe {
 
-    public static final String[] recipe = {"ore", "ingot"};
+    public static final String[] recipe = {"raw", "ingot"};
     public static final String[] recipe1 = {"crushed", "dust"};
     public static final int[] number = {2, 1};
 
@@ -48,30 +49,43 @@ public class MaceratorRecipe {
 
 
         }
+        for (int j = 0; j < recipe.length; j++) {
+            for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+                addmacerator(
+                        recipe[j] + RegisterOreDictionary.list_baseore1.get(i),
+                        recipe1[j] + RegisterOreDictionary.list_baseore1.get(i),
+                        number[j]
+                );
 
-        if (!OreDictionary.getOres("oreYellorite").isEmpty()) {
-            addmacerator("oreYellorite", "crushedUranium", 2);
+            }
         }
+
         addmacerator(IUItem.plateobsidian, IUItem.obsidianDust);
-        addmacerator(new ItemStack(Blocks.WOOL), new ItemStack(Items.STRING, 2));
-
-        addmacerator("oreOsmium", "crushedOsmium", 2);
-        addmacerator("oreTantalum", "crushedTantalum", 2);
-        addmacerator("oreCadmium", "crushedCadmium",2);
 
 
+        addmacerator("rawOsmium", "crushedOsmium",2);
+        addmacerator("rawTantalum", "crushedTantalum",2);
+        addmacerator("rawCadmium", "crushedCadmium",2);
+        addmacerator("rawTin", "crushedTin",2);
+        addmacerator("rawIron", "crushedIron",2);
+        addmacerator("rawGold", "crushedGold",2);
+        addmacerator("rawCopper", "crushedCopper",2);
+        addmacerator("rawLead", "crushedLead",2);
         addmacerator("ingotOsmium", "dustOsmium");
         addmacerator("ingotTantalum", "dustTantalum");
         addmacerator("ingotCadmium", "dustCadmium");
+        addmacerator("ingotElectrum", "dustElectrum");
+        addmacerator("ingotInvar", "dustInvar");
 
         addmacerator("ingotBronze", "dustBronze");
         addmacerator("ingotLead", "dustLead");
         addmacerator("plateDenseLead", "dustLead", 9);
         addmacerator(new ItemStack(Blocks.QUARTZ_BLOCK), new ItemStack(Items.QUARTZ, 4));
+        addmacerator(new ItemStack(Items.FLINT, 2), new ItemStack(IUItem.iudust, 1, 60));
         addmacerator(new ItemStack(Items.WHEAT_SEEDS, 16), IUItem.biochaff);
+        addmacerator(new ItemStack(IUItem.crops, 16), IUItem.biochaff);
         addmacerator(new ItemStack(Blocks.CLAY), "dustClay");
         addmacerator("crushedCopper", "dustCopper");
-        addmacerator("oreGold", "crushedGold", 2);
         addmacerator("plateDenseObsidian", "dustObsidian", 9);
         addmacerator("plateDenseLapis", "dustLapis", 9);
         addmacerator(new ItemStack(Blocks.TALLGRASS, 8), IUItem.biochaff);
@@ -81,6 +95,10 @@ public class MaceratorRecipe {
         addmacerator("treeSapling", 4, IUItem.biochaff);
         addmacerator("plateDenseIron", "dustIron", 9);
         addmacerator("crushedIron", "dustIron");
+
+        addmacerator(new ItemStack(IUItem.apatite, 1, 2), new ItemStack(IUItem.iudust, 1, 66));
+        addmacerator(new ItemStack(IUItem.apatite, 1, 3), new ItemStack(IUItem.iudust, 1, 69));
+        addmacerator(new ItemStack(IUItem.apatite, 1, 4), new ItemStack(IUItem.iudust, 1, 70));
 
 
         addmacerator(new ItemStack(Items.COAL), "dustCoal");
@@ -107,13 +125,8 @@ public class MaceratorRecipe {
         addmacerator("ingotTin", "dustTin");
         addmacerator(new ItemStack(Blocks.SANDSTONE), new ItemStack(Blocks.SAND));
         addmacerator("treeLeaves", 8, IUItem.biochaff);
-        addmacerator("oreUranium", "crushedUranium", 2);
         addmacerator(new ItemStack(Items.MELON_SEEDS, 16), IUItem.biochaff);
         addmacerator(new ItemStack(Items.POTATO, 8), IUItem.biochaff);
-        addmacerator("oreIron", "crushedIron", 2);
-        addmacerator("oreTin", "crushedTin", 2);
-        addmacerator("oreCopper", "crushedCopper", 2);
-        addmacerator("oreLead", "crushedLead", 2);
         addmacerator("crushedPurifiedGold", "dustGold", 1);
         addmacerator("crushedPurifiedIron", "dustIron", 1);
         addmacerator("crushedPurifiedTin", "dustTin", 1);

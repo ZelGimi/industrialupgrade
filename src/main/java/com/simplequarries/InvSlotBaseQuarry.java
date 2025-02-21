@@ -1,5 +1,7 @@
 package com.simplequarries;
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.modules.EnumQuarryModules;
 import com.denfop.items.modules.EnumQuarryType;
@@ -7,7 +9,7 @@ import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotBaseQuarry extends InvSlot {
+public class InvSlotBaseQuarry extends InvSlot implements ITypeSlot {
 
 
     public final TileBaseQuarry tile;
@@ -17,6 +19,11 @@ public class InvSlotBaseQuarry extends InvSlot {
         super(base1, TypeItemSlot.INPUT, oldStartIndex1);
         this.tile = base1;
         this.stackSizeLimit = 1;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.QUARRY1;
     }
 
     @Override

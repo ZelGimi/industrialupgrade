@@ -11,4 +11,5 @@ public interface ITank extends IMultiElement {
     Fluids.InternalFluidTank getTank();
 
     void setFluid(Fluid fluid);
+
 }

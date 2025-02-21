@@ -1,6 +1,5 @@
 package com.denfop.tiles.base;
 
-import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotOutput;
@@ -18,20 +17,18 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.render.tank.DataFluid;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,13 +46,15 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
 
     public final InvSlotFluidByList containerslot;
     public final InvSlotFluidByList containerslot1;
-    public final ResourceLocation texture;
     public final Fluids fluids;
     public final InvSlotOutput outputSlot;
     public FluidTank fluidTank;
+    @SideOnly(Side.CLIENT)
+    public DataFluid dataFluid;
+    public int prev = -10;
     private int old_amount;
 
-    public TileEntityLiquedTank(int tanksize, String texturename) {
+    public TileEntityLiquedTank(int tanksize) {
 
 
         this.containerslot = new InvSlotFluidByList(this,
@@ -66,15 +65,51 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
                 InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.INPUT
         );
         this.containerslot1.setUsually(true);
-        this.texture = new ResourceLocation(
-                Constants.TEXTURES,
-                "textures/models/" + texturename + ".png"
-        );
+
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", tanksize * 1000);
         this.outputSlot = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
 
+    }
+
+    @Override
+    public int getLightValue() {
+        if (this.fluidTank.getFluid() == null || this.fluidTank.getFluid().getFluid().getBlock() == null) {
+            return super.getLightValue();
+        } else {
+            return this.fluidTank.getFluid().getFluid().getBlock().getLightValue(this.fluidTank
+                    .getFluid()
+                    .getFluid()
+                    .getBlock()
+                    .getDefaultState());
+        }
+    }
+
+    @Override
+    public int getLightOpacity() {
+        if (this.fluidTank.getFluid() == null || this.fluidTank
+                .getFluid()
+                .getFluid()
+                .getBlock() == null) {
+            return super.getLightOpacity();
+        } else {
+            final int now = this.fluidTank.getFluid().getFluid().getBlock().getLightOpacity(this.fluidTank
+                    .getFluid()
+                    .getFluid()
+                    .getBlock()
+                    .getDefaultState());
+            if (this.prev != now) {
+                prev = now;
+                try {
+                    this.getWorld().checkLight(pos);
+                } catch (Exception ignored) {
+                }
+                ;
+
+            }
+            return now;
+        }
     }
 
     @Override
@@ -112,30 +147,17 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
                 .getHeldItem(hand)
                 .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
 
-            return FluidUtil.interactWithFluidHandler(player, hand,
+            return ModUtils.interactWithFluidHandler(player, hand,
                     this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return false;
-    }
-
-    public boolean isNormalCube() {
-        return false;
-    }
-
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return false;
-    }
 
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
 
@@ -143,7 +165,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.amount / 1000 + " B");
 
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     @Override
@@ -159,9 +181,24 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
         }
     }
 
+    @Override
+    public List<ItemStack> getWrenchDrops(final EntityPlayer player, final int fortune) {
+        List<ItemStack> itemStackList = super.getWrenchDrops(player, fortune);
+
+        if (this.fluidTank.getFluidAmount() > 0) {
+            NBTTagCompound nbt = ModUtils.nbt(itemStackList.get(0));
+            nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
+        }
+
+        return itemStackList;
+    }
+
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             if (this.fluidTank.getFluidAmount() > 0) {
                 NBTTagCompound nbt = ModUtils.nbt(drop);
                 nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
@@ -176,17 +213,6 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
                 : this.getFluidTank().getFluidAmount() * i / this.getFluidTank().getCapacity();
     }
 
-    public boolean isSideSolid(EnumFacing side) {
-        return false;
-    }
-
-    public boolean clientNeedsExtraModelInfo() {
-        return true;
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return true;
-    }
 
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
@@ -258,7 +284,7 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
 
         if (name.equals("fluidTank")) {
             try {
-                this.fluidTank.readFromNBT(((FluidTank) DecoderHandler.decode(is)).writeToNBT(new NBTTagCompound()));
+                this.fluidTank.setFluid(((FluidTank) DecoderHandler.decode(is)).getFluid());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -328,11 +354,24 @@ public class TileEntityLiquedTank extends TileEntityInventory implements IUpgrad
         }
     }
 
+    public boolean doesSideBlockRendering(EnumFacing side) {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+        return false;
+    }
+
+    @Override
+    public boolean isNormalCube() {
+        return false;
+    }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput, UpgradableProperty.FluidInput,
+                UpgradableProperty.FluidExtract
         );
     }
 

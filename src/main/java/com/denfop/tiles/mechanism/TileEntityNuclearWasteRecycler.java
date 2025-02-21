@@ -17,11 +17,12 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.container.ContainerBase;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerNuclearWasteRecycler;
 import com.denfop.gui.GuiNuclearWasteRecycler;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -41,7 +42,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TileEntityNuclearWasteRecycler extends TileElectricMachine implements IUpgradableBlock, IUpdateTick,
         IUpdatableTileEvent, IHasRecipe {
@@ -58,13 +58,15 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
     public TileEntityNuclearWasteRecycler() {
         super(500, 8, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
-        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot){
+        this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
             public void onLoaded() {
                 super.onLoaded();
-                this.componentProcess = ((TileEntityNuclearWasteRecycler)this.getParent()).componentProcess;
+                this.componentProcess = ((TileEntityNuclearWasteRecycler) this.getParent()).componentProcess;
             }
         });
+        this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.addComponent(new AirPollutionComponent(this, 0.1));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
@@ -73,7 +75,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
                                                       @Override
                                                       public void operateOnce(final List<ItemStack> processResult) {
                                                           super.operateOnce(processResult);
-                                                          ((TileEntityNuclearWasteRecycler)this.getParent()).rad.addEnergy(100);
+                                                          ((TileEntityNuclearWasteRecycler) this.getParent()).rad.addEnergy(150);
                                                       }
                                                   }
         );
@@ -103,7 +105,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
 
     @Override
     public ContainerNuclearWasteRecycler getGuiContainer(final EntityPlayer var1) {
-        return new ContainerNuclearWasteRecycler(this,var1);
+        return new ContainerNuclearWasteRecycler(this, var1);
     }
 
     @Override
@@ -120,7 +122,7 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
                 "waste_recycler",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(new ItemStack(IUItem.crafting_elements,1,443))),
+                                input.getInput(new ItemStack(IUItem.crafting_elements, 1, 443))),
                         new RecipeOutput(null, ItemStack.EMPTY)
                 )
         );
@@ -144,11 +146,16 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
 
     @Override
     public MachineRecipe getRecipeOutput() {
-        if(this.rad.getEnergy() + 100 <= 10000) {
+        if (this.rad.getEnergy() + 100 <= 10000) {
             return this.output;
-        }else{
+        } else {
             return null;
         }
+    }
+
+    @Override
+    public void setRecipeOutput(final MachineRecipe output) {
+        this.output = output;
     }
 
     public MachineRecipe getOutput() {
@@ -157,18 +164,13 @@ public class TileEntityNuclearWasteRecycler extends TileElectricMachine implemen
     }
 
     @Override
-    public void setRecipeOutput(final MachineRecipe output) {
-        this.output = output;
-    }
-
-    @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

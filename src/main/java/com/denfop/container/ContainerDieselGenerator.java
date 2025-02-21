@@ -7,7 +7,6 @@ public class ContainerDieselGenerator extends ContainerFullInv<TileDieselGenerat
 
     public ContainerDieselGenerator(EntityPlayer entityPlayer, TileDieselGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.chargeSlot, 0, 117, 49));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot, 0, 27, 21));
         this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 27, 54));
     }

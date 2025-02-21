@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
+  "parent" : "block/cube_all",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/socket",
-    "down" : "industrialupgrade:blocks/gas_reactor/casing",
-    "up" : "industrialupgrade:blocks/gas_reactor/casing",
-    "north" : "industrialupgrade:blocks/gas_reactor/socket",
-    "east" : "industrialupgrade:blocks/gas_reactor/socket_side",
-    "south" : "industrialupgrade:blocks/gas_reactor/socket_side",
-    "west" : "industrialupgrade:blocks/gas_reactor/socket_side"
+    "all" : "industrialupgrade:blocks/gas_reactor/socket/socket_side"
   }
 }

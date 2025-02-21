@@ -21,7 +21,18 @@ import com.denfop.register.Register;
 import com.denfop.tiles.mechanism.generator.energy.TileEntitySolarGenerator;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
-import com.denfop.tiles.panels.overtime.*;
+import com.denfop.tiles.panels.overtime.TileBarionSolarPanel;
+import com.denfop.tiles.panels.overtime.TileDiffractionSolarPanel;
+import com.denfop.tiles.panels.overtime.TileGravitonSolarPanel;
+import com.denfop.tiles.panels.overtime.TileHadronSolarPanel;
+import com.denfop.tiles.panels.overtime.TileHybridSolarPanel;
+import com.denfop.tiles.panels.overtime.TilePhotonicSolarPanel;
+import com.denfop.tiles.panels.overtime.TileProtonSolarPanel;
+import com.denfop.tiles.panels.overtime.TileQuantumSolarPanel;
+import com.denfop.tiles.panels.overtime.TileQuarkSolarPanel;
+import com.denfop.tiles.panels.overtime.TileSingularSolarPanel;
+import com.denfop.tiles.panels.overtime.TileSpectralSolarPanel;
+import com.denfop.tiles.panels.overtime.TileUltimateSolarPanel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
@@ -99,20 +110,20 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
             ItemStack stack = player.getHeldItem(hand);
             int meta = stack.getItemDamage();
             TileEntity tileEntity = world.getTileEntity(pos);
-            if ((tileEntity instanceof TileSolarPanel) && stack.getItemDamage() > 0) {
+            if ((tileEntity instanceof TileSolarPanel)) {
 
                 TileSolarPanel tile = (TileSolarPanel) tileEntity;
                 if (tile.getPanels() == null) {
                     return EnumActionResult.PASS;
                 }
                 EnumSolarPanels oldpanel = tile.getPanels();
-                EnumSolarPanels kit = EnumSolarPanels.getFromID(meta);
-                if (!kit.solarold.equals(oldpanel)) {
+                EnumSolarPanels kit = EnumSolarPanels.getFromID(meta+1);
+                if (kit.solarold != null && !kit.solarold.equals(oldpanel)) {
                     return EnumActionResult.PASS;
                 }
 
 
-                final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta - 1);
+                final EnumSolarPanelsKit kit1 = EnumSolarPanelsKit.getFromID(meta);
                 world.removeTileEntity(pos);
                 world.setBlockToAir(pos);
                 ItemStack stack1 = new ItemStack(kit1.solarpanel_new.block, 1, kit1.solarpanel_new.meta);
@@ -142,27 +153,6 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
                 return EnumActionResult.SUCCESS;
 
 
-            } else if (tileEntity instanceof TileEntitySolarGenerator) {
-                if (stack.getItemDamage() == 0 && world.getTileEntity(pos) instanceof TileEntitySolarGenerator) {
-                    EnumSolarPanels kit = EnumSolarPanels.getFromID(meta);
-                    world.removeTileEntity(pos);
-                    world.setBlockToAir(pos);
-                    ItemStack stack1 = new ItemStack(kit.block, 1, kit.meta);
-
-                    EntityItem item = new EntityItem(world);
-                    item.setItem(stack1);
-                    if (!player.getEntityWorld().isRemote) {
-                        item.setLocationAndAngles(player.posX, player.posY, player.posZ, 0.0F, 0.0F);
-                        item.setPickupDelay(0);
-                        world.spawnEntity(item);
-
-                    }
-                    stack.setCount(stack.getCount() - 1);
-                    return EnumActionResult.SUCCESS;
-
-
-                }
-                return EnumActionResult.SUCCESS;
             }
         }
         return EnumActionResult.PASS;
@@ -232,44 +222,42 @@ public class ItemUpgradePanelKit extends ItemSubTypes<ItemUpgradePanelKit.Types>
     }
 
     public enum EnumSolarPanelsKit {
-        HYBRID(EnumSolarPanels.HYBRID_SOLAR_PANEL, 1, true, new TileHybridSolarPanel()),
-        PERFECT(EnumSolarPanels.PERFECT_SOLAR_PANEL, 2, true, new TileUltimateSolarPanel()),
-        QUANTUM(EnumSolarPanels.QUANTUM_SOLAR_PANEL, 3, true, new TileQuantumSolarPanel()),
-        SPECTRAL(EnumSolarPanels.SPECTRAL_SOLAR_PANEL, 4, true, new TileSpectralSolarPanel()),
-        PROTON(EnumSolarPanels.PROTON_SOLAR_PANEL, 5, true, new TileProtonSolarPanel()),
-        SINGULAR(EnumSolarPanels.SINGULAR_SOLAR_PANEL, 6, true, new TileSingularSolarPanel()),
-        DIFFRACTION(EnumSolarPanels.DIFFRACTION_SOLAR_PANEL, 7, true, new TileDiffractionSolarPanel()),
-        PHOTON(EnumSolarPanels.PHOTONIC_SOLAR_PANEL, 8, true, new TilePhotonicSolarPanel()),
-        NEUTRONIUM(EnumSolarPanels.NEUTRONIUN_SOLAR_PANEL, 9, true, new com.denfop.tiles.panels.overtime.TileNeutronSolarPanel()),
-        BARION(EnumSolarPanels.BARION_SOLAR_PANEL, 10, true, new TileBarionSolarPanel()),
-        HADRON(EnumSolarPanels.HADRON_SOLAR_PANEL, 11, true, new TileHadronSolarPanel()),
-        GRAVITON(EnumSolarPanels.GRAVITON_SOLAR_PANEL, 12, true, new TileGravitonSolarPanel()),
-        QUARK(EnumSolarPanels.QUARK_SOLAR_PANEL, 13, true, new TileQuarkSolarPanel()),
+        ADVANCED(EnumSolarPanels.ADVANCED_SOLAR_PANEL, 0, true),
+        HYBRID(EnumSolarPanels.HYBRID_SOLAR_PANEL, 1, true),
+        PERFECT(EnumSolarPanels.PERFECT_SOLAR_PANEL, 2, true),
+        QUANTUM(EnumSolarPanels.QUANTUM_SOLAR_PANEL, 3, true),
+        SPECTRAL(EnumSolarPanels.SPECTRAL_SOLAR_PANEL, 4, true),
+        PROTON(EnumSolarPanels.PROTON_SOLAR_PANEL, 5, true),
+        SINGULAR(EnumSolarPanels.SINGULAR_SOLAR_PANEL, 6, true),
+        DIFFRACTION(EnumSolarPanels.DIFFRACTION_SOLAR_PANEL, 7, true),
+        PHOTON(EnumSolarPanels.PHOTONIC_SOLAR_PANEL, 8, true),
+        NEUTRONIUM(EnumSolarPanels.NEUTRONIUN_SOLAR_PANEL, 9, true),
+        BARION(EnumSolarPanels.BARION_SOLAR_PANEL, 10, true),
+        HADRON(EnumSolarPanels.HADRON_SOLAR_PANEL, 11, true),
+        GRAVITON(EnumSolarPanels.GRAVITON_SOLAR_PANEL, 12, true),
+        QUARK(EnumSolarPanels.QUARK_SOLAR_PANEL, 13, true),
 
-        DRACONIC(EnumSolarPanels.DRACONIC_SOLAR_PANEL, 14, true, new TileDraconianSolarPanel()),
-        AWAKANED(EnumSolarPanels.AWAKENED_SOLAR_PANEL, 15, true, new TileAwakenedSolarPanel()),
-        CHAOS(EnumSolarPanels.CHAOTIC_SOLAR_PANEL, 16, true, new TileChaoticSolarPanel()),
-        MANASTEEL(EnumSolarPanels.MANASTEEL_SOLAR_PANEL, 17, true, new TileManasteelSolarPanel()),
-        ELEMENTUM(EnumSolarPanels.ELEMENTUM_SOLAR_PANEL, 18, true, new TileElementumSolarPanel()),
-        TERRASTEEL(EnumSolarPanels.TERRASTEEL_SOLAR_PANEL, 19, true, new TileTerrasteelSolarPanel()),
-        NEUTRON_AV(EnumSolarPanels.NEUTRONIUM_SOLAR_PANEL_AVARITIA, 20, true,
-                new TileNeutronSolarPanel()
+        DRACONIC(EnumSolarPanels.DRACONIC_SOLAR_PANEL, 14, true),
+        AWAKANED(EnumSolarPanels.AWAKENED_SOLAR_PANEL, 15, true),
+        CHAOS(EnumSolarPanels.CHAOTIC_SOLAR_PANEL, 16, true),
+        MANASTEEL(EnumSolarPanels.MANASTEEL_SOLAR_PANEL, 17, true),
+        ELEMENTUM(EnumSolarPanels.ELEMENTUM_SOLAR_PANEL, 18, true),
+        TERRASTEEL(EnumSolarPanels.TERRASTEEL_SOLAR_PANEL, 19, true),
+        NEUTRON_AV(EnumSolarPanels.NEUTRONIUM_SOLAR_PANEL_AVARITIA, 20, true
         ),
-        INFINITY(EnumSolarPanels.INFINITY_SOLAR_PANEL, 21, true, new TileInfinitySolarPanel()),
-        THAUM(EnumSolarPanels.THAUM_SOLAR_PANEL, 22, true, new TileThaumSolarPanel()),
-        VOID(EnumSolarPanels.VOID_SOLAR_PANEL, 23, true, new TileVoidSolarPanel()),
+        INFINITY(EnumSolarPanels.INFINITY_SOLAR_PANEL, 21, true),
+        THAUM(EnumSolarPanels.THAUM_SOLAR_PANEL, 22, true),
+        VOID(EnumSolarPanels.VOID_SOLAR_PANEL, 23, true),
         ;
 
         public final int item_meta;
         public final EnumSolarPanels solarpanel_new;
         public final boolean register;
-        public final TileSolarPanel tile;
 
-        EnumSolarPanelsKit(EnumSolarPanels solarpanel_new, int item_meta, boolean register, TileSolarPanel tile) {
+        EnumSolarPanelsKit(EnumSolarPanels solarpanel_new, int item_meta, boolean register) {
             this.item_meta = item_meta;
             this.solarpanel_new = solarpanel_new;
             this.register = register;
-            this.tile = tile;
         }
 
         public static EnumSolarPanelsKit getFromID(final int ID) {

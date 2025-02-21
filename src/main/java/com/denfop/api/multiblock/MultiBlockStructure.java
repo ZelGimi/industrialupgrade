@@ -2,15 +2,19 @@ package com.denfop.api.multiblock;
 
 import com.denfop.IUCore;
 import com.denfop.Localization;
-import com.denfop.tiles.reactors.graphite.IExchanger;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
+import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -41,6 +45,8 @@ public class MultiBlockStructure {
     public boolean ignoreMetadata = false;
     public ItemStack activateItem = ItemStack.EMPTY;
 
+    public boolean hasUniqueModels = false;
+
     private Class<? extends IMainMultiBlock> main;
 
     public MultiBlockStructure() {
@@ -70,6 +76,14 @@ public class MultiBlockStructure {
     public MultiBlockStructure setIgnoreMetadata(final boolean ignoreMetadata) {
         this.ignoreMetadata = ignoreMetadata;
         return this;
+    }
+    public MultiBlockStructure setUniqueModel() {
+        this.hasUniqueModels = true;
+        return this;
+    }
+
+    public boolean isHasUniqueModels() {
+        return hasUniqueModels;
     }
 
     public ItemStack getActivateItem() {
@@ -215,8 +229,37 @@ public class MultiBlockStructure {
         return blockPosList;
     }
 
+    public List<BlockPos> getPoses(EnumFacing facing, BlockPos pos) {
+        List<BlockPos> blockPosList = new ArrayList<>();
+        for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
+            BlockPos pos1;
+            switch (facing) {
+                case NORTH:
+                    pos1 = pos.add(entry.getKey());
+                    break;
+                case EAST:
+                    pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                    break;
+                case WEST:
+                    pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                    break;
+                case SOUTH:
+                    pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + facing);
+            }
+            blockPosList.add(pos1);
+
+        }
+        return blockPosList;
+    }
+
     public boolean getFull(EnumFacing facing, BlockPos pos, World world, EntityPlayer player) {
         final IMainMultiBlock mainTile = (IMainMultiBlock) world.getTileEntity(pos);
+        if (mainTile == null) {
+            return false;
+        }
         for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
             if (entry.getValue() == main) {
                 continue;
@@ -249,24 +292,28 @@ public class MultiBlockStructure {
                 String report = this.reportLaskBlock.get(entry.getValue());
 
                 if (report != null && !report.isEmpty()) {
-                    if (IUCore.proxy.isSimulating()) {
+                    if (!world.isRemote) {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                Localization.translate("iu.not.found") + "x: "+ pos1.getX() + " y: "+ pos1.getY() + " z: "+ pos1.getZ() + " " + Localization.translate(report)
+                                Localization.translate("iu.not.found") + "x: " + pos1.getX() + " y: " + pos1.getY() + " z: " + pos1.getZ() + " " + Localization.translate(
+                                        report)
                         );
                     }
                 } else {
-                    if (IUCore.proxy.isSimulating()) {
+                    if (!world.isRemote) {
                         IUCore.proxy.messagePlayer(
                                 player,
-                                Localization.translate("iu.not.found") + "x: "+ pos1.getX() + " y: "+ pos1.getY() + " z: "+ pos1.getZ() + " "+ this.ItemStackMap.get(entry.getKey()).getDisplayName()
+                                Localization.translate("iu.not.found") + "x: " + pos1.getX() + " y: " + pos1.getY() + " z: " + pos1.getZ() + " " + this.ItemStackMap
+                                        .get(entry.getKey())
+                                        .getDisplayName()
                         );
                     }
                 }
                 return false;
             } else {
                 IMultiElement element = (IMultiElement) tile;
-                if ((element.isMain() && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel()) || (!element.canCreateSystem(mainTile))) {
+                if ((element.isMain() && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel() && element.getLevel() != -1) || (!element.canCreateSystem(
+                        mainTile))) {
                     return false;
                 }
                 if (element.getMain() != null && element.getMain() != mainTile) {
@@ -317,7 +364,8 @@ public class MultiBlockStructure {
                 return false;
             } else {
                 IMultiElement element = (IMultiElement) tile;
-                if ((element.getMain() != null && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel()) || !element.canCreateSystem(mainTile)) {
+                if ((element.getMain() != null && element.getMain() != mainTile) || (element.getLevel() != mainTile.getLevel() && element.getLevel() != -1) || !element.canCreateSystem(
+                        mainTile)) {
                     return false;
                 } else if (element.getMain() == null) {
                     element.setMainMultiElement(mainTile);
@@ -337,6 +385,77 @@ public class MultiBlockStructure {
 
     public void addReport(Class<? extends IMultiElement> name, String report) {
         reportLaskBlock.put(name, report);
+    }
+
+    public void markDirty(TileMultiBlockBase tileMultiBlockBase, boolean full) {
+        List<ChunkPos> passedChunk = new ArrayList<>();
+        if (full) {
+            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
+                if (entry.getValue() == main) {
+                    continue;
+                }
+                final World world = tileMultiBlockBase.getWorld();
+                BlockPos pos1 = null;
+                BlockPos pos = tileMultiBlockBase.getBlockPos();
+                switch (tileMultiBlockBase.getFacing()) {
+                    case NORTH:
+                        pos1 = pos.add(entry.getKey());
+                        break;
+                    case EAST:
+                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                        break;
+                    case WEST:
+                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                        break;
+                    case SOUTH:
+                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                        break;
+                }
+                TileEntity tile = world.getTileEntity(pos1);
+                if (tile instanceof TileEntityMultiBlockElement) {
+                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getTileEntity(pos1);
+                    te.setMainMultiElement(tileMultiBlockBase);
+                    ChunkPos chunkPos = new ChunkPos(pos1);
+                    if (!passedChunk.contains(chunkPos)) {
+                        world.markChunkDirty(pos1, null);
+                        passedChunk.add(chunkPos);
+                    }
+                }
+            }
+        } else {
+            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : blockPosMap.entrySet()) {
+                if (entry.getValue() == main) {
+                    continue;
+                }
+                final World world = tileMultiBlockBase.getWorld();
+                BlockPos pos1 = null;
+                BlockPos pos = tileMultiBlockBase.getBlockPos();
+                switch (tileMultiBlockBase.getFacing()) {
+                    case NORTH:
+                        pos1 = pos.add(entry.getKey());
+                        break;
+                    case EAST:
+                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                        break;
+                    case WEST:
+                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                        break;
+                    case SOUTH:
+                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                        break;
+                }
+                TileEntity tile = world.getTileEntity(pos1);
+                if (tile instanceof TileEntityMultiBlockElement) {
+                    TileEntityMultiBlockElement te = (TileEntityMultiBlockElement) world.getTileEntity(pos1);
+                    te.setMainMultiElement(null);
+                    ChunkPos chunkPos = new ChunkPos(pos1);
+                    if (!passedChunk.contains(chunkPos)) {
+                        world.markChunkDirty(pos1, null);
+                        passedChunk.add(chunkPos);
+                    }
+                }
+            }
+        }
     }
 
 }

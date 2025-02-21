@@ -50,6 +50,9 @@
       "cooling" : {
         "model" : "industrialupgrade:basemachine/cooling"
       },
+	  "cooling_active" : {
+        "model" : "industrialupgrade:basemachine/cooling_active"
+      },
       "modulator" : {
         "model" : "industrialupgrade:basemachine/modulator"
       },
@@ -61,6 +64,9 @@
       },
       "aircollector" : {
         "model" : "industrialupgrade:basemachine/aircollector"
+      },
+	  "aircollector_active" : {
+        "model" : "industrialupgrade:basemachine/aircollector_active"
       },
       "combiner_se_generators" : {
         "model" : "industrialupgrade:basemachine/combiner_se_generators"
@@ -89,10 +95,16 @@
       "probe_assembler" : {
         "model" : "industrialupgrade:basemachine/probe_assembler"
       },
+	  "probe_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/probe_assembler"
+      },
       "research_table_space" : {
         "model" : "industrialupgrade:basemachine/research_table_space"
       },
       "rocket_assembler" : {
+        "model" : "industrialupgrade:basemachine/rocket_assembler"
+      },
+      "rocket_assembler_active" : {
         "model" : "industrialupgrade:basemachine/rocket_assembler"
       },
       "rocket_launch_pad" : {
@@ -110,6 +122,9 @@
       "satellite_assembler" : {
         "model" : "industrialupgrade:basemachine/satellite_assembler"
       },
+      "satellite_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/satellite_assembler"
+      },
       "soil_analyzer" : {
         "model" : "industrialupgrade:basemachine/soil_analyzer"
       },
@@ -125,10 +140,16 @@
       "ender_assembler" : {
         "model" : "industrialupgrade:basemachine/ender_assembler"
       },
+      "ender_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/ender_assembler"
+      },
       "research_table" : {
         "model" : "industrialupgrade:basemachine/research_table"
       },
       "gas_combiner" : {
+        "model" : "industrialupgrade:basemachine/gas_combiner"
+      },
+      "gas_combiner_active" : {
         "model" : "industrialupgrade:basemachine/gas_combiner"
       },
       "simple_water_generator" : {
@@ -206,13 +227,22 @@
       "earth_assembler" : {
         "model" : "industrialupgrade:basemachine/earth_collector"
       },
+      "earth_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/earth_collector"
+      },
       "nether_assembler" : {
+        "model" : "industrialupgrade:basemachine/infernal_assembler"
+      },
+      "nether_assembler_active" : {
         "model" : "industrialupgrade:basemachine/infernal_assembler"
       },
       "auto_digger" : {
         "model" : "industrialupgrade:basemachine/auto-digger"
       },
       "crystallize" : {
+        "model" : "industrialupgrade:basemachine/crystallizer_2"
+      },
+      "crystallize_active" : {
         "model" : "industrialupgrade:basemachine/crystallizer_2"
       },
       "aer_assembler_active" : {
@@ -228,7 +258,7 @@
         "model" : "industrialupgrade:basemachine/infernal_assembler"
       },
       "ender_assembler_active" : {
-        "model" : "industrialupgrade:basemachine/ender_assembler-digger"
+        "model" : "industrialupgrade:basemachine/ender_assembler"
       },
       "crystallize_active" : {
         "model" : "industrialupgrade:basemachine/crystallizer_2"
@@ -437,6 +467,12 @@
 	   "autocrafter" : {
         "model" : "industrialupgrade:basemachine/autocrafter"
       },
+	   "autocrafter_active" : {
+        "model" : "industrialupgrade:basemachine/autocrafter_active"
+      },
+	   "tesseract" : {
+        "model" : "industrialupgrade:basemachine/tesseract"
+      },
 	   "facademechanism" : {
         "model" : "industrialupgrade:basemachine/facademechanism"
       },
@@ -517,10 +553,814 @@
       },
 	   "refrigerator_coolant_active" : {
         "model" : "industrialupgrade:basemachine/refrigerator_coolant_active"
+      },
+	   "comb_pump" : {
+        "model" : "industrialupgrade:basemachine/comb_pump"
+      },
+	   "comb_pump_active" : {
+        "model" : "industrialupgrade:basemachine/comb_pump_active"
+      },
+	   "adv_comb_pump" : {
+        "model" : "industrialupgrade:basemachine/adv_comb_pump"
+      },
+	   "adv_comb_pump_active" : {
+        "model" : "industrialupgrade:basemachine/adv_comb_pump_active"
+      },
+	   "imp_comb_pump" : {
+        "model" : "industrialupgrade:basemachine/imp_comb_pump"
+      },
+	   "imp_comb_pump_active" : {
+        "model" : "industrialupgrade:basemachine/imp_comb_pump_active"
+      },
+	   "per_comb_pump" : {
+        "model" : "industrialupgrade:basemachine/per_comb_pump"
+      },
+	   "per_comb_pump_active" : {
+        "model" : "industrialupgrade:basemachine/per_comb_pump_active"
+      },
+	   "safe" : {
+        "model" : "industrialupgrade:basemachine/safe"
+      },
+	   "safe_active" : {
+        "model" : "industrialupgrade:basemachine/safe_active"
+      },
+	   "vending" : {
+        "model" : "industrialupgrade:basemachine/vending"
+      },
+	   "adv_vending" : {
+        "model" : "industrialupgrade:basemachine/adv_vending"
+      },
+	   "imp_vending" : {
+        "model" : "industrialupgrade:basemachine/imp_vending"
+      },
+	   "per_vending" : {
+        "model" : "industrialupgrade:basemachine/per_vending"
+      },
+	   "autofuse" : {
+        "model" : "industrialupgrade:basemachine/autofuse"
+      },
+	   "autofuse_active" : {
+        "model" : "industrialupgrade:basemachine/autofuse_active"
+      },
+	   "auto_open_box" : {
+        "model" : "industrialupgrade:basemachine/auto_open_box"
+      },
+	   "auto_open_box_active" : {
+        "model" : "industrialupgrade:basemachine/auto_open_box_active"
+      },
+	   "exp_chargepad" : {
+        "model" : "industrialupgrade:basemachine/exp_chargepad"
+      },
+	   "exp_chargepad_active" : {
+        "model" : "industrialupgrade:basemachine/exp_chargepad_active"
+      },
+	   "recipe_tuner" : {
+        "model" : "industrialupgrade:basemachine/recipe_tuner"
+      },
+	   "energy_trash" : {
+        "model" : "industrialupgrade:basemachine/energy_trash"
+      },
+	   "fluid_trash" : {
+        "model" : "industrialupgrade:basemachine/fluid_trash"
+      },
+	   "item_trash" : {
+        "model" : "industrialupgrade:basemachine/item_trash"
+      },
+	   "rolling_machine" : {
+        "model" : "industrialupgrade:basemachine/rolling"
+      },
+	   "rolling_machine_active" : {
+        "model" : "industrialupgrade:basemachine/rolling_active"
+      },
+	   "automatic_mechanism" : {
+        "model" : "industrialupgrade:basemachine/automatic_mechanism"
+      },
+	   "wireless_controller_reactors" : {
+        "model" : "industrialupgrade:basemachine/wireless_controller_reactors"
+      },
+	   "simulation_reactors" : {
+        "model" : "industrialupgrade:basemachine/simulation_reactors"
+      },
+	   "wireless_oil_pump" : {
+        "model" : "industrialupgrade:basemachine/wireless_oil_pump"
+      },
+	   "wireless_oil_pump_active" : {
+        "model" : "industrialupgrade:basemachine/simulation_reactors_active"
+      },
+	   "wireless_mineral_quarry" : {
+        "model" : "industrialupgrade:basemachine/wireless_mineral_quarry"
+      },
+	   "wireless_mineral_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/wireless_mineral_quarry_active"
+      },
+	   "machine_charger" : {
+        "model" : "industrialupgrade:basemachine/machine_charger"
+      }, 
+	   "matter_collector" : {
+        "model" : "industrialupgrade:basemachine/matter_collector"
+      }, 
+	   "matter_collector_active" : {
+        "model" : "industrialupgrade:basemachine/matter_collector_active"
+      }, 
+	   "radiation_storage" : {
+        "model" : "industrialupgrade:basemachine/radiation_storage"
+      },
+	  "imp_refiner" : {
+        "model" : "industrialupgrade:basemachine/imp_refiner"
+      }, 
+	  "imp_refiner_active" : {
+        "model" : "industrialupgrade:basemachine/imp_refiner"
+      }, 
+	  "wireless_controller_graphite_reactors" : {
+        "model" : "industrialupgrade:basemachine/wireless_controller_graphite_reactors"
+      }, 
+	  "wireless_controller_heat_reactors" : {
+        "model" : "industrialupgrade:basemachine/wireless_controller_heat_reactors"
+      }, 
+	  "energy_remover" : {
+        "model" : "industrialupgrade:basemachine/energy_remover"
+      }, 
+	  "energy_barrier" : {
+        "model" : "industrialupgrade:basemachine/energy_barrier"
+      }, 
+	  "mob_magnet" : {
+        "model" : "industrialupgrade:basemachine/mob_magnet"
+      },
+	  "refrigerator_fluids" : {
+        "model" : "industrialupgrade:basemachine/refrigerator_fluids"
+      }, 
+	  "refrigerator_fluids_active" : {
+        "model" : "industrialupgrade:basemachine/refrigerator_fluids_active"
+      }, 
+	  "fluid_cooling" : {
+        "model" : "industrialupgrade:basemachine/fluid_cooling"
+      }, 
+	  "fluid_cooling_active" : {
+        "model" : "industrialupgrade:basemachine/fluid_cooling_active"
+      }, 
+	  "fluid_separator" : {
+        "model" : "industrialupgrade:basemachine/fluid_separator"
+      }, 
+	  "fluid_separator_active" : {
+        "model" : "industrialupgrade:basemachine/fluid_separator_active"
+      }, 
+	  "fluid_integrator" : {
+        "model" : "industrialupgrade:basemachine/fluid_integrator"
+      }, 
+	  "fluid_integrator_active" : {
+        "model" : "industrialupgrade:basemachine/fluid_integrator_active"
+      }, 
+	  "polymerizer" : {
+        "model" : "industrialupgrade:basemachine/polymerizer"
+      }, 
+	  "polymerizer_active" : {
+        "model" : "industrialupgrade:basemachine/polymerizer_active"
+      }, 
+	  "fluid_adapter" : {
+        "model" : "industrialupgrade:basemachine/fluid_adapter"
+      }, 
+	  "fluid_adapter_active" : {
+        "model" : "industrialupgrade:basemachine/fluid_adapter_active"
+      }, 
+	  "electric_squeezer" : {
+        "model" : "industrialupgrade:basemachine/electric_squeezer"
+      }, 
+	  "electric_squeezer_active" : {
+        "model" : "industrialupgrade:basemachine/electric_squeezer_active"
+      }, 
+	  "electric_dryer" : {
+        "model" : "industrialupgrade:basemachine/electric_dryer"
+      }, 
+	  "electric_dryer_active" : {
+        "model" : "industrialupgrade:basemachine/electric_dryer_active"
+      }, 
+	  "item_divider_to_fluid" : {
+        "model" : "industrialupgrade:basemachine/item_divider_to_fluid"
+      }, 
+	  "item_divider_to_fluid_active" : {
+        "model" : "industrialupgrade:basemachine/item_divider_to_fluid_active"
+      }, 
+	  "solid_state_electrolyzer" : {
+        "model" : "industrialupgrade:basemachine/solid_state_electrolyzer"
+      }, 
+	  "solid_state_electrolyzer_active" : {
+        "model" : "industrialupgrade:basemachine/solid_state_electrolyzer_active"
+      }, 
+	  "item_divider" : {
+        "model" : "industrialupgrade:basemachine/item_divider"
+      }, 
+	  "item_divider_active" : {
+        "model" : "industrialupgrade:basemachine/item_divider_active"
+      }, 
+	  "upgrade_machine" : {
+        "model" : "industrialupgrade:basemachine/upgrade_machine"
+      }, 
+	  "upgrade_machine_active" : {
+        "model" : "industrialupgrade:basemachine/upgrade_machine_active"
+      }, 
+	  "oil_purifier" : {
+        "model" : "industrialupgrade:basemachine/oil_purifier"
+      }, 
+	  "oil_purifier_active" : {
+        "model" : "industrialupgrade:basemachine/oil_purifier_active"
+      }, 
+	  "purifier_soil" : {
+        "model" : "industrialupgrade:basemachine/purifier_soil"
+      }, 
+	  "purifier_soil_active" : {
+        "model" : "industrialupgrade:basemachine/purifier_soil_active"
+      }, 
+	  "solid_cooling" : {
+        "model" : "industrialupgrade:basemachine/solid_cooling"
+      }, 
+	  "solid_cooling_active" : {
+        "model" : "industrialupgrade:basemachine/solid_cooling_active"
+      }, 
+	  "neutronseparator" : {
+        "model" : "industrialupgrade:basemachine/neutronseparator"
+      }, 
+	  "neutronseparator_active" : {
+        "model" : "industrialupgrade:basemachine/neutronseparator_active"
+      }, 
+	  "positronconverter" : {
+        "model" : "industrialupgrade:basemachine/positronconverter"
+      }, 
+	  "positronconverter_active" : {
+        "model" : "industrialupgrade:basemachine/positronconverter_active"
+      }, 
+	  "imp_alloy_smelter" : {
+        "model" : "industrialupgrade:basemachine/imp_alloy_smelter"
+      }, 
+	  "imp_alloy_smelter_active" : {
+        "model" : "industrialupgrade:basemachine/imp_alloy_smelter_active"
+      }, 
+	  "per_alloy_smelter" : {
+        "model" : "industrialupgrade:basemachine/per_alloy_smelter"
+      }, 
+	  "per_alloy_smelter_active" : {
+        "model" : "industrialupgrade:basemachine/per_alloy_smelter_active"
+      }, 
+	  "fluid_mixer" : {
+        "model" : "industrialupgrade:basemachine/fluid_mixer"
+      }, 
+	  "fluid_mixer_active" : {
+        "model" : "industrialupgrade:basemachine/fluid_mixer_active"
+      }, 
+	  "solid_fluid_mixer" : {
+        "model" : "industrialupgrade:basemachine/solid_fluid_mixer"
+      }, 
+	  "solid_fluid_mixer_active" : {
+        "model" : "industrialupgrade:basemachine/solid_fluid_mixer_active"
+      }, 
+	  "fluid_heater" : {
+        "model" : "industrialupgrade:basemachine/fluid_heater"
+      }, 
+	  "fluid_heater_active" : {
+        "model" : "industrialupgrade:basemachine/fluid_heater_active"
+      }, 
+	  "silicon_crystal_handler" : {
+        "model" : "industrialupgrade:basemachine/silicon_crystal_handler"
+      }, 
+	  "silicon_crystal_handler_active" : {
+        "model" : "industrialupgrade:basemachine/silicon_crystal_handler"
+      }, 
+	  
+	  "steamboiler" : {
+        "model" : "industrialupgrade:basemachine/steamboiler"
+      }, 
+	  "steamboiler_active" : {
+        "model" : "industrialupgrade:basemachine/steamboiler_active"
+      }, 
+	  "steampressureconverter_active" : {
+        "model" : "industrialupgrade:basemachine/steampressureconverter_active"
+      }, 
+	  "steampressureconverter" : {
+        "model" : "industrialupgrade:basemachine/steampressureconverter"
+      }, 
+	  "steamdryer_active" : {
+        "model" : "industrialupgrade:basemachine/steamdryer_active"
+      }, 
+	  "steamdryer" : {
+        "model" : "industrialupgrade:basemachine/steamdryer"
+      }, 
+	  "steam_macerator_active" : {
+        "model" : "industrialupgrade:basemachine/steam_macerator_active"
+      }, 
+	  "steam_macerator" : {
+        "model" : "industrialupgrade:basemachine/steam_macerator"
+      }, 
+	  "steam_compressor_active" : {
+        "model" : "industrialupgrade:basemachine/steam_compressor_active"
+      }, 
+	  "steam_compressor" : {
+        "model" : "industrialupgrade:basemachine/steam_compressor"
+      }, 
+	  "steam_extractor_active" : {
+        "model" : "industrialupgrade:basemachine/steam_extractor_active"
+      }, 
+	  "steam_extractor" : {
+        "model" : "industrialupgrade:basemachine/steam_extractor"
+      }, 
+	  "steam_extruder_active" : {
+        "model" : "industrialupgrade:basemachine/steam_extruder_active"
+      }, 
+	  "steam_extruder" : {
+        "model" : "industrialupgrade:basemachine/steam_extruder"
+      }, 
+	  "steam_cutting_active" : {
+        "model" : "industrialupgrade:basemachine/steam_cutting_active"
+      }, 
+	  "steam_cutting" : {
+        "model" : "industrialupgrade:basemachine/steam_cutting"
+      }, 
+	  "steam_converter_active" : {
+        "model" : "industrialupgrade:basemachine/steam_converter_active"
+      }, 
+	  "steam_converter" : {
+        "model" : "industrialupgrade:basemachine/steam_converter"
+      }, 
+	  "silicon_crystal_handler_active" : {
+        "model" : "industrialupgrade:basemachine/silicon_crystal_handler"
+      }, 
+	  "steam_converter" : {
+        "model" : "industrialupgrade:basemachine/steam_converter"
+      }, 
+	  "silicon_crystal_handler_active" : {
+        "model" : "industrialupgrade:basemachine/silicon_crystal_handler"
+      }, 
+	  "steam_converter" : {
+        "model" : "industrialupgrade:basemachine/steam_converter"
+      }, 
+	  "silicon_crystal_handler_active" : {
+        "model" : "industrialupgrade:basemachine/silicon_crystal_handler"
+      }, 
+	  "steam_converter" : {
+        "model" : "industrialupgrade:basemachine/steam_converter"
+      }, 
+	  "silicon_crystal_handler_active" : {
+        "model" : "industrialupgrade:basemachine/silicon_crystal_handler"
+      }, 
+	  "steam_converter" : {
+        "model" : "industrialupgrade:basemachine/steam_converter"
+      }, 
+	  
+	  "steam_converter_active" : {
+        "model" : "industrialupgrade:basemachine/steam_converter_active"
+      }, 
+	  "steam_squeezer" : {
+        "model" : "industrialupgrade:basemachine/steam_squeezer"
+      }, 
+	  "steam_squeezer_active" : {
+        "model" : "industrialupgrade:basemachine/steam_squeezer_active"
+      }, 
+	  "solid_fluid_integrator" : {
+        "model" : "industrialupgrade:basemachine/solid_fluid_integrator"
+      }, 
+	  "solid_fluid_integrator_active" : {
+        "model" : "industrialupgrade:basemachine/solid_fluid_integrator_active"
+      }, 
+	  "solid_mixer" : {
+        "model" : "industrialupgrade:basemachine/solid_mixer"
+      }, 
+	  "solid_mixer_active" : {
+        "model" : "industrialupgrade:basemachine/solid_mixer_active"
+      }, 
+	  "peat_generator" : {
+        "model" : "industrialupgrade:basemachine/peat_generator"
+      }, 
+	  "peat_generator_active" : {
+        "model" : "industrialupgrade:basemachine/peat_generator_active"
+      }, 
+	  "triple_solid_mixer" : {
+        "model" : "industrialupgrade:basemachine/triple_solid_mixer"
+      }, 
+	  
+	  
+	  "triple_solid_mixer_active" : {
+        "model" : "industrialupgrade:basemachine/triple_solid_mixer_active"
+      }, 
+	  "single_fluid_adapter" : {
+        "model" : "industrialupgrade:basemachine/single_fluid_adapter"
+      }, 
+	  "single_fluid_adapter_active" : {
+        "model" : "industrialupgrade:basemachine/single_fluid_adapter_active"
+      }, 
+	  "steam_peat_generator" : {
+        "model" : "industrialupgrade:basemachine/steam_peat_generator"
+      }, 
+	  "steam_peat_generator_active" : {
+        "model" : "industrialupgrade:basemachine/steam_peat_generator_active"
+      }, 
+	  "steam_handler_ore" : {
+        "model" : "industrialupgrade:basemachine/steam_handler_ore"
+      }, 
+	  "steam_handler_ore_active" : {
+        "model" : "industrialupgrade:basemachine/steam_handler_ore_active"
+      }, 
+	  "steam_electrolyzer" : {
+        "model" : "industrialupgrade:basemachine/steam_electrolyzer"
+      }, 
+	  "steam_electrolyzer_active" : {
+        "model" : "industrialupgrade:basemachine/steam_electrolyzer_active"
+      }, 
+	  "steam_ampere_generator" : {
+        "model" : "industrialupgrade:basemachine/steam_ampere_generator"
+      }, 
+	  
+	  "steam_ampere_generator_active" : {
+        "model" : "industrialupgrade:basemachine/steam_ampere_generator_active"
+      }, 
+	  "steam_solid_fluid_mixer" : {
+        "model" : "industrialupgrade:basemachine/steam_solid_fluid_mixer"
+      }, 
+	  "steam_solid_fluid_mixer_active" : {
+        "model" : "industrialupgrade:basemachine/steam_solid_fluid_mixer_active"
+      }, 
+	  "programming_table" : {
+        "model" : "industrialupgrade:basemachine/programming_table"
+      }, 
+	  "programming_table_active" : {
+        "model" : "industrialupgrade:basemachine/programming_table_active"
+      }, 
+	  "electronic_assembler" : {
+        "model" : "industrialupgrade:basemachine/electronic_assembler"
+      }, 
+	  "electronic_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/electronic_assembler_active"
+      }, 
+	  "oak_tank" : {
+        "model" : "industrialupgrade:basemachine/oak_tank"
+      }, 
+	  "steel_tank" : {
+        "model" : "industrialupgrade:basemachine/steel_tank"
+      }, 
+	  "steam_pump" : {
+        "model" : "industrialupgrade:basemachine/steam_pump"
+      },  
+	  "steam_pump_active" : {
+        "model" : "industrialupgrade:basemachine/steam_pump_active"
+      }, 
+	  "steam_sharpener" : {
+        "model" : "industrialupgrade:basemachine/steam_sharpener"
+      },  
+	  "steam_sharpener_active" : {
+        "model" : "industrialupgrade:basemachine/steam_sharpener_active"
+      },  
+	  "itemmanipulator" : {
+        "model" : "industrialupgrade:basemachine/itemmanipulator"
+      }, 
+	  "alkalineearthquarry" : {
+        "model" : "industrialupgrade:basemachine/alkalineearthquarry"
+      }, 
+	  "alkalineearthquarry_active" : {
+        "model" : "industrialupgrade:basemachine/alkalineearthquarry_active"
+      }, 
+	  "radioactive_handler_ore" : {
+        "model" : "industrialupgrade:basemachine/radioactive_handler_ore"
+      }, 
+	  "radioactive_handler_ore_active" : {
+        "model" : "industrialupgrade:basemachine/radioactive_handler_ore_active"
+      }, 
+	  "industrial_ore_purifier" : {
+        "model" : "industrialupgrade:basemachine/industrial_ore_purifier"
+      }, 
+	  "industrial_ore_purifier_active" : {
+        "model" : "industrialupgrade:basemachine/industrial_ore_purifier_active"
+      }, 
+	  "gas_pump" : {
+        "model" : "industrialupgrade:basemachine/gas_pump"
+      }, 
+	  "gas_pump_active" : {
+        "model" : "industrialupgrade:basemachine/gas_pump_active"
+      }, 
+	  "wireless_gas_pump" : {
+        "model" : "industrialupgrade:basemachine/wireless_gas_pump"
+      }, 
+	  "wireless_gas_pump_active" : {
+        "model" : "industrialupgrade:basemachine/wireless_gas_pump_active"
+      }, 
+	  "quantum_miner" : {
+        "model" : "industrialupgrade:basemachine/quantum_miner"
+      }, 
+	  "quantum_miner_active" : {
+        "model" : "industrialupgrade:basemachine/quantum_miner"
+      }, 
+	  "quantum_transformer" : {
+        "model" : "industrialupgrade:basemachine/quantum_transformer"
+      }, 
+	  "quantum_transformer_active" : {
+        "model" : "industrialupgrade:basemachine/quantum_transformer"
+      }, 
+	  "steam_storage" : {
+        "model" : "industrialupgrade:basemachine/steam_storage"
+      }, 
+	  "quarry_pipe" : {
+        "model" : "industrialupgrade:basemachine/quarry_pipe"
+      }, 
+	  "steam_quarry" : {
+        "model" : "industrialupgrade:basemachine/steam_quarry"
+      }, 
+	  "steam_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/steam_quarry_active"
+      }, 
+	  "adv_steam_quarry" : {
+        "model" : "industrialupgrade:basemachine/adv_steam_quarry"
+      }, 
+	  "adv_steam_quarry_active" : {
+        "model" : "industrialupgrade:basemachine/adv_steam_quarry_active"
+      }, 
+	  "steam_rolling" : {
+        "model" : "industrialupgrade:basemachine/steam_rolling"
+      }, 
+	  "steam_rolling_active" : {
+        "model" : "industrialupgrade:basemachine/steam_rolling_active"
+      }, 
+	  "electric_wire_insulator" : {
+        "model" : "industrialupgrade:basemachine/electric_wire_insulator"
+      }, 
+	  "electric_wire_insulator_active" : {
+        "model" : "industrialupgrade:basemachine/electric_wire_insulator_active"
+      }, 
+	  "steam_wire_insulator" : {
+        "model" : "industrialupgrade:basemachine/steam_wire_insulator"
+      }, 
+	  "steam_wire_insulator_active" : {
+        "model" : "industrialupgrade:basemachine/steam_wire_insulator_active"
+      }, 
+	  "steam_crystal_charge" : {
+        "model" : "industrialupgrade:basemachine/steam_crystal_charge"
+      }, 
+	  "steam_crystal_charge_active" : {
+        "model" : "industrialupgrade:basemachine/steam_crystal_charge_active"
+      }, 
+	  "crystal_charge" : {
+        "model" : "industrialupgrade:basemachine/crystal_charge"
+      }, 
+	  "crystal_charge_active" : {
+        "model" : "industrialupgrade:basemachine/crystal_charge_active"
+      }, 
+	  "ampere_generator" : {
+        "model" : "industrialupgrade:basemachine/ampere_generator"
+      }, 
+	  "ampere_generator_active" : {
+        "model" : "industrialupgrade:basemachine/ampere_generator_active"
+      }, 
+	  "steam_bio_generator" : {
+        "model" : "industrialupgrade:basemachine/steam_bio_generator"
+      }, 
+	  "steam_bio_generator_active" : {
+        "model" : "industrialupgrade:basemachine/steam_bio_generator_active"
+      }, 
+	  "bio_macerator" : {
+        "model" : "industrialupgrade:basemachine/bio_macerator"
+      }, 
+	  "bio_macerator_active" : {
+        "model" : "industrialupgrade:basemachine/bio_macerator_active"
+      }, 
+	  "bio_compressor" : {
+        "model" : "industrialupgrade:basemachine/bio_compressor"
+      }, 
+	  "bio_compressor_active" : {
+        "model" : "industrialupgrade:basemachine/bio_compressor_active"
+      }, 
+	  "bio_extractor" : {
+        "model" : "industrialupgrade:basemachine/bio_extractor"
+      }, 
+	  "bio_extractor_active" : {
+        "model" : "industrialupgrade:basemachine/bio_extractor_active"
+      }, 
+	  "bio_extruder" : {
+        "model" : "industrialupgrade:basemachine/bio_extruder"
+      }, 
+	  "bio_extruder_active" : {
+        "model" : "industrialupgrade:basemachine/bio_extruder_active"
+      }, 
+	  "bio_cutting" : {
+        "model" : "industrialupgrade:basemachine/bio_cutting"
+      }, 
+	  "bio_cutting_active" : {
+        "model" : "industrialupgrade:basemachine/bio_cutting_active"
+      }, 
+	  "bio_furnace" : {
+        "model" : "industrialupgrade:basemachine/bio_furnace"
+      }, 
+	  "bio_furnace_active" : {
+        "model" : "industrialupgrade:basemachine/bio_furnace_active"
+      }, 
+	  "bio_rolling" : {
+        "model" : "industrialupgrade:basemachine/bio_rolling"
+      }, 
+	  "bio_rolling_active" : {
+        "model" : "industrialupgrade:basemachine/bio_rolling_active"
+      }, 
+	  "bio_orewashing" : {
+        "model" : "industrialupgrade:basemachine/bio_orewashing"
+      }, 
+	  "bio_orewashing_active" : {
+        "model" : "industrialupgrade:basemachine/bio_orewashing_active"
+      }, 
+	  "bio_centrifuge" : {
+        "model" : "industrialupgrade:basemachine/bio_centrifuge"
+      }, 
+	  "bio_centrifuge_active" : {
+        "model" : "industrialupgrade:basemachine/bio_centrifuge_active"
+      }, 
+	  "bio_gearing" : {
+        "model" : "industrialupgrade:basemachine/bio_gearing"
+      }, 
+	  "bio_gearing_active" : {
+        "model" : "industrialupgrade:basemachine/bio_gearing_active"
+      }, 
+	  "electric_refractory_furnace" : {
+        "model" : "industrialupgrade:basemachine/electric_refractory_furnace"
+      }, 
+	  "electric_refractory_furnace_active" : {
+        "model" : "industrialupgrade:basemachine/electric_refractory_furnace_active"
+      }, 
+	  "chicken_farm" : {
+        "model" : "industrialupgrade:basemachine/chicken_farm"
+      }, 
+	  "sheep_farm" : {
+        "model" : "industrialupgrade:basemachine/sheep_farm"
+      }, 
+	  "cow_farm" : {
+        "model" : "industrialupgrade:basemachine/cow_farm"
+      }, 
+	  "sapling_gardener" : {
+        "model" : "industrialupgrade:basemachine/sapling_gardener"
+      }, 
+	  "tree_breaker" : {
+        "model" : "industrialupgrade:basemachine/tree_breaker"
+      }, 
+	  "cactus_farm" : {
+        "model" : "industrialupgrade:basemachine/cactus_farm"
+      }, 
+	  "pig_farm" : {
+        "model" : "industrialupgrade:basemachine/pig_farm"
+      }, 
+	  "electric_brewing" : {
+        "model" : "industrialupgrade:basemachine/electric_brewing"
+      }, 
+	  "electric_brewing_active" : {
+        "model" : "industrialupgrade:basemachine/electric_brewing_active"
+      }, 
+	  "sawmill" : {
+        "model" : "industrialupgrade:basemachine/sawmill"
+      }, 
+	  "sawmill_active" : {
+        "model" : "industrialupgrade:basemachine/sawmill_active"
+      }, 
+	  "gen_addition_stone" : {
+        "model" : "industrialupgrade:basemachine/gen_addition_stone"
+      }, 
+	  "gen_addition_stone_active" : {
+        "model" : "industrialupgrade:basemachine/gen_addition_stone_active"
+      }, 
+	  "plant_fertilizer" : {
+        "model" : "industrialupgrade:basemachine/plant_fertilizer"
+      }, 
+	  "plant_collector" : {
+        "model" : "industrialupgrade:basemachine/plant_collector"
+      }, 
+	  "plant_gardener" : {
+        "model" : "industrialupgrade:basemachine/plant_gardener"
+      }, 
+	  "field_cleaner" : {
+        "model" : "industrialupgrade:basemachine/field_cleaner"
+      }, 
+	  "weeder" : {
+        "model" : "industrialupgrade:basemachine/weeder"
+      }, 
+	  "apothecary_bee" : {
+        "model" : "industrialupgrade:basemachine/apothecary_bee"
+      }, 
+	  "collector_product_bee" : {
+        "model" : "industrialupgrade:basemachine/collector_product_bee"
+      }, 
+	  "incubator" : {
+        "model" : "industrialupgrade:basemachine/incubator"
+      }, 
+	  "incubator_active" : {
+        "model" : "industrialupgrade:basemachine/incubator_active"
+      }, 
+	  "insulator" : {
+        "model" : "industrialupgrade:basemachine/insulator"
+      }, 
+	  "insulator_active" : {
+        "model" : "industrialupgrade:basemachine/insulator_active"
+      }, 
+	  "rna_collector" : {
+        "model" : "industrialupgrade:basemachine/rna_collector"
+      }, 
+	  "rna_collector_active" : {
+        "model" : "industrialupgrade:basemachine/rna_collector_active"
+      }, 
+	  "mutatron" : {
+        "model" : "industrialupgrade:basemachine/mutatron"
+      }, 
+	  "mutatron_active" : {
+        "model" : "industrialupgrade:basemachine/mutatron_active"
+      }, 
+	  "reverse_transcriptor" : {
+        "model" : "industrialupgrade:basemachine/reverse_transcriptor"
+      }, 
+	  "reverse_transcriptor_active" : {
+        "model" : "industrialupgrade:basemachine/reverse_transcriptor_active"
+      }, 
+	  "genetic_stabilizer" : {
+        "model" : "industrialupgrade:basemachine/genetic_stabilizer"
+      }, 
+	  "genetic_stabilizer_active" : {
+        "model" : "industrialupgrade:basemachine/genetic_stabilizer_active"
+      }, 
+	  "centrifuge" : {
+        "model" : "industrialupgrade:basemachine/centrifuge"
+      }, 
+	  "centrifuge_active" : {
+        "model" : "industrialupgrade:basemachine/centrifuge_active"
+      }, 
+	  "genetic_replicator" : {
+        "model" : "industrialupgrade:basemachine/genetic_replicator"
+      }, 
+	  "genetic_replicator_active" : {
+        "model" : "industrialupgrade:basemachine/genetic_replicator_active"
+      }, 
+	  "inoculator" : {
+        "model" : "industrialupgrade:basemachine/inoculator"
+      }, 
+	  "inoculator_active" : {
+        "model" : "industrialupgrade:basemachine/inoculator_active"
+      }, 
+	  "genome_extractor" : {
+        "model" : "industrialupgrade:basemachine/genome_extractor"
+      }, 
+	  "genome_extractor_active" : {
+        "model" : "industrialupgrade:basemachine/genome_extractor_active"
+      }, 
+	  "genetic_transposer" : {
+        "model" : "industrialupgrade:basemachine/genetic_transposer"
+      }, 
+	  "genetic_transposer_active" : {
+        "model" : "industrialupgrade:basemachine/genetic_transposer_active"
+      }, 
+	  "genetic_polymerizer" : {
+        "model" : "industrialupgrade:basemachine/genetic_polymerizer"
+      }, 
+	  "genetic_polymerizer_active" : {
+        "model" : "industrialupgrade:basemachine/genetic_polymerizer_active"
+      }, 
+	  "shield" : {
+        "model" : "industrialupgrade:basemachine/shield"
+      }, 
+	  "hologram_space" : {
+        "model" : "industrialupgrade:basemachine/hologram_space"
+      }, 
+	  "single_multi_crop" : {
+        "model" : "industrialupgrade:basemachine/single_multi_crop"
+      }, 
+	  "dual_multi_crop" : {
+        "model" : "industrialupgrade:basemachine/dual_multi_crop"
+      }, 
+	  "triple_multi_crop" : {
+        "model" : "industrialupgrade:basemachine/triple_multi_crop"
+      }, 
+	  "quad_multi_crop" : {
+        "model" : "industrialupgrade:basemachine/quad_multi_crop"
+      }, 
+	  "upgrade_rover" : {
+        "model" : "industrialupgrade:basemachine/upgrade_rover"
+      }, 
+	  "upgrade_rover_active" : {
+        "model" : "industrialupgrade:basemachine/upgrade_rover_active"
+      }, 
+	  "rover_assembler" : {
+        "model" : "industrialupgrade:basemachine/rover_assembler"
+      }, 
+	  "rover_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/rover_assembler"
+      }, 
+	  "night_converter" : {
+        "model" : "industrialupgrade:basemachine/night_converter"
+      }, 
+	  "night_converter_active" : {
+        "model" : "industrialupgrade:basemachine/night_converter"
+      }, 
+	  "night_transformer" : {
+        "model" : "industrialupgrade:basemachine/night_transformer"
+      }, 
+	  "night_transformer_active" : {
+        "model" : "industrialupgrade:basemachine/night_transformer"
+      }, 
+	  "steam_fluid_heater" : {
+        "model" : "industrialupgrade:basemachine/steam_fluid_heater"
+      }, 
+	  "steam_fluid_heater_active" : {
+        "model" : "industrialupgrade:basemachine/steam_fluid_heater_active"
       }
 	  
-    },
-    "facing" : {
+	  
+	  
+    },"facing" : {
       "down" : {
         "x" : 90
       },

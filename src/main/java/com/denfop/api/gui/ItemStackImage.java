@@ -16,6 +16,9 @@ public class ItemStackImage extends GuiElement<ItemStackImage> {
     }
 
     public void drawBackground(int mouseX, int mouseY) {
+        if (!visible()) {
+            return;
+        }
         super.drawBackground(mouseX, mouseY);
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
@@ -27,6 +30,9 @@ public class ItemStackImage extends GuiElement<ItemStackImage> {
     }
 
     public void drawForeground(int mouseX, int mouseY) {
+        if (!visible()) {
+            return;
+        }
         if (this.contains(mouseX, mouseY)) {
             ItemStack stack = this.itemSupplier.get();
             if (!ModUtils.isEmpty(stack)) {

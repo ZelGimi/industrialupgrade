@@ -10,7 +10,7 @@ public class HandlerInventory {
     private final IItemHandler handler;
     private final IInventory inventory;
 
-    HandlerInventory(IItemHandler handler, IInventory inventory) {
+    public HandlerInventory(IItemHandler handler, IInventory inventory) {
         this.handler = handler;
         this.inventory = inventory;
     }

@@ -1,5 +1,6 @@
 package com.denfop.invslot;
 
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class InvSlot {
+public class InvSlot implements ITypeSlot {
 
-    public final IAdvInventory<?> base;
-    protected final TypeItemSlot typeItemSlot;
-    protected final List<ItemStack> contents;
+    public IAdvInventory<?> base;
+    protected TypeItemSlot typeItemSlot;
+    protected List<ItemStack> contents;
     protected int stackSizeLimit;
 
 
@@ -34,12 +35,28 @@ public class InvSlot {
         this.typeItemSlot = null;
     }
 
+    public void reset(int size) {
+
+        this.contents = new ArrayList<>(Collections.nCopies(size, ItemStack.EMPTY));
+        this.stackSizeLimit = 64;
+    }
+
+    public boolean acceptAllOrIndex() {
+        return true;
+    }
+
+    public TypeItemSlot getTypeItemSlot() {
+        return typeItemSlot;
+    }
+
     public ItemStack[] gets() {
         return this.contents.toArray(new ItemStack[0]);
     }
-    public List<ItemStack> getContents(){
+
+    public List<ItemStack> getContents() {
         return this.contents;
     }
+
     public void readFromNbt(NBTTagCompound nbt) {
         NBTTagList contentsTag = nbt.getTagList("Items", 10);
 
@@ -57,7 +74,11 @@ public class InvSlot {
     }
 
     public boolean add(List<ItemStack> stacks) {
-        return this.add(stacks, false);
+        boolean added = false;
+        for (ItemStack stack : stacks) {
+            added = added || this.add(stack);
+        }
+        return added;
     }
 
     public boolean add(ItemStack stack) {
@@ -66,6 +87,71 @@ public class InvSlot {
         } else {
             return this.add(Collections.singletonList(stack), false);
         }
+    }
+
+    public int addExperimental(ItemStack stack) {
+        if (stack == null) {
+            throw new NullPointerException("null ItemStack");
+        } else {
+            return this.addExperimental(stack, false);
+        }
+    }
+
+    public int addExperimental(ItemStack stack, boolean simulate) {
+
+        if (stack != null && !stack.isEmpty()) {
+
+            int count = stack.getCount();
+            int minSlot = this.size();
+
+            for (int i = 0; i < this.size(); i++) {
+                final ItemStack stack1 = this.get(i);
+                if (stack1.isEmpty()) {
+                    if (i < minSlot) {
+                        minSlot = i;
+                    }
+                } else {
+                    if (stack1.isItemEqual(stack)) {
+                        if (stack1.getCount() + count <= stack.getMaxStackSize()) {
+                            if (stack.getTagCompound() == null && stack1.getTagCompound() == null) {
+                                if (!simulate) {
+                                    stack1.grow(stack.getCount());
+                                }
+                                return 0;
+                            } else {
+                                if (ModUtils.checkNbtEquality(stack.getTagCompound(), this.get(i).getTagCompound())) {
+                                    if (!simulate) {
+                                        stack1.grow(count);
+
+                                    }
+                                    return 0;
+                                }
+                            }
+                        } else {
+                            int maxFill = stack1.getMaxStackSize() - stack1.getCount();
+                            if (maxFill == 0) {
+                                continue;
+                            }
+                            maxFill = Math.max(count, maxFill);
+                            count -= maxFill;
+                            stack1.grow(stack.getCount());
+                        }
+                    }
+                }
+            }
+            if (count != 0) {
+                if (minSlot != this.size()) {
+                    if (!simulate) {
+                        this.put(minSlot, new ItemStack(stack.getItem(), count, stack.getItemDamage(), stack.getTagCompound()));
+                    }
+                    return 0;
+                }
+                return count;
+            }
+            return count;
+        }
+        return 0;
+
     }
 
     public boolean canAdd(List<ItemStack> stacks) {
@@ -84,18 +170,17 @@ public class InvSlot {
         }
     }
 
-    private boolean add(List<ItemStack> stacks, boolean simulate) {
+    public boolean add(List<ItemStack> stacks, boolean simulate) {
 
         if (stacks != null && !stacks.isEmpty()) {
-
             for (ItemStack stack : stacks) {
+
+                int minSlot = this.size();
                 for (int i = 0; i < this.size(); i++) {
                     if (this.get(i).isEmpty()) {
-                        if (!simulate) {
-                            this.put(i, stack.copy());
-
+                        if (i < minSlot) {
+                            minSlot = i;
                         }
-                        return true;
                     } else {
                         if (this.get(i).isItemEqual(stack)) {
                             if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
@@ -105,8 +190,7 @@ public class InvSlot {
                                     }
                                     return true;
                                 } else {
-                                    if (stack.getTagCompound() != null &&
-                                            stack.getTagCompound().equals(this.get(i).getTagCompound())) {
+                                    if (ModUtils.checkNbtEquality(stack.getTagCompound(), this.get(i).getTagCompound())) {
                                         if (!simulate) {
                                             this.get(i).grow(stack.getCount());
 
@@ -117,6 +201,13 @@ public class InvSlot {
                             }
                         }
                     }
+                }
+                if (minSlot != this.size()) {
+                    if (!simulate) {
+                        this.put(minSlot, stack.copy());
+
+                    }
+                    return true;
                 }
             }
             return false;
@@ -161,7 +252,7 @@ public class InvSlot {
     }
 
     public ItemStack get(int index) {
-        return this.contents.get(index);
+        return this.contents.get(index % this.size());
     }
 
     public void put(ItemStack content) {
@@ -177,6 +268,9 @@ public class InvSlot {
         this.onChanged();
     }
 
+    public void setTypeItemSlot(final TypeItemSlot typeItemSlot) {
+        this.typeItemSlot = typeItemSlot;
+    }
 
     public void clear(int index) {
         this.put(index, ItemStack.EMPTY);
@@ -206,14 +300,22 @@ public class InvSlot {
     }
 
     public void set(int i, ItemStack empty) {
-        this.contents.set(i,empty);
+        this.contents.set(i, empty);
+    }
+
+    public boolean canShift() {
+        return true;
+    }
+
+    public void update() {
     }
 
 
     public enum TypeItemSlot {
         INPUT,
         OUTPUT,
-        INPUT_OUTPUT;
+        INPUT_OUTPUT,
+        NONE;
 
         TypeItemSlot() {
         }

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/smeltery_fuel_tank_front-back-left-right",
+    "down" : "industrialupgrade:blocks/smeltery_fuel_tank_top-bottom",
+    "up" : "industrialupgrade:blocks/smeltery_fuel_tank_top-bottom",
+    "north" : "industrialupgrade:blocks/smeltery_fuel_tank_front-back-left-right",
+    "east" : "industrialupgrade:blocks/smeltery_fuel_tank_front-back-left-right",
+    "south" : "industrialupgrade:blocks/smeltery_fuel_tank_front-back-left-right",
+    "west" : "industrialupgrade:blocks/smeltery_fuel_tank_front-back-left-right"
+  }
+}

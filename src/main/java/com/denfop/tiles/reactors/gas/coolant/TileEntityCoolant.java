@@ -7,8 +7,8 @@ import com.denfop.tiles.reactors.gas.ICoolant;
 
 public class TileEntityCoolant extends TileEntityMultiBlockElement implements ICoolant {
 
-    private final int level;
     public final CoolComponent cold;
+    private final int level;
     private IGasReactor gasReactor;
 
     public TileEntityCoolant(int level) {
@@ -21,16 +21,17 @@ public class TileEntityCoolant extends TileEntityMultiBlockElement implements IC
         super.updateEntityServer();
         if (this.getMain() != null) {
             this.gasReactor = (IGasReactor) this.getMain();
-            if ( this.gasReactor.getEnergy() != null && this.gasReactor.getEnergy().getEnergy() >= 30 && this.cold.getEnergy() < this.cold.getCapacity()) {
+            if (this.gasReactor.getEnergy() != null && this.gasReactor
+                    .getEnergy()
+                    .getEnergy() >= 30 && this.cold.getEnergy() < this.cold.getCapacity()) {
                 this.cold.addEnergy(1);
                 this.gasReactor.getEnergy().useEnergy(30);
             }
-            if(this.getWorld().getWorldTime() % 40 == 0 && this.cold.getEnergy() > 0){
+            if (this.getWorld().getWorldTime() % 40 == 0 && this.cold.getEnergy() > 0) {
                 this.cold.useEnergy(1);
             }
         }
     }
-
 
 
     @Override

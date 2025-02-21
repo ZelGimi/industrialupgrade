@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockbeehive_tropical",
+    "down" : "industrialupgrade:blocks/blockbeehive_top_tropical",
+    "up" : "industrialupgrade:blocks/blockbeehive_top_tropical",
+    "north" : "industrialupgrade:blocks/blockbeehive_tropical",
+    "east" : "industrialupgrade:blocks/blockbeehive_tropical",
+    "south" : "industrialupgrade:blocks/blockbeehive_tropical",
+    "west" : "industrialupgrade:blocks/blockbeehive_tropical"
+  }
+}

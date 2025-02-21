@@ -45,10 +45,21 @@ public class BatteryRecipeWrapper implements IRecipeWrapper {
         this.outputstack = container.getOutput();
 
     }
-    public List<ItemStack> getInputs1(){
-        return Arrays.asList(inputstack,inputstack1,inputstack2,inputstack3,inputstack4,inputstack5,inputstack6,inputstack7,
-                inputstack8);
+
+    public List<ItemStack> getInputs1() {
+        return Arrays.asList(
+                inputstack,
+                inputstack1,
+                inputstack2,
+                inputstack3,
+                inputstack4,
+                inputstack5,
+                inputstack6,
+                inputstack7,
+                inputstack8
+        );
     }
+
     public ItemStack getInput() {
         return inputstack;
     }

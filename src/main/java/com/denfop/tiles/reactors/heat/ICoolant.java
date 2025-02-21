@@ -9,4 +9,5 @@ public interface ICoolant extends IMultiElement {
     double getMaxRegenerate();
 
     double getHeliumToRegenerate();
+
 }

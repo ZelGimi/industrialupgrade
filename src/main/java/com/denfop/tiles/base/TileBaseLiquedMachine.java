@@ -16,7 +16,6 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -106,8 +105,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTagCompound()) {
             NBTTagCompound nbt = ModUtils.nbt(stack);
 
@@ -121,7 +119,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
                 }
             }
             if (fluidStackList.isEmpty()) {
-                super.addInformation(stack, tooltip, advanced);
+                super.addInformation(stack, tooltip);
                 return;
             }
             if (fluidStackList.size() == 1) {
@@ -134,10 +132,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
                 }
 
             }
-            super.addInformation(stack, tooltip, advanced);
+            super.addInformation(stack, tooltip);
             return;
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -176,7 +174,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             NBTTagCompound nbt = ModUtils.nbt(drop);
             nbt.setInteger("size", this.fluidTank.length);
             for (int i = 0; i < this.fluidTank.length; i++) {
@@ -309,7 +310,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
     ) {
         if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(player.getHeldItem(hand)) != null) {
 
-            return FluidUtil.interactWithFluidHandler(player, hand,
+            return ModUtils.interactWithFluidHandler(player, hand,
                     this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
             );
         }
@@ -320,7 +321,7 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
             } else {
                 stack.shrink(1);
                 this.level++;
-                return false;
+                return true;
             }
         } else {
 
@@ -366,10 +367,10 @@ public abstract class TileBaseLiquedMachine extends TileElectricMachine implemen
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput,
+                UpgradableProperty.FluidInput,
+                UpgradableProperty.FluidExtract
         );
     }
 

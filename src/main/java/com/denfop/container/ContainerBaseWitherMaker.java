@@ -2,6 +2,7 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.TileBaseWitherMaker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 
 public class ContainerBaseWitherMaker
         extends ContainerFullInv<TileBaseWitherMaker> {
@@ -17,35 +18,53 @@ public class ContainerBaseWitherMaker
             int upgradeX,
             int upgradeY
     ) {
-        super(entityPlayer, tileEntity1, height);
+        super(null, tileEntity1, height);
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 0, 11, 8));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 0, 8, 27));
         }
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 1, 29, 8));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 1, 26, 27));
         }
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 2, 47, 8));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 2, 44, 27));
         }
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 3, 11, 26));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 3, 8, 45));
         }
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 4, 29, 26));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 4, 26, 45));
         }
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 5, 47, 26));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 5, 44, 45));
         }
         if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 6, 29, 44));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA, 6, 26, 63));
         }
         if ((tileEntity1).outputSlot != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).outputSlot, 0, 131, 13));
+            addSlotToContainer(new SlotInvSlot((tileEntity1).outputSlot, 0, 120, 36));
         }
 
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(
-                    new SlotInvSlot((tileEntity1).upgradeSlot, i, upgradeX, upgradeY + i * 18));
+                    new SlotInvSlot((tileEntity1).upgradeSlot, i, upgradeX, upgradeY + 1 + i * 18));
+        }
+        final int width = 178;
+        height = 166;
+        int xStart = (width - 162) / 2;
+
+        int col;
+        for (col = 0; col < 3; ++col) {
+            for (int col1 = 0; col1 < 9; ++col1) {
+                this.addSlotToContainer(new Slot(
+                        entityPlayer.inventory,
+                        col1 + col * 9 + 9,
+                        xStart + col1 * 18,
+                        height + 1 + -82 + col * 18
+                ));
+            }
+        }
+        for (col = 0; col < 9; ++col) {
+            this.addSlotToContainer(new Slot(entityPlayer.inventory, col, xStart + col * 18, height + -24));
         }
     }
 

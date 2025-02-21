@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerGasSocket;
 import com.denfop.container.ContainerGraphiteSocket;
 import net.minecraft.util.ResourceLocation;
 
@@ -16,9 +15,10 @@ public class GuiGraphiteSocket extends GuiIU<ContainerGraphiteSocket> {
         this.addComponent(new GuiComponent(this, 72, 40, EnumTypeComponent.ENERGY_WEIGHT,
                 new Component<>(this.container.base.getEnergy())
         ));
-        this.xSize = 186;
-        this.ySize = 192;
+        this.xSize = 187;
+        this.ySize = 212;
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -37,6 +37,7 @@ public class GuiGraphiteSocket extends GuiIU<ContainerGraphiteSocket> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_graphite1.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite4.png");
     }
+
 }

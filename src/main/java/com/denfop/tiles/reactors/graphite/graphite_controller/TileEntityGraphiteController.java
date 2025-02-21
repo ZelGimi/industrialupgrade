@@ -1,10 +1,7 @@
 package com.denfop.tiles.reactors.graphite.graphite_controller;
 
 import com.denfop.api.reactors.IGraphiteReactor;
-import com.denfop.container.ContainerExchanger;
 import com.denfop.container.ContainerGraphiteController;
-import com.denfop.container.ContainerGraphiteReactor;
-import com.denfop.gui.GuiExchanger;
 import com.denfop.gui.GuiGraphiteGraphiteController;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.resource.ItemCraftingElements;
@@ -22,8 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
 
-    private final int level;
     public final InvSlot slot;
+    private final int level;
     public double fuel;
     public int levelGraphite = 1;
     private int index;
@@ -64,6 +61,11 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
         return index;
     }
 
+    @Override
+    public void setIndex(final int i) {
+        this.index = i;
+    }
+
     public double getFuel() {
         return fuel;
     }
@@ -74,7 +76,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
     @Override
     public ContainerGraphiteController getGuiContainer(final EntityPlayer var1) {
-        return new ContainerGraphiteController(this,var1);
+        return new ContainerGraphiteController(this, var1);
     }
 
     @Override
@@ -82,7 +84,6 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiGraphiteGraphiteController(getGuiContainer(var1));
     }
-
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
@@ -120,6 +121,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
         nbtTagCompound.setInteger("levelGraphite", levelGraphite);
         return nbtTagCompound;
     }
+
     @Override
     public int getLevel() {
         return level;
@@ -142,7 +144,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
     @Override
     public void consumeFuelGraphite(double col) {
-        this.fuel -= col ;
+        this.fuel -= col;
     }
 
     @Override
@@ -176,18 +178,13 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     }
 
     @Override
-    public void setIndex(final int i) {
-        this.index = i;
-    }
-
-    @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
-        if(var2 == 0){
+        if (var2 == 0) {
             this.levelGraphite = Math.min(this.levelGraphite + 1, 5);
-        }else{
-            this.levelGraphite = Math.max(1, levelGraphite-1);
+        } else {
+            this.levelGraphite = Math.max(1, levelGraphite - 1);
         }
-        if(this.getMain() != null){
+        if (this.getMain() != null) {
             IGraphiteReactor graphiteReactor = (IGraphiteReactor) this.getMain();
             graphiteReactor.updateDataReactor();
         }

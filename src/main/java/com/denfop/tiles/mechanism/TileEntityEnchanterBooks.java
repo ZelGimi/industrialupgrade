@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
@@ -16,11 +17,12 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
-import com.denfop.container.ContainerBase;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerEnchanterBooks;
 import com.denfop.gui.GuiEnchanterBooks;
 import com.denfop.invslot.InvSlotUpgrade;
@@ -39,8 +41,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 public class TileEntityEnchanterBooks extends TileElectricMachine implements IUpgradableBlock, IUpdateTick,
@@ -62,6 +66,8 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 400
         ));
+        this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.addComponent(new AirPollutionComponent(this, 0.1));
         this.inputSlotA = new InvSlotRecipes(this, "enchanter_books", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 400, 1));
         this.componentProcess.setHasAudio(false);
@@ -69,6 +75,19 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
         this.componentProcess.setExpSource();
         this.enchant = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000));
+    }
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            tooltip.add(Localization.translate("press.lshift"));
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
+                    "iu.machines_work_energy_type_eu"));
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+        }
+        super.addInformation(stack, tooltip);
+
     }
 
     @Override
@@ -82,7 +101,7 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
 
     @Override
     public ContainerEnchanterBooks getGuiContainer(final EntityPlayer var1) {
-        return new ContainerEnchanterBooks(this,var1);
+        return new ContainerEnchanterBooks(this, var1);
     }
 
     @Override
@@ -93,31 +112,31 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
 
     @Override
     public void init() {
-        addRecipe(new ItemStack(Blocks.LAPIS_BLOCK, 9), Enchantments.EFFICIENCY, 1, 200);
-        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 15), Enchantments.EFFICIENCY, 2, 400);
-        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 24), Enchantments.EFFICIENCY, 3, 600);
-        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 32), Enchantments.EFFICIENCY, 4, 700);
-        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 48), Enchantments.EFFICIENCY, 5, 800);
-        addRecipe(new ItemStack(Blocks.REDSTONE_BLOCK, 9), Enchantments.FORTUNE, 1, 300);
-        addRecipe1(new ItemStack(Blocks.REDSTONE_BLOCK, 24), Enchantments.FORTUNE, 2, 800);
-        addRecipe1(new ItemStack(Blocks.REDSTONE_BLOCK, 48), Enchantments.FORTUNE, 3, 1200);
+        addRecipe(new ItemStack(Blocks.LAPIS_BLOCK, 1), Enchantments.EFFICIENCY, 1, 200);
+        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 3), Enchantments.EFFICIENCY, 2, 400);
+        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 5), Enchantments.EFFICIENCY, 3, 600);
+        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 8), Enchantments.EFFICIENCY, 4, 700);
+        addRecipe1(new ItemStack(Blocks.LAPIS_BLOCK, 12), Enchantments.EFFICIENCY, 5, 800);
+        addRecipe(new ItemStack(Blocks.REDSTONE_BLOCK, 2), Enchantments.FORTUNE, 1, 300);
+        addRecipe1(new ItemStack(Blocks.REDSTONE_BLOCK, 4), Enchantments.FORTUNE, 2, 800);
+        addRecipe1(new ItemStack(Blocks.REDSTONE_BLOCK, 8), Enchantments.FORTUNE, 3, 1200);
         addRecipe(new ItemStack(Blocks.OBSIDIAN, 12), Enchantments.UNBREAKING, 1, 300);
         addRecipe1(new ItemStack(Blocks.OBSIDIAN, 20), Enchantments.UNBREAKING, 2, 800);
         addRecipe1(new ItemStack(Blocks.OBSIDIAN, 32), Enchantments.UNBREAKING, 3, 1200);
-        addRecipe(new ItemStack(Blocks.DIAMOND_BLOCK, 8), Enchantments.LOOTING, 1, 300);
-        addRecipe1(new ItemStack(Blocks.DIAMOND_BLOCK, 20), Enchantments.LOOTING, 2, 800);
-        addRecipe1(new ItemStack(Blocks.DIAMOND_BLOCK, 30), Enchantments.LOOTING, 3, 1200);
-        addRecipe(new ItemStack(Blocks.EMERALD_BLOCK, 20), Enchantments.SILK_TOUCH, 1, 600);
+        addRecipe(new ItemStack(Blocks.DIAMOND_BLOCK, 2), Enchantments.LOOTING, 1, 300);
+        addRecipe1(new ItemStack(Blocks.DIAMOND_BLOCK, 4), Enchantments.LOOTING, 2, 800);
+        addRecipe1(new ItemStack(Blocks.DIAMOND_BLOCK, 8), Enchantments.LOOTING, 3, 1200);
+        addRecipe(new ItemStack(Blocks.EMERALD_BLOCK, 10), Enchantments.SILK_TOUCH, 1, 600);
         addRecipe(new ItemStack(IUItem.crafting_elements, 4, 282), Enchantments.PROTECTION, 1, 300);
         addRecipe1(new ItemStack(IUItem.crafting_elements, 16, 282), Enchantments.PROTECTION, 2, 500);
         addRecipe1(new ItemStack(IUItem.crafting_elements, 32, 282), Enchantments.PROTECTION, 3, 900);
         addRecipe1(new ItemStack(IUItem.crafting_elements, 64, 282), Enchantments.PROTECTION, 4, 1200);
         addRecipe(new ItemStack(Blocks.ICE, 4), Enchantments.FROST_WALKER, 1, 300);
         addRecipe1(new ItemStack(Blocks.ICE, 16), Enchantments.FROST_WALKER, 2, 500);
-        addRecipe(new ItemStack(Blocks.SLIME_BLOCK, 8), Enchantments.THORNS, 1, 500);
-        addRecipe1(new ItemStack(Blocks.SLIME_BLOCK, 20), Enchantments.THORNS, 2, 900);
-        addRecipe1(new ItemStack(Blocks.SLIME_BLOCK, 48), Enchantments.THORNS, 3, 1400);
-        addRecipe(new ItemStack(Items.GOLDEN_CARROT, 32), Enchantments.AQUA_AFFINITY, 1, 500);
+        addRecipe(new ItemStack(Blocks.SLIME_BLOCK, 4), Enchantments.THORNS, 1, 500);
+        addRecipe1(new ItemStack(Blocks.SLIME_BLOCK, 10), Enchantments.THORNS, 2, 900);
+        addRecipe1(new ItemStack(Blocks.SLIME_BLOCK, 24), Enchantments.THORNS, 3, 1400);
+        addRecipe(new ItemStack(Items.GOLDEN_CARROT, 16), Enchantments.AQUA_AFFINITY, 1, 500);
         addRecipe(new ItemStack(Items.FISH, 1, 3), Enchantments.RESPIRATION, 1, 200);
         addRecipe1(new ItemStack(Items.FISH, 1, 3), Enchantments.RESPIRATION, 2, 400);
         addRecipe1(new ItemStack(Items.FISH, 1, 3), Enchantments.RESPIRATION, 3, 600);
@@ -135,9 +154,9 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
         addRecipe1(new ItemStack(Items.BLAZE_ROD, 32), Enchantments.BLAST_PROTECTION, 3, 800);
         addRecipe1(new ItemStack(Items.BLAZE_ROD, 64), Enchantments.BLAST_PROTECTION, 4, 1000);
         addRecipe(new ItemStack(Items.SHULKER_SHELL, 2), Enchantments.FEATHER_FALLING, 1, 200);
-        addRecipe1(new ItemStack(Items.SHULKER_SHELL, 6), Enchantments.FEATHER_FALLING, 2, 400);
-        addRecipe1(new ItemStack(Items.SHULKER_SHELL, 12), Enchantments.FEATHER_FALLING, 3, 800);
-        addRecipe1(new ItemStack(Items.SHULKER_SHELL, 32), Enchantments.FEATHER_FALLING, 4, 1000);
+        addRecipe1(new ItemStack(Items.SHULKER_SHELL, 4), Enchantments.FEATHER_FALLING, 2, 400);
+        addRecipe1(new ItemStack(Items.SHULKER_SHELL, 8), Enchantments.FEATHER_FALLING, 3, 800);
+        addRecipe1(new ItemStack(Items.SHULKER_SHELL, 16), Enchantments.FEATHER_FALLING, 4, 1000);
         addRecipe(new ItemStack(Items.MAGMA_CREAM, 16), Enchantments.FIRE_ASPECT, 1, 400);
         addRecipe1(new ItemStack(Items.MAGMA_CREAM, 48), Enchantments.FIRE_ASPECT, 2, 700);
         addRecipe(new ItemStack(Items.NETHER_WART, 16), Enchantments.FIRE_PROTECTION, 1, 400);
@@ -147,11 +166,11 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
         addRecipe(new ItemStack(Items.ENDER_PEARL, 8), Enchantments.KNOCKBACK, 1, 400);
         addRecipe1(new ItemStack(Items.ENDER_PEARL, 16), Enchantments.KNOCKBACK, 2, 800);
         addRecipe(new ItemStack(Items.NETHER_STAR), Enchantments.INFINITY, 1, 400);
-        addRecipe(new ItemStack(Blocks.QUARTZ_BLOCK, 4), Enchantments.POWER, 1, 200);
-        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 8), Enchantments.POWER, 2, 400);
-        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 16), Enchantments.POWER, 3, 600);
-        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 32), Enchantments.POWER, 4, 800);
-        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 64), Enchantments.POWER, 5, 1200);
+        addRecipe(new ItemStack(Blocks.QUARTZ_BLOCK, 2), Enchantments.POWER, 1, 200);
+        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 4), Enchantments.POWER, 2, 400);
+        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 8), Enchantments.POWER, 3, 600);
+        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 16), Enchantments.POWER, 4, 800);
+        addRecipe1(new ItemStack(Blocks.QUARTZ_BLOCK, 32), Enchantments.POWER, 5, 1200);
     }
 
     @Override
@@ -182,8 +201,10 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
                 "enchanter_books",
                 new BaseMachineRecipe(
                         new Input(
-                                input.getInput(ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(enchantments,
-                                        lvl - 1))),
+                                input.getInput(ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(
+                                        enchantments,
+                                        lvl - 1
+                                ))),
                                 input.getInput(stack)
                         ),
                         new RecipeOutput(nbt, ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(enchantments, lvl)))
@@ -197,14 +218,14 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
         return this.output;
     }
 
-    public MachineRecipe getOutput() {
-        this.output = this.inputSlotA.process();
-        return this.output;
-    }
-
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.output = output;
+    }
+
+    public MachineRecipe getOutput() {
+        this.output = this.inputSlotA.process();
+        return this.output;
     }
 
     @Override
@@ -213,8 +234,8 @@ public class TileEntityEnchanterBooks extends TileElectricMachine implements IUp
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

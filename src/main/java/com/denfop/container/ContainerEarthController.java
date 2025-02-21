@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerEarthController extends ContainerFullInv<TileEntityEarthQuarryController> {
 
     public ContainerEarthController(TileEntityEarthQuarryController tileEntityEarthQuarryController, EntityPlayer entityPlayer) {
-        super(tileEntityEarthQuarryController,entityPlayer);
+        super(tileEntityEarthQuarryController, entityPlayer);
     }
 
 }

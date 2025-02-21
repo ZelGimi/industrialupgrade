@@ -1,13 +1,21 @@
 package com.denfop.api.energy;
 
-public interface IEnergyConductor extends IEnergyAcceptor, IEnergyEmitter {
+import net.minecraft.util.EnumFacing;
 
-    void update_render();
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public interface IEnergyConductor extends IEnergyAcceptor, IEnergyEmitter {
 
     double getConductionLoss();
 
     double getConductorBreakdownEnergy();
 
     void removeConductor();
+
+    InfoCable getCable();
+
+    void setCable(InfoCable cable);
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class SocketHandler {
 
     private static final List<SocketHandler> recipes = new ArrayList<>();
-    private final ItemStack input, input1, input2, input3, input4, input5,output;
+    private final ItemStack input, input1, input2, input3, input4, input5, output;
 
     public SocketHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4, ItemStack input5,
@@ -36,10 +36,10 @@ public class SocketHandler {
 
     public static SocketHandler addRecipe(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack input4,ItemStack input5,
+            ItemStack input4, ItemStack input5,
             ItemStack output
     ) {
-        SocketHandler recipe = new SocketHandler(input, input1, input2, input3, input4,input5, output);
+        SocketHandler recipe = new SocketHandler(input, input1, input2, input3, input4, input5, output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -61,7 +61,8 @@ public class SocketHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("socket_factory")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
@@ -73,7 +74,6 @@ public class SocketHandler {
 
         }
     }
-
 
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
@@ -99,7 +99,6 @@ public class SocketHandler {
     public ItemStack getInput5() {
         return input5;
     }
-
 
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.

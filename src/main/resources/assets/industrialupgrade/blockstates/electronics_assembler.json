@@ -1,0 +1,36 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "electronics_assembler" : {
+        "model" : "industrialupgrade:basemachine/electronics_assembler"
+      },
+      "electronics_assembler_active" : {
+        "model" : "industrialupgrade:basemachine/electronics_assembler"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

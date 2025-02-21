@@ -31,7 +31,7 @@ public class IUModelLoader implements ICustomModelLoader {
             model.onReload();
         }
 
-        ModelComparator.onReload();
+        //    ModelComparator.onReload();
     }
 
     public boolean accepts(@Nonnull ResourceLocation modelLocation) {

@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerGraphiteTank extends ContainerFullInv<TileEntityMainTank> {
 
     public ContainerGraphiteTank(TileEntityMainTank tileEntityMainTank, EntityPlayer var1) {
-        super(var1,tileEntityMainTank,188,209);
+        super(var1, tileEntityMainTank, 188, 208);
     }
 
 }

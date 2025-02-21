@@ -1,0 +1,75 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "squeezer" : {
+        "model" : "industrialupgrade:squeezer/squeezer"
+      },
+	  "squeezer_1" : {
+        "model" : "industrialupgrade:squeezer/squeezer_1"
+      },
+	  "squeezer_2" : {
+        "model" : "industrialupgrade:squeezer/squeezer_2"
+      },
+	  "squeezer_3" : {
+        "model" : "industrialupgrade:squeezer/squeezer_3"
+      },
+	  "squeezer_4" : {
+        "model" : "industrialupgrade:squeezer/squeezer_4"
+      },
+	  "squeezer_5" : {
+        "model" : "industrialupgrade:squeezer/squeezer_5"
+      },
+	  "squeezer_6" : {
+        "model" : "industrialupgrade:squeezer/squeezer_6"
+      },
+	  "squeezer_7" : {
+        "model" : "industrialupgrade:squeezer/squeezer_7"
+      },
+	  "squeezer_8" : {
+        "model" : "industrialupgrade:squeezer/squeezer_8"
+      },
+	  "squeezer_9" : {
+        "model" : "industrialupgrade:squeezer/squeezer_9"
+      },
+	  "squeezer_10" : {
+        "model" : "industrialupgrade:squeezer/squeezer_10"
+      },
+	  "squeezer_11" : {
+        "model" : "industrialupgrade:squeezer/squeezer_11"
+      },
+	  "squeezer_12" : {
+        "model" : "industrialupgrade:squeezer/squeezer_12"
+      },
+	  "squeezer_13" : {
+        "model" : "industrialupgrade:squeezer/squeezer_13"
+      },
+	  "squeezer_14" : {
+        "model" : "industrialupgrade:squeezer/squeezer_14"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

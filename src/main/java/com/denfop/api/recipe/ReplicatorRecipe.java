@@ -9,7 +9,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
+
+import static com.denfop.register.RegisterOreDictionary.list_baseore1;
+import static com.denfop.register.RegisterOreDictionary.list_string;
 
 public class ReplicatorRecipe {
 
@@ -94,7 +96,7 @@ public class ReplicatorRecipe {
         add(IUItem.Plutonium, 291.3);
         add(IUItem.smallUran235, 5.74);
         add(IUItem.Uran238, 2.296);
-        add(IUItem.iridiumOre, 120);
+        add(IUItem.iridiumOre, 35);
         add(new ItemStack(Blocks.PLANKS, 1, 0), 5.019);
         add(new ItemStack(Blocks.PLANKS, 1, 1), 5.7);
         add(new ItemStack(Blocks.PLANKS, 1, 2), 9.37);
@@ -174,6 +176,19 @@ public class ReplicatorRecipe {
         add(Items.GUNPOWDER, 2.361);
         add(Items.STRING, 146.8);
         add(Items.BONE, 80.57);
+        for (String s : list_string) {
+            add("ingot" + s, 25);
+        }
+        for (String s : list_baseore1) {
+            add("ingot" + s, 25);
+        }
+        for (String s : list_string) {
+            add("block" + s, 25 * 9 * 0.9);
+        }
+        for (String s : list_baseore1) {
+            add("block" + s, 25 * 9 * 0.9);
+        }
+
     }
 
     public static double getInBuckets(ItemStack request) {
@@ -236,7 +251,7 @@ public class ReplicatorRecipe {
                         new Input(
                                 input1.getInput(stack)
                         ),
-                        new RecipeOutput(tag, OreDictionary.getOres(stack).get(0))
+                        new RecipeOutput(tag, input1.getInput(stack).getInputs().get(0))
                 )
         );
     }

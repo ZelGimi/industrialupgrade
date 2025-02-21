@@ -1,4 +1,3 @@
-
 package com.denfop.render.base;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -7,6 +6,7 @@ import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public abstract class AbstractBakedModel implements IBakedModel {
+
     public AbstractBakedModel() {
     }
 
@@ -33,4 +33,5 @@ public abstract class AbstractBakedModel implements IBakedModel {
     public ItemOverrideList getOverrides() {
         return null;
     }
+
 }

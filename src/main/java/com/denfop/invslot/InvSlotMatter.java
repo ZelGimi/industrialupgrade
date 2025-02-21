@@ -1,11 +1,13 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileCombinerMatter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotMatter extends InvSlot {
+public class InvSlotMatter extends InvSlot implements ITypeSlot {
 
     private final TileCombinerMatter tile;
     private int stackSizeLimit;
@@ -14,6 +16,11 @@ public class InvSlotMatter extends InvSlot {
         super(base1, TypeItemSlot.INPUT, 9);
         this.stackSizeLimit = 4;
         this.tile = base1;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.BLOCKS;
     }
 
     public void update() {

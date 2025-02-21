@@ -1,14 +1,17 @@
 package com.denfop.api;
 
+import com.denfop.api.energy.IEnergySink;
 import com.denfop.api.energy.IEnergyTile;
 import com.denfop.api.energy.NodeStats;
 import com.denfop.api.energy.Path;
 import com.denfop.api.energy.SunCoef;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IAdvEnergyNet {
 
@@ -20,6 +23,8 @@ public interface IAdvEnergyNet {
     SunCoef getSunCoefficient(World world);
 
     boolean getTransformerMode();
+
+    Map<ChunkPos, List<IEnergySink>> getChunkPosListMap(World world);
 
     boolean getLosing();
 

@@ -2,15 +2,13 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.recipe.*;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
@@ -22,10 +20,15 @@ import net.minecraft.util.SoundEvent;
 public class TileGenerationStone extends TileBaseGenStone implements IHasRecipe {
 
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+
     public TileGenerationStone() {
         super(1, 100, 12);
         this.inputSlotA = new InvSlotRecipes(this, "genstone", this);
         Recipes.recipes.addInitRecipes(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));
     }
 
     public static void addGen(IInputItemStack container, IInputItemStack fill, ItemStack output) {

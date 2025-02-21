@@ -10,6 +10,7 @@ import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.upgrade.ILevelInstruments;
 import com.denfop.api.upgrade.IUpgradeWithBlackList;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
@@ -50,7 +51,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -68,10 +74,14 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IItemStackInventory, IUpgradeWithBlackList,
-        IModelRegister {
+        IModelRegister, ILevelInstruments {
 
     private final String name;
     private final int transferLimit;
@@ -91,6 +101,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
     private final List<Item> item_tools;
     private final String name_type;
     private final float fuel_balance = 10.0F;
+    private final EnumTypeInstruments type;
     Set<String> toolType;
 
     public ItemEnergyInstruments(EnumTypeInstruments type, EnumVarietyInstruments variety, String name) {
@@ -100,6 +111,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
         this.transferLimit = variety.getEnergy_transfer();
         this.maxCharge = variety.getCapacity();
         this.tier = variety.getTier();
+        this.type = type;
         this.efficiency = this.normalPower = variety.getNormal_power();
         this.bigHolePower = variety.getBig_holes();
         this.energyPerOperation = variety.getEnergyPerOperation();
@@ -129,6 +141,21 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                 "energy_tools" + "/" + name + extraName;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    @Override
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return type.getEnumInfoUpgradeModules();
+    }
+
+    @Override
+    public int getMaxLevel(final ItemStack stack) {
+        int maxLevel = ILevelInstruments.super.getMaxLevel(stack);
+        if (maxLevel == Integer.MAX_VALUE) {
+            return maxLevel;
+        }
+        maxLevel *= Math.max(0.5, 0.5 * tier);
+        return maxLevel;
     }
 
     public boolean onBlockDestroyed(
@@ -398,16 +425,16 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                 return getModelLocation1(name, nbt.getString("mode"));
             }
 
-            return getModelLocation1(name_type, nbt.getString("mode"));
+            return getModelLocation1(name, "_" + nbt.getString("mode"));
 
         });
         String[] mode = {"", "Zelen", "Demon", "Dark", "Cold", "Ender", "Ukraine", "Fire", "Snow", "Taiga", "Desert", "Emerald"};
         for (final String s : mode) {
-            if (s.equals("")) {
+            if (!s.isEmpty()) {
+                ModelBakery.registerItemVariants(this, getModelLocation1(name, "_" + s));
+            } else {
                 ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
             }
-            ModelBakery.registerItemVariants(this, getModelLocation1(name_type, s));
-
         }
 
     }
@@ -416,7 +443,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
     public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
         NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
-        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+        if (world.getWorldTime() % 20 == 0 && !UpgradeSystem.system.hasInMap(itemStack)) {
             nbt.setBoolean("hasID", false);
             MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(world, this, itemStack, itemStack.getTagCompound()));
         }
@@ -466,7 +493,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
     ) {
         return !this.toolType.contains(toolClass) ?
                 super.getHarvestLevel(stack, toolClass, player, blockState)
-                : this.toolMaterial.getHarvestLevel();
+                : (this.type == EnumTypeInstruments.VAJRA ? 20 : this.toolMaterial.getHarvestLevel());
     }
 
     public boolean hitEntity(@Nonnull ItemStack stack, @Nonnull EntityLivingBase damagee, @Nonnull EntityLivingBase damager) {
@@ -565,6 +592,11 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
         }
         ModUtils.mode(par1ItemStack, par3List);
+        final int level = this.getLevel(par1ItemStack);
+        final int maxLevel = this.getMaxLevel(par1ItemStack);
+        final int experience = this.getExperience(par1ItemStack);
+        par3List.add(Localization.translate("iu.tier")+" "+  level);
+        par3List.add(Localization.translate("iu.space_colony_experience")+  experience + "/" + maxLevel);
         super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
     }
 
@@ -604,6 +636,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
         List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(stack);
         int speed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EFFICIENCY, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EFFICIENCY, stack, upgradeItemInforms).number : 0;
+        speed += UpgradeSystem.system.getUpgradeFromList(stack).get(0);
         return !ElectricItem.manager.canUse(stack, this.energy(stack, upgradeItemInforms))
                 ? 0.0F
                 : (canHarvestBlock(state, stack) ? (this.efficiency + (int) (this.efficiency * 0.2 * speed)) : 1.0F);
@@ -717,7 +750,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
         int z = pos.getZ();
         byte dig_depth = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.DIG_DEPTH, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.DIG_DEPTH, stack, upgradeItemInforms).number : 0);
-
+        dig_depth += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(4));
         switch (mop.sideHit.ordinal()) {
             case 0:
             case 1:
@@ -735,7 +768,10 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
         boolean lowPower = false;
         boolean silktouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
-        int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+        int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) + UpgradeSystem.system
+                .getUpgradeFromList(stack)
+                .get(2);
+        fortune = Math.min(3, fortune);
 
         int Yy;
         Yy = yRange > 0 ? yRange - 1 : 0;
@@ -849,6 +885,14 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
         return true;
     }
 
+    public EnumTypeInstruments getType() {
+        return type;
+    }
+
+    public List<EnumOperations> getOperations() {
+        return operations;
+    }
+
     public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull EntityPlayer player) {
         EnumOperations operations = this.operations.get(readToolMode(stack));
         World world = player.getEntityWorld();
@@ -874,7 +918,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
                 byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
-
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms, smelter, comb, mac, generator,
                         random, black_list, list
                 );
@@ -887,6 +931,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 if (player.isSneaking()) {
                     if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
                         return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms,
@@ -915,7 +960,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
-
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 if (player.isSneaking()) {
                     if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
                         return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms,
@@ -943,6 +988,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                 }
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 if (player.isSneaking()) {
                     if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
                         return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms,
@@ -1060,7 +1106,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                             ?
                             UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number
                             : 0);
-
+                    aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                     return break_block(
                             world,
                             block,
@@ -1304,7 +1350,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                 for (int Zz = z - 1; Zz <= z + 1; Zz++) {
 
                     int ore = NBTTagCompound.getInteger("ore");
-                    if (ore < 16) {
+                    if (ore < 40) {
                         BlockPos pos_block = new BlockPos(Xx, Yy, Zz);
                         IBlockState state = world.getBlockState(pos_block);
                         Block localBlock = state.getBlock();
@@ -1429,6 +1475,10 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
             }
 
             if (!world.isRemote) {
+
+                if (ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos) == -1) {
+                    return false;
+                }
                 List<ItemStack> drops1 = null;
                 if (shears && block instanceof IShearable) {
                     drops1 = ((IShearable) block).onSheared(stack, world, pos,
@@ -1436,13 +1486,10 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                     );
 
                 }
-                if (ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos) == -1) {
-                    return false;
-                }
-
 
                 if (block.removedByPlayer(state, world, pos, (EntityPlayerMP) entity, true)) {
                     block.onBlockDestroyedByPlayer(world, pos, state);
+                    this.addExperience(stack, 1);
                     if (!shears) {
                         block.harvestBlock(world, (EntityPlayerMP) entity, pos, state, null, stack);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -1627,7 +1674,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                     }
                 }
                 EntityPlayerMP mpPlayer = (EntityPlayerMP) entity;
-                mpPlayer.connection.sendPacket(new SPacketBlockChange(world, new BlockPos(pos)));
+                mpPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
             } else {
                 if (block.removedByPlayer(state, world, pos, (EntityPlayer) entity, true)) {
                     block.onBlockDestroyedByPlayer(world, pos, state);
@@ -1685,8 +1732,12 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
 
     public float energy(ItemStack stack, final List<UpgradeItemInform> upgradeItemInforms) {
-        int energy1 = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms) ?
+        double energy1 = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms).number : 0;
+        final List<Integer> list = UpgradeSystem.system.getUpgradeFromList(stack);
+        if (!list.isEmpty()) {
+            energy1 += (list).get(1) / 6D;
+        }
         int toolMode = readToolMode(stack);
         float energy;
         EnumOperations operations = this.operations.get(toolMode);

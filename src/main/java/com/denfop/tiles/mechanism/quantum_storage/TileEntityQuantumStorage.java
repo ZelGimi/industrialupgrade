@@ -13,7 +13,6 @@ import com.denfop.gui.GuiQuantumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -43,7 +42,7 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         tooltip.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.qe.getCapacity()) + " " +

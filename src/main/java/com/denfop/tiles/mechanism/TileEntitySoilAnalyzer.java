@@ -6,16 +6,15 @@ import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentProgress;
-import com.denfop.container.ContainerBase;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerSoilAnalyzer;
 import com.denfop.gui.GuiSoilAnalyzer;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,25 +34,29 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
             1.2
     ));
     public final ComponentProgress progress;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public boolean analyzed;
     public Radiation radiation;
 
     public TileEntitySoilAnalyzer() {
         super(5000, 14, 0);
-        this.progress = this.addComponent(new ComponentProgress(this,1, (short) 400));
+        this.progress = this.addComponent(new ComponentProgress(this, 1, (short) 400));
         this.analyzed = false;
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         nbttagcompound = super.writeToNBT(nbttagcompound);
-        nbttagcompound.setBoolean("analyzed",analyzed);
+        nbttagcompound.setBoolean("analyzed", analyzed);
         return nbttagcompound;
     }
 
     @Override
     public ContainerSoilAnalyzer getGuiContainer(final EntityPlayer var1) {
-        return new ContainerSoilAnalyzer(this,var1);
+        return new ContainerSoilAnalyzer(this, var1);
     }
 
     @Override
@@ -64,17 +67,17 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
-        CustomPacketBuffer customPacketBuffer=   super.writeContainerPacket();
+        CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeBoolean(this.analyzed);
-            customPacketBuffer.writeBoolean(this.radiation != null);
-            if(this.radiation != null){
-                try {
-                    EncoderHandler.encode(customPacketBuffer,this.radiation);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        customPacketBuffer.writeBoolean(this.radiation != null);
+        if (this.radiation != null) {
+            try {
+                EncoderHandler.encode(customPacketBuffer, this.radiation);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            return customPacketBuffer;
+        }
+        return customPacketBuffer;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
         super.readContainerPacket(customPacketBuffer);
         analyzed = customPacketBuffer.readBoolean();
         boolean notNull = customPacketBuffer.readBoolean();
-        if(notNull){
+        if (notNull) {
             try {
                 this.radiation = (Radiation) DecoderHandler.decode(customPacketBuffer);
             } catch (IOException e) {
@@ -100,22 +103,29 @@ public class TileEntitySoilAnalyzer extends TileElectricMachine {
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if(this.energy.getEnergy() > 20 && this.progress.getBar() < 1){
+        if (this.energy.getEnergy() > 20 && this.progress.getBar() < 1) {
             this.energy.useEnergy(20);
             this.progress.addProgress();
-            if(this.progress.getProgress() >= this.progress.getMaxValue()) {
+            if (this.progress.getProgress() >= this.progress.getMaxValue()) {
                 this.analyzed = true;
-                this.radiation = RadiationSystem.rad_system.getMap().get(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+                this.radiation = RadiationSystem.rad_system.getMap().get(this
+                        .getWorld()
+                        .getChunkFromBlockCoords(this.pos)
+                        .getPos());
             }
         }
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        if(!this.getWorld().isRemote){
-            if(this.analyzed)
-                this.radiation = RadiationSystem.rad_system.getMap().get(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
+    public void onLoaded() {
+        super.onLoaded();
+        if (!this.getWorld().isRemote) {
+            if (this.analyzed) {
+                this.radiation = RadiationSystem.rad_system.getMap().get(this
+                        .getWorld()
+                        .getChunkFromBlockCoords(this.pos)
+                        .getPos());
+            }
 
         }
     }

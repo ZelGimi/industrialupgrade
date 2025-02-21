@@ -80,7 +80,10 @@ public class RadiationPellets extends ItemSubTypes<RadiationPellets.Types> imple
         berkelium_gem_pellet(6),
         einsteinium_gem_pellet(7),
         uran233_gem_pellet(8),
-       proton_pellet(9),
+        proton_pellet(9),
+        fermium_pellet(10),
+        nobelium_pellet(11),
+        lawrencium_pellet(12),
         ;
 
         private final String name;

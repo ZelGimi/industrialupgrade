@@ -54,6 +54,11 @@ public enum HeatColdType implements ISubEnum, ICableItem {
         return nameMap.get(name);
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
+
     public String getName() {
         return this.name() + "_pipes";
     }

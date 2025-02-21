@@ -30,9 +30,10 @@ public interface ISolarTile {
 
     void setStables(int index, List<TileEntityMiniPanels.EnumState> enumStateList);
 
-    void  setCoreLevel(int level);
-
     List<ItemStack> getCoresItems();
 
     int getCoreLevel();
+
+    void setCoreLevel(int level);
+
 }

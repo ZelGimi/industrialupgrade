@@ -11,7 +11,7 @@ import java.util.List;
 public class LaserHandler {
 
     private static final List<LaserHandler> recipes = new ArrayList<>();
-    private final ItemStack input,output;
+    private final ItemStack input, output;
 
     public LaserHandler(
             ItemStack input,
@@ -53,14 +53,14 @@ public class LaserHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("laser")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
                     container.getOutput().items.get(0)
             );
 
 
         }
     }
-
 
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
@@ -73,7 +73,7 @@ public class LaserHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ;
+        return is.isItemEqual(input);
     }
 
 }

@@ -5,7 +5,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerEnchanterBooks;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiEnchanterBooks extends GuiIU<ContainerEnchanterBooks> {
@@ -15,7 +14,7 @@ public class GuiEnchanterBooks extends GuiIU<ContainerEnchanterBooks> {
         this.addComponent(new GuiComponent(this, 130, 55, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
         ));
-        this.addComponent(new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
+        this.addComponent(new GuiComponent(this, 70, 35, EnumTypeComponent.ENCHANT_PROCESS,
                 new Component<>(this.container.base.componentProgress)
         ));
 
@@ -23,6 +22,7 @@ public class GuiEnchanterBooks extends GuiIU<ContainerEnchanterBooks> {
                 new Component<>(this.container.base.enchant)
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);

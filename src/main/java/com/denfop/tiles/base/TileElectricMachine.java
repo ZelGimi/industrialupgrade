@@ -7,7 +7,7 @@ import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.network.DecoderHandler;
@@ -17,7 +17,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -41,7 +40,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
 
     public InvSlotOutput outputSlot = null;
 
-    public AdvEnergy energy = null;
+    public Energy energy = null;
     public InvSlotDischarge dischargeSlot;
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio;
@@ -52,7 +51,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         this.tier = tier;
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, tier, false);
         if (MaxEnergy != 0) {
-            energy = this.addComponent(AdvEnergy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
+            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
         }
 
         if (count != 0) {
@@ -70,7 +69,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final AdvEnergy component = this.getComp(AdvEnergy.class);
+                    final Energy component = this.getComp(Energy.class);
                     if (component != null) {
                         if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -88,7 +87,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
                     return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComp(AdvEnergy.class);
+        final Energy component = this.getComp(Energy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -166,10 +165,9 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -184,6 +182,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
             }
 
         }
+        super.addInformation(stack,tooltip);
     }
 
     public EnumTypeAudio getType() {

@@ -12,6 +12,13 @@ public enum EnumVarietyInstruments {
     DIAMOND(1, 100, 30000, 16, 8, 0, 0, 20,
             30, 0, 0
     ),
+
+    VAJRA(4, Config.spectral_transfer, Config.spectral_maxEnergy, 5000, 4000, 3000, 2500,
+            Config.energyPerOperation,
+            (int) (Config.energyPerLowOperation * 1.25),
+            (int) (Config.energyPerultraLowPowerOperation * 1.25),
+            (int) (Config.energyPerultraLowPowerOperation1 * 1.25)
+    ),
     NANO(2, Config.nano_transfer, Config.nano_maxEnergy, 30, 15, Config.ultraLowPower, 0, Config.nano_energyPerOperation,
             Config.nano_energyPerbigHolePowerOperation, Config.energyPerbigHolePowerOperation, 0
     ),

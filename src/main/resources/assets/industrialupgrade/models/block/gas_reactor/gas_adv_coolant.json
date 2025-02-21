@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
+  "parent" : "block/cube_all",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/adv_coolant",
-    "down" : "industrialupgrade:blocks/gas_reactor/adv_coolant_top",
-    "up" : "industrialupgrade:blocks/gas_reactor/adv_coolant_top",
-    "north" : "industrialupgrade:blocks/gas_reactor/adv_coolant",
-    "east" : "industrialupgrade:blocks/gas_reactor/adv_coolant_side",
-    "south" : "industrialupgrade:blocks/gas_reactor/adv_casing",
-    "west" : "industrialupgrade:blocks/gas_reactor/adv_coolant_side"
+    "all" : "industrialupgrade:blocks/gas_reactor/coolant/adv_coolant_side"
   }
 }

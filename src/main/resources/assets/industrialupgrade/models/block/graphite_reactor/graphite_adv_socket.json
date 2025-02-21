@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
-  "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/adv_socket_side",
-    "down" : "industrialupgrade:blocks/graphite_reactor/adv_socket_side",
-    "up" : "industrialupgrade:blocks/graphite_reactor/adv_socket_side",
-    "north" : "industrialupgrade:blocks/graphite_reactor/adv_socket",
-    "east" : "industrialupgrade:blocks/graphite_reactor/adv_socket_side",
-    "south" : "industrialupgrade:blocks/graphite_reactor/adv_socket_side",
-    "west" : "industrialupgrade:blocks/graphite_reactor/adv_socket_side"
-  }
+  "parent" : "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:blocks/graphite_reactor/socket/adv_socket_side"
+    }
 }

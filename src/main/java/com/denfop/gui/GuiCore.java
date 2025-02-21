@@ -3,6 +3,7 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.Localization;
 import com.denfop.api.gui.GuiElement;
+import com.denfop.api.gui.GuiVerticalSliderList;
 import com.denfop.api.gui.MouseButton;
 import com.denfop.api.gui.ScrollDirection;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -12,15 +13,19 @@ import com.denfop.api.upgrades.UpgradeRegistry;
 import com.denfop.container.ContainerBase;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -76,6 +81,105 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
 
     }
 
+    protected void drawSlot(Slot slotIn) {
+        int i = slotIn.xPos;
+        int j = slotIn.yPos;
+        ItemStack itemstack = slotIn.getStack();
+        boolean flag = false;
+        boolean flag1 = slotIn == this.clickedSlot && !this.draggedStack.isEmpty() && !this.isRightMouseClick;
+        ItemStack itemstack1 = this.mc.player.inventory.getItemStack();
+        String s = null;
+
+        if (slotIn == this.clickedSlot && !this.draggedStack.isEmpty() && this.isRightMouseClick && !itemstack.isEmpty()) {
+            itemstack = itemstack.copy();
+            itemstack.setCount(itemstack.getCount() / 2);
+        } else if (this.dragSplitting && this.dragSplittingSlots.contains(slotIn) && !itemstack1.isEmpty()) {
+            if (this.dragSplittingSlots.size() == 1) {
+                return;
+            }
+
+            if (Container.canAddItemToSlot(slotIn, itemstack1, true) && this.inventorySlots.canDragIntoSlot(slotIn)) {
+                itemstack = itemstack1.copy();
+                flag = true;
+                Container.computeStackSize(
+                        this.dragSplittingSlots,
+                        this.dragSplittingLimit,
+                        itemstack,
+                        slotIn.getStack().isEmpty() ? 0 : slotIn.getStack().getCount()
+                );
+                int k = Math.min(itemstack.getMaxStackSize(), slotIn.getItemStackLimit(itemstack));
+
+                if (itemstack.getCount() > k) {
+                    s = TextFormatting.YELLOW.toString() + k;
+                    itemstack.setCount(k);
+                }
+            } else {
+                this.dragSplittingSlots.remove(slotIn);
+                this.updateDragSplitting();
+            }
+        }
+
+        this.zLevel = 100.0F;
+        this.itemRender.zLevel = 100.0F;
+
+        if (itemstack.isEmpty() && slotIn.isEnabled()) {
+            TextureAtlasSprite textureatlassprite = slotIn.getBackgroundSprite();
+
+            if (textureatlassprite != null) {
+                GlStateManager.disableLighting();
+                this.mc.getTextureManager().bindTexture(slotIn.getBackgroundLocation());
+                this.drawTexturedModalRect(i, j, textureatlassprite, 16, 16);
+                GlStateManager.enableLighting();
+                flag1 = true;
+            }
+        }
+
+        if (!flag1) {
+            if (flag) {
+                drawRect(i, j, i + 16, j + 16, -2130706433);
+            }
+
+            GlStateManager.enableDepth();
+            this.itemRender.renderItemAndEffectIntoGUI(this.mc.player, itemstack, i, j);
+            this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, itemstack, i, j, s);
+        }
+
+        this.itemRender.zLevel = 0.0F;
+        this.zLevel = 0.0F;
+    }
+
+    protected void updateDragSplitting() {
+        ItemStack itemstack = this.mc.player.inventory.getItemStack();
+
+        if (!itemstack.isEmpty() && this.dragSplitting) {
+            if (this.dragSplittingLimit == 2) {
+                this.dragSplittingRemnant = itemstack.getMaxStackSize();
+            } else {
+                this.dragSplittingRemnant = itemstack.getCount();
+
+                for (Slot slot : this.dragSplittingSlots) {
+                    ItemStack itemstack1 = itemstack.copy();
+                    ItemStack itemstack2 = slot.getStack();
+                    int i = itemstack2.isEmpty() ? 0 : itemstack2.getCount();
+                    Container.computeStackSize(this.dragSplittingSlots, this.dragSplittingLimit, itemstack1, i);
+                    int j = Math.min(itemstack1.getMaxStackSize(), slot.getItemStackLimit(itemstack1));
+
+                    if (itemstack1.getCount() > j) {
+                        itemstack1.setCount(j);
+                    }
+
+                    this.dragSplittingRemnant -= itemstack1.getCount() - i;
+                }
+            }
+        }
+    }
+
+    public void updateTickInterface() {
+
+    }
+
+    ;
+
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -106,7 +210,29 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 6, name, 4210752, false);
+        int textWidth = this.fontRenderer.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.xSize / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6)/scale);
+
+
+        this.fontRenderer.drawString(name, textX, textY, 4210752);
+
+
+        GlStateManager.popMatrix();
+
     }
 
     protected final void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
@@ -155,7 +281,15 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
                 element.onMouseScroll(mouseX, mouseY, direction);
             }
         }
-
+        final List<GuiButton> listButton = this.buttonList;
+        for (GuiButton button : listButton) {
+            if (button instanceof GuiVerticalSliderList) {
+                GuiVerticalSliderList slider = (GuiVerticalSliderList) button;
+                if (direction != ScrollDirection.stopped) {
+                    slider.handleMouseWheel(direction, mouseX + guiLeft, mouseY + guiTop);
+                }
+            }
+        }
     }
 
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
@@ -434,8 +568,6 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
     protected void renderToolTipOnlyName(ItemStack stack, int x, int y, final List<String> strings) {
         FontRenderer font = stack.getItem().getFontRenderer(stack);
         net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
-        String name = this.getItemToolTip(stack).get(0);
-        strings.add(0, name);
         this.drawHoveringText(strings, x, y, (font == null ? fontRenderer : font));
         net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
@@ -456,7 +588,7 @@ public abstract class GuiCore<T extends ContainerBase<? extends IInventory>> ext
 
     }
 
-    protected final void bindTexture() {
+    public final void bindTexture() {
         this.mc.getTextureManager().bindTexture(this.getTexture());
     }
 

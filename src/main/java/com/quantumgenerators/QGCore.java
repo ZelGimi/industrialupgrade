@@ -4,6 +4,7 @@ import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.TileBlockCreator;
+import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,7 +48,7 @@ public final class QGCore {
                 8
         ),
                 Character.valueOf('C'), new ItemStack(IUItem.advQuantumtool), Character.valueOf('D'),
-                IUItem.circuitSpectral});
+                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral,9)});
         Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 1), new Object[]{" B ", "BAB", " B ",
 
                 Character.valueOf('A'), new ItemStack(this.qg, 1, 0), Character.valueOf('B'), new ItemStack(IUItem.core, 1, 9)});

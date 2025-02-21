@@ -31,6 +31,9 @@ public class ElectricItemManager implements IElectricItemManager {
     }
 
     public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
+        if (!(stack.getItem() instanceof IEnergyItem)) {
+            return 0;
+        }
         IEnergyItem item = (IEnergyItem) stack.getItem();
 
         assert item.getMaxEnergy(stack) > 0.0D;
@@ -68,6 +71,9 @@ public class ElectricItemManager implements IElectricItemManager {
             boolean externally,
             boolean simulate
     ) {
+        if (!(stack.getItem() instanceof IEnergyItem)) {
+            return 0;
+        }
         IEnergyItem item = (IEnergyItem) stack.getItem();
 
         assert item.getMaxEnergy(stack) > 0.0D;

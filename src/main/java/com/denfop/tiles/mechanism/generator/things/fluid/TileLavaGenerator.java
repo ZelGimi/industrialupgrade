@@ -8,7 +8,9 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerLavaGenerator;
 import com.denfop.gui.GuiLavaGenerator;
 import com.denfop.invslot.InvSlot;
@@ -37,10 +39,12 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     private double lastEnergy;
 
     public TileLavaGenerator() {
-        super(20000, 14, 1);
+        super(20000, 1, 1);
 
         this.energycost = 80;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -55,8 +59,10 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
         this.fluidTank = this.fluids.addTank("fluidTank", 20 * 1000, InvSlot.TypeItemSlot.OUTPUT,
                 Fluids.fluidPredicate(FluidRegistry.LAVA)
         );
-        this.upgradeSlot = new InvSlotUpgrade(this, 4);
 
+        this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.3));
     }
 
     private static int applyModifier(int extra) {
@@ -165,10 +171,7 @@ public class TileLavaGenerator extends TileElectricMachine implements IUpgradabl
         return EnumSet.of(
 
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.FluidExtract
         );
     }
 

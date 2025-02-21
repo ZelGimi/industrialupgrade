@@ -14,10 +14,10 @@ import java.util.List;
 
 public class TileEntityOutputFluid extends TileEntityMultiBlockElement implements IOutput {
 
+    public List<Fluids> internalFluidTankList = new ArrayList<>();
+
     public TileEntityOutputFluid() {
     }
-
-    public List<Fluids> internalFluidTankList = new ArrayList<>();
 
     @Override
     public void addFluids(final Fluids fluids) {

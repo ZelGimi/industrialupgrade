@@ -8,7 +8,9 @@ public class ContainerPrivatizer extends ContainerFullInv<TilePrivatizer> {
     public ContainerPrivatizer(EntityPlayer entityPlayer, TilePrivatizer tileEntity1) {
         this(entityPlayer, tileEntity1, 166);
 
-
+        addSlotToContainer(new SlotInvSlot((tileEntity1).inputslotA, 0, 81,
+                22
+        ));
         for (int j = 0; j < 9; ++j) {
 
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputslot,
@@ -16,9 +18,6 @@ public class ContainerPrivatizer extends ContainerFullInv<TilePrivatizer> {
             ));
         }
 
-        addSlotToContainer(new SlotInvSlot((tileEntity1).inputslotA, 0, 81,
-                22
-        ));
 
     }
 

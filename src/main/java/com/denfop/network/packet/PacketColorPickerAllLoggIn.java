@@ -1,14 +1,10 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
-import com.denfop.network.DecoderHandler;
-import com.denfop.network.EncoderHandler;
-import com.denfop.render.streak.EventSpectralSuitEffect;
 import com.denfop.render.streak.PlayerStreakInfo;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PacketColorPickerAllLoggIn implements IPacket {
@@ -21,8 +17,8 @@ public class PacketColorPickerAllLoggIn implements IPacket {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeByte(this.getId());
         buffer.writeInt(IUCore.mapStreakInfo.size());
-        for (Map.Entry<String, PlayerStreakInfo> playerStreakInfoEntry : IUCore.mapStreakInfo.entrySet()) {
-            buffer.writeString( playerStreakInfoEntry.getKey());
+        for (Map.Entry<String, PlayerStreakInfo> playerStreakInfoEntry : new HashMap<>(IUCore.mapStreakInfo).entrySet()) {
+            buffer.writeString(playerStreakInfoEntry.getKey());
             buffer.writeBytes(playerStreakInfoEntry.getValue().writePacket());
         }
         IUCore.network.getServer().sendPacket(buffer);
@@ -40,8 +36,8 @@ public class PacketColorPickerAllLoggIn implements IPacket {
 
             final String nick = is.readString();
             final PlayerStreakInfo playerStreakInfo = new PlayerStreakInfo(is);
-            EventSpectralSuitEffect.mapStreakInfo.remove(nick);
-            EventSpectralSuitEffect.mapStreakInfo.put(nick, playerStreakInfo);
+            IUCore.mapStreakInfo.remove(nick);
+            IUCore.mapStreakInfo.put(nick, playerStreakInfo);
         }
     }
 

@@ -108,6 +108,11 @@ public class ItemEnergyBow extends ItemBow implements IEnergyItem, IUpgradeItem,
         return new ModelResourceLocation(loc, null);
     }
 
+    @Override
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.BOW.list;
+    }
+
     public boolean showDurabilityBar(final ItemStack stack) {
         return true;
     }
@@ -162,6 +167,7 @@ public class ItemEnergyBow extends ItemBow implements IEnergyItem, IUpgradeItem,
                 break;
         }
 
+        ModUtils.mode(stack, tooltip);
         super.addInformation(stack, p_77624_2_, tooltip, p_77624_4_);
     }
 
@@ -477,8 +483,23 @@ public class ItemEnergyBow extends ItemBow implements IEnergyItem, IUpgradeItem,
 
     @SideOnly(Side.CLIENT)
     public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));
-        ModelBakery.registerItemVariants(this, getModelLocation1(name));
+        ModelLoader.setCustomMeshDefinition(this, stack -> {
+            final NBTTagCompound nbt = ModUtils.nbt(stack);
+            if (nbt.getString("mode").equals("")) {
+                return getModelLocation1(name + nbt.getString("mode"));
+            }
+
+            return getModelLocation1(name + "_" + nbt.getString("mode"));
+
+        });
+        String[] mode = {"", "Zelen", "Demon", "Dark", "Cold", "Ender", "Ukraine", "Fire", "Snow", "Taiga", "Desert", "Emerald"};
+        for (final String s : mode) {
+            if (!s.isEmpty()) {
+                ModelBakery.registerItemVariants(this, getModelLocation1(name + "_" + s));
+            } else {
+                ModelBakery.registerItemVariants(this, getModelLocation1(name + s));
+            }
+        }
 
 
     }

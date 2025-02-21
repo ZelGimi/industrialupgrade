@@ -5,6 +5,7 @@ import com.denfop.IUItem;
 import com.denfop.blocks.BlockClassicOre;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -12,17 +13,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public final class ScrapboxRecipeManager {
 
     public static ScrapboxRecipeManager instance;
-    public final List<Drop> drops = new ArrayList<>();
+    public final List<Drop> drops = new LinkedList<>();
 
 
     public ScrapboxRecipeManager() {
@@ -81,6 +82,26 @@ public final class ScrapboxRecipeManager {
         }
     }
 
+    public ItemStack getRandomDrop() {
+        if (this.drops.isEmpty()) {
+            return ItemStack.EMPTY;
+        } else {
+            float chance = WorldBaseGen.random.nextFloat() * ScrapboxRecipeManager.Drop.topChance;
+            int low = 0;
+            int high = this.drops.size() - 1;
+
+            while (low < high) {
+                int mid = (high + low) / 2;
+                if (chance < this.drops.get(mid).upperChanceBound) {
+                    high = mid;
+                } else {
+                    low = mid + 1;
+                }
+            }
+
+            return this.drops.get(low).item;
+        }
+    }
 
     public boolean isIterable() {
         return false;

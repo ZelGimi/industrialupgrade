@@ -1,17 +1,16 @@
 package com.denfop.tiles.reactors.graphite.capacitor;
 
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.reactors.IGraphiteReactor;
 import com.denfop.container.ContainerCapacitor;
-import com.denfop.container.ContainerExchanger;
 import com.denfop.gui.GuiCapacitor;
-import com.denfop.gui.GuiExchanger;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.reactors.ItemsFan;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.ICapacitor;
 import com.denfop.tiles.reactors.graphite.ICapacitorItem;
+import com.denfop.tiles.reactors.graphite.controller.TileEntityMainController;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,13 +22,19 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
 
     private final int level;
     private final InvSlot slot;
-    private int x = 0;
-
     public double percent = 1;
+    private int x = 0;
+    private ICapacitorItem item;
 
     public TileEntityCapacitor(int level) {
         this.level = level;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.CAPACITOR;
+            }
+
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 return stack.getItem() instanceof ICapacitorItem && ((ICapacitorItem) stack.getItem()).getLevel() <= ((TileEntityCapacitor) this.base).getLevel();
@@ -42,10 +47,13 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
                     ((TileEntityCapacitor) this.base).percent = 1;
                 } else {
                     ((TileEntityCapacitor) this.base).percent = 1 - ((ICapacitorItem) content.getItem()).getPercent();
+                    item = (ICapacitorItem) content.getItem();
                 }
             }
         };
+        slot.setStackSizeLimit(1);
     }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
@@ -60,10 +68,12 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
         this.x = customPacketBuffer.readInt();
         this.percent = customPacketBuffer.readDouble();
     }
+
     @Override
     public boolean hasOwnInventory() {
         return true;
     }
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -76,9 +86,19 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
         }
     }
 
-
-
-
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getMain() != null) {
+            TileEntityMainController controller = (TileEntityMainController) this.getMain();
+            if (controller.work && !this.slot.isEmpty() && world.provider.getWorldTime() % 20 == 0) {
+                if (item == null) {
+                    this.item = (ICapacitorItem) this.slot.get().getItem();
+                }
+                this.item.damageItem(this.slot.get(), -1);
+            }
+        }
+    }
 
     @Override
     public void readFromNBT(final NBTTagCompound nbtTagCompound) {
@@ -114,7 +134,7 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
 
     @Override
     public ContainerCapacitor getGuiContainer(final EntityPlayer var1) {
-        return new ContainerCapacitor(this,var1);
+        return new ContainerCapacitor(this, var1);
     }
 
     @Override
@@ -127,16 +147,18 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
     public int getX() {
         return x;
     }
+
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
-        if(this.getMain() == null)
+        if (this.getMain() == null) {
             return;
+        }
         IGraphiteReactor reactor = (IGraphiteReactor) this.getMain();
-        if(var2 == 0){
+        if (var2 == 0) {
             this.x = Math.min(this.x + 1, reactor.getWidth() - 1);
             reactor.updateDataReactor();
-        }else{
-            this.x = Math.max(0, this.x-1);
+        } else {
+            this.x = Math.max(0, this.x - 1);
             reactor.updateDataReactor();
         }
     }

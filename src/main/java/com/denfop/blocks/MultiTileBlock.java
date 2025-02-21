@@ -42,7 +42,14 @@ public enum MultiTileBlock implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         ModContainer mc = Loader.instance().activeModContainer();
         if (mc != null && (Constants.MOD_ID).equals(mc.getModId())) {
@@ -124,7 +131,7 @@ public enum MultiTileBlock implements IMultiTileBlock {
     }
 
     public enum HarvestTool {
-        None(null, -1),
+        None("", -1),
         Pickaxe("pickaxe", 0),
         Shovel("shovel", 0),
         Axe("axe", 0),

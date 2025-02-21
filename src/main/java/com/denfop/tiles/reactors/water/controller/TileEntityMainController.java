@@ -1,18 +1,29 @@
 package com.denfop.tiles.reactors.water.controller;
 
 import com.denfop.Config;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.reactors.*;
+import com.denfop.api.reactors.EnumTypeSecurity;
+import com.denfop.api.reactors.EnumTypeWork;
+import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.api.reactors.IFluidReactor;
+import com.denfop.api.reactors.IReactorItem;
+import com.denfop.api.reactors.ITypeRector;
+import com.denfop.api.reactors.InvSlotReactorModules;
+import com.denfop.api.reactors.LogicFluidReactor;
+import com.denfop.api.reactors.LogicReactor;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerWaterMainController;
 import com.denfop.gui.GuiWaterMainController;
 import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotScheduleReactor;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -20,11 +31,21 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketExplosion;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
+import com.denfop.render.oilquarry.DataBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
-import com.denfop.tiles.reactors.water.*;
+import com.denfop.tiles.reactors.water.IInput;
+import com.denfop.tiles.reactors.water.ILevelFuel;
+import com.denfop.tiles.reactors.water.IOutput;
+import com.denfop.tiles.reactors.water.ISecurity;
+import com.denfop.tiles.reactors.water.ISocket;
+import com.denfop.tiles.reactors.water.ITank;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,21 +68,14 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
 
     public final EnumFluidReactors enumFluidReactors;
     public final InvSlot reactorsElements;
-    private final ComponentBaseEnergy rad;
     public final InvSlotReactorModules<TileEntityMainController> reactorsModules;
+    public final InvSlotScheduleReactor scheduleReactor;
+    private final ComponentBaseEnergy rad;
     public Timer timer = new Timer(9999, 0, 0);
-    public Timer red_timer = new Timer(0, 2,30);
-    public Timer yellow_timer = new Timer(0, 15,0);
-    public AdvEnergy energy;
+    public Timer red_timer = new Timer(0, 2, 30);
+    public Timer yellow_timer = new Timer(0, 15, 0);
+    public Energy energy;
     public EnumTypeWork typeWork = EnumTypeWork.WORK;
-    List<Fluids.InternalFluidTank> fluidTankInputList = new ArrayList<>();
-    List<Fluids.InternalFluidTank> fluidTankOutputList = new ArrayList<>();
-
-    List<Fluids.InternalFluidTank> fluidTankCoolantList = new ArrayList<>();
-    List<Fluids.InternalFluidTank> fluidTankHotCoolantList = new ArrayList<>();
-
-    List<ISecurity> securities = new ArrayList<>();
-
     public int pressure = 1;
     public boolean work = false;
     public double heat;
@@ -69,20 +83,38 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     public LogicFluidReactor reactor;
     public EnumTypeSecurity security = EnumTypeSecurity.NONE;
     public int level = 0;
+    public boolean heat_sensor;
+    public boolean stable_sensor;
+    List<Fluids.InternalFluidTank> fluidTankInputList = new ArrayList<>();
+    List<Fluids.InternalFluidTank> fluidTankOutputList = new ArrayList<>();
+    List<Fluids.InternalFluidTank> fluidTankCoolantList = new ArrayList<>();
+    List<Fluids.InternalFluidTank> fluidTankHotCoolantList = new ArrayList<>();
+    List<ISecurity> securities = new ArrayList<>();
+    @SideOnly(Side.CLIENT)
+    public DataBlock dataBlock;
 
     public TileEntityMainController(final MultiBlockStructure multiBlockStructure, EnumFluidReactors enumFluidReactors) {
         super(multiBlockStructure);
         this.enumFluidReactors = enumFluidReactors;
+
         this.reactorsElements = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,
                 enumFluidReactors.getHeight() * enumFluidReactors.getWidth()
         ) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                if (stack.getItem() instanceof IReactorItem) {
-                    IReactorItem iReactorItem = (IReactorItem) stack.getItem();
-                    return ((TileEntityMainController) this.base).getLevelReactor() >= iReactorItem.getLevel();
+                if (scheduleReactor.getAccepts().isEmpty()) {
+                    if (stack.getItem() instanceof IReactorItem) {
+                        IReactorItem iReactorItem = (IReactorItem) stack.getItem();
+                        return ((TileEntityMainController) this.base).getLevelReactor() >= iReactorItem.getLevel();
+                    } else {
+                        return false;
+                    }
                 } else {
-                    return false;
+                    ItemStack stack1 = scheduleReactor.getAccepts().get(index);
+                    if (stack1.isEmpty()) {
+                        return false;
+                    }
+                    return stack1.isItemEqual(stack);
                 }
             }
 
@@ -92,9 +124,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 reactor = null;
             }
         };
+
         this.reactorsElements.setStackSizeLimit(1);
         this.reactorsModules = new InvSlotReactorModules<>(this);
-        this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation()));
+        this.scheduleReactor = new InvSlotScheduleReactor(this, 1, enumFluidReactors.ordinal() + 1, enumFluidReactors.getWidth(),
+                enumFluidReactors.getHeight()
+        );
+        this.rad = this.addComponent(new ComponentBaseEnergy(EnergyType.RADIATION, this, enumFluidReactors.getRadiation() * 100));
     }
 
     public LogicReactor getReactor() {
@@ -202,6 +238,17 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         } else if (var2 == 2) {
             this.pressure--;
             this.pressure = Math.max(1, this.pressure);
+
+        } else if (var2 == -1) {
+            if (!this.stable_sensor) {
+                this.heat_sensor = !this.heat_sensor;
+            }
+
+        } else if (var2 == -2) {
+            if (!this.heat_sensor) {
+                this.stable_sensor = !this.stable_sensor;
+            }
+
         } else {
             if (this.typeWork == EnumTypeWork.WORK && this.getLevelReactor() < this.getMaxLevelReactor()) {
                 this.typeWork = EnumTypeWork.LEVEL_INCREASE;
@@ -242,6 +289,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
+            scheduleReactor.update();
             this.reactorsModules.load();
             try {
                 if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
@@ -267,16 +315,47 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                     }
 
                 }
-            }catch (Exception e){};
+            } catch (Exception ignored) {
+            }
+            ;
             ChunkPos chunkPos = this.getWorld().getChunkFromBlockCoords(this.pos).getPos();
             List<IAdvReactor> list = RadiationSystem.rad_system.getAdvReactorMap().computeIfAbsent(
                     chunkPos,
                     k -> new ArrayList<>()
             );
             list.add(this);
+        } else {
+            boolean isActive = this.getActive();
+            this.setActive("global");
+            IBlockState blockState1 = this.block
+                    .getDefaultState()
+                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                    .withProperty(
+                            BlockTileEntity.facingProperty,
+                            this.getFacing()
+                    );
+            this.dataBlock = new DataBlock(blockState1);
+            final IBakedModel model = Minecraft
+                    .getMinecraft()
+                    .getBlockRendererDispatcher()
+                    .getModelForState(blockState1);
+            this.dataBlock.setState(model);
+            this.setActive(isActive);
         }
     }
+    @SideOnly(Side.CLIENT)
+    public void renderUniqueMultiBlock() {
+        GlStateManager.popMatrix();
+        GlStateManager.translate(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        final IBakedModel model = dataBlock.getState();
+        final IBlockState state = dataBlock.getBlockState();
+        for (EnumFacing enumfacing : EnumFacing.values()) {
+            render(model, state, enumfacing);
+        }
 
+        render(model, state, null);
+        GlStateManager.pushMatrix();
+    }
     @Override
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
@@ -306,6 +385,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         } else {
             if (this.full) {
                 if (this.typeWork == EnumTypeWork.WORK) {
+                    this.energy.capacity = Math.max(this.output, this.energy.getDefaultCapacity());
                     if (this.work) {
                         if (this.getWorld().provider.getWorldTime() % 20 == 0) {
                             reactor.onTick();
@@ -322,11 +402,16 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                             } else if (!this.red_timer.canWork()) {
                                 this.explode();
                                 this.reactor = null;
+                            } else if (this.reactor != null && this.getHeat() >= this.getMaxHeat() && this.reactor.getMaxHeat() >= this.getMaxHeat() * 1.5) {
+                                this.explode();
+                                this.reactor = null;
                             }
 
                         }
-                        if(this.security != EnumTypeSecurity.ERROR)
-                        this.energy.addEnergy(output);
+                        if (this.work && this.reactor != null) {
+                            this.energy.setSourceTier(EnergyNetGlobal.initialize().getTierFromPower(output));
+                            this.energy.addEnergy(this.output);
+                        }
                     }
                 } else {
                     if (this.energy.getEnergy() >= this.energy.getCapacity()) {
@@ -359,6 +444,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         super.readContainerPacket(customPacketBuffer);
         this.pressure = customPacketBuffer.readInt();
         this.work = customPacketBuffer.readBoolean();
+        this.stable_sensor = customPacketBuffer.readBoolean();
+        this.heat_sensor = customPacketBuffer.readBoolean();
         boolean socket = customPacketBuffer.readBoolean();
         if (socket) {
             try {
@@ -382,8 +469,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankCoolantList) {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
-                if (fluidTank1 != null && fluidTank1.getFluid() != null) {
-                    fluidTank.setFluid(fluidTank1.getFluid());
+                if (fluidTank1 != null) {
+                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -392,8 +479,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankInputList) {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
-                if (fluidTank1 != null && fluidTank1.getFluid() != null) {
-                    fluidTank.setFluid(fluidTank1.getFluid());
+                if (fluidTank1 != null) {
+                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -402,8 +489,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankOutputList) {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
-                if (fluidTank1 != null && fluidTank1.getFluid() != null) {
-                    fluidTank.setFluid(fluidTank1.getFluid());
+                if (fluidTank1 != null) {
+                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -412,8 +499,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         for (Fluids.InternalFluidTank fluidTank : this.fluidTankHotCoolantList) {
             try {
                 FluidTank fluidTank1 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
-                if (fluidTank1 != null && fluidTank1.getFluid() != null) {
-                    fluidTank.setFluid(fluidTank1.getFluid());
+                if (fluidTank1 != null) {
+                    fluidTank.readFromNBT(fluidTank1.writeToNBT(new NBTTagCompound()));
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -436,6 +523,8 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeInt(this.pressure);
         customPacketBuffer.writeBoolean(work);
+        customPacketBuffer.writeBoolean(stable_sensor);
+        customPacketBuffer.writeBoolean(heat_sensor);
         customPacketBuffer.writeBoolean(this.energy != null);
         if (energy != null) {
             try {
@@ -551,21 +640,45 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 case 0:
                     fluidTankInputList.add(tank.getTank());
                     tank.setFluid(FluidRegistry.WATER);
+                    if (tank.getTank().getFluid() != null && !tank.getTank().getFluid().getFluid().equals(FluidRegistry.WATER)) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                    }
                     inputs.add(tank.getFluids());
                     break;
                 case 1:
                     fluidTankOutputList.add(tank.getTank());
                     tank.setFluid(FluidName.fluidsteam.getInstance());
+                    if (tank.getTank().getFluid() != null && !tank
+                            .getTank()
+                            .getFluid()
+                            .getFluid()
+                            .equals(FluidName.fluidsteam.getInstance())) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                    }
                     outputs.add(tank.getFluids());
                     break;
                 case 2:
                     fluidTankCoolantList.add(tank.getTank());
                     tank.setFluid(FluidName.fluidcoolant.getInstance());
+                    if (tank.getTank().getFluid() != null && !tank
+                            .getTank()
+                            .getFluid()
+                            .getFluid()
+                            .equals(FluidName.fluidcoolant.getInstance())) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                    }
                     inputs.add(tank.getFluids());
                     break;
                 case 3:
                     fluidTankHotCoolantList.add(tank.getTank());
                     tank.setFluid(FluidName.fluidhot_coolant.getInstance());
+                    if (tank.getTank().getFluid() != null && !tank
+                            .getTank()
+                            .getFluid()
+                            .getFluid()
+                            .equals(FluidName.fluidhot_coolant.getInstance())) {
+                        tank.getTank().drain(tank.getTank().getFluidAmount(), true);
+                    }
                     outputs.add(tank.getFluids());
                     break;
             }
@@ -599,9 +712,11 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             ISocket output = (ISocket) this.getWorld().getTileEntity(pos2);
             this.energy = output.getEnergy();
         }
-        reactor = new LogicFluidReactor(this);
-        reactor.temp_heat = this.heat;
-        new PacketUpdateFieldTile(this, "reactor", this.reactor.getGeneration());
+        if (!this.getWorld().isRemote) {
+            reactor = new LogicFluidReactor(this);
+            reactor.temp_heat = this.heat;
+            new PacketUpdateFieldTile(this, "reactor", this.reactor.getGeneration());
+        }
         pos1 = this
                 .getMultiBlockStucture()
                 .getPosFromClass(this.getFacing(), this.getBlockPos(),
@@ -622,6 +737,35 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             levelFuel.setMainMultiElement(this);
 
         }
+        if (!this.getWorld().isRemote)
+        this.reactorsModules.load();
+        if (this.isFull()) {
+            if (this.typeWork == EnumTypeWork.LEVEL_INCREASE) {
+                this.energy.onUnloaded();
+                this.energy.setDirections(ModUtils.allFacings, ModUtils.noFacings);
+                this.energy.delegate = null;
+                this.energy.createDelegate();
+                this.energy.onLoaded();
+                switch (this.level) {
+                    case 0:
+                        this.energy.setCapacity(4000000);
+                        break;
+                    case 1:
+                        this.energy.setCapacity(50000000);
+                        break;
+                    case 2:
+                        this.energy.setCapacity(200000000);
+                        break;
+                    case 3:
+                        this.energy.setCapacity(500000000);
+                        break;
+
+                }
+
+            }
+        }
+
+
     }
 
     @Override
@@ -650,16 +794,6 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     }
 
     @Override
-    public void setUpdate() {
-        this.reactor = null;
-    }
-
-    @Override
-    public int getLevel() {
-        return enumFluidReactors.ordinal();
-    }
-
-    @Override
     public void setHeat(final double var1) {
         this.heat = var1;
         if (this.heat > this.getMaxHeat()) {
@@ -669,7 +803,7 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
             this.setSecurity(EnumTypeSecurity.STABLE);
             this.setTime(EnumTypeSecurity.STABLE);
         } else if (this.heat >= this.getStableMaxHeat() && this.heat <=
-                this.getStableMaxHeat() +  (this.getMaxHeat() - this.getStableMaxHeat()) * 0.75 ) {
+                this.getStableMaxHeat() + (this.getMaxHeat() - this.getStableMaxHeat()) * 0.75) {
             this.setSecurity(EnumTypeSecurity.UNSTABLE);
             this.setTime(EnumTypeSecurity.UNSTABLE);
         } else {
@@ -679,16 +813,13 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     }
 
     @Override
-    public void setOutput(final double output) {
-        this.output = output * this.reactorsModules.getGeneration();
+    public void setUpdate() {
+        this.reactor = null;
     }
 
     @Override
-    public void setRad(final double rad) {
-        this.rad.addEnergy(rad * this.reactorsModules.getRadiation());
-        if (this.rad.getEnergy() >= this.rad.getCapacity()) {
-            this.explode();
-        }
+    public int getLevel() {
+        return enumFluidReactors.ordinal();
     }
 
     @Override
@@ -704,6 +835,11 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
     @Override
     public double getOutput() {
         return this.output;
+    }
+
+    @Override
+    public void setOutput(final double output) {
+        this.output = output * this.reactorsModules.getGeneration();
     }
 
     @Override
@@ -735,15 +871,41 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
         Explosion explosion = new Explosion(this.world, null, this.getPos().getX() + weight, this.getPos().getY() + height,
                 this.getPos().getZ() + length, 25, false, true
         );
-        if(Config.explodeReactor) {
+        if (Config.explodeReactor) {
+            world.setBlockToAir(pos);
+            for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
+                if (world.rand.nextInt(2) == 0) {
+                    continue;
+                }
+                BlockPos pos1;
+                switch (EnumFacing.values()[facing]) {
+                    case NORTH:
+                        pos1 = pos.add(entry.getKey());
+                        break;
+                    case EAST:
+                        pos1 = pos.add(entry.getKey().getZ() * -1, entry.getKey().getY(), entry.getKey().getX());
+                        break;
+                    case WEST:
+                        pos1 = pos.add(entry.getKey().getZ(), entry.getKey().getY(), entry.getKey().getX() * -1);
+                        break;
+                    case SOUTH:
+                        pos1 = pos.add(entry.getKey().getX() * -1, entry.getKey().getY(), entry.getKey().getZ() * -1);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + facing);
+                }
+                world.setBlockToAir(pos1);
+
+            }
             if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.getWorld(), explosion)) {
                 return;
             }
             explosion.doExplosionA();
             explosion.doExplosionB(true);
-        }else{
+        } else {
+            world.setBlockToAir(pos);
             for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
-                if(world.rand.nextInt(2) == 0){
+                if (world.rand.nextInt(2) == 0) {
                     continue;
                 }
                 BlockPos pos1;
@@ -776,8 +938,9 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
                 }
             }
         }
-        if(Config.explodeReactor)
-        new PacketExplosion(explosion, 25, false, true);
+        if (Config.explodeReactor) {
+            new PacketExplosion(explosion, 25, false, true);
+        }
     }
 
     public List<Fluids.InternalFluidTank> getFluidTankCoolantList() {
@@ -802,6 +965,14 @@ public class TileEntityMainController extends TileMultiBlockBase implements IFlu
 
     public ComponentBaseEnergy getRad() {
         return rad;
+    }
+
+    @Override
+    public void setRad(final double rad) {
+        this.rad.addEnergy(rad * this.reactorsModules.getRadiation());
+        if (this.rad.getEnergy() >= this.rad.getCapacity()) {
+            this.explode();
+        }
     }
 
     @Override

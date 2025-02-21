@@ -6,16 +6,17 @@ import com.denfop.api.IAdvEnergyNet;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
-import com.denfop.componets.AdvEnergy;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.CoolComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.ProcessMultiComponent;
@@ -34,11 +35,11 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.mechanism.EnumTypeMachines;
+import com.denfop.tiles.mechanism.multimechanism.IMultiMachine;
 import com.denfop.tiles.panels.entity.EnumSolarPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,14 +63,14 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class TileMultiMachine extends TileEntityInventory implements
-        IAudioFixer, IUpgradableBlock, IUpdatableTileEvent, IHasRecipe {
+        IAudioFixer, IUpgradableBlock, IUpdatableTileEvent, IHasRecipe, IMultiMachine {
 
 
-    public final int type;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final InvSlotDischarge dischargeSlot;
     public final ProcessMultiComponent multi_process;
     public final int sizeWorkingSlot;
+    public final InvSlot input_slot;
     private final ComponentUpgradeSlots componentUpgrades;
     public CoolComponent cold;
     public HeatComponent heat = null;
@@ -83,29 +84,36 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     private int tick;
     private TileSolarPanel panel;
 
-    public TileMultiMachine(int energyconsume, int OperationsPerTick, int type) {
-        this(1, energyconsume, OperationsPerTick, type);
+    public TileMultiMachine(EnumMultiMachine enumMultiMachine) {
+        this(1, enumMultiMachine.usagePerTick, enumMultiMachine.lenghtOperation);
+    }
+
+
+    public TileMultiMachine(int energyconsume, int OperationsPerTick) {
+        this(1, energyconsume, OperationsPerTick);
     }
 
     public TileMultiMachine(
             int aDefaultTier,
             int energyconsume,
-            int OperationsPerTick,
-            int type
+            int OperationsPerTick
     ) {
 
         this.sizeWorkingSlot = this.getMachine().sizeWorkingSlot;
         this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, aDefaultTier, false);
-        this.energy = this.addComponent(AdvEnergy
-                .asBasicSink(this, (double) energyconsume * OperationsPerTick, (int) Math.pow(2, this.sizeWorkingSlot - 1))
+        this.energy = this.addComponent(Energy
+                .asBasicSink(this, (double) energyconsume * OperationsPerTick, (int) Math.min(14, Math.pow(
+                        2,
+                        this.sizeWorkingSlot - 1
+                )))
                 .addManagedSlot(this.dischargeSlot));
         if (this.getMachine().type == EnumTypeMachines.OreWashing) {
             this.fluid = this.addComponent(new Fluids(this));
-            this.tank = fluid.addTank("tank", 10000, InvSlot.TypeItemSlot.INPUT,
+            this.tank = fluid.addTank("tank", 64000, InvSlot.TypeItemSlot.INPUT,
                     Fluids.fluidPredicate(FluidRegistry.WATER)
             );
         }
-        this.type = type;
+
         this.solartype = null;
         this.cold = this.addComponent(CoolComponent.asBasicSink(this, 100));
         this.sound = true;
@@ -128,6 +136,36 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                 invSlotUpgrade.isUpdate = false;
             }
         });
+        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+            @Override
+            public void put(final int index, final ItemStack content) {
+                super.put(index, content);
+                if (this.get().isEmpty()) {
+                    ((TileMultiMachine) this.base).multi_process.inputSlots.changeAccepts(ItemStack.EMPTY);
+                } else {
+                    ((TileMultiMachine) this.base).multi_process.inputSlots.changeAccepts(this.get());
+                }
+            }
+
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.RECIPE_SCHEDULE;
+            }
+
+            @Override
+            public boolean accepts(final ItemStack stack, final int index) {
+                return stack.getItem() == IUItem.recipe_schedule;
+            }
+        };
+    }
+
+    public FluidTank getTank() {
+        return tank;
+    }
+
+    @Override
+    public HeatComponent getHeat() {
+        return heat;
     }
 
     @Override
@@ -211,8 +249,8 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         return this.getMachine().type.getSound();
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -223,13 +261,13 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             if (this.heat != null) {
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
             }
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.multi_process.defaultEnergyConsume + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.multi_process.energyConsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.multi_process.defaultOperationLength);
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.multi_process.operationLength);
         }
 
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
@@ -243,6 +281,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                     energy.getCapacity())
                     + " EF");
         }
+        super.addInformation(stack,tooltip);
     }
 
 
@@ -317,7 +356,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
                 default:
-                    final AdvEnergy component = this.energy;
+                    final Energy component = this.energy;
                     if (component != null) {
                         if (component.getEnergy() != 0) {
                             final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -343,7 +382,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                     return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
             }
         }
-        final AdvEnergy component = this.getComp(AdvEnergy.class);
+        final Energy component = this.getComp(Energy.class);
         if (component != null) {
             if (component.getEnergy() != 0) {
                 final NBTTagCompound nbt = ModUtils.nbt(drop);
@@ -393,7 +432,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             colling = new ItemStack(IUItem.coolupgrade, 1, this.cold.meta);
 
         }
-        if (!stack_modulestorage.isEmpty() || !stack_quickly.isEmpty()  || !module_separate.isEmpty()   || !module_infinity_water.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !colling.isEmpty()) {
+        if (!stack_modulestorage.isEmpty() || !stack_quickly.isEmpty() || !module_separate.isEmpty() || !module_infinity_water.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !colling.isEmpty()) {
             if (!stack_modulestorage.isEmpty()) {
                 ret.add(stack_modulestorage);
                 this.multi_process.shrinkModule(1);
@@ -464,13 +503,13 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
 
                 }
                 this.solartype = ItemModuleTypePanel.getSolarType(entityPlayer.getHeldItem(hand).getItemDamage());
-                entityPlayer.getHeldItem(hand).setCount(entityPlayer.getHeldItem(hand).getCount() - 1);
+                entityPlayer.getHeldItem(hand).shrink(1);
                 return true;
             } else if (this.multi_process.onActivated(entityPlayer.getHeldItem(hand))) {
                 return true;
             } else if (!this.getWorld().isRemote && FluidUtil.getFluidHandler(entityPlayer.getHeldItem(hand)) != null && this.fluid != null) {
 
-                return FluidUtil.interactWithFluidHandler(entityPlayer, hand,
+                return ModUtils.interactWithFluidHandler(entityPlayer, hand,
                         this.fluid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
                 );
             }
@@ -528,6 +567,11 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
         super.onLoaded();
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "sound", this.sound);
+            if (this.input_slot.isEmpty()) {
+                (this).multi_process.inputSlots.changeAccepts(ItemStack.EMPTY);
+            } else {
+                (this).multi_process.inputSlots.changeAccepts(this.input_slot.get());
+            }
         }
 
     }
@@ -627,14 +671,25 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 
 
     public int getMode() {
         return 0;
+    }
+
+    public boolean canoperate(int size) {
+        return true;
+    }
+
+    public int getSize(int size) {
+        return size;
+    }
+
+    public void consume(int size) {
     }
 
 }

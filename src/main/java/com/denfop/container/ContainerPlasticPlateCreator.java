@@ -21,6 +21,9 @@ public class ContainerPlasticPlateCreator extends ContainerFullInv<TilePlasticPl
                     0, 56, 17
             ));
         }
+        addSlotToContainer(new SlotInvSlot(base.input_slot,
+                0, -20, 84
+        ));
         if (tileEntity1.outputSlot != null) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot,
                     0, outputX, outputY

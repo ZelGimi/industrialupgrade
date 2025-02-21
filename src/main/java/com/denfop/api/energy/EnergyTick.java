@@ -2,16 +2,23 @@ package com.denfop.api.energy;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class EnergyTick {
 
     private final IEnergySource source;
     private final boolean isAdv;
     private final boolean isDual;
+    List<Integer> conductors = new LinkedList<>();
     private IEnergySource advSource = null;
     private List<Path> energyPaths;
+    private int hash;
+
 
     public EnergyTick(IEnergySource source, List<Path> list) {
         this.source = source;
@@ -22,6 +29,8 @@ public class EnergyTick {
             this.advSource = source;
         }
     }
+
+
 
     public IEnergySource getSource() {
         return source;
@@ -72,8 +81,17 @@ public class EnergyTick {
         return advSource;
     }
 
+    public boolean hasHash = false;
+
     @Override
     public int hashCode() {
+        if (source != null && !hasHash) {
+            this.hash = Objects.hash(source);
+            hasHash = true;
+            return hash;
+        } else if (hasHash) {
+            return hash;
+        }
         return Objects.hash(source);
     }
 
@@ -83,29 +101,20 @@ public class EnergyTick {
 
     public void setList(final List<Path> energyPaths) {
         this.energyPaths = energyPaths;
+        if (this.energyPaths == null)
+            this.conductors.clear();
     }
 
     public void rework() {
-        List<Path> energyPaths1 = new ArrayList<>();
-        int i = 1;
-        while (!energyPaths.isEmpty()) {
-            if (i < 14) {
-                final int finalI = i;
-                energyPaths.removeIf(energyPath -> {
-                    if (energyPath.target.getSinkTier() == finalI) {
-                        energyPaths1.add(energyPath);
-                        return true;
-                    }
-                    return false;
-                });
-            } else {
-                energyPaths1.addAll(energyPaths);
-                energyPaths.clear();
-                break;
-            }
-            i++;
-        }
-        this.energyPaths = energyPaths1;
+        energyPaths.sort(Comparator.comparingInt(path -> path.target.getSinkTier()));
+    }
+
+    public List<Integer> getConductors() {
+        return conductors;
+    }
+
+    public void setConductors(final List<Integer> conductors) {
+        this.conductors = conductors;
     }
 
 }

@@ -102,11 +102,11 @@ public class MultiBlockAdvGasReactor {
                 EnumFacing.NORTH
         );
 
-        advGasReactorMultiBlock.add(advGasReactorMultiBlock.getPos().add(-4,0,3), ICoolant.class,
+        advGasReactorMultiBlock.add(advGasReactorMultiBlock.getPos().add(-4,0,3), IInterCooler.class,
                 new ItemStack(IUItem.gas_reactor, 1, 9),
                 EnumFacing.SOUTH
         );
-        advGasReactorMultiBlock.add(advGasReactorMultiBlock.getPos().add(-4,1,3), IInterCooler.class,
+        advGasReactorMultiBlock.add(advGasReactorMultiBlock.getPos().add(-4,1,3), ICoolant.class,
                 new ItemStack(IUItem.gas_reactor, 1, 5),
                 EnumFacing.SOUTH
         );

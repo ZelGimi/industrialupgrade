@@ -1,10 +1,7 @@
 package com.denfop.tiles.reactors.heat.graphite_controller;
 
-import com.denfop.api.reactors.IGraphiteReactor;
 import com.denfop.api.reactors.IHeatReactor;
-import com.denfop.container.ContainerGraphiteController;
 import com.denfop.container.ContainerHeatGraphiteController;
-import com.denfop.gui.GuiGraphiteGraphiteController;
 import com.denfop.gui.GuiHeatGraphiteGraphiteController;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.resource.ItemCraftingElements;
@@ -22,8 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityGraphiteController extends TileEntityMultiBlockElement implements IGraphiteController,
         IUpdatableTileEvent {
 
-    private final int level;
     public final InvSlot slot;
+    private final int level;
     public double fuel;
     public int levelGraphite = 1;
     private int index;
@@ -61,7 +58,6 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
     }
 
 
-
     public double getFuel() {
         return fuel;
     }
@@ -72,7 +68,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
     @Override
     public ContainerHeatGraphiteController getGuiContainer(final EntityPlayer var1) {
-        return new ContainerHeatGraphiteController(this,var1);
+        return new ContainerHeatGraphiteController(this, var1);
     }
 
     @Override
@@ -178,7 +174,7 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
 
     @Override
     public int getIndex() {
-     return    this.index;
+        return this.index;
     }
 
     @Override

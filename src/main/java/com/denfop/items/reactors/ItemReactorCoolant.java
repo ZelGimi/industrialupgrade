@@ -29,21 +29,7 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
         this.heat = heat;
         setMaxStackSize(1);
     }
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
-    }
-    @Override
-    public boolean needClear(ItemStack stack) {
-        return this.getMaxCustomDamage(stack) - this.getCustomDamage(
-                stack) == 0;
-    }
-    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
-        return true;
-    }
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
+
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {
 
@@ -52,6 +38,26 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
                 "reactors" + "/" + name;
         return new ModelResourceLocation(loc, null);
     }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
+    }
+
+    @Override
+    public boolean needClear(ItemStack stack) {
+        return this.getMaxCustomDamage(stack) - this.getCustomDamage(
+                stack) == 0;
+    }
+
+    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
+        return true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModel(Item item, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.COOLANT_ROD;
@@ -91,6 +97,7 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
     public void damageItem(final ItemStack stack, final int damage) {
         applyCustomDamage(stack, damage, null);
     }
+
     @Override
     public void addInformation(
             @Nonnull final ItemStack stack,
@@ -102,9 +109,10 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
         tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack)) + "/" + this.getMaxCustomDamage(stack));
 
-        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level") + this.level);
         tooltip.add(Localization.translate("reactor.component_level1"));
     }
+
     @Override
     public boolean updatableItem() {
         return true;
@@ -126,12 +134,14 @@ public class ItemReactorCoolant extends ItemDamage implements IReactorItem {
         final int custom = this.getCustomDamage(
                 stack);
         final int min = max / 1000;
-        if(max - custom == max)
+        if (max - custom == max) {
             return 0;
-        return (max - custom)/min;
+        }
+        return (max - custom) / min;
     }
-    public void fill(ItemStack stack){
-        applyCustomDamage(stack,  this.getMaxCustomDamage(stack) /  1000, null);
+
+    public void fill(ItemStack stack) {
+        applyCustomDamage(stack, this.getMaxCustomDamage(stack) / 1000, null);
     }
 
 }

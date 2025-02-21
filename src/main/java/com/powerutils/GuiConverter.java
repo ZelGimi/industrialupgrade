@@ -22,7 +22,8 @@ public class GuiConverter extends GuiCore<ContainerConverter> {
 
     public GuiConverter(ContainerConverter container1) {
         super(container1);
-        this.ySize = 176;
+        this.xSize = this.getXSize() - 1;
+        this.ySize = 186;
         this.container = container1;
         this.tileentity = container1.base;
 
@@ -36,11 +37,11 @@ public class GuiConverter extends GuiCore<ContainerConverter> {
         int x = i - xMin;
         int y = j - yMin;
 
-        if (x >= 43 && x <= 58 && y >= 77 && y <= 87) {
+        if (x >= 39 && x < 59 && y >= 81 && y <= 91) {
             if (this.container.base.rf) {
                 new PacketUpdateServerTile(this.container.base, 0);
             }
-        } else if (x >= 59 && x <= 73 && y >= 77 && y <= 87) {
+        } else if (x >= 59 && x < 79 && y >= 81 && y <= 91) {
             if (!this.container.base.rf) {
                 new PacketUpdateServerTile(this.container.base, 0);
             }
@@ -59,7 +60,7 @@ public class GuiConverter extends GuiCore<ContainerConverter> {
         this.fontRenderer.drawString(Localization.translate(this.container.base.getName()), nmPos, 6, 7718655);
         this.fontRenderer.drawString(
                 "EF: " + ModUtils.getString(this.tileentity.energy.getEnergy()) + "/" + ModUtils.getString(
-                        this.tileentity.capacity),
+                        this.tileentity.energy.capacity),
                 9,
                 20,
                 13487565
@@ -102,36 +103,31 @@ public class GuiConverter extends GuiCore<ContainerConverter> {
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
         drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
-        if (this.container.base.rf) {
-            drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
 
-        }
         if (!this.tileentity.rf) {
-            if (isPointInRegion(43, 76, 31, 12, mouseX, mouseY)) {
-                drawTexturedModalRect(j + 43, k + 76, 194, 44, 15, 11);
+            if (isPointInRegion(39, 81, 20, 12, mouseX, mouseY)) {
+                drawTexturedModalRect(j + 39, k + 81, 197, 87, 20, 11);
             } else {
-                drawTexturedModalRect(j + 43, k + 76, 177, 44, 15, 11);
+                drawTexturedModalRect(j + 39, k + 81, 175, 87, 20, 11);
             }
-            drawTexturedModalRect(j + 6, k + 72, 177, 4, 36, 19);
-            drawTexturedModalRect(j + 116, k + 70, 177, 102, 16, 17);
+            drawTexturedModalRect(j + 118, k + 72, 175, 78, 7, 7);
         } else {
-            if (isPointInRegion(43, 76, 31, 12, mouseX, mouseY)) {
-                drawTexturedModalRect(j + 59, k + 76, 194, 44, 15, 11);
+            if (isPointInRegion(59, 81, 20, 12, mouseX, mouseY)) {
+                drawTexturedModalRect(j + 59, k + 81, 197, 87, 20, 11);
             } else {
-                drawTexturedModalRect(j + 59, k + 76, 177, 44, 15, 11);
+                drawTexturedModalRect(j + 59, k + 81, 175, 87, 20, 11);
             }
-            drawTexturedModalRect(j + 75, k + 72, 177, 24, 36, 19);
-            drawTexturedModalRect(j + 131, k + 70, 194, 102, 16, 17);
+            drawTexturedModalRect(j + 136, k + 72, 184, 78, 7, 7);
         }
         if (this.tileentity.energy.getEnergy() > 0) {
-            int gaugeFullHeight = 39;
+            int gaugeFullHeight = 41;
             int gaugeScaledHeight = this.tileentity.gaugeICEnergyScaled(gaugeFullHeight);
-            drawTexturedModalRect(j + 119, k + 68 - gaugeScaledHeight, 177, 97 - gaugeScaledHeight, 11, gaugeScaledHeight);
+            drawTexturedModalRect(j + 117, k + 70 - gaugeScaledHeight, 175, 76 - gaugeScaledHeight, 9, gaugeScaledHeight);
         }
         if (this.tileentity.energy2 > 0) {
-            int gaugeFullHeight = 39;
+            int gaugeFullHeight = 41;
             int gaugeScaledHeight = this.tileentity.gaugeTEEnergyScaled(gaugeFullHeight);
-            drawTexturedModalRect(j + 133, k + 68 - gaugeScaledHeight, 189, 97 - gaugeScaledHeight, 11, gaugeScaledHeight);
+            drawTexturedModalRect(j + 135, k + 70 - gaugeScaledHeight, 186, 76 - gaugeScaledHeight, 9, gaugeScaledHeight);
         }
     }
 

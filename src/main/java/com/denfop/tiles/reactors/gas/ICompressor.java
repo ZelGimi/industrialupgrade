@@ -7,4 +7,5 @@ public interface ICompressor extends IMultiElement {
     int getEnergy();
 
     int getPressure();
+
 }

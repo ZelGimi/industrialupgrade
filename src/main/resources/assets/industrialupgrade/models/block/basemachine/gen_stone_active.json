@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:blocks/blockgencobble_bottom",
     "up" : "industrialupgrade:blocks/blockgencobble_top_active",
     "north" : "industrialupgrade:blocks/blockgencobble_main_active",
-    "east" : "industrialupgrade:blocks/blockgencobble_side_active",
-    "south" : "industrialupgrade:blocks/blockgencobble_side2",
-    "west" : "industrialupgrade:blocks/blockgencobble_side1_active"
+    "east" : "industrialupgrade:blocks/blockgencobble_left_active",
+    "south" : "industrialupgrade:blocks/blockgencobble_bottom",
+    "west" : "industrialupgrade:blocks/blockgencobble_right_active"
   }
 }

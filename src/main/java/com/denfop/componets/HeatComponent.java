@@ -1,13 +1,19 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
+import com.denfop.api.cool.CoolTick;
+import com.denfop.api.cool.ICoolSource;
+import com.denfop.api.cool.ICoolTile;
+import com.denfop.api.heat.HeatTick;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatSink;
 import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
+import com.denfop.api.heat.Path;
 import com.denfop.api.heat.event.HeatTileLoadEvent;
 import com.denfop.api.heat.event.HeatTileUnloadEvent;
+import com.denfop.api.sytem.InfoTile;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -26,7 +32,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -123,6 +133,11 @@ public class HeatComponent extends AbstractComponent {
 
 
     }
+    Map<EnumFacing, IHeatTile> energyHeatConductorMap = new HashMap<>();
+
+    List<InfoTile<IHeatTile>> validHeatReceivers = new LinkedList<>();
+
+
     public CustomPacketBuffer updateComponent() {
         final CustomPacketBuffer packet = super.updateComponent();
         packet.writeDouble(this.capacity);
@@ -132,6 +147,7 @@ public class HeatComponent extends AbstractComponent {
         packet.writeBoolean(this.auto);
         return packet;
     }
+
     public NBTTagCompound writeToNbt() {
         NBTTagCompound ret = new NBTTagCompound();
         ret.setDouble("storage", this.storage);
@@ -154,6 +170,9 @@ public class HeatComponent extends AbstractComponent {
 
 
                 this.createDelegate();
+
+                this.validHeatReceivers.clear();
+                this.energyHeatConductorMap.clear();
                 MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.parent.getWorld()));
             }
 
@@ -186,7 +205,7 @@ public class HeatComponent extends AbstractComponent {
         return new ItemStack(IUItem.autoheater);
     }
 
-    private void createDelegate() {
+    public void createDelegate() {
         if (this.delegate != null) {
         } else {
             assert !this.sinkDirections.isEmpty() || !this.sourceDirections.isEmpty();
@@ -280,10 +299,8 @@ public class HeatComponent extends AbstractComponent {
     public double addEnergy(double amount) {
 
         this.storage += amount;
-        if (this.world != null) {
-            if (rand.nextInt(2) == 1) {
-                this.storage += 1 * this.coef;
-            }
+        if (this.coef != 0 && rand.nextInt(2) == 1) {
+            this.storage += 7 * this.coef;
         }
         this.storage = Math.min(this.storage, this.capacity);
         this.storage = Math.max(this.storage, 0);
@@ -391,7 +408,8 @@ public class HeatComponent extends AbstractComponent {
 
 
             assert !this.parent.getWorld().isRemote;
-
+            this.validHeatReceivers.clear();
+            this.energyHeatConductorMap.clear();
             MinecraftForge.EVENT_BUS.post(new HeatTileLoadEvent(this.delegate, this.world));
         }
 
@@ -431,6 +449,11 @@ public class HeatComponent extends AbstractComponent {
         public boolean acceptsHeatFrom(IHeatEmitter emitter, EnumFacing dir) {
             return HeatComponent.this.sinkDirections.contains(dir);
         }
+        List<IHeatSource> list = new LinkedList<>();
+        @Override
+        public List<IHeatSource> getEnergyTickList() {
+            return list;
+        }
 
         @Override
         public @NotNull BlockPos getBlockPos() {
@@ -441,7 +464,59 @@ public class HeatComponent extends AbstractComponent {
 
             return HeatComponent.this.capacity;
         }
+        private long id;
+        public long getIdNetwork() {
+            return this.id;
+        }
 
+        int hashCodeSource;
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+
+        public void setId(final long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
+            if (!this.getWorld().isRemote) {
+                energyHeatConductorMap.put(dir, tile);
+                validHeatReceivers.add(new InfoTile<>(tile,dir.getOpposite()));
+            }
+        }
+
+        @Override
+        public void RemoveHeatTile(final IHeatTile tile, final EnumFacing dir) {
+            if (!this.getWorld().isRemote) {
+                energyHeatConductorMap.remove(dir);
+                final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
+                while (iter.hasNext()){
+                    InfoTile<IHeatTile> tileInfoTile = iter.next();
+                    if (tileInfoTile.tileEntity == tile) {
+                        iter.remove();
+                        break;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public Map<EnumFacing, IHeatTile> getHeatTiles() {
+            return energyHeatConductorMap;
+        }
+        @Override
+        public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
+            return validHeatReceivers;
+        }
         public void receivedHeat(double amount) {
             this.setHeatStored(amount);
 
@@ -491,7 +566,59 @@ public class HeatComponent extends AbstractComponent {
 
         public void drawHeat(double amount) {
         }
+        private long id;
+        public long getIdNetwork() {
+            return this.id;
+        }
 
+        int hashCodeSource;
+
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+
+        public void setId(final long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void AddHeatTile(final IHeatTile tile, final EnumFacing dir) {
+            if (!this.getWorld().isRemote) {
+                energyHeatConductorMap.put(dir, tile);
+                validHeatReceivers.add(new InfoTile<>(tile,dir.getOpposite()));
+            }
+        }
+
+        @Override
+        public void RemoveHeatTile(final IHeatTile tile, final EnumFacing dir) {
+            if (!this.getWorld().isRemote) {
+                energyHeatConductorMap.remove(dir);
+                final Iterator<InfoTile<IHeatTile>> iter = validHeatReceivers.iterator();
+                while (iter.hasNext()){
+                    InfoTile<IHeatTile> tileInfoTile = iter.next();
+                    if (tileInfoTile.tileEntity == tile) {
+                        iter.remove();
+                        break;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public Map<EnumFacing, IHeatTile> getHeatTiles() {
+            return energyHeatConductorMap;
+        }
+        @Override
+        public List<InfoTile<IHeatTile>> getHeatValidReceivers() {
+            return validHeatReceivers;
+        }
         @Override
         public boolean isAllowed() {
             return HeatComponent.this.allow;

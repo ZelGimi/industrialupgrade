@@ -3,9 +3,19 @@ package com.simplequarries;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.api.gui.ImageScreen;
+import com.denfop.api.gui.ItemStackImage;
+import com.denfop.componets.ComponentButton;
+import com.denfop.componets.ComponentSoundButton;
 import com.denfop.gui.AdvArea;
 import com.denfop.gui.GuiIU;
 import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.tiles.base.TileMultiMatter;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
@@ -13,8 +23,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -23,12 +31,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,37 +45,145 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
     public GuiBaseQuarry(ContainerBaseQuarry container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-        this.xSize = 229;
+        this.xSize = 250;
+        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addComponent(new GuiComponent(this, 175, 106, EnumTypeComponent.BIG_FRAME,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 145, 5, EnumTypeComponent.EXP_BUTTON,
+                        new Component<>(new ComponentButton(container.base, 40, Localization.translate("sq.add_experience") +
+                                "\n" + "EXP: " + ModUtils.getString(this.container.base.exp.getEnergy()) + "/" + ModUtils.getString(this.container.base.exp.getCapacity())))
+                )
+        );
+
+        this.addComponent(new GuiComponent(this, 208, 31, EnumTypeComponent.FRAME,
+                        new Component<>(new ComponentButton(container.base, 50, "") {
+                            @Override
+                            public String getText() {
+                                return Localization.translate("button.rf") + "\n" + Localization.translate(container.base.vein_need
+                                        ? "iu.simplyquarries.info5"
+                                        : "iu.simplyquarries.info4");
+                            }
+                        })
+                )
+        );
+        this.elements.add(new ItemStackImage(this, 212,
+                35, () -> new ItemStack(IUItem.heavyore, 1, 8)
+        ) {
+            @Override
+            public void drawForeground(final int mouseX, final int mouseY) {
+
+            }
+        });
+        this.elements.add(new ImageScreen(this, 180, 9, 24, 12));
+        this.addComponent(new GuiComponent(this, 179, 25, EnumTypeComponent.PLUS_BUTTON,
+                        new Component<>(new ComponentButton(container.base, 0, "") {
+                            @Override
+                            public String getText() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                return "+" + (shift ? 10 : 1);
+                            }
+
+                            @Override
+                            public void ClickEvent() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                int event = (shift ? 1 : 0);
+                                new PacketUpdateServerTile(getEntityBlock(), event);
+                            }
+                        })
+                )
+        );
+        this.addComponent(new GuiComponent(this, 193, 25, EnumTypeComponent.MINUS_BUTTON,
+                        new Component<>(new ComponentButton(container.base, 0, "") {
+                            @Override
+                            public String getText() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                return "-" + (shift ? 10 : 1);
+                            }
+
+                            @Override
+                            public void ClickEvent() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                int event = 10 + (shift ? 1 : 0);
+                                new PacketUpdateServerTile(getEntityBlock(), event);
+                            }
+                        })
+                )
+        );
+
+        this.elements.add(new ImageScreen(this, 180, 39, 24, 12));
+        this.addComponent(new GuiComponent(this, 179, 55, EnumTypeComponent.PLUS_BUTTON,
+                        new Component<>(new ComponentButton(container.base, 0, "") {
+                            @Override
+                            public String getText() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                return "+" + (shift ? 10 : 1);
+                            }
+
+                            @Override
+                            public void ClickEvent() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                int event = 20 +(shift ? 1 : 0);
+                                new PacketUpdateServerTile(getEntityBlock(), event);
+                            }
+                        })
+                )
+        );
+        this.addComponent(new GuiComponent(this, 193, 55, EnumTypeComponent.MINUS_BUTTON,
+                        new Component<>(new ComponentButton(container.base, 0, "") {
+                            @Override
+                            public String getText() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                return "-" + (shift ? 10 : 1);
+                            }
+
+                            @Override
+                            public void ClickEvent() {
+                                boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+                                int event = 30 + (shift ? 1 : 0);
+                                new PacketUpdateServerTile(getEntityBlock(), event);
+                            }
+                        })
+                )
+        );
+        this.addComponent(new GuiComponent(this, 213, 11, EnumTypeComponent.SOUND_BUTTON,
+                new Component<>(new ComponentSoundButton(this.container.base, 70, this.container.base))
+        ));
+        this.elements.add(new ImageScreen(this, 170, 69, 62, 34));
+        this.componentList.add(new GuiComponent(this, 143, 24, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 60, ""){
+                    @Override
+                    public String getText() {
+                        return ((TileBaseQuarry)this.getEntityBlock()).need_work ? Localization.translate("turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((TileBaseQuarry)this.getEntityBlock()).need_work;
+                    }
+                })
+        ));
+        this.addComponent(new GuiComponent(this, 145, 50, EnumTypeComponent.BUTTON1,
+                        new Component<>(new ComponentButton(container.base, 80,Localization.translate("iu.wind_change_side")))
+                )
+        );
+        this.addComponent(new GuiComponent(this, 166, 50, EnumTypeComponent.COLD,
+                        new Component<>(this.container.base.cold)
+                )
+        );
+        this.addComponent(new GuiComponent(this, 231, 114, EnumTypeComponent.ENERGY_HEIGHT,
+                        new Component<>(this.container.base.energy)
+                )
+        );
+        this.addComponent(new GuiComponent(this, 235, 60, EnumTypeComponent.QUANTUM_HEIGHT1,
+                        new Component<>(this.container.base.energy1)
+                )
+        );
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
-        if (mouseX >= 147 && mouseX <= 158 && mouseY >= 27 && mouseY <= 76) {
-            List<String> text = new ArrayList<>();
-            text.add(Localization.translate("gui.SuperSolarPanel.storage") + ": " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(
-                    this.container.base.energy.getCapacity()));
-            List<String> compatibleUpgrades = getStringList();
-            Iterator<String> var5 = compatibleUpgrades.iterator();
-            String itemstack;
-            while (var5.hasNext()) {
-                itemstack = var5.next();
-                text.add(itemstack);
-            }
-
-            this.drawTooltip(mouseX, mouseY, text);
-        } else if (mouseX >= 189 && mouseX <= 206 && mouseY >= 83 && mouseY <= 100) {
-            List<String> text = new ArrayList<>();
-            text.add(Localization.translate("button.rf"));
-            List<String> compatibleUpgrades = Collections.singletonList(Localization.translate(this.container.base.vein_need
-                    ? "iu.simplyquarries.info5"
-                    : "iu.simplyquarries.info4"));
-            Iterator<String> var5 = compatibleUpgrades.iterator();
-            String itemstack;
-            while (var5.hasNext()) {
-                itemstack = var5.next();
-                text.add(itemstack);
-            }
-            this.drawTooltip(mouseX, mouseY, text);
-        } else if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
+        if (mouseX >= 3 && mouseX <= 15 && mouseY >= 3 && mouseY <= 15) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.simplyquarries_info"));
             List<String> compatibleUpgrades = ListInformationUtils.quarry;
@@ -85,103 +198,40 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
         }
     }
 
-    protected void mouseClicked(int i, int j, int k) throws IOException {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
-        boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-        if (x >= 179 && x <= 189 && y >= 29 && y <= 39) {
-            new PacketUpdateServerTile(this.container.base, (shift ? 1 : 0));
-        }
-        if (x >= 206 && x <= 216 && y >= 29 && y <= 39) {
-            new PacketUpdateServerTile(this.container.base, 10 + (shift ? 1 : 0));
-        }
-        if (x >= 179 && x <= 189 && y >= 64 && y <= 74) {
-            new PacketUpdateServerTile(this.container.base, 20 + (shift ? 1 : 0));
-        }
-        if (x >= 206 && x <= 216 && y >= 64 && y <= 74) {
-            new PacketUpdateServerTile(this.container.base, 30 + (shift ? 1 : 0));
-        }
-        if (x >= 146 && x <= 160 && y >= 5 && y <= 23) {
-            new PacketUpdateServerTile(this.container.base, 40 + (shift ? 1 : 0));
-        }
-        if (x >= 189 && x <= 206 && y >= 83 && y <= 100) {
-            new PacketUpdateServerTile(this.container.base, 50);
-        }
-        if (x >= 209 && x <= 224 && y >= 86 && y <= 99) {
-            new PacketUpdateServerTile(this.container.base, 60);
-        }
-    }
-
-    private List<String> getStringList() {
-        List<String> lst = new ArrayList<>();
-        if (this.container.base != null) {
-            lst.add(Localization.translate("iu.machines_work_energy") + this.container.base.energyconsume + "EF/t");
-            if (this.container.base.blockpos != null) {
-                lst.add("X: " + this.container.base.blockpos.getX());
-                lst.add("Y: " + this.container.base.blockpos.getY());
-                lst.add("Z: " + this.container.base.blockpos.getZ());
-            } else {
-                lst.add("X: " + this.container.base.default_pos.getX());
-                lst.add("Y: " + this.container.base.default_pos.getY());
-                lst.add("Z: " + this.container.base.default_pos.getZ());
-
-            }
-        }
-        return lst;
-    }
 
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
+        super.drawForegroundLayer(mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
         handleUpgradeTooltip1(mouseX, mouseY);
         this.fontRenderer.drawString(TextFormatting.GREEN + "" + this.container.base.min_y, 190
                 , 12, ModUtils.convertRGBcolorToInt(217, 217, 217));
-        this.fontRenderer.drawString(TextFormatting.GREEN + "" + this.container.base.max_y, 190
-                , 48, ModUtils.convertRGBcolorToInt(217, 217, 217));
-        new AdvArea(this, 172, 27, 175, 75)
-                .withTooltip("EXP: " + ModUtils.getString(this.container.base.exp.getEnergy()) + "/" + ModUtils.getString(this.container.base.exp.getCapacity()))
-                .drawForeground(mouseX
-                        , mouseY);
-        new AdvArea(this, 163, 27, 167, 75)
-                .withTooltip("QE: " + ModUtils.getString(this.container.base.energy1.getEnergy()) + "/" + ModUtils.getString(this
-                        .container.base.energy1.getCapacity()))
-                .drawForeground(mouseX
-                        , mouseY);
-        String tooltip =
-                ModUtils.getString(this.container.base
-                        .cold
-                        .getEnergy()) + "°C" + "/" + ModUtils.getString(this.container.base.cold.getCapacity()) + "°C";
-        new AdvArea(this, 140, 62, 144, 76)
-                .withTooltip(tooltip)
-                .drawForeground(mouseX
-                        , mouseY);
-        new AdvArea(this, 209, 86, 224, 99).withTooltip(this.container.base.need_work ? Localization.translate("turn_off") :
-                Localization.translate("turn_on")).drawForeground(mouseX, mouseY);
-        new AdvArea(this, 146, 5, 160, 23).withTooltip(Localization.translate("sq.add_experience")).drawForeground(mouseX
-                , mouseY);
-        boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-        if (!shift) {
-            new AdvArea(this, 179, 29, 189, 39).withTooltip("+1").drawForeground(mouseX
-                    , mouseY);
-            new AdvArea(this, 179, 64, 189, 74).withTooltip("+1").drawForeground(mouseX
-                    , mouseY);
-            new AdvArea(this, 206, 29, 216, 39).withTooltip("-1").drawForeground(mouseX
-                    , mouseY);
-            new AdvArea(this, 206, 64, 216, 74).withTooltip("-1").drawForeground(mouseX
-                    , mouseY);
+        if (this.container.base.blockpos != null) {
+            this.fontRenderer.drawString(TextFormatting.GREEN + "X: " +  this.container.base.blockpos.getX(), 175
+                    , 72, ModUtils.convertRGBcolorToInt(217, 217, 217));
+            this.fontRenderer.drawString(TextFormatting.GREEN + "Y: " +  this.container.base.blockpos.getY(), 175
+                    , 82, ModUtils.convertRGBcolorToInt(217, 217, 217));
+            this.fontRenderer.drawString(TextFormatting.GREEN + "Z: " +  this.container.base.blockpos.getZ(), 175
+                    , 92, ModUtils.convertRGBcolorToInt(217, 217, 217));
         } else {
-            new AdvArea(this, 179, 29, 189, 39).withTooltip("+10").drawForeground(mouseX
-                    , mouseY);
-            new AdvArea(this, 179, 64, 189, 74).withTooltip("+10").drawForeground(mouseX
-                    , mouseY);
-            new AdvArea(this, 206, 29, 216, 39).withTooltip("-10").drawForeground(mouseX
-                    , mouseY);
-            new AdvArea(this, 206, 64, 216, 74).withTooltip("-10").drawForeground(mouseX
-                    , mouseY);
+            this.fontRenderer.drawString(TextFormatting.GREEN + "X: " +  this.container.base.default_pos.getX(), 175
+                    , 72, ModUtils.convertRGBcolorToInt(217, 217, 217));
+            this.fontRenderer.drawString(TextFormatting.GREEN + "Y: " +  this.container.base.default_pos.getY(), 175
+                    , 82, ModUtils.convertRGBcolorToInt(217, 217, 217));
+            this.fontRenderer.drawString(TextFormatting.GREEN + "Z: " +  this.container.base.default_pos.getZ(), 175
+                    , 92, ModUtils.convertRGBcolorToInt(217, 217, 217));
         }
+        this.fontRenderer.drawString(TextFormatting.GREEN + ""+ (int)this.container.base.energyconsume , 212
+                , 77, ModUtils.convertRGBcolorToInt(217, 217, 217));
+        this.fontRenderer.drawString(TextFormatting.GREEN + "EF/t" , 212
+                , 87, ModUtils.convertRGBcolorToInt(217, 217, 217));
+        this.fontRenderer.drawString(TextFormatting.GREEN + "" + this.container.base.max_y, 190
+                , 42, ModUtils.convertRGBcolorToInt(217, 217, 217));
+
+
+
+
+
     }
 
     private void handleUpgradeTooltip1(int mouseX, int mouseY) {
@@ -235,20 +285,11 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
         int h = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
-        // drawTexturedModalRect(h, k + 112, 0, 112, 176, this.ySize - 112);
-        this.drawBackground();
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int chargeLevel = (int) (48.0F * this.container.base.energy.getEnergy()
-                / this.container.base.energy.getCapacity());
-        int exp = (int) (48.0F * this.container.base.exp.getEnergy()
-                / this.container.base.exp.getCapacity());
-        int chargeLevel1 = (int) (48.0F * this.container.base.energy1.getEnergy()
-                / this.container.base.energy1.getCapacity());
-        int heat = (int) (14.0F * this.container.base.cold.getFillRatio());
+
+
         if (this.container.base.blockpos != null) {
             final double[][] colors = new double[16][16];
             for (int i = 0; i < 16; i++) {
@@ -271,66 +312,11 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
             }
         }
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        if (heat >= 0) {
-            drawTexturedModalRect(
-                    h + 140, k + 62 + 14 - heat, 194, 219 + 14 - heat, 4,
-                    heat
-            );
-
-        }
-        if (this.container.base.need_work) {
-            this.drawTexturedModalRect(h + 209, k + 86, 233, 53, 239 - 224, 84 - 70);
-
-        }
-        if (exp > 0) {
-            drawTexturedModalRect(h + 172, k + 28 + 48 - exp, 194,
-                    171 + 48 - exp, 3, exp
-            );
-        }
-        if (chargeLevel1 > 0) {
-            drawTexturedModalRect(h + 164, k + 28 + 48 - chargeLevel1, 200,
-                    171 + 48 - chargeLevel1, 12, chargeLevel1
-            );
-        }
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(h + 140 + 1 + 5 + 1, k + 28 + 48 - chargeLevel, 176,
-                    171 + 48 - chargeLevel, 12, chargeLevel
-            );
-        }
-        int y1 = 6;
-        for (int i = 0; i < this.container.base.index; i++) {
-            drawTexturedModalRect(h + 6, k + y1, 174,
-                    220, 16, 16
-            );
-            y1 += 18;
-        }
         this.mc.getTextureManager()
                 .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        RenderHelper.enableGUIStandardItemLighting();
-        GL11.glPushMatrix();
-        GL11.glColor4f(0.1F, 1, 0.1F, 1);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GlStateManager.disableLighting();
-        GlStateManager.enableDepth();
-        this.zLevel = 100.0F;
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        ItemStack stack;
-        stack = new ItemStack(IUItem.heavyore, 1, 8);
-        itemRender.renderItemAndEffectIntoGUI(
-                stack,
-                h + 190,
-                k + 84
-        );
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GlStateManager.enableLighting();
 
-        RenderHelper.enableStandardItemLighting();
-        GL11.glColor4f(0.1F, 1, 0.1F, 1);
-        GL11.glPopMatrix();
+
 
     }
 
@@ -340,7 +326,7 @@ public class GuiBaseQuarry extends GuiIU<ContainerBaseQuarry> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(SQConstants.MOD_ID, "textures/gui/GUIQuantumQuerry.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

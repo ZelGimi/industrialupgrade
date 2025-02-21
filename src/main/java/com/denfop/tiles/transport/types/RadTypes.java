@@ -64,6 +64,10 @@ public enum RadTypes implements ISubEnum, ICableItem {
         return "radcable";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     @Override
     public ResourceLocation getRecourse() {

@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
+  "parent" : "block/cube_all",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/imp_compressor_side",
-    "down" : "industrialupgrade:blocks/gas_reactor/imp_casing",
-    "up" : "industrialupgrade:blocks/gas_reactor/imp_compressor_top",
-    "north" : "industrialupgrade:blocks/gas_reactor/imp_compressor_main",
-    "east" : "industrialupgrade:blocks/gas_reactor/imp_compressor_side",
-    "south" : "industrialupgrade:blocks/gas_reactor/imp_casing",
-    "west" : "industrialupgrade:blocks/gas_reactor/imp_compressor_side"
+    "all" : "industrialupgrade:blocks/gas_reactor/compressor/imp_compressor_side"
   }
 }

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/photonic_redstone_generator_active_main",
+    "down" : "industrialupgrade:blocks/photonic_redstone_generator_sides",
+    "up" : "industrialupgrade:blocks/photonic_redstone_generator_sides",
+    "north" : "industrialupgrade:blocks/photonic_redstone_generator_active_main",
+    "east" : "industrialupgrade:blocks/photonic_redstone_generator_active_left-right",
+    "south" : "industrialupgrade:blocks/photonic_redstone_generator_sides",
+    "west" : "industrialupgrade:blocks/photonic_redstone_generator_active_left-right"
+  }
+}

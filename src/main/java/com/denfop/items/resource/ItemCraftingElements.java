@@ -3,25 +3,35 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.blocks.ISubEnum;
+import com.denfop.items.ItemBaseCircuit;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Locale;
 
 public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Types> implements IModelRegister {
@@ -35,6 +45,31 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
         IUCore.proxy.addIModelRegister(this);
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(
+            final ItemStack p_77624_1_,
+            @Nullable final World p_77624_2_,
+            final List<String> p_77624_3_,
+            final ITooltipFlag p_77624_4_
+    ) {
+        if (p_77624_1_.getItemDamage() == 143) {
+            final NBTTagCompound nbt = ModUtils.nbt(p_77624_1_);
+            NBTTagList nbtTagList = nbt.getTagList("Items", 10);
+            if (!nbtTagList.hasNoTags()) {
+                p_77624_3_.add(Localization.translate("multiblock." + nbt.getString("name")));
+                p_77624_3_.add("Generation: " + nbt.getInteger("generation") + " EF");
+                p_77624_3_.add("Radiation: " + nbt.getInteger("rad") + " ☢");
+
+                for (int i = 0; i < nbtTagList.tagCount(); ++i) {
+                    NBTTagCompound contentTag = nbtTagList.getCompoundTagAt(i);
+                    ItemStack stack = new ItemStack(contentTag);
+                    p_77624_3_.add(TextFormatting.GREEN + "" + stack.getCount() + "x " + stack.getDisplayName());
+                }
+            }
+        }
+        super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+    }
 
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
@@ -74,14 +109,40 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
 
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, final int meta, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(
-                        Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(),
-                        null
-                )
-        );
+        if (meta >= 272 && meta <= 273) {
+            ModelLoader.setCustomMeshDefinition(this, stack -> {
+                final NBTTagCompound nbt = ModUtils.nbt(stack);
+                int level = nbt.getInteger("level");
+                switch (stack.getItemDamage()){
+                    case 272:
+                        level = level - 1;
+                        break;
+                    case 273:
+                        level = level - 3;
+                        break;
+                }
+                return new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types
+                        .getFromID(stack.getItemDamage()).getName() + (level == 1 ? "_1" : ""),
+                        null);
+
+            });
+            String[] mode = {"", "_1"};
+            for (final String s : mode) {
+                ModelBakery.registerItemVariants(this,
+                        new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+s,
+                                null));
+
+            }
+        } else {
+            ModelLoader.setCustomModelResourceLocation(
+                    this,
+                    meta,
+                    new ModelResourceLocation(
+                            Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(),
+                            null
+                    )
+            );
+        }
     }
 
     public enum Types implements ISubEnum {
@@ -545,6 +606,326 @@ public class ItemCraftingElements extends ItemSubTypes<ItemCraftingElements.Type
         crafting_451_element(),
         crafting_452_element(),
         crafting_453_element(),
+        crafting_454_element(),
+        crafting_455_element(),
+        crafting_456_element(),
+        crafting_457_element(),
+        crafting_458_element(),
+        crafting_459_element(),
+        crafting_460_element(),
+        crafting_461_element(),
+        crafting_462_element(),
+        crafting_463_element(),
+        crafting_464_element(),
+        crafting_465_element(),
+        crafting_466_element(),
+        crafting_467_element(),
+        crafting_468_element(),
+        crafting_469_element(),
+        crafting_470_element(),
+        crafting_471_element(),
+        crafting_472_element(),
+        crafting_473_element(),
+        crafting_474_element(),
+        crafting_475_element(),
+
+        crafting_476_element(),
+        crafting_477_element(),
+        crafting_478_element(),
+        crafting_479_element(),
+        crafting_480_element(),
+        crafting_481_element(),
+        crafting_482_element(),
+        crafting_483_element(),
+        crafting_484_element(),
+        crafting_485_element(),
+        crafting_486_element(),
+        crafting_487_element(),
+        crafting_488_element(),
+        crafting_489_element(),
+        crafting_490_element(),
+        crafting_491_element(),
+        crafting_492_element(),
+        crafting_493_element(),
+        crafting_494_element(),
+        crafting_495_element(),
+        crafting_496_element(),
+        crafting_497_element(),
+
+        crafting_498_element(),
+        crafting_499_element(),
+        crafting_500_element(),
+        crafting_501_element(),
+        crafting_502_element(),
+        crafting_503_element(),
+        crafting_504_element(),
+        crafting_505_element(),
+        crafting_506_element(),
+        crafting_507_element(),
+        crafting_508_element(),
+        crafting_509_element(),
+        crafting_510_element(),
+        crafting_511_element(),
+        crafting_512_element(),
+        crafting_513_element(),
+        crafting_514_element(),
+        crafting_515_element(),
+        crafting_516_element(),
+        crafting_517_element(),
+        crafting_518_element(),
+        crafting_519_element(),
+        crafting_520_element(),
+        crafting_521_element(),
+        crafting_522_element(),
+        crafting_523_element(),
+        crafting_524_element(),
+        crafting_525_element(),
+        crafting_526_element(),
+        crafting_527_element(),
+        crafting_528_element(),
+        crafting_529_element(),
+        crafting_530_element(),
+        crafting_531_element(),
+        crafting_532_element(),
+        crafting_533_element(),
+        crafting_534_element(),
+        crafting_535_element(),
+        crafting_536_element(),
+        crafting_537_element(),
+        crafting_538_element(),
+        crafting_539_element(),
+        crafting_540_element(),
+        crafting_541_element(),
+        crafting_542_element(),
+        crafting_543_element(),
+        crafting_544_element(),
+        crafting_545_element(),
+        crafting_546_element(),
+        crafting_547_element(),
+        crafting_548_element(),
+        crafting_549_element(),
+        crafting_550_element(),
+        crafting_551_element(),
+        crafting_552_element(),
+        crafting_553_element(),
+        crafting_554_element(),
+        crafting_555_element(),
+        crafting_556_element(),
+        crafting_557_element(),
+        crafting_558_element(),
+        crafting_559_element(),
+        crafting_560_element(),
+        crafting_561_element(),
+        crafting_562_element(),
+        crafting_563_element(),
+        crafting_564_element(),
+        crafting_565_element(),
+        crafting_566_element(),
+        crafting_567_element(),
+        crafting_568_element(),
+        crafting_569_element(),
+        crafting_570_element(),
+        crafting_571_element(),
+        crafting_572_element(),
+        crafting_573_element(),
+        crafting_574_element(),
+        crafting_575_element(),
+        crafting_576_element(),
+        crafting_577_element(),
+        crafting_578_element(),
+        crafting_579_element(),
+        crafting_580_element(),
+        crafting_581_element(),
+        crafting_582_element(),
+        crafting_583_element(),
+        crafting_584_element(),
+        crafting_585_element(),
+        crafting_586_element(),
+        crafting_587_element(),
+        crafting_588_element(),
+        crafting_589_element(),
+        crafting_590_element(),
+        crafting_591_element(),
+        crafting_592_element(),
+        crafting_593_element(),
+        crafting_594_element(),
+        crafting_595_element(),
+        crafting_596_element(),
+        crafting_597_element(),
+        crafting_598_element(),
+        crafting_599_element(),
+        crafting_600_element(),
+        crafting_601_element(),
+        crafting_602_element(),
+        crafting_603_element(),
+        crafting_604_element(),
+        crafting_605_element(),
+        crafting_606_element(),
+        crafting_607_element(),
+        crafting_608_element(),
+        crafting_609_element(),
+        crafting_610_element(),
+        crafting_611_element(),
+        crafting_612_element(),
+        crafting_613_element(),
+        crafting_614_element(),
+        crafting_615_element(),
+        crafting_616_element(),
+        crafting_617_element(),
+        crafting_618_element(),
+        crafting_619_element(),
+        crafting_620_element(),
+        crafting_621_element(),
+        crafting_622_element(),
+        crafting_623_element(),
+        crafting_624_element(),
+        crafting_625_element(),
+        crafting_626_element(),
+        crafting_627_element(),
+        crafting_628_element(),
+        crafting_629_element(),
+        crafting_630_element(),
+        crafting_631_element(),
+        crafting_632_element(),
+        crafting_633_element(),
+        crafting_634_element(),
+        crafting_635_element(),
+
+        crafting_636_element(),
+        crafting_637_element(),
+        crafting_638_element(),
+        crafting_639_element(),
+        crafting_640_element(),
+        crafting_641_element(),
+        crafting_642_element(),
+        crafting_643_element(),
+        crafting_644_element(),
+        crafting_645_element(),
+        crafting_646_element(),
+        crafting_647_element(),
+        crafting_648_element(),
+        crafting_649_element(),
+
+        crafting_650_element(),
+        crafting_651_element(),
+        crafting_652_element(),
+        crafting_653_element(),
+        crafting_654_element(),
+        crafting_655_element(),
+        crafting_656_element(),
+        crafting_657_element(),
+        crafting_658_element(),
+        crafting_659_element(),
+        crafting_660_element(),
+        crafting_661_element(),
+        crafting_662_element(),
+        crafting_663_element(),
+        crafting_664_element(),
+        crafting_665_element(),
+        crafting_666_element(),
+        crafting_667_element(),
+        crafting_668_element(),
+        crafting_669_element(),
+        crafting_670_element(),
+        crafting_671_element(),
+        crafting_672_element(),
+        crafting_673_element(),
+        crafting_674_element(),
+        crafting_675_element(),
+        crafting_676_element(),
+        crafting_677_element(),
+        crafting_678_element(),
+        crafting_679_element(),
+        crafting_680_element(),
+        crafting_681_element(),
+        crafting_682_element(),
+        crafting_683_element(),
+        crafting_684_element(),
+        crafting_685_element(),
+        crafting_686_element(),
+        crafting_687_element(),
+        crafting_688_element(),
+        crafting_689_element(),
+        crafting_690_element(),
+        crafting_691_element(),
+        crafting_692_element(),
+        crafting_693_element(),
+        crafting_694_element(),
+        crafting_695_element(),
+        crafting_696_element(),
+        crafting_697_element(),
+        crafting_698_element(),
+        crafting_699_element(),
+        crafting_700_element(),
+        crafting_701_element(),
+        crafting_702_element(),
+        crafting_703_element(),
+        crafting_704_element(),
+        crafting_705_element(),
+        crafting_706_element(),
+        crafting_707_element(),
+        crafting_708_element(),
+        crafting_709_element(),
+        crafting_710_element(),
+        crafting_711_element(),
+        crafting_712_element(),
+        crafting_713_element(),
+        crafting_714_element(),
+        crafting_715_element(),
+        crafting_716_element(),
+        crafting_717_element(),
+        crafting_718_element(),
+        crafting_719_element(),
+        crafting_720_element(),
+        crafting_721_element(),
+        crafting_722_element(),
+        crafting_723_element(),
+        crafting_724_element(),
+        crafting_725_element(),
+        crafting_726_element(),
+        crafting_727_element(),
+        crafting_728_element(),
+        crafting_729_element(),
+        crafting_730_element(),
+        crafting_731_element(),
+        crafting_732_element(),
+        crafting_733_element(),
+        crafting_734_element(),
+        crafting_735_element(),
+        crafting_736_element(),
+        crafting_737_element(),
+        crafting_738_element(),
+        crafting_739_element(),
+        crafting_740_element(),
+        crafting_741_element(),
+        crafting_742_element(),
+        crafting_743_element(),
+        crafting_744_element(),
+        crafting_745_element(),
+        crafting_746_element(),
+        crafting_747_element(),
+        crafting_748_element(),
+        crafting_749_element(),
+        crafting_750_element(),
+        crafting_751_element(),
+        crafting_752_element(),
+        crafting_753_element(),
+        crafting_754_element(),
+        crafting_755_element(),
+        crafting_756_element(),
+        crafting_757_element(),
+        crafting_758_element(),
+        crafting_759_element(),
+        crafting_760_element(),
+        crafting_761_element(),
+        crafting_762_element(),
+        crafting_763_element(),
+        crafting_764_element(),
+        crafting_765_element(),
+        crafting_766_element(),
+        crafting_767_element(),
+        crafting_768_element(),
+
         ;
 
         private final String name;

@@ -1,10 +1,10 @@
 package com.denfop.recipe;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+
+import java.util.List;
 
 public class InputHandler implements IInputHandler {
 
@@ -16,27 +16,51 @@ public class InputHandler implements IInputHandler {
     }
 
     @Override
+    public IInputItemStack getInput(final ItemStack[] var1) {
+        return new InputItemStacks(var1);
+    }
+
+
+    @Override
     public IInputItemStack getInput(final Object var1) {
-        if(var1 instanceof ItemStack)
-            return this.getInput((ItemStack)var1);
-        if(var1 instanceof Fluid)
-            return this.getInput((Fluid)var1);
-        if(var1 instanceof String)
-            return this.getInput((String)var1);
-        if(var1 instanceof Item)
+        if (var1 instanceof ItemStack) {
+            return this.getInput((ItemStack) var1);
+        }
+        if (var1 instanceof ItemStack[]) {
+            return this.getInput((ItemStack[]) var1);
+        }
+        if (var1 instanceof Fluid) {
+            return this.getInput((Fluid) var1);
+        }
+        if (var1 instanceof String) {
+            return this.getInput((String) var1);
+        }
+        if (var1 instanceof Item) {
             return this.getInput(new ItemStack((Item) var1));
+        }
+        if (var1 instanceof List) {
+            List<?> list = (List<?>) var1;
+            if (list.size() == 1) {
+                return this.getInput(list.get(0));
+            }
+        }
         return null;
     }
+
     @Override
     public IInputItemStack getInput(final Object var1, int i) {
-        if(var1 instanceof ItemStack)
-            return this.getInput((ItemStack)var1,i);
-        if(var1 instanceof Fluid)
-            return this.getInput((Fluid)var1,i);
-        if(var1 instanceof String)
-            return this.getInput((String)var1,i);
+        if (var1 instanceof ItemStack) {
+            return this.getInput((ItemStack) var1, i);
+        }
+        if (var1 instanceof Fluid) {
+            return this.getInput((Fluid) var1, i);
+        }
+        if (var1 instanceof String) {
+            return this.getInput((String) var1, i);
+        }
         return null;
     }
+
     public IInputItemStack getInput(ItemStack stack, int amount) {
         return new InputItemStack(stack, amount);
     }

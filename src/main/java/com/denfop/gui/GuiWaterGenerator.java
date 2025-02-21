@@ -3,6 +3,10 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerWaterGenerator;
 import net.minecraft.util.ResourceLocation;
@@ -10,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiWaterGenerator extends GuiCore<ContainerWaterGenerator> {
+public class GuiWaterGenerator extends GuiIU<ContainerWaterGenerator> {
 
     public final ContainerWaterGenerator container;
     public final String progressLabel;
@@ -22,6 +26,9 @@ public class GuiWaterGenerator extends GuiCore<ContainerWaterGenerator> {
         this.progressLabel = Localization.translate("Matter.gui.info.progress");
         this.amplifierLabel = Localization.translate("Matter.gui.info.amplifier");
         addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
+        this.componentList.add(new GuiComponent(this, 117, 41, EnumTypeComponent.FLUID_PART,
+                new Component<>(new ComponentEmpty())
+        ));
     }
 
 
@@ -40,7 +47,7 @@ public class GuiWaterGenerator extends GuiCore<ContainerWaterGenerator> {
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

@@ -307,7 +307,7 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, IMod
             final ItemStack var4 = new ItemStack(this, 1);
             ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             var3.add(var4);
-            var3.add(new ItemStack(this, 1, 27));
+            var3.add(new ItemStack(this, 1));
         }
     }
 
@@ -451,6 +451,12 @@ public class ItemAdvJetpack extends ItemArmorEnergy implements IEnergyItem, IMod
 
     public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
         return 0;
+    }
+
+
+    @Override
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.JETPACK.list;
     }
 
 

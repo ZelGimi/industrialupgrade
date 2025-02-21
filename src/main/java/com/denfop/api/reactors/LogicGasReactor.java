@@ -1,7 +1,6 @@
 package com.denfop.api.reactors;
 
 import com.denfop.blocks.FluidName;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 public class LogicGasReactor extends LogicReactor {
@@ -14,37 +13,45 @@ public class LogicGasReactor extends LogicReactor {
         this.gasReactor = advReactor;
     }
 
-    public void setTemp_heat(final double temp_heat) {
-        this.temp_heat = temp_heat;
-    }
-
     public double getTemp_heat() {
         return temp_heat;
     }
 
+    public void setTemp_heat(final double temp_heat) {
+        this.temp_heat = temp_heat;
+    }
+
     @Override
     public void onTick() {
-        final double log = (Math.log(this.gasReactor.getTemperatureRefrigerator()) / Math.log(4));
-        double temp = this.generation * 1.1;
+        double log = (Math.log(this.gasReactor.getTemperatureRefrigerator()) / Math.log(4));
+        if (log == Double.NEGATIVE_INFINITY) {
+            log = 1;
+        }
+        double temp = this.generation * 1.175;
         if (this.rodsList.isEmpty()) {
 
             if (this.temp_heat >= 1) {
                 temp_heat -= rand.nextInt((int) this.temp_heat);
             }
-        } else if (log > 0 && this.gasReactor.getHeliumTank().getFluidAmount() > 5 * log) {
+            this.reactor.setOutput(0);
+        } else if (log > 0 && this.gasReactor.getHeliumTank().getFluidAmount() >= 5 * log) {
             super.onTick();
+            if (!this.gasReactor.isFull()) {
+                return;
+            }
             this.gasReactor.getHeliumTank().drain((int) (5 * log), true);
-            if (temp_heat < getMaxHeat()) {
+            if (temp_heat <= getMaxHeat()) {
                 temp_heat += rand.nextInt(Math.max((int) (getMaxHeat() - temp_heat), 4));
                 if (temp_heat > getMaxHeat()) {
                     temp_heat = getMaxHeat();
                 }
             }
-            if (rand.nextInt(100) >= 20) {
+            if (rand.nextInt(100) >= 80) {
                 this.gasReactor.addHeliumToRegenerate((int) (5 * log));
             } else {
                 this.gasReactor.addHeliumToRegenerate((int) (4 * log));
             }
+
             for (int j = 0; j < this.gasReactor.getLengthCompressors(); j++) {
                 final int energy = this.gasReactor.getEnergyCompressor(j);
                 if (temp >= energy) {
@@ -62,6 +69,7 @@ public class LogicGasReactor extends LogicReactor {
                     ), true);
                     this.gasReactor.addHeliumToRegenerate(-col * this.gasReactor.getPressure(j));
                 }
+
             }
             if (this.gasReactor.hasPump()) {
                 for (int j = 0; j < this.gasReactor.getLengthPump(); j++) {
@@ -77,22 +85,23 @@ public class LogicGasReactor extends LogicReactor {
                     final int power = this.gasReactor.getPowerPump(j);
                     if (this.gasReactor
                             .getHydrogenTank(j)
-                            .getFluidAmount() > 2 * power && this.gasReactor
+                            .getFluidAmount() + 2 * power <= this.gasReactor
+                            .getHydrogenTank(j)
+                            .getCapacity() && this.gasReactor
                             .getOxygenTank(j)
-                            .getFluidAmount() > power) {
+                            .getFluidAmount() + power <= this.gasReactor
+                            .getOxygenTank(j)
+                            .getCapacity()) {
                         if (this.gasReactor
                                 .getWaterTank(j)
-                                .getFluidAmount() + 2 * power < this.gasReactor
-                                .getWaterTank(j)
-                                .getCapacity()) {
-                            this.gasReactor.getWaterTank(j).fill(new FluidStack(
-                                    FluidRegistry.WATER,
+                                .getFluidAmount() > 2 * power) {
+                            this.gasReactor.getWaterTank(j).drain(
                                     2 * power
-                            ), true);
+                                    , true);
                             this.gasReactor
-                                    .getHydrogenTank(j).drain(2 * power, true);
+                                    .getHydrogenTank(j).fill(new FluidStack(FluidName.fluidhyd.getInstance(), 2 * power), true);
                             this.gasReactor
-                                    .getOxygenTank(j).drain(power, true);
+                                    .getOxygenTank(j).fill(new FluidStack(FluidName.fluidoxy.getInstance(), power), true);
                             this.gasReactor.damagePump(j);
                         }
                     }
@@ -127,17 +136,23 @@ public class LogicGasReactor extends LogicReactor {
                     }
                 }
             }
+            if (temp < 0) {
+                temp = 0;
+            }
+            this.gasReactor.setOutput(temp);
         } else {
             if (!this.rodsList.isEmpty()) {
                 temp_heat += rand.nextInt(200);
+                if (temp_heat > this.gasReactor.getMaxHeat()) {
+                    temp_heat = this.gasReactor.getMaxHeat();
+                }
             }
+            this.gasReactor.setOutput(0);
         }
 
         this.gasReactor.setHeat(temp_heat);
-        if (temp < 0) {
-            temp = 0;
-        }
-        this.gasReactor.setOutput(temp);
+
+
     }
 
 }

@@ -1,5 +1,7 @@
 package com.denfop.invslot;
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.EnumBaseType;
 import com.denfop.items.modules.EnumModule;
 import com.denfop.items.modules.ItemBaseModules;
@@ -9,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvSlotGenCombinerSunarrium extends InvSlot {
+public class InvSlotGenCombinerSunarrium extends InvSlot implements ITypeSlot {
 
     private final TileEntityCombinerSEGenerators tile;
     private int stackSizeLimit;
@@ -18,6 +20,11 @@ public class InvSlotGenCombinerSunarrium extends InvSlot {
         super(base1, TypeItemSlot.INPUT, 4);
         this.stackSizeLimit = 1;
         this.tile = base1;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.QUARRY1;
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {

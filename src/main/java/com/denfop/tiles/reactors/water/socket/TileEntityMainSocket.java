@@ -1,6 +1,6 @@
 package com.denfop.tiles.reactors.water.socket;
 
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerWaterSocket;
 import com.denfop.gui.GuiWaterSocket;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -12,13 +12,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityMainSocket extends TileEntityMultiBlockElement implements ISocket {
 
-    private final AdvEnergy energy;
+    private final Energy energy;
 
-    public TileEntityMainSocket(int Capacity){
-        this.energy = this.addComponent( AdvEnergy.asBasicSource(this,Capacity,14));
+    public TileEntityMainSocket(int Capacity) {
+        this.energy = this.addComponent(Energy.asBasicSource(this, Capacity, 14));
     }
 
-    public AdvEnergy getEnergy() {
+    public Energy getEnergy() {
         return energy;
     }
 
@@ -35,7 +35,7 @@ public class TileEntityMainSocket extends TileEntityMultiBlockElement implements
 
     @Override
     public ContainerWaterSocket getGuiContainer(final EntityPlayer var1) {
-        return new ContainerWaterSocket(this,var1);
+        return new ContainerWaterSocket(this, var1);
     }
 
 }

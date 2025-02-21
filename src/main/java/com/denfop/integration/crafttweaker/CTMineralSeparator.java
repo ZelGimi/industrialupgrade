@@ -97,7 +97,7 @@ public class CTMineralSeparator {
             }
             final IInputHandler input = com.denfop.api.Recipes.inputFactory;
 
-            ItemStack stack = new IC2InputItemStack(this.input).getInputs().get(0);
+            ItemStack stack = new InputItemStack(this.input).getInputs().get(0);
             IInputItemStack second1;
             if (OreDictionary.getOreIDs(stack).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(stack)[0])

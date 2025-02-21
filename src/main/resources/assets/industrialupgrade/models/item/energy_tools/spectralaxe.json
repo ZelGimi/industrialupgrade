@@ -1,6 +1,5 @@
 {
-  "parent" : "industrialupgrade:item/tool/default",
-  "textures" : {
-    "layer0" : "industrialupgrade:items/spectralaxe"
-  }
+	"parent": "industrialupgrade:item/tool/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/spectralaxe"	}
 }

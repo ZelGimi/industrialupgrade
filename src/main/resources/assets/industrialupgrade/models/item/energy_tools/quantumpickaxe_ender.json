@@ -1,0 +1,5 @@
+{
+	"parent": "industrialupgrade:item/tool/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/quantumpickaxe_ender"	}
+}

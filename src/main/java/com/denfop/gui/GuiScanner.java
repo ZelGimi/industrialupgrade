@@ -41,7 +41,7 @@ public class GuiScanner extends GuiIU<ContainerScanner> {
 
         componentList.add(inventory);
         componentList.add(slots);
-        this.addComponent(new GuiComponent(this, 12, 25, EnumTypeComponent.ENERGY,
+        this.addComponent(new GuiComponent(this, 12, 26, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
         ));
         this.info[1] = Localization.translate("Scanner.gui.info1");

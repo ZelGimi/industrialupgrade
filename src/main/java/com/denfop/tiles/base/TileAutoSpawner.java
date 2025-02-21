@@ -13,7 +13,9 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAutoSpawner;
 import com.denfop.gui.GuiAutoSpawner;
 import com.denfop.invslot.InvSlotModules;
@@ -23,7 +25,6 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.utils.ModUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -56,6 +57,8 @@ public class TileAutoSpawner extends TileElectricMachine
     public final double maxEnergy2;
     public final int defaultconsume;
     public final ComponentBaseEnergy exp;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public int[] progress;
     public int costenergy;
     public int[] tempprogress;
@@ -89,7 +92,8 @@ public class TileAutoSpawner extends TileElectricMachine
         this.experience = 0;
         this.defaultconsume = this.costenergy;
         this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE, this, 15000, 14));
-
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
     public IMultiTileBlock getTeBlock() {
@@ -112,8 +116,7 @@ public class TileAutoSpawner extends TileElectricMachine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -121,7 +124,7 @@ public class TileAutoSpawner extends TileElectricMachine
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.defaultconsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -207,11 +210,12 @@ public class TileAutoSpawner extends TileElectricMachine
             ModUtils.tick(this.outputSlot, this);
         }
 
-
+        boolean active = false;
         for (int i = 0; i < module_slot.size(); i++) {
             if (!this.module_slot.get(i).isEmpty()) {
                 if (this.energy.getEnergy() >= this.costenergy || this.energy2 >= this.costenergy * Config.coefficientrf) {
                     this.progress[i]++;
+                    active = true;
                     if (this.energy.getEnergy() >= this.costenergy) {
                         this.energy.useEnergy(this.costenergy);
                     } else {
@@ -236,6 +240,11 @@ public class TileAutoSpawner extends TileElectricMachine
 
                 }
             }
+        }
+        if (this.getActive() && !active) {
+            this.setActive(active);
+        } else if (!this.getActive() && active) {
+            this.setActive(active);
         }
     }
 
@@ -321,7 +330,7 @@ public class TileAutoSpawner extends TileElectricMachine
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract
         );
     }
 

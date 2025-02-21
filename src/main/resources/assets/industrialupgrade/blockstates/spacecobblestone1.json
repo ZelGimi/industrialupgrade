@@ -1,0 +1,52 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "mimas_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/mimas_cobblestone"
+      },
+      "miranda_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/miranda_cobblestone"
+      },
+      "moon_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/moon_cobblestone"
+      },
+      "oberon_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/oberon_cobblestone"
+      },
+      "phobos_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/phobos_cobblestone"
+      },
+      "pluto_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/pluto_cobblestone"
+      },
+      "proteus_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/proteus_cobblestone"
+      },
+      "rhea_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/rhea_cobblestone"
+      },
+      "tethys_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/tethys_cobblestone"
+      },
+      "titan_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/titan_cobblestone"
+      },
+      "titania_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/titania_cobblestone"
+      },
+      "triton_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/triton_cobblestone"
+      },
+      "umbriel_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/umbriel_cobblestone"
+      },
+      "venus_cobblestone" : {
+         "model" : "industrialupgrade:spacecobblestone/venus_cobblestone"
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

@@ -28,7 +28,7 @@ public class InvSlotScannable extends InvSlot {
 
     public boolean accepts(ItemStack stack, int index) {
         return accepts.contains(
-                new RecipeInputStack(stack)) && !(this.tile.state == TileScanner.State.COMPLETED) ;
+                new RecipeInputStack(stack)) && !(this.tile.state == TileScanner.State.COMPLETED);
     }
 
     @Override

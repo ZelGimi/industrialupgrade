@@ -28,7 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class StampCategory extends GuiIU implements IRecipeCategory<StampRecipeWrapper> {
@@ -53,7 +52,7 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampRecipeW
         );
         this.container1 = (ContainerStamp) this.getContainer();
         this.componentList.add(slots);
-        progress_bar =  new GuiComponent(this, 70, 32, EnumTypeComponent.PROCESS,
+        progress_bar = new GuiComponent(this, 70, 32, EnumTypeComponent.PROCESS,
                 new Component<>(this.container1.base.componentProgress)
         );
         this.componentList.add(progress_bar);
@@ -125,22 +124,22 @@ public class StampCategory extends GuiIU implements IRecipeCategory<StampRecipeW
         isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i, recipes.getOutput());
         i++;
-        isg.init(i, false, 9,59);
-        switch (recipes.getName()){
-                case "stamp_coolant":
-                    isg.set(i, new ItemStack(IUItem.crafting_elements,1,369));
-                    break;
+        isg.init(i, false, 9, 59);
+        switch (recipes.getName()) {
+            case "stamp_coolant":
+                isg.set(i, new ItemStack(IUItem.crafting_elements, 1, 369));
+                break;
             case "stamp_plate":
-                isg.set(i, new ItemStack(IUItem.crafting_elements,1,370));
+                isg.set(i, new ItemStack(IUItem.crafting_elements, 1, 370));
                 break;
             case "stamp_exchanger":
-                isg.set(i, new ItemStack(IUItem.crafting_elements,1,412));
+                isg.set(i, new ItemStack(IUItem.crafting_elements, 1, 412));
                 break;
             case "stamp_vent":
-                isg.set(i, new ItemStack(IUItem.crafting_elements,1,413));
+                isg.set(i, new ItemStack(IUItem.crafting_elements, 1, 413));
                 break;
             case "stamp_capacitor":
-                isg.set(i, new ItemStack(IUItem.crafting_elements,1,438));
+                isg.set(i, new ItemStack(IUItem.crafting_elements, 1, 438));
                 break;
 
 

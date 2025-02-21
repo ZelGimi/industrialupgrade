@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/controller",
-    "down" : "industrialupgrade:blocks/gas_reactor/controller_top",
-    "up" : "industrialupgrade:blocks/gas_reactor/controller_top",
-    "north" : "industrialupgrade:blocks/gas_reactor/controller",
-    "east" : "industrialupgrade:blocks/gas_reactor/casing",
-    "south" : "industrialupgrade:blocks/gas_reactor/casing",
-    "west" : "industrialupgrade:blocks/gas_reactor/casing"
+    "particle" : "industrialupgrade:blocks/gas_reactor/controller/controller_front",
+    "down" : "industrialupgrade:blocks/gas_reactor/controller/controller_side",
+    "up" : "industrialupgrade:blocks/gas_reactor/controller/controller_side",
+    "north" : "industrialupgrade:blocks/gas_reactor/controller/controller_front",
+    "east" : "industrialupgrade:blocks/gas_reactor/controller/controller_side",
+    "south" : "industrialupgrade:blocks/gas_reactor/controller/controller_side",
+    "west" : "industrialupgrade:blocks/gas_reactor/controller/controller_side"
   }
 }

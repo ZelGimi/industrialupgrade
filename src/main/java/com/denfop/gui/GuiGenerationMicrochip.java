@@ -1,7 +1,6 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -26,7 +25,7 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
         this.addComponent(new GuiComponent(this, 7, 62, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
-        this.addComponent(new GuiComponent(this, 70, 62, EnumTypeComponent.HEAT,
+        this.addComponent(new GuiComponent(this, 68, 60, EnumTypeComponent.HEAT,
                 new Component<>(container1.base.heat)
         ));
     }
@@ -41,6 +40,7 @@ public class GuiGenerationMicrochip extends GuiIU<ContainerBaseGenerationChipMac
     protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(this.guiLeft - 22, this.guiTop + 82, 8, 7, 20, 20);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {

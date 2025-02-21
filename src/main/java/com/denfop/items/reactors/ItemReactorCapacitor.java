@@ -29,6 +29,16 @@ public class ItemReactorCapacitor extends ItemDamage implements IReactorItem {
         this.heat_to_damage = heat_to_damage;
         setMaxStackSize(1);
     }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name) {
+
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "reactors" + "/" + name;
+        return new ModelResourceLocation(loc, null);
+    }
+
     @Override
     public void addInformation(
             @Nonnull final ItemStack stack,
@@ -40,25 +50,20 @@ public class ItemReactorCapacitor extends ItemDamage implements IReactorItem {
         tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack)) + "/" + this.getMaxCustomDamage(stack));
         tooltip.add(Localization.translate("reactor.vent1", 1, this.heat_to_damage));
-        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level") + this.level);
         tooltip.add(Localization.translate("reactor.component_level1"));
 
     }
+
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
     }
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
 
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "reactors" + "/" + name;
-        return new ModelResourceLocation(loc, null);
-    }
     @SideOnly(Side.CLIENT)
     public void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
+
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.CAPACITOR;
@@ -78,11 +83,13 @@ public class ItemReactorCapacitor extends ItemDamage implements IReactorItem {
     public int getRepairOther(final IAdvReactor reactor) {
         return 0;
     }
+
     @Override
     public boolean needClear(ItemStack stack) {
         return this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack) == 0;
     }
+
     @Override
     public int getDamageCFromHeat(final int heat, final IAdvReactor reactor) {
         return (int) (heat_to_damage * reactor.getModuleCapacitor());

@@ -1,24 +1,20 @@
 package com.denfop.api.transport;
 
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 
 
 public interface ITransportSink<T, E> extends ITransportAcceptor<T, E> {
 
-    List<Integer> getDemanded();
+    List<Integer> getDemanded(IItemHandler handler);
 
     boolean isSink();
 
-    List<T> getItemStackFromFacing(EnumFacing facing);
+    List<Integer> getEnergyTickList();
 
-    boolean canAccept(EnumFacing facing);
+    boolean isItemSink();
 
-    void removeFacing(EnumFacing facing);
-
-    boolean canAdd(EnumFacing facing);
-
-    List<EnumFacing> getFacingList();
-
+    boolean isFluidSink();
 }

@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
-  "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/cooling_side",
-    "down" : "industrialupgrade:blocks/graphite_reactor/cooling_side",
-    "up" : "industrialupgrade:blocks/graphite_reactor/cooling_side",
-    "north" : "industrialupgrade:blocks/graphite_reactor/cooling",
-    "east" : "industrialupgrade:blocks/graphite_reactor/cooling_side",
-    "south" : "industrialupgrade:blocks/graphite_reactor/cooling_side",
-    "west" : "industrialupgrade:blocks/graphite_reactor/cooling_side"
-  }
+  "parent" : "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:blocks/graphite_reactor/cooling/cooling_side"
+    }
 }

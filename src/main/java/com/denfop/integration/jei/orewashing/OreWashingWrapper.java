@@ -63,7 +63,10 @@ public class OreWashingWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawString(FluidRegistry.WATER.getLocalizedName(new FluidStack(FluidRegistry.WATER,1)) + ": " + temperature + " " + Localization.translate(
+        minecraft.fontRenderer.drawString(FluidRegistry.WATER.getLocalizedName(new FluidStack(
+                FluidRegistry.WATER,
+                1
+        )) + ": " + temperature + " " + Localization.translate(
                 "iu" + ".generic.text.mb"), 88, 44, 4210752);
     }
 

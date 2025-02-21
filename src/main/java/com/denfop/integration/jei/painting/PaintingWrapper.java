@@ -74,7 +74,7 @@ public class PaintingWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawString(ModUtils.mode(this.nbt), 64, 52, 4210752);
+        minecraft.fontRenderer.drawString(ModUtils.mode(this.nbt), 64, 59, 4210752);
     }
 
 }

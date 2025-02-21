@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerGasSocket extends ContainerFullInv<TileEntityMainSocket> {
 
     public ContainerGasSocket(TileEntityMainSocket tileEntityMainSocket, EntityPlayer var1) {
-        super(var1,tileEntityMainSocket,188,209);
+        super(var1, tileEntityMainSocket, 188, 209);
     }
 
 }

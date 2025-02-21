@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -33,6 +34,7 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
     private final String name;
     private final int level;
     private final double radiation;
+    double[] p = new double[]{5.0D, 20D, 60D, 200D};
 
     public ItemBaseRod(String internalName, int cells, int heat, float power, int level) {
         super(internalName, 1);
@@ -55,6 +57,11 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
                 ':' +
                 "reactors" + "/" + name;
         return new ModelResourceLocation(loc, null);
+    }
+
+    @Override
+    public boolean showDurabilityBar(@NotNull final ItemStack stack) {
+        return false;
     }
 
     public void onUpdate(ItemStack stack, World world, Entity rawEntity, int slotIndex, boolean isCurrentItem) {
@@ -84,10 +91,6 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
         registerModels(this.name);
     }
 
-
-
-    double[] p = new double[]{5.0D, 20D, 60D, 200D};
-
     @Override
     public void addInformation(
             @Nonnull final ItemStack stack,
@@ -100,9 +103,9 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
         double temp1 = Math.log10(2);
         double m = temp / temp1;
         tooltip.add(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level) + " EF");
-        tooltip.add(Localization.translate("reactor.rod.radiation") + (int)this.radiation );
-        tooltip.add(Localization.translate("reactor.rod.heat") + this.heat );
-        tooltip.add(Localization.translate("reactor.rod_level") + this.level );
+        tooltip.add(Localization.translate("reactor.rod.radiation") + (int) this.radiation);
+        tooltip.add(Localization.translate("reactor.rod.heat") + this.heat);
+        tooltip.add(Localization.translate("reactor.rod_level") + this.level);
         tooltip.add(Localization.translate("reactor.rod_level1"));
 
     }
@@ -129,9 +132,10 @@ public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IRe
         return this.level;
     }
 
-    public double getRadiation(){
+    public double getRadiation() {
         return radiation;
     }
+
     @Override
     public int getAutoRepair(final IAdvReactor reactor) {
         return 0;

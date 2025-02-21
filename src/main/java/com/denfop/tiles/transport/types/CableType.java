@@ -8,26 +8,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum CableType implements IStringSerializable, ICableItem {
-    glass(0.25F, 0.06D, 32768),
-    glass1(0.25F, 0.07D, 131072),
-    glass2(0.25F, 0.08D, 524288),
-    glass3(0.25F, 0.09D, 2097152),
-    glass4(0.25F, 0.1D, 8388608),
-    glass5(0.25F, 0.11D, 33554432),
-    glass6(0.25F, 0.12D, 134217728),
-    glass7(0.25F, 0.15D, 536870912),
-    glass8(0.25F, 0.18D, 8589934590D),
-    glass9(0.25F, 0.2D, 439804653000D),
-    glass10(0.25F, 0.25D, 1759218610000D),
-    copper(0.25F, 0.015D, 128),
-    copper1(0.25F, 0.015D, 128, 1),
-    glass_1(0.25F, 0.05D, 8192, 0),
+    glass(0.25F, 0.06D, 4096),
+    glass1(0.25F, 0.07D, 8192),
+    glass2(0.25F, 0.08D, 32768),
+    glass3(0.25F, 0.09D, 131072),
+    glass4(0.25F, 0.1D, 524288),
+    glass5(0.25F, 0.11D, 2097152),
+    glass6(0.25F, 0.12D, 8388608),
+    glass7(0.25F, 0.15D, 33554432),
+    glass8(0.25F, 0.18D, 134217728),
+    glass9(0.25F, 0.2D, 536870912),
+    glass10(0.25F, 0.25D, 8589934590D),
+    copper(0.25F, 0.015D, 32),
+    copper1(0.375F, 0.015D, 128, 1),
+    glass_1(0.25F, 0.05D, 2048, 0),
     gold(0.25F, 0.02D, 512),
-    gold1(0.25F, 0.02D, 512, 1),
-    iron(0.25F, 0.04D, 2048),
-    iron1(0.25F, 0.04D, 2048, 1),
+    gold1(0.375F, 0.02D, 1024, 1),
+    iron(0.25F, 0.04D, 256),
+    iron1(0.375F, 0.04D, 512, 1),
     tin(0.25F, 0.02D, 32),
-    tin1(0.25F, 0.02D, 32, 1),
+    tin1(0.375F, 0.02D, 128, 1),
     ;
 
     public static final CableType[] values = values();
@@ -84,6 +84,10 @@ public enum CableType implements IStringSerializable, ICableItem {
         return this.name() + "_cable";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     public int getId() {
         return this.ordinal();
@@ -98,7 +102,6 @@ public enum CableType implements IStringSerializable, ICableItem {
     public String getMainPath() {
         return "cable";
     }
-
 
 
     @Override

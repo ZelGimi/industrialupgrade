@@ -54,6 +54,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
+                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -70,6 +71,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
+                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -90,6 +92,7 @@ public class InvSlotInput extends InvSlot {
                     final List<ItemStack> list3 = new ArrayList<>();
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
+                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list3.add(stack1);
                     });
                     list3.forEach(stack1 -> stack1.setCount(stack.getCount()));
@@ -135,6 +138,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
+                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -152,6 +156,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
+                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -172,6 +177,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
+                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }

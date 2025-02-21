@@ -9,7 +9,11 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.Redstone;
+import com.denfop.componets.RedstoneHandler;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerNeutronGenerator;
 import com.denfop.gui.GuiNeutronGenerator;
 import com.denfop.invslot.InvSlot;
@@ -41,6 +45,9 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
+    private final Redstone redstone;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     public boolean work = true;
 
     public TileNeutronGenerator() {
@@ -55,12 +62,23 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
                 InvSlotFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidNeutron.getInstance()
         );
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank = this.fluids.addTank("fluidTank", 9 * 1000,
-                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance())
+                Fluids.fluidPredicate(FluidName.fluidNeutron.getInstance()), InvSlot.TypeItemSlot.OUTPUT
         );
-
+        this.redstone = this.addComponent(new Redstone(this));
+        this.redstone.subscribe(new RedstoneHandler() {
+                                    @Override
+                                    public void action(final int input) {
+                                        energy.setEnabled(input == 0);
+                                        work = input != 0;
+                                        energy.setReceivingEnabled(work);
+                                    }
+                                }
+        );
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.005));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
     }
 
     private static int applyModifier(int extra) {
@@ -102,6 +120,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
         super.onLoaded();
         if (!this.getWorld().isRemote) {
             this.setUpgradestat();
+            energy.setReceivingEnabled(work);
         }
 
     }
@@ -189,9 +208,9 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidExtract,
+
+                UpgradableProperty.ItemExtract
         );
     }
 
@@ -200,6 +219,7 @@ public class TileNeutronGenerator extends TileElectricMachine implements IUpgrad
     public void updateTileServer(final EntityPlayer entityPlayer, final double i) {
         if (i != 10) {
             this.work = !this.work;
+            energy.setReceivingEnabled(work);
         } else {
             super.updateTileServer(entityPlayer, i);
         }

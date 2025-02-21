@@ -3,7 +3,6 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerWaterTank;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMainTank extends GuiIU<ContainerWaterTank> {
@@ -11,8 +10,9 @@ public class GuiMainTank extends GuiIU<ContainerWaterTank> {
     public GuiMainTank(ContainerWaterTank guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        elements.add(TankGauge.createNormal(this,40,25,guiContainer.base.tank));
+        elements.add(TankGauge.createNormal(this, 40, 25, guiContainer.base.tank));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -31,7 +31,7 @@ public class GuiMainTank extends GuiIU<ContainerWaterTank> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiWaterReactor2.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor4.png");
     }
 
 }

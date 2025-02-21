@@ -29,21 +29,7 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem {
         this.percent = percent;
         setMaxStackSize(1);
     }
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
-    }
-    @Override
-    public boolean needClear(ItemStack stack) {
-        return this.getMaxCustomDamage(stack) - this.getCustomDamage(
-                stack) == 0;
-    }
-    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
-        return false;
-    }
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
+
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {
 
@@ -52,6 +38,26 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem {
                 "reactors" + "/" + name;
         return new ModelResourceLocation(loc, null);
     }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
+    }
+
+    @Override
+    public boolean needClear(ItemStack stack) {
+        return this.getMaxCustomDamage(stack) - this.getCustomDamage(
+                stack) == 0;
+    }
+
+    public boolean showDurabilityBar(@Nonnull ItemStack stack) {
+        return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModel(Item item, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.PLATE;
@@ -81,10 +87,11 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem {
     ) {
         super.addInformation(stack, world, tooltip, advanced);
 
-        tooltip.add(Localization.translate("reactor.component_level") + this.level );
+        tooltip.add(Localization.translate("reactor.component_level") + this.level);
         tooltip.add(Localization.translate("reactor.component_level1"));
 
     }
+
     @Override
     public int getDamageCFromHeat(final int heat, final IAdvReactor reactor) {
         return 1;

@@ -409,7 +409,14 @@ public final class Config {
     public static boolean LeadOre;
     public static boolean UraniumOre;
     public static boolean explodeReactor;
+    public static boolean enableProbe;
+    public static boolean optimization_network;
+    public static int optimization_network_col;
 
+    public static int speed_insert_item;
+    public static int speed_extract_item;
+    public static int speed_insert_fluid;
+    public static int speed_extract_fluid;
 
     public static void loadNormalConfig(final File configFile) {
         IUCore.log.info("Loading IU Config from " + configFile.getAbsolutePath());
@@ -417,7 +424,6 @@ public final class Config {
         final Configuration config = new Configuration(configFile);
         try {
             config.load();
-            experiment = config.get("Experiment 3.0", "Enable", false).getBoolean(false);
             tickupdateenergysystem = config.get("general", "Tick update energy system", 20).getInt(20);
             ticktransferenergy = config.get("general", "Tick transfer energy", 1).getInt(1);
             uran233RodCells = config.get("Configuration of reactor`s rods", "Uran233_Cells", 5000).getInt(5000);
@@ -663,7 +669,7 @@ public final class Config {
             percent_day = config.get("Modules", "percent generation day", 5).getInt(5);
             percent_night = config.get("Modules", "percent generation night", 5).getInt(5);
             Storagequantumsuit = config.get("Battery", "MaxEnergy", 100000000).getInt(100000000);
-
+            enableProbe = config.get("Integration", "Integration The One Probe", true).getBoolean(true);
             thaumcraft = config.get("Integration", "Integration Thaumcraft", true).getBoolean(true);
             Draconic = config.get("Integration", "Integration Draconic Evolution", true).getBoolean(true);
             Botania = config.get("Integration", "Integration Botania", true).getBoolean(true);
@@ -947,6 +953,13 @@ public final class Config {
 
             explodeReactor = config.get("Configuration of reactors", "Enable explode", true).getBoolean(true);
 
+
+            optimization_network = config.get("Configuration of server", "optimization network", false).getBoolean(false);
+            optimization_network_col = config.get("Configuration of server", "how many tile updates per tick", 256).getInt(256);
+            speed_insert_item = config.get("Configuration of server", "Insert item in mechanism", 4).getInt(4);
+            speed_extract_item = config.get("Configuration of server", "Extract item in mechanism", 2).getInt(2);
+            speed_insert_fluid = config.get("Configuration of server", "Insert fluid in mechanism", 4).getInt(4);
+            speed_extract_fluid = config.get("Configuration of server", "Extract fluid in mechanism", 2).getInt(2);
             //
 
             //

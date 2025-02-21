@@ -6,6 +6,7 @@ import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.IUpgradeItem;
+import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.register.Register;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -28,6 +29,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class ItemEnergyShield extends ItemShield implements IEnergyItem, IUpgradeItem, IModelRegister {
 
@@ -67,6 +70,10 @@ public class ItemEnergyShield extends ItemShield implements IEnergyItem, IUpgrad
                 "energy_tools" + "/" + name;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return Collections.emptyList();
     }
 
     @Override

@@ -104,7 +104,7 @@ public class RecipeGrid {
             if (xEmpty && yEmpty) {
                 List<String> recipe = new ArrayList<>();
                 if (x1 == 0 && y1 == 0) {
-                    if(this.x2 == -1 && this.y2 == -1){
+                    if (this.x2 == -1 && this.y2 == -1) {
                         this.x2 = x1;
                         this.y2 = y1;
                         this.index = m;
@@ -120,7 +120,7 @@ public class RecipeGrid {
                     recipe.add(three.toString());
                     list.add(recipe);
                 } else if (x1 == 2 && y1 == 0) {
-                    if(this.x2 == -1 && this.y2 == -1){
+                    if (this.x2 == -1 && this.y2 == -1) {
                         this.x2 = x1;
                         this.y2 = y1;
                         this.index = m;
@@ -136,7 +136,7 @@ public class RecipeGrid {
                     recipe.add(" " + three);
                     list.add(recipe);
                 } else if (x1 == 2 && y1 == 2) {
-                    if(this.x2 == -1 && this.y2 == -1){
+                    if (this.x2 == -1 && this.y2 == -1) {
                         this.x2 = x1;
                         this.y2 = y1;
                         this.index = m;
@@ -152,7 +152,7 @@ public class RecipeGrid {
                     recipe.add(three);
                     list.add(recipe);
                 } else if (x1 == 0 && y1 == 2) {
-                    if(this.x2 == -1 && this.y2 == -1){
+                    if (this.x2 == -1 && this.y2 == -1) {
                         this.x2 = x1;
                         this.y2 = y1;
                         this.index = m;

@@ -27,7 +27,7 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
 
     public GuiElectricBlock(ContainerElectricBlock container1) {
         super(container1);
-        this.ySize = 196;
+        this.ySize = 167;
         this.container = container1;
         this.armorInv = Localization.translate("EUStorage.gui.info.armor");
         this.name = Localization.translate(container.base.getName());
@@ -46,7 +46,23 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return background;
+        if (this.container.base.energy.getSourceTier() == 1) {
+            return new ResourceLocation(
+                    Constants.MOD_ID,
+                    "textures/gui/GUIElectricBlockEuRf1.png"
+            );
+        }
+        if (this.container.base.energy.getSourceTier() == 2) {
+            return new ResourceLocation(
+                    Constants.MOD_ID,
+                    "textures/gui/GUIElectricBlockEuRf2.png"
+            );
+        }
+
+        return new ResourceLocation(
+                Constants.MOD_ID,
+                "textures/gui/GUIElectricBlockEuRf.png"
+        );
     }
 
     @Override
@@ -55,10 +71,10 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
         this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6,
                 4210752
         );
-        this.fontRenderer.drawString(this.armorInv, 8, this.ySize - 126 + 3, 4210752);
+
         String tooltip =
                 "EF: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(this.container.base.energy.getCapacity());
-        new Area(this, 85 - 3, 38, 108 - 82, 46 - 38).withTooltip(tooltip).drawForeground(par1, par2);
+        new Area(this, 62, 27, 79, 22).withTooltip(tooltip).drawForeground(par1, par2);
 
 
         String output = Localization.translate(
@@ -66,7 +82,7 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
                 ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(this.container.base.energy.getSourceTier())
                 )
         );
-        this.fontRenderer.drawString(output, 85, 70, 4210752);
+        this.fontRenderer.drawString(output, 77, 17, 4210752);
 
 
         handleUpgradeTooltip(par1, par2);
@@ -75,17 +91,18 @@ public class GuiElectricBlock extends GuiCore<ContainerElectricBlock> {
 
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(background);
+        this.mc.getTextureManager().bindTexture(getTexture());
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
         drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
         this.mc.getTextureManager()
                 .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(j + 3, k + 3, 0, 0, 10, 10);
-        this.mc.getTextureManager().bindTexture(background);
+        this.mc.getTextureManager().bindTexture(getTexture());
         if (this.container.base.energy.getEnergy() > 0.0D) {
-            int i1 = (int) (24.0F * this.container.base.getChargeLevel());
-            drawTexturedModalRect(j + 79 + 6 - 2 - 1, k + 34, 176, 14, i1 + 1, 16);
+            int i1 = (int) (78.0F * this.container.base.getChargeLevel());
+
+            drawTexturedModalRect(j + 62, k + 27, 176, 0, i1 + 1, 22);
         }
     }
 

@@ -3,18 +3,18 @@ package com.denfop.api.sytem;
 import net.minecraft.util.EnumFacing;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class Path {
 
-    final Set<IConductor> conductors;
+
     final ISink target;
     final EnumFacing targetDirection;
-    double min = Double.MAX_VALUE;
 
     Path(ISink sink, EnumFacing facing) {
         this.target = sink;
-        this.conductors = new HashSet<>();
         this.targetDirection = facing;
     }
 
@@ -29,16 +29,7 @@ public class Path {
         }
     }
 
-    public double getMin() {
-        return min;
-    }
 
-    public void setMin(final double min) {
-        this.min = min;
-    }
 
-    public Set<IConductor> getConductors() {
-        return conductors;
-    }
 
 }

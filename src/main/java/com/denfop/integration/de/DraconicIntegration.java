@@ -1,9 +1,7 @@
 package com.denfop.integration.de;
 
 import com.brandon3055.draconicevolution.DEFeatures;
-import com.brandon3055.draconicevolution.lib.RecipeManager;
 import com.denfop.Config;
-import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.TileBlockCreator;
@@ -42,7 +40,7 @@ public class DraconicIntegration {
             Recipes.recipe.addRecipe(new ItemStack(ChaosEnergyCore, 1), " B ", "BAB", " B ", 'B',
                     new ItemStack(chaosingot, 1), 'A', DEFeatures.draconicEnergyCore
             );
-            RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL, new ItemStack(blockDESolarPanel, 1),
+       /*     RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL, new ItemStack(blockDESolarPanel, 1),
                     new ItemStack(IUItem.blockpanel, 1), 400000000, 1, DEFeatures.wyvernCore, DEFeatures.wyvernCore,
                     DEFeatures.wyvernCore, DEFeatures.wyvernCore
             );
@@ -110,7 +108,7 @@ public class DraconicIntegration {
                     ChaosEnergyCore,
                     ChaosEnergyCore,
                     ChaosEnergyCore
-            );
+            );*/
         }
 
     }

@@ -7,7 +7,7 @@ import com.denfop.api.recipe.IPatternStorage;
 import com.denfop.api.recipe.RecipeInfo;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.blocks.MultiTileBlock.DefaultDrop;
+import com.denfop.blocks.MultiTileBlock;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerPatternStorage;
@@ -120,7 +120,10 @@ public class TilePatternStorage extends TileEntityInventory implements IUpdatabl
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == DefaultDrop.Self) {
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             NBTTagCompound nbt = ModUtils.nbt(drop);
             this.writeContentsAsNbtList(nbt);
         }

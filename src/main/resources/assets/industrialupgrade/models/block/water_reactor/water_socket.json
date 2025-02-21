@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_reactor/socket_side",
-    "down" : "industrialupgrade:blocks/water_reactor/socket_side",
-    "up" : "industrialupgrade:blocks/water_reactor/socket_side",
-    "north" : "industrialupgrade:blocks/water_reactor/socket",
-    "east" : "industrialupgrade:blocks/water_reactor/socket_side",
-    "south" : "industrialupgrade:blocks/water_reactor/socket_side",
-    "west" : "industrialupgrade:blocks/water_reactor/socket_side"
+    "particle" : "industrialupgrade:blocks/water_reactor/socket/socket_side",
+    "down" : "industrialupgrade:blocks/water_reactor/socket/socket_side",
+    "up" : "industrialupgrade:blocks/water_reactor/socket/socket_side",
+    "north" : "industrialupgrade:blocks/water_reactor/socket/socket_side",
+    "east" : "industrialupgrade:blocks/water_reactor/socket/socket_side",
+    "south" : "industrialupgrade:blocks/water_reactor/socket/socket_side",
+    "west" : "industrialupgrade:blocks/water_reactor/socket/socket_side"
   }
 }

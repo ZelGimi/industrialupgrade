@@ -8,7 +8,7 @@ public class DataPos {
     public final BlockPos pos;
     public final IBlockState state;
 
-    public DataPos(BlockPos pos, IBlockState state){
+    public DataPos(BlockPos pos, IBlockState state) {
         this.pos = pos;
         this.state = state;
     }

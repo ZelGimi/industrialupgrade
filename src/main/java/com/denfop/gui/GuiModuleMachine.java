@@ -2,6 +2,7 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerModuleMachine;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.gui.GuiButton;
@@ -26,6 +27,7 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
         this.ySize = 178;
         this.inventory.setX(7);
         this.inventory.setY(96);
+        this.addElement(new CustomButton(this, 103, 15, 68, 14, container1.base, 0, Localization.translate("button.write")));
     }
 
     private static List<String> getInformation() {
@@ -47,9 +49,7 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
 
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 21,
-                68, 9, Localization.translate("button.write")
-        ));
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -98,7 +98,7 @@ public class GuiModuleMachine extends GuiIU<ContainerModuleMachine> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiModuleMachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

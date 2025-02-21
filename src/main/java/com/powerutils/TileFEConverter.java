@@ -9,7 +9,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -18,7 +18,6 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,7 +43,7 @@ public class TileFEConverter extends TileEntityInventory implements
         IEnergyStorage, IUpgradableBlock {
 
 
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final InvSlotUpgrade upgradeSlot;
     public final int defaultEnergyRFStorage;
     public final int defaultEnergyStorage;
@@ -63,7 +62,7 @@ public class TileFEConverter extends TileEntityInventory implements
         this.energy2 = 0.0D;
         this.maxStorage2 = 400000;
         this.rf = true;
-        this.energy = this.addComponent((new AdvEnergy(this, 40000, ModUtils.allFacings,
+        this.energy = this.addComponent((new Energy(this, 40000, ModUtils.allFacings,
                 ModUtils.allFacings,
                 5,
                 5, false
@@ -84,9 +83,9 @@ public class TileFEConverter extends TileEntityInventory implements
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComp(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.hasComp(Energy.class)) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
                 tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {

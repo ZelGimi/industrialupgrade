@@ -43,7 +43,14 @@ public enum BlockPowerConverter implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         for (final BlockPowerConverter block : BlockPowerConverter.values()) {
             if (block.teClass != null) {

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/alkalineearthquarry_front",
+    "down" : "industrialupgrade:blocks/alkalineearthquarry_sides",
+    "up" : "industrialupgrade:blocks/alkalineearthquarry_top",
+    "north" : "industrialupgrade:blocks/alkalineearthquarry_front",
+    "east" : "industrialupgrade:blocks/alkalineearthquarry_left",
+    "south" : "industrialupgrade:blocks/alkalineearthquarry_sides",
+    "west" : "industrialupgrade:blocks/alkalineearthquarry_right"
+  }
+}

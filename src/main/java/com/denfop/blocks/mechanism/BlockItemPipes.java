@@ -58,7 +58,14 @@ public enum BlockItemPipes implements IMultiTileBlock {
             }
         }
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public float getHardness() {
         return 0.5F;
     }

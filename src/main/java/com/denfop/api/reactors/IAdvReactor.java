@@ -13,20 +13,21 @@ public interface IAdvReactor {
 
     double getHeat();
 
+    void setHeat(double var1);
+
     void setUpdate();
 
     void setItemAt(final int x, final int y);
 
-    void setHeat(double var1);
-
-    void setOutput(double output);
-
     void setRad(double rad);
+
     int getMaxHeat();
 
     int getStableMaxHeat();
 
     double getOutput();
+
+    void setOutput(double output);
 
     ItemStack getItemAt(int var1, int var2);
 
@@ -58,19 +59,25 @@ public interface IAdvReactor {
 
     ComponentBaseEnergy getRadiation();
 
-    default double getMulHeat(final int x, final int y, ItemStack stack){
-        return 1;
-    };
-    default double getMulOutput(final int x, final int y, ItemStack stack){
-        return 1;
-    }
-    default double getMulDamage(final int x, final int y, ItemStack stack){
+    default double getMulHeat(final int x, final int y, ItemStack stack) {
         return 1;
     }
 
-    default   double getMulHeatRod(int x, int y, ItemStack stack){
+    ;
+
+    default double getMulOutput(final int x, final int y, ItemStack stack) {
         return 1;
-    };
+    }
+
+    default double getMulDamage(final int x, final int y, ItemStack stack) {
+        return 1;
+    }
+
+    default double getMulHeatRod(int x, int y, ItemStack stack) {
+        return 1;
+    }
+
+    ;
 
     double getModuleStableHeat();
 

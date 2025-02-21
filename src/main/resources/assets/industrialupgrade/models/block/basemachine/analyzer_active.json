@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:blocks/blockanalyzer_bootm",
     "up" : "industrialupgrade:blocks/blockanalyzer_bootm",
     "north" : "industrialupgrade:blocks/blockanalyzer_main_active",
-    "east" : "industrialupgrade:blocks/blockanalyzer_side_active",
-    "south" : "industrialupgrade:blocks/blockanalyzer_top",
-    "west" : "industrialupgrade:blocks/blockanalyzer_side_active"
+    "east" : "industrialupgrade:blocks/blockanalyzer_left_active",
+    "south" : "industrialupgrade:blocks/blockanalyzer_bootm",
+    "west" : "industrialupgrade:blocks/blockanalyzer_right_active"
   }
 }

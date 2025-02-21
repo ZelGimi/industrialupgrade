@@ -45,34 +45,34 @@ public class ModelMiniPanelGlass extends ModelBase {
 
         switch (number) {
             case 0:
-                this.glass.addBox(0, 16.001F, 0, 5, 0, 5);
+                this.glass.addBox(0, 16.05F, 0, 5, 0, 5);
                 break;
             case 1:
-                this.glass.addBox(5, 16.001F, 0, 6, 0, 5);
+                this.glass.addBox(5, 16.05F, 0, 6, 0, 5);
                 break;
             case 2:
-                this.glass.addBox(11, 16.001F, 0, 5, 0, 5);
+                this.glass.addBox(11, 16.05F, 0, 5, 0, 5);
                 break;
             case 3:
-                this.glass.addBox(0, 16.001F, 5, 5, 0, 6);
+                this.glass.addBox(0, 16.05F, 5, 5, 0, 6);
                 break;
             case 4:
-                this.glass.addBox(5, 16.001F, 5, 6, 0, 6);
+                this.glass.addBox(5, 16.05F, 5, 6, 0, 6);
                 break;
             case 5:
-                this.glass.addBox(11, 16.001F, 5, 5, 0, 6);
+                this.glass.addBox(11, 16.05F, 5, 5, 0, 6);
                 break;
             case 6:
-                this.glass.addBox(0, 16.001F, 11, 5, 0, 5);
+                this.glass.addBox(0, 16.05F, 11, 5, 0, 5);
                 break;
             case 7:
-                this.glass.addBox(5, 16.001F, 11, 6, 0, 5);
+                this.glass.addBox(5, 16.05F, 11, 6, 0, 5);
                 break;
             case 8:
-                this.glass.addBox(11, 16.001F, 11, 5, 0, 5);
+                this.glass.addBox(11, 16.05F, 11, 5, 0, 5);
                 break;
             default:
-                this.glass.addBox(0, 16.001F, 0, 16, 0, 16);
+                this.glass.addBox(0, 16.05F, 0, 16, 0, 16);
                 break;
         }
         this.glass.mirror = true;

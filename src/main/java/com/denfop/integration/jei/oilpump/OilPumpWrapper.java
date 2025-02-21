@@ -37,7 +37,7 @@ public class OilPumpWrapper implements IRecipeWrapper {
         minecraft.fontRenderer.drawSplitString(
                 Localization.translate("iu.oilpump.info"),
                 10,
-                30,
+                5,
                 recipeWidth - 10,
                 4210752
         );

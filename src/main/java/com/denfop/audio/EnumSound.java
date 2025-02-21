@@ -72,7 +72,20 @@ public enum EnumSound {
     default_radiation(TypePath.Radiation, "default"),
     medium_radiation(TypePath.Radiation, "medium"),
     high_radiation(TypePath.Radiation, "high"),
-    very_high_radiation(TypePath.Radiation, "very_high"),;
+    very_high_radiation(TypePath.Radiation, "very_high"),
+    gas_combiner(TypePath.Machines, "gas_combiner"),
+    molot(TypePath.Machines, "molot"),
+    primal_macerator(TypePath.Machines, "primal_macerator"),
+    solid_electrolyzer(TypePath.Machines, "solid_electrolyzer"),
+    primal_compressor(TypePath.Machines, "primal_compressor"),
+    dryer(TypePath.Machines, "dryer"),
+    squeezer(TypePath.Machines, "squeezer"),
+    mixer(TypePath.Machines, "mixer"),
+    fluid_mixer(TypePath.Machines, "fluid_mixer"),
+    solid_mixer(TypePath.Machines, "solid_mixer"),
+    steam(TypePath.Machines, "steam"),
+    interruptone_steam(TypePath.Machines, "interruptone_steam"),
+    ;
     private final TypePath typePath;
     private final String nameSounds;
     private SoundEvent soundEvent;

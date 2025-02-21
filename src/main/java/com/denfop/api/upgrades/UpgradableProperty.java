@@ -4,10 +4,10 @@ public enum UpgradableProperty {
     Processing,
     Transformer,
     EnergyStorage,
-    ItemConsuming,
-    ItemProducing,
-    FluidConsuming,
-    FluidProducing;
+    ItemExtract,
+    ItemInput,
+    FluidExtract,
+    FluidInput;
 
     UpgradableProperty() {
     }

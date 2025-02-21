@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/electric_brewing_main-side-back_active",
+    "down" : "industrialupgrade:blocks/electric_brewing_bottom",
+    "up" : "industrialupgrade:blocks/electric_brewin_top_active",
+    "north" : "industrialupgrade:blocks/electric_brewing_main-side-back_active",
+    "east" : "industrialupgrade:blocks/electric_brewing_bottom",
+    "south" : "industrialupgrade:blocks/electric_brewing_bottom",
+    "west" : "industrialupgrade:blocks/electric_brewing_bottom"
+  }
+}

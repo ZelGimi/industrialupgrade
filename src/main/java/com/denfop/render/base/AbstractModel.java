@@ -1,10 +1,5 @@
-
 package com.denfop.render.base;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -18,7 +13,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+
 public abstract class AbstractModel implements IReloadableModel, IBakedModel {
+
     public AbstractModel() {
     }
 
@@ -30,7 +31,11 @@ public abstract class AbstractModel implements IReloadableModel, IBakedModel {
         return Collections.emptyList();
     }
 
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public IBakedModel bake(
+            IModelState state,
+            VertexFormat format,
+            Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter
+    ) {
         return this;
     }
 
@@ -65,4 +70,5 @@ public abstract class AbstractModel implements IReloadableModel, IBakedModel {
     public ItemOverrideList getOverrides() {
         return ItemOverrideList.NONE;
     }
+
 }

@@ -4,12 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntityPerTank  extends TileEntityMainTank {
+public class TileEntityPerTank extends TileEntityMainTank {
+
     public TileEntityPerTank() {
         super(80000);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlocksGraphiteReactors.graphite_per_tank;
@@ -19,6 +20,7 @@ public class TileEntityPerTank  extends TileEntityMainTank {
     public BlockTileEntity getBlock() {
         return IUItem.graphite_reactor;
     }
+
     @Override
     public int getLevel() {
         return 3;

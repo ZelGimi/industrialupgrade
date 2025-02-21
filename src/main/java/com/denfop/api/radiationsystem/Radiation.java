@@ -4,6 +4,7 @@ package com.denfop.api.radiationsystem;
 import com.denfop.IUPotion;
 import com.denfop.api.item.IHazmatLike;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketRadiationUpdateValue;
 import com.denfop.network.packet.PacketUpdateRadiation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -16,7 +17,7 @@ import java.util.Random;
 public class Radiation {
 
     private final ChunkPos pos;
-    private final Random rand = new Random();
+    private final static Random rand = new Random();
     private double radiation;
     private EnumLevelRadiation level;
     private EnumCoefficient coef;
@@ -36,19 +37,20 @@ public class Radiation {
     }
 
     public Radiation(CustomPacketBuffer packetBuffer) {
-        this.radiation = packetBuffer.readDouble();
-        this.level = EnumLevelRadiation.values()[packetBuffer.readInt()];
-        this.coef = EnumCoefficient.values()[packetBuffer.readInt()];
-        this.pos = new ChunkPos(packetBuffer.readInt(), packetBuffer.readInt());
+        this.radiation = packetBuffer.readShort() / 32.5D;
+        byte levelAndCoef = packetBuffer.readByte();
+        this.level = EnumLevelRadiation.values()[levelAndCoef & 0x07];
+        this.coef = EnumCoefficient.values()[(levelAndCoef >> 3) & 0x07];
+        this.pos = new ChunkPos(packetBuffer.readShort(), packetBuffer.readShort());
     }
 
     public CustomPacketBuffer writePacket() {
         CustomPacketBuffer customPacketBuffer = new CustomPacketBuffer();
-        customPacketBuffer.writeDouble(this.radiation);
-        customPacketBuffer.writeInt(this.level.ordinal());
-        customPacketBuffer.writeInt(this.coef.ordinal());
-        customPacketBuffer.writeInt(this.pos.x);
-        customPacketBuffer.writeInt(this.pos.z);
+        customPacketBuffer.writeShort((short) (this.radiation*32.5));
+        byte levelAndCoef = (byte) ((this.level.ordinal() & 0x07) | ((this.coef.ordinal() & 0x07) << 3));
+        customPacketBuffer.writeByte(levelAndCoef);
+        customPacketBuffer.writeShort((short) this.pos.x);
+        customPacketBuffer.writeShort((short) this.pos.z);
         return customPacketBuffer;
     }
 
@@ -80,59 +82,62 @@ public class Radiation {
         this.radiation = radiation;
     }
 
-    public boolean removeRadiationWithType(double radiation){
+    public boolean removeRadiationWithType(double radiation) {
         boolean removed;
 
-            if (this.level == EnumLevelRadiation.LOW) {
-                if(this.radiation == 999 && radiation== 1000){
-                    this.radiation = 0;
-                    new PacketUpdateRadiation(this);
-                    return true;
-                }
-              if(this.radiation < radiation){
-                  return false;
-              }
+        if (this.level == EnumLevelRadiation.LOW) {
+            if (this.radiation == 999 && radiation == 1000) {
+                this.radiation = 0;
+                new PacketUpdateRadiation(this);
+                return true;
             }
-            if (this.level == EnumLevelRadiation.DEFAULT) {
-                radiation /= 10;
+            if (this.radiation < radiation) {
+                return false;
             }
-            if (this.level == EnumLevelRadiation.MEDIUM) {
-                radiation /= 100;
-            }
-            if (this.level == EnumLevelRadiation.HIGH) {
-                radiation /= 1000;
-            }
-            if (this.level == EnumLevelRadiation.VERY_HIGH) {
-                radiation /= 10000;
-            }
-            if (this.radiation - radiation == 0) {
-                if(this.level != EnumLevelRadiation.LOW)
+        }
+        if (this.level == EnumLevelRadiation.DEFAULT) {
+            radiation /= 10;
+        }
+        if (this.level == EnumLevelRadiation.MEDIUM) {
+            radiation /= 100;
+        }
+        if (this.level == EnumLevelRadiation.HIGH) {
+            radiation /= 1000;
+        }
+        if (this.level == EnumLevelRadiation.VERY_HIGH) {
+            radiation /= 10000;
+        }
+        if (this.radiation - radiation == 0) {
+            if (this.level != EnumLevelRadiation.LOW) {
                 this.radiation = 1000;
-                else
-                    this.radiation = 0;
-                this.level = EnumLevelRadiation.values()[Math.max(
-                        this.level.ordinal() - 1,
-                        0
-                )];
-                this.coef = EnumCoefficient.values()[Math.max(this.coef.ordinal() - 1, 0)];
-                removed = true;
-            } else if (this.radiation - radiation < 0) {
-                this.radiation = 1000 - (radiation - this.radiation);
-                this.level = EnumLevelRadiation.values()[Math.max(
-                        this.level.ordinal() - 1,
-                        0
-                )];
-                this.coef = EnumCoefficient.values()[Math.max(this.coef.ordinal() - 1, 0)];
-                removed = true;
             } else {
-                this.radiation -= radiation;
-                removed = true;
+                this.radiation = 0;
             }
+            this.level = EnumLevelRadiation.values()[Math.max(
+                    this.level.ordinal() - 1,
+                    0
+            )];
+            this.coef = EnumCoefficient.values()[Math.max(this.coef.ordinal() - 1, 0)];
+            removed = true;
+        } else if (this.radiation - radiation < 0) {
+            this.radiation = 1000 - (radiation - this.radiation);
+            this.level = EnumLevelRadiation.values()[Math.max(
+                    this.level.ordinal() - 1,
+                    0
+            )];
+            this.coef = EnumCoefficient.values()[Math.max(this.coef.ordinal() - 1, 0)];
+            removed = true;
+        } else {
+            this.radiation -= radiation;
+            radiation = 0;
+            removed = true;
+        }
         new PacketUpdateRadiation(this);
         return removed;
 
     }
-    public void removeRadiation(double radiation){
+
+    public void removeRadiation(double radiation) {
         while (radiation > 0 && !(this.radiation == 0 && this.getLevel() == EnumLevelRadiation.LOW)) {
             if (this.radiation - radiation == 0) {
                 radiation = 0;
@@ -189,16 +194,21 @@ public class Radiation {
                 this.coef = EnumCoefficient.values()[Math.min(this.coef.ordinal() + 1, EnumCoefficient.values().length - 1)];
             } else {
                 this.radiation += radiation;
+                radiation = 0;
             }
         }
     }
 
     public void process(EntityPlayer player) {
         boolean need = IHazmatLike.hasCompleteHazmat(player, this.level);
+        final NBTTagCompound nbt = player.getEntityData();
+        double radiation = nbt.getDouble("radiation");
         if (!need) {
             switch (this.level) {
                 case MEDIUM:
                     int num = rand.nextInt(4);
+                    nbt.setDouble("radiation", radiation + 0.02);
+                    new PacketRadiationUpdateValue(player, radiation + 0.02);
                     switch (num) {
                         case 0:
                             player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 200, 0));
@@ -216,6 +226,8 @@ public class Radiation {
                     break;
                 case HIGH:
                     num = rand.nextInt(4);
+                    nbt.setDouble("radiation", radiation + 0.2);
+                    new PacketRadiationUpdateValue(player, radiation + 0.2);
                     switch (num) {
                         case 0:
                             player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 200, 0));
@@ -234,6 +246,8 @@ public class Radiation {
                     break;
                 case VERY_HIGH:
                     num = rand.nextInt(4);
+                    nbt.setDouble("radiation", radiation + 2);
+                    new PacketRadiationUpdateValue(player, radiation + 2);
                     switch (num) {
                         case 0:
                             player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 200, 0));

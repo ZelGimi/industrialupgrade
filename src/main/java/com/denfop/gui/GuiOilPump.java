@@ -2,6 +2,10 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.api.vein.Type;
 import com.denfop.container.ContainerOilPump;
@@ -10,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiOilPump extends GuiCore<ContainerOilPump> {
+public class GuiOilPump extends GuiIU<ContainerOilPump> {
 
     public final ContainerOilPump container;
 
@@ -18,59 +22,48 @@ public class GuiOilPump extends GuiCore<ContainerOilPump> {
     public GuiOilPump(ContainerOilPump container1) {
         super(container1);
         this.container = container1;
+        addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
+        this.componentList.add(new GuiComponent(this, 117, 41, EnumTypeComponent.FLUID_PART,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.componentList.add(new GuiComponent(this, 43, 39, EnumTypeComponent.OIL,
+                new Component(new ComponentEmpty()) {
+                    @Override
+                    public String getText(final GuiComponent guiComponent) {
+                        if (container.base.find && container.base.count > 0 && container.base.maxcount > 0 && container.base.type == Type.OIL.ordinal()) {
+
+
+                            return
+                                    Localization.translate("iu.fluidneft") + ": " + container.base
+                                            .count + "/" + container.base.maxcount
+                                            + Localization.translate(Constants.ABBREVIATION + ".generic.text.mb");
+
+                        } else {
+                            return Localization.translate("iu.notfindoil");
+
+                        }
+                    }
+                }
+        ));
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
 
 
         super.drawForegroundLayer(par1, par2);
-        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(par1, par2);
-
-        String tooltip;
-
-        if (this.container.base.find && this.container.base.count > 0 && this.container.base.maxcount > 0 && this.container.base.type == Type.OIL.ordinal()) {
 
 
-            tooltip =
-                    Localization.translate("iu.fluidneft") + ": " + this.container.base
-                            .count + "/" + this.container.base.maxcount
-                            + Localization.translate(Constants.ABBREVIATION + ".generic.text.mb");
-            new AdvArea(this, 43, 39, 52, 53).withTooltip(tooltip).drawForeground(par1, par2);
-
-        } else {
-            tooltip = Localization.translate("iu.notfindoil");
-
-        }
-
-        new AdvArea(this, 43, 39, 52, 53).withTooltip(tooltip).drawForeground(par1, par2);
-
-        int temp = 0;
-        if (this.container.base.find && this.container.base.maxcount > 0 && this.container.base.type == Type.OIL.ordinal()) {
-
-            temp = 14 * this.container.base
-                    .count / this.container.base.maxcount;
-
-        }
-        temp = Math.min(14, temp);
-        this.mc.getTextureManager().bindTexture(getTexture());
-
-        if (temp > 0) {
-            drawTexturedModalRect(43, 39 + 14 - temp, 177, 130 - temp, 10, temp);
-
-        }
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawBackground(xOffset, yOffset);
+
 
     }
 
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiOilPump.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

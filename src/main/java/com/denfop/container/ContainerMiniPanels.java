@@ -8,27 +8,27 @@ public class ContainerMiniPanels extends ContainerFullInv<TileEntityMiniPanels> 
     private final TileEntityMiniPanels tileentity;
 
     public ContainerMiniPanels(TileEntityMiniPanels tileEntityMiniPanels, EntityPlayer var1) {
-        super(var1, tileEntityMiniPanels, 196, 224);
+        super(var1, tileEntityMiniPanels, 204, 234);
         this.tileentity = tileEntityMiniPanels;
         for (int j = 0; j < 4; ++j) {
 
-            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotStorage, j, 121, 21 + j * 18));
+            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotStorage, j, 143, 24 + j * 22));
 
         }
         for (int j = 0; j < 2; ++j) {
 
-            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotCore, j, 135 + j * 18, 103));
+            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotCore, j, 43 + j * 100, 118));
 
         }
         for (int j = 0; j < 4; ++j) {
 
-            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotOutput, j, 27, 21 + j * 18));
+            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotOutput, j, 43, 24 + j * 22));
 
         }
         for (int j = 0; j < 9; ++j) {
 
-            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotGlass, j, 48 + (j % 3) * 26,
-                    22 + 26 * (j / 3)
+            this.addSlotToContainer(new SlotInvSlot(tileEntityMiniPanels.invSlotGlass, j, 70 + (j % 3) * 23,
+                    34 + 23 * (j / 3)
             ));
 
         }

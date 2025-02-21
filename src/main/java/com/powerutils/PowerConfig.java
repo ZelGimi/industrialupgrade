@@ -7,6 +7,8 @@ import java.io.File;
 public final class PowerConfig {
 
 
+    public static boolean multi;
+
     public static void loadConfig(File config, boolean client) {
         loadNormalConfig(config, client);
 
@@ -16,7 +18,7 @@ public final class PowerConfig {
         final Configuration config = new Configuration(configFile);
         try {
             config.load();
-
+            multi = config.get("MultiEnergy", "Enable", false).getBoolean(false);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

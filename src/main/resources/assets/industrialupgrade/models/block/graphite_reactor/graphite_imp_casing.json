@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
-  "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/imp_casing",
-    "down" : "industrialupgrade:blocks/graphite_reactor/imp_casing",
-    "up" : "industrialupgrade:blocks/graphite_reactor/imp_casing",
-    "north" : "industrialupgrade:blocks/graphite_reactor/imp_casing",
-    "east" : "industrialupgrade:blocks/graphite_reactor/imp_casing",
-    "south" : "industrialupgrade:blocks/graphite_reactor/imp_casing",
-    "west" : "industrialupgrade:blocks/graphite_reactor/imp_casing"
-  }
+  "parent" : "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:blocks/graphite_reactor/casing/imp_casing_side"
+    }
 }

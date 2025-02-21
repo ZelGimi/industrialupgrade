@@ -10,6 +10,8 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockMoreMachine1;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
@@ -22,14 +24,17 @@ import java.util.List;
 public class TileCombMacerator extends TileMultiMachine {
 
     public static List<String> ores = new ArrayList<>();
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
 
     public TileCombMacerator() {
         super(
                 EnumMultiMachine.COMB_MACERATOR.usagePerTick,
-                EnumMultiMachine.COMB_MACERATOR.lenghtOperation,
-                1
+                EnumMultiMachine.COMB_MACERATOR.lenghtOperation
         );
         Recipes.recipes.addInitRecipes(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
 
     public static void addrecipe(String input, String output) {
@@ -62,22 +67,29 @@ public class TileCombMacerator extends TileMultiMachine {
     }
 
     public void init() {
-
         for (String name : OreDictionary.getOreNames()) {
 
             if (name.startsWith("crushed") && !name.startsWith("crushedPurified")) {
                 String name1 = name.substring("crushed".length());
-
+                if (name1.startsWith("Uranium"))
+                    continue;
                 name1 = "ore" + name1;
-
-                if (OreDictionary
+                final String name2 = "raw" + name.substring("crushed".length());
+                if (!OreDictionary
                         .getOres(name1)
-                        .size() > 0 && OreDictionary.getOres(name1) != null && OreDictionary.getOres(name) != null && OreDictionary
-                        .getOres(name)
-                        .size() > 0) {
-                    if (!ores.contains(name)) {
-                        addrecipe(name1, name);
-                        ores.add(name);
+                        .isEmpty() && !OreDictionary
+                        .getOres(name).isEmpty()) {
+                    if (!OreDictionary
+                            .getOres(name2).isEmpty()) {
+                        if (!ores.contains(name)) {
+                            addrecipe(name2, name);
+                            ores.add(name);
+                        }
+                    }else{
+                        if (!ores.contains(name)) {
+                            addrecipe(name1, name);
+                            ores.add(name);
+                        }
                     }
                 }
 

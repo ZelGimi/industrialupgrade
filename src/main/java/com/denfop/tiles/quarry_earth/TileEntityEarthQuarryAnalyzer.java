@@ -4,7 +4,6 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEarthQuarry;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerEarthAnalyzer;
 import com.denfop.gui.GuiEarthAnalyzer;
 import com.denfop.network.IUpdatableTileEvent;
@@ -28,12 +27,14 @@ import java.util.Map;
 
 public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement implements IAnalyzer, IUpdatableTileEvent {
 
-    private boolean analyzer;
-    private boolean fullAnalyzer;
+    public int blockCol;
+    public int blockOres;
     Map<ChunkPos, List<DataPos>> chunkPosListHashMap = new HashMap<>();
-    private ChunkPos chunkPos;
     int x = -1;
     int z = -1;
+    private boolean analyzer;
+    private boolean fullAnalyzer;
+    private ChunkPos chunkPos;
 
     public TileEntityEarthQuarryAnalyzer() {
 
@@ -65,6 +66,8 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeBoolean(analyzer);
         customPacketBuffer.writeBoolean(fullAnalyzer);
+        customPacketBuffer.writeInt(blockCol);
+        customPacketBuffer.writeInt(blockOres);
         return customPacketBuffer;
     }
 
@@ -78,12 +81,16 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         super.readContainerPacket(customPacketBuffer);
         analyzer = customPacketBuffer.readBoolean();
         fullAnalyzer = customPacketBuffer.readBoolean();
+        blockCol = customPacketBuffer.readInt();
+        blockOres = customPacketBuffer.readInt();
     }
 
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
         nbt.setBoolean("analyzer", this.analyzer);
         nbt.setBoolean("fullAnalyzer", this.fullAnalyzer);
+        nbt.setInteger("blockCol", this.blockCol);
+        nbt.setInteger("blockOres", this.blockOres);
         return super.writeToNBT(nbt);
     }
 
@@ -92,6 +99,8 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
         super.readFromNBT(nbtTagCompound);
         this.analyzer = nbtTagCompound.getBoolean("analyzer");
         this.fullAnalyzer = nbtTagCompound.getBoolean("fullAnalyzer");
+        this.blockCol = nbtTagCompound.getInteger("blockCol");
+        this.blockOres = nbtTagCompound.getInteger("blockOres");
     }
 
     @Override
@@ -131,17 +140,23 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
                                             height - y,
                                             chunk1.getPos().z * 16 + z
                                     );
+                                    this.blockCol++;
                                     IBlockState state = world.getBlockState(pos);
                                     if (state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.GRAVEL || state.getBlock() == Blocks.SAND) {
                                         List<DataPos> dataPos = this.chunkPosListHashMap.getOrDefault(
                                                 chunk1.getPos(),
                                                 new ArrayList<>()
                                         );
+
                                         if (dataPos.isEmpty()) {
                                             dataPos.add(new DataPos(pos, state));
                                             chunkPosListHashMap.put(chunk1.getPos(), dataPos);
                                         } else {
                                             dataPos.add(new DataPos(pos, state));
+                                        }
+                                        this.blockOres = 0;
+                                        for (List<DataPos> dataPos1 : chunkPosListHashMap.values()) {
+                                            this.blockOres += dataPos1.size();
                                         }
                                     }
                                 }
@@ -155,7 +170,7 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
                         z++;
                         x = -1;
                     }
-                }else{
+                } else {
                     if (x < 1) {
                         x++;
                     } else {
@@ -192,6 +207,8 @@ public class TileEntityEarthQuarryAnalyzer extends TileEntityMultiBlockElement i
                 x = -1;
                 z = -1;
                 this.chunkPosListHashMap.clear();
+                this.blockCol = 0;
+                blockOres = 0;
             }
         }
     }

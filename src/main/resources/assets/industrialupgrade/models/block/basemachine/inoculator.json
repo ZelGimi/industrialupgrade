@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/inoculator_main",
+    "down" : "industrialupgrade:blocks/inoculator_bottom-side",
+    "up" : "industrialupgrade:blocks/inoculator_top",
+    "north" : "industrialupgrade:blocks/inoculator_main",
+    "east" : "industrialupgrade:blocks/inoculator_bottom-side",
+    "south" : "industrialupgrade:blocks/inoculator_bottom-side",
+    "west" : "industrialupgrade:blocks/inoculator_bottom-side"
+  }
+}

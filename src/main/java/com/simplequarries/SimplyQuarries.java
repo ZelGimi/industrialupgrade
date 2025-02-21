@@ -96,6 +96,20 @@ public final class SimplyQuarries {
                 new ItemStack((Item) IUItem.crafting_elements, 1, 140),
 
                 Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 51)});
+
+        Recipes.recipe.addRecipe(new ItemStack(this.quarry, 1, 4), new Object[]{
+                "D D", "ABE", "DCD",
+
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 631),
+
+                Character.valueOf('B'), new ItemStack(this.quarry, 1, 3),
+
+                Character.valueOf('C'), new ItemStack((Item) IUItem.crafting_elements, 1, 622),
+
+                Character.valueOf('D'),
+                new ItemStack((Item) IUItem.crafting_elements, 1, 623),
+
+                Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 52)});
     }
 
 

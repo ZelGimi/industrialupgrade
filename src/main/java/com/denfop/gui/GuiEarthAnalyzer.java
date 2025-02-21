@@ -2,10 +2,13 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerEarthAnalyzer;
-import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryAnalyzer;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,6 +18,21 @@ public class GuiEarthAnalyzer extends GuiIU<ContainerEarthAnalyzer> {
 
     public GuiEarthAnalyzer(ContainerEarthAnalyzer guiContainer) {
         super(guiContainer);
+        this.componentList.add(new GuiComponent(this, 30, 30, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return ((TileEntityEarthQuarryAnalyzer) this.getEntityBlock()).isAnalyzed() ? Localization.translate(
+                                "turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((TileEntityEarthQuarryAnalyzer) this.getEntityBlock()).isAnalyzed();
+                    }
+                })
+        ));
     }
 
     @Override
@@ -24,22 +42,31 @@ public class GuiEarthAnalyzer extends GuiIU<ContainerEarthAnalyzer> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if(x >= 30 && x <= 45 && y >= 30 &&y <= 45 )
-            new PacketUpdateServerTile(this.container.base, 0);
+
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        if(this.container.base.isAnalyzed() && !this.container.base.fullAnalyzed()){
+        if (this.container.base.isAnalyzed() && !this.container.base.fullAnalyzed()) {
             this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze"), 60, 34,
-                    ModUtils.convertRGBcolorToInt(56, 56, 56));
-        }else   if(this.container.base.fullAnalyzed() && this.container.base.isAnalyzed()){
+                    ModUtils.convertRGBcolorToInt(56, 56, 56)
+            );
+        } else if (this.container.base.fullAnalyzed() && this.container.base.isAnalyzed()) {
             this.fontRenderer.drawString(Localization.translate("earth_quarry.analyze1"), 60, 34,
-                    ModUtils.convertRGBcolorToInt(56, 56, 56));
+                    ModUtils.convertRGBcolorToInt(56, 56, 56)
+            );
         } else if (this.container.base.fullAnalyzed() && !this.container.base.isAnalyzed()) {
             this.fontRenderer.drawString(Localization.translate("earth_quarry.full_analyze"), 60, 34,
-                    ModUtils.convertRGBcolorToInt(56, 56, 56));
+                    ModUtils.convertRGBcolorToInt(56, 56, 56)
+            );
         }
+        this.fontRenderer.drawString(Localization.translate("earth_quarry.block_col") + container.base.blockCol, 10, 60,
+                ModUtils.convertRGBcolorToInt(56, 56, 56)
+        );
+        this.fontRenderer.drawString(Localization.translate("earth_quarry.block_ores") + container.base.blockOres, 10, 70,
+                ModUtils.convertRGBcolorToInt(56, 56, 56)
+        );
     }
 
     @Override
@@ -52,15 +79,12 @@ public class GuiEarthAnalyzer extends GuiIU<ContainerEarthAnalyzer> {
     protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
-        this.drawTexturedModalRect(this.guiLeft + 30, this.guiTop + 30, 37, 52,15, 15);
-        if(this.container.base.isAnalyzed() && !this.container.base.fullAnalyzed()){
-            this.drawTexturedModalRect(this.guiLeft + 30, this.guiTop + 30, 37, 68,17, 15);
-        }
+
     }
 
     @Override
     protected ResourceLocation getTexture() {
         return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
+
 }

@@ -1,16 +1,18 @@
 package com.denfop.world.vein;
 
 public enum TypeVein {
-    SMALL(3,10,2,10,3),MEDIUM(6,15,3,8,4),BIG(10,25,4,5,5);
+    SMALL(4, 11, 2, 10, 3),
+    MEDIUM(8, 17, 3, 8, 4),
+    BIG(12, 28, 4, 5, 5);
     private final int max;
     private final int max_length;
     private final int level;
     private final int need;
     private final int minNeed;
 
-    TypeVein(int max, int max_length, int level, int need, int minNeed){
+    TypeVein(int max, int max_length, int level, int need, int minNeed) {
         this.max = max;
-        this.max_length=max_length;
+        this.max_length = max_length;
         this.level = level;
         this.need = need;
         this.minNeed = minNeed;

@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/genetic_replicator_main_active",
+    "down" : "industrialupgrade:blocks/genetic_replicator_bottom",
+    "up" : "industrialupgrade:blocks/genetic_replicator_top",
+    "north" : "industrialupgrade:blocks/genetic_replicator_main",
+    "east" : "industrialupgrade:blocks/genetic_replicator_bottom",
+    "south" : "industrialupgrade:blocks/genetic_replicator_bottom",
+    "west" : "industrialupgrade:blocks/genetic_replicator_bottom"
+  }
+}

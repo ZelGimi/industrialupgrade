@@ -17,8 +17,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemArmorBase extends ItemArmor implements IModelRegister {
 
 
-    public String armorName;
     private final String name = "";
+    public String armorName;
 
     public ItemArmorBase(
             ItemArmor.ArmorMaterial armorMaterial,
@@ -28,7 +28,6 @@ public class ItemArmorBase extends ItemArmor implements IModelRegister {
         super(armorMaterial, -1, armorType);
         this.armorName = armorName;
         this.setNoRepair();
-        this.setMaxDamage(armorMaterial.getDurability(armorType));
     }
 
     @SideOnly(Side.CLIENT)

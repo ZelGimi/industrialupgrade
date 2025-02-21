@@ -16,4 +16,5 @@ public interface IGraphiteController extends IMultiElement {
     void consumeGraphite();
 
     int getIndex();
+
 }

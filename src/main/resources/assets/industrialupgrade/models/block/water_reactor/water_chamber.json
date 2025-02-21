@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_reactor/chamber",
-    "down" : "industrialupgrade:blocks/water_reactor/chamber",
-    "up" : "industrialupgrade:blocks/water_reactor/chamber",
-    "north" : "industrialupgrade:blocks/water_reactor/chamber",
-    "east" : "industrialupgrade:blocks/water_reactor/chamber",
-    "south" : "industrialupgrade:blocks/water_reactor/chamber",
-    "west" : "industrialupgrade:blocks/water_reactor/chamber"
+    "particle" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side",
+    "down" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side",
+    "up" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side",
+    "north" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side",
+    "east" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side",
+    "south" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side",
+    "west" : "industrialupgrade:blocks/water_reactor/chamber/chamber_side"
   }
 }

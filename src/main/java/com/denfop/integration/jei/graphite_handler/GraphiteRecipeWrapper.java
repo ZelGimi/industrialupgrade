@@ -31,14 +31,14 @@ public class GraphiteRecipeWrapper implements IRecipeWrapper {
         this.outputstack = container.getOutput();
 
     }
-    public List<ItemStack> getInputs1(){
-        return Arrays.asList(inputstack,inputstack1);
+
+    public List<ItemStack> getInputs1() {
+        return Arrays.asList(inputstack, inputstack1);
     }
+
     public ItemStack getInput() {
         return inputstack;
     }
-
-
 
 
     public List<List<ItemStack>> getInputs() {
@@ -50,7 +50,7 @@ public class GraphiteRecipeWrapper implements IRecipeWrapper {
         } else {
             stack.add(inputs);
         }
-         inputs = this.inputstack1;
+        inputs = this.inputstack1;
         if (OreDictionary.getOreIDs(inputs).length > 0) {
             int id = OreDictionary.getOreIDs(inputs)[0];
             stack.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));

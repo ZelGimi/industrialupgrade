@@ -2,30 +2,16 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.api.Recipes;
-import com.denfop.api.recipe.BaseMachineRecipe;
-import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.recipe.IUpdateTick;
-import com.denfop.api.recipe.Input;
-import com.denfop.api.recipe.InvSlotRecipes;
-import com.denfop.api.recipe.MachineRecipe;
-import com.denfop.api.recipe.RecipeOutput;
-import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.ComponentBaseEnergy;
-import com.denfop.componets.ComponentProcess;
-import com.denfop.componets.ComponentProgress;
-import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerEnchanterBooks;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRefrigerator;
-import com.denfop.gui.GuiEnchanterBooks;
 import com.denfop.gui.GuiRefrigerator;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
@@ -33,25 +19,12 @@ import com.denfop.invslot.InvSlotTank;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.items.reactors.ItemReactorCoolant;
 import com.denfop.network.IUpdatableTileEvent;
-import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
-import com.google.common.base.Predicate;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -73,6 +46,8 @@ public class TileEntityRefrigeratorCoolant extends TileElectricMachine implement
                 FluidName.fluidhyd.getInstance(),
                 FluidName.fluidazot.getInstance()
         ));
+        this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.addComponent(new AirPollutionComponent(this, 0.1));
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
@@ -113,54 +88,49 @@ public class TileEntityRefrigeratorCoolant extends TileElectricMachine implement
                     .get()
                     .isEmpty()) {
                 if (fluidSlot.processIntoTank(tank, this.outputSlot)) {
-                   this.upgradeSlot.tickNoMark();
+                    this.upgradeSlot.tickNoMark();
                 }
             }
         }
 
 
-        if(this.energy.getEnergy()>=50&&!this.slot.isEmpty()&&this.tank.getFluidAmount()>1)
-
-    {
-        ItemReactorCoolant coolant = (ItemReactorCoolant) this.slot.get().getItem();
-        int need = coolant.needFill(this.slot.get());
-        if (coolant == IUItem.coolant && this.tank.getFluid().getFluid() == FluidName.fluidhyd.getInstance() && need > 0) {
-            coolant.fill(this.slot.get());
-            this.tank.drain(1, true);
-            this.setActive(true);
-            this.energy.useEnergy(50);
-        } else if (coolant == IUItem.adv_coolant && this.tank
-                .getFluid()
-                .getFluid() == FluidName.fluidazot.getInstance() && need > 0) {
-            coolant.fill(this.slot.get());
-            this.tank.drain(1, true);
-            this.setActive(true);
-            this.energy.useEnergy(50);
-        } else if (coolant == IUItem.imp_coolant && this.tank
-                .getFluid()
-                .getFluid() == FluidName.fluidHelium.getInstance() && need > 0) {
-            coolant.fill(this.slot.get());
-            this.tank.drain(1, true);
-            this.setActive(true);
-            this.energy.useEnergy(50);
+        if (this.energy.getEnergy() >= 50 && !this.slot.isEmpty() && this.tank.getFluidAmount() > 1) {
+            ItemReactorCoolant coolant = (ItemReactorCoolant) this.slot.get().getItem();
+            int need = coolant.needFill(this.slot.get());
+            if (coolant == IUItem.coolant && this.tank.getFluid().getFluid() == FluidName.fluidhyd.getInstance() && need > 0) {
+                coolant.fill(this.slot.get());
+                this.tank.drain(1, true);
+                this.setActive(true);
+                this.energy.useEnergy(50);
+            } else if (coolant == IUItem.adv_coolant && this.tank
+                    .getFluid()
+                    .getFluid() == FluidName.fluidazot.getInstance() && need > 0) {
+                coolant.fill(this.slot.get());
+                this.tank.drain(1, true);
+                this.setActive(true);
+                this.energy.useEnergy(50);
+            } else if (coolant == IUItem.imp_coolant && this.tank
+                    .getFluid()
+                    .getFluid() == FluidName.fluidHelium.getInstance() && need > 0) {
+                coolant.fill(this.slot.get());
+                this.tank.drain(1, true);
+                this.setActive(true);
+                this.energy.useEnergy(50);
+            } else {
+                setActive(false);
+            }
         } else {
-            setActive(false);
+            this.setActive(false);
         }
-    }else
-
-    {
-        this.setActive(false);
+        this.upgradeSlot.tickNoMark();
     }
-    this.upgradeSlot.tickNoMark();
-}
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.FluidConsuming,
-                UpgradableProperty.FluidProducing
+                UpgradableProperty.FluidInput
         );
     }
 

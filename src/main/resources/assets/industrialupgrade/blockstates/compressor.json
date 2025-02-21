@@ -1,0 +1,60 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "compressor" : {
+        "model" : "industrialupgrade:compressor"
+      },
+	  "compressor_1" : {
+        "model" : "industrialupgrade:compressor_1"
+      },
+	  "compressor_2" : {
+        "model" : "industrialupgrade:compressor_2"
+      },
+	  "compressor_3" : {
+        "model" : "industrialupgrade:compressor_3"
+      },
+	  "compressor_4" : {
+        "model" : "industrialupgrade:compressor_4"
+      },
+	  "compressor_5" : {
+        "model" : "industrialupgrade:compressor_5"
+      },
+	  "compressor_6" : {
+        "model" : "industrialupgrade:compressor_6"
+      },
+	  "compressor_7" : {
+        "model" : "industrialupgrade:compressor_7"
+      },
+	  "compressor_8" : {
+        "model" : "industrialupgrade:compressor_8"
+      },
+	  "compressor_9" : {
+        "model" : "industrialupgrade:compressor_9"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

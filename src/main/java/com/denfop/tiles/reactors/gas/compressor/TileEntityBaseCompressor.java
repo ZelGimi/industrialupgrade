@@ -1,9 +1,7 @@
 package com.denfop.tiles.reactors.gas.compressor;
 
 import com.denfop.container.ContainerCompressor;
-import com.denfop.container.ContainerInterCooler;
 import com.denfop.gui.GuiCompressor;
-import com.denfop.gui.GuiReCirculationPump;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
@@ -19,7 +17,7 @@ public class TileEntityBaseCompressor extends TileEntityMultiBlockElement implem
     private final int level;
     private int pressure;
 
-    public TileEntityBaseCompressor(int level){
+    public TileEntityBaseCompressor(int level) {
         this.level = level;
         this.pressure = 1;
 
@@ -52,22 +50,26 @@ public class TileEntityBaseCompressor extends TileEntityMultiBlockElement implem
     @Override
     public NBTTagCompound writeToNBT(final NBTTagCompound nbt) {
         NBTTagCompound nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.setInteger("pressure",pressure);
+        nbtTagCompound.setInteger("pressure", pressure);
         return nbtTagCompound;
     }
+
     @Override
     public boolean hasOwnInventory() {
         return true;
     }
+
     @Override
     public ContainerCompressor getGuiContainer(final EntityPlayer var1) {
-        return new ContainerCompressor(this,var1);
+        return new ContainerCompressor(this, var1);
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiCompressor(getGuiContainer(var1));
     }
+
     @Override
     public int getEnergy() {
         return this.pressure * 5;
@@ -80,10 +82,10 @@ public class TileEntityBaseCompressor extends TileEntityMultiBlockElement implem
 
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
-        if(var2 == 0){
-            this.pressure = Math.min(this.level + 1, pressure+1);
-        }else{
-            this.pressure = Math.max(1, pressure-1);
+        if (var2 == 0) {
+            this.pressure = Math.min(this.level + 1, pressure + 1);
+        } else {
+            this.pressure = Math.max(1, pressure - 1);
         }
     }
 

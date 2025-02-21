@@ -1,9 +1,7 @@
 package com.denfop.tiles.reactors.graphite.socket;
 
-import com.denfop.componets.AdvEnergy;
-import com.denfop.container.ContainerGasSocket;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerGraphiteSocket;
-import com.denfop.gui.GuiGasSocket;
 import com.denfop.gui.GuiGraphiteSocket;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.ISocket;
@@ -14,13 +12,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityMainSocket extends TileEntityMultiBlockElement implements ISocket {
 
-    private final AdvEnergy energy;
+    private final Energy energy;
 
-    public TileEntityMainSocket(int Capacity){
-        this.energy = this.addComponent( AdvEnergy.asBasicSource(this,Capacity,14));
+    public TileEntityMainSocket(int Capacity) {
+        this.energy = this.addComponent(Energy.asBasicSource(this, Capacity, 14));
     }
 
-    public AdvEnergy getEnergy() {
+    public Energy getEnergy() {
         return energy;
     }
 
@@ -37,7 +35,7 @@ public class TileEntityMainSocket extends TileEntityMultiBlockElement implements
 
     @Override
     public ContainerGraphiteSocket getGuiContainer(final EntityPlayer var1) {
-        return new ContainerGraphiteSocket(this,var1);
+        return new ContainerGraphiteSocket(this, var1);
     }
 
 }

@@ -15,19 +15,30 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemsPumps  extends ItemDamage{
+public class ItemsPumps extends ItemDamage {
 
     private final int power;
     private final int energy;
 
     private final int level;
-    public ItemsPumps(final String name, final int maxDamage,int level,  int power, int energy) {
+
+    public ItemsPumps(final String name, final int maxDamage, int level, int power, int energy) {
         super(name, maxDamage);
         this.power = power;
-        this.level=level;
+        this.level = level;
         this.energy = energy;
         setMaxStackSize(1);
     }
+
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name) {
+
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "pumps" + "/" + name;
+        return new ModelResourceLocation(loc, null);
+    }
+
     @Override
     public void addInformation(
             @Nonnull final ItemStack stack,
@@ -36,8 +47,9 @@ public class ItemsPumps  extends ItemDamage{
             @Nonnull final ITooltipFlag advanced
     ) {
         super.addInformation(stack, world, tooltip, advanced);
-
-        tooltip.add(Localization.translate("reactor.component_level") + (this.level +1) );
+        tooltip.add(Localization.translate("iu.reactoritem.durability") + " " + (this.getMaxCustomDamage(stack) - this.getCustomDamage(
+                stack)) + "/" + this.getMaxCustomDamage(stack));
+        tooltip.add(Localization.translate("reactor.component_level") + (this.level + 1));
         tooltip.add(Localization.translate("reactor.component_level1"));
 
     }
@@ -58,15 +70,9 @@ public class ItemsPumps  extends ItemDamage{
     public void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
+
     public String getItemStackDisplayName(ItemStack stack) {
         return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
     }
-    @SideOnly(Side.CLIENT)
-    public static ModelResourceLocation getModelLocation(String name) {
 
-        final String loc = Constants.MOD_ID +
-                ':' +
-                "pumps" + "/" + name;
-        return new ModelResourceLocation(loc, null);
-    }
 }

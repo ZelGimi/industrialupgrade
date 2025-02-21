@@ -7,18 +7,16 @@ import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
+import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerPump;
 import com.denfop.gui.GuiPump;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.network.DecoderHandler;
-import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +31,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.lwjgl.input.Keyboard;
 
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -49,9 +46,8 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
     public final InvSlotUpgrade upgradeSlot;
     public double energyConsume;
     public int operationsPerTick;
-    public short progress = 0;
     public int operationLength;
-    public float guiProgress;
+    public ComponentProgress componentProgress;
 
     public TilePump(int size, int operationLength) {
         super(20, 1, size);
@@ -67,7 +63,9 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
         this.defaultOperationLength = this.operationLength = operationLength;
         this.defaultTier = 1;
         this.defaultEnergyStorage = this.operationLength;
+        componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) operationLength));
 
+        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
     }
 
     private static int applyModifier(int base, int extra, double multiplier) {
@@ -82,27 +80,18 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
-        try {
-            guiProgress = (float) DecoderHandler.decode(customPacketBuffer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
 
     }
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         final CustomPacketBuffer packet = super.writeContainerPacket();
-        try {
-            EncoderHandler.encode(packet, guiProgress);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -111,21 +100,21 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
 
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.energy.canUseEnergy((this.energyConsume * this.operationLength))) {
+        if (this.energy.canUseEnergy((this.energyConsume))) {
 
-            if (this.progress < this.operationLength) {
-                ++this.progress;
+            if (componentProgress.getProgress() < componentProgress.getMaxValue()) {
+                componentProgress.addProgress(0);
                 this.energy.useEnergy(energyConsume);
             } else {
                 if (this.canoperate()) {
-                    this.progress = 0;
+                    componentProgress.setProgress((short) 0);
                 }
             }
         }
@@ -143,7 +132,6 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
         }
 
 
-        this.guiProgress = (float) this.progress / (float) this.operationLength;
         if (this.upgradeSlot.tickNoMark()) {
             setUpgradestat();
         }
@@ -241,7 +229,7 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
 
 
     public void setUpgradestat() {
-        double previousProgress = (double) this.progress / (double) this.operationLength;
+        double previousProgress = componentProgress.getBar();
         double stackOpLen = ((double) this.defaultOperationLength + (double) this.upgradeSlot.extraProcessTime) * 64.0D * this.upgradeSlot.processTimeMultiplier;
         this.operationsPerTick = (int) Math.min(Math.ceil(64.0D / stackOpLen), 2.147483647E9D);
         this.operationLength = (int) Math.round(stackOpLen * (double) this.operationsPerTick / 64.0D);
@@ -255,8 +243,9 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
         if (this.operationLength < 1) {
             this.operationLength = 1;
         }
+        componentProgress.setMaxValue((short) operationLength);
+        componentProgress.setProgress((short) ((int) Math.floor(previousProgress * (double) this.operationLength + 0.1D)));
 
-        this.progress = (short) ((int) Math.floor(previousProgress * (double) this.operationLength + 0.1D));
     }
 
     public double getEnergy() {
@@ -274,12 +263,10 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.progress = nbttagcompound.getShort("progress");
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("progress", this.progress);
         return nbttagcompound;
     }
 
@@ -298,10 +285,7 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.FluidExtract
         );
     }
 

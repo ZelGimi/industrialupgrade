@@ -62,6 +62,15 @@
       }
     ]
   },
+  "machines.gas_combiner" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/gas_combiner",
+        "stream" : false
+      }
+    ]
+  },
   "machines.centrifuge" : {
     "category" : "block",
     "sounds" : [
@@ -157,6 +166,105 @@
     "sounds" : [
       {
         "name" : "industrialupgrade:machines/fermer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.molot" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/molot",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.primal_macerator" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/primal_macerator",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.dryer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/dryer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.mixer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/mixer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.fluid_mixer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/fluid_mixer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.solid_mixer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/solid_mixer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.steam" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/steam",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.interruptone_steam" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/interruptone_steam",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.squeezer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/squeezer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.solid_electrolyzer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/solid_electrolyzer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.primal_compressor" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/primal_compressor",
         "stream" : false
       }
     ]

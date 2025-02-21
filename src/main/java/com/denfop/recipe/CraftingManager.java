@@ -5,11 +5,13 @@ import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.api.crafting.PartRecipe;
 import com.denfop.api.crafting.RecipeGrid;
+import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,12 +22,14 @@ public class CraftingManager {
     public CraftingManager() {
     }
 
-
-    public void addRecipe(Item output, Object... input) {
-        addRecipe(new ItemStack(output), input);
+    public BaseRecipe addRecipe(String output, Object... input) {
+        return addRecipe(OreDictionary.getOres(output).get(0), input);
+    }
+    public BaseRecipe addRecipe(Item output, Object... input) {
+        return addRecipe(new ItemStack(output), input);
     }
 
-    public void addRecipe(ItemStack output, Object... input) {
+    public BaseRecipe addRecipe(ItemStack output, Object... input) {
         List<Object> objects = Arrays.asList(input);
         List<String> list = new ArrayList<>();
         List<PartRecipe> objectMap = new ArrayList<>();
@@ -44,24 +48,25 @@ public class CraftingManager {
             IInputItemStack recipeInput = getRecipeInput(object);
             objectMap.add(new PartRecipe(character.toString(), recipeInput));
         }
-        new BaseRecipe(output, grid, objectMap);
+        return new BaseRecipe(output, grid, objectMap);
     }
 
-    public void addShapelessRecipe(ItemStack output, Object... input) {
+    public BaseShapelessRecipe addShapelessRecipe(ItemStack output, Object... input) {
         List<IInputItemStack> recipeInputList = new ArrayList<>();
         for (Object object : input) {
             IInputItemStack recipeInput = getRecipeInput(object);
             recipeInputList.add(recipeInput);
         }
-        new BaseShapelessRecipe(output, recipeInputList);
+        return new BaseShapelessRecipe(output, recipeInputList);
     }
 
-    public void addShapelessRecipe(Item output, Object... input) {
-        addShapelessRecipe(new ItemStack(output), input);
+    public BaseShapelessRecipe addShapelessRecipe(Item output, Object... input) {
+        return addShapelessRecipe(new ItemStack(output), input);
     }
 
-    public void addShapelessRecipe(Block output, Object... input) {
-        addShapelessRecipe(new ItemStack(output), input);
+
+    public BaseShapelessRecipe addShapelessRecipe(Block output, Object... input) {
+        return addShapelessRecipe(new ItemStack(output), input);
     }
 
     private IInputItemStack getRecipeInput(Object o) {

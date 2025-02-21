@@ -2,8 +2,8 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerSubstitute;
-import com.denfop.network.packet.PacketUpdateServerTile;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -19,9 +19,22 @@ public class GuiEnergySubstitute extends GuiIU<ContainerSubstitute> {
     public GuiEnergySubstitute(ContainerSubstitute container1) {
         super(container1);
         this.container = container1;
-        this.ySize = 178;
+        this.ySize = 200;
         this.inventory.setX(7);
-        this.inventory.setY(96);
+        this.inventory.setY(119);
+        this.addElement(new CustomButton(
+                this,
+                83,
+                21,
+                88,
+                15,
+                container1.base,
+                0,
+                Localization.translate("button.find_energypaths")
+        ));
+        this.addElement(new CustomButton(this, 83, 40, 88, 15, container1.base, 1, Localization.translate("button" +
+                ".set_value_energypaths")));
+
     }
 
 
@@ -34,12 +47,7 @@ public class GuiEnergySubstitute extends GuiIU<ContainerSubstitute> {
 
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 21,
-                68, 9, Localization.translate("button.find_energypaths")
-        ));
-        this.buttonList.add(new GuiButton(1, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 39,
-                68, 9, Localization.translate("button.set_value_energypaths")
-        ));
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -58,18 +66,11 @@ public class GuiEnergySubstitute extends GuiIU<ContainerSubstitute> {
 
     protected void actionPerformed(GuiButton guibutton) {
 
-        if (guibutton.id == 0) {
-            new PacketUpdateServerTile(this.container.base, 0);
 
-        }
-        if (guibutton.id == 1) {
-            new PacketUpdateServerTile(this.container.base, 1);
-
-        }
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicontroller.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

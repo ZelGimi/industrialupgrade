@@ -4,8 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerGasSocket;
-import com.denfop.container.ContainerGraphiteSocket;
 import com.denfop.container.ContainerHeatSocket;
 import net.minecraft.util.ResourceLocation;
 
@@ -20,6 +18,7 @@ public class GuiHeatSocket extends GuiIU<ContainerHeatSocket> {
         this.xSize = 186;
         this.ySize = 211;
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -38,6 +37,7 @@ public class GuiHeatSocket extends GuiIU<ContainerHeatSocket> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiheat2.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiheat4.png");
     }
+
 }

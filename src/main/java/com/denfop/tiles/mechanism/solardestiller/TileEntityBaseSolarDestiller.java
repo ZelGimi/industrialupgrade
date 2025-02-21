@@ -52,7 +52,11 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     public TileEntityBaseSolarDestiller(EnumTypeStyle style) {
         this.style = style;
         this.inputTank = this.fluids.addTankInsert("inputTank", 10000, Fluids.fluidPredicate(FluidRegistry.WATER));
-        this.outputTank = this.fluids.addTankExtract("outputTank", 10000);
+        this.outputTank = this.fluids.addTankExtract(
+                "outputTank",
+                10000,
+                Fluids.fluidPredicate(FluidName.fluiddistilled_water.getInstance())
+        );
         this.waterinputSlot = new InvSlotFluidByList(
                 this,
                 InvSlot.TypeItemSlot.INPUT,
@@ -121,7 +125,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         if (this.getWorld().provider.getWorldTime() % this.tickrate == 0) {
 
             if (this.canWork()) {
-                this.inputTank.drainInternal(1, true);
+                this.inputTank.drainInternal(4, true);
                 this.outputTank.fillInternal(new FluidStack(FluidName.fluiddistilled_water.getInstance(), 1), true);
             }
 
@@ -143,7 +147,6 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
 
-
     public int getTickRate() {
         Biome biome = world.getBiome(pos);
         if (BiomeDictionary.hasType(biome, Type.HOT)) {
@@ -156,6 +159,8 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                     return 24;
                 case PERFECT:
                     return 15;
+                case PHOTONIC:
+                    return 8;
             }
         } else {
             switch (style) {
@@ -167,6 +172,8 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                     return BiomeDictionary.hasType(biome, Type.COLD) ? 96 : 48;
                 case PERFECT:
                     return BiomeDictionary.hasType(biome, Type.COLD) ? 60 : 30;
+                case PHOTONIC:
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 35 : 17;
             }
 
         }
@@ -193,12 +200,12 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
     public boolean canWork() {
-        return this.inputTank.getFluidAmount() > 0 && this.outputTank.getFluidAmount() < this.outputTank.getCapacity() && this.skyLight;
+        return this.inputTank.getFluidAmount() > 3 && this.outputTank.getFluidAmount() < this.outputTank.getCapacity() && this.skyLight;
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
-                , UpgradableProperty.FluidConsuming);
+        return EnumSet.of(UpgradableProperty.FluidInput
+                , UpgradableProperty.FluidExtract);
     }
 
     @Override

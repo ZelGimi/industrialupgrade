@@ -17,7 +17,7 @@ public class StampHandler {
     public StampHandler(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
 
-            ItemStack output,String name
+            ItemStack output, String name
     ) {
         this.input = input;
         this.input1 = input1;
@@ -25,10 +25,6 @@ public class StampHandler {
         this.input3 = input3;
         this.output = output;
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public static List<StampHandler> getRecipes() {
@@ -40,9 +36,9 @@ public class StampHandler {
 
     public static StampHandler addRecipe(
             ItemStack input, ItemStack input1, ItemStack input2, ItemStack input3,
-            ItemStack output,String name
+            ItemStack output, String name
     ) {
-        StampHandler recipe = new StampHandler(input, input1, input2, input3, output,name);
+        StampHandler recipe = new StampHandler(input, input1, input2, input3, output, name);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -68,7 +64,7 @@ public class StampHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0),"stamp_vent"
+                    container.getOutput().items.get(0), "stamp_vent"
 
             );
         }
@@ -77,7 +73,7 @@ public class StampHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0),"stamp_plate"
+                    container.getOutput().items.get(0), "stamp_plate"
 
             );
         }
@@ -86,7 +82,7 @@ public class StampHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0),"stamp_exchanger"
+                    container.getOutput().items.get(0), "stamp_exchanger"
 
             );
         }
@@ -95,7 +91,7 @@ public class StampHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0),"stamp_coolant"
+                    container.getOutput().items.get(0), "stamp_coolant"
 
             );
         }
@@ -104,14 +100,16 @@ public class StampHandler {
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
                     container.input.getInputs().get(3).getInputs().get(0),
-                    container.getOutput().items.get(0),"stamp_capacitor"
+                    container.getOutput().items.get(0), "stamp_capacitor"
 
             );
         }
 
     }
 
-
+    public String getName() {
+        return name;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;
@@ -128,9 +126,6 @@ public class StampHandler {
     public ItemStack getInput3() { // Получатель входного предмета рецепта.
         return input3;
     }
-
-
-
 
 
     public ItemStack getOutput() { // Получатель выходного предмета рецепта.

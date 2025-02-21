@@ -2,9 +2,12 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerGraphiteController;
-import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -14,8 +17,24 @@ public class GuiGraphiteGraphiteController extends GuiIU<ContainerGraphiteContro
     public GuiGraphiteGraphiteController(ContainerGraphiteController guiContainer) {
         super(guiContainer);
         this.componentList.clear();
-        this.xSize = 186;
-        this.ySize = 238;
+        this.xSize = 187;
+        this.ySize = 212;
+        this.addComponent(new GuiComponent(this, 83, 70 - 26, 22, 22,
+                new Component<>(new ComponentButton(this.container.base, 0) {
+                    @Override
+                    public String getText() {
+                        return "+1";
+                    }
+                })
+        ));
+        this.addComponent(new GuiComponent(this, 83, 70 + 20, 22, 22,
+                new Component<>(new ComponentButton(this.container.base, 1) {
+                    @Override
+                    public String getText() {
+                        return "-1";
+                    }
+                })
+        ));
     }
 
     @Override
@@ -25,12 +44,7 @@ public class GuiGraphiteGraphiteController extends GuiIU<ContainerGraphiteContro
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if(x >= 87 && y >= 57 - 15 && x <= 98&& y <=57 - 4){
-            new PacketUpdateServerTile(this.container.base, 0);
-        }
-        if(x >= 87 && y >= 57+18+5 && x <= 98&& y <=57+18+16){
-            new PacketUpdateServerTile(this.container.base, 1);
-        }
+
     }
 
     @Override
@@ -38,18 +52,24 @@ public class GuiGraphiteGraphiteController extends GuiIU<ContainerGraphiteContro
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString(Localization.translate("reactor.level_graphite") + this.container.base.getLevelGraphite(),
                 23 - 6
-                ,10,
+                , 10,
                 ModUtils.convertRGBcolorToInt(15,
-                        125,205));
+                        125, 205
+                )
+        );
         this.fontRenderer.drawString(Localization.translate("reactor.level_fuel_graphite") + ModUtils.getString(this.container.base.getFuelGraphite()),
                 23 - 6
-                ,20,
+                , 20,
                 ModUtils.convertRGBcolorToInt(15,
-                        125,205));
+                        125, 205
+                )
+        );
         this.fontRenderer.drawString(Localization.translate("reactor.index_graphite") + this.container.base.getIndex(),
-                23 - 6,30,
+                23 - 6, 30,
                 ModUtils.convertRGBcolorToInt(15,
-                        125,205));
+                        125, 205
+                )
+        );
     }
 
     @Override
@@ -60,22 +80,18 @@ public class GuiGraphiteGraphiteController extends GuiIU<ContainerGraphiteContro
     @Override
     protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
+        GlStateManager.color(1f, 1f, 1f, 1f);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(this.guiLeft + 83, this.guiTop + 57, 189, 4, 18, 18);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
+        this.drawTexturedModalRect(this.guiLeft + 83, this.guiTop + 67, 188, 3, 23, 23);
 
-        drawTexturedModalRect(this.guiLeft + 83 + 4, this.guiTop + 57 - 15
-                , 0, 245, 11, 11);
+        this.drawTexturedModalRect(this.guiLeft + 83, this.guiTop + 70 - 26, 188, 43, 22, 22);
+        this.drawTexturedModalRect(this.guiLeft + 83, this.guiTop + 70 + 20, 211, 43, 22, 22);
 
-
-        drawTexturedModalRect(this.guiLeft + 83 + 4, this.guiTop +57+18+5
-                , 11, 245, 11, 11);
-        this.mc.getTextureManager().bindTexture(this.getTexture());
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_graphite.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guigraphite4.png");
     }
 
 }

@@ -118,19 +118,36 @@ public class TileEntityWaterRotorModifier extends TileEntityInventory implements
 
     @Override
     public void updateTileServer(final EntityPlayer var1, final double var2) {
-        if(!this.rotor_slot.get().isEmpty())
-            for(int i =0; i < this.slot.size();i++){
-                RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
-                if(!this.slot.get(i).isEmpty()){
-                    NBTTagCompound nbt = ModUtils.nbt(this.getItemStack());
-                    nbt.setString("mode_module" + i,
-                            (com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules.getFromID(this.slot.get(i).getItemDamage())).name);
+        if (var2 == 0) {
+            if (!this.rotor_slot.get().isEmpty()) {
+                for (int i = 0; i < this.slot.size(); i++) {
+                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
+                    if (!this.slot.get(i).isEmpty()) {
+                        NBTTagCompound nbt = ModUtils.nbt(this.getItemStack());
+                        nbt.setString(
+                                "mode_module" + i,
+                                (com.denfop.api.water.upgrade.EnumInfoRotorUpgradeModules.getFromID(this.slot
+                                        .get(i)
+                                        .getItemDamage())).name
+                        );
+                        MinecraftForge.EVENT_BUS.post(new com.denfop.api.water.upgrade.event.EventRotorItemLoad(this
+                                .getParent().getWorld(), (com.denfop.api.water.upgrade.IRotorUpgradeItem) this
+                                .getItemStack().getItem(), this
+                                .getItemStack()));
+                    }
+                }
+            }
+        } else {
+            if (!this.rotor_slot.get().isEmpty()) {
+                for (int i = 0; i < this.slot.size(); i++) {
+                    RotorUpgradeSystem.instance.removeUpdate(this.getItemStack(), this.getParent().getWorld(), i);
                     MinecraftForge.EVENT_BUS.post(new com.denfop.api.water.upgrade.event.EventRotorItemLoad(this
                             .getParent().getWorld(), (com.denfop.api.water.upgrade.IRotorUpgradeItem) this
                             .getItemStack().getItem(), this
                             .getItemStack()));
                 }
             }
+        }
     }
 
 }

@@ -80,11 +80,13 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
     private final int tier;
     private final double transferLimit;
     private final EnumTypeArmor armor;
+    private final EnumSubTypeArmor subTypeArmor;
     private float jumpCharge;
     private boolean lastJetpackUsed = false;
 
     public ItemSpecialArmor(EnumSubTypeArmor subTypeArmor, EnumTypeArmor typeArmor) {
         super(ArmorMaterial.DIAMOND, -1, subTypeArmor.getEntityEquipmentSlot());
+        this.subTypeArmor = subTypeArmor;
         final List<EnumCapability> list = new ArrayList<>(subTypeArmor.getCapabilities());
         list.removeIf(capability -> !typeArmor.getListCapability().contains(capability));
         this.listCapability = list;
@@ -93,6 +95,8 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         }
         if (this.listCapability.contains(EnumCapability.ACTIVE_EFFECT) || this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
             potionRemovalCost.put(IUPotion.radiation, 20);
+            potionRemovalCost.put(IUPotion.frostbite, 20);
+            potionRemovalCost.put(IUPotion.poison_gas, 20);
             if (this.listCapability.contains(EnumCapability.ALL_ACTIVE_EFFECT)) {
                 potionRemovalCost.put(MobEffects.POISON, 100);
                 potionRemovalCost.put(MobEffects.WITHER, 100);
@@ -144,6 +148,24 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         return new ModelResourceLocation(loc, null);
     }
 
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        switch (armorType) {
+            case HEAD:
+                return EnumUpgrades.HELMET.list;
+
+            case CHEST:
+                return EnumUpgrades.BODY.list;
+
+            case LEGS:
+                return EnumUpgrades.LEGGINGS.list;
+
+            case FEET:
+                return EnumUpgrades.BOOTS.list;
+
+        }
+        return EnumUpgrades.HELMET.list;
+    }
+
     public boolean showDurabilityBar(final ItemStack stack) {
         return true;
     }
@@ -170,17 +192,17 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         return listCapability;
     }
 
-    @Override
-    public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
-        NBTTagCompound nbt = ModUtils.nbt(itemStack);
+        @Override
+        public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
+            NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
-        if (!UpgradeSystem.system.hasInMap(itemStack)) {
-            nbt.setBoolean("hasID", false);
-            MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            if (!UpgradeSystem.system.hasInMap(itemStack)) {
+                nbt.setBoolean("hasID", false);
+                MinecraftForge.EVENT_BUS.post(new EventItemLoad(world, this, itemStack));
+            }
+
+
         }
-
-
-    }
 
     @Override
     public void getSubItems(final CreativeTabs subs, final NonNullList<ItemStack> items) {
@@ -258,10 +280,10 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
         }
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
         NBTTagCompound nbtData = player.getEntityData();
-        if (!player.inventory.armorInventory.get(0).isEmpty()
-                && player.inventory.armorInventory
+        Item boots = player.inventory.armorInventory
                 .get(0)
-                .getItem() == this && this.listCapability.contains(EnumCapability.AUTO_JUMP)) {
+                .getItem();
+        if (boots == IUItem.spectral_boots || boots == IUItem.quantum_boots) {
             nbtData.setBoolean("stepHeight", true);
             player.stepHeight = 1.0F;
 
@@ -355,33 +377,38 @@ public class ItemSpecialArmor extends ItemArmor implements IModelRegister, IItem
                     toggleTimer = (byte) (toggleTimer - 1);
                     nbtData.setByte("toggleTimer", toggleTimer);
                 }
+                boolean NightvisioModule = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RESISTANCE, itemStack);
+                if (!NightvisioModule) {
+                    if (Nightvision && IUCore.proxy.isSimulating() &&
+                            ElectricItem.manager.use(itemStack, 1.0D, player)) {
+                        int x = MathHelper.floor(player.posX);
+                        int z = MathHelper.floor(player.posZ);
+                        int y = MathHelper.floor(player.posY);
+                        int skylight = player.getEntityWorld().getLightFromNeighbors(new BlockPos(x, y, z));
+                        boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
+                        boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
+                        if (without || with) {
+                            if (skylight > 8) {
+                                IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
+                                if (with) {
+                                    player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0, true, true));
 
-                if (Nightvision && IUCore.proxy.isSimulating() &&
-                        ElectricItem.manager.use(itemStack, 1.0D, player)) {
-                    int x = MathHelper.floor(player.posX);
-                    int z = MathHelper.floor(player.posZ);
-                    int y = MathHelper.floor(player.posY);
-                    int skylight = player.getEntityWorld().getLightFromNeighbors(new BlockPos(x, y, z));
-                    boolean with = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITH);
-                    boolean without = this.listCapability.contains(EnumCapability.NIGHT_VISION_WITHOUT);
-                    if (without || with) {
-                        if (skylight > 8) {
-                            IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
-                            if (with) {
-                                player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0, true, true));
+                                }
+                            } else {
+                                if (with) {
+                                    IUCore.proxy.removePotion(player, MobEffects.BLINDNESS);
 
+                                }
+                                player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
                             }
                         } else {
-                            if (with) {
-                                IUCore.proxy.removePotion(player, MobEffects.BLINDNESS);
-
-                            }
                             player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
                         }
-                    } else {
-                        player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
+                        ret = true;
                     }
-                    ret = true;
+                } else {
+                    player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
+
                 }
                 if (this.listCapability.contains(EnumCapability.FOOD) && ElectricItem.manager.canUse(itemStack, 1000.0D) && player
                         .getFoodStats()

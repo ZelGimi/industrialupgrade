@@ -3,7 +3,18 @@ package com.denfop.integration.jei.fishmachine;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
+import com.denfop.container.ContainerFisher;
+import com.denfop.container.SlotInvSlot;
+import com.denfop.gui.GuiIU;
+import com.denfop.tiles.base.TileFisher;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -12,25 +23,41 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class FishMCategory extends Gui implements IRecipeCategory<FishMWrapper> {
+public class FishMCategory extends GuiIU implements IRecipeCategory<FishMWrapper> {
 
     private final IDrawableStatic bg;
+    private final ContainerFisher container1;
+    private final GuiComponent progress_bar;
     private int energy = 0;
     private int progress = 0;
 
     public FishMCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiFisher.png"), 3, 3, 160,
-                80
+        super(((TileFisher) BlockBaseMachine2.fisher.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+                        ".png"), 3, 3, 140,
+                82
         );
+        this.componentList.clear();
+        this.slots = new GuiComponent(this, 3, 3, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE_JEI))
+        );
+        this.container1 = (ContainerFisher) this.getContainer();
+        this.componentList.add(slots);
+        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROGRESS4,
+                new Component<>(new ComponentProgress(container1.base, 1, (short) 100))
+        );
+        this.componentList.add(progress_bar);
+
+
     }
 
     @Nonnull
@@ -61,19 +88,17 @@ public class FishMCategory extends Gui implements IRecipeCategory<FishMWrapper> 
     @Override
     public void drawExtras(final Minecraft mc) {
         progress++;
-        energy++;
-        int energylevel = (int) Math.min(48.0F * energy / 100, 48);
+        if (this.energy < 100) {
+            energy++;
+        }
 
-        double xScale = 15.0F * progress / 100;
-        if (xScale > 15.0F) {
+        double xScale = progress / 100D;
+        if (xScale >= 1) {
             progress = 0;
         }
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(
-                140 + 1 + 2, 25 + 48 - energylevel, 176,
-                48 - energylevel, 48, energylevel
-        );
-        drawTexturedModalRect(39, 43, 177, 48, (int) (xScale + 1), 14);
+        this.slots.drawBackground(0, 0);
+
+        progress_bar.renderBar(-30, 8, xScale);
 
     }
 
@@ -84,15 +109,20 @@ public class FishMCategory extends Gui implements IRecipeCategory<FishMWrapper> 
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 13, 41);
-        isg.set(0, new ItemStack(Items.FISHING_ROD));
-        isg.init(1, false, 61, 23);
-        isg.set(1, recipes.getOutput());
+        final List<SlotInvSlot> slots1 = container1.getSlots();
+
+        int i = 0;
+        isg.init(i, true, slots1.get(i).getJeiX(), slots1.get(i).getJeiY());
+        isg.set(i, new ItemStack(Items.FISHING_ROD));
+
+        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        isg.init(i + 1, false, outputSlot.getJeiX(), outputSlot.getJeiY());
+        isg.set(i + 1, recipes.getOutput());
 
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiFisher.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

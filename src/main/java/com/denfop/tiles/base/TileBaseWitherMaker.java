@@ -7,10 +7,18 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.audio.EnumSound;
-import com.denfop.componets.*;
+import com.denfop.componets.Action;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.ComponentProcess;
+import com.denfop.componets.ComponentProgress;
+import com.denfop.componets.ComponentUpgrade;
+import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.TypeAction;
+import com.denfop.componets.TypeLoad;
+import com.denfop.componets.TypeUpgrade;
 import com.denfop.container.ContainerBaseWitherMaker;
 import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -52,25 +60,27 @@ public abstract class TileBaseWitherMaker extends TileElectricMachine
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setAction(new Action(this, 20, TypeAction.AUDIO, TypeLoad.PROGRESS, 3));
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
 
     }
+
 
     public static int applyModifier(int base, int extra, double multiplier) {
         double ret = Math.round((base + extra) * multiplier);
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 

@@ -28,7 +28,6 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricLiquidTankInventory;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -68,14 +67,24 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     public int type;
 
     public TileOilPump() {
-        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance()));
+        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidneft.getInstance(),
+                FluidName.fluidsour_light_oil.getInstance(), FluidName.fluidsour_heavy_oil.getInstance(),
+                FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
+                FluidName.fluidsweet_heavy_oil.getInstance()
+        ));
         this.containerslot = new InvSlotFluidByList(this,
                 InvSlot.TypeItemSlot.INPUT, 1, InvSlotFluid.TypeFluidSlot.OUTPUT,
-                FluidName.fluidneft.getInstance()
+                FluidName.fluidneft.getInstance(),
+                FluidName.fluidsour_light_oil.getInstance(), FluidName.fluidsour_heavy_oil.getInstance(),
+                FluidName.fluidsour_medium_oil.getInstance(), FluidName.fluidsweet_medium_oil.getInstance(),
+                FluidName.fluidsweet_heavy_oil.getInstance()
         );
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
         this.defaultTier = 14;
         this.level = 0;
+
+        fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);
+        this.fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
     }
 
     private static int applyModifier(int extra) {
@@ -106,9 +115,9 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
         this.level -= level;
     }
 
-    @SideOnly(Side.CLIENT)
+
     @Override
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -123,7 +132,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.amount / 1000 + " B");
 
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     @Override
@@ -194,7 +203,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             } else {
                 stack.shrink(1);
                 this.level++;
-                return false;
+                return true;
             }
         } else {
             return super.onActivated(player, hand, side, hitX, hitY, hitZ);
@@ -211,12 +220,15 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
     }
 
     private void updateTileEntityField() {
-
+        new PacketUpdateFieldTile(this, "vein", vein);
     }
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             NBTTagCompound nbt = ModUtils.nbt(drop);
             if (this.fluidTank.getFluidAmount() > 0) {
                 nbt.setTag("fluid", this.fluidTank.getFluid().writeToNBT(new NBTTagCompound()));
@@ -258,6 +270,15 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
                 throw new RuntimeException(e);
             }
         }
+        if (name.equals("vein")) {
+            try {
+                vein = (Vein) DecoderHandler.decode(is);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         super.updateField(name, is);
     }
 
@@ -347,7 +368,38 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
             int size = Math.min(this.level + 1, vein.getCol());
             size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
             if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
-                this.fluidTank.fill(new FluidStack(FluidName.fluidneft.getInstance(), size), true);
+                int variety = this.vein.getMeta() / 3;
+                int type = this.vein.getMeta() % 3;
+                switch (variety) {
+                    case 0:
+                        switch (type) {
+                            case 0:
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidneft.getInstance(), size), true);
+                                break;
+                            case 1:
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), size), true);
+                                break;
+                            case 2:
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), size), true);
+                                break;
+                        }
+                        break;
+                    case 1:
+                        switch (type) {
+                            case 0:
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_light_oil.getInstance(), size), true);
+                                break;
+                            case 1:
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), size), true);
+                                break;
+                            case 2:
+                                this.fluidTank.fill(new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), size), true);
+                                break;
+                        }
+                        break;
+                }
+
+
                 vein.removeCol(size);
                 this.count = vein.getCol();
                 this.energy.useEnergy(2);
@@ -409,8 +461,7 @@ public class TileOilPump extends TileElectricLiquidTankInventory implements IUpg
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing, UpgradableProperty.FluidProducing
+        return EnumSet.of(UpgradableProperty.Transformer, UpgradableProperty.FluidExtract
         );
     }
 

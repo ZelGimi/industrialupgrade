@@ -35,6 +35,7 @@ public class TileModuleMachine extends TileElectricMachine
 
 
         this.inputslot = new InvSlotModule(this, 0, 27);
+        inputslot.setStackSizeLimit(1);
         this.inputslotA = new InvSlotModule(this, 1, 1);
     }
 

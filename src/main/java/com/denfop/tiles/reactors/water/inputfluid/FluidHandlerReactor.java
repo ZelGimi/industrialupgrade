@@ -16,7 +16,7 @@ public class FluidHandlerReactor implements IFluidHandler {
     public FluidHandlerReactor(List<Fluids> list) {
         this.list = list;
         this.fluidTankProperties = new IFluidTankProperties[this.list.size()];
-        for(int i =0; i < list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             fluidTankProperties[i] = this.list.get(i).getAllTanks().iterator().next().getTankProperties()[0];
         }
     }
@@ -28,11 +28,12 @@ public class FluidHandlerReactor implements IFluidHandler {
 
     @Override
     public int fill(final FluidStack resource, final boolean doFill) {
-        for(int i =1; i < this.list.size();i++){
+        for (int i = 1; i < this.list.size(); i++) {
             Fluids fluids = this.list.get(i);
             final int f = fluids.getAllTanks().iterator().next().fill(resource, doFill);
-            if(f != 0)
+            if (f != 0) {
                 return f;
+            }
         }
         return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().fill(resource, doFill) : 0;
     }
@@ -40,25 +41,27 @@ public class FluidHandlerReactor implements IFluidHandler {
     @Nullable
     @Override
     public FluidStack drain(final FluidStack resource, final boolean doDrain) {
-        for(int i =1; i < this.list.size();i++){
-           Fluids fluids = this.list.get(i);
-            FluidStack f =  fluids.getAllTanks().iterator().next().drain(resource,doDrain);
-           if(f != null)
-               return f;
+        for (int i = 1; i < this.list.size(); i++) {
+            Fluids fluids = this.list.get(i);
+            FluidStack f = fluids.getAllTanks().iterator().next().drain(resource, doDrain);
+            if (f != null) {
+                return f;
+            }
         }
-        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(resource,doDrain) : null;
+        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(resource, doDrain) : null;
     }
 
     @Nullable
     @Override
     public FluidStack drain(final int maxDrain, final boolean doDrain) {
-        for(int i =1; i < this.list.size();i++){
+        for (int i = 1; i < this.list.size(); i++) {
             Fluids fluids = this.list.get(i);
-            FluidStack f =  fluids.getAllTanks().iterator().next().drain(maxDrain,doDrain);
-            if(f != null)
+            FluidStack f = fluids.getAllTanks().iterator().next().drain(maxDrain, doDrain);
+            if (f != null) {
                 return f;
+            }
         }
-        return  !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(maxDrain,doDrain) : null;
+        return !this.list.isEmpty() ? this.list.get(0).getAllTanks().iterator().next().drain(maxDrain, doDrain) : null;
     }
 
 }

@@ -7,7 +7,6 @@ import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ParticleBaseBlockDust;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,10 +26,8 @@ public class PacketLandEffect implements IPacket {
         CustomPacketBuffer buffer = new CustomPacketBuffer(60);
         buffer.writeByte(this.getId());
         buffer.writeBlockPos(pos);
-        buffer.writeDouble(x);
-        buffer.writeDouble(y);
-        buffer.writeDouble(z);
-        buffer.writeInt(count);
+        buffer.writeBlockPos(new BlockPos(x,y,z));
+        buffer.writeShort(count);
         for (final EntityPlayer player : world.playerEntities) {
             if (!(player instanceof EntityPlayerMP)) {
                 continue;
@@ -52,10 +49,11 @@ public class PacketLandEffect implements IPacket {
     @SideOnly(Side.CLIENT)
     public void readPacket(final CustomPacketBuffer is, final EntityPlayer entityPlayer) {
         final BlockPos pos = is.readBlockPos();
-        double x = is.readDouble();
-        double y = is.readDouble();
-        double z = is.readDouble();
-        int count = is.readInt();
+        final BlockPos pos1 = is.readBlockPos();
+        double x = pos1.getX();
+        double y = pos1.getY();
+        double z = pos1.getZ();
+        int count = is.readShort();
         TileEntityBlock block = (TileEntityBlock) entityPlayer.getEntityWorld().getTileEntity(pos);
         IUCore.proxy.requestTick(false, () -> {
             final Minecraft mc = Minecraft.getMinecraft();
@@ -78,14 +76,21 @@ public class PacketLandEffect implements IPacket {
                             mz,
                             state
                     );
-                    if (pos != null && block.hasSpecialModel()) {
-                        IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(state);
+                    if (block.hasSpecialModel()) {
+                        IBakedModel model = Minecraft
+                                .getMinecraft()
+                                .getBlockRendererDispatcher()
+                                .getBlockModelShapes()
+                                .getModelForState(state);
                         if (model instanceof ISpecialParticleModel) {
 
-                            state = state.getBlock().getExtendedState(state,  entityPlayer.getEntityWorld(), pos);
+                            state = state.getBlock().getExtendedState(state, entityPlayer.getEntityWorld(), pos);
 
 
-                            ((ISpecialParticleModel)model).enhanceParticle(particle, (TileEntityBlockStateContainer.PropertiesStateInstance) state);
+                            ((ISpecialParticleModel) model).enhanceParticle(
+                                    particle,
+                                    (TileEntityBlockStateContainer.PropertiesStateInstance) state
+                            );
                         }
                     }
                     particle.init();

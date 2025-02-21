@@ -7,7 +7,7 @@ import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.graphite.ICasing;
 
-public class TileEntitySimpleCasing  extends TileEntityMultiBlockElement implements ICasing {
+public class TileEntitySimpleCasing extends TileEntityMultiBlockElement implements ICasing {
 
     @Override
     public IMultiTileBlock getTeBlock() {

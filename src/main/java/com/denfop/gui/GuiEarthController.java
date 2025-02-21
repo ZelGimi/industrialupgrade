@@ -5,12 +5,10 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerEarthAnalyzer;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerEarthController;
-import com.denfop.network.packet.PacketUpdateServerTile;
-import com.denfop.utils.ListInformationUtils;
+import com.denfop.tiles.quarry_earth.TileEntityEarthQuarryController;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,16 +21,32 @@ public class GuiEarthController extends GuiIU<ContainerEarthController> {
 
     public GuiEarthController(ContainerEarthController guiContainer) {
         super(guiContainer);
-        this.addComponent(new GuiComponent(this, 32, 55, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+        this.addComponent(new GuiComponent(this, 10, 65, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+        this.componentList.add(new GuiComponent(this, 30, 30, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return ((TileEntityEarthQuarryController) this.getEntityBlock()).work
+                                ? Localization.translate("turn_off")
+                                :
+                                        Localization.translate("turn_on");
+                    }
 
+                    @Override
+                    public boolean active() {
+                        return !((TileEntityEarthQuarryController) this.getEntityBlock()).work;
+                    }
+                })
+        ));
     }
+
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("quarry.guide.earth_quarry"));
             List<String> compatibleUpgrades = new ArrayList<>();
-            for(int i =1;i < 10;i++){
-                compatibleUpgrades.add(Localization.translate("quarry.guide.earth_quarry"+i));
+            for (int i = 1; i < 10; i++) {
+                compatibleUpgrades.add(Localization.translate("quarry.guide.earth_quarry" + i));
             }
             Iterator<String> var5 = compatibleUpgrades.iterator();
             String itemstack;
@@ -44,6 +58,7 @@ public class GuiEarthController extends GuiIU<ContainerEarthController> {
             this.drawTooltip(mouseX, mouseY, text);
         }
     }
+
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
@@ -51,9 +66,7 @@ public class GuiEarthController extends GuiIU<ContainerEarthController> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 30 && x <= 45 && y >= 30 && y <= 45) {
-            new PacketUpdateServerTile(this.container.base, 0);
-        }
+
     }
 
     @Override
@@ -62,15 +75,18 @@ public class GuiEarthController extends GuiIU<ContainerEarthController> {
         if (this.container.base.work) {
             if (this.container.base.indexChunk < this.container.base.max) {
                 this.fontRenderer.drawString(
-                        Localization.translate("earth_quarry.controller_work"), 30, 50,
+                        Localization.translate("earth_quarry.controller_work"), 30, 55,
                         ModUtils.convertRGBcolorToInt(56, 56, 56)
                 );
             }
-        }else if (this.container.base.indexChunk == this.container.base.max) {
+        } else if (this.container.base.indexChunk == this.container.base.max) {
             this.fontRenderer.drawString(Localization.translate("earth_quarry.send_work"), 60, 34,
                     ModUtils.convertRGBcolorToInt(56, 56, 56)
             );
         }
+        this.fontRenderer.drawString(Localization.translate("earth_quarry.block_ores") + container.base.block_Col, 40, 70,
+                ModUtils.convertRGBcolorToInt(56, 56, 56)
+        );
         handleUpgradeTooltip(par1, par2);
     }
 
@@ -84,14 +100,10 @@ public class GuiEarthController extends GuiIU<ContainerEarthController> {
         super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_progressbars.png"));
-        this.drawTexturedModalRect(this.guiLeft + 30, this.guiTop + 30, 37, 52, 15, 15);
-        if (this.container.base.work) {
-            this.drawTexturedModalRect(this.guiLeft + 30, this.guiTop + 30, 37, 68, 16, 15);
-        }
+
         this.mc.getTextureManager()
                 .bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        drawTexturedModalRect(this.guiLeft , this.guiTop, 0, 0, 10, 10);
+        drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 10, 10);
     }
 
     @Override

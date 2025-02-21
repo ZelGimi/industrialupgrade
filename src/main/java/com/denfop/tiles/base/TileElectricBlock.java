@@ -1,6 +1,5 @@
 package com.denfop.tiles.base;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
 import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.Localization;
@@ -11,8 +10,9 @@ import com.denfop.api.energy.IEnergySource;
 import com.denfop.api.item.IEnergyItem;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.MultiTileBlock;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Redstone;
+import com.denfop.componets.WirelessComponent;
 import com.denfop.container.ContainerElectricBlock;
 import com.denfop.gui.GuiElectricBlock;
 import com.denfop.invslot.InvSlotCharge;
@@ -21,11 +21,9 @@ import com.denfop.invslot.InvSlotElectricBlock;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.PacketStopSound;
 import com.denfop.proxy.CommonProxy;
-import com.denfop.tiles.panels.entity.WirelessTransfer;
 import com.denfop.tiles.wiring.EnumElectricBlock;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,18 +51,18 @@ public class TileElectricBlock extends TileEntityInventory implements
         IUpdatableTileEvent,
         IStorage {
 
-    public EnumElectricBlock electricblock;
+    public final WirelessComponent wirelessComponent;
     public final double tier;
     public final boolean chargepad;
     public final String name;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final double maxStorage2;
     public final double l;
     public final InvSlotCharge inputslotA;
     public final InvSlotDischarge inputslotB;
     public final InvSlotElectricBlock inputslotC;
     private final Redstone redstone;
-    public boolean wireless;
+    public EnumElectricBlock electricblock;
     public double output;
     public boolean rfeu = false;
     public boolean needsInvUpdate = false;
@@ -73,7 +71,6 @@ public class TileElectricBlock extends TileEntityInventory implements
     public short temp;
     public boolean load = false;
     public boolean movementchargeitem = false;
-    public List<WirelessTransfer> wirelessTransferList = new ArrayList<>();
     public EnumTypeAudio typeAudio = EnumTypeAudio.OFF;
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     private byte redstoneMode = 0;
@@ -93,10 +90,9 @@ public class TileElectricBlock extends TileEntityInventory implements
         this.inputslotC = new InvSlotElectricBlock(this, 3, 2);
         this.output_plus = 0;
         this.temp = 0;
-        this.wireless = false;
         this.l = output1;
         this.player = null;
-        this.energy = this.addComponent((new AdvEnergy(
+        this.energy = this.addComponent((new Energy(
                 this,
                 maxStorage1,
                 Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
@@ -108,6 +104,8 @@ public class TileElectricBlock extends TileEntityInventory implements
         this.energy.addManagedSlot(this.inputslotA);
         this.energy.addManagedSlot(this.inputslotB);
         this.redstone = this.addComponent(new Redstone(this));
+        this.wirelessComponent = this.addComponent(new WirelessComponent(this));
+
     }
 
 
@@ -116,7 +114,7 @@ public class TileElectricBlock extends TileEntityInventory implements
         electricblock = electricBlock;
     }
 
-    public  EnumElectricBlock getElectricBlock() {
+    public EnumElectricBlock getElectricBlock() {
 
         return electricblock;
     }
@@ -195,16 +193,20 @@ public class TileElectricBlock extends TileEntityInventory implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack itemStack, final List<String> info, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack itemStack, final List<String> info) {
 
 
         info.add(Localization.translate("iu.item.tooltip.Output") + " " + ModUtils.getString(EnergyNetGlobal.instance.getPowerFromTier(
                 this.energy.getSourceTier())) + " EF/t ");
         info.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.energy.getCapacity()) + " EF ");
         NBTTagCompound nbttagcompound = ModUtils.nbt(itemStack);
-        info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(nbttagcompound.getDouble("energy"))
-                + " EF ");
+        if (this.energy == null || this.energy.getEnergy() == 0) {
+            info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(nbttagcompound.getDouble("energy"))
+                    + " EF ");
+        } else {
+            info.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(this.energy.getEnergy())
+                    + " EF ");
+        }
         info.add(Localization.translate("iu.tier") + ModUtils.getString(this.tier));
 
 
@@ -249,6 +251,7 @@ public class TileElectricBlock extends TileEntityInventory implements
 
 
         }
+        wirelessComponent.setEnergySource((IEnergySource) this.energy.getDelegate());
     }
 
     public boolean shouldEmitEnergy() {
@@ -335,10 +338,11 @@ public class TileElectricBlock extends TileEntityInventory implements
         double charge;
         if (freeamount > 0.0D) {
             charge = Math.min(freeamount, chargefactor);
+            charge = Math.min(charge, ((IEnergyItem)itemstack.getItem()).getTransferEnergy(itemstack));
             if (this.energy.getEnergy() < charge) {
                 charge = this.energy.getEnergy();
             }
-            this.energy.useEnergy(ElectricItem.manager.charge(itemstack, charge, Integer.MAX_VALUE, true, false));
+            this.energy.useEnergy(ElectricItem.manager.charge(itemstack, charge, (int) this.tier, true, false));
         }
 
     }
@@ -445,36 +449,14 @@ public class TileElectricBlock extends TileEntityInventory implements
     public void updateEntityServer() {
         super.updateEntityServer();
         if (!load) {
-            this.wirelessTransferList.clear();
+
             this.inputslotC.wirelessmodule();
-            this.wireless = !this.wirelessTransferList.isEmpty();
             this.load = true;
         }
         this.needsInvUpdate = false;
         this.energy.setSendingEnabled(this.shouldEmitEnergy());
         this.energy.receivingDisabled = false;
-        if (this.wireless) {
-            boolean refresh = false;
-            try {
-                for (WirelessTransfer transfer : this.wirelessTransferList) {
-                    if (transfer.getTile().isInvalid()) {
-                        refresh = true;
-                        continue;
-                    }
-                    double energy = Math.min(
-                            ((IEnergySource) this.energy.getDelegate()).canExtractEnergy(),
-                            transfer.getSink().getDemandedEnergy()
-                    );
-                    transfer.work(energy);
-                    this.energy.useEnergy(energy);
-                }
-            } catch (Exception ignored) {
-            }
-            if (refresh) {
-                this.wirelessTransferList.clear();
-                this.inputslotC.wirelessmodule();
-            }
-        }
+
         if (chargepad) {
             if (this.player != null && this.energy.getEnergy() >= 1.0D) {
                 if (!getActive()) {
@@ -535,9 +517,12 @@ public class TileElectricBlock extends TileEntityInventory implements
         return drop == null ? Collections.emptyList() : Collections.singletonList(drop);
     }
 
-    private ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
-        drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+    public ItemStack adjustDrop(ItemStack drop, boolean wrench, int fortune) {
+        drop = super.adjustDrop(drop, wrench, fortune);
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             double retainedRatio = 0.8;
             if (fortune == 100) {
                 retainedRatio = 1;

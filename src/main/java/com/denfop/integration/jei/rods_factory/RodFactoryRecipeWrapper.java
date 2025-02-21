@@ -4,20 +4,14 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class RodFactoryRecipeWrapper implements IRecipeWrapper {
-
 
 
     private final ItemStack outputstack;
@@ -30,14 +24,10 @@ public class RodFactoryRecipeWrapper implements IRecipeWrapper {
         this.outputstack = container.getOutput();
 
     }
-    public List<ItemStack> getInputs1(){
+
+    public List<ItemStack> getInputs1() {
         return inputstacks;
     }
-
-
-
-
-
 
 
     public List<ItemStack> getOutputs() {

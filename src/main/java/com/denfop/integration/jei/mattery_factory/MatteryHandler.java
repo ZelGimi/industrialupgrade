@@ -11,7 +11,7 @@ import java.util.List;
 public class MatteryHandler {
 
     private static final List<MatteryHandler> recipes = new ArrayList<>();
-    private final ItemStack input,output;
+    private final ItemStack input, output;
 
     public MatteryHandler(
             ItemStack input,
@@ -53,14 +53,14 @@ public class MatteryHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("active_matter_factory")) {
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            addRecipe(
+                    container.input.getInputs().get(0).getInputs().get(0),
                     container.getOutput().items.get(0)
             );
 
 
         }
     }
-
 
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
@@ -73,7 +73,7 @@ public class MatteryHandler {
     }
 
     public boolean matchesInput(ItemStack is) {
-        return is.isItemEqual(input) ;
+        return is.isItemEqual(input);
     }
 
 }

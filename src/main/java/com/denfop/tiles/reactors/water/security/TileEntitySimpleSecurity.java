@@ -19,9 +19,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
-public class TileEntitySimpleSecurity  extends TileEntityMultiBlockElement implements ISecurity {
+public class TileEntitySimpleSecurity extends TileEntityMultiBlockElement implements ISecurity {
 
 
+    public EnumTypeSecurity security;
+    private Timer red_timer = new Timer(0, 2, 30);
+    private Timer yellow_timer = new Timer(0, 5, 0);
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -32,21 +35,22 @@ public class TileEntitySimpleSecurity  extends TileEntityMultiBlockElement imple
     public BlockTileEntity getBlock() {
         return IUItem.water_reactors_component;
     }
+
     @Override
     public boolean hasOwnInventory() {
         return true;
     }
+
     @Override
     public int getLevel() {
         return 0;
     }
-    private Timer red_timer = new Timer(0,2,30);
-    private Timer yellow_timer= new Timer(0,5,0);
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeBoolean(this.getMain() != null);
-        if(this.getMain() != null) {
+        if (this.getMain() != null) {
             TileEntityMainController controller = (TileEntityMainController) this.getMain();
             controller.getRed_timer().writeBuffer(customPacketBuffer);
             controller.getYellow_timer().writeBuffer(customPacketBuffer);
@@ -61,11 +65,12 @@ public class TileEntitySimpleSecurity  extends TileEntityMultiBlockElement imple
     public Timer getRed_timer() {
         return red_timer;
     }
+
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         boolean can = customPacketBuffer.readBoolean();
-        if(can){
+        if (can) {
             try {
                 this.red_timer.readBuffer(customPacketBuffer);
             } catch (IOException e) {
@@ -78,11 +83,7 @@ public class TileEntitySimpleSecurity  extends TileEntityMultiBlockElement imple
             }
         }
     }
-    public EnumTypeSecurity security;
-    @Override
-    public void setSecurity(final EnumTypeSecurity typeSecurity) {
-        this.security = typeSecurity;
-    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
@@ -91,10 +92,16 @@ public class TileEntitySimpleSecurity  extends TileEntityMultiBlockElement imple
 
     @Override
     public ContainerWaterSecurity getGuiContainer(final EntityPlayer var1) {
-        return new ContainerWaterSecurity(this,var1);
+        return new ContainerWaterSecurity(this, var1);
     }
+
     public EnumTypeSecurity getSecurity() {
         return security;
+    }
+
+    @Override
+    public void setSecurity(final EnumTypeSecurity typeSecurity) {
+        this.security = typeSecurity;
     }
 
 }

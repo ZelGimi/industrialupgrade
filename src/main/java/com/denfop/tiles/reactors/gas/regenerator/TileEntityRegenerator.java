@@ -9,7 +9,7 @@ public class TileEntityRegenerator extends TileEntityMultiBlockElement implement
     private final int max;
     private int helium;
 
-    public TileEntityRegenerator(int level, int max){
+    public TileEntityRegenerator(int level, int max) {
         this.level = level;
         this.max = max;
     }
@@ -26,12 +26,12 @@ public class TileEntityRegenerator extends TileEntityMultiBlockElement implement
 
     @Override
     public int getHelium() {
-        return  this.helium;
+        return this.helium;
     }
 
     @Override
     public void addHelium(final int helium) {
-        this.helium +=helium;
+        this.helium += helium;
     }
 
 }

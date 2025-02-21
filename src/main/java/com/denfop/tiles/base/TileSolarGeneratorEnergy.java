@@ -19,7 +19,6 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -75,8 +74,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
@@ -85,7 +83,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.cof);
 
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -142,7 +140,7 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
     public CustomPacketBuffer writePacket() {
         final CustomPacketBuffer packet = super.writePacket();
         try {
-            EncoderHandler.encode(packet, sunenergy,false);
+            EncoderHandler.encode(packet, sunenergy, false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

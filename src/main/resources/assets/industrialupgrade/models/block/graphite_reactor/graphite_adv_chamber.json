@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
-  "textures" : {
-    "particle" : "industrialupgrade:blocks/graphite_reactor/adv_chamber",
-    "down" : "industrialupgrade:blocks/graphite_reactor/adv_chamber",
-    "up" : "industrialupgrade:blocks/graphite_reactor/adv_chamber",
-    "north" : "industrialupgrade:blocks/graphite_reactor/adv_chamber",
-    "east" : "industrialupgrade:blocks/graphite_reactor/adv_chamber",
-    "south" : "industrialupgrade:blocks/graphite_reactor/adv_chamber",
-    "west" : "industrialupgrade:blocks/graphite_reactor/adv_chamber"
-  }
+  "parent" : "block/cube_all",
+    "textures": {
+        "all": "industrialupgrade:blocks/graphite_reactor/chamber/adv_chamber_side"
+    }
 }

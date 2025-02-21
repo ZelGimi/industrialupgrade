@@ -4,11 +4,10 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
-import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.heat.IChamber;
 
-public class TileEntitySimpleChamber  extends TileEntityMultiBlockElement implements IChamber {
+public class TileEntitySimpleChamber extends TileEntityMultiBlockElement implements IChamber {
 
     @Override
     public IMultiTileBlock getTeBlock() {
@@ -19,8 +18,10 @@ public class TileEntitySimpleChamber  extends TileEntityMultiBlockElement implem
     public BlockTileEntity getBlock() {
         return IUItem.heat_reactor;
     }
+
     @Override
     public int getLevel() {
         return 0;
     }
+
 }

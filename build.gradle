@@ -85,13 +85,6 @@ minecraft {
 
 repositories {
     maven {
-        name 'IC2'
-        url 'http://maven.ic2.player.to'
-        content {
-            includeGroup 'net.industrial-craft'
-        }
-    }
-	  maven {
         url "http://maven.cil.li"
     }
     maven {
@@ -118,18 +111,14 @@ dependencies {
     compileOnly "curse.maven:botania-225643:2846950"
 	compileOnly "curse.maven:baubles-227083:2518667"
     compileOnly "curse.maven:projecte-226410:2702991"
-    runtimeOnly "curse.maven:projecte-226410:2702991"
     compileOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
-    runtimeOnly "curse.maven:ex-nihilo-creatio-274456:2817545"
     compileOnly "curse.maven:forestry-59751:2684780"
-    runtimeOnly "curse.maven:forestry-59751:2684780"
     compileOnly "curse.maven:patchouli-306770:3087124"
     runtimeOnly "curse.maven:patchouli-306770:3087124"
     compileOnly "curse.maven:avaritia-1-10-261348:3143349"
     runtimeOnly "curse.maven:avaritia-1-10-261348:3143349"
 	runtimeOnly "curse.maven:cofh-core-69162:2920433"
 	compileOnly "curse.maven:cofh-core-69162:2920433"
-    runtimeOnly "curse.maven:immersive-engineering-231951:2974106"
     compileOnly "curse.maven:immersive-engineering-231951:2974106"
 	runtimeOnly "curse.maven:thermal-expansion-69163:2926431"
 	compileOnly "curse.maven:thermal-expansion-69163:2926431"
@@ -159,7 +148,6 @@ dependencies {
     compileOnly "curse.maven:mtlib-253211:3308160"
     runtimeOnly "curse.maven:external-tweaker-270558:2452858"
     compileOnly "curse.maven:external-tweaker-270558:2452858"
-	runtimeOnly "curse.maven:redstone-arsenal-70631:2939416"
 	compileOnly "curse.maven:redstone-arsenal-70631:2939416"
 	runtimeOnly "curse.maven:redstone-flux-270789:2920436"
 	compileOnly "curse.maven:redstone-flux-270789:2920436"
@@ -175,11 +163,10 @@ dependencies {
 	compileOnly "curse.maven:cofh-world-271384:2920434"
     runtimeOnly "curse.maven:cucumber-272335:2645867"
     compileOnly "curse.maven:cucumber-272335:2645867"
-    runtimeOnly "curse.maven:ae2-extended-life-570458:4323863"
     compileOnly "curse.maven:ae2-extended-life-570458:4323863"
+    runtimeOnly "curse.maven:ae2-extended-life-570458:4323863"
     compileOnly "curse.maven:galacticraft-legacy-564236:4052975"
     compileOnly "curse.maven:ender-io-64578:3328811"
-    runtimeOnly "curse.maven:compact-machines-224218:2707509"
     compileOnly "curse.maven:compact-machines-224218:2707509"
     runtimeOnly "curse.maven:the-one-probe-245211:2667280"
     compileOnly "curse.maven:the-one-probe-245211:2667280"

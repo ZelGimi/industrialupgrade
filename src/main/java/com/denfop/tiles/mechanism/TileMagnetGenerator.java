@@ -7,7 +7,7 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerMagnetGenerator;
 import com.denfop.gui.GuiMagnetGenerator;
 import com.denfop.network.DecoderHandler;
@@ -15,7 +15,6 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -35,7 +34,7 @@ public class TileMagnetGenerator extends TileElectricMachine {
     public TileMagnetGenerator() {
         super(0, 14, 1);
         this.timer = 86400;
-        this.energy = this.addComponent(AdvEnergy.asBasicSource(
+        this.energy = this.addComponent(Energy.asBasicSource(
                 this,
                 3456000,
                 14
@@ -48,10 +47,9 @@ public class TileMagnetGenerator extends TileElectricMachine {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         tooltip.add(Localization.translate("iu.magnet_generator.info"));
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -109,7 +107,10 @@ public class TileMagnetGenerator extends TileElectricMachine {
 
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
-        if (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self) {
+        if (drop.isItemEqual(this.getPickBlock(
+                null,
+                null
+        )) && (wrench || this.teBlock.getDefaultDrop() == MultiTileBlock.DefaultDrop.Self)) {
             NBTTagCompound nbt = ModUtils.nbt(drop);
             nbt.setInteger("timer", this.timer);
             nbt.setBoolean("work", true);

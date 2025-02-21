@@ -70,7 +70,27 @@ public class ItemSmallDust extends ItemSubTypes<ItemSmallDust.Types> implements 
         diamond(28),
         osmium(29),
         tantalum(30),
-        cadmium(31);
+        cadmium(31),
+        arsenic(32),
+        barium(33),
+        bismuth(34),
+        gadolinium(35),
+        gallium(36),
+        hafnium(37),
+        yttrium(38),
+        molybdenum(39),
+        neodymium(40),
+        niobium(41),
+        palladium(42),
+        polonium(43),
+        strontium(44),
+        thallium(45),
+        zirconium(46),
+        emerald(47),
+        quartz(48),
+        ender_pearl(49),
+        ghast(50),
+        ;
 
         private final String name;
         private final int ID;

@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
+  "parent" : "block/cube_all",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/intercooler_top",
-    "down" : "industrialupgrade:blocks/gas_reactor/intercooler_top",
-    "up" : "industrialupgrade:blocks/gas_reactor/intercooler_top",
-    "north" : "industrialupgrade:blocks/gas_reactor/intercooler",
-    "east" : "industrialupgrade:blocks/gas_reactor/intercooler",
-    "south" : "industrialupgrade:blocks/gas_reactor/intercooler",
-    "west" : "industrialupgrade:blocks/gas_reactor/intercooler"
+    "all" : "industrialupgrade:blocks/gas_reactor/intercooler/intercooler_side"
   }
 }

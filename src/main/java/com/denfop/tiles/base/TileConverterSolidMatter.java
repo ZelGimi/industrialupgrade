@@ -22,6 +22,7 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Precision;
 import net.minecraft.entity.player.EntityPlayer;
@@ -265,17 +266,36 @@ public class TileConverterSolidMatter extends TileElectricMachine
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.iuingot, 1, i), 12, 0, 0, 0, 0, 36, 0, 0);
         }
+        addrecipe(new ItemStack(IUItem.iuingot, 1, 25), 12, 0, 0, 0, 0, 36, 0, 0);
+        addrecipe(new ItemStack(IUItem.iuingot, 1, 26), 12, 0, 0, 0, 0, 36, 0, 0);
+        addrecipe(new ItemStack(IUItem.iuingot, 1, 27), 12, 0, 0, 0, 0, 36, 0, 0);
+
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.iuingot, 1, i + 28), 12, 0, 0, 0, 0, 36, 0, 0);
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.stik, 1, i + 22), 6, 0, 0, 0, 0, 18, 0, 0);
+        }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.stik, 1, i), 6, 0, 0, 0, 0, 18, 0, 0);
         }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.plate, 1, i + 31), 12, 0, 0, 0, 0, 36, 0, 0);
+        }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.plate, 1, i), 12, 0, 0, 0, 0, 36, 0, 0);
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.doubleplate, 1, i + 31), 108, 0, 0, 0, 0, 288, 0, 0);
         }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.doubleplate, 1, i), 108, 0, 0, 0, 0, 288, 0, 0);
         }
         for (int i = 0; i < IUItem.name_mineral.size(); i++) {
             addrecipe(new ItemStack(IUItem.casing, 1, i), 6, 0, 0, 0, 0, 18, 0, 0);
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+            addrecipe(new ItemStack(IUItem.casing, 1, i + 29), 6, 0, 0, 0, 0, 18, 0, 0);
         }
         IUItem.machineRecipe = Recipes.recipes.getRecipeStack("converter");
     }
@@ -380,6 +400,7 @@ public class TileConverterSolidMatter extends TileElectricMachine
     @Override
     public void onLoaded() {
         super.onLoaded();
+        this.inputSlots.remove(inputSlot);
         inputSlot.load();
         this.getOutput();
         if (this.output != null) {
@@ -480,8 +501,8 @@ public class TileConverterSolidMatter extends TileElectricMachine
                 UpgradableProperty.Processing,
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
     }
 

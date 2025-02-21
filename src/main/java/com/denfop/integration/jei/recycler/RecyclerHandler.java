@@ -28,6 +28,9 @@ public class RecyclerHandler {
     }
 
     public static RecyclerHandler addRecipe(ItemStack input, ItemStack output) {
+        if (input.isEmpty() || input == ItemStack.EMPTY) {
+            return null;
+        }
         RecyclerHandler recipe = new RecyclerHandler(input, output);
         if (recipes.contains(recipe)) {
             return null;

@@ -19,6 +19,7 @@ public class CompressorRecipe {
     public static final String[] recipe = {"plate", "smalldust", "verysmalldust"};
     public static final String[] recipe1 = {"doubleplate", "dust", "smalldust"};
     public static final String[] recipe2 = {"Osmium", "Tantalum", "Cadmium"};
+
     public static void recipe() {
         addcompressor(ModUtils.setSize(IUItem.iridiumShard, 9), IUItem.iridiumOre);
 
@@ -26,7 +27,7 @@ public class CompressorRecipe {
         addcompressor(IUItem.carbonPlate, 9, new ItemStack(IUItem.compresscarbon));
         addcompressor(IUItem.advancedAlloy, 9, new ItemStack(IUItem.compressAlloy));
         addcompressor(IUItem.iridiumPlate, 4, new ItemStack(IUItem.compressIridiumplate));
-        addcompressor(new ItemStack(IUItem.cell_all, 1, 1), 1, new ItemStack(IUItem.neutronium));
+        addcompressor(ModUtils.getCellFromFluid(FluidName.fluidNeutron.getInstance()), 1, new ItemStack(IUItem.neutronium));
         addcompressor(new ItemStack(IUItem.compressIridiumplate), 9, new ItemStack(IUItem.doublecompressIridiumplate));
         addcompressor(new ItemStack(IUItem.neutronium), 9, new ItemStack(IUItem.neutroniumingot, 1));
         addcompressor(IUItem.coalBall, 1, IUItem.compressedCoalBall);
@@ -42,6 +43,68 @@ public class CompressorRecipe {
 
 
         }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+
+            addcompressor(
+                    "smalldust" + RegisterOreDictionary.list_baseore1.get(i),
+                    1,
+                    "dust" + RegisterOreDictionary.list_baseore1.get(i)
+            );
+
+
+        }
+        for (int i = 0; i < RegisterOreDictionary.list_baseore1.size(); i++) {
+
+            addcompressor(
+                    "block" + RegisterOreDictionary.list_baseore1.get(i),
+                    1,
+                    "doubleplate" + RegisterOreDictionary.list_baseore1.get(i)
+            );
+
+
+        }
+        addcompressor(
+                "blockIron",
+                1,
+                "plateDenseIron"
+        );
+        addcompressor(
+                "blockGold",
+                1,
+                "plateDenseGold"
+        );
+        addcompressor(
+                "blockLapis",
+                1,
+                "plateDenseLapis"
+        );
+        addcompressor(
+                "blockBronze",
+                1,
+                "plateDenseBronze"
+        );
+        addcompressor(
+                "blockSteel",
+                1,
+                "plateDenseSteel"
+        );
+
+        addcompressor(
+                "blockCopper",
+                1,
+                "plateDenseCopper"
+        );
+
+        addcompressor(
+                "blockTin",
+                1,
+                "plateDenseTin"
+        );
+        addcompressor(
+                "blockLead",
+                1,
+                "plateDenseLead"
+        );
         for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
 
             addcompressor(
@@ -54,32 +117,41 @@ public class CompressorRecipe {
         }
 
         addcompressor(
-                "blockOsmium" ,
+                "blockOsmium",
                 1,
                 "doubleplateOsmium"
         );
         addcompressor(
-                "blockTantalum" ,
+                "blockTantalum",
                 1,
                 "doubleplateTantalum"
         );
         addcompressor(
-                "blockCadmium" ,
+                "blockCadmium",
                 1,
                 "doubleplateCadmium"
         );
-       
-            for (String s : recipe2) {
-                for (int i = 0; i < recipe1.length; i++) {
-                    addcompressor(
-                            recipe[i] + s,
-                            9,
-                            recipe1[i] + s
-                    );
 
-                }
+        for (String s : recipe2) {
+            for (int i = 0; i < recipe1.length; i++) {
+                addcompressor(
+                        recipe[i] + s,
+                        9,
+                        recipe1[i] + s
+                );
+
             }
+        }
+        for (String s : RegisterOreDictionary.spaceElementList) {
+            for (int i = 0; i < 1; i++) {
+                addcompressor(
+                        recipe[i] + s,
+                        9,
+                        recipe1[i] + s
+                );
 
+            }
+        }
 
         for (int j = 0; j < recipe.length; j++) {
             for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
@@ -104,7 +176,8 @@ public class CompressorRecipe {
 
             }
         }
-        addcompressor(IUItem.uraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
+
+        addcompressor( new ItemStack(IUItem.iudust, 1, 78), 1, new ItemStack(IUItem.itemiu, 2, 2));
         addcompressor(IUItem.crushedUraniumOre, 1, new ItemStack(IUItem.itemiu, 1, 2));
         addcompressor(
                 "plateCopper",
@@ -180,10 +253,7 @@ public class CompressorRecipe {
                 9,
                 "plateDenseIron"
         );
-        addcompressor(
-                IUItem.RTGPellets,
-                IUItem.Uran235
-        );
+
         addcompressor(
                 IUItem.mixedMetalIngot,
                 IUItem.advancedAlloy

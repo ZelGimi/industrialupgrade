@@ -3,7 +3,18 @@ package com.denfop.integration.jei.advalloysmelter;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
+import com.denfop.container.ContainerTripleElectricMachine;
+import com.denfop.container.SlotInvSlot;
+import com.denfop.gui.GuiIU;
+import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -12,25 +23,45 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 
-public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvAlloySmelterRecipeWrapper> {
+public class AdvAlloySmelterCategory extends GuiIU implements IRecipeCategory<AdvAlloySmelterRecipeWrapper> {
 
     private final IDrawableStatic bg;
+    private final ContainerTripleElectricMachine container1;
+    private final GuiComponent progress_bar;
+    private final GuiComponent slots1;
     private int progress = 0;
     private int energy = 0;
 
     public AdvAlloySmelterCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiadvalloysmelter" +
-                        ".png"), 5, 16, 140,
-                65
+        super(((TileAdvAlloySmelter) BlockBaseMachine1.adv_alloy_smelter.getDummyTe()).getGuiContainer(Minecraft.getMinecraft().player));
+
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine" +
+                        ".png"), 3, 3, 140,
+                77
         );
+        this.componentList.clear();
+        this.slots = new GuiComponent(this, 3, 3, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_INPUT))
+        );
+        this.slots1 = new GuiComponent(this, 3, 3, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS__JEI_OUTPUT))
+        );
+        this.container1 = (ContainerTripleElectricMachine) this.getContainer();
+        this.componentList.add(slots);
+        progress_bar = new GuiComponent(this, 85, 35, EnumTypeComponent.PROCESS,
+                new Component<>(this.container1.base.componentProgress)
+        );
+        this.componentList.add(progress_bar);
+
     }
 
     @Nonnull
@@ -61,19 +92,18 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        energy++;
-        double energylevel = Math.min(14.0F * energy / 100, 14);
-        double xScale = 24.0F * progress / 100;
-        if (xScale > 24.0F) {
+        if (this.energy < 100) {
+            energy++;
+        }
+        double energylevel = energy / 100D;
+        double xScale = progress / 100D;
+        if (xScale >= 1) {
             progress = 0;
         }
-
+        this.slots.drawBackground(-20, 15);
+        this.slots1.drawBackground(0, 0);
+        progress_bar.renderBar(0, 0, xScale);
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(51 + 1, 20 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
-                14, (int) energylevel
-        );
-        drawTexturedModalRect(74, 18, 176, 14, (int) (xScale + 1), 16);
-
     }
 
     @Override
@@ -83,19 +113,24 @@ public class AdvAlloySmelterCategory extends Gui implements IRecipeCategory<AdvA
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 32, 0);
-        isg.set(0, recipes.getInput());
-        isg.init(1, true, 50, 0);
-        isg.set(1, recipes.getInput1());
-        isg.init(2, true, 68, 0);
-        isg.set(2, recipes.getInput2());
 
-        isg.init(3, false, 110, 17);
-        isg.set(3, recipes.getOutput());
+        final List<SlotInvSlot> slots1 = container1.findClassSlots(InvSlotRecipes.class);
+        final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1(), recipes.getInput2());
+        int i = 0;
+        for (; i < inputs.size(); i++) {
+
+            isg.init(i, true, slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() + 15);
+            isg.set(i, inputs.get(i));
+
+        }
+
+        final SlotInvSlot outputSlot = container1.findClassSlot(InvSlotOutput.class);
+        isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
+        isg.set(i, recipes.getOutput());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiadvalloysmelter.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 

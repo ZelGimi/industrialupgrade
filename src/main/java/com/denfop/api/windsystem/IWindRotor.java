@@ -1,9 +1,10 @@
 package com.denfop.api.windsystem;
 
+import com.denfop.api.item.IDamageItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public interface IWindRotor {
+public interface IWindRotor extends IDamageItem {
 
     int getDiameter(ItemStack var1);
 

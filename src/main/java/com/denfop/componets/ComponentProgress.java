@@ -17,6 +17,12 @@ public class ComponentProgress extends AbstractComponent {
         this.maxValue = max;
     }
 
+    public ComponentProgress(final TileEntityInventory parent, int col, int max) {
+        super(parent);
+        this.progress = new short[col];
+        this.maxValue = (short) max;
+    }
+
     public short getMaxValue() {
         return maxValue;
     }
@@ -80,6 +86,7 @@ public class ComponentProgress extends AbstractComponent {
         buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
+
     public CustomPacketBuffer updateComponent() {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeShort(progress.length);
@@ -89,6 +96,7 @@ public class ComponentProgress extends AbstractComponent {
         buffer.writeShort(this.maxValue);
         return buffer;
     }
+
     @Override
     public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
         super.onNetworkUpdate(is);

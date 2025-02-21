@@ -20,7 +20,7 @@ public class BaseRecipe implements IShapedRecipe {
     private final ItemStack output;
     private final int[][] inputIndex;
 
-    private final  int[] inputIndexCraftingTable = new int[4];
+    private final int[] inputIndexCraftingTable = new int[4];
     private final IInputItemStack[][] input;
     private final int size;
     private final NonNullList<Ingredient> listIngridient;
@@ -60,14 +60,16 @@ public class BaseRecipe implements IShapedRecipe {
                 listIngridient.add(Ingredient.EMPTY);
             }
         }
-        if(minX == 2 && minY == 2){
+        if (minX == 2 && minY == 2) {
             int j = 0;
-            for(int x =0; x < 3;x++){
-                if(x == this.x)
+            for (int x = 0; x < 3; x++) {
+                if (x == this.x) {
                     continue;
-                for(int y =0; y < 3;y++){
-                    if(this.y == y)
+                }
+                for (int y = 0; y < 3; y++) {
+                    if (this.y == y) {
                         continue;
+                    }
                     this.inputIndexCraftingTable[j] = x + y * 3;
                     j++;
                 }
@@ -109,11 +111,16 @@ public class BaseRecipe implements IShapedRecipe {
 
     @Override
     public boolean matches(final InventoryCrafting inv, final World worldIn) {
-        return this.getCraftingResult(inv) != ItemStack.EMPTY;
+        return this.matches(inv) != ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack getCraftingResult(final InventoryCrafting inv) {
+        return this.output.copy();
+    }
+
+
+    public ItemStack matches(final InventoryCrafting inv) {
         if (inv.getWidth() < 3 || inv.getHeight() < 3) {
             if (this.minY == 2 && this.minX == 2 && inv.getWidth() == 2 && inv.getHeight() == 2) {
 
@@ -189,7 +196,7 @@ public class BaseRecipe implements IShapedRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return this.output.copy();
+        return this.output;
 
     }
 

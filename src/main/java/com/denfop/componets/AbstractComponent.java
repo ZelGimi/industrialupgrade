@@ -184,4 +184,7 @@ public abstract class AbstractComponent {
 
     public void blockBreak() {
     }
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+    }
 }

@@ -1,14 +1,12 @@
 package com.denfop.tiles.reactors.gas.controller;
 
 import com.denfop.IUItem;
-import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
 import com.denfop.register.InitMultiBlockSystem;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntitySimpleController   extends TileEntityMainController {
+public class TileEntitySimpleController extends TileEntityMainController {
 
     public TileEntitySimpleController() {
         super(InitMultiBlockSystem.GasReactorMultiBlock, EnumGasReactors.S);

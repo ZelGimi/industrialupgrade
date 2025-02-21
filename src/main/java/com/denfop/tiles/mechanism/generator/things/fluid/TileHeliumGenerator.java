@@ -9,7 +9,9 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerHeliumGenerator;
 import com.denfop.gui.GuiHeliumGenerator;
 import com.denfop.invslot.InvSlot;
@@ -37,10 +39,12 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
     public final FluidTank fluidTank;
     protected final Fluids fluids;
     private final float energycost;
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
     private double lastEnergy;
 
     public TileHeliumGenerator() {
-        super(50000, 14, 1);
+        super(50000, 1, 1);
 
         this.energycost = 1000;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -57,7 +61,8 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
                 Fluids.fluidPredicate(FluidName.fluidHelium.getInstance())
         );
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
-
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
     }
 
     private static int applyModifier(int extra) {
@@ -165,10 +170,7 @@ public class TileHeliumGenerator extends TileElectricMachine implements IUpgrada
         return EnumSet.of(
 
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.FluidExtract
         );
     }
 

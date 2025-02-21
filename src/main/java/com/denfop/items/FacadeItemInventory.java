@@ -1,10 +1,6 @@
 package com.denfop.items;
 
-import com.denfop.container.ContainerBase;
-import com.denfop.container.ContainerLeadBox;
-import com.denfop.gui.GuiLeadBox;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.ItemStackInventory;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;

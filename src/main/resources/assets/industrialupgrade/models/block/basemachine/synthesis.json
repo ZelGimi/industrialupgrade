@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blocksynthesis_top",
     "north" : "industrialupgrade:blocks/blocksynthesis_main",
     "east" : "industrialupgrade:blocks/blocksynthesis_side",
-    "south" : "industrialupgrade:blocks/blocksynthesis_side2",
+    "south" : "industrialupgrade:blocks/blocksynthesis_bottom",
     "west" : "industrialupgrade:blocks/blocksynthesis_side"
   }
 }

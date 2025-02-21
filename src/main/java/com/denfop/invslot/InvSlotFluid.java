@@ -14,7 +14,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 public class InvSlotFluid extends InvSlot {
 
-    private final TypeFluidSlot typeFluidSlot;
+    private TypeFluidSlot typeFluidSlot;
 
     public InvSlotFluid(IAdvInventory<?> base1, int count) {
         this(base1, TypeItemSlot.INPUT, count, TypeFluidSlot.INPUT);
@@ -28,6 +28,10 @@ public class InvSlotFluid extends InvSlot {
     ) {
         super(base1, typeItemSlot1, count);
         this.typeFluidSlot = typeFluidSlot1;
+    }
+
+    public void setTypeFluidSlot(final TypeFluidSlot typeFluidSlot) {
+        this.typeFluidSlot = typeFluidSlot;
     }
 
     public boolean accepts(ItemStack stack, final int index) {

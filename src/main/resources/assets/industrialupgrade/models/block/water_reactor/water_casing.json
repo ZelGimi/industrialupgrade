@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_reactor/casing",
-    "down" : "industrialupgrade:blocks/water_reactor/casing",
-    "up" : "industrialupgrade:blocks/water_reactor/casing",
-    "north" : "industrialupgrade:blocks/water_reactor/casing",
-    "east" : "industrialupgrade:blocks/water_reactor/casing",
-    "south" : "industrialupgrade:blocks/water_reactor/casing",
-    "west" : "industrialupgrade:blocks/water_reactor/casing"
+    "particle" : "industrialupgrade:blocks/water_reactor/casing/casing_side",
+    "down" : "industrialupgrade:blocks/water_reactor/casing/casing_side",
+    "up" : "industrialupgrade:blocks/water_reactor/casing/casing_side",
+    "north" : "industrialupgrade:blocks/water_reactor/casing/casing_side",
+    "east" : "industrialupgrade:blocks/water_reactor/casing/casing_side",
+    "south" : "industrialupgrade:blocks/water_reactor/casing/casing_side",
+    "west" : "industrialupgrade:blocks/water_reactor/casing/casing_side"
   }
 }

@@ -7,15 +7,18 @@ import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.Input;
+import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentUpgradeSlots;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.gui.GuiPainting;
 import com.denfop.recipe.IInputHandler;
@@ -38,6 +41,9 @@ import java.util.Set;
 
 public class TilePainting extends TileDoubleElectricMachine implements IHasRecipe {
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+
     public TilePainting() {
         super(1, 300, 1, EnumDoubleElectricMachine.PAINTING, false);
         Recipes.recipes.addInitRecipes(this);
@@ -51,7 +57,21 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
         ));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
         this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1) {
+            @Override
+            public void operateWithMax(final MachineRecipe output) {
+                operate(output);
+
+            }
+
+            @Override
+            public void operateWithMax(final MachineRecipe output, final int size) {
+                operate(output);
+            }
+
+
             public void operateOnce(List<ItemStack> processResult) {
                 ItemStack stack1 = this.invSlotRecipes.get(1).getItem() instanceof IEnergyItem
                         ? this.invSlotRecipes.get(1)
@@ -236,7 +256,15 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
         addpainting(new ItemStack(IUItem.nanoaxe, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.quantumaxe, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.spectralaxe, 1, OreDictionary.WILDCARD_VALUE));
+
         addpainting(new ItemStack(IUItem.nanopickaxe, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.diamond_drill, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.drill, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.vajra, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.ult_vajra, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.nano_bow, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.quantum_bow, 1, OreDictionary.WILDCARD_VALUE));
+        addpainting(new ItemStack(IUItem.spectral_bow, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.quantumpickaxe, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.spectralpickaxe, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.nanoshovel, 1, OreDictionary.WILDCARD_VALUE));
@@ -256,8 +284,6 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
         addpainting(new ItemStack(IUItem.nano_boots, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.nano_helmet, 1, OreDictionary.WILDCARD_VALUE));
         addpainting(new ItemStack(IUItem.nano_leggings, 1, OreDictionary.WILDCARD_VALUE));
-
-
 
 
     }
@@ -282,7 +308,7 @@ public class TilePainting extends TileDoubleElectricMachine implements IHasRecip
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
 

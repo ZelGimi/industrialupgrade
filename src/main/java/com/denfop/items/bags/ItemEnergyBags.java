@@ -14,6 +14,8 @@ import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.container.ContainerBags;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.items.IItemStackInventory;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -26,7 +28,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -44,7 +50,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgradeItem, IEnergyItem, IModelRegister {
+public class ItemEnergyBags extends Item implements IItemStackInventory, IUpdatableItemStackEvent, IUpgradeItem, IEnergyItem,
+        IModelRegister {
 
     private final int slots;
     private final int maxStorage;
@@ -74,6 +81,11 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgrad
                 "bags" + "/" + name;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    @Override
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.BAGS.list;
     }
 
     public boolean showDurabilityBar(final ItemStack stack) {
@@ -122,6 +134,8 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgrad
                         player.closeScreen();
                         nbt.setBoolean("open", false);
                     }
+                } else if (!(player.openContainer instanceof ContainerBags)) {
+                    nbt.setBoolean("open", false);
                 }
             }
         }
@@ -166,8 +180,15 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgrad
 
     @SideOnly(Side.CLIENT)
     public void registerModels(final String name) {
-        ModelLoader.setCustomMeshDefinition(this, stack -> getModelLocation1(name));
-        ModelBakery.registerItemVariants(this, getModelLocation1(name));
+        ModelLoader.setCustomMeshDefinition(this, stack -> {
+            final NBTTagCompound nbt = ModUtils.nbt(stack);
+            return getModelLocation1(name + (nbt.getBoolean("open") ? "_open" : ""));
+
+        });
+        String[] mode = {"", "_open"};
+        for (final String s : mode) {
+            ModelBakery.registerItemVariants(this, getModelLocation1(name + s));
+        }
     }
 
     @Override
@@ -250,6 +271,18 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgrad
         return true;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateField(final String name, final CustomPacketBuffer buffer, final ItemStack stack) {
+
+    }
+
+    @Override
+    public void updateEvent(final int event, final ItemStack stack) {
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        nbt.setBoolean("white", !nbt.getBoolean("white"));
+    }
+
     public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
         ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         return box.canAdd(stack1);
@@ -259,6 +292,11 @@ public class ItemEnergyBags extends Item implements IItemStackInventory, IUpgrad
         ItemStackBags box = (ItemStackBags) getInventory(player, stack);
         box.add(stack1);
         box.markDirty();
+    }
+
+    public void insertWithoutSave(EntityPlayer player, ItemStack stack, ItemStack stack1) {
+        ItemStackBags box = (ItemStackBags) getInventory(player, stack);
+        box.addWithoutSave(stack1);
     }
 
     public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {

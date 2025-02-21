@@ -69,7 +69,14 @@ public enum BlockSolarPanels implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public static BlockSolarPanels getFromID(final int ID) {
         return values()[ID % values().length];
     }
@@ -157,6 +164,6 @@ public enum BlockSolarPanels implements IMultiTileBlock {
 
     @Override
     public String[] getMultiModels(final IMultiTileBlock teBlock) {
-        return new String[]{"aer", "earth", "nether", "end", "night", "day", "rain"};
+        return new String[]{"aer", "earth", "nether", "end", "night", "sun", "rain"};
     }
 }

@@ -2,6 +2,14 @@ package com.denfop.container;
 
 import com.denfop.tiles.base.EnumDoubleElectricMachine;
 import com.denfop.tiles.base.TileDoubleElectricMachine;
+import com.denfop.tiles.base.TilePainting;
+import com.denfop.tiles.mechanism.TileEntityUpgradeRover;
+import com.denfop.tiles.mechanism.TileSunnariumPanelMaker;
+import com.denfop.tiles.mechanism.dual.TileEnrichment;
+import com.denfop.tiles.mechanism.dual.TileSynthesis;
+import com.denfop.tiles.mechanism.dual.TileUpgradeBlock;
+import com.denfop.tiles.mechanism.dual.heat.TileAlloySmelter;
+import com.denfop.tiles.mechanism.dual.heat.TileWeldingMachine;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricMachine {
@@ -21,7 +29,7 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
                 type.inputy,
                 type.inputx1,
                 type.inputy1,
-                152,
+                147,
                 8,
                 type.register,
                 type.outputx,
@@ -64,8 +72,60 @@ public class ContainerDoubleElectricMachine extends ContainerBaseDoubleElectricM
             ));
         }
         for (int i = 0; i < 4; i++) {
-            addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                    i, upgradeX, upgradeY + i * 18
+            if (tileEntity1 instanceof TileEnrichment) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, 144, 9 + i * 18
+                ));
+            } else if (tileEntity1 instanceof TileSunnariumPanelMaker) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX + 5, upgradeY + 1 + i * 18
+                ));
+            } else if (tileEntity1 instanceof TileSynthesis) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX + 5, upgradeY + 1 + i * 18
+                ));
+            } else if (tileEntity1 instanceof TileWeldingMachine) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX + 5, upgradeY + i * 18
+                ));
+            } else if (tileEntity1 instanceof TileUpgradeBlock || tileEntity1 instanceof TileEntityUpgradeRover) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX + 5, upgradeY + 1 + i * 18
+                ));
+            } else if (tileEntity1 instanceof TilePainting) {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX + 5, upgradeY + 1 + i * 18
+                ));
+            } else {
+                addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
+                        i, upgradeX, upgradeY + i * 18
+                ));
+            }
+
+        }
+        if (tileEntity1 instanceof TileAlloySmelter) {
+            addSlotToContainer(new SlotInvSlot(((TileAlloySmelter) tileEntity1).input_slot,
+                    0, -20, 84
+            ));
+        }
+        if (tileEntity1 instanceof TileSynthesis) {
+            addSlotToContainer(new SlotInvSlot(((TileSynthesis) tileEntity1).input_slot,
+                    0, -20, 84
+            ));
+        }
+        if (tileEntity1 instanceof TileEnrichment) {
+            addSlotToContainer(new SlotInvSlot(((TileEnrichment) tileEntity1).input_slot,
+                    0, -20, 84
+            ));
+        }
+        if (tileEntity1 instanceof TileSunnariumPanelMaker) {
+            addSlotToContainer(new SlotInvSlot(((TileSunnariumPanelMaker) tileEntity1).input_slot,
+                    0, -20, 84
+            ));
+        }
+        if (tileEntity1 instanceof TileWeldingMachine) {
+            addSlotToContainer(new SlotInvSlot(((TileWeldingMachine) tileEntity1).input_slot,
+                    0, -20, 84
             ));
         }
     }

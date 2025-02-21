@@ -1,6 +1,8 @@
 package com.denfop.invslot;
 
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemEntityModule;
 import com.denfop.tiles.base.TileEntityInventory;
@@ -9,7 +11,7 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class InvSlotPrivatizer extends InvSlot {
+public class InvSlotPrivatizer extends InvSlot implements ITypeSlot {
 
     private final int type;
     private final TilePrivatizer tile;
@@ -20,6 +22,14 @@ public class InvSlotPrivatizer extends InvSlot {
         this.stackSizeLimit = 1;
         this.type = type;
         this.tile = (TilePrivatizer) base1;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot(final int slotid) {
+        if (type == 1) {
+            return EnumTypeSlot.PRIVATE;
+        }
+        return EnumTypeSlot.QUARRY1;
     }
 
     @Override

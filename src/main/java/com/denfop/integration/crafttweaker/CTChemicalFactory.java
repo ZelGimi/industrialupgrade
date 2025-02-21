@@ -25,8 +25,8 @@ public class CTChemicalFactory {
         Recipes.recipes.addAdderRecipe(
                 "plastic",
                 new BaseMachineRecipe(
-                        new Input(new IC2FluidRecipeInput(liquidStack).getInputs(),
-                                new IC2InputItemStack(container), new IC2InputItemStack(container1)
+                        new Input(new FluidRecipeInput(liquidStack).getInputs(),
+                                new InputItemStack(container), new InputItemStack(container1)
                         ),
                         new RecipeOutput(null, CraftTweakerMC.getItemStacks(output))
                 )

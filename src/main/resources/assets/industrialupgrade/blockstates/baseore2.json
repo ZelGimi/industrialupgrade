@@ -1,0 +1,94 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "arsenic" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/arsenic_ore"
+        }
+      },
+      "barium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/barium_ore"
+        }
+      },
+      "bismuth" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/bismuth_ore"
+        }
+      },
+      "gadolinium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/gadolinium_ore"
+        }
+      },
+      "gallium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/gallium_ore"
+        }
+      },
+      "hafnium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/hafnium_ore"
+        }
+      },
+      "yttrium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/yttrium_ore"
+        }
+      },
+      "molybdenum" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/molybdenum_ore"
+        }
+      },
+      "neodymium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/neodymium_ore"
+        }
+      },
+      "niobium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/niobium_ore"
+        }
+      },
+      "palladium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/palladium_ore"
+        }
+      },
+      "polonium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/polonium_ore"
+        }
+      },
+      "strontium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/strontium_ore"
+        }
+      },
+      "thallium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/thallium_ore"
+        }
+      },
+      "zirconium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/zirconium_ore"
+        }
+      },
+      "sulfur" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/sulfur_ore"
+        }
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

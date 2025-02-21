@@ -5,7 +5,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
 
-public class TileEntitySimpleSocket  extends TileEntityMainSocket {
+public class TileEntitySimpleSocket extends TileEntityMainSocket {
 
     public TileEntitySimpleSocket() {
         super(10000);
@@ -25,4 +25,5 @@ public class TileEntitySimpleSocket  extends TileEntityMainSocket {
     public int getLevel() {
         return 0;
     }
+
 }

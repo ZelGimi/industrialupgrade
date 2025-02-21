@@ -4,11 +4,9 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.reactors.gas.IRegenerator;
 import com.denfop.tiles.reactors.gas.ISocket;
 
-public class TileEntityAdvSocket   extends TileEntityMainSocket  implements ISocket {
+public class TileEntityAdvSocket extends TileEntityMainSocket implements ISocket {
 
     public TileEntityAdvSocket() {
         super(20000);
@@ -28,4 +26,5 @@ public class TileEntityAdvSocket   extends TileEntityMainSocket  implements ISoc
     public int getLevel() {
         return 1;
     }
+
 }

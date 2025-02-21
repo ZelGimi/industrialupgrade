@@ -1,12 +1,9 @@
 package com.denfop.tiles.reactors.gas.intercooler;
 
 import com.denfop.container.ContainerInterCooler;
-import com.denfop.container.ContainerReCirculationPump;
 import com.denfop.gui.GuiInterCooler;
-import com.denfop.gui.GuiReCirculationPump;
 import com.denfop.invslot.InvSlot;
 import com.denfop.items.reactors.ItemsFan;
-import com.denfop.items.reactors.ItemsPumps;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.gas.IInterCooler;
 import net.minecraft.client.gui.GuiScreen;
@@ -19,48 +16,58 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
 
     private final int level;
     private final InvSlot slot;
-    private  int power;
+    private int power;
     private int energy;
-    public TileEntityBaseInterCooler(int level){
+
+    public TileEntityBaseInterCooler(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,1){
+        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof ItemsFan && ((ItemsFan) stack.getItem()).getLevel() <= ((TileEntityBaseInterCooler)this.base).getLevel();
+                return stack.getItem() instanceof ItemsFan && ((ItemsFan) stack.getItem()).getLevel() <= ((TileEntityBaseInterCooler) this.base).getLevel();
             }
 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if(content.isEmpty()){
-                    ((TileEntityBaseInterCooler)this.base).setEnergy(0);
-                    ((TileEntityBaseInterCooler)this.base).setPower(0);
-                }else{
-                    ((TileEntityBaseInterCooler)this.base).setEnergy(((ItemsFan) content.getItem()).getEnergy());
-                    ((TileEntityBaseInterCooler)this.base).setPower(((ItemsFan) content.getItem()).getPower());
+                if (content.isEmpty()) {
+                    ((TileEntityBaseInterCooler) this.base).setEnergy(0);
+                    ((TileEntityBaseInterCooler) this.base).setPower(0);
+                } else {
+                    ((TileEntityBaseInterCooler) this.base).setEnergy(((ItemsFan) content.getItem()).getEnergy());
+                    ((TileEntityBaseInterCooler) this.base).setPower(((ItemsFan) content.getItem()).getPower());
                 }
             }
         };
     }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.getWorld().provider.getWorldTime() % 20 == 0) {
+            if (!this.getSlot().get().isEmpty() && ((ItemsFan) this.getSlot().get().getItem()).getDurabilityForDisplay(this
+                    .getSlot()
+                    .get()) == 1) {
+                this.getSlot().put(0, ItemStack.EMPTY);
+            }
+
+        }
+    }
+
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if(!this.getWorld().isRemote){
-            if(this.getSlot().get().isEmpty()){
+        if (!this.getWorld().isRemote) {
+            if (this.getSlot().get().isEmpty()) {
                 this.setEnergy(0);
                 this.setPower(0);
-            }else{
+            } else {
+
                 this.setEnergy(((ItemsFan) this.getSlot().get().getItem()).getEnergy());
                 this.setPower(((ItemsFan) this.getSlot().get().getItem()).getPower());
+
             }
         }
-    }
-    public void setEnergy(final int energy) {
-        this.energy = energy;
-    }
-
-    public void setPower(final int power) {
-        this.power = power;
     }
 
     @Override
@@ -72,8 +79,16 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
         return energy;
     }
 
+    public void setEnergy(final int energy) {
+        this.energy = energy;
+    }
+
     public int getPower() {
         return power;
+    }
+
+    public void setPower(final int power) {
+        this.power = power;
     }
 
     public InvSlot getSlot() {
@@ -82,15 +97,18 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
 
     @Override
     public ContainerInterCooler getGuiContainer(final EntityPlayer var1) {
-        return new ContainerInterCooler(this,var1);
+        return new ContainerInterCooler(this, var1);
     }
+
     @Override
     public boolean hasOwnInventory() {
         return true;
     }
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
         return new GuiInterCooler(getGuiContainer(var1));
     }
+
 }

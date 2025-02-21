@@ -9,18 +9,19 @@ public interface IMultiElement {
     default boolean isMain() {
         return false;
     }
-    default int getLevel(){return 0;};
 
-    default boolean canCreateSystem(IMainMultiBlock mainMultiBlock){return true;}
-    default boolean hasOwnInventory() {
-        return false;
+    default int getLevel() {
+        return 0;
     }
 
-    default void deletePart() {
-        if (getMain() != null) {
-            getMain().setFull(false);
-            getMain().setActivated(false);
-        }
+    ;
+
+    default boolean canCreateSystem(IMainMultiBlock mainMultiBlock) {
+        return true;
+    }
+
+    default boolean hasOwnInventory() {
+        return false;
     }
 
 }

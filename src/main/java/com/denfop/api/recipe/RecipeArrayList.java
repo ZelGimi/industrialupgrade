@@ -13,9 +13,12 @@ public class RecipeArrayList<T extends IRecipeInputStack> extends ArrayList<T> {
 
 
     public boolean contains(final ItemStack o) {
-        for (T t : this)
-            if (t.matched(o))
+        for (T t : this) {
+            if (t.matched(o)) {
                 return true;
+            }
+        }
         return false;
     }
+
 }

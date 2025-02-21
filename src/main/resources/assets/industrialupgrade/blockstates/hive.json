@@ -1,0 +1,45 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "forest_hive" : {
+        "model" : "industrialupgrade:hive/forest_hive"
+      },
+	  "plains_hive" : {
+        "model" : "industrialupgrade:hive/plains_hive"
+      },
+	  "winter_hive" : {
+        "model" : "industrialupgrade:hive/winter_hive"
+      },
+	  "swamp_hive" : {
+        "model" : "industrialupgrade:hive/swamp_hive"
+      },
+	  "tropical_hive" : {
+        "model" : "industrialupgrade:hive/tropical_hive"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

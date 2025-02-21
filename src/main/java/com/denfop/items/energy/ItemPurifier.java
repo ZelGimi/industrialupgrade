@@ -65,6 +65,10 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
     }
 
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.PURIFIER.list;
+    }
+
     public int getItemEnchantability() {
         return 0;
     }
@@ -179,7 +183,7 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                 if (base.solartype != null) {
                     panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
                 }
-                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()  || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
+                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                     final EntityItem item = new EntityItem(world);
                     if (!stack_quickly.isEmpty()) {
                         item.setItem(stack_quickly);
@@ -197,7 +201,7 @@ public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpg
                         item.setItem(module_separate);
                         base.multi_process.module_separate = false;
                         base.multi_process.shrinkModule(1);
-                    }else if (!panel.isEmpty()) {
+                    } else if (!panel.isEmpty()) {
                         item.setItem(panel);
                         base.solartype = null;
                     } else if (!stack_modulestorage.isEmpty()) {

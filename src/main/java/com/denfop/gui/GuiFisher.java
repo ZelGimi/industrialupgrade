@@ -5,6 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerFisher;
 import com.denfop.utils.ListInformationUtils;
@@ -25,10 +26,21 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
     public GuiFisher(ContainerFisher container1) {
         super(container1);
         this.container = container1;
-        this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+        this.addComponent(new GuiComponent(this, 5, 20, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 140 + 1 + 5, 28, EnumTypeComponent.ENERGY_HEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
+        this.addComponent(new GuiComponent(this, 41, 45, EnumTypeComponent.PROGRESS4,
+                new Component<>(new ComponentProgress(this.container.base, 1, (short) 0) {
+                    @Override
+                    public double getBar() {
+                        return container.base.progress / 100D;
+                    }
+                })
+        ));
+
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
@@ -107,7 +119,7 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiFisher.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

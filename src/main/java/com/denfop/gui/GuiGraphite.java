@@ -4,10 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.container.ContainerBattery;
 import com.denfop.container.ContainerGraphite;
-import com.denfop.container.ContainerLaserPolisher;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiGraphite extends GuiIU<ContainerGraphite> {
@@ -25,8 +22,9 @@ public class GuiGraphite extends GuiIU<ContainerGraphite> {
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString("Silicon concentration: " + (int)((this.container.base.col / 90D) * 100) + "%",30, 20,
-                4210752);
+        this.fontRenderer.drawString("Silicon concentration: " + (int) ((this.container.base.col / 90D) * 100) + "%", 30, 20,
+                4210752
+        );
     }
 
     @Override

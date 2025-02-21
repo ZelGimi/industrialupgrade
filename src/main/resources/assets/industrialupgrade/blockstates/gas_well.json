@@ -1,0 +1,51 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "gas_well_controller" : {
+        "model" : "industrialupgrade:gas_well/gas_well_controller"
+      },
+      "gas_well_socket" : {
+        "model" : "industrialupgrade:gas_well/gas_well_socket"
+      },
+      "gas_well_analyzer" : {
+        "model" : "industrialupgrade:gas_well/gas_well_analyzer"
+      },
+      "gas_well_drill" : {
+        "model" : "industrialupgrade:gas_well/gas_well_drill"
+      },
+      "gas_well_casing" : {
+        "model" : "industrialupgrade:gas_well/gas_well_casing"
+      },
+      "gas_well_transport" : {
+        "model" : "industrialupgrade:gas_well/gas_well_transport"
+      },
+      "gas_well_tank" : {
+        "model" : "industrialupgrade:gas_well/gas_well_tank"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

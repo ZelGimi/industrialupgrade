@@ -1,12 +1,6 @@
 {
-  "parent" : "block/cube",
+  "parent" : "block/cube_all",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/imp_recirculationpump_side",
-    "down" : "industrialupgrade:blocks/gas_reactor/imp_casing",
-    "up" : "industrialupgrade:blocks/gas_reactor/imp_casing",
-    "north" : "industrialupgrade:blocks/gas_reactor/imp_recirculationpump_main",
-    "east" : "industrialupgrade:blocks/gas_reactor/imp_recirculationpump_side",
-    "south" : "industrialupgrade:blocks/gas_reactor/imp_casing",
-    "west" : "industrialupgrade:blocks/gas_reactor/imp_recirculationpump_side"
+    "all" : "industrialupgrade:blocks/gas_reactor/recirculation/imp_recirculation_side"
   }
 }

@@ -4,26 +4,35 @@
     "type" : {
       "quarry_vein" : {
         "model" : "industrialupgrade:basemachine/quarry_vein"
+      }, 
+	  "quarry_vein_active_2" : {
+        "model" : "industrialupgrade:basemachine/quarry_vein_active_2"
+      }, 
+	  "quarry_vein_active_3" : {
+        "model" : "industrialupgrade:basemachine/quarry_vein_active_3"
+      }, 
+	  "quarry_vein_active_4" : {
+        "model" : "industrialupgrade:basemachine/quarry_vein_active_4"
       }
     },
-    "facing" : {
+     "facing" : {
       "down" : {
-        "transform" : "forge:default-block"
+        "x" : 90
       },
       "up" : {
-        "transform" : "forge:default-block"
+        "x" : 270
       },
       "north" : {
         "transform" : "forge:default-block"
       },
       "south" : {
-        "transform" : "forge:default-block"
+        "y" : 180
       },
       "west" : {
-        "transform" : "forge:default-block"
+        "y" : 270
       },
       "east" : {
-        "transform" : "forge:default-block"
+        "y" : 90
       }
     },
     "inventory" : [

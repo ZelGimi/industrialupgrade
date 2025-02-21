@@ -5,7 +5,6 @@ import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.container.ContainerWaterSocket;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiWaterSocket extends GuiIU<ContainerWaterSocket> {
@@ -17,6 +16,7 @@ public class GuiWaterSocket extends GuiIU<ContainerWaterSocket> {
                 new Component<>(this.container.base.getEnergy())
         ));
     }
+
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
@@ -35,6 +35,7 @@ public class GuiWaterSocket extends GuiIU<ContainerWaterSocket> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiWaterReactor.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidreactor4.png");
     }
+
 }

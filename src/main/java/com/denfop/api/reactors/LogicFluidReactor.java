@@ -18,6 +18,9 @@ public class LogicFluidReactor extends LogicReactor {
 
         if (!this.rodsList.isEmpty() && reactorFluid.getInputTank().getFluidAmount() > 0) {
             super.onTick();
+            if (!this.reactorFluid.isFull()) {
+                return;
+            }
             if (temp_heat < getMaxHeat()) {
                 temp_heat += rand.nextInt(Math.max((int) (getMaxHeat() - temp_heat), 4) / 4);
                 if (temp_heat > getMaxHeat()) {
@@ -35,19 +38,23 @@ public class LogicFluidReactor extends LogicReactor {
                             2 * this.reactorFluid.getPressure()
                     ), true);
                     if (temp_heat > this.getMaxHeat()) {
-                        temp_heat -= rand.nextInt((int) (temp_heat - this.getMaxHeat()));
-                        temp_heat = Math.max(temp_heat, 0);
+                        temp_heat -= rand.nextInt((int) Math.max(temp_heat - this.getMaxHeat(), 1));
+                        if (temp_heat < 0) {
+                            temp_heat = 0;
+                        }
                     } else {
                         if (temp_heat > reactorFluid.getStableMaxHeat() && temp_heat > this.getMaxHeat()) {
-                            temp_heat -= rand.nextInt((int) ((temp_heat - reactorFluid.getStableMaxHeat()) * 0.25));
-                            temp_heat = Math.max(temp_heat, 0);
+                            temp_heat -= rand.nextInt((int) Math.max(((temp_heat - reactorFluid.getStableMaxHeat()) * 0.25), 1));
+                            if (temp_heat < 0) {
+                                temp_heat = 0;
+                            }
                         }
                     }
-                    reactorFluid.setOutput(generation * (1 + 0.02 * this.reactorFluid.getPressure()));
+                    reactorFluid.setOutput(generation * (1 + 0.02 * (this.reactorFluid.getPressure() - 1)));
                 } else {
                     temp_heat += rand.nextInt(100);
                 }
-            }else {
+            } else {
 
                 temp_heat += rand.nextInt(150);
             }
@@ -62,8 +69,10 @@ public class LogicFluidReactor extends LogicReactor {
                     ), true);
                     if ((int) (temp_heat * 0.2) > 0) {
                         temp_heat -= rand.nextInt((int) (temp_heat * 0.2));
+                        if (temp_heat < 0) {
+                            temp_heat = 0;
+                        }
                     }
-                    temp_heat = Math.max(temp_heat, 0);
                     if (temp_heat < 0) {
                         temp_heat = 0;
                     }
@@ -72,20 +81,25 @@ public class LogicFluidReactor extends LogicReactor {
         } else {
             if (this.getTemp_heat() > 0 && this.rodsList.isEmpty()) {
                 temp_heat -= rand.nextInt((int) (this.getTemp_heat() + 1));
+                if (temp_heat < 0) {
+                    temp_heat = 0;
+                }
+                this.reactor.setOutput(0);
             } else if (!this.rodsList.isEmpty()) {
                 temp_heat += rand.nextInt(200);
+                this.reactor.setOutput(0);
             }
-
+            this.reactor.setOutput(0);
         }
         reactorFluid.setHeat(temp_heat);
     }
 
-    public void setTemp_heat(final double temp_heat) {
-        this.temp_heat = temp_heat;
-    }
-
     public double getTemp_heat() {
         return temp_heat;
+    }
+
+    public void setTemp_heat(final double temp_heat) {
+        this.temp_heat = temp_heat;
     }
 
 }

@@ -55,6 +55,10 @@ public enum CoolType implements ISubEnum, ICableItem {
         return this.name() + "_pipes";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     public int getId() {
         return this.ordinal();

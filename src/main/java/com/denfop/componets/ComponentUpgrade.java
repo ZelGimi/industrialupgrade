@@ -91,6 +91,7 @@ public class ComponentUpgrade extends AbstractComponent {
         }
         return nbt;
     }
+
     public CustomPacketBuffer updateComponent() {
         CustomPacketBuffer buffer = new CustomPacketBuffer();
         buffer.writeInt(this.listActiveUpgrade.size());
@@ -105,7 +106,7 @@ public class ComponentUpgrade extends AbstractComponent {
     public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
         super.onNetworkUpdate(is);
         int i = is.readInt();
-        for(int j =0; j < i;j++){
+        for (int j = 0; j < i; j++) {
             this.listActiveUpgrade.add(TypeUpgrade.values()[is.readInt()]);
         }
 

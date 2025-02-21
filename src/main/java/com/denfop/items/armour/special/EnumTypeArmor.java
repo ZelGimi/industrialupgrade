@@ -1,6 +1,5 @@
 package com.denfop.items.armour.special;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,28 +20,57 @@ import static com.denfop.items.armour.special.EnumCapability.SPEED;
 import static com.denfop.items.armour.special.EnumCapability.VERTICAL_FLY;
 
 public enum EnumTypeArmor {
-    NANO("nano", Arrays.asList("Zelen","Demon","Emerald","Cold","Dark","Desert","Fire","Snow","Taiga","Ukraine","Ender"), 3, 512,
+    NANO(
+            "nano",
+            Arrays.asList("Zelen", "Demon", "Emerald", "Cold", "Dark", "Desert", "Fire", "Snow", "Taiga", "Ukraine", "Ender"),
+            3,
+            512,
             1000000,
-            new ArmorMulDamage(0.1,
-            0.25,
-            0.2,
-            0.1), 5000,
-            NIGHT_VISION_WITH),
-    ADV_NANO("adv_nano", Arrays.asList("Zelen","Snow","Desert"), 4, 2048, 10000000, new ArmorMulDamage(0.1, 0.3, 0.3, 0.1), 7500,
-            NIGHT_VISION_WITHOUT,
-            JETPACK, SPEED, BIG_JUMP
+            new ArmorMulDamage(
+                    0.1,
+                    0.25,
+                    0.2,
+                    0.1
+            ),
+            5000,
+            NIGHT_VISION_WITH
     ),
-    QUANTUM("quantum",  Arrays.asList("Zelen","Snow","Desert","Demon","Emerald","Cold"), 5, 8192, 50000000, new ArmorMulDamage(0.2
-            , 0.4,
-            0.3, 0.2),
+    ADV_NANO(
+            "adv_nano",
+            Arrays.asList("Zelen", "Snow", "Desert"),
+            4,
+            2048,
+            10000000,
+            new ArmorMulDamage(0.1, 0.3, 0.3, 0.1),
+            7500,
+            NIGHT_VISION_WITHOUT,
+            JETPACK,
+            SPEED,
+            BIG_JUMP
+    ),
+    QUANTUM(
+            "quantum",
+            Arrays.asList("Zelen", "Snow", "Desert", "Demon", "Emerald", "Cold"),
+            5,
+            8192,
+            50000000,
+            new ArmorMulDamage(0.2
+                    , 0.4,
+                    0.3, 0.2
+            ),
             10000,
             NIGHT_VISION_AUTO,
-            ACTIVE_EFFECT, FOOD,
-            JETPACK_FLY, SPEED, BAGS, BIG_JUMP, AUTO_JUMP
+            ACTIVE_EFFECT,
+            FOOD,
+            JETPACK_FLY,
+            SPEED,
+            BAGS,
+            BIG_JUMP,
+            AUTO_JUMP
     ),
     SPECTRAL(
             "spectral",
-            Arrays.asList("Zelen","Snow","Desert"),
+            Arrays.asList("Zelen", "Snow", "Desert"),
             7,
             131072,
             300000000,

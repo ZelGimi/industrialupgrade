@@ -5,12 +5,13 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockWaterReactors;
 import com.denfop.register.InitMultiBlockSystem;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntityImpController  extends TileEntityMainController {
+public class TileEntityImpController extends TileEntityMainController {
+
     public TileEntityImpController() {
         super(InitMultiBlockSystem.ImpWaterReactorMultiBlock, EnumFluidReactors.I);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockWaterReactors.water_imp_controller;

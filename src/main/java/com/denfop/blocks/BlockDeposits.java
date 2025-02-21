@@ -4,8 +4,17 @@ package com.denfop.blocks;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.api.recipe.IBaseRecipe;
+import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.items.energy.ItemHammer;
+import com.denfop.world.WorldBaseGen;
+import com.denfop.world.vein.ChanceOre;
+import com.denfop.world.vein.VeinType;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -13,12 +22,19 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
@@ -33,33 +49,109 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-public class BlockDeposits extends BlockCore implements IModelRegister {
+public class BlockDeposits extends BlockCore implements IModelRegister, IDeposits {
 
     public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
-
+    public static final AxisAlignedBB Deposits = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
+    public static   Map<Integer, List<String>> mapInf = new HashMap<>();
 
     public BlockDeposits() {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("deposits");
         setCreativeTab(IUCore.OreTab);
-        setHardness(3.0F);
-        setResistance(5.0F);
+        setHardness(0.2F);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.deposits_Magnetite));
-        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("pickaxe", 0);
     }
-    public static final AxisAlignedBB Deposits = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.2D, 1.0D);
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
+
+    public static boolean canFallThrough(IBlockState state) {
+        Block block = state.getBlock();
+        Material material = state.getMaterial();
+        return block == Blocks.FIRE || material == Material.AIR || material == Material.WATER || material == Material.LAVA;
+    }
+
+    @Override
+    public boolean isReplaceable(final IBlockAccess worldIn, final BlockPos pos) {
+        return false;
+    }
+
+    public boolean canSilkHarvest(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+
+        return false;
+    }
+
+
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return Deposits;
     }
 
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        worldIn.scheduleUpdate(pos, this, 2);
+    }
 
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        worldIn.scheduleUpdate(pos, this, 2);
+    }
+
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        if (!worldIn.isRemote) {
+            this.checkFallable(worldIn, pos);
+        }
+    }
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT;
+    }
+    private void checkFallable(World worldIn, BlockPos pos) {
+        if ((worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down()))) && pos.getY() >= 0) {
+
+
+            if (worldIn.isAreaLoaded(pos.add(-32, -32, -32), pos.add(32, 32, 32))) {
+                if (!worldIn.isRemote) {
+                    EntityFallingBlock entityfallingblock = new EntityFallingBlock(
+                            worldIn,
+                            (double) pos.getX() + 0.5D,
+                            (double) pos.getY(),
+                            (double) pos.getZ() + 0.5D,
+                            worldIn.getBlockState(pos)
+                    );
+                    this.onStartFalling(entityfallingblock);
+                    worldIn.spawnEntity(entityfallingblock);
+                }
+            } else {
+                IBlockState state = worldIn.getBlockState(pos);
+                worldIn.setBlockToAir(pos);
+                BlockPos blockpos;
+
+                for (blockpos = pos.down(); (worldIn.isAirBlock(blockpos) || canFallThrough(worldIn.getBlockState(blockpos))) && blockpos.getY() > 0; blockpos = blockpos.down()) {
+                    ;
+                }
+
+                if (blockpos.getY() > 0) {
+                    worldIn.setBlockState(blockpos.up(), state); //Forge: Fix loss of state information during world gen.
+                }
+            }
+        }
+    }
+
+    protected void onStartFalling(EntityFallingBlock fallingEntity) {
+    }
+
+    public int tickRate(World worldIn) {
+        return 10;
+    }
 
     @Nonnull
     protected BlockStateContainer createBlockState() {
@@ -86,8 +178,6 @@ public class BlockDeposits extends BlockCore implements IModelRegister {
         return Type.values()[meta].getRarity();
     }
 
-
-
     @Nonnull
     public IBlockState getStateMeta(int meta) {
         return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
@@ -101,12 +191,123 @@ public class BlockDeposits extends BlockCore implements IModelRegister {
             final BlockPos pos,
             final EntityPlayer player
     ) {
-        return new ItemStack(IUItem.heavyore,1,getMetaFromState(state));
+        return new ItemStack(IUItem.heavyore, 1, getMetaFromState(state));
     }
 
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-    {
-        drops.add(new ItemStack(IUItem.heavyore, 1, this.getMetaFromState(state)));
+    public void harvestBlock(
+            World worldIn,
+            EntityPlayer player,
+            BlockPos pos,
+            IBlockState state,
+            @Nullable TileEntity te,
+            ItemStack stack
+    ) {
+        player.addStat(StatList.getBlockStats(this));
+        player.addExhaustion(0.005F);
+
+        if (this.canSilkHarvest(worldIn, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(
+                Enchantments.SILK_TOUCH,
+                stack
+        ) > 0) {
+            java.util.List<ItemStack> items = new java.util.ArrayList<ItemStack>();
+            ItemStack itemstack = this.getSilkTouchDrop(state);
+
+            if (!itemstack.isEmpty()) {
+                items.add(itemstack);
+            }
+
+            net.minecraftforge.event.ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0f, true, player);
+            for (ItemStack item : items) {
+                spawnAsEntity(worldIn, pos, item);
+            }
+        } else {
+            harvesters.set(player);
+            int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+            this.dropBlockAsItemWithChance(worldIn, pos, state, 1, i, player);
+            harvesters.set(null);
+        }
+    }
+
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune, EntityPlayer player) {
+        NonNullList<ItemStack> ret = NonNullList.create();
+        getDrops(ret, world, pos, state, fortune, player);
+        return ret;
+    }
+
+    public void dropBlockAsItemWithChance(
+            World worldIn, BlockPos pos, IBlockState state, float chance, int fortune,
+            EntityPlayer player
+    ) {
+        if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots) {
+            List<ItemStack> drops = getDrops(
+                    worldIn,
+                    pos,
+                    state,
+                    fortune,
+                    player
+            );
+
+
+            for (ItemStack drop : drops) {
+                spawnAsEntity(worldIn, pos, drop);
+            }
+        }
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+
+    }
+
+    public void getDrops(
+            NonNullList<ItemStack> drops,
+            IBlockAccess world,
+            BlockPos pos,
+            IBlockState state,
+            int fortune,
+            EntityPlayer player
+    ) {
+        if (player.getHeldItem(player.getActiveHand()).getItem() instanceof ItemHammer) {
+            final IBaseRecipe recipe = Recipes.recipes.getRecipe("handlerho");
+            final List<BaseMachineRecipe> recipe_list = Recipes.recipes.getRecipeList("handlerho");
+            final MachineRecipe output = Recipes.recipes.getRecipeMachineRecipeOutput(
+                    recipe,
+                    recipe_list,
+                    false,
+                    Collections.singletonList(new ItemStack(IUItem.heavyore, 1, this.getMetaFromState(state)))
+            );
+            if (output != null) {
+                final int[] col = new int[output.getRecipe().output.items.size()];
+                for (int i = 0; i < col.length; i++) {
+                    col[i] = output.getRecipe().output.metadata.getInteger(("input" + i));
+                    col[i] = Math.min(col[i], 95);
+                }
+                List<ItemStack> stacks = new ArrayList<>();
+                for (int i = 0; i < col.length; i++) {
+                    final Random rand = player.getEntityWorld().rand;
+                    if ((rand.nextInt(100) < col[i])) {
+                        stacks.add(output.getRecipe().output.items.get(i));
+                    }
+                }
+                for (ItemStack stack : stacks) {
+                    final BaseMachineRecipe rec1 = Recipes.recipes.getRecipeOutput("macerator", false, stack);
+                    if (rec1 != null) {
+                        ItemStack stack1 = rec1.output.items.get(0).copy();
+                        stack1.setCount(1);
+                        drops.add(stack1);
+                    } else {
+                        drops.add(stack.copy());
+                    }
+                }
+            }
+        } else {
+            drops.add(new ItemStack(IUItem.heavyore, 1, this.getMetaFromState(state)));
+        }
     }
 
     @Nonnull
@@ -124,7 +325,12 @@ public class BlockDeposits extends BlockCore implements IModelRegister {
     }
 
     public int getLightValue(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-        return -1;
+        return 0;
+    }
+
+    @Override
+    public int getLightOpacity(final IBlockState state, final IBlockAccess world, final BlockPos pos) {
+        return 0;
     }
 
     @Override
@@ -140,13 +346,15 @@ public class BlockDeposits extends BlockCore implements IModelRegister {
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
+
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
         return false;
     }
-    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
-    {
+
+    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return false;
     }
+
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (int i = 0; i < (Type.values()).length; i++) {
@@ -172,6 +380,46 @@ public class BlockDeposits extends BlockCore implements IModelRegister {
     public boolean initialize() {
 
         return true;
+    }
+
+    @Override
+    public List<String> getInformationFromMeta(final int meta) {
+        List<String> inf = mapInf.get(meta);
+        if (inf == null) {
+            final VeinType vein = WorldBaseGen.veinTypes.get(meta);
+            List<String> stringList = new ArrayList<>();
+            final String s = Localization.translate("deposists.jei1") + (vein.getHeavyOre() != null ?
+                    new ItemStack(vein.getHeavyOre().getBlock(), 1, vein.getMeta()).getDisplayName() :
+                    new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1,
+                            vein.getOres().get(0).getMeta()
+                    ).getDisplayName());
+            stringList.add(s);
+            if (vein.getHeavyOre() != null) {
+                final String s1 = new ItemStack(vein.getHeavyOre().getBlock(), 1, vein.getMeta()).getDisplayName() + " 50%";
+                stringList.add(s1);
+                for (int i = 0; i < vein.getOres().size(); i++) {
+                    final ChanceOre chanceOre = vein.getOres().get(i);
+                    String s2 =
+                            new ItemStack(chanceOre.getBlock().getBlock(),
+                                    1,
+                                    chanceOre.getMeta()).getDisplayName() + " " + chanceOre.getChance() + "%";
+                    stringList.add(s2);
+                }
+            } else {
+                for (int i = 0; i < vein.getOres().size(); i++) {
+                    final ChanceOre chanceOre = vein.getOres().get(i);
+                    String s2 =
+                            new ItemStack(chanceOre.getBlock().getBlock(),
+                                    1,
+                                    chanceOre.getMeta()).getDisplayName() + " " + chanceOre.getChance() + "%";
+                    stringList.add(s2);
+                }
+            }
+            mapInf.put(meta, stringList);
+            return stringList;
+        } else {
+            return inf;
+        }
     }
 
     public enum Type implements IStringSerializable {

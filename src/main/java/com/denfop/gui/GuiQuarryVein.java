@@ -3,8 +3,15 @@ package com.denfop.gui;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.api.gui.ImageScreen;
 import com.denfop.api.vein.Type;
 import com.denfop.api.vein.VeinSystem;
+import com.denfop.blocks.FluidName;
 import com.denfop.container.ContainerQuarryVein;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
@@ -47,6 +54,16 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 colors[x1 - 74][y1 - 14] = this.getColor(state, this.container.base.getWorld(), pos);
             }
         }
+        this.ySize += 30;
+        this.inventory.setY(this.inventory.getY() + 30);
+        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.elements.add(new ImageScreen(this, 7, 30, 60, 15));
+        this.addComponent(new GuiComponent(this, 69, 28, EnumTypeComponent.BIGGEST_FRAME,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 129, 58, EnumTypeComponent.ENERGY_HEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
     }
 
     int getChance(Biome biome) {
@@ -65,7 +82,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         } else if (Biome.getIdForBiome(biome) == 35) {
             return 50;
         } else {
-            return 30;
+            return 10;
         }
     }
 
@@ -74,14 +91,15 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getBlockPos());
         lst.add(Localization.translate("iu.biome") + biome.getBiomeName());
         int col = biome instanceof BiomeHills ? 25 : 0;
-        lst.add(Localization.translate("iu.gettingvein") + (getChance(biome) - col) + "%");
-        lst.add(Localization.translate("iu.gettingvein1") + 15 + col + "%");
+        lst.add(Localization.translate("iu.gettingvein") + ((int) (Math.max(0, getChance(biome) - col) * 0.85) + "%"));
+        lst.add(Localization.translate("iu.gettingvein1") + String.valueOf(15 + col) + "%");
+        lst.add(Localization.translate("iu.gettingvein2") + String.valueOf(15 + col) + "%");
 
         return lst;
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
-        if (mouseX >= 73 && mouseX <= 113 && mouseY >= 13 && mouseY < 80) {
+        if (mouseX >= 73 && mouseX <= 113 && mouseY >= 33 && mouseY < 100) {
             int y = getCoord(mouseY, this.container.base.getBlockPos().getY());
             List<String> text = new ArrayList<>();
             text.add(Localization.translate("iu.quarryveininformation"));
@@ -201,7 +219,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
             this.fontRenderer.drawString(
                     (this.container.base.progress * 100 / 1200) + "%",
                     29,
-                    32,
+                    34,
                     ModUtils.convertRGBcolorToInt(13, 229, 34)
             );
 
@@ -213,15 +231,15 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
             if (this.container.base.vein.getType() == Type.EMPTY || this.container.base.vein.getMaxCol() == 0) {
                 this.fontRenderer.drawString(
                         Localization.translate("iu.empty"),
-                        29,
-                        32,
+                        27,
+                        34,
                         ModUtils.convertRGBcolorToInt(13, 229, 34)
                 );
             } else {
                 this.fontRenderer.drawString(
                         Localization.translate("iu.find"),
-                        26,
-                        32,
+                        19,
+                        34,
                         ModUtils.convertRGBcolorToInt(13, 229, 34)
                 );
                 int col = this.container.base.vein.getCol();
@@ -229,7 +247,16 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 boolean isOil = this.container.base.vein.getType() == Type.OIL;
                 String name_vein;
                 if (!isOil) {
-                    name_vein = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta()).getDisplayName();
+                    if (this.container.base.vein.getType() != Type.GAS) {
+                        if (container.base.vein.isOldMineral())
+                        name_vein = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta()).getDisplayName();
+                        else
+                            name_vein = new ItemStack(IUItem.mineral, 1, this.container.base.vein.getMeta()).getDisplayName();
+
+                    } else {
+                        name_vein = new ItemStack(FluidName.fluidgas.getInstance().getBlock()).getDisplayName();
+                        isOil = true;
+                    }
                 } else {
                     name_vein = Localization.translate("iu.fluidneft");
                 }
@@ -241,15 +268,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
             }
         }
 
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EF";
-        new AdvArea(this, 6, 31, 17, 80)
-                .withTooltip(tooltip2)
-                .drawForeground(par1, par2);
+
     }
 
     private int getColor(IBlockState state, World world, BlockPos pos) {
@@ -261,11 +280,9 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
         int h = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(h, k, 0, 0, this.xSize, this.ySize);
-        this.drawBackground();
         this.mc.getTextureManager().bindTexture(getTexture());
         int m = this.container.base.progress * 34 / 1200;
 
@@ -273,23 +290,23 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         for (int x1 = 74; x1 <= 112; x1++) {
             for (int y1 = 14; y1 <= 79; y1++) {
 
-                this.drawColoredRect(x1, y1, 1, 1, colors[x1 - 74][y1 - 14]);
+                this.drawColoredRect(x1, y1 + 20, 1, 1, colors[x1 - 74][y1 - 14]);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             }
         }
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        drawTexturedModalRect(h + 88, k + 22, 183, 50, 1, m);
+        drawTexturedModalRect(h + 88, k + 42, 183, 50, 1, m);
         switch (this.container.base.level) {
             case 2:
-                drawTexturedModalRect(h + 88, k + 21, 184, 48, 1, 1);
+                drawTexturedModalRect(h + 88, k + 41, 184, 48, 1, 1);
                 break;
             case 3:
-                drawTexturedModalRect(h + 88, k + 21, 185, 48, 1, 1);
+                drawTexturedModalRect(h + 88, k + 41, 185, 48, 1, 1);
                 break;
             case 4:
-                drawTexturedModalRect(h + 88, k + 21, 186, 48, 1, 1);
+                drawTexturedModalRect(h + 88, k + 41, 186, 48, 1, 1);
                 break;
             default:
                 break;
@@ -298,14 +315,7 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(h + 3, k + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
-        int chargeLevel = (int) (48.0F * this.container.base.energy.getEnergy()
-                / this.container.base.energy.getCapacity());
 
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(h + 6, k + 32 + 48 - chargeLevel, 196,
-                    85 - chargeLevel, 48, chargeLevel
-            );
-        }
 
         if (this.container.base.vein != null && this.container.base.vein.get()) {
             if (this.container.base.vein.getType() != Type.EMPTY) {
@@ -320,10 +330,18 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 ItemStack stack;
                 if (this.container.base.vein.getType() == Type.VEIN) {
-                    stack = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta());
+                    if (this.container.base.vein.isOldMineral()) {
+                        stack = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta());
+                    } else {
+                        stack = new ItemStack(IUItem.mineral, 1, this.container.base.vein.getMeta());
+                    }
 
                 } else {
-                    stack = new ItemStack(IUItem.oilblock);
+                    if (this.container.base.vein.getType() == Type.OIL) {
+                        stack = new ItemStack(IUItem.oilblock);
+                    } else {
+                        stack = new ItemStack(IUItem.gasBlock);
+                    }
                 }
                 itemRender.renderItemAndEffectIntoGUI(
                         stack,

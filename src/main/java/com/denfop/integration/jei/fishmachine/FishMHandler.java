@@ -45,6 +45,8 @@ public class FishMHandler {
     }
 
     public static void initRecipes() {
+
+
         for (ItemStack container : IUCore.fish_rodding) {
             addRecipe(container);
 

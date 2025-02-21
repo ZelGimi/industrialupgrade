@@ -3,10 +3,10 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockcircuit_bottom",
     "down" : "industrialupgrade:blocks/blockcircuit_bottom",
-    "up" : "industrialupgrade:blocks/blockcircuit_top",
+    "up" : "industrialupgrade:blocks/blockcircuit_bottom",
     "north" : "industrialupgrade:blocks/blockcircuit_main",
     "east" : "industrialupgrade:blocks/blockcircuit_side",
-    "south" : "industrialupgrade:blocks/blockcircuit_side2",
+    "south" : "industrialupgrade:blocks/blockcircuit_bottom",
     "west" : "industrialupgrade:blocks/blockcircuit_side"
   }
 }

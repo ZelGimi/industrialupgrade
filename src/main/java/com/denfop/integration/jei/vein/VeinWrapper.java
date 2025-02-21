@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -35,35 +36,26 @@ public class VeinWrapper implements IRecipeWrapper {
 
     public void getIngredients(IIngredients ingredients) {
         ingredients.setOutputs(VanillaTypes.ITEM, this.getInputs());
-        ingredients.setOutput(VanillaTypes.FLUID, new FluidStack(FluidName.fluidneft.getInstance(), 1000));
+        ingredients.setOutputs(VanillaTypes.FLUID,
+                Arrays.asList(new FluidStack[]{new FluidStack(FluidName.fluidneft.getInstance(),
+            1000), new FluidStack(FluidName.fluidgas.getInstance(), 1000)
+                        , new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), 1000)
+                        , new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), 1000)
+                        , new FluidStack(FluidName.fluidsour_light_oil.getInstance(), 1000)
+                        , new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), 1000)
+                        , new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), 1000)}));
     }
 
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawString(
-                Localization.translate("iu.vein.info"),
+        minecraft.fontRenderer.drawSplitString(
+                Localization.translate("iu.vein.info") + ". " + Localization.translate("iu.vein.info1") + ". " +    Localization.translate("iu.vein.info2") + ". " +   Localization.translate("iu.vein.info3") + ". " +   Localization.translate("iu.vein.info4") + ". " +   Localization.translate("iu.vein.info5"),
                 6,
-                14,
+                14, recipeWidth - 5,
                 4210752
         );
-        minecraft.fontRenderer.drawString(
-                Localization.translate("iu.vein.info1"),
-                6,
-                14 + 7,
-                4210752
-        );
-        minecraft.fontRenderer.drawString(
-                Localization.translate("iu.vein.info2"),
-                6,
-                14 + 14,
-                4210752
-        );
-        minecraft.fontRenderer.drawString(
-                Localization.translate("iu.vein.info3"),
-                6,
-                14 + 21,
-                4210752
-        );
+
+
     }
 
 }

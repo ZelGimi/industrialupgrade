@@ -6,6 +6,7 @@ import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,10 +14,13 @@ public interface IAdvInventory<P extends TileEntityInventory> extends IInventory
 
     P getParent();
 
+    default void removeInventorySlot(InvSlot var1) {
+    }
 
     void addInventorySlot(InvSlot var1);
 
     int getBaseIndex(InvSlot var1);
+
 
     ContainerBase<?> getGuiContainer(EntityPlayer var1);
 

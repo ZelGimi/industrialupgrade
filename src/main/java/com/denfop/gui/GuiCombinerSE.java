@@ -2,7 +2,11 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
-import com.denfop.api.gui.Area;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerCombinerSE;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
@@ -14,29 +18,36 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GuiCombinerSE extends GuiCore<ContainerCombinerSE> {
+public class GuiCombinerSE extends GuiIU<ContainerCombinerSE> {
 
     public final ContainerCombinerSE container;
 
     public GuiCombinerSE(ContainerCombinerSE container1) {
         super(container1);
         this.container = container1;
+        this.ySize = 200;
+        componentList.clear();
+        inventory = new GuiComponent(this, 7, 119, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
+        );
+        this.slots = new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE))
+        );
+        componentList.add(inventory);
+        componentList.add(slots);
+        this.addComponent(new GuiComponent(this, 95, 100, EnumTypeComponent.SOLARIUM_ENERGY_WEIGHT,
+                new Component<>(this.container.base.sunenergy)
+        ));
     }
 
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
 
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
-        drawTexturedModalRect(xoffset, yoffset, 0, 0, this.xSize, this.ySize);
         if (this.container.base != null) {
             this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
-        this.mc.getTextureManager().bindTexture(getTexture());
-        this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
-        this.drawTexturedRect(163.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
 
     }
 
@@ -44,12 +55,10 @@ public class GuiCombinerSE extends GuiCore<ContainerCombinerSE> {
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         handleUpgradeTooltip(mouseX, mouseY);
-        String tooltip = "SE: " + ModUtils.getString(this.container.base.sunenergy.getEnergy());
-        new Area(this, 123, 38, 146 - 123, 46 - 38).withTooltip(tooltip).drawForeground(mouseX, mouseY);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         fontRenderer.drawString(Localization.translate("gui.SuperSolarPanel.generating") +
                         ": " + (int) this.container.base.generation + Localization.translate("iu.machines_work_energy_type_se"),
-                3, 71, ModUtils.convertRGBcolorToInt(0, 0, 0)
+                9, 105, ModUtils.convertRGBcolorToInt(0, 0, 0)
         );
     }
 
@@ -74,7 +83,7 @@ public class GuiCombinerSE extends GuiCore<ContainerCombinerSE> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicombinese.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
     }
 
 }

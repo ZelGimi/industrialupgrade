@@ -1,6 +1,6 @@
 {
   "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/imp_iu_bags"
+    "layer0" : "industrialupgrade:items/improved_bag"
   }
 }

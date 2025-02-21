@@ -17,6 +17,7 @@ public enum BlockQuarry implements IMultiTileBlock {
     adv_simply_quarry(TileAdvSimplyQuarry.class, 1),
     imp_simply_quarry(TileImpSimplyQuarry.class, 2),
     per_simply_quarry(TilePerSimplyQuarry.class, 3),
+    pho_simply_quarry(TilePhoSimplyQuarry.class, 4),
 
     ;
 
@@ -43,7 +44,14 @@ public enum BlockQuarry implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         for (final BlockQuarry block : BlockQuarry.values()) {
             if (block.teClass != null) {

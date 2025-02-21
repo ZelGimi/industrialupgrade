@@ -67,7 +67,30 @@ public class ItemCasing extends ItemSubTypes<ItemCasing.Types> implements IModel
         tin(25),
         osmium(26),
         tantalum(27),
-        cadmium(28);
+        cadmium(28),
+        arsenic(29),
+        barium(30),
+        bismuth(31),
+        gadolinium(32),
+        gallium(33),
+        hafnium(34),
+        yttrium(35),
+        molybdenum(36),
+        neodymium(37),
+        niobium(38),
+        palladium(39),
+        polonium(40),
+        strontium(41),
+        thallium(42),
+        zirconium(43),
+
+        adamantite(44),
+        bloodstone(45),
+        draconid(46),
+        meteoric_iron(47),
+        mythril(48),
+        orichalcum(49),
+        ;
 
         private final String name;
         private final int ID;

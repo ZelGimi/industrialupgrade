@@ -1,30 +1,42 @@
 package com.denfop.container;
 
+import com.denfop.api.inv.VirtualSlot;
 import com.denfop.invslot.InvSlot;
-import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
+import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
-public class SlotInfo extends InvSlot {
+public class SlotInfo extends InvSlot implements VirtualSlot {
 
 
-    private boolean fluid;
+    private List<ItemStack> listBlack;
+    private List<ItemStack> listWhite;
     List<FluidStack> fluidStackList;
+    private boolean fluid;
 
-    public SlotInfo(TileEntityMultiCable multiCable, int size, boolean fluid) {
+    public SlotInfo(TileEntityInventory multiCable, int size, boolean fluid) {
         super(multiCable, null, size);
         this.fluid = fluid;
         this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+        this.listBlack = new ArrayList<>();
+        this.listWhite = new ArrayList<>();
+    }
 
+    public List<ItemStack> getListBlack() {
+        return listBlack;
+    }
+
+    public List<ItemStack> getListWhite() {
+        return listWhite;
     }
 
     @Override
@@ -32,14 +44,14 @@ public class SlotInfo extends InvSlot {
         super.readFromNbt(nbt);
         fluid = nbt.getBoolean("fluid");
         if (this.fluid) {
-            fluidStackList =  new ArrayList<>(Collections.nCopies(this.size(), null));
+            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
 
             for (int i = 0; i < size(); i++) {
                 if (!this.get(i).isEmpty()) {
                     Block block = Block.getBlockFromItem(this.get(i).getItem());
-                    if(block != Blocks.AIR){
-                        if(block instanceof IFluidBlock){
-                            fluidStackList.set(i,new FluidStack (((IFluidBlock) block).getFluid(),1));
+                    if (block != Blocks.AIR) {
+                        if (block instanceof IFluidBlock) {
+                            fluidStackList.set(i, new FluidStack(((IFluidBlock) block).getFluid(), 1));
                         }
                     }
                 }
@@ -49,13 +61,18 @@ public class SlotInfo extends InvSlot {
 
     @Override
     public NBTTagCompound writeToNbt(NBTTagCompound nbt) {
-        nbt =  super.writeToNbt(nbt);
-        nbt.setBoolean("fluid",isFluid());
+        nbt = super.writeToNbt(nbt);
+        nbt.setBoolean("fluid", isFluid());
         return nbt;
     }
 
     public List<FluidStack> getFluidStackList() {
         return fluidStackList;
+    }
+
+    @Override
+    public void setFluidList(final List<FluidStack> fluidStackList) {
+        this.fluidStackList = fluidStackList;
     }
 
     public boolean isFluid() {
@@ -68,15 +85,53 @@ public class SlotInfo extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack stack, final int index) {
-        return false;
+        return true;
     }
 
     public void put(int index, ItemStack stack) {
-        stack = stack.copy();
-        stack.setCount(1);
+        if (!stack.isEmpty()) {
+            stack = stack.copy();
+            stack.setCount(1);
+        }
+
         this.contents.set(index, stack);
+        listBlack.clear();
+        listWhite.clear();
+        this.listBlack = new LinkedList<>();
+        this.listWhite = new LinkedList<>();
+        for (int i = 0; i < size(); i++) {
+            ItemStack itemStack = this.contents.get(i);
+            if (itemStack.isEmpty()) {
+                continue;
+            }
+            if (i < 9) {
+                listBlack.add(itemStack);
+            } else {
+                listWhite.add(itemStack);
+            }
+        }
+
+        this.listBlack =new ArrayList<>(listBlack);
+        this.listWhite =new ArrayList<>(listWhite);
+        this.onChanged();
     }
 
+    protected void putFromNBT(int index, ItemStack content) {
+        this.contents.set(index, content);
+        listBlack.clear();
+        listWhite.clear();
+        for (int i = 0; i < size(); i++) {
+            ItemStack itemStack = this.contents.get(i);
+            if (itemStack.isEmpty()) {
+                continue;
+            }
+            if (index < 9) {
+                listBlack.add(itemStack);
+            } else {
+                listWhite.add(itemStack);
+            }
+        }
+    }
 
     public ItemStack get(int index) {
         return this.contents.get(index);

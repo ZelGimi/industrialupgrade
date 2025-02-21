@@ -10,12 +10,10 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
-import com.denfop.container.ContainerMatterFactory;
 import com.denfop.container.ContainerMoonSpotter;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.JEICompat;
-import com.denfop.tiles.mechanism.TileEntityMatterFactory;
 import com.denfop.tiles.mechanism.TileEntityMoonSpotter;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -29,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class MoonSpooterCategory extends GuiIU implements IRecipeCategory<MoonSpooterRecipeWrapper> {

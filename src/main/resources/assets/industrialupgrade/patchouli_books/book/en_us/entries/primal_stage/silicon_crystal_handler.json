@@ -1,0 +1,13 @@
+{
+    "name": "Выращиватель кристаллов",
+    "icon": "industrialupgrade:primal_silicon_crystal_handler",
+    "category": "industrialupgrade:primal_stage",
+    "pages": [
+        {
+            "type": "text",
+			"text": "Аналог электрических версий в примитивном эре. Для начало работы покладите 3 пыли кремния, а потом обычный кремний. Подождите 10 минут и заберите вырощенный кристалл"
+		
+		}
+	
+    ]
+}

@@ -16,7 +16,6 @@ public class PacketStopSoundPlayer implements IPacket {
     }
 
 
-
     public PacketStopSoundPlayer() {
 
     }

@@ -1,10 +1,12 @@
 package com.denfop.invslot;
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotTuner extends InvSlot {
+public class InvSlotTuner extends InvSlot implements ITypeSlot {
 
     private int stackSizeLimit;
 
@@ -17,6 +19,11 @@ public class InvSlotTuner extends InvSlot {
 
         return itemStack.getItem() instanceof ItemAdditionModule && itemStack.getItemDamage() == 10;
 
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.WIRELESS;
     }
 
     public int getStackSizeLimit() {

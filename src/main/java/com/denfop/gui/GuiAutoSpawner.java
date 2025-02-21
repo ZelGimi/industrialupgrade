@@ -28,14 +28,14 @@ public class GuiAutoSpawner extends GuiCore<ContainerAutoSpawner> {
         drawTexturedModalRect(xoffset, yoffset, 0, 0, this.xSize, this.ySize);
 
         for (int i = 0; i < 4; i++) {
-            progress[i] = 29 * this.container.base.progress[i] / this.container.base.tempprogress[i];
-            progress[i] = Math.min(progress[i], 29);
+            progress[i] = 31 * this.container.base.progress[i] / this.container.base.tempprogress[i];
+            progress[i] = Math.min(progress[i], 31);
             if (progress[i] > 0) {
                 drawTexturedModalRect(
                         xoffset + 177,
-                        yoffset + 63 + i * 35 - progress[i],
+                        yoffset + 51 + i * 35 - progress[i],
                         215,
-                        46 - progress[i] + 28,
+                        77 - progress[i],
                         4,
                         progress[i]
                 );

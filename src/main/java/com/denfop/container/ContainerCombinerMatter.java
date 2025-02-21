@@ -18,7 +18,7 @@ public class ContainerCombinerMatter extends ContainerFullInv<TileCombinerMatter
         }
         for (int i = 0; i < 9; i++) {
             int count = i / 3;
-            addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlot, i, 12 + (i - (3 * count)) * 18, 16 + count * 18));
+            addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlot, i, 12 + (i - (3 * count)) * 18, 22 + count * 18));
 
         }
     }

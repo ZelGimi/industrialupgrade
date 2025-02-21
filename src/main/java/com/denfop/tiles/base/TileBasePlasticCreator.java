@@ -14,13 +14,8 @@ import com.denfop.componets.ComponentUpgrade;
 import com.denfop.componets.ComponentUpgradeSlots;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.TypeUpgrade;
-import com.denfop.container.ContainerPlasticCreator;
-import com.denfop.gui.GuiPlasticCreator;
 import com.denfop.invslot.InvSlotFluidByList;
 import com.denfop.invslot.InvSlotUpgrade;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundEvent;
@@ -72,17 +67,16 @@ public class TileBasePlasticCreator extends TileElectricLiquidTankInventory
         return (ret > 2.147483647E9D) ? Integer.MAX_VALUE : (int) ret;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getDefaultEnergyConsume() + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
         }
-        super.addInformation(stack, tooltip, advanced);
+        super.addInformation(stack, tooltip);
 
     }
 
@@ -122,16 +116,6 @@ public class TileBasePlasticCreator extends TileElectricLiquidTankInventory
 
     }
 
-    public ContainerPlasticCreator getGuiContainer(EntityPlayer entityPlayer) {
-        return new ContainerPlasticCreator(entityPlayer, this);
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer entityPlayer, boolean isAdmin) {
-        return new GuiPlasticCreator(new ContainerPlasticCreator(entityPlayer, this));
-
-    }
 
     public MachineRecipe getOutput() {
         this.output = this.inputSlotA.process();
@@ -152,7 +136,7 @@ public class TileBasePlasticCreator extends TileElectricLiquidTankInventory
 
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(UpgradableProperty.Processing, UpgradableProperty.Transformer,
-                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemConsuming, UpgradableProperty.ItemProducing
+                UpgradableProperty.EnergyStorage, UpgradableProperty.ItemExtract, UpgradableProperty.ItemInput
         );
     }
 

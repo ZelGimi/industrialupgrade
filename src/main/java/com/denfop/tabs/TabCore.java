@@ -2,6 +2,7 @@ package com.denfop.tabs;
 
 
 import com.denfop.IUItem;
+import com.denfop.blocks.FluidName;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
@@ -41,6 +42,16 @@ public class TabCore extends CreativeTabs {
                 return new ItemStack(IUItem.crafting_elements, 1, 21);
             case 10:
                 return new ItemStack(IUItem.water_reactors_component, 1, 8);
+            case 11:
+                return new ItemStack(FluidName.fluiduu_matter.getInstance().getBlock(), 1);
+            case 12:
+                return new ItemStack(IUItem.crops);
+            case 13:
+                return new ItemStack(IUItem.jarBees);
+            case 14:
+                return new ItemStack(IUItem.genome_crop);
+            case 15:
+                return new ItemStack(IUItem.rocket);
 
         }
         return new ItemStack(IUItem.blockpanel);

@@ -4,7 +4,6 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockEarthQuarry;
-import com.denfop.container.ContainerBase;
 import com.denfop.container.ContainerEarthChest;
 import com.denfop.gui.GuiEarthChest;
 import com.denfop.invslot.InvSlot;
@@ -18,13 +17,15 @@ public class TileEntityChest extends TileEntityMultiBlockElement implements IEar
 
     private final InvSlot slot;
 
-    public TileEntityChest(){
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT,9);
+    public TileEntityChest() {
+        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.OUTPUT, 9);
     }
+
     @Override
     public InvSlot getSlot() {
         return slot;
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.earthQuarry;
@@ -42,7 +43,7 @@ public class TileEntityChest extends TileEntityMultiBlockElement implements IEar
 
     @Override
     public ContainerEarthChest getGuiContainer(final EntityPlayer var1) {
-        return new ContainerEarthChest(this,var1);
+        return new ContainerEarthChest(this, var1);
     }
 
     @Override

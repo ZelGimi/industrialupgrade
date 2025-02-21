@@ -1,12 +1,18 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerDoubleElectricMachine;
 import com.denfop.tiles.mechanism.TileSunnariumPanelMaker;
-import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class GuiSunnariumPanelMaker extends GuiIU<ContainerDoubleElectricMachine> {
@@ -17,24 +23,25 @@ public class GuiSunnariumPanelMaker extends GuiIU<ContainerDoubleElectricMachine
         super(container1);
         this.container = container1;
         this.componentList.clear();
+        componentList.add(new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(
+                        EnumTypeComponentSlot.SLOT,
+                        Collections.singletonList(((TileSunnariumPanelMaker) this.container.base).input_slot)
+                ))
+        ));
+        componentList.add(new GuiComponent(this, 26, 60, EnumTypeComponent.SOLARIUM_ENERGY_WEIGHT,
+                new Component<>(((TileSunnariumPanelMaker) this.container.base).sunenergy)
+        ));
+        componentList.add(new GuiComponent(this, 7, 65, EnumTypeComponent.ENERGY,
+                new Component<>(((TileSunnariumPanelMaker) this.container.base).energy)
+        ));
     }
 
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        String tooltip =
-                "SE: " + ModUtils.getString(((TileSunnariumPanelMaker) this.container.base).sunenergy.getEnergy()) + "/" + ModUtils.getString(
-                        ((TileSunnariumPanelMaker) this.container.base).sunenergy.getCapacity());
-        new AdvArea(this, 100, 60, 125, 70).withTooltip(tooltip).drawForeground(mouseX, mouseY);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EF";
-        new AdvArea(this, 26, 56, 37, 71)
-                .withTooltip(tooltip2)
-                .drawForeground(mouseX, mouseY);
+
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -42,20 +49,12 @@ public class GuiSunnariumPanelMaker extends GuiIU<ContainerDoubleElectricMachine
         this.mc.getTextureManager().bindTexture(getTexture());
         int xoffset = (this.width - this.xSize) / 2;
         int yoffset = (this.height - this.ySize) / 2;
-        int chargeLevel = (int) (14.0F * this.container.base.getChargeLevel());
+
         int progress = (int) (14 * this.container.base.getProgress());
 
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(xoffset + 25, yoffset + 57 + 14 - chargeLevel, 176, 14 - chargeLevel,
-                    14, chargeLevel
-            );
-        }
-        if (((TileSunnariumPanelMaker) this.container.base).sunenergy.getEnergy() > 0.0D) {
-            int i1 = (int) (24.0D * ((TileSunnariumPanelMaker) this.container.base).sunenergy.getFillRatio());
-            drawTexturedModalRect(xoffset + 101, yoffset + 57, 176, 49, i1 + 1, 16);
-        }
+
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 74, yoffset + 34, 177, 32, progress + 1, 15);
+            drawTexturedModalRect(xoffset + 77, yoffset + 36, 177, 15, progress + 1, 15);
         }
 
     }

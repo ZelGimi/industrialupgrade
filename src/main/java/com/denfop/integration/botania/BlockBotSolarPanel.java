@@ -44,7 +44,14 @@ public enum BlockBotSolarPanel implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public static BlockBotSolarPanel getFromID(final int ID) {
         return values()[ID % values().length];
     }

@@ -4,9 +4,11 @@ import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.invslot.InvSlot;
 
 public interface IRecirculationPump extends IMultiElement {
-    int getEnergy() ;
+
+    int getEnergy();
 
     int getPower();
 
-    InvSlot getSlot() ;
+    InvSlot getSlot();
+
 }

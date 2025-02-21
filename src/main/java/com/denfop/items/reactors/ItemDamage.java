@@ -30,9 +30,11 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
         this.maxDamage = maxDamage;
         this.name = name;
         this.setCreativeTab(IUCore.ReactorsTab);
-        this.setUnlocalizedName(name);
-        Register.registerItem(this, IUCore.getIdentifier(name));
-        IUCore.proxy.addIModelRegister(this);
+        if (name != null) {
+            this.setUnlocalizedName(name);
+            Register.registerItem(this, IUCore.getIdentifier(name));
+            IUCore.proxy.addIModelRegister(this);
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -107,7 +109,7 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
 
     public void setCustomDamage(ItemStack stack, int damage) {
         NBTTagCompound nbt = ModUtils.nbt(stack);
-        if(damage > maxDamage){
+        if (damage > maxDamage) {
             damage = maxDamage;
         }
         nbt.setInteger("damage", damage);
@@ -115,10 +117,11 @@ public class ItemDamage extends Item implements IDamageItem, IModelRegister {
 
     public boolean applyCustomDamage(ItemStack stack, int damage, EntityLivingBase src) {
         int damage1 = this.getCustomDamage(stack) - damage;
-        if(damage1 <= 0)
+        if (damage1 <= 0) {
             damage1 = 0;
-        this.setCustomDamage(stack,damage1);
-        return true;
+        }
+        this.setCustomDamage(stack, damage1);
+        return  getMaxCustomDamage(stack) - damage1 == 0;
     }
 
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {

@@ -63,7 +63,14 @@ public enum BlockMolecular implements IMultiTileBlock, IMultiBlockItem {
             }
         }
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     @Override
     public String getName() {
         return this.name();

@@ -5,14 +5,13 @@ import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerSolidMatter;
 import com.denfop.gui.GuiSolidMatter;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +30,7 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
     public final InvSlotOutput outputSlot;
     public final ItemStack itemstack;
     public final InvSlotUpgrade upgradeSlot;
-    private final AdvEnergy energy;
+    private final Energy energy;
     private final String name;
     private double progress;
 
@@ -41,7 +40,7 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.progress = 0;
         this.name = name;
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, Config.SolidMatterStorage, 10));
+        this.energy = this.addComponent(Energy.asBasicSink(this, Config.SolidMatterStorage, 10));
 
     }
 
@@ -72,15 +71,15 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.matter_solid_work_info") + (int) Config.SolidMatterStorage);
         }
-        AdvEnergy energy = this.energy;
+        Energy energy = this.energy;
         if (!energy.getSourceDirs().isEmpty()) {
             tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
         } else if (!energy.getSinkDirs().isEmpty()) {
@@ -104,16 +103,20 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
 
     public void updateEntityServer() {
         super.updateEntityServer();
+        boolean active = false;
         if (this.energy.getEnergy() > 0) {
+            active = true;
             this.progress = this.energy.getEnergy() / this.energy.getCapacity();
             if (this.energy.getEnergy() >= this.energy.getCapacity()) {
                 if (this.outputSlot.add(itemstack)) {
                     this.energy.useEnergy(this.energy.getCapacity());
                     this.progress = 0;
+
                 }
             }
 
         }
+        this.setActive(active);
 
 
         if (this.upgradeSlot.tickNoMark()) {
@@ -148,7 +151,8 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemInput,
+                UpgradableProperty.ItemExtract
         );
     }
 

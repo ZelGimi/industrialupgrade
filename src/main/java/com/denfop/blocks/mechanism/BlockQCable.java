@@ -38,7 +38,14 @@ public enum BlockQCable implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     @Override
     public Material getMaterial() {
         return IMultiTileBlock.CABLE;

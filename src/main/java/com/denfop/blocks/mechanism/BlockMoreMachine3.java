@@ -5,10 +5,26 @@ import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
 import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multimechanism.dual.*;
-import com.denfop.tiles.mechanism.multimechanism.quad.*;
-import com.denfop.tiles.mechanism.multimechanism.simple.*;
-import com.denfop.tiles.mechanism.multimechanism.triple.*;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleAssamplerScrap;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleCentrifuge;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleFermer;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleGearMachine;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleOreWashing;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadAssamplerScrap;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadCentrifuge;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadFermer;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadGearMachine;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadOreWashing;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileAssamplerScrap;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileCentrifuge;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileFermer;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileGearMachine;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileOreWashing;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleAssamplerScrap;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleCentrifuge;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleFermer;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleGearMachine;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleOreWashing;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
@@ -114,7 +130,14 @@ public enum BlockMoreMachine3 implements IMultiTileBlock {
         // TODO Auto-generated method stub
         return true;
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {

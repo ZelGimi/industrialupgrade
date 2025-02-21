@@ -1,14 +1,13 @@
 package com.denfop.api.gui;
 
 import com.denfop.Localization;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.gui.GuiCore;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
 
 import java.util.List;
 
@@ -19,7 +18,15 @@ public class TanksGauge extends GuiElement<TankGauge> {
     private final List<Fluids.InternalFluidTank> tank;
     private final TanksGauge.TankGuiStyle style;
 
-    private TanksGauge(GuiCore<?> gui, int x, int y, int width, int height, List<Fluids.InternalFluidTank> tank, TanksGauge.TankGuiStyle style) {
+    private TanksGauge(
+            GuiCore<?> gui,
+            int x,
+            int y,
+            int width,
+            int height,
+            List<Fluids.InternalFluidTank> tank,
+            TanksGauge.TankGuiStyle style
+    ) {
         super(gui, x, y, width, height);
         if (tank == null) {
             throw new NullPointerException("null tank");
@@ -33,11 +40,24 @@ public class TanksGauge extends GuiElement<TankGauge> {
         return new TanksGauge(gui, x, y, 20, 55, tank, TanksGauge.TankGuiStyle.Normal);
     }
 
-    public static TanksGauge createPlain(GuiCore<?> gui, int x, int y, int width, int height, List<Fluids.InternalFluidTank> tank) {
+    public static TanksGauge createPlain(
+            GuiCore<?> gui,
+            int x,
+            int y,
+            int width,
+            int height,
+            List<Fluids.InternalFluidTank> tank
+    ) {
         return new TanksGauge(gui, x, y, width, height, tank, TanksGauge.TankGuiStyle.Plain);
     }
 
-    public static TanksGauge createBorderless(GuiCore<?> gui, int x, int y, List<Fluids.InternalFluidTank> tank, boolean mirrored) {
+    public static TanksGauge createBorderless(
+            GuiCore<?> gui,
+            int x,
+            int y,
+            List<Fluids.InternalFluidTank> tank,
+            boolean mirrored
+    ) {
         return new TanksGauge(
                 gui,
                 x,
@@ -51,14 +71,15 @@ public class TanksGauge extends GuiElement<TankGauge> {
 
     public void drawBackground(int mouseX, int mouseY) {
         bindCommonTexture();
-        FluidStack fs= null;
+        FluidStack fs = null;
         int amount = 0;
         int capacity = 0;
-        for(Fluids.InternalFluidTank tank1 : this.tank){
-            if(fs == null && tank1.getFluid() != null)
+        for (Fluids.InternalFluidTank tank1 : this.tank) {
+            if (fs == null && tank1.getFluid() != null) {
                 fs = tank1.getFluid();
-            amount+=tank1.getFluidAmount();
-            capacity+=tank1.getCapacity();
+            }
+            amount += tank1.getFluidAmount();
+            capacity += tank1.getCapacity();
         }
         if (fs != null && fs.amount > 0) {
             if (this.style.withBorder) {
@@ -84,7 +105,11 @@ public class TanksGauge extends GuiElement<TankGauge> {
             }
 
             Fluid fluid = fs.getFluid();
-            TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString()) : null;
+            TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(FluidName
+                    .isFluid(fluid)
+                    .getStill(fs)
+                    .toString()) :
+                    null;
             int color = fluid != null ? fluid.getColor(fs) : -1;
             double renderHeight = (double) fluidHeight * ModUtils.limit(
                     (double) amount / (double) capacity,
@@ -142,10 +167,11 @@ public class TanksGauge extends GuiElement<TankGauge> {
         List<String> ret = super.getToolTip();
         FluidStack fs = null;
         int amount = 0;
-        for(Fluids.InternalFluidTank tank1 : this.tank){
-            if(fs == null && tank1.getFluid() != null)
+        for (Fluids.InternalFluidTank tank1 : this.tank) {
+            if (fs == null && tank1.getFluid() != null) {
                 fs = tank1.getFluid();
-            amount+=tank1.getFluidAmount();
+            }
+            amount += tank1.getFluidAmount();
         }
         if (fs != null && amount > 0) {
             Fluid fluid = fs.getFluid();

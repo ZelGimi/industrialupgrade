@@ -2,6 +2,11 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ImageInterface;
+import com.denfop.componets.ComponentRenderInventory;
+import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerLeadBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiLeadBox extends GuiCore<ContainerLeadBox> {
+public class GuiLeadBox extends GuiIU<ContainerLeadBox> {
 
     private static final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/GUIBags.png");
     private final String name;
@@ -19,6 +24,13 @@ public class GuiLeadBox extends GuiCore<ContainerLeadBox> {
 
         this.name = Localization.translate(itemStack1.getUnlocalizedName() + ".name");
         this.ySize = 232;
+        this.componentList.clear();
+        this.slots = new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
+        );
+
+        componentList.add(slots);
+        this.addElement(new ImageInterface(this, 0, 0, xSize, ySize));
     }
 
     protected void drawForegroundLayer(int par1, int par2) {

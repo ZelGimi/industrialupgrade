@@ -3,10 +3,10 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockplasticplatecreator_bottom",
     "down" : "industrialupgrade:blocks/blockplasticplatecreator_bottom",
-    "up" : "industrialupgrade:blocks/blockplasticplatecreator_top_active",
+    "up" : "industrialupgrade:blocks/blockplasticplatecreator_bottom",
     "north" : "industrialupgrade:blocks/blockplasticplatecreator_main_active",
     "east" : "industrialupgrade:blocks/blockplasticplatecreator_side_active",
-    "south" : "industrialupgrade:blocks/blockplasticplatecreator_side2",
+    "south" : "industrialupgrade:blocks/blockplasticplatecreator_bottom",
     "west" : "industrialupgrade:blocks/blockplasticplatecreator_side_active"
   }
 }

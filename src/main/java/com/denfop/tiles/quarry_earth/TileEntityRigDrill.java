@@ -17,6 +17,7 @@ public class TileEntityRigDrill extends TileEntityMultiBlockElement implements I
     public TileEntityRigDrill() {
 
     }
+
     @Override
     public BlockTileEntity getBlock() {
         return IUItem.earthQuarry;
@@ -26,6 +27,7 @@ public class TileEntityRigDrill extends TileEntityMultiBlockElement implements I
     public IMultiTileBlock getTeBlock() {
         return BlockEarthQuarry.earth_rig;
     }
+
     @Override
     public void startOperation(final List<DataPos> dataPos) {
         this.dataPos = dataPos;
@@ -36,11 +38,12 @@ public class TileEntityRigDrill extends TileEntityMultiBlockElement implements I
         super.updateEntityServer();
         if (this.getMain() != null && dataPos != null) {
             TileEntityEarthQuarryController controller = (TileEntityEarthQuarryController) this.getMain();
-            for (int i =0; i < 8; i++) {
-                if(dataPos.isEmpty())
+            for (int i = 0; i < 8; i++) {
+                if (dataPos.isEmpty()) {
                     break;
+                }
                 final DataPos dataPos1 = dataPos.remove(0);
-                if (controller.getEnergy().getEnergy() > 500) {
+                if (controller.getEnergy().getEnergy() > 50) {
                     IBlockState state = world.getBlockState(dataPos1.getPos());
                     List<ItemStack> stacks = state.getBlock().getDrops(world, dataPos1.getPos(),
                             state
@@ -51,7 +54,7 @@ public class TileEntityRigDrill extends TileEntityMultiBlockElement implements I
                         chest:
                         for (IEarthChest chest : controller.earthChestList) {
                             if (chest.getSlot().add(stack)) {
-                                controller.getEnergy().useEnergy(500);
+                                controller.getEnergy().useEnergy(50);
                                 break chest;
                             }
                         }

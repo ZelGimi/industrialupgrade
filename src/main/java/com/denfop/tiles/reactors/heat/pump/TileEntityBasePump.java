@@ -1,15 +1,10 @@
 package com.denfop.tiles.reactors.heat.pump;
 
-import com.denfop.container.ContainerExchanger;
 import com.denfop.container.ContainerHeatPump;
-import com.denfop.gui.GuiExchanger;
 import com.denfop.gui.GuiHeatPump;
 import com.denfop.invslot.InvSlot;
-import com.denfop.items.reactors.ItemsPumps;
 import com.denfop.items.resource.ItemCraftingElements;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import com.denfop.tiles.reactors.graphite.graphite_controller.TileEntityGraphiteController;
-import com.denfop.tiles.reactors.heat.ICirculationPump;
 import com.denfop.tiles.reactors.heat.IPump;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,13 +13,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityBasePump extends TileEntityMultiBlockElement implements IPump {
+
     private final int level;
     private final InvSlot slot;
-    private  int power;
+    private int power;
     private int energy;
-    public TileEntityBasePump(int level){
+
+    public TileEntityBasePump(int level) {
         this.level = level;
-        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT,1){
+        this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+            @Override
+            public int getStackSizeLimit() {
+                return 1;
+            }
+
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
@@ -47,36 +49,37 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if(content.isEmpty()){
-                    ((TileEntityBasePump)this.base).setEnergy(0);
-                    ((TileEntityBasePump)this.base).setPower(0);
-                }else{
+                if (content.isEmpty()) {
+                    ((TileEntityBasePump) this.base).setEnergy(0);
+                    ((TileEntityBasePump) this.base).setPower(0);
+                } else {
                     final int itemDamage = content.getItemDamage();
                     switch (itemDamage) {
                         case 276:
-                            ((TileEntityBasePump)this.base).setEnergy(5);
-                            ((TileEntityBasePump)this.base).setPower(1);
+                            ((TileEntityBasePump) this.base).setEnergy(5);
+                            ((TileEntityBasePump) this.base).setPower(1);
                             break;
                         case 20:
-                            ((TileEntityBasePump)this.base).setEnergy(10);
-                            ((TileEntityBasePump)this.base).setPower(2);
+                            ((TileEntityBasePump) this.base).setEnergy(10);
+                            ((TileEntityBasePump) this.base).setPower(2);
                             break;
                         case 96:
-                            ((TileEntityBasePump)this.base).setEnergy(20);
-                            ((TileEntityBasePump)this.base).setPower(3);
+                            ((TileEntityBasePump) this.base).setEnergy(20);
+                            ((TileEntityBasePump) this.base).setPower(3);
                             break;
                         case 120:
-                            ((TileEntityBasePump)this.base).setEnergy(40);
-                            ((TileEntityBasePump)this.base).setPower(4);
+                            ((TileEntityBasePump) this.base).setEnergy(40);
+                            ((TileEntityBasePump) this.base).setPower(4);
                             break;
                     }
-                 }
+                }
             }
         };
     }
+
     @Override
     public ContainerHeatPump getGuiContainer(final EntityPlayer var1) {
-        return new ContainerHeatPump(this,var1);
+        return new ContainerHeatPump(this, var1);
     }
 
     @Override
@@ -88,11 +91,11 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if(!this.getWorld().isRemote){
-            if(this.getSlot().get().isEmpty()){
+        if (!this.getWorld().isRemote) {
+            if (this.getSlot().get().isEmpty()) {
                 this.setEnergy(0);
                 this.setPower(0);
-            }else{
+            } else {
                 final int itemDamage = this.getSlot().get().getItemDamage();
                 switch (itemDamage) {
                     case 276:
@@ -121,13 +124,6 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
     public boolean hasOwnInventory() {
         return true;
     }
-    public void setEnergy(final int energy) {
-        this.energy = energy;
-    }
-
-    public void setPower(final int power) {
-        this.power = power;
-    }
 
     @Override
     public int getLevel() {
@@ -138,10 +134,20 @@ public class TileEntityBasePump extends TileEntityMultiBlockElement implements I
         return energy;
     }
 
+    public void setEnergy(final int energy) {
+        this.energy = energy;
+    }
+
     public int getPower() {
         return power;
     }
+
+    public void setPower(final int power) {
+        this.power = power;
+    }
+
     public InvSlot getSlot() {
         return slot;
     }
+
 }

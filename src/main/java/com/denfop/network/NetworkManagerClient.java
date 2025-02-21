@@ -24,6 +24,7 @@ public class NetworkManagerClient extends NetworkManager {
             IPacket packet = this.packetMap.get(type);
             if (packet != null && packet.getPacketType() == EnumTypePacket.SERVER) {
                 packet.readPacket(is, player);
+                is.flip();
             }
         }
     }
@@ -35,15 +36,13 @@ public class NetworkManagerClient extends NetworkManager {
 
     @SubscribeEvent
     public void onPacket(ClientCustomPacketEvent event) {
-        assert !this.getClass().getName().equals(NetworkManager.class.getName());
+
 
         try {
             this.onPacketData(new CustomPacketBuffer(event.getPacket().payload()), Minecraft.getMinecraft().player);
         } catch (Throwable var3) {
             throw new RuntimeException(var3);
         }
-
-        event.getPacket().payload().release();
     }
 
 

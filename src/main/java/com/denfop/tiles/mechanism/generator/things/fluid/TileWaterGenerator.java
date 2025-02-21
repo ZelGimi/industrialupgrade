@@ -7,7 +7,9 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerWaterGenerator;
 import com.denfop.gui.GuiWaterGenerator;
 import com.denfop.invslot.InvSlot;
@@ -39,7 +41,7 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
     private double lastEnergy;
 
     public TileWaterGenerator() {
-        super(10000, 14, 1);
+        super(10000, 1, 1);
 
         this.energycost = 40;
         this.outputSlot = new InvSlotOutput(this, 1);
@@ -56,6 +58,9 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
                 Fluids.fluidPredicate(FluidRegistry.WATER)
         );
         this.upgradeSlot = new InvSlotUpgrade(this, 4);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.25));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+
     }
 
     private static int applyModifier(int extra) {
@@ -160,10 +165,7 @@ public class TileWaterGenerator extends TileElectricMachine implements IUpgradab
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemConsuming,
-                UpgradableProperty.ItemProducing,
-                UpgradableProperty.FluidProducing,
-                UpgradableProperty.FluidConsuming
+                UpgradableProperty.FluidExtract
         );
     }
 

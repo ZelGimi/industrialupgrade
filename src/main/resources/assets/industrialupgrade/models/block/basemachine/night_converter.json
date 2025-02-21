@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/night_converter_side1",
+    "down" : "industrialupgrade:blocks/night_converter_side1",
+    "up" : "industrialupgrade:blocks/night_converter_side1",
+    "north" : "industrialupgrade:blocks/night_converter_side1",
+    "east" : "industrialupgrade:blocks/night_converter_side1",
+    "south" : "industrialupgrade:blocks/night_converter_side1",
+    "west" : "industrialupgrade:blocks/night_converter_side1"
+  }
+}

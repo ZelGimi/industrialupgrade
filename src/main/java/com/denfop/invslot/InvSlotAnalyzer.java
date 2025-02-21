@@ -1,6 +1,8 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemQuarryModule;
 import com.denfop.tiles.base.TileAnalyzer;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("ALL")
-public class InvSlotAnalyzer extends InvSlot {
+public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
     private final int type;
     private final TileAnalyzer tile;
@@ -27,14 +29,27 @@ public class InvSlotAnalyzer extends InvSlot {
         this.tile = base1;
     }
 
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        if (this.type == 0) {
+            return EnumTypeSlot.QUARRY1;
+        }
+
+        return EnumTypeSlot.BLOCKS;
+    }
+
     public void update() {
         if (this.type == 0) {
             this.tile.blacklist = this.getblacklist();
             this.tile.whitelist = this.getwhitelist();
             this.tile.size = this.getChunksize();
             this.tile.lucky = this.lucky();
+            this.tile.macerator = this.macerator();
+            this.tile.comb_macerator = this.comb_macerator();
+            this.tile.polisher = this.polisher();
             this.tile.consume = this.getenergycost();
             this.tile.update_chunk();
+            this.tile.furnace = this.getFurnaceModule();
         }
     }
 
@@ -47,6 +62,10 @@ public class InvSlotAnalyzer extends InvSlot {
             this.tile.size = this.getChunksize();
             this.tile.lucky = this.lucky();
             this.tile.consume = this.getenergycost();
+            this.tile.macerator = this.macerator();
+            this.tile.polisher = this.polisher();
+            this.tile.comb_macerator = this.comb_macerator();
+            this.tile.furnace = this.getFurnaceModule();
         }
     }
 
@@ -93,6 +112,42 @@ public class InvSlotAnalyzer extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 if (this.get(i).getItem().equals(IUItem.quarrymodule)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean macerator() {
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 14) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean comb_macerator() {
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 15) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean polisher() {
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 16) {
                     return true;
                 }
             }

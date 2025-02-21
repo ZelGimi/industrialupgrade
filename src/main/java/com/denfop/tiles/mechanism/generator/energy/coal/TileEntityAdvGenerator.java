@@ -2,7 +2,7 @@ package com.denfop.tiles.mechanism.generator.energy.coal;
 
 import com.denfop.Localization;
 import com.denfop.api.gui.IType;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerGenerator;
 import com.denfop.gui.GuiGenerator;
@@ -14,7 +14,6 @@ import com.denfop.tiles.mechanism.generator.energy.TileEntityBaseGenerator;
 import com.denfop.utils.DamageHandler;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements IType {
 
-    public final InvSlot fuelSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1){
+    public final InvSlot fuelSlot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
         @Override
         public boolean accepts(final ItemStack stack, final int index) {
             return ModUtils.getFuelValue(stack, false) > 0;
@@ -80,22 +79,16 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.coef);
         }
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
-        }
 
+
+        super.addInformation(stack,tooltip);
     }
 
     public int gaugeFuelScaled(int i) {

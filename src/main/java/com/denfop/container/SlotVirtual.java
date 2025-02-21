@@ -1,6 +1,9 @@
 package com.denfop.container;
 
 import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.inv.VirtualSlot;
+import com.denfop.blocks.FluidName;
+import com.denfop.invslot.InvSlot;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,7 +22,7 @@ import java.util.Collections;
 
 public class SlotVirtual extends Slot {
 
-    private final SlotInfo slotInfo;
+    private final VirtualSlot slotInfo;
     private final int index;
 
     public SlotVirtual(
@@ -27,9 +30,14 @@ public class SlotVirtual extends Slot {
             final int index,
             final int xPosition,
             final int yPosition,
-            SlotInfo slotInfo
+            VirtualSlot slotInfo
     ) {
-        super(inventoryIn, inventoryIn.getBaseIndex(slotInfo) + index, xPosition, yPosition);
+        super(
+                inventoryIn,
+                slotInfo instanceof InvSlot ? inventoryIn.getBaseIndex((InvSlot) slotInfo) + index : index,
+                xPosition,
+                yPosition
+        );
         this.slotInfo = slotInfo;
         this.index = index;
     }
@@ -41,6 +49,7 @@ public class SlotVirtual extends Slot {
     public boolean canTakeStack(EntityPlayer par1EntityPlayer) {
         return false;
     }
+
     @Override
     public void putStack(final ItemStack stack) {
         super.putStack(stack);
@@ -51,7 +60,11 @@ public class SlotVirtual extends Slot {
         ItemStack itemstack12 = player.inventory.getItemStack();
         if (!itemstack12.isEmpty()) {
             if (!this.slotInfo.isFluid()) {
-                this.inventory.setInventorySlotContents(index, itemstack12);
+                ItemStack stack = itemstack12.copy();
+                stack.setCount(1);
+                if (this.isItemValid(stack)) {
+                    putStack(stack);
+                }
             } else {
                 itemstack12 = itemstack12.copy();
                 itemstack12.setCount(1);
@@ -63,12 +76,18 @@ public class SlotVirtual extends Slot {
                     if (handler != null) {
                         final FluidStack containerFluid = handler.drain(2147483647, false);
                         if (containerFluid != null && containerFluid.amount > 0) {
-                            final ItemStack fluidItemStack = new ItemStack(containerFluid.getFluid().getBlock());
-                            this.inventory.setInventorySlotContents(index,fluidItemStack );
-                            if (this.slotInfo.fluidStackList == null || this.slotInfo.fluidStackList.size() == 0) {
-                                this.slotInfo.fluidStackList = new ArrayList<>(Collections.nCopies(this.slotInfo.size(), null));
+                            ItemStack fluidItemStack = new ItemStack(containerFluid.getFluid().getBlock());
+                            if (containerFluid.getFluid() == FluidRegistry.WATER) {
+                                fluidItemStack = new ItemStack(FluidName.fluidwater.getInstance().getBlock());
                             }
-                            this.slotInfo.fluidStackList.set(index, containerFluid);
+                            if (containerFluid.getFluid() == FluidRegistry.LAVA) {
+                                fluidItemStack = new ItemStack(FluidName.fluidlava.getInstance().getBlock());
+                            }
+                            this.inventory.setInventorySlotContents(this.getSlotIndex(), fluidItemStack);
+                            if (this.slotInfo.getFluidStackList() == null || this.slotInfo.getFluidStackList().isEmpty()) {
+                                this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), null)));
+                            }
+                            this.slotInfo.getFluidStackList().set(index, containerFluid);
                         }
                     }
                 }
@@ -79,11 +98,11 @@ public class SlotVirtual extends Slot {
                 Block block = Block.getBlockFromItem(this.slotInfo.get(index).getItem());
                 if (block != Blocks.AIR) {
                     if (block instanceof IFluidBlock) {
-                        this.slotInfo.fluidStackList.set(index, null);
+                        this.slotInfo.getFluidStackList().set(index, null);
                     }
                 }
             }
-            this.inventory.setInventorySlotContents(index, itemstack12);
+            putStack(itemstack12);
         }
         this.onSlotChanged();
     }

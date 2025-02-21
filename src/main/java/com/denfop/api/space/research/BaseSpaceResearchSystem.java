@@ -1,21 +1,16 @@
 package com.denfop.api.space.research;
 
-import com.denfop.api.space.IBaseResource;
-import com.denfop.api.space.IBody;
-import com.denfop.api.space.IPlanet;
-import com.denfop.api.space.ISatellite;
-import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.fakebody.Data;
-import com.denfop.api.space.fakebody.EnumOperation;
-import com.denfop.api.space.fakebody.FakePlanet;
-import com.denfop.api.space.fakebody.FakeSatellite;
-import com.denfop.api.space.fakebody.IFakeBody;
-import com.denfop.api.space.fakebody.IFakePlanet;
-import com.denfop.api.space.fakebody.IFakeSatellite;
-import com.denfop.api.space.fakebody.SpaceOperation;
-import com.denfop.api.space.rovers.IRovers;
+import com.denfop.ElectricItem;
+import com.denfop.api.space.*;
+import com.denfop.api.space.fakebody.*;
+import com.denfop.api.space.research.api.IResearchSystem;
+import com.denfop.api.space.research.api.IResearchTable;
+import com.denfop.api.space.research.api.IRocketLaunchPad;
+import com.denfop.api.space.rovers.api.IRovers;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class BaseSpaceResearchSystem implements IResearchSystem {
 
@@ -24,59 +19,219 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
 
     }
 
+    public Data getDataFromPlayer(final IResearchTable table, IBody body) {
+        return SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(table.getPlayer()).computeIfAbsent(
+                body,
+                k -> new Data(table.getPlayer(), body)
+        );
+    }
+
     @Override
-    public void sendingOperation(final IRovers rovers, final IBody body, final IResearchTable table) {
+    public void sendingAutoOperation(final IRovers rovers, final IBody body, final IResearchTable table) {
         if (canSendingOperation(rovers, body, table)) {
             if (body instanceof IPlanet) {
-                final FakePlanet fakeplanet = new FakePlanet(table.getPlayer(),
-                        (IPlanet) body, rovers, new Data(table.getPlayer(), body)
+                UUID uuid = table.getPlayer();
+                final FakePlanet fakeplanet = new FakePlanet(uuid,
+                        (IPlanet) body, rovers,
+                        SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(uuid).computeIfAbsent(body, k -> new Data(
+                                uuid,
+                                body
+                        )),
+                        new SpaceOperation(
+                                body,
+                                EnumOperation.WAIT,true
+                        )
                 );
-                if (!SpaceNet.instance.getFakeSpaceSystem().getFakePlayers().contains(table.getPlayer())) {
-                    SpaceNet.instance.getFakeSpaceSystem().getFakePlayers().add(table.getPlayer());
-                }
                 SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakeplanet);
-                table.getSpaceBody().put(body, new SpaceOperation(fakeplanet.getPlanet(), EnumOperation.WAIT));
+                SpaceNet.instance
+                        .getFakeSpaceSystem()
+                        .getBodyMap()
+                        .computeIfAbsent(uuid, l -> new LinkedList<>())
+                        .add(fakeplanet);
+                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeplanet.getSpaceOperation());
             }
             if (body instanceof ISatellite) {
-                final FakeSatellite fakeSatellite = new FakeSatellite(table.getPlayer(),
-                        (ISatellite) body, rovers, new Data(table.getPlayer(), body)
+                UUID uuid = table.getPlayer();
+                final FakeSatellite fakeSatellite = new FakeSatellite(uuid,
+                        (ISatellite) body, rovers,
+                        SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(uuid).computeIfAbsent(body, k -> new Data(
+                                uuid,
+                                body
+                        )),
+                        new SpaceOperation(
+                                body,
+                                EnumOperation.WAIT,true
+                        )
                 );
-                if (!SpaceNet.instance.getFakeSpaceSystem().getFakePlayers().contains(table.getPlayer())) {
-                    SpaceNet.instance.getFakeSpaceSystem().getFakePlayers().add(table.getPlayer());
-                }
                 SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakeSatellite);
-                table.getSpaceBody().put(body, new SpaceOperation(fakeSatellite.getSatellite(), EnumOperation.WAIT));
-
+                SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
+                        fakeSatellite);
+                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
             }
-
+            if (body instanceof IAsteroid) {
+                UUID uuid = table.getPlayer();
+                final FakeAsteroid fakeSatellite = new FakeAsteroid(uuid,
+                        (IAsteroid) body, rovers,
+                        SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(uuid).computeIfAbsent(body, k -> new Data(
+                                uuid,
+                                body
+                        )),
+                        new SpaceOperation(
+                                body,
+                                EnumOperation.WAIT,true
+                        )
+                );
+                SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakeSatellite);
+                SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
+                        fakeSatellite);
+                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
+            }
+            IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(table.getPlayer());
+            rocketLaunchPad.consumeRover();
         }
     }
 
     @Override
-    public boolean canSendingOperation(final IRovers rovers, final IBody body, final IResearchTable table) {
-        if (body instanceof IPlanet) {
-            if (SpaceNet.instance.getFakeSpaceSystem().cadAddFakePlanet(new FakePlanet(table.getPlayer(),
-                    (IPlanet) body, rovers, new Data(table.getPlayer(), body)
-            ))) {
-                return table.getLevel().ordinal() > ((IPlanet) body).getLevels().ordinal() &&
-                        (!table.getSpaceBody().containsKey(body) || (table.getSpaceBody().get(body) != null && table
-                                .getSpaceBody()
-                                .get(body)
-                                .getOperation() != EnumOperation.WAIT));
+    public void sendingOperation(final IRovers rovers, final IBody body, final IResearchTable table) {
+        if (canSendingOperation(rovers, body, table)) {
+            if (body instanceof IPlanet) {
+                UUID uuid = table.getPlayer();
+                final FakePlanet fakeplanet = new FakePlanet(uuid,
+                        (IPlanet) body, rovers,
+                        SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(uuid).computeIfAbsent(body, k -> new Data(
+                                uuid,
+                                body
+                        )),
+                        new SpaceOperation(
+                                body,
+                                EnumOperation.WAIT
+                        )
+                );
+                SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakeplanet);
+                IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(uuid);
+                rocketLaunchPad.addDataRocket(fakeplanet.getRover().getItemStack());
+                SpaceNet.instance
+                        .getFakeSpaceSystem()
+                        .getBodyMap()
+                        .computeIfAbsent(uuid, l -> new LinkedList<>())
+                        .add(fakeplanet);
+                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeplanet.getSpaceOperation());
             }
+            if (body instanceof ISatellite) {
+                UUID uuid = table.getPlayer();
+                final FakeSatellite fakeSatellite = new FakeSatellite(uuid,
+                        (ISatellite) body, rovers,
+                        SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(uuid).computeIfAbsent(body, k -> new Data(
+                                uuid,
+                                body
+                        )),
+                        new SpaceOperation(
+                                body,
+                                EnumOperation.WAIT
+                        )
+                );
+                SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakeSatellite);
+                IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(uuid);
+                rocketLaunchPad.addDataRocket(fakeSatellite.getRover().getItemStack());
+                SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
+                        fakeSatellite);
+                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
+            }
+            if (body instanceof IAsteroid) {
+                UUID uuid = table.getPlayer();
+                final FakeAsteroid fakeSatellite = new FakeAsteroid(uuid,
+                        (IAsteroid) body, rovers,
+                        SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(uuid).computeIfAbsent(body, k -> new Data(
+                                uuid,
+                                body
+                        )),
+                        new SpaceOperation(
+                                body,
+                                EnumOperation.WAIT
+                        )
+                );
+                SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakeSatellite);
+                IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(uuid);
+                rocketLaunchPad.addDataRocket(fakeSatellite.getRover().getItemStack());
+                SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
+                        fakeSatellite);
+                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
+            }
+            IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(table.getPlayer());
+            rocketLaunchPad.consumeRover();
         }
-        if (body instanceof ISatellite) {
-            if (SpaceNet.instance.getFakeSpaceSystem().cadAddFakeSatellite(new FakeSatellite(table.getPlayer(),
-                    (ISatellite) body, rovers, new Data(table.getPlayer(), body)
-            ))) {
-                return table.getLevel().ordinal() > ((ISatellite) body).getLevels().ordinal() &&
-                        (!table.getSpaceBody().containsKey(body) || (table.getSpaceBody().get(body) != null && table
-                                .getSpaceBody()
-                                .get(body)
-                                .getOperation() != EnumOperation.WAIT));
+
+    }
+
+    @Override
+    public boolean canSendingOperation(final IRovers rovers, final IBody body, final IResearchTable table) {
+        final List<IFakeBody> list = SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(
+                table.getPlayer(),
+                k -> new LinkedList<>()
+        );
+        for (IFakeBody fakeBody : list) {
+            if (fakeBody.matched(body)) {
+                return false;
             }
         }
 
+        IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(table.getPlayer());
+        if (rocketLaunchPad == null) {
+            return false;
+        }
+        if (rovers == null) {
+            return false;
+        }
+        if (rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(10, false) == null) {
+            return false;
+        }
+        Data data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(table.getPlayer()).computeIfAbsent(body,
+                k-> new Data(table.getPlayer(),body));
+
+        switch (rovers.getItem().getType()){
+            case ROVERS:
+                if (data.getPercent() >= 0)
+                    break;
+            case PROBE:
+                if (data.getPercent() >= 20)
+                    break;
+                else
+                    return false;
+            case SATELLITE:
+                if (data.getPercent() >= 50)
+                    break;
+                else
+                    return false;
+            case ROCKET:
+                if (data.getPercent() >= 80)
+                    break;
+                else
+                    return false;
+        }
+        if (!ElectricItem.manager.canUse(rovers.getItemStack(), 10)) {
+            return false;
+        }
+        if (body instanceof IPlanet) {
+            return table.getLevel().ordinal() >= ((IPlanet) body).getLevels().ordinal() && rovers
+                    .getItem()
+                    .getLevel()
+                    .getLevelsList()
+                    .contains(((IPlanet) body).getLevels());
+        }
+        if (body instanceof ISatellite) {
+            return table.getLevel().ordinal() >= ((ISatellite) body).getLevels().ordinal() && rovers
+                    .getItem()
+                    .getLevel()
+                    .getLevelsList()
+                    .contains(((ISatellite) body).getLevels());
+        }
+        if (body instanceof IAsteroid) {
+            return table.getLevel().ordinal() >= ((IAsteroid) body).getLevels().ordinal() && rovers
+                    .getItem()
+                    .getLevel()
+                    .getLevelsList()
+                    .contains(((IAsteroid) body).getLevels());
+        }
         return false;
     }
 
@@ -93,21 +248,10 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                     break;
                 }
             }
-            if (fakePlanet != null) {
-                fakePlanet.setEnd();
-                if (table.getContainerBlock() != null) {
-                    final List<IBaseResource> resourceList = SpaceNet.instance.getFakeSpaceSystem().getFakePlanetListMap().get(
-                            fakePlanet);
-                    for (IBaseResource resource : resourceList) {
-                        table.getContainerBlock().getSlotOutput().add(resource.getItemStack());
-                    }
-                    table.getContainerBlock().getSlotOutput().add(fakePlanet.getRover().getItemStack());
-                    SpaceNet.instance.getFakeSpaceSystem().getFakePlanetListMap().remove(fakePlanet);
-                    SpaceNet.instance.getFakeSpaceSystem().getFakePlanetList().remove(fakePlanet);
-                    SpaceNet.instance.getFakeSpaceSystem().removeFakeBodyFromPlayer(table, fakePlanet.getPlanet());
-                    table.getSpaceBody().get(fakePlanet.getPlanet()).setOperation(EnumOperation.FAIL);
-                    fakePlanet.remove();
-                }
+            if (fakePlanet != null && fakePlanet.getTimerTo().canWork()) {
+                fakePlanet.getTimerTo().setCanWork(false);
+                fakePlanet.getTimerFrom().setCanWork(true);
+                fakePlanet.getTimerFrom().getTimeFromTimerRemove(fakePlanet.getTimerTo());
 
             }
         } else if (body instanceof ISatellite) {
@@ -121,21 +265,27 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                     break;
                 }
             }
-            if (fakeSatellite != null) {
-                fakeSatellite.setEnd();
-                if (table.getContainerBlock() != null) {
-                    final List<IBaseResource> resourceList = SpaceNet.instance.getFakeSpaceSystem().getFakeSatelliteListMap().get(
-                            fakeSatellite);
-                    for (IBaseResource resource : resourceList) {
-                        table.getContainerBlock().getSlotOutput().add(resource.getItemStack());
-                    }
-                    table.getContainerBlock().getSlotOutput().add(fakeSatellite.getRover().getItemStack());
-                    SpaceNet.instance.getFakeSpaceSystem().getFakeSatelliteListMap().remove(fakeSatellite);
-                    SpaceNet.instance.getFakeSpaceSystem().getFakeSatelliteList().remove(fakeSatellite);
-                    SpaceNet.instance.getFakeSpaceSystem().removeFakeBodyFromPlayer(table, fakeSatellite.getSatellite());
-                    table.getSpaceBody().get(fakeSatellite.getSatellite()).setOperation(EnumOperation.FAIL);
-                    fakeSatellite.remove();
+            if (fakeSatellite != null && fakeSatellite.getTimerTo().canWork()) {
+                fakeSatellite.getTimerTo().setCanWork(false);
+                fakeSatellite.getTimerFrom().setCanWork(true);
+                fakeSatellite.getTimerFrom().getTimeFromTimerRemove(fakeSatellite.getTimerTo());
+
+            }
+        } else if (body instanceof IAsteroid) {
+            final List<IFakeBody> list = SpaceNet.instance.getFakeSpaceSystem()
+                    .getBodyMap()
+                    .get(table.getPlayer());
+            IFakeAsteroid fakeSatellite = null;
+            for (IFakeBody fakeBody : list) {
+                if (fakeBody.matched(body)) {
+                    fakeSatellite = (IFakeAsteroid) fakeBody;
+                    break;
                 }
+            }
+            if (fakeSatellite != null && fakeSatellite.getTimerTo().canWork()) {
+                fakeSatellite.getTimerTo().setCanWork(false);
+                fakeSatellite.getTimerFrom().setCanWork(true);
+                fakeSatellite.getTimerFrom().getTimeFromTimerRemove(fakeSatellite.getTimerTo());
 
             }
         }

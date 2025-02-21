@@ -9,6 +9,8 @@ import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockMoreMachine3;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.EnumMultiMachine;
 import com.denfop.tiles.base.TileMultiMachine;
@@ -17,13 +19,17 @@ import net.minecraft.item.ItemStack;
 
 public class TileAssamplerScrap extends TileMultiMachine {
 
+    private final SoilPollutionComponent pollutionSoil;
+    private final AirPollutionComponent pollutionAir;
+
     public TileAssamplerScrap() {
         super(
                 EnumMultiMachine.AssamplerScrap.usagePerTick,
-                EnumMultiMachine.AssamplerScrap.lenghtOperation,
-                3
+                EnumMultiMachine.AssamplerScrap.lenghtOperation
         );
         Recipes.recipes.addInitRecipes(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
 
     public static void addrecipe(ItemStack input, ItemStack output) {

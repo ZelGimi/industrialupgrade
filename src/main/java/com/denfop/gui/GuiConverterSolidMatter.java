@@ -2,6 +2,9 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.api.upgrades.UpgradableProperty;
@@ -16,15 +19,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 @SideOnly(Side.CLIENT)
-public class GuiConverterSolidMatter extends GuiCore<ContainerConverterSolidMatter> {
+public class GuiConverterSolidMatter extends GuiIU<ContainerConverterSolidMatter> {
 
     private static final ResourceLocation background = new ResourceLocation(
             Constants.TEXTURES,
-            "textures/gui/GuiConverterSolidMatter.png"
+            "textures/gui/guiconvertersolidmatter1.png"
     );
     final TextFormatting[] name = {TextFormatting.DARK_PURPLE, TextFormatting.YELLOW, TextFormatting.BLUE,
             TextFormatting.RED, TextFormatting.GRAY, TextFormatting.GREEN, TextFormatting.DARK_AQUA, TextFormatting.AQUA};
@@ -32,8 +36,54 @@ public class GuiConverterSolidMatter extends GuiCore<ContainerConverterSolidMatt
 
     public GuiConverterSolidMatter(ContainerConverterSolidMatter container1) {
         super(container1);
-        this.ySize = 240;
+        this.xSize = 246;
+        this.ySize = 192;
         this.container = container1;
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 117, 93, EnumTypeComponent.ENERGY_WEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
+        for (int i = 0; i < container.base.quantitysolid.length; i++) {
+
+            final int finalI = i;
+            this.addElement(new AdvArea(this, 202, 6 + 18 * finalI, 245, 19 + 18 * finalI) {
+                @Override
+                protected List<String> getToolTip() {
+                    return Collections.singletonList(name[finalI] + "" + container.base.quantitysolid[finalI] + "/" + 100000);
+                }
+            });
+
+        }
+        this.addElement(new AdvArea(this, 79,
+                11, 96, 44
+        ) {
+            @Override
+            protected List<String> getToolTip() {
+                return Collections.singletonList(ModUtils.getString(container.base.getProgress() * 100) + "%");
+            }
+        });
+        this.addElement(new AdvArea(this, 43, 47, 76, 64
+        ) {
+            @Override
+            protected List<String> getToolTip() {
+                return Collections.singletonList(ModUtils.getString(container.base.getProgress() * 100) + "%");
+            }
+        });
+        this.addElement(new AdvArea(this, 99, 47, 132, 64
+        ) {
+            @Override
+            protected List<String> getToolTip() {
+                return Collections.singletonList(ModUtils.getString(container.base.getProgress() * 100) + "%");
+            }
+        });
+        this.addElement(new AdvArea(this, 79, 67, 96, 100
+        ) {
+            @Override
+            protected List<String> getToolTip() {
+                return Collections.singletonList(ModUtils.getString(container.base.getProgress() * 100) + "%");
+            }
+        });
+
     }
 
     private static List<ItemStack> getCompatibleUpgrades(IUpgradableBlock block) {
@@ -51,31 +101,7 @@ public class GuiConverterSolidMatter extends GuiCore<ContainerConverterSolidMatt
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
-
-
-        new AdvArea(this, 119, 114, 157, 126)
-                .withTooltip("EF: " + ModUtils.getString((this.container.base).energy.getEnergy()) + "/" + ModUtils.getString((this.container.base).energy.getCapacity()))
-                .drawForeground(par1, par2);
-
-
-        for (int i = 0; i < container.base.quantitysolid.length; i++) {
-            String tooltip1 = container.base.quantitysolid[i] + "/" + 100000;
-
-            new AdvArea(this, 23, 20 + 15 * i, 40, 28 + 15 * i).withTooltip(name[i] + tooltip1).drawForeground(par1, par2);
-
-        }
-        new AdvArea(this, 78,
-                50, 111, 67
-        ).withTooltip(ModUtils.getString(this.container.base.getProgress() * 100) + "%").drawForeground(par1, par2);
-        new AdvArea(this, 138, 50, 171, 67)
-                .withTooltip(ModUtils.getString(this.container.base.getProgress() * 100) + "%")
-                .drawForeground(par1, par2);
-        new AdvArea(this, 116, 16, 133, 49)
-                .withTooltip(ModUtils.getString(this.container.base.getProgress() * 100) + "%")
-                .drawForeground(par1, par2);
-        new AdvArea(this, 116, 68, 133, 101)
-                .withTooltip(ModUtils.getString(this.container.base.getProgress() * 100) + "%")
-                .drawForeground(par1, par2);
+        super.drawForegroundLayer(par1, par2);
         this.handleUpgradeTooltip1(par1, par2);
 
 
@@ -105,42 +131,35 @@ public class GuiConverterSolidMatter extends GuiCore<ContainerConverterSolidMatt
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(background);
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
-        drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
-
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         for (int i = 0; i < container.base.quantitysolid.length; i++) {
-            double p = ((container.base.quantitysolid[i] / 100000) * 11);
-            int l = i - 6;
-            if (l != 1) {
-                l = 0;
-            }
+            double p = ((container.base.quantitysolid[i] / 100000) * 23);
 
-            drawTexturedModalRect((int) (j + 26 + p), k + 25 + 15 * i - l, 182, 12, 1, 3);
+
+            drawTexturedModalRect(j + 217, k + 11 + i * 18, 99, 194, (int) p, 4);
 
 
         }
         double temp = container.base.getProgress();
         if (temp > 0) {
-            temp *= 31;
-            drawTexturedModalRect(j + 79, k + 51, 176, 24, (int) temp, 15);
-            drawTexturedModalRect((int) ((j + 171) - temp), k + 51, (int) (208 - temp), 24, (int) temp, 15);
+            temp *= 32;
+            drawTexturedModalRect(j + 44, k + 48, 144, 194, (int) temp, 16);
+            drawTexturedModalRect((int) ((j + 133) - temp), k + 48, (int) (177 - temp), 194, (int) temp, 16);
 
-            drawTexturedModalRect(j + 116, k + 16 + 1, 176, 42, 17, (int) temp);
+            drawTexturedModalRect(j + 80, k + 12, 125, 194, 16, (int) temp);
 
-            drawTexturedModalRect(j + 116, (int) (k + 101 - temp), 176, (int) (74 - temp), 17, (int) temp);
+            drawTexturedModalRect(j + 80, (int) (k + 101 - temp), 125, (int) (227 - temp), 16, (int) temp);
 
         }
-        double energy = this.container.base.energy.getFillRatio() * 38;
-        if (energy > 0) {
-            drawTexturedModalRect(j + 119, k + 115, 176,
-                    81, (int) energy, 11
-            );
-        }
+        drawBackground();
         this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+
     }
 
 

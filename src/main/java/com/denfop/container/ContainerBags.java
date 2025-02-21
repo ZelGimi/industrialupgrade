@@ -1,11 +1,13 @@
 package com.denfop.container;
 
+import com.denfop.IUItem;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketHeldItemChange;
 
@@ -27,13 +29,49 @@ public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
         slots = slots / 9;
 
         int col;
-        for (col = 0; col < slots; ++col) {
-            for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 24 + col * 18));
+        Item item = Toolbox1.itemStack1.getItem();
+        if (item == IUItem.bags) {
+            for (col = 0; col < slots; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 30 + col * 18));
+                }
+            }
+        }else if (item == IUItem.adv_bags){
+            for (col = 0; col < slots; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18));
+                }
+            }
+        }else{
+            for (col = 0; col < slots; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18));
+                }
             }
         }
 
-        addPlayerInventorySlots(player, 233);
+        if (item == IUItem.bags) {
+            for (int i = 0; i < Toolbox1.list.length; i++) {
+                addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 180, 9 + (i) * 18,
+                        new VirtualSlotItem(Toolbox1.list, inventorySize)
+                ));
+            }
+        } else {
+            for (int i = 0; i < Toolbox1.list.length; i++) {
+                addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 180, 25 + (i) * 18,
+                        new VirtualSlotItem(Toolbox1.list, inventorySize)
+                ));
+            }
+        }
+        int y;
+        if (item == IUItem.bags) {
+            y = 177;
+        }else if (item == IUItem.adv_bags){
+            y = 202;
+        }else{
+            y = 238;
+        }
+        addPlayerInventorySlots(player, y);
 
     }
 
@@ -116,6 +154,12 @@ public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
         }
 
         return stack;
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
     }
 
     public ItemStack slotClick1(int slotId, int dragType, ClickType clickType, EntityPlayer player) {

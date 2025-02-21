@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerSafetyDoom extends ContainerFullInv<TileEntityReactorSafetyDoom> {
 
     public ContainerSafetyDoom(TileEntityReactorSafetyDoom tileEntityReactorSafetyDoom, EntityPlayer entityPlayer) {
-        super(tileEntityReactorSafetyDoom,entityPlayer);
+        super(tileEntityReactorSafetyDoom, entityPlayer);
     }
 
 }

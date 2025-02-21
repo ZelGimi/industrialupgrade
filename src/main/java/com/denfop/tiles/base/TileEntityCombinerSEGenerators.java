@@ -252,7 +252,7 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemExtract
         );
     }
 

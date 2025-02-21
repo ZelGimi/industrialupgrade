@@ -4,12 +4,9 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockGasReactor;
-import com.denfop.tiles.base.TileEntityBlock;
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.reactors.gas.ICell;
-import com.denfop.tiles.reactors.water.ICasing;
 
-public class TileEntityAdvCell  extends TileEntityMainTank implements ICell {
+public class TileEntityAdvCell extends TileEntityMainTank implements ICell {
 
     public TileEntityAdvCell() {
         super(60000);
@@ -29,4 +26,5 @@ public class TileEntityAdvCell  extends TileEntityMainTank implements ICell {
     public int getLevel() {
         return 1;
     }
+
 }

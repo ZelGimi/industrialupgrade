@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/blockbeehive_plaints",
+    "down" : "industrialupgrade:blocks/blockbeehive_top_plaints",
+    "up" : "industrialupgrade:blocks/blockbeehive_top_plaints",
+    "north" : "industrialupgrade:blocks/blockbeehive_plaints",
+    "east" : "industrialupgrade:blocks/blockbeehive_plaints",
+    "south" : "industrialupgrade:blocks/blockbeehive_plaints",
+    "west" : "industrialupgrade:blocks/blockbeehive_plaints"
+  }
+}

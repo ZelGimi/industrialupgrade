@@ -14,6 +14,7 @@ import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.register.Register;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -33,6 +34,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ISpecialArmor;
@@ -40,6 +42,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -156,6 +159,10 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         return new ModelResourceLocation(loc, null);
     }
 
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.SOLAR_HELMET.list;
+    }
+
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
 
@@ -241,7 +248,58 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.INVISIBILITY, itemStack)) {
             player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300));
         }
+        boolean NightvisioModule = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.RESISTANCE, itemStack);
 
+        boolean Nightvision = nbtData.getBoolean("Nightvision");
+        byte toggleTimer = nbtData.getByte("toggleTimer");
+        if (IUCore.keyboard.isArmorKey(player) && toggleTimer == 0) {
+            toggleTimer = 10;
+            Nightvision = !Nightvision;
+            if (IUCore.proxy.isSimulating()) {
+                nbtData.setBoolean("Nightvision", Nightvision);
+                if (Nightvision) {
+                    IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
+                } else {
+                    IUCore.proxy.messagePlayer(player, "Nightvision disabled.");
+                }
+            }
+        }
+        if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
+            toggleTimer = (byte) (toggleTimer - 1);
+            nbtData.setByte("toggleTimer", toggleTimer);
+        }
+        if (!NightvisioModule) {
+            if (Nightvision && IUCore.proxy.isSimulating() &&
+                    ElectricItem.manager.use(itemStack, 1.0D, player)) {
+                int x = MathHelper.floor(player.posX);
+                int z = MathHelper.floor(player.posZ);
+                int y = MathHelper.floor(player.posY);
+                int skylight = player.getEntityWorld().getLightFromNeighbors(new BlockPos(x, y, z));
+                boolean with = this.solarType == 1;
+                boolean without = this.solarType == 2 || this.solarType == 3;
+                if (without || with) {
+                    if (skylight > 8) {
+                        IUCore.proxy.removePotion(player, MobEffects.NIGHT_VISION);
+                        if (with) {
+                            player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100, 0, true, true));
+
+                        }
+                    } else {
+                        if (with) {
+                            IUCore.proxy.removePotion(player, MobEffects.BLINDNESS);
+
+                        }
+                        player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
+                    }
+                } else {
+                    player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
+                }
+                ret = true;
+            }
+        } else {
+            player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 300, 0));
+
+        }
         if (repaired != 0) {
             if (worldObj.provider.getWorldTime() % 80 == 0) {
                 ElectricItem.manager.charge(
@@ -480,6 +538,21 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements IEnergyItem
         info.add(Localization.translate("iu.storage.helmet") + " "
                 + ModUtils.getString(nbtData1.getDouble("storage")) + " EF");
         ModUtils.mode(itemStack, info);
+        boolean with = this.solarType == 1;
+        boolean without = this.solarType == 2 || this.solarType == 3;
+        boolean auto = this.solarType > 3;
+        if (with || without || auto) {
+            info.add(Localization.translate("iu.special_armor_nightvision") + Keyboard.getKeyName(Math.abs(KeyboardClient.armormode.getKeyCode())));
+            if (with) {
+                info.add(Localization.translate("iu.special_armor_nightvision_1"));
+            }
+            if (without) {
+                info.add(Localization.translate("iu.special_armor_nightvision_2"));
+            }
+            if (auto) {
+                info.add(Localization.translate("iu.special_armor_nightvision_3"));
+            }
+        }
     }
 
 

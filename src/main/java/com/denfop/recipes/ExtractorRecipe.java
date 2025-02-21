@@ -94,6 +94,14 @@ public class ExtractorRecipe {
                 new ItemStack(Items.SNOWBALL, 4)
         );
         addextractor(
+                new ItemStack(Items.REDSTONE),
+                9,
+                new ItemStack(IUItem.compressed_redstone, 1)
+        );
+        addextractor(new ItemStack(IUItem.crafting_elements, 4, 481), new ItemStack(Items.BONE,2));
+
+        addextractor(new ItemStack(IUItem.ore2, 1, 7), new ItemStack(IUItem.crafting_elements, 2, 481));
+        addextractor(
                 "blockWool",
                 1,
                 new ItemStack(Blocks.WOOL)
@@ -107,6 +115,14 @@ public class ExtractorRecipe {
                 IUItem.latex,
                 IUItem.rubber, 3
         );
+        addextractor(
+                new ItemStack(IUItem.crafting_elements, 4, 477),
+                new ItemStack(IUItem.ore2, 1, 2), 1
+        );
+     /*   addextractor(
+                new ItemStack(IUItem.crafting_elements,1,477),
+                new ItemStack(IUItem.iudust,4,31)
+        );*/
 
         addextractor(
                 new ItemStack(Blocks.CLAY),
@@ -123,11 +139,7 @@ public class ExtractorRecipe {
                 1,
                 new ItemStack(Items.BRICK, 4)
         );
-        addextractor(
-                new ItemStack(Items.GUNPOWDER),
-                1,
-                IUItem.sulfurDust
-        );
+
 
     }
 

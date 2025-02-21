@@ -2,7 +2,6 @@ package com.denfop.blocks;
 
 import com.denfop.IUCore;
 import com.denfop.api.tile.IMultiTileBlock;
-import com.denfop.tiles.base.TileAdminSolarPanel;
 import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.utils.ModUtils;
@@ -43,7 +42,14 @@ public enum BlockAnvil implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public void buildDummies() {
         for (final BlockAnvil block : values()) {
             if (block.teClass != null) {
@@ -111,7 +117,7 @@ public enum BlockAnvil implements IMultiTileBlock {
 
     @Override
     public boolean allowWrenchRotating() {
-        return true;
+        return false;
     }
 
     @Override
@@ -125,5 +131,8 @@ public enum BlockAnvil implements IMultiTileBlock {
     }
 
 
-
+    @Override
+    public String[] getMultiModels(final IMultiTileBlock teBlock) {
+        return new String[]{"1", "2", "3"};
+    }
 }

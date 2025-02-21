@@ -1,12 +1,15 @@
 package com.denfop.api.gui;
 
 import com.denfop.Localization;
+import com.denfop.blocks.FluidName;
+import com.denfop.componets.Fluids;
 import com.denfop.gui.GuiCore;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
@@ -14,10 +17,10 @@ public class TankGauge extends GuiElement<TankGauge> {
 
 
     public static final int v = 100;
-    private final IFluidTank tank;
+    protected final IFluidTank tank;
     private final TankGauge.TankGuiStyle style;
 
-    private TankGauge(GuiCore<?> gui, int x, int y, int width, int height, IFluidTank tank, TankGauge.TankGuiStyle style) {
+    public TankGauge(GuiCore<?> gui, int x, int y, int width, int height, IFluidTank tank, TankGauge.TankGuiStyle style) {
         super(gui, x, y, width, height);
         if (tank == null) {
             throw new NullPointerException("null tank");
@@ -47,6 +50,10 @@ public class TankGauge extends GuiElement<TankGauge> {
         );
     }
 
+    public TankGuiStyle getStyle() {
+        return style;
+    }
+
     public void drawBackground(int mouseX, int mouseY) {
         bindCommonTexture();
         FluidStack fs = this.tank.getFluid();
@@ -74,7 +81,10 @@ public class TankGauge extends GuiElement<TankGauge> {
             }
 
             Fluid fluid = fs.getFluid();
-            TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(fluid.getStill(fs).toString()) : null;
+            TextureAtlasSprite sprite = fluid != null ? getBlockTextureMap().getAtlasSprite(FluidName
+                    .isFluid(fluid)
+                    .getStill(fs)
+                    .toString()) : null;
             int color = fluid != null ? fluid.getColor(fs) : -1;
             double renderHeight = (double) fluidHeight * ModUtils.limit(
                     (double) fs.amount / (double) this.tank.getCapacity(),
@@ -131,7 +141,13 @@ public class TankGauge extends GuiElement<TankGauge> {
     protected List<String> getToolTip() {
         List<String> ret = super.getToolTip();
         FluidStack fs = this.tank.getFluid();
-        if (fs != null && fs.amount > 0) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            if (this.tank instanceof Fluids.InternalFluidTank) {
+                Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
+                ret.add(Localization.translate("iu.tank.fluids"));
+                ret.addAll(tank1.getFluidList());
+            }
+        } else if (fs != null && fs.amount > 0) {
             Fluid fluid = fs.getFluid();
             if (fluid != null) {
                 ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
@@ -145,7 +161,7 @@ public class TankGauge extends GuiElement<TankGauge> {
         return ret;
     }
 
-    private enum TankGuiStyle {
+    public enum TankGuiStyle {
         Normal(true, true, false),
         Borderless(false, true, false),
         BorderlessMirrored(false, true, true),

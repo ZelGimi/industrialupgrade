@@ -24,7 +24,6 @@ import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -52,8 +51,10 @@ public class TileStorageExp extends TileEntityInventory implements
 
     public TileStorageExp() {
         this.inputSlot = new InvSlotExpStorage(this);
-        this.energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.EXPERIENCE, this, 2000000000, 14));
-        this.energy.setDirections(ModUtils.allFacings,ModUtils.allFacings);
+        this.energy = this.addComponent(new ComponentBaseEnergy(EnergyType.EXPERIENCE, this, 2000000000, ModUtils.allFacings,
+                ModUtils.allFacings, 14
+        ));
+        this.energy.setDirections(ModUtils.allFacings, ModUtils.allFacings);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class TileStorageExp extends TileEntityInventory implements
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
         if (energy1 != 0) {

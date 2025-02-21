@@ -9,4 +9,5 @@ public interface IRegenerator extends IMultiElement {
     int getHelium();
 
     void addHelium(int helium);
+
 }

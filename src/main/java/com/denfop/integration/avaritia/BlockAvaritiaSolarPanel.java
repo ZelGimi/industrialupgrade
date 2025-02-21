@@ -43,7 +43,14 @@ public enum BlockAvaritiaSolarPanel implements IMultiTileBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     public static BlockAvaritiaSolarPanel getFromID(final int ID) {
         return values()[ID % values().length];
     }

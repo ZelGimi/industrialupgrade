@@ -4,9 +4,9 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockHeatReactor;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntityAdvPump  extends TileEntityBasePump {
+public class TileEntityAdvPump extends TileEntityBasePump {
+
     public TileEntityAdvPump() {
         super(1);
     }

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/gas_reactor/cell",
-    "down" : "industrialupgrade:blocks/gas_reactor/cell_top",
-    "up" : "industrialupgrade:blocks/gas_reactor/cell_top",
-    "north" : "industrialupgrade:blocks/gas_reactor/cell",
-    "east" : "industrialupgrade:blocks/gas_reactor/cell",
-    "south" : "industrialupgrade:blocks/gas_reactor/cell",
-    "west" : "industrialupgrade:blocks/gas_reactor/cell"
+    "particle" : "industrialupgrade:blocks/gas_reactor/tank/tank_side",
+    "down" : "industrialupgrade:blocks/gas_reactor/tank/tank_top-bottom",
+    "up" : "industrialupgrade:blocks/gas_reactor/tank/tank_top-bottom",
+    "north" : "industrialupgrade:blocks/gas_reactor/tank/tank_side",
+    "east" : "industrialupgrade:blocks/gas_reactor/tank/tank_side",
+    "south" : "industrialupgrade:blocks/gas_reactor/tank/tank_side",
+    "west" : "industrialupgrade:blocks/gas_reactor/tank/tank_side"
   }
 }

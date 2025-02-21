@@ -4,12 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlocksGraphiteReactors;
-import com.denfop.tiles.base.TileEntityBlock;
 
-public class TileEntityImpCapacitor  extends TileEntityCapacitor {
+public class TileEntityImpCapacitor extends TileEntityCapacitor {
+
     public TileEntityImpCapacitor() {
         super(2);
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlocksGraphiteReactors.graphite_imp_capacitor;

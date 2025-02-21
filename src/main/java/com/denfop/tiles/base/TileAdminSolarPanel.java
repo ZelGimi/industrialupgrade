@@ -23,6 +23,12 @@ public class TileAdminSolarPanel extends TileSolarPanel {
         );
     }
 
+
+    @Override
+    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+        return new ItemStack(IUItem.blockadmin);
+    }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -30,11 +36,6 @@ public class TileAdminSolarPanel extends TileSolarPanel {
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
-    }
-
-    @Override
-    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
-        return new ItemStack(IUItem.blockadmin);
     }
 
     @Override

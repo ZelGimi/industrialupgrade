@@ -11,12 +11,10 @@ import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerGraphite;
-import com.denfop.container.ContainerMatterFactory;
 import com.denfop.container.SlotInvSlot;
 import com.denfop.gui.GuiIU;
 import com.denfop.integration.jei.JEICompat;
 import com.denfop.tiles.mechanism.TileEntityGraphiteHandler;
-import com.denfop.tiles.mechanism.TileEntityMatterFactory;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -30,7 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteRecipeWrapper> {
@@ -55,7 +52,7 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteR
         );
         this.container1 = (ContainerGraphite) this.getContainer();
         this.componentList.add(slots);
-        progress_bar = new GuiComponent(this,70, 35, EnumTypeComponent.PROCESS,
+        progress_bar = new GuiComponent(this, 70, 35, EnumTypeComponent.PROCESS,
                 new Component<>(this.container1.base.timer)
         );
         this.componentList.add(progress_bar);
@@ -127,7 +124,7 @@ public class GraphiteCategory extends GuiIU implements IRecipeCategory<GraphiteR
         isg.init(i, false, outputSlot.getJeiX(), outputSlot.getJeiY());
         isg.set(i, recipes.getOutput());
         i++;
-        isg.init(i, false, 29, 42 );
+        isg.init(i, false, 29, 42);
         isg.set(i, new ItemStack(Items.FLINT));
     }
 

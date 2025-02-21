@@ -30,27 +30,6 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem {
         setMaxStackSize(1);
     }
 
-    @Override
-    public void addInformation(
-            @Nonnull final ItemStack stack,
-            final World world,
-            @Nonnull final List<String> tooltip,
-            @Nonnull final ITooltipFlag advanced
-    ) {
-        super.addInformation(stack, world, tooltip, advanced);
-        tooltip.add(Localization.translate("reactor.component_vent1") + 150 * level );
-        tooltip.add(Localization.translate("reactor.component_vent") + this.autoRepair );
-        tooltip.add(Localization.translate("reactor.component_level") + this.level );
-        tooltip.add(Localization.translate("reactor.component_level1"));
-
-    }
-    public String getItemStackDisplayName(ItemStack stack) {
-        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
-    }
-    @SideOnly(Side.CLIENT)
-    public void registerModel(Item item, int meta, String name) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
-    }
     @SideOnly(Side.CLIENT)
     public static ModelResourceLocation getModelLocation(String name) {
 
@@ -59,11 +38,37 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem {
                 "reactors" + "/" + name;
         return new ModelResourceLocation(loc, null);
     }
+
+    @Override
+    public void addInformation(
+            @Nonnull final ItemStack stack,
+            final World world,
+            @Nonnull final List<String> tooltip,
+            @Nonnull final ITooltipFlag advanced
+    ) {
+        super.addInformation(stack, world, tooltip, advanced);
+        tooltip.add(Localization.translate("reactor.component_vent1") + 150 * level);
+        tooltip.add(Localization.translate("reactor.component_vent") + this.autoRepair);
+        tooltip.add(Localization.translate("reactor.component_level") + this.level);
+        tooltip.add(Localization.translate("reactor.component_level1"));
+
+    }
+
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModel(Item item, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
     @Override
     public boolean needClear(ItemStack stack) {
         return this.getMaxCustomDamage(stack) - this.getCustomDamage(
                 stack) == 0;
     }
+
     @Override
     public EnumTypeComponent getType() {
         return EnumTypeComponent.HEAT_SINK;
@@ -101,8 +106,9 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem {
 
     @Override
     public void damageItem(final ItemStack stack, final int damage) {
-        if(damage <= -150 * level)
-            this.applyCustomDamage(stack,damage,null);
+        if (damage <= -150 * level) {
+            this.applyCustomDamage(stack, damage, null);
+        }
     }
 
     @Override

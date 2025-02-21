@@ -6,11 +6,15 @@ import com.denfop.api.windsystem.EnumLevelGenerators;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.EnumTypeStyle;
+import com.denfop.componets.SoilPollutionComponent;
 
 public class TilePerWaterGenerator extends TileBaseWaterGenerator {
 
+    private final SoilPollutionComponent pollutionSoil;
+
     public TilePerWaterGenerator() {
         super(EnumLevelGenerators.FOUR);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
     }
 
     @Override

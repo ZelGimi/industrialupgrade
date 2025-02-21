@@ -2,17 +2,9 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.api.gui.Component;
-import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
-import com.denfop.api.gui.IButtonClick;
-import com.denfop.api.gui.MouseButton;
-import com.denfop.container.ContainerBattery;
-import com.denfop.container.ContainerLaserPolisher;
-import com.denfop.container.ContainerMatterFactory;
-import com.denfop.container.ContainerMoonSpotter;
 import com.denfop.container.ContainerStamp;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiStamp extends GuiIU<ContainerStamp> {
@@ -22,7 +14,7 @@ public class GuiStamp extends GuiIU<ContainerStamp> {
         this.addComponent(new GuiComponent(this, 130, 55, EnumTypeComponent.ENERGY,
                 new Component<>(this.container.base.energy)
         ));
-        this.addComponent(new GuiComponent(this, 70, 32, EnumTypeComponent.PROCESS,
+        this.addComponent(new GuiComponent(this, 66, 32, EnumTypeComponent.STAMP_PROCESS,
                 new Component<>(this.container.base.componentProgress)
         ));
 

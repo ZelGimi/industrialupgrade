@@ -4,12 +4,12 @@ import com.denfop.IUItem;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.radiationsystem.Radiation;
 import com.denfop.api.radiationsystem.RadiationSystem;
-import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRadiationPurifier;
 import com.denfop.gui.GuiRadiationPurifier;
 import com.denfop.network.DecoderHandler;
@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -27,8 +28,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TileRadiationPurifier extends TileElectricMachine {
 
@@ -37,22 +38,27 @@ public class TileRadiationPurifier extends TileElectricMachine {
     public EnumTypeAudio[] valuesAudio = EnumTypeAudio.values();
     public Radiation radiation;
 
-    public List<BlockPos> booleanMap = new ArrayList<>();
+    public Map<BlockPos, TileEntitySoilAnalyzer> booleanMap = new HashMap<>();
     private ItemStack stack;
 
     public TileRadiationPurifier() {
         super(50000, 14, 1);
-
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
     }
+
     @Override
     public void onNeighborChange(final Block neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if(this.getWorld().isRemote)
+        if (this.getWorld().isRemote) {
             return;
-        boolean can = this.getWorld().getTileEntity(neighborPos) instanceof TileEntitySoilAnalyzer;
-        if(!booleanMap.contains(neighborPos) && can){
-            booleanMap.add(neighborPos);
-        }else if(!can){
+        }
+
+        final TileEntity tile = this.getWorld().getTileEntity(neighborPos);
+        boolean can = tile instanceof TileEntitySoilAnalyzer;
+        if (!booleanMap.containsKey(neighborPos) && can) {
+            booleanMap.put(neighborPos, (TileEntitySoilAnalyzer) tile);
+        } else if (!can) {
             booleanMap.remove(neighborPos);
         }
     }
@@ -60,13 +66,15 @@ public class TileRadiationPurifier extends TileElectricMachine {
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if(!this.getWorld().isRemote){
-            for(EnumFacing facing1: EnumFacing.VALUES){
-                boolean can = this.getWorld().getTileEntity(this.pos.offset(facing1)) instanceof TileEntitySoilAnalyzer;
-                if(!booleanMap.contains(this.pos.offset(facing1)) && can){
-                    booleanMap.add(this.pos.offset(facing1));
-                }else if(!can){
-                    booleanMap.remove(this.pos.offset(facing1));
+        if (!this.getWorld().isRemote) {
+            for (EnumFacing facing1 : EnumFacing.VALUES) {
+                final BlockPos pos1 = this.pos.offset(facing1);
+                final TileEntity tile = this.getWorld().getTileEntity(pos1);
+                boolean can = tile instanceof TileEntitySoilAnalyzer;
+                if (!booleanMap.containsKey(pos1) && can) {
+                    booleanMap.put(pos1, (TileEntitySoilAnalyzer) tile);
+                } else if (!can) {
+                    booleanMap.remove(pos1);
                 }
             }
         }
@@ -76,7 +84,7 @@ public class TileRadiationPurifier extends TileElectricMachine {
     public void loadBeforeFirstUpdate() {
         super.loadBeforeFirstUpdate();
         this.radiation = RadiationSystem.rad_system.getMap().get(this.getWorld().getChunkFromBlockCoords(this.pos).getPos());
-      stack =   new ItemStack(IUItem.crafting_elements, 1, 443);
+        stack = new ItemStack(IUItem.crafting_elements, 1, 443);
 
     }
 
@@ -98,8 +106,15 @@ public class TileRadiationPurifier extends TileElectricMachine {
 
         super.updateEntityServer();
         if (this.getWorld().getWorldTime() % 20 == 0) {
-            if (this.radiation != null && this.energy.canUseEnergy(100)  && !booleanMap.isEmpty()) {
-                if (this.outputSlot.canAdd(stack)) {
+            if (this.radiation != null && this.energy.canUseEnergy(100) && !booleanMap.isEmpty()) {
+                boolean canWork = false;
+                for (Map.Entry<BlockPos, TileEntitySoilAnalyzer> entry : booleanMap.entrySet()) {
+                    canWork = entry.getValue().analyzed;
+                    if (canWork) {
+                        break;
+                    }
+                }
+                if (canWork && this.outputSlot.canAdd(stack)) {
                     if (this.radiation.removeRadiationWithType(1000)) {
                         this.energy.useEnergy(100);
                         this.outputSlot.add(stack);

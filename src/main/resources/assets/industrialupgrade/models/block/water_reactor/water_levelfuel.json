@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/water_reactor/levelfuel_side",
-    "down" : "industrialupgrade:blocks/water_reactor/levelfuel_side",
-    "up" : "industrialupgrade:blocks/water_reactor/levelfuel_side",
-    "north" : "industrialupgrade:blocks/water_reactor/levelfuel_main",
-    "east" : "industrialupgrade:blocks/water_reactor/levelfuel_side",
-    "south" : "industrialupgrade:blocks/water_reactor/levelfuel_side",
-    "west" : "industrialupgrade:blocks/water_reactor/levelfuel_side"
+    "particle" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_main",
+    "down" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_side",
+    "up" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_side",
+    "north" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_main",
+    "east" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_side",
+    "south" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_side",
+    "west" : "industrialupgrade:blocks/water_reactor/levelfuel/levelfuel_side"
   }
 }
