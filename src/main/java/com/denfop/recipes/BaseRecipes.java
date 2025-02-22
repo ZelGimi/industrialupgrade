@@ -6108,55 +6108,88 @@ public class BaseRecipes {
                 ('A'), PHOTON_SENSOR, ('B'), "doubleplateVitalium",
                 ('C'), "doubleplateInvar"
         );
-        Recipes.recipe.addShapelessRecipe(CropNetwork.instance.getCrop(0).getStack(), new ItemStack(Items.WHEAT_SEEDS));
+        Recipes.recipe.addShapelessRecipe(CropNetwork.instance.getCrop(0).getStack(), new ItemStack(Items.WHEAT_SEEDS), new ItemStack(Items.WHEAT_SEEDS));
         Recipes.recipe.addShapelessRecipe(CropNetwork.instance.getCrop(1).getStack(), new ItemStack(Items.REEDS),new ItemStack(Items.REEDS));
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(4).getStack(),
+                CropNetwork.instance.getCrop(4).getDrop().get(0),
                 CropNetwork.instance.getCrop(4).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(5).getStack(),
+                CropNetwork.instance.getCrop(5).getDrop().get(0),
                 CropNetwork.instance.getCrop(5).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(6).getStack(),
+                CropNetwork.instance.getCrop(6).getDrop().get(0),
                 CropNetwork.instance.getCrop(6).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(7).getStack(),
+                CropNetwork.instance.getCrop(7).getDrop().get(0),
                 CropNetwork.instance.getCrop(7).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(8).getStack(),
+                CropNetwork.instance.getCrop(8).getDrop().get(0),
                 CropNetwork.instance.getCrop(8).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(9).getStack(),
+                CropNetwork.instance.getCrop(9).getDrop().get(0),
                 CropNetwork.instance.getCrop(9).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(10).getStack(),
+                CropNetwork.instance.getCrop(10).getDrop().get(0),
                 CropNetwork.instance.getCrop(10).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(11).getStack(),
+                CropNetwork.instance.getCrop(11).getDrop().get(0),
                 CropNetwork.instance.getCrop(11).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(12).getStack(),
+                CropNetwork.instance.getCrop(12).getDrop().get(0),
                 CropNetwork.instance.getCrop(12).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(13).getStack(),
+                CropNetwork.instance.getCrop(13).getDrop().get(0),
                 CropNetwork.instance.getCrop(13).getDrop().get(0)
         );
         Recipes.recipe.addShapelessRecipe(
                 CropNetwork.instance.getCrop(14).getStack(),
+                CropNetwork.instance.getCrop(14).getDrop().get(0),
                 CropNetwork.instance.getCrop(14).getDrop().get(0)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crop, 2), "A A", "A A", "   ",
+        Recipes.recipe.addShapelessRecipe(
+                CropNetwork.instance.getCrop(23).getStack(),
+                CropNetwork.instance.getCrop(23).getDrop().get(0),
+                CropNetwork.instance.getCrop(23).getDrop().get(0)
+        );
+        Recipes.recipe.addShapelessRecipe(
+                CropNetwork.instance.getCrop(24).getStack(),
+                CropNetwork.instance.getCrop(24).getDrop().get(0),
+                CropNetwork.instance.getCrop(24).getDrop().get(0)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crop, 4), "A A", "A A", "   ",
 
                 ('A'), "stickWood"
+
+
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.iudust, 1,75), "AAA", "AAA", "AAA",
+
+                ('A'), new ItemStack(IUItem.smalldust, 1,49)
+
+
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.iudust, 1,77), "AAA", "AAA", "AAA",
+
+                ('A'), new ItemStack(IUItem.smalldust, 1,50)
 
 
         );

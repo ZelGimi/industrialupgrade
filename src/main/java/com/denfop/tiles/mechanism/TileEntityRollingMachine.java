@@ -172,6 +172,7 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
             if (progress >= 100) {
                 this.progress = 0;
                 player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
+                if (!this.getWorld().isRemote)
                 PrimitiveHandler.addExperience(EnumPrimitive.ROLLING,0.5,player.getUniqueID());
                 this.outputSlot.add(this.output.getRecipe().output.items.get(0));
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());

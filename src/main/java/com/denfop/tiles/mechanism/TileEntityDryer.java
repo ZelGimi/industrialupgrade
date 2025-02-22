@@ -232,6 +232,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
 
             if (this.progress >= 100) {
                 operate();
+                if (!this.getWorld().isRemote)
                 PrimitiveHandler.addExperience(EnumPrimitive.DRYER,0.25,
                         getComponentPrivate().getPlayersUUID().get(0));
                 this.progress = 0;

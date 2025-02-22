@@ -240,6 +240,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
                 if (progress >= 100) {
                     this.progress = 0;
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));
+                    if (!this.getWorld().isRemote)
                     PrimitiveHandler.addExperience(EnumPrimitive.WIRE_INSULATOR,0.5,player.getUniqueID());
                     this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
                     this.inputSlotA.consume(1, this.output.getRecipe().input.getInputs().get(1).getAmount());

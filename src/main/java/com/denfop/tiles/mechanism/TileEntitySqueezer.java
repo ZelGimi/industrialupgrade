@@ -282,6 +282,7 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
             if (progress >= 150) {
                 this.progress = 0;
                 this.setActive("");
+                if (!this.getWorld().isRemote)
                 PrimitiveHandler.addExperience(EnumPrimitive.SQUEEZER,0.5,player.getUniqueID());
                 this.fluid_handler.fillFluid();
                 this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());

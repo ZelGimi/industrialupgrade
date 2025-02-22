@@ -283,6 +283,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
             }
             if (progress >= 100) {
                 this.progress = 0;
+                if (!this.getWorld().isRemote)
                 PrimitiveHandler.addExperience(EnumPrimitive.ANVIL,0.5,player.getUniqueID());
                 durability--;
                 if (durability > 200) {

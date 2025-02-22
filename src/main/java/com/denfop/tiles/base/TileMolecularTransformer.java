@@ -246,6 +246,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         try {
             guiProgress = (double[]) DecoderHandler.decode(customPacketBuffer);
             energyShare = (double[]) DecoderHandler.decode(customPacketBuffer);
+            energySlots = (double[]) DecoderHandler.decode(customPacketBuffer);
             maxEnergySlots = (double[]) DecoderHandler.decode(customPacketBuffer);
             queue = (boolean) DecoderHandler.decode(customPacketBuffer);
             redstoneMode = (byte) DecoderHandler.decode(customPacketBuffer);
@@ -264,6 +265,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         try {
             EncoderHandler.encode(packet, guiProgress);
             EncoderHandler.encode(packet, energyShare);
+            EncoderHandler.encode(packet, energySlots);
             EncoderHandler.encode(packet, maxEnergySlots);
             EncoderHandler.encode(packet, queue);
             EncoderHandler.encode(packet, redstoneMode);

@@ -10,6 +10,7 @@ import com.denfop.api.energy.event.TileLoadEvent;
 import com.denfop.api.energy.event.TileUnLoadEvent;
 import com.denfop.api.energy.event.TilesUpdateEvent;
 import com.denfop.integration.ae.AESink;
+import com.denfop.items.relocator.RelocatorNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;

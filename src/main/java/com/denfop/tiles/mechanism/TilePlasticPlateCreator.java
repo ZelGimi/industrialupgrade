@@ -128,6 +128,16 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                 input.getInput(new ItemStack(IUItem.red_phosphorus, 4))
         ), new RecipeOutput(null, new ItemStack(IUItem.phosphorus_oxide, 2))));
 
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidName.fluidglowstone.getInstance(), 125),
+                input.getInput(new ItemStack(IUItem.iudust,1,75))
+        ), new RecipeOutput(null, new ItemStack(Items.ENDER_PEARL))));
+
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidName.fluidglowstone.getInstance(), 125),
+                input.getInput(new ItemStack(IUItem.iudust,1,77))
+        ), new RecipeOutput(null, new ItemStack(Items.GHAST_TEAR))));
+
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidchlorum.getInstance(), 180),

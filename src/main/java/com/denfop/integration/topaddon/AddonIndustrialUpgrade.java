@@ -30,6 +30,7 @@ import com.denfop.items.armour.ItemSolarPanelHelmet;
 import com.denfop.items.armour.special.ItemSpecialArmor;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.tiles.base.IManufacturerBlock;
+import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityLiquedTank;
@@ -233,6 +234,21 @@ public class AddonIndustrialUpgrade extends AddonBlank {
             final ComponentProcess component1 = te.getComp(ComponentProcess.class);
 
             ProcessMultiComponent component2 = te.getComp(ProcessMultiComponent.class);
+            if (te instanceof TileEntityAnvil) {
+                TileEntityAnvil anvil = (TileEntityAnvil) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo.horizontal().text(TextFormatting.GREEN +Localization.translate("iu.primitive_master")+" "+percentString);
+                cropInfo.horizontal().text(TextFormatting.GRAY +Localization.translate("iu.primitive_anvil_durability")+" "+anvil.durability);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
             if (te instanceof TileEntityCrop) {
                 TileEntityCrop tileEntityCrop = (TileEntityCrop) te;
                 if (tileEntityCrop.getCrop() != null){

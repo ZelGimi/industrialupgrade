@@ -36,9 +36,7 @@ public class CropCrossoverHandler {
             ICrop output, List<ICrop> inputs
     ) {
         CropCrossoverHandler recipe = new CropCrossoverHandler(output, inputs);
-        if (recipes.contains(recipe)) {
-            return null;
-        }
+
         recipes.add(recipe);
         return recipe;
     }

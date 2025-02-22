@@ -337,7 +337,7 @@ public class TransportNetLocal {
                         stack.setCount(count);
                         remainingStack = path.getHandler().insertItem(slot, stack, false);
 
-                        int transferredAmount = currentItem.getCount() - remainingStack.getCount();
+                        int transferredAmount = Math.min(count, currentItem.getCount()) - remainingStack.getCount();
                         path.end.setMax(transferredAmount);
                         path.first.setMax(transferredAmount);
                         if (transferredAmount > 0) {

@@ -125,7 +125,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         if (this.getWorld().provider.getWorldTime() % this.tickrate == 0) {
 
             if (this.canWork()) {
-                this.inputTank.drainInternal(4, true);
+                this.inputTank.drainInternal(getAmountWater(), true);
                 this.outputTank.fillInternal(new FluidStack(FluidName.fluiddistilled_water.getInstance(), 1), true);
             }
 
@@ -146,7 +146,21 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
         return new GuiSolarDestiller(new ContainerSolarDestiller(player, this));
     }
 
-
+    public int getAmountWater() {
+        switch (style) {
+            case DEFAULT:
+                return 4;
+            case ADVANCED:
+                return 4;
+            case IMPROVED:
+                return 3;
+            case PERFECT:
+                return 2;
+            case PHOTONIC:
+                return 1;
+        }
+        return 4;
+    }
     public int getTickRate() {
         Biome biome = world.getBiome(pos);
         if (BiomeDictionary.hasType(biome, Type.HOT)) {
@@ -200,7 +214,7 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
     }
 
     public boolean canWork() {
-        return this.inputTank.getFluidAmount() > 3 && this.outputTank.getFluidAmount() < this.outputTank.getCapacity() && this.skyLight;
+        return this.inputTank.getFluidAmount() >= getAmountWater() && this.outputTank.getFluidAmount() < this.outputTank.getCapacity() && this.skyLight;
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

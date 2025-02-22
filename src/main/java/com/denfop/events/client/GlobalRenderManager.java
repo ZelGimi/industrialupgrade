@@ -1,6 +1,8 @@
 package com.denfop.events.client;
 
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.gui.GuiIU;
+import com.denfop.items.relocator.RelocatorNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,7 +30,13 @@ public class GlobalRenderManager {
     }
 
     public static long tick = 0;
-
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+        if ((event.getWorld()).isRemote) {
+            return;
+        }
+        globalRenders.getOrDefault(event.getWorld().provider.getDimension(), new HashMap<>()).clear();
+    }
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onWorldTick(TickEvent.PlayerTickEvent event) {

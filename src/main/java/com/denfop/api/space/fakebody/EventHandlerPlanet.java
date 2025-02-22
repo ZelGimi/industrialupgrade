@@ -10,6 +10,7 @@ import com.denfop.api.space.research.event.ResearchTableUnLoadEvent;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.events.WorldSavedDataIU;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -110,6 +111,7 @@ public class EventHandlerPlanet {
             if (data == null) {
                 data = new WorldSavedDataIU();
                 data.setWorld(event.getWorld());
+                data.readFromNBT(new NBTTagCompound());
                 event.getWorld().getMapStorage().setData(Constants.MOD_ID, data);
             } else {
                 data.setWorld(event.getWorld());

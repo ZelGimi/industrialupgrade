@@ -57,6 +57,7 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
     public final Fluids.InternalFluidTank fluidTank1;
     public InvSlotOutput outputSlot;
     protected short progress;
+    private int amount;
 
     public TileEntityMiniSmeltery() {
         super();
@@ -376,7 +377,10 @@ public class TileEntityMiniSmeltery extends TileEntityInventory implements  IHas
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (amount != fluidTank1.getFluidAmount()) {
+            amount = fluidTank1.getFluidAmount();
+            new PacketUpdateFieldTile(this, "fluidtank", fluidTank1);
+        }
         if ((this.fluid_handler.output() == null && this.fluidTank1.getFluidAmount() >= 1)) {
             this.fluid_handler.getOutput();
         } else {

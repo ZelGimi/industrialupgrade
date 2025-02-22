@@ -27,7 +27,6 @@ import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.crafttweaker.CTVein;
-import com.denfop.integration.ic2.Ic2RemoveIntegration;
 import com.denfop.items.energy.EntityAdvArrow;
 import com.denfop.items.energy.ItemNanoSaber;
 import com.denfop.items.energy.ItemQuantumSaber;
@@ -291,9 +290,7 @@ public final class IUCore {
         proxy.registerRecipe();
         initENet();
 
-        if (Loader.isModLoaded("ic2")) {
-            Ic2RemoveIntegration.init();
-        }
+
 
     }
 

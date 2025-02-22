@@ -185,14 +185,14 @@ public class CropInit {
                 true,false,Arrays.asList(new ItemStack(Blocks.RED_FLOWER,1,1)),10,Collections.emptyList(),1
         );
         corn= new CropBase("corn",16,EnumSoil.FARMLAND,2,1,6,1,75,4,1,
-                new ResourceLocation(Constants.MOD_ID,"blocks/crop/corn"),false, Collections.emptyList(),5,
+                new ResourceLocation(Constants.MOD_ID,"blocks/crop/corn"),true,  Arrays.asList(dandelion,brown_mushroom),5,
                 false,5000,100,
-                true,false, Arrays.asList(new ItemStack(IUItem.corn)),5,Collections.emptyList(),3
+                true,false, Arrays.asList(new ItemStack(IUItem.corn)),5, Arrays.asList(),3
         );
         rubber_reed_seed = new CropBase("rubber_reed",2,EnumSoil.SAND,1,1,1,1,60,4,1,
                 new ResourceLocation(Constants.MOD_ID,"blocks/crop/stickreed_rubber"),true, Arrays.asList(reed_seed,corn),3,
                 false,5000,80,
-                true,true, Arrays.asList(new ItemStack(IUItem.rawLatex)),10,Collections.emptyList(),1
+                true,true, Arrays.asList(new ItemStack(IUItem.rawLatex)),10, Arrays.asList(),1
         );
         beet= new CropBase("beet",17,EnumSoil.FARMLAND,1,1,4,1,70,4,1,
                 new ResourceLocation(Constants.MOD_ID,"blocks/crop/beetroots_stage"),false, Collections.emptyList(),5,
@@ -209,21 +209,22 @@ public class CropInit {
                 false,4000,60,
                 true,false, Arrays.asList(new ItemStack(Items.POTATO)),5,Collections.emptyList(),0
         );
-        raspberry= new CropBase("raspberry",20,EnumSoil.FARMLAND,2,0,4,1,40,4,1,
-                new ResourceLocation(Constants.MOD_ID,"blocks/crop/raspberry"),false, Collections.emptyList(),3,
-                false,4000,50,
-                true,false, Arrays.asList(new ItemStack(IUItem.raspberry)),5, Arrays.asList(tulip_red,tomato),0
-        );
-        hops= new CropBase("hops",21,EnumSoil.FARMLAND,1,1,4,1,20,4,1,
-                new ResourceLocation(Constants.MOD_ID,"blocks/crop/hops"),false, Collections.emptyList(),1,
-                false,8000,70,
-                true,false,  Arrays.asList(new ItemStack(IUItem.hops)),3,Collections.emptyList(),3
-        );
         tomato = new CropBase("tomato",22,EnumSoil.FARMLAND,1,0,4,1,60,4,1,
-                new ResourceLocation(Constants.MOD_ID,"blocks/crop/tomato"),false,  Arrays.asList(potato,carrot,red_mushroom),4,
+                new ResourceLocation(Constants.MOD_ID,"blocks/crop/tomato"),true,  Arrays.asList(potato,carrot,red_mushroom),4,
                 false,4000,60,
                 true,false,Arrays.asList(new ItemStack(IUItem.tomato)),5,Collections.emptyList(),0
         );
+        raspberry= new CropBase("raspberry",20,EnumSoil.FARMLAND,2,0,4,1,40,4,1,
+                new ResourceLocation(Constants.MOD_ID,"blocks/crop/raspberry"),true,  Arrays.asList(tulip_red,tomato),3,
+                false,4000,50,
+                true,false, Arrays.asList(new ItemStack(IUItem.raspberry)),5, Arrays.asList(),0
+        );
+        hops= new CropBase("hops",21,EnumSoil.FARMLAND,1,1,4,1,20,4,1,
+                new ResourceLocation(Constants.MOD_ID,"blocks/crop/hops"),true, Arrays.asList(wheat_seed,tomato,corn),1,
+                false,8000,70,
+                true,false,  Arrays.asList(new ItemStack(IUItem.hops)),3,Arrays.asList(),3
+        );
+
         melon = new CropBase("melon",23,EnumSoil.FARMLAND,1,0,4,1,60,4,1,
                 new ResourceLocation(Constants.MOD_ID,"blocks/crop/melon"),false,  Arrays.asList(),4,
                 false,5000,60,
@@ -250,7 +251,7 @@ public class CropInit {
                 1);
 
         diamond_island = new CropBase("diamond_island", 47, EnumSoil.DIAMOND, 1, 0, 1, 1, 65, 4, 0,
-                new ResourceLocation(Constants.MOD_ID, "blocks/crop/diamond_island"), false, Arrays.asList(gold_astral,blue_orchid,carrot), 4,
+                new ResourceLocation(Constants.MOD_ID, "blocks/crop/diamond_island"), true, Arrays.asList(gold_astral,blue_orchid,carrot), 4,
                 false, 4800, 50, true, false, Arrays.asList(new ItemStack(IUItem.smalldust,1,28)), 10,
                 Arrays.asList(),
                 1);

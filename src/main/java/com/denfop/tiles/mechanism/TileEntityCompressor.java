@@ -260,6 +260,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
                 }
                 if (progress >= 100) {
                     this.progress = 0;
+                    if (!this.getWorld().isRemote)
                     PrimitiveHandler.addExperience(EnumPrimitive.COMPRESSOR,0.75,player.getUniqueID());
                     this.setActive(false);
                     durability--;

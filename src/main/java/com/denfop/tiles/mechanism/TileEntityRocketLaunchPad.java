@@ -83,7 +83,7 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
         for (int i = 0; i < 9; i++) {
             tanks[i] = this.fluids.addTankExtract("tank" + i, 10000);
         }
-        this.energy = this.addComponent(Energy.asBasicSink(this, 5000000, 8));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 5000000, 14));
     }
 
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(-1, 0.0D, -1, 2, 2.0D,
@@ -158,9 +158,11 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     @Override
     public void onLoaded() {
         super.onLoaded();
-        MinecraftForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
+
         if (this.getWorld().isRemote) {
             GlobalRenderManager.addRender(world, pos, createFunction(this));
+        }else{
+            MinecraftForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
         }
     }
     @SideOnly(Side.CLIENT)

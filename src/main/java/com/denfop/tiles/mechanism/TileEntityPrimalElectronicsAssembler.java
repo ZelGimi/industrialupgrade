@@ -536,6 +536,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
             this.componentProgress.addProgress(0, (short) ((short) 30*(1+data1.getOrDefault(var1.getUniqueID(),0.0)/50D)));
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
+                if (!this.getWorld().isRemote)
                 PrimitiveHandler.addExperience(EnumPrimitive.ELECTRONIC,0.75,var1.getUniqueID());
             }
             GREEN_PERCENT = (int) (80 * (1 - 0.75 * componentProgress.getBar()));
@@ -551,6 +552,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
             this.data = generateColorStrip();
         } else if (start && var2 == 2) {
             this.componentProgress.setProgress(0, (short) 300);
+            if (!this.getWorld().isRemote)
             PrimitiveHandler.addExperience(EnumPrimitive.ELECTRONIC,0.75,var1.getUniqueID());
         }
     }

@@ -225,6 +225,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
             if (progress >= 100) {
                 this.progress = 0;
                 player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
+                if (!this.getWorld().isRemote)
                 PrimitiveHandler.addExperience(EnumPrimitive.STRONG_ANVIL,0.5,player.getUniqueID());
                 ItemStack stack1 = this.output.getRecipe().output.items.get(0).copy();
                 double chance = WorldBaseGen.random.nextDouble();

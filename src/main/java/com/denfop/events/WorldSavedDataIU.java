@@ -65,9 +65,9 @@ public class WorldSavedDataIU extends WorldSavedData {
 
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound compound) {
+        SpaceNet.instance.getFakeSpaceSystem().unload();
         if (compound.hasKey("fakePlayers")) {
             NBTTagList fakePlayersList = compound.getTagList("fakePlayers", 10);
-            SpaceNet.instance.getFakeSpaceSystem().unload();
             for (int i = 0; i < fakePlayersList.tagCount(); i++) {
                 NBTTagCompound nbt = fakePlayersList.getCompoundTagAt(i);
                 UUID name = nbt.getUniqueId("name");
@@ -111,33 +111,33 @@ public class WorldSavedDataIU extends WorldSavedData {
             }
         }
 
+        VeinSystem.system.unload();
         if (compound.hasKey("veins")) {
             NBTTagList veinsList = compound.getTagList("veins", 10);
-            VeinSystem.system.unload();
             for (int i = 0; i < veinsList.tagCount(); i++) {
                 NBTTagCompound veinTag = veinsList.getCompoundTagAt(i);
                 VeinSystem.system.addVein(veinTag);
             }
         }
 
+        SpaceNet.instance.getColonieNet().unload();
         if (compound.hasKey("colonies")) {
             NBTTagList coloniesList = compound.getTagList("colonies", 10);
-            SpaceNet.instance.getColonieNet().unload();
             for (int i = 0; i < coloniesList.tagCount(); i++) {
                 NBTTagCompound colonyTag = coloniesList.getCompoundTagAt(i);
                 SpaceNet.instance.getColonieNet().addColony(colonyTag);
             }
         }
 
+        RadiationSystem.rad_system.clear();
         if (compound.hasKey("radiations")) {
             NBTTagList radiationsList = compound.getTagList("radiations", 10);
-            RadiationSystem.rad_system.clear();
             for (int i = 0; i < radiationsList.tagCount(); i++) {
                 NBTTagCompound radiationTag = radiationsList.getCompoundTagAt(i);
                 RadiationSystem.rad_system.addRadiation(radiationTag);
             }
         }
-
+        IUCore.mapStreakInfo.clear();
         if (compound.hasKey("streaks")) {
             NBTTagList streaksList = compound.getTagList("streaks", 10);
             for (int i = 0; i < streaksList.tagCount(); i++) {
@@ -147,15 +147,14 @@ public class WorldSavedDataIU extends WorldSavedData {
                 IUCore.mapStreakInfo.putIfAbsent(nick, streakInfo);
             }
         }
-
         if (compound.hasKey("pollution")) {
             NBTTagCompound pollutionTag = compound.getCompoundTag("pollution");
             PollutionManager.pollutionManager.loadData(pollutionTag);
         }
 
+        TileEntityEarthQuarryController.chunkPos.clear();
         if (compound.hasKey("earth_quarry")) {
             NBTTagList earthQuarryList = compound.getTagList("earth_quarry", 10);
-            TileEntityEarthQuarryController.chunkPos.clear();
             for (int i = 0; i < earthQuarryList.tagCount(); i++) {
                 NBTTagCompound chunkTag = earthQuarryList.getCompoundTagAt(i);
                 int x = chunkTag.getInteger("x");
@@ -164,9 +163,9 @@ public class WorldSavedDataIU extends WorldSavedData {
             }
         }
 
+        WorldGenGas.gasMap.clear();
         if (compound.hasKey("gen_gas")) {
             NBTTagList gasMapList = compound.getTagList("gen_gas", 10);
-            WorldGenGas.gasMap.clear();
             for (int i = 0; i < gasMapList.tagCount(); i++) {
                 NBTTagCompound gasTag = gasMapList.getCompoundTagAt(i);
                 int x = gasTag.getInteger("x");
@@ -175,9 +174,10 @@ public class WorldSavedDataIU extends WorldSavedData {
                 WorldGenGas.gasMap.put(new ChunkPos(x, z), new GenData(dataTag));
             }
         }
+        PrimitiveHandler.getMapPrimitives().clear();
         if (compound.hasKey("primitive")) {
             NBTTagList primitiveList = compound.getTagList("primitive", 10);
-            PrimitiveHandler.getMapPrimitives().clear();
+
             for (int i = 0; i < primitiveList.tagCount(); i++) {
                 NBTTagCompound primitiveCompound = primitiveList.getCompoundTagAt(i);
                 NBTTagList playersList = primitiveCompound.getTagList("listPlayers", 10);
@@ -196,20 +196,22 @@ public class WorldSavedDataIU extends WorldSavedData {
                 PrimitiveHandler.getMapPrimitives().put(primitiveType, playerMap);
             }
         }
+        GasVeinSystem.system.unload();
         if (compound.hasKey("gasvein")) {
             NBTTagList gasVeinsList = compound.getTagList("gasvein", 10);
-            GasVeinSystem.system.unload();
             for (int i = 0; i < gasVeinsList.tagCount(); i++) {
                 NBTTagCompound gasVeinTag = gasVeinsList.getCompoundTagAt(i);
                 GasVeinSystem.system.addVein(gasVeinTag);
             }
         }
+        RelocatorNetwork.instance.onUnload();
         if (compound.hasKey("relocator")) {
+
             NBTTagCompound tag8 = compound.getCompoundTag("relocator");
 
 
             NBTTagList nbtTagList = tag8.getTagList("worldUUID", 10);
-            RelocatorNetwork.instance.onUnload();
+
             for (int i = 0; i < nbtTagList.tagCount(); i++) {
                 NBTTagCompound tag9 = nbtTagList.getCompoundTagAt(i);
                 int id = tag9.getInteger("id");
@@ -271,7 +273,7 @@ public class WorldSavedDataIU extends WorldSavedData {
                     nbt1.setByte("id", (byte) 2);
                 }
                 fakeBody.writeNBTTagCompound(nbt1);
-                fakesBody.appendTag(fakesBody);
+                fakesBody.appendTag(nbt1);
             }
             nbt.setTag("fakesBody", fakesBody);
             NBTTagList dataBody = new NBTTagList();

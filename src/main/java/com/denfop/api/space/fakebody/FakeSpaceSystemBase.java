@@ -326,6 +326,7 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
         this.fakePlanetList.clear();
         this.fakeSatelliteList.clear();
         this.MapEntityPlayer.clear();
+        rocketLaunchPadMap.clear();
         this.fakeBodyMap.clear();
         this.fakeAsteroids.clear();
         uuidListMap.clear();

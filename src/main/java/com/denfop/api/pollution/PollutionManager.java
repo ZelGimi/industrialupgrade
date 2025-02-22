@@ -116,6 +116,8 @@ public class PollutionManager {
     public void loadData(NBTTagCompound tagCompound) {
         pollutionSoil.clear();
         pollutionAir.clear();
+        pollutionAirChunks.clear();
+        pollutionSoilChunks.clear();
         NBTTagCompound soil = tagCompound.getCompoundTag("soil");
         NBTTagCompound air = tagCompound.getCompoundTag("air");
         final int size = soil.getInteger("size");
@@ -224,6 +226,14 @@ public class PollutionManager {
         });
         if (world.provider.getWorldTime() % 6000 == 0) {
             for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionSoil.entrySet()) {
+                ChunkLevel chunkLevel = entry.getValue();
+                if (chunkLevel != null) {
+                    chunkLevel.removePollution(chunkLevel.getPollution() / 2);
+                }
+            }
+        }
+        if (world.provider.getWorldTime() % 6000 == 0) {
+            for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionAir.entrySet()) {
                 ChunkLevel chunkLevel = entry.getValue();
                 if (chunkLevel != null) {
                     chunkLevel.removePollution(chunkLevel.getPollution() / 2);

@@ -269,6 +269,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
                 if (progress >= 100) {
                     this.progress = 0;
                     this.setActive(false);
+                    if (!this.getWorld().isRemote)
                     PrimitiveHandler.addExperience(EnumPrimitive.MACERATOR,0.75,player.getUniqueID());
                     durability--;
                     this.outputSlot.add(this.output.getRecipe().output.items.get(0));

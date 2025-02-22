@@ -207,7 +207,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                 return true;
             }
         });
-        this.elements.add(new CustomButton(this, 167, 20 + 30, 68, 18, guiContainer.base, 0, "") {
+        this.elements.add(new CustomButton(this,  167, 20 + 30 + 10, 68, 18, guiContainer.base, 0, "") {
             @Override
             public boolean visible() {
                 boolean can = true;
@@ -1034,12 +1034,12 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             GlStateManager.translate(guiLeft + (int) ((15 + (i % 11) * 13)), guiTop + (int) ((27 + 66 + 13 * (i / 11))), 0);
             GlStateManager.scale(0.75, 0.75, 1);
             IBaseResource baseResource = planet.getResources().get(i);
-            if (baseResource.getPercentPanel() >= data.getPercent()) {
+            if (baseResource.getPercentPanel() > data.getPercent()) {
                 GlStateManager.disableTexture2D();
                 RenderHelper.disableStandardItemLighting();
             }
             if (baseResource.getItemStack() != null || baseResource.getFluidStack() != null) {
-                if (baseResource.getPercentPanel() < data.getPercent() && baseResource.getItemStack() != null) {
+                if (baseResource.getPercentPanel() <= data.getPercent() && baseResource.getItemStack() != null) {
                     itemRender.renderItemAndEffectIntoGUI(baseResource.getItemStack(), 0, 0);
                     String s = String.valueOf(baseResource.getItemStack().getCount());
                     GlStateManager.disableLighting();
@@ -1051,7 +1051,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                     GlStateManager.enableLighting();
                     GlStateManager.enableDepth();
                     GlStateManager.enableBlend();
-                } else if (baseResource.getPercentPanel() < data.getPercent() && baseResource.getFluidStack() != null) {
+                } else if (baseResource.getPercentPanel() <= data.getPercent() && baseResource.getFluidStack() != null) {
                     FluidStack fs = baseResource.getFluidStack();
                     int fluidX = 0;
                     int fluidY = 0;
@@ -1569,6 +1569,8 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                 text.add(Localization.translate("iu.research2.info"));
                 List<String> compatibleUpgrades = new ArrayList<>();
                 for (int i = 1; i < 14; i++) {
+                    if (i == 12)
+                        continue;
                     compatibleUpgrades.add(Localization.translate("iu.research2.info" + i));
                 }
                 Iterator<String> var5 = compatibleUpgrades.iterator();
@@ -1941,7 +1943,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
     private void renderTooltipResource(IBody asteroid, Data data, int par1, int par2) {
         for (int i = 0; i < asteroid.getResources().size(); i++) {
             IBaseResource resource = asteroid.getResources().get(i);
-            if (resource.getItemStack() != null && !(resource.getPercentPanel() >= data.getPercent())) {
+            if (resource.getItemStack() != null && !(resource.getPercentPanel() > data.getPercent())) {
                 new Area(this, ((15 + (i % 11) * 13)), (int) ((27 + 66 + 13 * (i / 11))), 13, 13).withTooltip(
                         resource
                                 .getItemStack()
@@ -1951,7 +1953,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                                 ".space_rover_" + resource.getTypeRovers().name().toLowerCase())
                 ).drawForeground(par1, par2);
             }
-            if (resource.getFluidStack() != null && !(resource.getPercentPanel() >= data.getPercent())) {
+            if (resource.getFluidStack() != null && !(resource.getPercentPanel() > data.getPercent())) {
                 new Area(this, ((15 + (i % 11) * 13)), (int) ((27 + 66 + 13 * (i / 11))), 13, 13).withTooltip(
                         resource
                                 .getFluidStack()
