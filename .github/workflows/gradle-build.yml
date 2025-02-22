@@ -40,7 +40,7 @@ jobs :
               body: '❌ ${{ github.workflow }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
             })
 
-      - uses : actions/upload-artifact@v2
+      - uses : actions/upload-artifact@v4
         with :
           path : build/libs/IndustrialUpgrade*
           if-no-files-found : error
