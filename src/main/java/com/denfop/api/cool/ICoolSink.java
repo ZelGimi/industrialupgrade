@@ -1,13 +1,16 @@
 package com.denfop.api.cool;
 
-import net.minecraft.util.EnumFacing;
+
+
+import java.util.List;
 
 public interface ICoolSink extends ICoolAcceptor {
 
     double getDemandedCool();
 
-    double injectCool(EnumFacing var1, double var2, double var4);
+    void receivedCold(double var2);
 
     boolean needCooling();
 
+    List<ICoolSource> getEnergyTickList();
 }

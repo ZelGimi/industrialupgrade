@@ -1,6 +1,5 @@
 package com.denfop.componets;
 
-import com.denfop.IUCore;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.tiles.base.TileEntityInventory;
 
@@ -23,13 +22,8 @@ public class Action {
     public void doAction() {
         if (this.inventory.getWorld().provider.getWorldTime() % tick == 0) {
             if (typeAction == TypeAction.AUDIO && this.param.length > 0) {
-                Object o = param[0];
+                ((IAudioFixer) this.inventory).initiate((Integer) param[0]);
 
-                if (!((Boolean) o)) {
-                    IUCore.network.get(true).initiateTileEntityEvent(this.inventory, (Integer) param[1], true);
-                } else {
-                    ((IAudioFixer) this.inventory).initiate((Integer) param[1]);
-                }
             }
         }
     }

@@ -18,7 +18,9 @@ public enum EnumQuarryModules {
     BLACKLIST(12, EnumQuarryType.BLACKLIST, 1, 0),
     WHITELIST(13, EnumQuarryType.WHITELIST, 1, 0),
     MACERATOR(14, EnumQuarryType.MACERATOR, 1, 5),
-    COMBMAC(15, EnumQuarryType.COMB_MAC, 1, 5);
+    COMBMAC(15, EnumQuarryType.COMB_MAC, 1, 5),
+    POLISHER(16, EnumQuarryType.POLISHER, 1, 8),
+    ;
     public final int meta;
     public final EnumQuarryType type;
     public final int efficiency;

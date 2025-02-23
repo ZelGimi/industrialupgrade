@@ -1,12 +1,8 @@
 {
-  "parent" : "block/cube",
+  "parent" : "industrialupgrade:block/solar_side",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/nsp_side",
-    "down" : "industrialupgrade:blocks/nsp_bottom",
-    "up" : "industrialupgrade:blocks/nsp_top",
-    "north" : "industrialupgrade:blocks/nsp_side",
-    "east" : "industrialupgrade:blocks/nsp_side",
-    "south" : "industrialupgrade:blocks/nsp_side",
-    "west" : "industrialupgrade:blocks/nsp_side"
+    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:blocks/solar_panels/neutronium/glass",
+    "side" : "industrialupgrade:blocks/solar_panels/neutronium/side"
   }
 }

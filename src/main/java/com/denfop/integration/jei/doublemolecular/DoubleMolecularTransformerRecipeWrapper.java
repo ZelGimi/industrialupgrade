@@ -1,8 +1,9 @@
 package com.denfop.integration.jei.doublemolecular;
 
+import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -51,7 +52,7 @@ public class DoubleMolecularTransformerRecipeWrapper implements IRecipeWrapper {
                 Localization.translate("gui.MolecularTransformer.output") + ": " + container.getOutput().getDisplayName();
         this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation") + ":",
                 ModUtils.getString(container.getEnergy()),
-                Localization.translate("ic2.generic.text.EU")
+                Localization.translate(Constants.ABBREVIATION + ".generic.text.EF")
         );
     }
 
@@ -98,7 +99,7 @@ public class DoubleMolecularTransformerRecipeWrapper implements IRecipeWrapper {
 
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int y = 5;
-        int x = 49;
+        int x = 65;
         minecraft.fontRenderer.drawSplitString(this.input, x, y, recipeWidth - x, 16777215);
         y += minecraft.fontRenderer.getWordWrappedHeight(this.input, recipeWidth - x) + 1;
         minecraft.fontRenderer.drawSplitString(this.input1, x, y, recipeWidth - x, 16777215);

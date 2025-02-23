@@ -3,40 +3,39 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemSunnarium extends ItemMulti<ItemSunnarium.Types> implements IModelRegister {
+public class ItemSunnarium extends ItemSubTypes<ItemSunnarium.Types> implements IModelRegister {
 
     protected static final String NAME = "itemsunnarium";
 
     public ItemSunnarium() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace("iu.iu", "iu.item"));
     }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item stack, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -44,7 +43,7 @@ public class ItemSunnarium extends ItemMulti<ItemSunnarium.Types> implements IMo
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         sunnarium_enriched(0),
         sunnarium_enriched_plate(1),
         sunnarium_plate(2),

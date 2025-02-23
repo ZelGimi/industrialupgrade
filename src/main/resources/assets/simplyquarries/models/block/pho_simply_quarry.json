@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "simplyquarries:blocks/pho_simply_quarry_main",
+    "down" : "simplyquarries:blocks/pho_simply_quarry_other-sides",
+    "up" : "simplyquarries:blocks/pho_simply_quarry_up",
+    "north" : "simplyquarries:blocks/pho_simply_quarry_main",
+    "east" : "simplyquarries:blocks/pho_simply_quarry_other-sides",
+    "south" : "simplyquarries:blocks/pho_simply_quarry_other-sides",
+    "west" : "simplyquarries:blocks/pho_simply_quarry_other-sides"
+  }
+}

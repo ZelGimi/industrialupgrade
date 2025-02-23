@@ -1,11 +1,13 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+import com.denfop.Constants;
+import com.denfop.blocks.ISubEnum;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum QEType implements IIdProvider {
+public enum QEType implements ISubEnum, ICableItem {
     qcable(0, 0, 0.25F, 0.02D, Integer.MAX_VALUE);
 
     public static final QEType[] values = values();
@@ -24,6 +26,7 @@ public enum QEType implements IIdProvider {
     public final float thickness;
     public final double loss;
     public final double capacity;
+    private final ResourceLocation texture;
 
     QEType(int maxInsulation, int minColoredInsulation, float thickness, double loss, double capacity) {
         this.maxInsulation = maxInsulation;
@@ -31,6 +34,11 @@ public enum QEType implements IIdProvider {
         this.thickness = thickness;
         this.loss = loss;
         this.capacity = capacity;
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     public static QEType get(String name) {
@@ -41,8 +49,28 @@ public enum QEType implements IIdProvider {
         return this.name() + "_qcable";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_qcable";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "qcable";
+    }
+
+
+    @Override
+    public ResourceLocation getRecourse() {
+        return texture;
     }
 }

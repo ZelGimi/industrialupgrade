@@ -2,17 +2,16 @@ package com.denfop.items.modules;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import com.denfop.componets.AdvEnergy;
-import com.denfop.tiles.base.TileEntityElectricBlock;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.componets.Energy;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
+import com.denfop.tiles.base.TileElectricBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,24 +33,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class ItemAdditionModule extends ItemMulti<ItemAdditionModule.CraftingTypes> implements IModelRegister {
+public class ItemAdditionModule extends ItemSubTypes<ItemAdditionModule.CraftingTypes> implements IModelRegister {
 
     protected static final String NAME = "additionmodule";
 
     public ItemAdditionModule() {
-        super(null, CraftingTypes.class);
+        super(CraftingTypes.class);
         this.setCreativeTab(IUCore.ModuleTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, int meta, String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -77,16 +72,16 @@ public class ItemAdditionModule extends ItemMulti<ItemAdditionModule.CraftingTyp
             if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityInventory) {
                 TileEntityInventory tile = (TileEntityInventory) world.getTileEntity(pos);
                 assert tile != null;
-                if (tile.getComp(AdvEnergy.class) != null) {
+                if (tile.getComp(Energy.class) != null) {
                     NBTTagCompound nbttagcompound = ModUtils.nbt(player.getHeldItem(hand));
                     boolean charge = nbttagcompound.getBoolean("change");
-                    if (tile instanceof TileEntityElectricBlock && charge) {
+                    if (tile instanceof TileElectricBlock && charge) {
                         return EnumActionResult.PASS;
                     }
                     nbttagcompound.setInteger("Xcoord", tile.getPos().getX());
                     nbttagcompound.setInteger("Ycoord", tile.getPos().getY());
                     nbttagcompound.setInteger("Zcoord", tile.getPos().getZ());
-                    nbttagcompound.setInteger("tier", tile.getComp(AdvEnergy.class).getSinkTier());
+                    nbttagcompound.setInteger("tier", tile.getComp(Energy.class).getSinkTier());
                     nbttagcompound.setInteger("World1", tile.getWorld().provider.getDimension());
                     nbttagcompound.setString("World", tile.getWorld().provider.getDimensionType().getName());
                     nbttagcompound.setString(
@@ -182,10 +177,10 @@ public class ItemAdditionModule extends ItemMulti<ItemAdditionModule.CraftingTyp
 
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
-    public enum CraftingTypes implements IIdProvider {
+    public enum CraftingTypes implements ISubEnum {
         personality(0),
         tier_in(1),
         tier_de(2),

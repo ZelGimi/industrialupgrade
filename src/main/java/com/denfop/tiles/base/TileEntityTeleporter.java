@@ -1,18 +1,18 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUCore;
-import com.denfop.api.energy.EnergyNetGlobal;
-import com.denfop.api.energy.IAdvEnergySource;
-import com.denfop.api.energy.IAdvEnergyTile;
-import com.denfop.audio.AudioPosition;
-import com.denfop.audio.AudioSource;
-import com.denfop.audio.PositionSpec;
-import com.denfop.componets.ComparatorEmitter;
-import ic2.api.network.INetworkTileEntityEventListener;
-import ic2.core.IC2;
-import ic2.core.init.MainConfig;
-import ic2.core.util.ConfigUtil;
-import ic2.core.util.StackUtil;
+import com.denfop.IUItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.audio.EnumSound;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.utils.ModUtils;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,36 +28,45 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class TileEntityTeleporter extends TileEntityInventory implements INetworkTileEntityEventListener {
+public class TileEntityTeleporter extends TileElectricMachine {
 
-    protected final ComparatorEmitter comparator;
     private BlockPos target;
-    private AudioSource audioSource = null;
     private int targetCheckTicker;
     private int cooldown;
 
     public TileEntityTeleporter() {
-        this.targetCheckTicker = IC2.random.nextInt(1024);
+        super(500000, 14, 0);
+        this.targetCheckTicker = IUCore.random.nextInt(1024);
         this.cooldown = 0;
-        this.comparator = this.addComponent(new ComparatorEmitter(this));
     }
 
     private static int getStackCost(ItemStack stack) {
-        return StackUtil.isEmpty(stack) ? 0 : 100 * StackUtil.getSize(stack) / stack.getMaxStackSize();
+        return ModUtils.isEmpty(stack) ? 0 : 100 * ModUtils.getSize(stack) / stack.getMaxStackSize();
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.teleporter_iu;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -79,26 +88,16 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
         return nbt;
     }
 
-    protected void onUnloaded() {
-        if (IC2.platform.isRendering() && this.audioSource != null) {
-            IC2.audioManager.removeSources(this);
-            this.audioSource = null;
-        }
-
-        super.onUnloaded();
-    }
-
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
-        this.updateComparatorLevel();
     }
 
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
         boolean coolingDown = this.cooldown > 0;
         if (coolingDown) {
             --this.cooldown;
-            IUCore.network.get(true).updateTileEntityField(this, "cooldown");
+            new PacketUpdateFieldTile(this, "cooldown", cooldown);
         }
 
         World world = this.getWorld();
@@ -137,7 +136,7 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
                 }
 
                 assert closestEntity != null;
-
+                world.playSound(null, this.pos, EnumSound.teleporter.getSoundEvent(), SoundCategory.BLOCKS, 1, 1);
                 this.teleport(closestEntity, Math.sqrt(this.pos.distanceSq(this.target)));
             } else if (++this.targetCheckTicker % 1024 == 0) {
                 this.verifyTarget();
@@ -153,14 +152,13 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
             return true;
         } else {
             this.target = null;
-            this.updateComparatorLevel();
             this.setActive(false);
             return false;
         }
     }
 
     @SideOnly(Side.CLIENT)
-    protected void updateEntityClient() {
+    public void updateEntityClient() {
         super.updateEntityClient();
         if (this.getActive()) {
             if (this.cooldown > 0) {
@@ -172,10 +170,6 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
 
     }
 
-    private void updateComparatorLevel() {
-        int targetLevel = this.target != null ? 15 : 0;
-        this.comparator.setLevel(targetLevel);
-    }
 
     public void teleport(Entity user, double distance) {
         int weight = this.getWeightOf(user);
@@ -203,12 +197,7 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
 
                 assert te instanceof TileEntityTeleporter;
 
-                ((TileEntityTeleporter) te).onTeleportTo(this, user);
-                IUCore.network.get(true).initiateTileEntityEvent(this, 0, true);
-                if (user instanceof EntityPlayer && distance >= 1000.0) {
-                    IC2.achievements.issueAchievement((EntityPlayer) user, "teleportFarAway");
-                }
-
+                ((TileEntityTeleporter) te).onTeleportTo();
             }
         }
     }
@@ -249,67 +238,24 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
     }
 
     public void consumeEnergy(int energy) {
-        World world = this.getWorld();
-        List<IAdvEnergySource> energySources = new LinkedList<>();
-        EnumFacing[] var4 = EnumFacing.VALUES;
-
-        for (EnumFacing dir : var4) {
-            IAdvEnergyTile energyTile = EnergyNetGlobal.instance.getTile(world, this.pos.offset(dir));
-            if (energyTile instanceof IAdvEnergySource) {
-                IAdvEnergySource energySource = (IAdvEnergySource) energyTile;
-                if (energySource.getOfferedEnergy() > 0) {
-                    energySources.add(energySource);
-                }
-            }
-        }
-
-        while (energy > 0) {
-            int drain = (energy + energySources.size() - 1) / energySources.size();
-            Iterator<IAdvEnergySource> it = energySources.iterator();
-
-            while (it.hasNext()) {
-                IAdvEnergySource energySource = it.next();
-                if (drain > energy) {
-                    drain = energy;
-                }
-
-                if (energySource.getOfferedEnergy() <= drain) {
-                    energy -= energySource.getOfferedEnergy();
-                    energySource.drawEnergy(energySource.getOfferedEnergy());
-                    it.remove();
-                } else {
-                    energy -= drain;
-                    energySource.drawEnergy(drain);
-                }
-            }
-        }
+        this.energy.useEnergy(energy);
 
     }
 
     public int getAvailableEnergy() {
-        World world = this.getWorld();
-        int energy = 0;
-        EnumFacing[] var4 = EnumFacing.VALUES;
 
-        for (EnumFacing dir : var4) {
-            IAdvEnergyTile energyTile = EnergyNetGlobal.instance.getTile(world, this.pos.offset(dir));
-            if (energyTile instanceof IAdvEnergySource) {
-                IAdvEnergySource energySource = (IAdvEnergySource) energyTile;
-                energy += energySource.getOfferedEnergy();
-            }
-        }
 
-        return energy;
+        return (int) this.energy.getEnergy();
     }
 
     public int getWeightOf(Entity user) {
-        boolean teleporterUseInventoryWeight = ConfigUtil.getBool(MainConfig.get(), "balance/teleporterUseInventoryWeight");
+        boolean teleporterUseInventoryWeight = true;
         int weight = 0;
         ItemStack stack1;
         Iterator<ItemStack> var7;
         if (user instanceof EntityItem) {
             ItemStack is = ((EntityItem) user).getItem();
-            weight += 100 * StackUtil.getSize(is) / is.getMaxStackSize();
+            weight += 100 * ModUtils.getSize(is) / is.getMaxStackSize();
         } else if (!(user instanceof EntityAnimal) && !(user instanceof EntityMinecart) && !(user instanceof EntityBoat)) {
             if (user instanceof EntityPlayer) {
                 weight += 1000;
@@ -332,7 +278,7 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
             weight += 100;
         }
 
-        if (teleporterUseInventoryWeight && user instanceof EntityLivingBase) {
+        if (user instanceof EntityLivingBase) {
             EntityLivingBase living = (EntityLivingBase) user;
 
             ItemStack stack;
@@ -356,7 +302,7 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
         return weight;
     }
 
-    private void onTeleportTo(TileEntityTeleporter from, Entity entity) {
+    private void onTeleportTo() {
         this.cooldown = 20;
     }
 
@@ -371,47 +317,45 @@ public class TileEntityTeleporter extends TileEntityInventory implements INetwor
 
     public void setTarget(BlockPos pos) {
         this.target = pos;
-        this.updateComparatorLevel();
-        (IUCore.network.get(true)).updateTileEntityField(this, "target");
+        new PacketUpdateFieldTile(this, "target", target);
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("target");
-        return ret;
-    }
+    public void updateField(String name, CustomPacketBuffer is) {
 
-    public void onNetworkUpdate(String field) {
-        if (field.equals("active")) {
-            if (this.audioSource == null) {
-                this.audioSource = IUCore.audioManager.createSource(this, PositionSpec.Center, "Machines/Teleporter" +
-                        "/TeleChargedLoop.ogg", true, false, IC2.audioManager.getDefaultVolume());
-            }
-
-            if (this.getActive()) {
-                if (this.audioSource != null) {
-                    this.audioSource.play();
-                }
-            } else if (this.audioSource != null) {
-                this.audioSource.stop();
+        if (name.equals("cooldown")) {
+            try {
+                this.cooldown = (int) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
-
-        super.onNetworkUpdate(field);
+        if (name.equals("target")) {
+            try {
+                this.target = (BlockPos) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        super.updateField(name, is);
     }
 
-    public void onNetworkEvent(int event) {
-        if (event == 0) {
-            IC2.audioManager.playOnce(this, "Machines/Teleporter/TeleUse.ogg");
-            IC2.audioManager.playOnce(new AudioPosition(this.getWorld(), this.pos), "Machines/Teleporter/TeleUse.ogg");
-            this.spawnBlueParticles(20, this.pos);
-            this.spawnBlueParticles(20, this.target);
-        } else {
-            IC2.platform.displayError(
-                    "An unknown event type was received over multiplayer.\nThis could happen due to corrupted data or a bug.\n\n(Technical information: event ID " + event + ", tile entity below)\nT: " + this + " (" + this.pos + ")"
-            );
+    public CustomPacketBuffer writePacket() {
+        final CustomPacketBuffer packet = super.writePacket();
+        try {
+            EncoderHandler.encode(packet, target);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        return packet;
+    }
 
+    public void readPacket(CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        try {
+            target = (BlockPos) DecoderHandler.decode(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

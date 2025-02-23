@@ -1,0 +1,6 @@
+{
+	"parent": "industrialupgrade:item/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/superheated_steam_cell"
+	}
+}

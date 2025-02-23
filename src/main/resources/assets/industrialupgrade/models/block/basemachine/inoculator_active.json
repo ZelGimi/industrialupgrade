@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/plant_fertilizer_main",
+    "down" : "industrialupgrade:blocks/inoculator_bottom-side",
+    "up" : "industrialupgrade:blocks/inoculator_top_active",
+    "north" : "industrialupgrade:blocks/inoculator_main_active",
+    "east" : "industrialupgrade:blocks/inoculator_bottom-side",
+    "south" : "industrialupgrade:blocks/inoculator_bottom-side",
+    "west" : "industrialupgrade:blocks/inoculator_bottom-side"
+  }
+}

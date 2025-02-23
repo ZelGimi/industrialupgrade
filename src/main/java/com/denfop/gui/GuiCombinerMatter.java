@@ -1,9 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.TankGauge;
 import com.denfop.container.ContainerCombinerMatter;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiCombinerMatter extends GuiIC2<ContainerCombinerMatter> {
+public class GuiCombinerMatter extends GuiIU<ContainerCombinerMatter> {
 
     public final ContainerCombinerMatter container;
 
@@ -21,6 +21,7 @@ public class GuiCombinerMatter extends GuiIC2<ContainerCombinerMatter> {
     public GuiCombinerMatter(ContainerCombinerMatter container1) {
         super(container1);
         this.container = container1;
+        this.addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
     }
 
     private static List<String> getInformation() {
@@ -50,27 +51,20 @@ public class GuiCombinerMatter extends GuiIC2<ContainerCombinerMatter> {
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-
-
-        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(par1, par2);
         handleUpgradeTooltip(par1 - this.guiLeft, par2 - this.guiTop);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
         this.mc.getTextureManager().bindTexture(getTexture());
-        int xoffset = (this.width - this.xSize) / 2;
-        int yoffset = (this.height - this.ySize) / 2;
 
-        this.mc.getTextureManager().bindTexture(getTexture());
-        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawBackground(xoffset, yoffset);
 
     }
 
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GUICombineMatter.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
 
     }
 

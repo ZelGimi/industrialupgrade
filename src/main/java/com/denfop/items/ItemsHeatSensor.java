@@ -2,12 +2,11 @@ package com.denfop.items;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.componets.HeatComponent;
+import com.denfop.register.Register;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +33,7 @@ public class ItemsHeatSensor extends Item implements IModelRegister {
         this.maxStackSize = 1;
         this.setMaxDamage(0);
         this.setCreativeTab(IUCore.EnergyTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
@@ -85,7 +84,7 @@ public class ItemsHeatSensor extends Item implements IModelRegister {
                 if (component == null) {
                     return EnumActionResult.PASS;
                 }
-                IC2.platform.messagePlayer(
+                IUCore.proxy.messagePlayer(
                         player,
                         String.format("%.2f", component.getEnergy()) + "°C" + "/" + component.getCapacity() + "°C"
                 );

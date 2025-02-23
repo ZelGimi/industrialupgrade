@@ -1,6 +1,9 @@
 package com.denfop.api.transport;
 
+import com.denfop.api.energy.IEnergyTile;
+import com.denfop.api.sytem.InfoTile;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
@@ -9,7 +12,12 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TransportFluidItemSinkSource implements ITransportSource, ITransportSink {
 
@@ -17,23 +25,19 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     private final ItemFluidHandler handler;
     private final int slots;
     private final List<Integer> list_limits;
-    private int sinks;
-    private int sources;
-    private int sinksfluid;
-    private int sourcesfluid;
+    private final TileEntity parent;
     private boolean isSink;
     private boolean isSource;
     private boolean isSinkFluid;
     private boolean isSourceFluid;
-    private boolean need_update = false;
-    private List<EnumFacing> facingListSink = new ArrayList<>();
-    private List<EnumFacing> facingListSource = new ArrayList<>();
+    private long id;
 
-    public TransportFluidItemSinkSource(
+    public TransportFluidItemSinkSource(TileEntity parent,
             BlockPos pos, IItemHandler handler, IFluidHandler handler1,
             boolean isSink, boolean isSource, boolean isSinkFluid, boolean isSourceFluid
     ) {
         int slots1;
+        this.parent = parent;
         this.pos = pos;
         this.handler = new ItemFluidHandler(handler, handler1);
         try {
@@ -50,72 +54,84 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         for (int i = 0; i < this.slots; i++) {
             this.list_limits.add(handler.getSlotLimit(i));
         }
-        this.sinks = isSink ? 1 : 0;
-        this.sources = isSource ? 1 : 0;
-        this.sinksfluid = isSinkFluid ? 1 : 0;
-        this.sourcesfluid = isSourceFluid ? 1 : 0;
 
     }
-
-    public void setFacingListSink(final List<EnumFacing> facingListSink) {
-        this.facingListSink = facingListSink;
+    public long getIdNetwork() {
+        return id;
     }
 
-    public void setFacingListSource(final List<EnumFacing> facingListSource) {
-        this.facingListSource = facingListSource;
+
+    public void setId(final long id) {
+        this.id = id;
     }
 
-    public boolean need_delete() {
-        return !this.isSink && !this.isSinkFluid && !this.isSourceFluid && !this.isSource;
-    }
+    Map<EnumFacing, ITransportTile> energyConductorMap = new HashMap<>();
 
-    public boolean isNeed_update() {
-        return need_update;
-    }
-
-    public void setNeed_update(final boolean need_update) {
-        this.need_update = need_update;
-    }
-
-    public boolean isSinkFluid() {
-        return isSinkFluid;
-    }
-
-    public void setSinkFluid(final boolean sinkFluid) {
-        if (!sinkFluid) {
-            if (sinksfluid == 1) {
-                isSinkFluid = false;
-                need_update = true;
+    public void RemoveTile(ITransportTile tile, final EnumFacing facing1) {
+        if (!this.parent.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<ITransportTile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<ITransportTile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
             }
-            sinksfluid--;
+        }
+    }
+    private int hashCode;
+    boolean hasHashCode = false;
+
+    @Override
+    public int hashCode() {
+        if (!hasHashCode) {
+            hasHashCode = true;
+            this.hashCode = super.hashCode();
+            return hashCode;
         } else {
-            isSinkFluid = true;
-            if (sinksfluid == 0) {
-                need_update = true;
+            return hashCode;
+        }
+    }
+    int hashCodeSource;
+    @Override
+    public void setHashCodeSource(final int hashCode) {
+        hashCodeSource = hashCode;
+    }
+
+    @Override
+    public int getHashCodeSource() {
+        return hashCodeSource;
+    }
+
+    @Override
+    public Map<EnumFacing, ITransportTile> getTiles() {
+        return energyConductorMap;
+    }
+
+    List<InfoTile<ITransportTile>> validReceivers = new LinkedList<>();
+
+
+    public List<InfoTile<ITransportTile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    @Override
+    public TileEntity getTileEntity() {
+        return parent;
+    }
+
+    public void AddTile(ITransportTile tile, final EnumFacing facing1) {
+        if (!this.parent.getWorld().isRemote) {
+            if (!this.energyConductorMap.containsKey(facing1)) {
+                this.energyConductorMap.put(facing1, tile);
+                validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
             }
-            sinksfluid++;
+
         }
     }
 
-    public boolean isSourceFluid() {
-        return isSourceFluid;
-    }
 
-    public void setSourceFluid(final boolean sourceFluid) {
-        if (!sourceFluid) {
-            if (sourcesfluid == 1) {
-                isSourceFluid = false;
-                need_update = true;
-            }
-            sourcesfluid--;
-        } else {
-            isSourceFluid = true;
-            if (sourcesfluid == 0) {
-                need_update = true;
-            }
-            sourcesfluid++;
-        }
-    }
 
     public IItemHandler getItemHandler() {
         return this.handler.getItemHandler();
@@ -135,11 +151,14 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public TransportItem getOffered(final int type) {
+    public TransportItem<?> getOffered(final int type) {
+        TransportItem<?> transportItem;
+
         if (type == 0) {
-            TransportItem<ItemStack> transportItem = new TransportItem<>();
-            List<ItemStack> itemStackList = new ArrayList<>();
-            List<Integer> integerList = new ArrayList<>();
+            TransportItem<ItemStack> itemTransportItem = new TransportItem<>();
+            List<ItemStack> itemStackList = new LinkedList<>();
+            List<Integer> integerList = new LinkedList<>();
+
             for (int i = 0; i < this.slots; i++) {
                 ItemStack stack = this.handler.extractItem(i, this.list_limits.get(i), true);
                 if (!stack.isEmpty()) {
@@ -147,22 +166,30 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
                     integerList.add(i);
                 }
             }
-            transportItem.setList(itemStackList);
-            transportItem.setList1(integerList);
-            return transportItem;
+
+            itemTransportItem.setList(itemStackList);
+            itemTransportItem.setList1(integerList);
+            transportItem = itemTransportItem;
+
         } else {
-            TransportItem transportItem = new TransportItem();
-            List<FluidStack> fluidStackList = new ArrayList<>();
-            final IFluidTankProperties[] fluidTanks = this.handler.getTankProperties();
+            TransportItem<FluidStack> fluidTransportItem = new TransportItem<>();
+            List<FluidStack> fluidStackList = new LinkedList<>();
+            IFluidTankProperties[] fluidTanks = this.handler.getTankProperties();
+
             for (IFluidTankProperties fluidTankProperties : fluidTanks) {
-                if (fluidTankProperties.canDrain() && fluidTankProperties.getContents() != null) {
-                    fluidStackList.add(fluidTankProperties.getContents());
+                FluidStack contents = fluidTankProperties.getContents();
+                if (fluidTankProperties.canDrain() && contents != null) {
+                    fluidStackList.add(contents);
                 }
             }
-            transportItem.setList(fluidStackList);
-            return transportItem;
+
+            fluidTransportItem.setList(fluidStackList);
+            transportItem = fluidTransportItem;
         }
+
+        return transportItem;
     }
+
 
     @Override
     public void draw(final Object var, final int col) {
@@ -171,7 +198,6 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         }
         if (this.isSourceFluid && var instanceof FluidStack) {
             FluidStack fluidStack = (FluidStack) var;
-            fluidStack = fluidStack.copy();
             fluidStack.amount = col;
             this.handler.drain(fluidStack, true);
         }
@@ -192,21 +218,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
         return this.isSource || isSourceFluid;
     }
 
-    public void setSource(final boolean source) {
-        if (!source) {
-            if (sources == 1) {
-                isSource = false;
-                need_update = true;
-            }
-            sources--;
-        } else {
-            isSource = true;
-            if (sources == 0) {
-                need_update = true;
-            }
-            sources++;
-        }
-    }
+
 
     @Override
     public Object getHandler() {
@@ -237,71 +249,45 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
     }
 
     @Override
-    public List<Integer> getDemanded() {
-        if (this.isSink) {
-            int i = 0;
-            List<Integer> list = new ArrayList<>();
-            for (Integer integer : this.list_limits) {
-                final ItemStack stack = this.handler.getStackInSlot(i);
-                if (stack.isEmpty() || (stack.getCount() < integer && integer <= stack.getMaxStackSize()) || (stack.getCount() < stack.getMaxStackSize() && integer < stack.getMaxStackSize())) {
-                    list.add(i);
-                }
-                i++;
-            }
-            return list;
+    public List<Integer> getDemanded(IItemHandler handler) {
+        if (!this.isSink) {
+            return Collections.emptyList();
         }
-        return null;
+
+        List<Integer> demandedSlots = new LinkedList<>();
+
+        for (int i = 0; i < this.list_limits.size(); i++) {
+            final ItemStack stack = handler.getStackInSlot(i);
+            int limit = this.list_limits.get(i);
+            int maxStackSize = stack.getMaxStackSize();
+
+            if (stack.isEmpty() || stack.getCount() < Math.min(limit, maxStackSize)) {
+                demandedSlots.add(i);
+            }
+        }
+
+        return demandedSlots;
     }
 
     @Override
     public boolean isSink() {
         return this.isSink || this.isSinkFluid;
     }
-
-    public void setSink(final boolean sink) {
-        if (!sink) {
-            if (sinks == 1) {
-                isSink = false;
-                need_update = true;
-            }
-            sinks--;
-        } else {
-            isSink = true;
-            if (sinks == 0) {
-                need_update = true;
-            }
-            sinks++;
-        }
+    List<Integer> energyTickList = new LinkedList<>();
+    @Override
+    public List<Integer> getEnergyTickList() {
+        return energyTickList;
     }
 
     @Override
-    public List getItemStackFromFacing(final EnumFacing facing) {
-        return null;
+    public boolean isItemSink() {
+        return isSink;
     }
 
     @Override
-    public boolean canAccept(final EnumFacing facing) {
-
-        return this.facingListSink.contains(facing);
+    public boolean isFluidSink() {
+        return isSinkFluid;
     }
 
-    @Override
-    public void removeFacing(final EnumFacing facing) {
-        this.facingListSink.remove(facing);
-    }
-
-    @Override
-    public boolean canAdd(final EnumFacing facing) {
-        if (!this.facingListSink.contains(facing)) {
-            this.facingListSink.add(facing);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public List<EnumFacing> getFacingList() {
-        return this.facingListSink;
-    }
 
 }

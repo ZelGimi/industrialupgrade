@@ -1,6 +1,5 @@
 {
-  "parent" : "ic2:item/tool/default",
-  "textures" : {
-    "layer0" : "industrialupgrade:items/ultddrill"
-  }
+	"parent": "industrialupgrade:item/tool/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/ultddrill"	}
 }

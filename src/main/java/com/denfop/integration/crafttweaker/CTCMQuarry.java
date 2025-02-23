@@ -1,6 +1,6 @@
 package com.denfop.integration.crafttweaker;
 
-import com.blamejared.mtlib.helpers.LogHelper;
+
 import com.denfop.IUCore;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
@@ -128,10 +128,6 @@ public class CTCMQuarry {
                 int i = OreDictionary.getOreIDs((ItemStack) input.getInternal())[0];
                 IUCore.list_comb_crushed_removing.add(OreDictionary.getOres(OreDictionary.getOreName(i)).get(0));
             }
-        }
-
-        protected String getRecipeInfo() {
-            return LogHelper.getStackDescription(this.input);
         }
 
     }

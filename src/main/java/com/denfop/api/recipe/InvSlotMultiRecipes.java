@@ -1,12 +1,13 @@
 package com.denfop.api.recipe;
 
 
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
 import com.denfop.api.Recipes;
+import com.denfop.api.upgrades.IUpgradeItem;
 import com.denfop.componets.ProcessMultiComponent;
 import com.denfop.invslot.InvSlot;
+import com.denfop.items.ItemRecipeSchedule;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.api.upgrade.IUpgradeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -18,8 +19,10 @@ public class InvSlotMultiRecipes extends InvSlot {
 
     private final IMultiUpdateTick tile;
     private final ProcessMultiComponent processMultiComponent;
+    private final RecipeArrayList<IRecipeInputStack> default_accepts;
     public MachineRecipe recycler_output;
-    private List<IRecipeInputStack> accepts;
+    MachineRecipe[] prev = new MachineRecipe[8];
+    private RecipeArrayList<IRecipeInputStack> accepts;
     private List<BaseMachineRecipe> recipe_list;
     private IBaseRecipe recipe;
     private FluidTank tank;
@@ -28,16 +31,16 @@ public class InvSlotMultiRecipes extends InvSlot {
             final TileEntityInventory base, IBaseRecipe baseRecipe, IMultiUpdateTick tile, int size,
             ProcessMultiComponent processMultiComponent
     ) {
-        super(base, "input", Access.I, size);
+        super(base, TypeItemSlot.INPUT, size);
         this.recipe = baseRecipe;
         this.recipe_list = Recipes.recipes.getRecipeList(this.recipe.getName());
         this.tile = tile;
         this.tank = null;
-        this.accepts = Recipes.recipes.getMap_recipe_managers_itemStack(this.recipe.getName());
+        this.default_accepts = this.accepts = Recipes.recipes.getMap_recipe_managers_itemStack(this.recipe.getName());
 
         recycler_output = new MachineRecipe(new BaseMachineRecipe(null, new RecipeOutput(
                 null,
-                Ic2Items.scrap
+                IUItem.scrap
         )), Collections.singletonList(1));
         this.processMultiComponent = processMultiComponent;
     }
@@ -61,6 +64,15 @@ public class InvSlotMultiRecipes extends InvSlot {
         this.tank = tank;
     }
 
+    public void changeAccepts(ItemStack stack) {
+        if (stack.isEmpty()) {
+            this.accepts = this.default_accepts;
+        } else {
+            ItemRecipeSchedule itemRecipeSchedule = (ItemRecipeSchedule) stack.getItem();
+            this.accepts = itemRecipeSchedule.getInputs(this.recipe, stack);
+        }
+    }
+
     public IBaseRecipe getRecipe() {
         return recipe;
     }
@@ -70,7 +82,7 @@ public class InvSlotMultiRecipes extends InvSlot {
         if (this.recipe.getName().equals("recycler")) {
             this.recycler_output = new MachineRecipe(new BaseMachineRecipe(null, new RecipeOutput(
                     null,
-                    Ic2Items.scrap
+                    IUItem.scrap
             )), Collections.singletonList(1));
         }
     }
@@ -79,7 +91,23 @@ public class InvSlotMultiRecipes extends InvSlot {
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
         if (!recipe.getName().equals("recycler")) {
-            this.tile.setRecipeOutput(this.process(index), index);
+            final ItemStack input = this.get(index);
+            if (input.isEmpty()) {
+                this.tile.setRecipeOutput(null, index);
+            } else {
+                MachineRecipe recipe = prev[index];
+                if (recipe == null) {
+                    prev[index] = this.process(index);
+                    this.tile.setRecipeOutput(prev[index], index);
+                } else {
+                    if (recipe.getRecipe().input.getInputs().get(0).matches(input)) {
+                        this.tile.setRecipeOutput(recipe, index);
+                    } else {
+                        prev[index] = this.process(index);
+                        this.tile.setRecipeOutput(prev[index], index);
+                    }
+                }
+            }
         } else {
             processMultiComponent.getOutput(index);
 
@@ -93,8 +121,7 @@ public class InvSlotMultiRecipes extends InvSlot {
                 return null;
             }
         }
-        List<ItemStack> list = new ArrayList<>();
-        this.forEach(list::add);
+        List<ItemStack> list = new ArrayList<>(this.contents);
         if (this.tank == null) {
             return Recipes.recipes.getRecipeConsume(this.recipe, recipe, this.recipe.consume(), list);
         } else {
@@ -105,14 +132,20 @@ public class InvSlotMultiRecipes extends InvSlot {
 
     @Override
     public boolean accepts(final ItemStack itemStack, final int index) {
+        if (recipe.getName().equals("recycler") && !itemStack.isEmpty()) {
+            return true;
+        }
         return !itemStack.isEmpty() && !(itemStack.getItem() instanceof IUpgradeItem) && (recipe
                 .getName()
                 .equals("painter") || recipe
                 .getName()
                 .equals("upgradeblock") || recipe
                 .getName()
-                .equals("recycler") || accepts.contains(
-                new RecipeInputStack(itemStack)));
+                .equals("recycler") || (!recipe
+                .getName()
+                .equals("furnace") ? accepts.contains(
+                itemStack) : accepts.contains(
+                new RecipeInputStack(itemStack))));
     }
 
     public void consume(int number, int amount) {
@@ -158,7 +191,9 @@ public class InvSlotMultiRecipes extends InvSlot {
             return false;
         }
         if (!this.recipe.getName().equals("recycler")) {
-            return slot.canAdd(tile.getRecipeOutput(slotid).getRecipe().output.items) && this.get(slotid).getCount() >= tile
+            return slot.addWithoutIgnoring(tile.getRecipeOutput(slotid).getRecipe().output.items, true) && this
+                    .get(slotid)
+                    .getCount() >= tile
                     .getRecipeOutput(
                             slotid).getList().get(0);
         } else {
@@ -233,5 +268,9 @@ public class InvSlotMultiRecipes extends InvSlot {
 
     }
 
+
+    public void consume(int slotid, int size, Integer integer) {
+        this.get(slotid).shrink(size * integer);
+    }
 
 }

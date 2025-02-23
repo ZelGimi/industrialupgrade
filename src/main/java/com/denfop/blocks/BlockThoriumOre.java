@@ -4,7 +4,11 @@ package com.denfop.blocks;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
+import com.denfop.IUPotion;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IHazmatLike;
+import com.denfop.blocks.state.BoolProperty;
+import com.denfop.network.packet.PacketUpdateRadiationValue;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -12,12 +16,18 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -26,30 +36,34 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class BlockThoriumOre extends BlockCore implements IModelRegister {
 
     public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
+    public static final BoolProperty BOOL_PROPERTY = new BoolProperty("hasdamage");
 
 
     public BlockThoriumOre() {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("thorium_ore");
         setCreativeTab(IUCore.OreTab);
-        setHardness(3.0F);
+        setHardness(1);
         setResistance(5.0F);
+        this.setTickRandomly(true);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.thorium_ore));
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", 1);
     }
 
 
     @Nonnull
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
+        return new BlockStateContainer(this, VARIANT, BOOL_PROPERTY);
     }
 
     public void getSubBlocks(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items) {
@@ -79,14 +93,54 @@ public class BlockThoriumOre extends BlockCore implements IModelRegister {
 
 
         int count = quantityDropped(fortune, rand);
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 1; i++) {
 
-            drops.add(new ItemStack(IUItem.toriy, 1, 0));
+            drops.add(new ItemStack(IUItem.toriyore, 1, 0));
 
         }
 
     }
 
+    public void randomTick(World world, BlockPos pos, IBlockState state, Random random) {
+
+        if (world.isRemote) {
+            return;
+        }
+        boolean damage = state.getValue(BOOL_PROPERTY);
+        if (!damage) {
+            return;
+        }
+        ChunkPos chunkPos = new ChunkPos(pos);
+        new PacketUpdateRadiationValue(chunkPos, 1);
+        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2,
+                pos.getY() + 2, pos.getZ() + 2
+        );
+        final List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, axisAlignedBB);
+        for (EntityPlayer player : list) {
+            boolean can = !IHazmatLike.hasCompleteHazmat(player);
+            if (can) {
+                player.addPotionEffect(new PotionEffect(IUPotion.radiation, 400, 0));
+                player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 400, 0));
+
+            }
+
+
+        }
+
+    }
+
+    @Override
+    public void onBlockPlacedBy(
+            final World p_180633_1_,
+            final BlockPos p_180633_2_,
+            IBlockState p_180633_3_,
+            final EntityLivingBase p_180633_4_,
+            final ItemStack p_180633_5_
+    ) {
+        super.onBlockPlacedBy(p_180633_1_, p_180633_2_, p_180633_3_, p_180633_4_, p_180633_5_);
+        p_180633_3_ = p_180633_3_.withProperty(BOOL_PROPERTY, false);
+        p_180633_1_.setBlockState(p_180633_2_, p_180633_3_);
+    }
 
     public int quantityDropped(int fortune, Random random) {
 
@@ -132,6 +186,14 @@ public class BlockThoriumOre extends BlockCore implements IModelRegister {
                     new ModelResourceLocation(this.modName + ":" + this.name, "type=" + Type.values()[i].getName())
             );
         }
+        ModelLoader.setCustomStateMapper(this, block -> block.getBlockState().getValidStates().stream()
+                .collect(Collectors.toMap(
+                        state -> state,
+                        state -> {
+                            StateMapperIU stateMapper = new StateMapperIU(getRegistryName());
+                            return stateMapper.getModelResourceLocation(state);
+                        }
+                )));
     }
 
     public boolean preInit() {

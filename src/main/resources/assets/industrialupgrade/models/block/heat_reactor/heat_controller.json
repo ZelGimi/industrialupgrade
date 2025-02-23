@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/heat_reactor/controller/controller_front",
+    "down" : "industrialupgrade:blocks/heat_reactor/controller/controller_side",
+    "up" : "industrialupgrade:blocks/heat_reactor/controller/controller_side",
+    "north" : "industrialupgrade:blocks/heat_reactor/controller/controller_front",
+    "east" : "industrialupgrade:blocks/heat_reactor/controller/controller_side",
+    "south" : "industrialupgrade:blocks/heat_reactor/controller/controller_side",
+    "west" : "industrialupgrade:blocks/heat_reactor/controller/controller_side"
+  }
+}

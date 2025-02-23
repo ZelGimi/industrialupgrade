@@ -1,0 +1,263 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "water_casing" : {
+        "model" : "industrialupgrade:water_reactor/water_casing"
+      },
+      "water_adv_casing" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_casing"
+      },
+      "water_imp_casing" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_casing"
+      },
+      "water_per_casing" : {
+        "model" : "industrialupgrade:water_reactor/water_per_casing"
+      },
+      "water_chamber" : {
+        "model" : "industrialupgrade:water_reactor/water_chamber"
+      },
+      "water_adv_chamber" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_chamber"
+      },
+      "water_imp_chamber" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_chamber"
+      },
+      "water_per_chamber" : {
+        "model" : "industrialupgrade:water_reactor/water_per_chamber"
+      },
+      "water_controller" : {
+        "model" : "industrialupgrade:water_reactor/water_controller"
+      },
+      "water_adv_controller" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_controller"
+      },
+      "water_imp_controller" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_controller"
+      },
+      "water_per_controller" : {
+        "model" : "industrialupgrade:water_reactor/water_per_controller"
+      },
+      "water_per_controller_global" : {
+        "model" : "industrialupgrade:water_reactor/water_per_controller_global"
+      },
+      "water_input" : {
+        "model" : "industrialupgrade:water_reactor/water_input"
+      },
+      "water_adv_input" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_input"
+      },
+      "water_imp_input" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_input"
+      },
+      "water_per_input" : {
+        "model" : "industrialupgrade:water_reactor/water_per_input"
+      },
+      "water_levelfuel" : {
+        "model" : "industrialupgrade:water_reactor/water_levelfuel"
+      },
+      "water_adv_levelfuel" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_levelfuel"
+      },
+      "water_imp_levelfuel" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_levelfuel"
+      },
+      "water_per_levelfuel" : {
+        "model" : "industrialupgrade:water_reactor/water_per_levelfuel"
+      },
+      "water_output" : {
+        "model" : "industrialupgrade:water_reactor/water_output"
+      },
+      "water_adv_output" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_output"
+      },
+      "water_imp_output" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_output"
+      },
+      "water_per_output" : {
+        "model" : "industrialupgrade:water_reactor/water_per_output"
+      },
+      "water_security" : {
+        "model" : "industrialupgrade:water_reactor/water_security"
+      },
+      "water_adv_security" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_security"
+      },
+      "water_imp_security" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_security"
+      },
+      "water_per_security" : {
+        "model" : "industrialupgrade:water_reactor/water_per_security"
+      },
+      "water_socket" : {
+        "model" : "industrialupgrade:water_reactor/water_socket"
+      },
+      "water_adv_socket" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_socket"
+      },
+      "water_imp_socket" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_socket"
+      },
+      "water_per_socket" : {
+        "model" : "industrialupgrade:water_reactor/water_per_socket"
+      },
+      "water_tank" : {
+        "model" : "industrialupgrade:water_reactor/water_tank"
+      },
+      "water_adv_tank" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank"
+      },
+      "water_imp_tank" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank"
+      },
+      "water_per_tank" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank"
+      },
+      "water_reactor" : {
+        "model" : "industrialupgrade:water_reactor/water_reactor"
+      },
+      "water_adv_reactor" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_reactor"
+      },
+      "water_imp_reactor" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_reactor"
+      },
+      "water_per_reactor" : {
+        "model" : "industrialupgrade:water_reactor/water_per_reactor"
+      },
+	    "water_tank_1" : {
+        "model" : "industrialupgrade:water_reactor/water_tank_1"
+      },
+      "water_adv_tank_1" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank_1"
+      },
+      "water_imp_tank_1" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank_1"
+      },
+      "water_per_tank_1" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank_1"
+      },
+	    "water_tank_2" : {
+        "model" : "industrialupgrade:water_reactor/water_tank_2"
+      },
+      "water_adv_tank_2" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank_2"
+      },
+      "water_imp_tank_2" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank_2"
+      },
+      "water_per_tank_2" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank_2"
+      },  
+		"water_tank_3" : {
+        "model" : "industrialupgrade:water_reactor/water_tank_3"
+      },
+      "water_adv_tank_3" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank_3"
+      },
+      "water_imp_tank_3" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank_3"
+      },
+      "water_per_tank_3" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank_3"
+      },
+	   
+      "water_tank_4" : {
+        "model" : "industrialupgrade:water_reactor/water_tank_4"
+      },
+      "water_adv_tank_4" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank_4"
+      },
+      "water_imp_tank_4" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank_4"
+      },
+      "water_per_tank_4" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank_4"
+      },
+	    
+	  "water_tank_5" : {
+        "model" : "industrialupgrade:water_reactor/water_tank_5"
+      },
+      "water_adv_tank_5" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank_5"
+      },
+      "water_imp_tank_5" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank_5"
+      },
+      "water_per_tank_5" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank_5"
+      },
+	    
+      "water_tank_6" : {
+        "model" : "industrialupgrade:water_reactor/water_tank_6"
+      },
+      "water_adv_tank_6" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_tank_6"
+      },
+      "water_imp_tank_6" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_tank_6"
+      },
+      "water_per_tank_6" : {
+        "model" : "industrialupgrade:water_reactor/water_per_tank_6"
+      },
+	   "water_security_stable" : {
+        "model" : "industrialupgrade:water_reactor/water_security_stable"
+      },
+      "water_adv_security_stable" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_security_stable"
+      },
+      "water_imp_security_stable" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_security_stable"
+      },
+      "water_per_security_stable" : {
+        "model" : "industrialupgrade:water_reactor/water_per_security_stable"
+      }, "water_security_unstable" : {
+        "model" : "industrialupgrade:water_reactor/water_security_unstable"
+      },
+      "water_adv_security_unstable" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_security_unstable"
+      },
+      "water_imp_security_unstable" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_security_unstable"
+      },
+      "water_per_security_unstable" : {
+        "model" : "industrialupgrade:water_reactor/water_per_security_unstable"
+      },
+	   "water_security_error" : {
+        "model" : "industrialupgrade:water_reactor/water_security_error"
+      },
+      "water_adv_security_error" : {
+        "model" : "industrialupgrade:water_reactor/water_adv_security_error"
+      },
+      "water_imp_security_error" : {
+        "model" : "industrialupgrade:water_reactor/water_imp_security_error"
+      },
+      "water_per_security_error" : {
+        "model" : "industrialupgrade:water_reactor/water_per_security_error"
+      }
+    },
+     "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

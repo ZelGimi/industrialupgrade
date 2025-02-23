@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_left",
-    "down" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_bottom",
-    "up" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_top",
-    "north" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_front",
-    "east" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_left",
-    "south" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_back",
-    "west" : "ic2:blocks/machine/processing/advanced/ore_washing_plant_right"
+    "particle" : "industrialupgrade:blocks/ore_washing_plant_bottom",
+    "down" : "industrialupgrade:blocks/ore_washing_plant_bottom",
+    "up" : "industrialupgrade:blocks/ore_washing_plant_bottom",
+    "north" : "industrialupgrade:blocks/ore_washing_plant_front",
+    "east" : "industrialupgrade:blocks/ore_washing_plant_left",
+    "south" : "industrialupgrade:blocks/ore_washing_plant_bottom",
+    "west" : "industrialupgrade:blocks/ore_washing_plant_left"
   }
 }

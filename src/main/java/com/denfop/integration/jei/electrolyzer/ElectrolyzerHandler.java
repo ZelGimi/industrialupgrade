@@ -1,9 +1,9 @@
 package com.denfop.integration.jei.electrolyzer;
 
 
-import com.denfop.blocks.FluidName;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -52,13 +52,22 @@ public class ElectrolyzerHandler {
 
     public static void initRecipes() {
 
-        addRecipe(new FluidStack(FluidRegistry.WATER, 1000), new FluidStack(
-                        FluidName.fluidhyd.getInstance(),
-                        500
-                ),
-                new FluidStack(FluidName.fluidoxy.getInstance(), 250)
-        );
-
+        for (BaseFluidMachineRecipe machineRecipe : Recipes.recipes.getRecipeFluid().getRecipeList(
+                "electrolyzer")) {
+            FluidStack fluidStack = machineRecipe.getInput().getInputs().get(0);
+            FluidStack fluidStack1 = machineRecipe.getOutput_fluid().get(0);
+            FluidStack fluidStack2 = machineRecipe.getOutput_fluid().get(1);
+            double m = 1000D / fluidStack.amount;
+            addRecipe(new FluidStack(fluidStack.getFluid(), (int) (m * fluidStack.amount)), new FluidStack(
+                            fluidStack1.getFluid(),
+                            (int) (m * fluidStack1.amount)
+                    ),
+                    new FluidStack(
+                            fluidStack2.getFluid(),
+                            (int) (m * fluidStack2.amount)
+                    )
+            );
+        }
 
     }
 

@@ -3,63 +3,59 @@ package com.denfop.items;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import ic2.api.item.ICustomDamageItem;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemIC2;
-import ic2.core.ref.ItemName;
-import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
+import com.denfop.api.item.IDamageItem;
+import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-public class ItemChemistry extends ItemIC2 implements ICustomDamageItem, IModelRegister {
+public class ItemChemistry extends Item implements IDamageItem, IModelRegister {
 
     private final String name;
     private final String path;
 
 
     public ItemChemistry(String name) {
-        super(null);
+        super();
         this.setCreativeTab(IUCore.ItemTab);
         this.setMaxStackSize(1);
-        setUnlocalizedName(name);
+
         this.name = name;
         setMaxDamage(20000);
         this.path = "chemistry";
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item.", "iu.").replace(".name", ""));
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModels() {
         ModelLoader.setCustomModelResourceLocation(
                 this,
-                meta,
+                0,
                 new ModelResourceLocation(Constants.MOD_ID + ":" + path + "/" + this.name, null)
         );
     }
 
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
-    }
 
     @Override
     public int getCustomDamage(ItemStack stack) {
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
+        NBTTagCompound nbt = ModUtils.nbt(stack);
         return nbt.getInteger("advDmg");
     }
 
@@ -71,11 +67,12 @@ public class ItemChemistry extends ItemIC2 implements ICustomDamageItem, IModelR
 
     @Override
     public void setCustomDamage(ItemStack stack, int damage) {
-        NBTTagCompound nbt = StackUtil.getOrCreateNbtData(stack);
+        NBTTagCompound nbt = ModUtils.nbt(stack);
         nbt.setInteger("advDmg", damage);
         int maxStackDamage = stack.getMaxDamage();
         if (maxStackDamage > 2) {
-            stack.setItemDamage(1 + (int) Util.map(damage, 250, (maxStackDamage - 2)));
+
+            stack.setItemDamage(1 + (damage / 250 * ((maxStackDamage - 2))));
         }
     }
 

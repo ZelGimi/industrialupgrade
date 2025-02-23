@@ -3,16 +3,10 @@ package com.denfop.items.energy;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import ic2.api.item.IBoxable;
-import ic2.api.tile.IWrenchable;
-import ic2.core.IC2;
-import ic2.core.audio.PositionSpec;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.MainConfig;
-import ic2.core.util.ConfigUtil;
-import ic2.core.util.LogCategory;
-import ic2.core.util.StackUtil;
-import ic2.core.util.Util;
+import com.denfop.api.tile.IWrenchable;
+import com.denfop.audio.EnumSound;
+import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -35,9 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
+public class ItemToolWrench extends Item implements IModelRegister {
 
-    private static final boolean logEmptyWrenchDrops = ConfigUtil.getBool(MainConfig.get(), "debug/logEmptyWrenchDrops");
     private final String name;
 
     public ItemToolWrench() {
@@ -48,9 +41,11 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
         super();
         this.setMaxDamage(120);
         this.setMaxStackSize(1);
+        this.setNoRepair();
+        this.setCreativeTab(IUCore.EnergyTab);
         this.name = name;
         IUCore.proxy.addIModelRegister(this);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
 
     }
 
@@ -69,7 +64,9 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
     }
 
     public static WrenchResult wrenchBlock(World world, BlockPos pos, EnumFacing side, EntityPlayer player, boolean remove) {
-        IBlockState state = Util.getBlockState(world, pos);
+        IBlockState state = world.getBlockState(pos);
+        state = state.getActualState(world, pos);
+        state = state.getActualState(world, pos);
         Block block = state.getBlock();
         if (!block.isAir(state, world, pos)) {
             if (block instanceof IWrenchable) {
@@ -77,7 +74,7 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
                 EnumFacing currentFacing = wrenchable.getFacing(world, pos);
                 EnumFacing newFacing = currentFacing;
                 int experience;
-                if (!IC2.keyboard.isAltKeyDown(player)) {
+                if (!IUCore.keyboard.isChangeKeyDown(player)) {
                     if (player.isSneaking()) {
                         newFacing = side.getOpposite();
                     } else {
@@ -101,15 +98,6 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
                 if (remove && wrenchable.wrenchCanRemove(world, pos, player)) {
                     if (!world.isRemote) {
                         TileEntity te = world.getTileEntity(pos);
-                        if (ConfigUtil.getBool(MainConfig.get(), "protection/wrenchLogging")) {
-                            String playerName = player.getGameProfile().getName() + "/" + player.getGameProfile().getId();
-                            IC2.log.info(
-                                    LogCategory.PlayerActivity,
-                                    "Player %s used a wrench to remove the block %s (te %s) at %s.",
-                                    playerName, state, getTeName(te), Util.formatPosition(world, pos)
-                            );
-                        }
-
                         if (player instanceof EntityPlayerMP) {
                             experience = ForgeHooks.onBlockBreakEvent(
                                     world,
@@ -130,20 +118,17 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
                         }
 
                         block.onBlockDestroyedByPlayer(world, pos, state);
-                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player, 0);
+                        List<ItemStack> drops = wrenchable.getWrenchDrops(world, pos, state, te, player,
+                                player.getEntityWorld().rand.nextInt(100)
+                        );
                         if (drops != null && !drops.isEmpty()) {
 
                             for (final ItemStack drop : drops) {
-                                StackUtil.dropAsEntity(world, pos, drop);
+                                ModUtils.dropAsEntity(world, pos, drop);
                             }
-                        } else if (logEmptyWrenchDrops) {
-                            IC2.log.warn(
-                                    LogCategory.General,
-                                    "The block %s (te %s) at %s didn't yield any wrench drops.",
-                                    state, getTeName(te), Util.formatPosition(world, pos)
-                            );
-                        }
 
+                        }
+                        wrenchable.wrenchBreak(world, pos);
                         if (!player.capabilities.isCreativeMode && experience > 0) {
                             block.dropXpOnBlockBreak(world, pos, experience);
                         }
@@ -187,7 +172,7 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
             float hitZ,
             EnumHand hand
     ) {
-        ItemStack stack = StackUtil.get(player, hand);
+        ItemStack stack = ModUtils.get(player, hand);
         if (!this.canTakeDamage(stack, 1)) {
             return EnumActionResult.FAIL;
         } else {
@@ -196,13 +181,8 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
                 if (!world.isRemote) {
                     this.damage(stack, result == ItemToolWrench.WrenchResult.Rotated ? 1 : 10, player);
                 } else {
-                    IC2.audioManager.playOnce(
-                            player,
-                            PositionSpec.Hand,
-                            "Tools/wrench.ogg",
-                            true,
-                            IC2.audioManager.getDefaultVolume()
-                    );
+                    player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
+
                 }
 
                 return world.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
@@ -216,13 +196,6 @@ public class ItemToolWrench extends Item implements IBoxable, IModelRegister {
         is.damageItem(damage, player);
     }
 
-    public boolean canBeStoredInToolbox(ItemStack itemstack) {
-        return true;
-    }
-
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return !repair.isEmpty() && Util.matchesOD(repair, "ingotBronze");
-    }
 
     @Override
     public void registerModels() {

@@ -2,18 +2,16 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.TileEntityMatter;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityCompressor;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityElectricFurnace;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityExtractor;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityMacerator;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityRecycler;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.TileMatter;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileCompressor;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileElectricFurnace;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileExtractor;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileMacerator;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileRecycler;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -24,13 +22,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockSimpleMachine implements ITeBlock {
-    macerator_iu(TileEntityMacerator.class, 0),
-    compressor_iu(TileEntityCompressor.class, 1),
-    furnace_iu(TileEntityElectricFurnace.class, 2),
-    extractor_iu(TileEntityExtractor.class, 3),
-    recycler_iu(TileEntityRecycler.class, 5),
-    generator_matter(TileEntityMatter.class, 6);
+public enum BlockSimpleMachine implements IMultiTileBlock {
+    macerator_iu(TileMacerator.class, 0),
+    compressor_iu(TileCompressor.class, 1),
+    furnace_iu(TileElectricFurnace.class, 2),
+    extractor_iu(TileExtractor.class, 3),
+    recycler_iu(TileRecycler.class, 5),
+    generator_matter(TileMatter.class, 6);
 
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("simplemachine");
@@ -55,8 +53,16 @@ public enum BlockSimpleMachine implements ITeBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -66,17 +72,10 @@ public enum BlockSimpleMachine implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -114,7 +113,7 @@ public enum BlockSimpleMachine implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -123,26 +122,15 @@ public enum BlockSimpleMachine implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override

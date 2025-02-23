@@ -2,8 +2,8 @@ package com.denfop.integration.jei.quarry_comb;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -59,15 +59,6 @@ public class CMQuarryCategory extends Gui implements IRecipeCategory<CMQuarryWra
     @Override
     public void drawExtras(final Minecraft mc) {
 
-        energy++;
-        int energylevel = (int) Math.min(48.0F * energy / 100, 48);
-
-
-        mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(
-                140 + 1 + 2, 25 + 48 - energylevel, 176,
-                48 - energylevel, 48, energylevel
-        );
 
     }
 
@@ -78,11 +69,11 @@ public class CMQuarryCategory extends Gui implements IRecipeCategory<CMQuarryWra
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 4, 11);
+        isg.init(0, true, 7, 20);
         isg.set(0, new ItemStack(IUItem.analyzermodule));
-        isg.init(1, false, 26, 2);
+        isg.init(1, false, 31, 11);
         isg.set(1, recipes.getOutput());
-        isg.init(2, true, 4, 29);
+        isg.init(2, true, 7, 38);
         isg.set(2, new ItemStack(IUItem.module9, 1, 15));
     }
 

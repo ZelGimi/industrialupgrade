@@ -1,8 +1,6 @@
 package com.denfop.render.base;
 
 import com.denfop.Constants;
-import ic2.core.model.IReloadableModel;
-import ic2.core.model.ModelComparator;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -33,7 +31,7 @@ public class IUModelLoader implements ICustomModelLoader {
             model.onReload();
         }
 
-        ModelComparator.onReload();
+        //    ModelComparator.onReload();
     }
 
     public boolean accepts(@Nonnull ResourceLocation modelLocation) {

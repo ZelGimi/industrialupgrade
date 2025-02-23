@@ -1,7 +1,7 @@
 package com.denfop.container;
 
 import com.denfop.invslot.InvSlot;
-import ic2.core.util.StackUtil;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -16,6 +16,14 @@ public class SlotInvSlot extends Slot {
         super(invSlot.base.getParent(), invSlot.base.getBaseIndex(invSlot) + index, x, y);
         this.invSlot = invSlot;
         this.index = index;
+    }
+
+    public int getJeiX() {
+        return this.xPos - 1;
+    }
+
+    public int getJeiY() {
+        return this.yPos - 1;
     }
 
     public boolean isItemValid(ItemStack stack) {
@@ -34,20 +42,20 @@ public class SlotInvSlot extends Slot {
 
     public ItemStack decrStackSize(int amount) {
         if (amount <= 0) {
-            return StackUtil.emptyStack;
+            return ModUtils.emptyStack;
         } else {
             ItemStack stack = this.invSlot.get(this.index);
-            if (StackUtil.isEmpty(stack)) {
-                return StackUtil.emptyStack;
+            if (ModUtils.isEmpty(stack)) {
+                return ModUtils.emptyStack;
             } else {
-                amount = Math.min(amount, StackUtil.getSize(stack));
+                amount = Math.min(amount, ModUtils.getSize(stack));
                 ItemStack ret;
-                if (StackUtil.getSize(stack) == amount) {
+                if (ModUtils.getSize(stack) == amount) {
                     ret = stack;
                     this.invSlot.clear(this.index);
                 } else {
-                    ret = StackUtil.copyWithSize(stack, amount);
-                    this.invSlot.put(this.index, StackUtil.decSize(stack, amount));
+                    ret = ModUtils.setSize(stack, amount);
+                    this.invSlot.put(this.index, ModUtils.decSize(stack, amount));
                 }
 
                 this.onSlotChanged();
@@ -75,7 +83,6 @@ public class SlotInvSlot extends Slot {
 
     public ItemStack onTake(EntityPlayer player, ItemStack stack) {
         stack = super.onTake(player, stack);
-        this.invSlot.onPickupFromSlot(player, stack);
         return stack;
     }
 

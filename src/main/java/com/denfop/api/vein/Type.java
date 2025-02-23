@@ -3,6 +3,7 @@ package com.denfop.api.vein;
 
 public enum Type {
     OIL,
+    GAS,
     VEIN,
     EMPTY;
 

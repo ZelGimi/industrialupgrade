@@ -1,9 +1,9 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockasmscr_bottom",
-    "down" : "industrialupgrade:blocks/blockasmscr_bottom",
-    "up" : "industrialupgrade:blocks/blockasmscr_top_active",
+    "particle" : "industrialupgrade:blocks/blockasmscr_side",
+    "down" : "industrialupgrade:blocks/blockasmscr_side",
+    "up" : "industrialupgrade:blocks/blockasmscr_side",
     "north" : "industrialupgrade:blocks/blockasmscr_main_active",
     "east" : "industrialupgrade:blocks/blockasmscr_side",
     "south" : "industrialupgrade:blocks/blockasmscr_side",

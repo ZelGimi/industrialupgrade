@@ -1,39 +1,46 @@
 package com.denfop.heat;
 
+import com.denfop.api.cool.CoolTick;
+import com.denfop.api.cool.ICoolAcceptor;
+import com.denfop.api.cool.ICoolConductor;
+import com.denfop.api.cool.ICoolEmitter;
+import com.denfop.api.cool.ICoolSink;
+import com.denfop.api.cool.ICoolSource;
+import com.denfop.api.cool.ICoolTile;
 import com.denfop.api.energy.SystemTick;
+import com.denfop.api.heat.HeatTick;
+import com.denfop.api.heat.HeatTickList;
 import com.denfop.api.heat.IHeatAcceptor;
 import com.denfop.api.heat.IHeatConductor;
 import com.denfop.api.heat.IHeatEmitter;
 import com.denfop.api.heat.IHeatSink;
 import com.denfop.api.heat.IHeatSource;
 import com.denfop.api.heat.IHeatTile;
-import ic2.core.IC2;
+import com.denfop.api.heat.InfoCable;
+import com.denfop.api.heat.Path;
+import com.denfop.api.sytem.ISource;
+import com.denfop.api.sytem.InfoTile;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class HeatNetLocal {
 
 
-    private final World world;
-    private final HeatPathMap HeatSourceToHeatPathMap;
+    final HeatTickList<HeatTick<IHeatSource, Path>> senderPath = new HeatTickList<>();
+    List<IHeatSource> sourceToUpdateList = new ArrayList<>();
     private final Map<BlockPos, IHeatTile> chunkCoordinatesIHeatTileMap;
-    private final WaitingList waitingList;
 
-
-    HeatNetLocal(final World world) {
-        this.HeatSourceToHeatPathMap = new HeatPathMap();
-        this.waitingList = new WaitingList();
-        this.world = world;
+    HeatNetLocal() {
         this.chunkCoordinatesIHeatTileMap = new HashMap<>();
     }
 
@@ -53,23 +60,49 @@ public class HeatNetLocal {
             return;
         }
         this.chunkCoordinatesIHeatTileMap.put(coords, tile);
-        this.update(coords);
+        this.updateAdd(coords, tile);
         if (tile instanceof IHeatAcceptor) {
-            this.waitingList.onTileEntityAdded(this.getValidReceivers(tile, true), (IHeatAcceptor) tile);
+            this.onTileEntityAdded((IHeatAcceptor) tile);
         }
         if (tile instanceof IHeatSource) {
-            HeatSourceToHeatPathMap.senderPath.add(new SystemTick<>((IHeatSource) tile, null));
+            senderPath.add(new HeatTick<>((IHeatSource) tile, null));
 
         }
 
 
     }
 
-    public BlockPos getPos(final IHeatTile tile) {
-        if (tile == null) {
-            return null;
+    private void updateAdd(BlockPos pos, IHeatTile tile) {
+        for (final EnumFacing dir : EnumFacing.values()) {
+            BlockPos pos1 = pos
+                    .offset(dir);
+            final IHeatTile tile1 = this.chunkCoordinatesIHeatTileMap.get(pos1);
+            if (tile1 != null) {
+                final EnumFacing inverseDirection2 = dir.getOpposite();
+                if (tile1 instanceof IHeatEmitter && tile instanceof IHeatAcceptor) {
+                    final IHeatEmitter sender2 = (IHeatEmitter) tile1;
+                    final IHeatAcceptor receiver2 = (IHeatAcceptor) tile;
+                    if (sender2.emitsHeatTo(receiver2, dir) && receiver2.acceptsHeatFrom(
+                            sender2,
+                            inverseDirection2
+                    )) {
+                        tile1.AddHeatTile(tile, dir.getOpposite());
+                        tile.AddHeatTile(tile1, dir);
+                    }
+                } else if (tile1 instanceof IHeatAcceptor && tile instanceof IHeatEmitter) {
+                    final IHeatEmitter sender2 = (IHeatEmitter) tile;
+                    final IHeatAcceptor receiver2 = (IHeatAcceptor) tile1;
+                    if (sender2.emitsHeatTo(receiver2, dir.getOpposite()) && receiver2.acceptsHeatFrom(
+                            sender2,
+                            inverseDirection2.getOpposite()
+                    )) {
+                        tile1.AddHeatTile(tile, dir.getOpposite());
+                        tile.AddHeatTile(tile1, dir);
+                    }
+                }
+            }
+
         }
-        return tile.getBlockPos();
     }
 
     public void addTileEntity(final BlockPos coords, final IHeatTile tile) {
@@ -77,16 +110,51 @@ public class HeatNetLocal {
             return;
         }
         this.chunkCoordinatesIHeatTileMap.put(coords, tile);
-        this.update(coords);
+        this.updateAdd(coords,tile);
         if (tile instanceof IHeatAcceptor) {
-            this.waitingList.onTileEntityAdded(this.getValidReceivers(tile, true), (IHeatAcceptor) tile);
+            this.onTileEntityAdded((IHeatAcceptor) tile);
         }
         if (tile instanceof IHeatSource) {
-            HeatSourceToHeatPathMap.senderPath.add(new SystemTick<>((IHeatSource) tile, null));
+            senderPath.add(new HeatTick<>((IHeatSource) tile, null));
 
         }
     }
+    public void onTileEntityAdded(final IHeatAcceptor tile) {
+        final LinkedList<IHeatTile> tileEntitiesToCheck = new LinkedList<>();
+        tileEntitiesToCheck.add(tile);
+        long id = WorldBaseGen.random.nextLong();
+        this.sourceToUpdateList = new LinkedList<>();
+        while (!tileEntitiesToCheck.isEmpty()) {
+            final IHeatTile currentTileEntity = tileEntitiesToCheck.pop();
+            final List<InfoTile<IHeatTile>> validReceivers = this.getValidReceivers(currentTileEntity);
+            for (final InfoTile<IHeatTile> validReceiver : validReceivers) {
+                if (validReceiver.tileEntity != tile && validReceiver.tileEntity.getIdNetwork() != id) {
+                    validReceiver.tileEntity.setId(id);
+                    if (validReceiver.tileEntity instanceof IHeatSource) {
+                        this.sourceToUpdateList.add((IHeatSource) validReceiver.tileEntity);
+                        continue;
+                    }
 
+                    if (validReceiver.tileEntity instanceof IHeatConductor) {
+                        tileEntitiesToCheck.push(validReceiver.tileEntity);
+
+                    }
+                }
+            }
+        }
+        this.sourceToUpdateList = new ArrayList<>(sourceToUpdateList);
+    }
+    private void updateRemove(BlockPos pos, IHeatTile tile) {
+        for (final EnumFacing dir : EnumFacing.values()) {
+            BlockPos pos1 = pos
+                    .offset(dir);
+            final IHeatTile tile1 = this.chunkCoordinatesIHeatTileMap.get(pos1);
+            if (tile1 != null) {
+                tile1.RemoveHeatTile(tile, dir.getOpposite());
+            }
+
+        }
+    }
     public void removeTile(IHeatTile tile1) {
 
         this.removeTileEntity(tile1);
@@ -99,27 +167,28 @@ public class HeatNetLocal {
             return;
         }
         final BlockPos coord = tile.getBlockPos();
-        this.chunkCoordinatesIHeatTileMap.remove(coord, tile);
-        this.update(coord);
+        this.chunkCoordinatesIHeatTileMap.remove(coord);
         if (tile instanceof IHeatAcceptor) {
-            this.HeatSourceToHeatPathMap.removeAll(this.HeatSourceToHeatPathMap.getSources((IHeatAcceptor) tile));
-            this.waitingList.onTileEntityRemoved((IHeatAcceptor) tile);
+            this.removeAll(this.getSources((IHeatAcceptor) tile));
         }
         if (tile instanceof IHeatSource) {
-            this.HeatSourceToHeatPathMap.remove((IHeatSource) tile);
+            this.remove((IHeatSource) tile);
         }
+        this.updateRemove(coord, tile);
     }
 
-    public void emitHeatFrom(final IHeatSource HeatSource, double amount, final SystemTick<IHeatSource, HeatPath> tick) {
-        List<HeatPath> HeatPaths = tick.getList();
+    public void emitHeatFrom(final IHeatSource HeatSource, double amount, final HeatTick<IHeatSource, Path> tick) {
+        List<Path> HeatPaths = tick.getList();
 
         if (HeatPaths == null) {
-            HeatPaths = this.discover(HeatSource);
-            tick.setList(HeatPaths);
+            final Tuple<List<Path>, LinkedList<IHeatConductor>> tuple = this.discover(HeatSource, tick);
+            tick.setList(tuple.getFirst());
+            tick.setConductors(tuple.getSecond());
+            HeatPaths = tick.getList();
         }
         boolean allow = false;
         if (amount > 0) {
-            for (final HeatPath HeatPath : HeatPaths) {
+            for (final Path HeatPath : HeatPaths) {
                 final IHeatSink HeatSink = HeatPath.target;
                 double demandedHeat = HeatSink.getDemandedHeat();
                 if (demandedHeat <= 0.0) {
@@ -134,8 +203,7 @@ public class HeatNetLocal {
                 }
                 allow = allow || HeatSink.needTemperature();
 
-                adding -= HeatSink.injectHeat(HeatPath.targetDirection, adding, 0);
-                HeatPath.totalHeatConducted = (long) adding;
+                HeatSink.receivedHeat(adding);
 
 
                 if (adding > HeatPath.min) {
@@ -165,164 +233,100 @@ public class HeatNetLocal {
         return tile.getTile();
     }
 
-    public List<HeatPath> discover(final IHeatSource emitter) {
-        final Map<IHeatConductor, EnumFacing> reachedTileEntities = new HashMap<>();
-        final List<IHeatTile> tileEntitiesToCheck = new ArrayList<>();
-        final List<HeatPath> HeatPaths = new ArrayList<>();
-
-        tileEntitiesToCheck.add(emitter);
-
+    public Tuple<List<Path>,LinkedList<IHeatConductor>> discover(final IHeatSource emitter,
+                                                                 final HeatTick<IHeatSource, Path> tick) {
+        final LinkedList<IHeatTile> tileEntitiesToCheck = new LinkedList<>();
+        List<Path> energyPaths = new LinkedList<>();
+        long id = WorldBaseGen.random.nextLong();
+        emitter.setId(id);
+        tileEntitiesToCheck.push(emitter);
+        LinkedList<IHeatConductor> set = new LinkedList<>();
         while (!tileEntitiesToCheck.isEmpty()) {
-            final IHeatTile currentTileEntity = tileEntitiesToCheck.remove(0);
-            final List<HeatTarget> validReceivers = this.getValidReceivers(currentTileEntity, false);
-            for (final HeatTarget validReceiver : validReceivers) {
-                if (validReceiver.tileEntity != emitter) {
+            final IHeatTile currentTileEntity = tileEntitiesToCheck.pop();
+            final List<InfoTile<IHeatTile>> validReceivers = this.getValidReceivers(currentTileEntity);
+            InfoCable cable = null;
+            if (currentTileEntity instanceof IHeatConductor) {
+                cable = ((IHeatConductor) currentTileEntity).getHeatCable();
+            }
+            for (final InfoTile<IHeatTile> validReceiver : validReceivers) {
+                if (validReceiver.tileEntity != emitter && validReceiver.tileEntity.getIdNetwork() != id) {
+                    validReceiver.tileEntity.setId(id);
                     if (validReceiver.tileEntity instanceof IHeatSink) {
-                        HeatPaths.add(new HeatPath((IHeatSink) validReceiver.tileEntity, validReceiver.direction));
-                        continue;
-                    }
-                    if (reachedTileEntities.containsKey((IHeatConductor) validReceiver.tileEntity)) {
+                        energyPaths.add(new Path((IHeatSink) validReceiver.tileEntity, validReceiver.direction));
                         continue;
                     }
 
-                    reachedTileEntities.put((IHeatConductor) validReceiver.tileEntity, validReceiver.direction);
-                    tileEntitiesToCheck.add(validReceiver.tileEntity);
-                }
-            }
+                    if (validReceiver.tileEntity instanceof IHeatConductor) {
+                        IHeatConductor conductor = (IHeatConductor) validReceiver.tileEntity;
+                        conductor.setHeatCable(new InfoCable(conductor, validReceiver.direction, cable));
 
+                        tileEntitiesToCheck.push(validReceiver.tileEntity);
 
-        }
-        for (HeatPath HeatPath : HeatPaths) {
-            IHeatTile tileEntity = HeatPath.target;
-            EnumFacing HeatBlockLink = HeatPath.targetDirection;
-            BlockPos te = tileEntity.getBlockPos();
-            if (emitter != null) {
-                while (tileEntity != emitter) {
-                    if (HeatBlockLink != null && te != null) {
-                        tileEntity = this.getTileEntity(te.offset(HeatBlockLink));
-                        te = te.offset(HeatBlockLink);
-                    }
-                    if (!(tileEntity instanceof IHeatConductor)) {
-                        break;
-                    }
-                    final IHeatConductor HeatConductor = (IHeatConductor) tileEntity;
-                    HeatPath.conductors.add(HeatConductor);
-                    if (HeatConductor.getConductorBreakdownHeat() - 1 < HeatPath.getMin()) {
-                        HeatPath.setMin(HeatConductor.getConductorBreakdownHeat() - 1);
-                    }
-                    HeatBlockLink = reachedTileEntities.get(tileEntity);
-                    if (HeatBlockLink != null) {
-                        continue;
-                    }
-                    assert te != null;
-                    IC2.platform.displayError("An Heat network pathfinding entry is corrupted.\nThis could happen due to " +
-                            "incorrect Minecraft behavior or a bug.\n\n(Technical information: HeatBlockLink, tile " +
-                            "entities below)\nE: " + emitter + " (" + te.getX() + "," + te.getY() + "," + te
-
-                            .getZ() + ")\n" + "C: " + tileEntity + " (" + te.getX() + "," + te
-
-                            .getY() + "," + te
-
-                            .getZ() + ")\n" + "R: " + HeatPath.target + " (" + HeatPath.target
-                            .getBlockPos()
-                            .getX() + "," + HeatPath.target.getBlockPos().getY() + "," + HeatPath.target
-                            .getBlockPos()
-                            .getZ() + ")");
-                }
-            }
-        }
-        return HeatPaths;
-    }
-
-    public IHeatTile getNeighbor(final IHeatTile tile, final EnumFacing dir) {
-        if (tile == null) {
-            return null;
-        }
-        return this.getTileEntity(tile.getBlockPos().offset(dir));
-    }
-
-    private List<HeatTarget> getValidReceivers(final IHeatTile emitter, final boolean reverse) {
-        final List<HeatTarget> validReceivers = new LinkedList<>();
-
-        for (final EnumFacing direction : EnumFacing.values()) {
-            final IHeatTile target2 = getNeighbor(emitter, direction);
-            if (target2 != null) {
-                final EnumFacing inverseDirection2 = direction.getOpposite();
-                if (reverse) {
-                    if (emitter instanceof IHeatAcceptor && target2 instanceof IHeatEmitter) {
-                        final IHeatEmitter sender2 = (IHeatEmitter) target2;
-                        final IHeatAcceptor receiver2 = (IHeatAcceptor) emitter;
-                        if (sender2.emitsHeatTo(receiver2, inverseDirection2) && receiver2.acceptsHeatFrom(
-                                sender2,
-                                direction
-                        )) {
-                            validReceivers.add(new HeatTarget(target2, inverseDirection2));
-                        }
-                    }
-                } else if (emitter instanceof IHeatEmitter && target2 instanceof IHeatAcceptor) {
-                    final IHeatEmitter sender2 = (IHeatEmitter) emitter;
-                    final IHeatAcceptor receiver2 = (IHeatAcceptor) target2;
-                    if (sender2.emitsHeatTo(receiver2, direction) && receiver2.acceptsHeatFrom(
-                            sender2,
-                            inverseDirection2
-                    )) {
-                        validReceivers.add(new HeatTarget(target2, inverseDirection2));
                     }
                 }
             }
-
         }
-        //
-
-        return validReceivers;
-    }
-
-    public List<IHeatSource> discoverFirstPathOrSources(final IHeatTile par1) {
-        final Set<IHeatTile> reached = new HashSet<>();
-        final List<IHeatSource> result = new ArrayList<>();
-        final List<IHeatTile> workList = new ArrayList<>();
-        workList.add(par1);
-        while (workList.size() > 0) {
-            final IHeatTile tile = workList.remove(0);
-            final TileEntity te = tile.getTile();
-            if (te == null) {
+        energyPaths = new ArrayList<>(energyPaths);
+        int id1 = WorldBaseGen.random.nextInt();
+        for (Path energyPath : energyPaths) {
+            IHeatTile tileEntity = energyPath.target;
+            energyPath.target.getEnergyTickList().add(tick.getSource());
+            EnumFacing energyBlockLink = energyPath.targetDirection;
+            tileEntity = tileEntity.getHeatTiles().get(energyBlockLink);
+            if (!(tileEntity instanceof IHeatConductor)) {
                 continue;
             }
-            if (!te.isInvalid()) {
-                final List<HeatTarget> targets = this.getValidReceivers(tile, true);
-                for (HeatTarget HeatTarget : targets) {
-                    final IHeatTile target = HeatTarget.tileEntity;
-                    if (target != par1) {
-                        if (!reached.contains(target)) {
-                            reached.add(target);
-                            if (target instanceof IHeatSource) {
-                                result.add((IHeatSource) target);
-                            } else if (target instanceof IHeatConductor) {
-                                workList.add(target);
-                            }
-                        }
+            InfoCable cable = ((IHeatConductor) tileEntity).getHeatCable();
+
+            while (cable != null) {
+
+                final IHeatConductor energyConductor = cable.getConductor();
+                energyPath.conductors.add(energyConductor);
+                if (energyConductor.getHashCodeSource() != id1){
+                    energyConductor.setHashCodeSource(id1);
+                    set.add(energyConductor);
+                    if (energyConductor.getConductorBreakdownHeat() - 1 < energyPath.getMin()) {
+                        energyPath.setMin(energyConductor.getConductorBreakdownHeat() - 1);
                     }
                 }
+                cable = cable.getPrev();
+                if (cable == null) {
+                    break;
+                }
             }
+
         }
-        return result;
+        return new Tuple<>(energyPaths,set);
+    }
+
+
+
+    public List<InfoTile<IHeatTile>> getValidReceivers(final IHeatTile emitter) {
+
+        final BlockPos tile1;
+        tile1 = emitter.getBlockPos();
+        if (tile1 != null) {
+
+            return emitter.getHeatValidReceivers();
+
+
+        }
+
+
+        return Collections.emptyList();
     }
 
 
     public void onTickEnd() {
-        if (this.waitingList.hasWork()) {
-            final List<IHeatTile> tiles = this.waitingList.getPathTiles();
-            for (final IHeatTile tile : tiles) {
-                final List<IHeatSource> sources = this.discoverFirstPathOrSources(tile);
-                if (sources.size() > 0) {
-                    this.HeatSourceToHeatPathMap.removeAllSource1(sources);
-                }
+        if (!sourceToUpdateList.isEmpty()) {
+            for (IHeatSource source : sourceToUpdateList) {
+                remove1(source);
             }
-            this.waitingList.clear();
-
+            sourceToUpdateList.clear();
         }
+
         try {
-            for (SystemTick<IHeatSource, HeatPath> tick : this.HeatSourceToHeatPathMap.senderPath) {
+            for (HeatTick<IHeatSource, Path> tick : this.senderPath) {
                 final IHeatSource entry = tick.getSource();
                 if (entry != null) {
                     double offered = entry.getOfferedHeat();
@@ -348,16 +352,18 @@ public class HeatNetLocal {
     public void emitHeatFromNotAllowed(
             final IHeatSource HeatSource,
             double amount,
-            final SystemTick<IHeatSource, HeatPath> tick
+            final HeatTick<IHeatSource, Path> tick
     ) {
-        List<HeatPath> HeatPaths = tick.getList();
+        List<Path> HeatPaths = tick.getList();
 
         if (HeatPaths == null) {
-            HeatPaths = this.discover(HeatSource);
-            tick.setList(HeatPaths);
+            final Tuple<List<Path>, LinkedList<IHeatConductor>> tuple = this.discover(HeatSource, tick);
+            tick.setList(tuple.getFirst());
+            tick.setConductors(tuple.getSecond());
+            HeatPaths = tick.getList();
         }
 
-        for (final HeatPath HeatPath : HeatPaths) {
+        for (final Path HeatPath : HeatPaths) {
             final IHeatSink HeatSink = HeatPath.target;
             double demandedHeat = HeatSink.getDemandedHeat();
             if (HeatSink.needTemperature()) {
@@ -376,8 +382,7 @@ public class HeatNetLocal {
             }
 
 
-            adding -= HeatSink.injectHeat(HeatPath.targetDirection, adding, 0);
-            HeatPath.totalHeatConducted = (long) adding;
+            HeatSink.receivedHeat(adding);
 
 
             if (adding > HeatPath.min) {
@@ -403,307 +408,82 @@ public class HeatNetLocal {
     }
 
 
-    public void update(BlockPos pos) {
-        for (final EnumFacing dir : EnumFacing.values()) {
-            BlockPos pos1 = pos
-                    .offset(dir);
-            final IHeatTile tile = this.chunkCoordinatesIHeatTileMap.get(pos1);
-            if (tile != null) {
-                if (tile instanceof IHeatConductor) {
-                    ((IHeatConductor) tile).update_render();
-                }
-            }
 
+
+
+
+    public void remove1(final IHeatSource par1) {
+
+        for (HeatTick<IHeatSource, Path> ticks : this.senderPath) {
+            if (ticks.getSource() == par1) {
+                if (ticks.getList() != null) {
+                    for (Path path : ticks.getList()) {
+                        path.target.getEnergyTickList().remove(ticks.getSource());
+                    }
+                }
+                ticks.setList(null);
+                break;
+            }
         }
     }
 
+    public void remove(final IHeatSource par1) {
+        final HeatTick<IHeatSource, Path> heatTick = this.senderPath.removeSource(par1);
+        if (heatTick.getList() != null) {
+            for (Path path : heatTick.getList()) {
+                path.target.getEnergyTickList().remove(heatTick.getSource());
+            }
+        }
+    }
+
+
+
+    public void removeAll(final List<HeatTick<IHeatSource, Path>> par1) {
+        if (par1 == null) {
+            return;
+        }
+        for (HeatTick<IHeatSource,Path> iHeatSource : par1) {
+            if (iHeatSource.getList() != null) {
+                for (Path path : iHeatSource.getList()) {
+                    path.target.getEnergyTickList().remove(iHeatSource.getSource());
+                }
+            }
+            iHeatSource.setList(null);
+        }
+    }
+
+
+    public List<HeatTick<IHeatSource, Path>> getSources(final IHeatAcceptor par1) {
+        if (par1 instanceof IHeatSink) {
+            List<HeatTick<IHeatSource, Path>> list = new LinkedList<>();
+            for (HeatTick<IHeatSource, Path> energyTicks : senderPath) {
+                if (((IHeatSink) par1).getEnergyTickList().contains(energyTicks.getSource())) {
+                    list.add(energyTicks);
+                }
+            }
+            return list;
+        } else {
+            if (par1 instanceof ICoolConductor) {
+                List<HeatTick<IHeatSource, Path>> list = new LinkedList<>();
+                for (HeatTick<IHeatSource, Path> energyTicks : senderPath) {
+                    if (energyTicks.getConductors().contains(par1)) {
+                        list.add(energyTicks);
+                    }
+                }
+                return list;
+            }
+            return Collections.emptyList();
+        }
+    }
+
+
+
     public void onUnload() {
-        this.HeatSourceToHeatPathMap.clear();
-        this.waitingList.clear();
+        this.senderPath.clear();
         this.chunkCoordinatesIHeatTileMap.clear();
     }
 
-    static class HeatTarget {
-
-        final IHeatTile tileEntity;
-        final EnumFacing direction;
-
-        HeatTarget(final IHeatTile tileEntity, final EnumFacing direction) {
-            this.tileEntity = tileEntity;
-            this.direction = direction;
-        }
-
-    }
-
-    public static class HeatPath {
-
-        final List<IHeatConductor> conductors;
-        final IHeatSink target;
-        final EnumFacing targetDirection;
-        long totalHeatConducted;
-        double min = Double.MAX_VALUE;
-
-        HeatPath(IHeatSink sink, EnumFacing facing) {
-            this.target = sink;
-            this.conductors = new ArrayList<>();
-            this.totalHeatConducted = 0L;
-            this.targetDirection = facing;
 
 
-        }
-
-        public List<IHeatConductor> getConductors() {
-            return conductors;
-        }
-
-
-        public double getMin() {
-            return min;
-        }
-
-        public void setMin(final double min) {
-            this.min = min;
-        }
-
-
-    }
-
-
-    static class HeatPathMap {
-
-        final List<SystemTick<IHeatSource, HeatPath>> senderPath;
-
-        HeatPathMap() {
-            this.senderPath = new ArrayList<>();
-        }
-
-        public void put(final IHeatSource par1, final List<HeatPath> par2) {
-            this.senderPath.add(new SystemTick<>(par1, par2));
-        }
-
-
-        public boolean containsKey(final SystemTick<IHeatSource, HeatPath> par1) {
-            return this.senderPath.contains(par1);
-        }
-
-        public boolean containsKey(final IHeatSource par1) {
-            return this.senderPath.contains(new SystemTick<IHeatSource, HeatPath>(par1, null));
-        }
-
-
-        public void remove1(final IHeatSource par1) {
-
-            for (SystemTick<IHeatSource, HeatPath> ticks : this.senderPath) {
-                if (ticks.getSource() == par1) {
-                    ticks.setList(null);
-                    break;
-                }
-            }
-        }
-
-        public void remove(final IHeatSource par1) {
-            this.senderPath.remove(new SystemTick<IHeatSource, HeatPath>(par1, null));
-        }
-
-        public void remove(final SystemTick<IHeatSource, HeatPath> par1) {
-            this.senderPath.remove(par1);
-        }
-
-        public void removeAll(final List<SystemTick<IHeatSource, HeatPath>> par1) {
-            if (par1 == null) {
-                return;
-            }
-            for (SystemTick<IHeatSource, HeatPath> iHeatSource : par1) {
-                iHeatSource.setList(null);
-            }
-        }
-
-        public void removeAllSource1(final List<IHeatSource> par1) {
-            if (par1 == null) {
-                return;
-            }
-            for (IHeatSource iHeatSource : par1) {
-                this.remove1(iHeatSource);
-            }
-        }
-
-        public List<SystemTick<IHeatSource, HeatPath>> getSources(final IHeatAcceptor par1) {
-            final List<SystemTick<IHeatSource, HeatPath>> source = new ArrayList<>();
-            for (final SystemTick<IHeatSource, HeatPath> entry : this.senderPath) {
-                if (source.contains(entry)) {
-                    continue;
-                }
-                if (entry.getList() != null) {
-                    for (HeatPath path : entry.getList()) {
-                        if ((!(par1 instanceof IHeatConductor) || !path.conductors.contains(par1)) && (!(par1 instanceof IHeatSink) || path.target != par1)) {
-                            continue;
-                        }
-                        source.add(entry);
-                    }
-                }
-            }
-            return source;
-        }
-
-
-        public void clear() {
-            for (SystemTick<IHeatSource, HeatPath> entry : this.senderPath) {
-                List<HeatPath> list = entry.getList();
-                if (list != null) {
-                    for (HeatPath HeatPath : list) {
-                        HeatPath.conductors.clear();
-                    }
-                }
-
-            }
-            this.senderPath.clear();
-        }
-
-
-        public SystemTick<IHeatSource, HeatPath> get(IHeatSource tileEntity) {
-            for (SystemTick<IHeatSource, HeatPath> entry : this.senderPath) {
-                if (entry.getSource() == tileEntity) {
-                    return entry;
-                }
-            }
-            return null;
-        }
-
-    }
-
-
-    static class PathLogic {
-
-        final List<IHeatTile> tiles;
-
-        PathLogic() {
-            this.tiles = new ArrayList<>();
-        }
-
-        public boolean contains(final IHeatTile par1) {
-            return this.tiles.contains(par1);
-        }
-
-        public void add(final IHeatTile par1) {
-            this.tiles.add(par1);
-        }
-
-        public void remove(final IHeatTile par1) {
-            this.tiles.remove(par1);
-        }
-
-        public void clear() {
-            this.tiles.clear();
-        }
-
-        public IHeatTile getRepresentingTile() {
-            if (this.tiles.isEmpty()) {
-                return null;
-            }
-            return this.tiles.get(0);
-        }
-
-    }
-
-    class WaitingList {
-
-        final List<PathLogic> paths;
-
-        WaitingList() {
-            this.paths = new ArrayList<>();
-        }
-
-        public void onTileEntityAdded(final List<HeatTarget> around, final IHeatAcceptor tile) {
-            if (around.isEmpty() || this.paths.isEmpty()) {
-                this.createNewPath(tile);
-                return;
-            }
-            boolean found = false;
-            final List<PathLogic> logics = new ArrayList<>();
-            for (final PathLogic logic : this.paths) {
-                if (logic.contains(tile)) {
-                    found = true;
-                    if (tile instanceof IHeatConductor) {
-                        logics.add(logic);
-                    }
-                } else {
-                    for (final HeatTarget target : around) {
-                        if (logic.contains(target.tileEntity)) {
-                            found = true;
-                            logic.add(tile);
-                            if (target.tileEntity instanceof IHeatConductor) {
-                                logics.add(logic);
-                                break;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            if (logics.size() > 1 && tile instanceof IHeatConductor) {
-                final PathLogic newLogic = new PathLogic();
-                for (final PathLogic logic2 : logics) {
-                    this.paths.remove(logic2);
-                    for (final IHeatTile toMove : logic2.tiles) {
-                        if (!newLogic.contains(toMove)) {
-                            newLogic.add(toMove);
-                        }
-                    }
-                }
-                this.paths.add(newLogic);
-            }
-            if (!found) {
-                this.createNewPath(tile);
-            }
-        }
-
-        public void onTileEntityRemoved(final IHeatAcceptor par1) {
-            if (this.paths.isEmpty()) {
-                return;
-            }
-
-            List<IHeatTile> toRecalculate = new ArrayList<>();
-            for (int i = 0; i < this.paths.size(); i++) {
-                PathLogic logic = this.paths.get(i);
-                if (logic.contains(par1)) {
-                    logic.remove(par1);
-                    toRecalculate.addAll(logic.tiles);
-                    this.paths.remove(i--);
-                }
-            }
-            for (final IHeatTile tile : toRecalculate) {
-                this.onTileEntityAdded(HeatNetLocal.this.getValidReceivers(tile, true), (IHeatAcceptor) tile);
-            }
-        }
-
-        public void createNewPath(final IHeatTile par1) {
-            final PathLogic logic = new PathLogic();
-            logic.add(par1);
-            this.paths.add(logic);
-        }
-
-        public void clear() {
-            if (this.paths.isEmpty()) {
-                return;
-            }
-            this.paths.clear();
-        }
-
-        public boolean hasWork() {
-            return this.paths.size() > 0;
-        }
-
-        public List<IHeatTile> getPathTiles() {
-            final List<IHeatTile> tiles = new ArrayList<>();
-            for (PathLogic path : this.paths) {
-                final IHeatTile tile = path.getRepresentingTile();
-                if (tile != null) {
-                    tiles.add(tile);
-                }
-            }
-            return tiles;
-        }
-
-    }
 
 }

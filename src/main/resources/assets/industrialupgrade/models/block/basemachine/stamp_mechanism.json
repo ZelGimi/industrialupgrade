@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/stamp_mechanism_main",
+    "down" : "industrialupgrade:blocks/stamp_mechanism_all",
+    "up" : "industrialupgrade:blocks/stamp_mechanism_all",
+    "north" : "industrialupgrade:blocks/stamp_mechanism_main",
+    "east" : "industrialupgrade:blocks/stamp_mechanism_all",
+    "south" : "industrialupgrade:blocks/stamp_mechanism_all",
+    "west" : "industrialupgrade:blocks/stamp_mechanism_all"
+  }
+}

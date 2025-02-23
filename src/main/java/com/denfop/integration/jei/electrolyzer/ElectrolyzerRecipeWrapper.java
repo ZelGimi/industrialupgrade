@@ -42,12 +42,14 @@ public class ElectrolyzerRecipeWrapper implements IRecipeWrapper {
         stack.add(this.inputstack);
         return Collections.singletonList(stack);
     }
+
     public List<ItemStack> getItemInputs() {
         List<ItemStack> stack = new ArrayList<>();
         stack.add(new ItemStack(IUItem.cathode));
         stack.add(new ItemStack(IUItem.anode));
         return stack;
     }
+
     public List<FluidStack> getOutputs() {
         List<FluidStack> lst = new ArrayList<>();
         lst.add(this.outputstack);

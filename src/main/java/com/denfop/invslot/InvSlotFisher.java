@@ -1,18 +1,24 @@
 package com.denfop.invslot;
 
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotFisher extends InvSlot {
+public class InvSlotFisher extends InvSlot implements ITypeSlot {
 
     private int stackSizeLimit;
 
     public InvSlotFisher(TileEntityInventory base1) {
-        super(base1, "input2", InvSlot.Access.I, 1, InvSlot.InvSide.ANY);
+        super(base1, TypeItemSlot.INPUT, 1);
         this.stackSizeLimit = 1;
     }
 
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.FISHING_ROD;
+    }
 
     public boolean accepts(ItemStack itemStack, final int index) {
         return itemStack.getItem() instanceof ItemFishingRod;

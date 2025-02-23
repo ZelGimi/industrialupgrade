@@ -2,13 +2,12 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.transport.tiles.TileEntitySCable;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
+import com.denfop.utils.ModUtils;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -18,7 +17,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockSCable implements ITeBlock {
+public enum BlockSCable implements IMultiTileBlock {
 
     scable(TileEntitySCable.class, -1),
     ;
@@ -40,7 +39,7 @@ public enum BlockSCable implements ITeBlock {
 
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -50,25 +49,26 @@ public enum BlockSCable implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
+
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    @Override
+    public Material getMaterial() {
+        return IMultiTileBlock.CABLE;
+    }
 
     public float getHardness() {
         return 0.5F;
-    }
-
-    @Nonnull
-    public Material getMaterial() {
-        return Material.CLOTH;
-    }
-
-    public boolean isTransparent() {
-        return true;
     }
 
 
@@ -107,30 +107,19 @@ public enum BlockSCable implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.noFacings;
-    }
-
-    @Override
-    public float getExplosionResistance() {
-        return 0.5f;
+        return ModUtils.noFacings;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Pickaxe;
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Pickaxe;
     }
 
     @Override
     @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return EnumRarity.COMMON;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override

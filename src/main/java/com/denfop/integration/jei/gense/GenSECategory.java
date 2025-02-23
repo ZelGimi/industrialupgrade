@@ -2,8 +2,8 @@ package com.denfop.integration.jei.gense;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockSolarEnergy;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -58,7 +58,6 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
     @Override
     public void drawExtras(final Minecraft mc) {
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(120, 31, 176, 14, 24 + 1, 16);
 
     }
 
@@ -69,7 +68,7 @@ public class GenSECategory extends Gui implements IRecipeCategory<GenSEWrapper> 
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, false, 65, 31);
+        isg.init(0, false, 37, 26);
         isg.set(0, recipes.getOutput());
     }
 

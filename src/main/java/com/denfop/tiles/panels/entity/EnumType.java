@@ -10,8 +10,8 @@ public enum EnumType {
     EARTH(0, 0, 1.5, 1.5, 0.65, 2, "earth"),
     NETHER(1, 0, 1, 1, 0.65, 3, "nether"),
     END(0, 1, 1, 1, 0.65, 4, "end"),
-    NIGHT(0, 0, 1, 2, 0.65, 5, "Advanced"),
-    DAY(0, 0, 2, 1, 0.65, 6, "Advanced"),
+    NIGHT(0, 0, 1, 1.5, 0.65, 5, "night"),
+    DAY(0, 0, 1.5, 1, 0.65, 6, "sun"),
     RAIN(0, 0, 1, 1, 1.5, 7, "rain");
     public final double coefficient_day;
     public final double coefficient_night;
@@ -20,6 +20,7 @@ public enum EnumType {
     public final ResourceLocation texture;
     public final double coefficient_nether;
     public final double coefficient_end;
+    private final String nameType;
 
     EnumType(
             double coefficient_nether,
@@ -40,6 +41,7 @@ public enum EnumType {
                 Constants.MOD_ID,
                 "textures/gui/GUI" + name + "SolarPanel.png"
         );
+        this.nameType = name;
     }
 
     public static EnumType getFromID(final int ID) {
@@ -47,4 +49,7 @@ public enum EnumType {
         return values[ID % values.length];
     }
 
+    public String getNameType() {
+        return nameType;
+    }
 }

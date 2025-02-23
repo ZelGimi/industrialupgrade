@@ -2,12 +2,15 @@ package com.denfop.gui;
 
 import com.denfop.Constants;
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentCustomizeSize;
+import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.ComponentRenderInventory;
 import com.denfop.componets.ComponentSoundButton;
+import com.denfop.componets.EnumTypeComponentSlot;
 import com.denfop.container.ContainerElectrolyzer;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,52 +30,82 @@ public class GuiElectrolyzer extends GuiIU<ContainerElectrolyzer> {
     public GuiElectrolyzer(ContainerElectrolyzer container1) {
         super(container1);
         this.container = container1;
-        this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 33, 4, EnumTypeComponent.SOUND_BUTTON,
+        componentList.clear();
+        inventory = new GuiComponent(this, 7, 119, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.ALL))
+        );
+        this.slots = new GuiComponent(this, 0, 0, getComponent(),
+                new Component<>(new ComponentRenderInventory(EnumTypeComponentSlot.SLOTS_UPGRADE))
+        );
+        componentList.add(inventory);
+        componentList.add(slots);
+        this.addComponent(new GuiComponent(this, 15, 102, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 122, 102, EnumTypeComponent.ENERGY_WEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
+        this.addElement(TankGauge.createNormal(this, 12, 44, container.base.getFluidTank(0)));
+        this.addElement(TankGauge.createNormal(this, 74, 6, container.base.getFluidTank(1)));
+        this.addElement(TankGauge.createNormal(this, 74, 63, container.base.getFluidTank(2)));
+        this.addComponent(new GuiComponent(this, 16, 26, EnumTypeComponent.FLUID_PART6,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 35, 85, EnumTypeComponent.FLUID_PART8,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 35, 45, EnumTypeComponent.FLUID_PART3,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 95, 25, EnumTypeComponent.FLUID_PART3,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 95, 85, EnumTypeComponent.FLUID_PART8,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 95, 25, EnumTypeComponent.FLUID_PART8,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 95, 85, EnumTypeComponent.FLUID_PART3,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.addComponent(new GuiComponent(this, 106, 32, EnumTypeComponent.FLUID_PART9,
+                new Component<>(new ComponentCustomizeSize(3, 54))
+        ));
+        this.addComponent(new GuiComponent(this, 106, 26, EnumTypeComponent.FLUID_PART9,
+                new Component<>(new ComponentCustomizeSize(3, 5))
+        ));
+        this.addComponent(new GuiComponent(this, 106, 92, EnumTypeComponent.FLUID_PART9,
+                new Component<>(new ComponentCustomizeSize(3, 6))
+        ));
+        this.ySize = 200;
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
-        TankGauge.createNormal(this, 12, 6, container.base.fluidTank[0]).drawForeground(par1, par2);
-        TankGauge.createNormal(this, 74, 6, container.base.fluidTank[1]).drawForeground(par1, par2);
-        TankGauge.createNormal(this, 106, 6, container.base.fluidTank[2]).drawForeground(par1, par2);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
-        new AdvArea(this, 38, 68, 68, 78)
-                .withTooltip(tooltip2)
-                .drawForeground(par1, par2);
+
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return background;
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine_main1.png");
+    }
+
+    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.bindTexture();
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         if (this.container.base != null) {
-            this.mc.getTextureManager().bindTexture(new ResourceLocation("ic2", "textures/gui/infobutton.png"));
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
             this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
         }
-        this.drawBackground();
-        this.mc.getTextureManager().bindTexture(background);
-        int energy = (int) ((this.container.base.energy.getEnergy() / this.container.base.energy.getCapacity()) * 29);
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        energy = Math.min(energy, 29);
-        this.drawTexturedModalRect(xOffset + 39, yOffset + 69, 177, 104, energy, 9);
-        TankGauge.createNormal(this, 12, 6, container.base.fluidTank[0]).drawBackground(xOffset, yOffset);
-        TankGauge.createNormal(this, 74, 6, container.base.fluidTank[1]).drawBackground(xOffset, yOffset);
-        TankGauge.createNormal(this, 106, 6, container.base.fluidTank[2]).drawBackground(xOffset, yOffset);
 
 
     }

@@ -1,8 +1,8 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockmodulemachine_bottom",
-    "down" : "industrialupgrade:blocks/blockmodulemachine_bottom",
+    "particle" : "industrialupgrade:blocks/blockmodulemachine_side",
+    "down" : "industrialupgrade:blocks/blockmodulemachine_side",
     "up" : "industrialupgrade:blocks/blockmodulemachine_side",
     "north" : "industrialupgrade:blocks/blockmodulemachine_main",
     "east" : "industrialupgrade:blocks/blockmodulemachine_side",

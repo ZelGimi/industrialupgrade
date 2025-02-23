@@ -2,7 +2,7 @@ package com.denfop.tiles.wiring;
 
 
 import com.denfop.Config;
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 
 public enum EnumElectricBlock {
     BATBOX("iu.blockBatBox.name", 1, 32, 40000, false, 0, 5, -1),

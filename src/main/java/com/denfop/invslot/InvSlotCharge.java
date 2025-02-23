@@ -1,21 +1,26 @@
 package com.denfop.invslot;
 
-import com.denfop.tiles.base.IInventorySlotHolder;
-import ic2.api.energy.tile.IChargingSlot;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.core.util.StackUtil;
+import com.denfop.ElectricItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.item.IEnergyItem;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotCharge extends InvSlot implements IChargingSlot {
+public class InvSlotCharge extends InvSlot {
 
     public int tier;
     private boolean ignore;
 
-    public InvSlotCharge(IInventorySlotHolder<?> base1, int tier) {
-        super(base1, "charge", Access.IO, 1, InvSide.ANY);
+    public InvSlotCharge(IAdvInventory<?> base1, int tier) {
+        super(base1, TypeItemSlot.INPUT_OUTPUT, 1);
         this.tier = tier;
         this.ignore = false;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.BATTERY;
     }
 
     public void setIgnore(final boolean ignore) {
@@ -23,7 +28,7 @@ public class InvSlotCharge extends InvSlot implements IChargingSlot {
     }
 
     public boolean accepts(ItemStack stack, int index) {
-        return stack.getItem() instanceof IElectricItem && ElectricItem.manager.charge(stack, 1.0D / 0.0, this.tier, true,
+        return stack.getItem() instanceof IEnergyItem && ElectricItem.manager.charge(stack, 1.0D / 0.0, this.tier, true,
                 true
         ) > 0.0D;
     }
@@ -33,7 +38,7 @@ public class InvSlotCharge extends InvSlot implements IChargingSlot {
             return 0;
         } else {
             ItemStack stack = this.get(0);
-            return StackUtil.isEmpty(stack) ? 0.0D : ElectricItem.manager.charge(stack, amount, this.tier, this.ignore, false);
+            return ModUtils.isEmpty(stack) ? 0.0D : ElectricItem.manager.charge(stack, amount, this.tier, this.ignore, false);
         }
     }
 

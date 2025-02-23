@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "ic2:blocks/machine/uu/scanner_leftright",
-    "down" : "ic2:blocks/machine/uu/scanner_bottom",
-    "up" : "ic2:blocks/machine/uu/scanner_top",
-    "north" : "ic2:blocks/machine/uu/scanner_front",
-    "east" : "ic2:blocks/machine/uu/scanner_leftright",
-    "south" : "ic2:blocks/machine/uu/scanner_back",
-    "west" : "ic2:blocks/machine/uu/scanner_leftright"
+    "particle" : "industrialupgrade:blocks/scanner_bottom",
+    "down" : "industrialupgrade:blocks/scanner_bottom",
+    "up" : "industrialupgrade:blocks/scanner_bottom",
+    "north" : "industrialupgrade:blocks/scanner_front",
+    "east" : "industrialupgrade:blocks/scanner_leftright",
+    "south" : "industrialupgrade:blocks/scanner_leftright",
+    "west" : "industrialupgrade:blocks/scanner_leftright"
   }
 }

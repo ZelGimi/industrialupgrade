@@ -2,9 +2,9 @@ package com.denfop.api.sytem;
 
 public interface ISource extends IEmitter {
 
-    double getOffered();
+    double canProvideEnergy();
 
-    void draw(double var1);
+    void extractEnergy(double var1);
 
     double getPerEnergy();
 

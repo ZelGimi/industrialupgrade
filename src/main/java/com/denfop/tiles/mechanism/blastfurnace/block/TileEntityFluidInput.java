@@ -1,13 +1,14 @@
 package com.denfop.tiles.mechanism.blastfurnace.block;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
+import com.denfop.Localization;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.componets.Fluids;
 import com.denfop.invslot.InvSlot;
 import com.denfop.tiles.mechanism.blastfurnace.api.IBlastInputFluid;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import ic2.core.init.Localization;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
@@ -23,16 +24,24 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
 
     public TileEntityFluidInput() {
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = fluids.addTank("tank", 10000, InvSlot.Access.I, InvSlot.InvSide.ANY,
+        this.tank = fluids.addTank("tank", 10000, InvSlot.TypeItemSlot.INPUT,
                 Fluids.fluidPredicate(FluidRegistry.WATER)
         );
 
     }
 
+    public IMultiTileBlock getTeBlock() {
+        return BlockBlastFurnace.blast_furnace_input_fluid;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.blastfurnace;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
-        super.addInformation(stack, tooltip, advanced);
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
                 IUItem.blastfurnace,
@@ -40,7 +49,7 @@ public class TileEntityFluidInput extends TileEntityMultiBlockElement implements
                 0
         ).getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + Localization.translate(Ic2Items.ForgeHammer.getUnlocalizedName()));
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 

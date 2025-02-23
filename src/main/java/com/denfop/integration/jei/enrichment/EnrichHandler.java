@@ -12,11 +12,13 @@ public class EnrichHandler {
 
     private static final List<EnrichHandler> recipes = new ArrayList<>();
     private final ItemStack input, input1, output;
+    private final int radAmount;
 
-    public EnrichHandler(ItemStack input, ItemStack input1, ItemStack output) {
+    public EnrichHandler(ItemStack input, ItemStack input1, ItemStack output, final int radAmount) {
         this.input = input;
         this.input1 = input1;
         this.output = output;
+        this.radAmount = radAmount;
     }
 
     public static List<EnrichHandler> getRecipes() {
@@ -26,8 +28,8 @@ public class EnrichHandler {
         return recipes;
     }
 
-    public static EnrichHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output) {
-        EnrichHandler recipe = new EnrichHandler(input, input1, output);
+    public static EnrichHandler addRecipe(ItemStack input, ItemStack input1, ItemStack output, final int radAmount) {
+        EnrichHandler recipe = new EnrichHandler(input, input1, output, radAmount);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -52,13 +54,16 @@ public class EnrichHandler {
             addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
-                    container.getOutput().items.get(0)
+                    container.getOutput().items.get(0), container.output.metadata.getInteger("rad_amount")
             );
 
 
         }
     }
 
+    public int getRadAmount() {
+        return radAmount;
+    }
 
     public ItemStack getInput() { // Получатель входного предмета рецепта.
         return input;

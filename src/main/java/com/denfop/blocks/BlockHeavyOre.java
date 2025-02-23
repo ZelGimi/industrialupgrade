@@ -4,6 +4,7 @@ package com.denfop.blocks;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -27,7 +28,7 @@ import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Objects;
 
-public class BlockHeavyOre extends BlockCore implements IModelRegister {
+public class BlockHeavyOre extends BlockCore implements IModelRegister, IMineral {
 
     public static final PropertyEnum<Type> VARIANT = PropertyEnum.create("type", Type.class);
 
@@ -36,11 +37,11 @@ public class BlockHeavyOre extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("heavyore");
         setCreativeTab(IUCore.OreTab);
-        setHardness(3.0F);
+        setHardness(1.0F);
         setResistance(5.0F);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.Magnetite));
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", 1);
     }
 
     @Nonnull
@@ -73,6 +74,11 @@ public class BlockHeavyOre extends BlockCore implements IModelRegister {
     @Nonnull
     public IBlockState getStateMeta(int meta) {
         return getDefaultState().withProperty(VARIANT, Type.values()[meta]);
+    }
+
+    @Override
+    public Block getBlock() {
+        return this;
     }
 
     @Nonnull

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "ic2:blocks/machine/processing/advanced/centrifuge_leftright",
-    "down" : "ic2:blocks/machine/processing/advanced/centrifuge_bottom",
-    "up" : "ic2:blocks/machine/processing/advanced/centrifuge_top",
-    "north" : "ic2:blocks/machine/processing/advanced/centrifuge_front",
-    "east" : "ic2:blocks/machine/processing/advanced/centrifuge_leftright",
-    "south" : "ic2:blocks/machine/processing/advanced/centrifuge_back",
-    "west" : "ic2:blocks/machine/processing/advanced/centrifuge_leftright"
+    "particle" : "industrialupgrade:blocks/centrifuge_front",
+    "down" : "industrialupgrade:blocks/centrifuge_side",
+    "up" : "industrialupgrade:blocks/centrifuge_top",
+    "north" : "industrialupgrade:blocks/centrifuge_front",
+    "east" : "industrialupgrade:blocks/centrifuge_side",
+    "south" : "industrialupgrade:blocks/centrifuge_side",
+    "west" : "industrialupgrade:blocks/centrifuge_side"
   }
 }

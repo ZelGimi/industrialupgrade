@@ -1,12 +1,8 @@
 {
-  "parent" : "block/cube",
+  "parent" : "industrialupgrade:block/solar_side",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/Quantum Solar Side",
-    "down" : "industrialupgrade:blocks/Quantum Solar Bottom",
-    "up" : "industrialupgrade:blocks/Quantum Solar Top",
-    "north" : "industrialupgrade:blocks/Quantum Solar Side",
-    "east" : "industrialupgrade:blocks/Quantum Solar Side",
-    "south" : "industrialupgrade:blocks/Quantum Solar Side",
-    "west" : "industrialupgrade:blocks/Quantum Solar Side"
+    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:blocks/solar_panels/quantum/glass",
+    "side" : "industrialupgrade:blocks/solar_panels/quantum/side"
   }
 }

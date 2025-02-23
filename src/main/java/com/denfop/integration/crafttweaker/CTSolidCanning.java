@@ -124,8 +124,8 @@ public class CTSolidCanning {
                     "cannerbottle",
                     new BaseMachineRecipe(
                             new Input(
-                                    new IC2RecipeInput(this.container),
-                                    new IC2RecipeInput(this.fill)
+                                    new InputItemStack(this.container),
+                                    new InputItemStack(this.fill)
                             ),
                             new RecipeOutput(null, getItemStack(this.output))
                     )

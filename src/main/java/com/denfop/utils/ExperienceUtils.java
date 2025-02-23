@@ -12,11 +12,21 @@ public class ExperienceUtils {
     }
 
     public static void addPlayerXP(EntityPlayer player, int amount) {
-        int experience = getPlayerXP(player) + amount;
-        player.experienceTotal = experience;
-        player.experienceLevel = getLevelForExperience(experience);
-        int expForLevel = getExperienceForLevel(player.experienceLevel);
-        player.experience = (float) (experience - expForLevel) / (float) player.xpBarCap();
+        player.addScore(amount);
+        int i = Integer.MAX_VALUE - player.experienceTotal;
+
+        if (amount > i)
+        {
+            amount = i;
+        }
+
+        player.experience += (float)amount / (float)player.xpBarCap();
+
+        for (player.experienceTotal += amount; player.experience >= 1.0F; player.experience /= (float)player.xpBarCap())
+        {
+            player.experience = (player.experience - 1.0F) * (float)player.xpBarCap();
+            player.addExperienceLevel(1);
+        }
     }
 
     public static int addPlayerXP1(EntityPlayer player, int amount) {

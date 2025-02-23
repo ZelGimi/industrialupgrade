@@ -1,11 +1,11 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.container.ContainerBaseDoubleMolecular;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,12 +14,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMolecular> {
+public class GuiDoubleMolecularTransformer extends GuiCore<ContainerBaseDoubleMolecular> {
 
     public final ContainerBaseDoubleMolecular container;
 
     public GuiDoubleMolecularTransformer(ContainerBaseDoubleMolecular container1) {
-        super(container1, 220, 193);
+        super(container1, 238, 225);
         this.container = container1;
     }
 
@@ -31,9 +31,9 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
     @Override
     protected void drawForegroundLayer(final int mouseX, final int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
-        new AdvArea(this, 7, 3, 58, 17).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
-                "iu.molecular_info3")).drawForeground(mouseX, mouseY);
-        new AdvArea(this, 180, 3, 195, 17)
+        new AdvArea(this, 21, 29, 58, 41).withTooltip(Localization.translate("iu.molecular_info") + "\n" + Localization.translate(
+                "iu.molecular_info3") + " " + (this.container.base.queue ? "x64" : "x1")).drawForeground(mouseX, mouseY);
+        new AdvArea(this, 165, 22, 232, 47)
                 .withTooltip(Localization.translate("iu.molecular_info1") + "\n" + Localization.translate(
                         "iu.molecular_info2"))
                 .drawForeground(
@@ -41,6 +41,13 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                         mouseY
                 );
 
+    }
+
+    protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        String name = Localization.translate(this.container.base.getName());
+        this.drawXCenteredString((int) ((this.xSize / 2)), 5, name, ModUtils.convertRGBcolorToInt(255, 255, 255), false);
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -51,52 +58,47 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
         String energyPerOperation = Localization.translate("gui.MolecularTransformer.energyPerOperation") + ": ";
         String progress = Localization.translate("gui.MolecularTransformer.progress") + ": ";
 
-        this.fontRenderer.drawString(Localization.translate("button.changemode"), this.guiLeft + 17, this.guiTop + 6,
-                ModUtils.convertRGBcolorToInt(23, 119, 167)
-        );
-        this.fontRenderer.drawString(Localization.translate("button.rg"), this.guiLeft + 186, this.guiTop + 6,
-                ModUtils.convertRGBcolorToInt(23, 119, 167)
-        );
-        double chargeLevel = (15.0D * this.container.base.getProgress());
+        this.bindTexture();
+        double chargeLevel = (20.0D * this.container.base.getProgress());
+        if (!this.container.base.queue) {
+            drawTexturedModalRect(this.guiLeft + 22, this.guiTop + 30, 26, 245, 16, 11);
 
+        } else {
+            drawTexturedModalRect(this.guiLeft + 42, this.guiTop + 30, 26, 245, 16, 11);
+
+        }
         final MachineRecipe output3 = this.container.base.output;
         if (chargeLevel > 0 && !this.container.base.inputSlot.isEmpty() && output3 != null && this.container.base.outputSlot.canAdd(
                 output3.getRecipe().getOutput().items)) {
             if (!this.container.base.queue) {
                 this.mc.getTextureManager().bindTexture(getTexture());
-                drawTexturedModalRect(this.guiLeft + 23, this.guiTop + 48, 221, 7, 10, (int) chargeLevel);
+                drawTexturedModalRect(this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
                 this.mc.getTextureManager().bindTexture(getTexture());
 
                 this.fontRenderer.drawString(input + this.container.base.inputSlot.get().getDisplayName(),
-                        this.guiLeft + 60, this.guiTop + 25, 4210752
+                        this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
                 this.fontRenderer.drawString(input + this.container.base.inputSlot.get(1).getDisplayName(),
-                        this.guiLeft + 60, this.guiTop + 36, 4210752
+                        this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
 
-                this.fontRenderer.drawString(output + output3.getRecipe().output.items.get(0).getDisplayName(), this.guiLeft + 60,
-                        this.guiTop + 47, 4210752
+                this.fontRenderer.drawString(output + output3.getRecipe().output.items.get(0).getDisplayName(), this.guiLeft + 73,
+                        this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
                 this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
                                 "energy")) +
-                                " EU",
-                        this.guiLeft + 60, this.guiTop + 58, 4210752
+                                " EF",
+                        this.guiLeft + 73, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
                 if (this.container.base.getProgress() * 100 <= 100) {
                     this.fontRenderer.drawString(
                             progress + floor_double(this.container.base.getProgress() * 100) + "%",
-                            this.guiLeft + 60, this.guiTop + 69, 4210752
-                    );
-                }
-                if (this.container.base.getProgress() * 100 > 100) {
-                    this.fontRenderer.drawString(
-                            progress + floor_double(100) + "%",
-                            this.guiLeft + 60, this.guiTop + 69, 4210752
+                            this.guiLeft + 73, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                 }
                 this.fontRenderer.drawString(
-                        "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
-                        this.guiLeft + 60, this.guiTop + 80, 4210752
+                        "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
+                        this.guiLeft + 73, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
 
             } else {
@@ -120,44 +122,39 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
                 size = Math.min(size, output2.getMaxStackSize());
                 if (this.container.base.outputSlot.get().isEmpty() || this.container.base.outputSlot.get().getCount() < 64) {
                     this.mc.getTextureManager().bindTexture(getTexture());
-                    drawTexturedModalRect(this.guiLeft + 23, this.guiTop + 48, 221, 7, 10, (int) chargeLevel);
+                    drawTexturedModalRect(this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
                     this.mc.getTextureManager().bindTexture(getTexture());
                     this.fontRenderer.drawString(input + col * size + "x" + this.container.base.inputSlot.get().getDisplayName(),
-                            this.guiLeft + 60, this.guiTop + 25, 4210752
+                            this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
                     this.fontRenderer.drawString(input + col1 * size + "x" + this.container.base.inputSlot
                                     .get(1)
                                     .getDisplayName(),
-                            this.guiLeft + 60, this.guiTop + 36, 4210752
+                            this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
                     this.fontRenderer.drawString(output + output2.getCount() * size + "x" + output3.getRecipe().output.items
                                     .get(0)
                                     .getDisplayName()
-                            , this.guiLeft + 60,
-                            this.guiTop + 47, 4210752
+                            , this.guiLeft + 73,
+                            this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                     this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
-                                    "energy") * size) + " EU",
-                            this.guiLeft + 60, this.guiTop + 58, 4210752
+                                    "energy") * size) + " EF",
+                            this.guiLeft + 73, this.guiTop + 85, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
                     if (this.container.base.getProgress() * 100 <= 100) {
                         this.fontRenderer.drawString(
                                 progress + floor_double(this.container.base.getProgress() * 100) + "%",
-                                this.guiLeft + 60, this.guiTop + 69, 4210752
-                        );
-                    }
-                    if (this.container.base.getProgress() * 100 > 100) {
-                        this.fontRenderer.drawString(
-                                progress + floor_double(100) + "%",
-                                this.guiLeft + 60, this.guiTop + 69, 4210752
+                                this.guiLeft + 73, this.guiTop + 95, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                     }
 
+
                     this.fontRenderer.drawString(
-                            "EU/t: " + ModUtils.getString(this.container.base.differenceenergy),
-                            this.guiLeft + 60, this.guiTop + 80, 4210752
+                            "EF/t: " + ModUtils.getString(this.container.base.differenceenergy),
+                            this.guiLeft + 73, this.guiTop + 105, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
                 }
@@ -210,12 +207,14 @@ public class GuiDoubleMolecularTransformer extends GuiIC2<ContainerBaseDoubleMol
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 180 && x <= 197 && y >= 3 && y <= 17) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
+        if (x >= 219 && x <= 232 && y >= 25 && y <= 45) {
+            new PacketUpdateServerTile(this.container.base, 0);
         }
-
-        if (x >= 7 && x <= 60 && y >= 3 && y <= 17) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
+        if (x >= 165 && x <= 178 && y >= 25 && y <= 45) {
+            new PacketUpdateServerTile(this.container.base, -1);
+        }
+        if (x >= 22 && x <= 57 && y >= 30 && y <= 40) {
+            new PacketUpdateServerTile(this.container.base, 1);
         }
 
     }

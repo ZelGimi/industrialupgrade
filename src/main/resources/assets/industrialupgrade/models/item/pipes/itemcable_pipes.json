@@ -1,6 +1,7 @@
 {
-  "parent" : "ic2:item/default",
-  "textures" : {
-    "layer0" : "industrialupgrade:items/itemcable_pipes"
+	"parent" : "industrialupgrade:item/default",
+	"textures" : {
+	  "layer0" : "industrialupgrade:items/stainless_steel_item_pipe_output"
+	}
   }
-}
+  

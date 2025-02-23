@@ -52,7 +52,7 @@ public class GenLavaHandler {
 
     public static void initRecipes() {
 
-        addRecipe(20000, new FluidStack(FluidRegistry.LAVA, 1000));
+        addRecipe(80000, new FluidStack(FluidRegistry.LAVA, 1000));
 
 
     }

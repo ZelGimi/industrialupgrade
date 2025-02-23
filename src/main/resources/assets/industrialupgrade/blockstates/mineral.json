@@ -1,0 +1,99 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "arsenopyrite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/arsenopyrite"
+        }
+      },
+      "braggite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/braggite"
+        }
+      },
+      "wolframite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/wolframite"
+        }
+      },
+      "germanite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/germanite"
+        }
+      },
+      "coltan" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/coltan"
+        }
+      },
+      "crocoite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/crocoite"
+        }
+      },
+      "xenotime" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/xenotime"
+        }
+      },
+      "iridosmine" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/iridosmine"
+        }
+      },
+      "theophrastite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/theophrastite"
+        }
+      },
+      "tetrahedrite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/tetrahedrite"
+        }
+      },
+      "fergusonite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/fergusonite"
+        }
+      },
+      "celestine" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/celestine"
+        }
+      },
+      "zircon" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/zircon"
+        }
+      },
+      "manganese" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/manganese_ore"
+        }
+      },
+      "iridium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/iridium_ore"
+        }
+      },
+      "germanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/germanium_ore"
+        }
+      },
+      "crystal" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/crystal_ore"
+        }
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

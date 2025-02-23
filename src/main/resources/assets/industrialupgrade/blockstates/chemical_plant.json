@@ -1,0 +1,54 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "chemical_plant_controller" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_controller"
+      },
+      "chemical_plant_exchanger" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_exchanger"
+      },
+      "chemical_plant_casing" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_casing"
+      },
+      "chemical_plant_rig" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_rig"
+      },
+      "chemical_plant_generator" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_generator"
+      },
+      "chemical_plant_transport" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_transport"
+      },
+      "chemical_plant_waste" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_waste"
+      },
+      "chemical_plant_separate" : {
+        "model" : "industrialupgrade:chemical_plant/chemical_plant_separate"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

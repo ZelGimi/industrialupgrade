@@ -2,9 +2,9 @@ package com.denfop.integration.jei.painting;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -63,20 +63,18 @@ public class PaintingCategory extends Gui implements IRecipeCategory<PaintingWra
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        energy++;
-        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
-        int xScale = 14 * progress / 100;
-        if (xScale > 14) {
+
+
+        int xScale = (int) (9 * progress / 100D);
+        if (xScale >= 9) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
 
 
-        drawTexturedModalRect(72, 32, 178, 33, xScale + 1, 13);
-        drawTexturedModalRect(22, 54 + 14 - energylevel, 176, 14 - energylevel,
-                14, energylevel
-        );
+        drawTexturedModalRect(76, 35, 179, 34, xScale, 13);
+
 
     }
 
@@ -87,11 +85,11 @@ public class PaintingCategory extends Gui implements IRecipeCategory<PaintingWra
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 10, 30);
+        isg.init(0, true, 25, 32);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 32, 30);
+        isg.init(1, true, 47, 32);
         isg.set(1, recipes.getInput1());
-        isg.init(2, false, 102, 30);
+        isg.init(2, false, 102, 32);
         final ItemStack item = recipes.getOutput();
         final NBTTagCompound nbt = ModUtils.nbt(item);
         nbt.setString("mode", recipes.nbt.getString("mode"));

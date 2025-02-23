@@ -1,5 +1,5 @@
 {
-  "parent" : "ic2:item/default",
+  "parent" : "industrialupgrade:item/default",
   "textures" : {
     "layer0" : "industrialupgrade:items/blueprint_533"
   }

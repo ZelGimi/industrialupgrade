@@ -2,8 +2,8 @@ package com.denfop.integration.jei.genobs;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -65,20 +65,16 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
 
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
-        int xScale = 16 * progress / 100;
-        if (xScale > 16) {
+
+        int xScale = 32 * progress / 100;
+        if (xScale > 32) {
             progress = 0;
         }
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(20, 52 + 14 - energylevel, 176, 14 - energylevel,
-                14, energylevel
-        );
 
-
-        drawTexturedModalRect(96, 29, 176, 32, xScale, 16);
+        drawTexturedModalRect(83, 35, 177, 41, xScale, 19);
 
 
     }
@@ -93,11 +89,11 @@ public class GenObsCategory extends Gui implements IRecipeCategory<GenObsWrapper
 
         IGuiFluidStackGroup fff = layout.getFluidStacks();
         IGuiItemStackGroup isg = layout.getItemStacks();
-        fff.init(0, true, 39, 7, 12, 47, 10000, true, null);
+        fff.init(0, true, 42, 20, 12, 47, 10000, true, null);
         fff.set(0, recipes.getInput1());
-        fff.init(1, true, 63, 7, 12, 47, 10000, true, null);
+        fff.init(1, true, 65, 20, 12, 47, 10000, true, null);
         fff.set(1, recipes.getInput2());
-        isg.init(2, false, 125, 28);
+        isg.init(2, false, 121, 35);
         isg.set(2, recipes.getOutput());
     }
 

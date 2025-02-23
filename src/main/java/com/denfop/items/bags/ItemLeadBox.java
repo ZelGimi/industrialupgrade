@@ -2,19 +2,16 @@ package com.denfop.items.bags;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUPotion;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.container.ContainerLeadBox;
-import com.denfop.items.IHandHeldInventory;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.items.reactors.IRadioactiveItemType;
 import com.denfop.items.reactors.ItemBaseRod;
+import com.denfop.register.Register;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.IC2Potion;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.reactor.ItemReactorUranium;
-import ic2.core.item.type.IRadioactiveItemType;
-import ic2.core.util.StackUtil;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -39,7 +36,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegister {
+public class ItemLeadBox extends Item implements IItemStackInventory, IModelRegister {
 
     private final int slots;
 
@@ -52,7 +49,7 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
         this.internalName = internalName;
         this.slots = 27;
         IUCore.proxy.addIModelRegister(this);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
+        Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -65,14 +62,12 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
     }
 
     public boolean canInsert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        HandHeldLeadBox box = (HandHeldLeadBox) getInventory(player, stack);
+        ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
         NBTTagCompound nbt = ModUtils.nbt(stack);
         boolean rod = nbt.getBoolean("rod");
         if (stack1.getItem() instanceof IRadioactiveItemType) {
             if (!rod) {
-                if (stack1.getItem() instanceof ItemReactorUranium || stack1.getItem() instanceof ItemBaseRod) {
-                    return false;
-                }
+                return !(stack1.getItem() instanceof ItemBaseRod);
             } else {
                 return box.canAdd(stack1);
             }
@@ -81,7 +76,7 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
     }
 
     public void insert(EntityPlayer player, ItemStack stack, ItemStack stack1) {
-        HandHeldLeadBox box = (HandHeldLeadBox) getInventory(player, stack);
+        ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
         box.add(stack1);
         box.markDirty();
     }
@@ -127,8 +122,8 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
 
         if (nbt.getBoolean("open")) {
             int slot_id = nbt.getInteger("slot_inventory");
-            if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !StackUtil.isEmpty(stack) && player.openContainer instanceof ContainerLeadBox) {
-                HandHeldLeadBox toolbox = ((ContainerLeadBox) player.openContainer).base;
+            if (slot_id != itemSlot && !player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerLeadBox) {
+                ItemStackLeadBox toolbox = ((ContainerLeadBox) player.openContainer).base;
                 if (toolbox.isThisContainer(stack)) {
                     toolbox.saveAsThrown(stack);
                     player.closeScreen();
@@ -144,14 +139,14 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
                     final ItemStack stack1 = player.inventory.getStackInSlot(i);
                     if (stack1.getItem() instanceof IRadioactiveItemType) {
                         if (!rod) {
-                            if (stack1.getItem() instanceof ItemReactorUranium || stack1.getItem() instanceof ItemBaseRod) {
+                            if (stack1.getItem() instanceof ItemBaseRod) {
                                 continue;
                             }
                         }
-                        HandHeldLeadBox box = (HandHeldLeadBox) getInventory(player, stack);
+                        ItemStackLeadBox box = (ItemStackLeadBox) getInventory(player, stack);
                         if (box.canAdd(stack1)) {
                             box.add(stack1);
-                            player.removePotionEffect(IC2Potion.radiation);
+                            player.removePotionEffect(IUPotion.radiation);
                             player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
                             player.inventoryContainer.detectAndSendChanges();
                             box.markDirty();
@@ -192,24 +187,24 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
     @Nonnull
     public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 
-        ItemStack stack = StackUtil.get(player, hand);
-        if (IC2.platform.isSimulating() && !player.isSneaking()) {
+        ItemStack stack = ModUtils.get(player, hand);
+        if (IUCore.proxy.isSimulating() && !player.isSneaking()) {
             save(stack, player);
-            IUCore.proxy.launchGui(player, this.getInventory(player, stack));
+            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
-        } else if (IC2.platform.isSimulating() && player.isSneaking()) {
+        } else if (IUCore.proxy.isSimulating() && player.isSneaking()) {
             NBTTagCompound nbt = ModUtils.nbt(stack);
             boolean rod = !nbt.getBoolean("rod");
             nbt.setBoolean("rod", rod);
             if (rod) {
-                IC2.platform.messagePlayer(
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.GREEN + Localization.translate("message.text.mode_no_instrument") + ": "
                                 + Localization.translate("message.leadbox.enable")
                 );
             } else {
-                IC2.platform.messagePlayer(
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.RED + Localization.translate("message.text.mode_no_instrument") + ": "
                                 + Localization.translate("message.leadbox.disable")
@@ -227,8 +222,8 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
     }
 
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && !StackUtil.isEmpty(stack) && player.openContainer instanceof ContainerLeadBox) {
-            HandHeldLeadBox toolbox = ((ContainerLeadBox) player.openContainer).base;
+        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerLeadBox) {
+            ItemStackLeadBox toolbox = ((ContainerLeadBox) player.openContainer).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAndThrow(stack);
                 player.closeScreen();
@@ -239,8 +234,8 @@ public class ItemLeadBox extends Item implements IHandHeldInventory, IModelRegis
     }
 
 
-    public IHasGui getInventory(EntityPlayer player, ItemStack stack) {
-        return new HandHeldLeadBox(player, stack, this.slots);
+    public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
+        return new ItemStackLeadBox(player, stack, this.slots);
     }
 
 

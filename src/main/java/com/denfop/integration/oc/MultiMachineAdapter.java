@@ -1,6 +1,6 @@
 package com.denfop.integration.oc;
 
-import com.denfop.tiles.base.TileEntityMultiMachine;
+import com.denfop.tiles.base.TileMultiMachine;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -12,9 +12,9 @@ import net.minecraft.item.ItemStack;
 
 public class MultiMachineAdapter extends AbstractManagedEnvironment implements ManagedPeripheral, NamedBlock {
 
-    private final TileEntityMultiMachine multiMachine;
+    private final TileMultiMachine multiMachine;
 
-    public MultiMachineAdapter(TileEntityMultiMachine multiMachine) {
+    public MultiMachineAdapter(TileMultiMachine multiMachine) {
         this.multiMachine = multiMachine;
         this.setNode(Network.newNode(this, Visibility.Network).withComponent("multiMachine", Visibility.Network).create());
     }
@@ -26,7 +26,7 @@ public class MultiMachineAdapter extends AbstractManagedEnvironment implements M
                 "getHeatMachine",
                 "getCapacity",
                 "getEnergy",
-                "getTier",
+                "getTierItem",
                 "getEnergyConsume",
                 "getOperationLength"
         };
@@ -36,6 +36,7 @@ public class MultiMachineAdapter extends AbstractManagedEnvironment implements M
 
         switch (method) {
             case "getProgressFromIndex":
+
                 if (args.isInteger(0)) {
                     return new Object[]{multiMachine.multi_process.getProgress(args.checkInteger(0))};
                 }
@@ -59,7 +60,7 @@ public class MultiMachineAdapter extends AbstractManagedEnvironment implements M
                 return new Object[]{multiMachine.energy.getCapacity()};
             case "getEnergy":
                 return new Object[]{multiMachine.energy.getEnergy()};
-            case "getTier":
+            case "getTierItem":
                 return new Object[]{multiMachine.energy.getSinkTier()};
             case "getEnergyConsume":
                 return new Object[]{multiMachine.multi_process.energyConsume};

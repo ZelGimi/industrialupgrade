@@ -1,16 +1,20 @@
 package com.denfop.tiles.base;
 
-import com.denfop.api.inv.IHasGui;
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
+import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerDigger;
 import com.denfop.gui.GuiDigger;
 import com.denfop.invslot.InvSlotDigger;
 import com.denfop.invslot.InvSlotInput;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -20,10 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui {
+public class TileEntityAutoDigger extends TileEntityInventory {
 
     public final InvSlotOutput outputSlot;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public final InvSlotInput inputslot;
     public final InvSlotDigger slot_upgrade;
     public boolean mac_enabled = false;
@@ -39,23 +43,36 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
         this.chance = 0;
         this.col = 1;
         this.furnace = false;
-        this.outputSlot = new InvSlotOutput(this, "output", 48);
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 500000, 14));
-        this.inputslot = new InvSlotInput(this, "input", 16);
+        this.outputSlot = new InvSlotOutput(this, 48);
+        this.energy = this.addComponent(Energy.asBasicSink(this, 500000, 14));
+        this.inputslot = new InvSlotInput(this, 16);
 
         this.energyconsume = 500;
         this.consume = 500;
         this.slot_upgrade = new InvSlotDigger(this);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.5));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
+
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.excavator.info"));
         tooltip.add(Localization.translate("iu.excavator.info1"));
+
+        super.addInformation(stack,tooltip);
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.auto_digger;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
     }
 
     @Override
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
         this.slot_upgrade.update();
         this.inputslot.update();
@@ -63,7 +80,7 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
     }
 
     @Override
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
         for (int k = 0; k < this.col; k++) {
             for (int i = 0; i < this.inputslot.size(); i++) {
@@ -93,23 +110,23 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
     }
 
     @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
     }
 
-    protected boolean isNormalCube() {
+    public boolean isNormalCube() {
         return false;
     }
 
-    protected boolean doesSideBlockRendering(EnumFacing side) {
+    public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
 
-    protected boolean isSideSolid(EnumFacing side) {
+    public boolean isSideSolid(EnumFacing side) {
         return false;
     }
 
-    protected boolean clientNeedsExtraModelInfo() {
+    public boolean clientNeedsExtraModelInfo() {
         return true;
     }
 
@@ -128,9 +145,5 @@ public class TileEntityAutoDigger extends TileEntityInventory implements IHasGui
         return new GuiDigger(getGuiContainer(entityPlayer));
     }
 
-    @Override
-    public void onGuiClosed(final EntityPlayer entityPlayer) {
-
-    }
 
 }

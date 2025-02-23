@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by translate decompiler)
-//
-
 package com.denfop.blocks;
 
 import com.denfop.Constants;
@@ -23,9 +18,15 @@ import java.util.Map;
 public class IUFluid extends Fluid implements IFluidModelProvider {
 
     private static final ResourceLocation fluidLocation = new ResourceLocation(Constants.MOD_ID, "fluid");
+    private final FluidName name;
 
     public IUFluid(FluidName name) {
         super(name.getName(), name.getTextureLocation(false), name.getTextureLocation(true));
+        this.name = name;
+    }
+
+    public FluidName getFluid() {
+        return name;
     }
 
     @SideOnly(Side.CLIENT)

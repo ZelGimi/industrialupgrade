@@ -3,11 +3,10 @@ package com.denfop.items.book;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.api.inv.IHasGui;
-import com.denfop.items.IHandHeldInventory;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.util.StackUtil;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -25,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-public class ItemBook extends Item implements IHandHeldInventory, IModelRegister {
+public class ItemBook extends Item implements IItemStackInventory, IModelRegister {
 
 
     private final String internalName;
@@ -36,7 +35,7 @@ public class ItemBook extends Item implements IHandHeldInventory, IModelRegister
         this.setMaxStackSize(64);
         this.internalName = internalName;
         IUCore.proxy.addIModelRegister(this);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
+        Register.registerItem((Item) this, IUCore.getIdentifier(internalName)).setUnlocalizedName(internalName);
     }
 
     @SideOnly(Side.CLIENT)
@@ -75,9 +74,8 @@ public class ItemBook extends Item implements IHandHeldInventory, IModelRegister
     @Nonnull
     public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 
-        ItemStack stack = StackUtil.get(player, hand);
-        if (IC2.platform.isSimulating()) {
-            IUCore.proxy.launchGui(player, this.getInventory(player, stack));
+        if (IUCore.proxy.isSimulating()) {
+            player.openGui(IUCore.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 
         }
@@ -87,8 +85,8 @@ public class ItemBook extends Item implements IHandHeldInventory, IModelRegister
 
     public boolean onDroppedByPlayer(@Nonnull ItemStack stack, EntityPlayer player) {
 
-        if (!player.getEntityWorld().isRemote && !StackUtil.isEmpty(stack) && player.openContainer instanceof ContainerBook) {
-            HandHeldBook toolbox = ((ContainerBook) player.openContainer).base;
+        if (!player.getEntityWorld().isRemote && !ModUtils.isEmpty(stack) && player.openContainer instanceof ContainerBook) {
+            ItemStackBook toolbox = ((ContainerBook) player.openContainer).base;
             if (toolbox.isThisContainer(stack)) {
                 toolbox.saveAsThrown(stack);
                 player.closeScreen();
@@ -98,8 +96,8 @@ public class ItemBook extends Item implements IHandHeldInventory, IModelRegister
     }
 
 
-    public IHasGui getInventory(EntityPlayer player, ItemStack stack) {
-        return new HandHeldBook(player, stack);
+    public IAdvInventory getInventory(EntityPlayer player, ItemStack stack) {
+        return new ItemStackBook(player, stack);
     }
 
 

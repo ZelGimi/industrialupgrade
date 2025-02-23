@@ -1,0 +1,5 @@
+{
+	"parent": "industrialupgrade:item/default",
+	"textures": {
+		"layer0": "industrialupgrade:items/aluminium_silicon_nugget"	}
+}

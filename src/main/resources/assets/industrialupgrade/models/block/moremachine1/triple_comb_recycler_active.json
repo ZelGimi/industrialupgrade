@@ -3,7 +3,7 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockcombrecycler1_side",
     "down" : "industrialupgrade:blocks/blockcombrecycler1_side",
-    "up" : "industrialupgrade:blocks/blockcombrecycler1_side",
+    "up" : "industrialupgrade:blocks/blockcombrecycler1_top_active",
     "north" : "industrialupgrade:blocks/blockcombrecycler1_main_active",
     "east" : "industrialupgrade:blocks/blockcombrecycler1_side",
     "south" : "industrialupgrade:blocks/blockcombrecycler1_side",

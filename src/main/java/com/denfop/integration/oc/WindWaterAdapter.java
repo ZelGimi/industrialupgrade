@@ -26,7 +26,7 @@ public class WindWaterAdapter extends AbstractManagedEnvironment implements Mana
         return new String[]{"getRotorSide",
                 "setRotorSide",
                 "getCoefficient",
-                "getLevel",
+                "getLevelGenerator",
                 "getAngle",
                 "getRotorDiameter",
                 "getAuto",
@@ -49,8 +49,8 @@ public class WindWaterAdapter extends AbstractManagedEnvironment implements Mana
                 return new Object[]{windMechanism.getRotorSide().name().toUpperCase()};
             case "getCoefficient":
                 return new Object[]{windMechanism.getCoefficient()};
-            case "getLevel":
-                return new Object[]{windMechanism.getLevel().name()};
+            case "getLevelGenerator":
+                return new Object[]{windMechanism.getLevelGenerator().name()};
             case "getAngle":
                 return new Object[]{windMechanism.getAngle()};
             case "getRotorDiameter":

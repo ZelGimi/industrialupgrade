@@ -1,0 +1,6 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/medium_current_converter_to_low"
+  }
+}

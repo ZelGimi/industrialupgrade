@@ -1,11 +1,12 @@
 package com.denfop.tiles.mechanism.blastfurnace.block;
 
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
+import com.denfop.Localization;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBlastFurnace;
 import com.denfop.tiles.mechanism.blastfurnace.api.IOtherBlastPart;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
-import ic2.core.init.Localization;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,8 +18,8 @@ public class TileEntityOtherPart extends TileEntityMultiBlockElement implements 
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
-        super.addInformation(stack, tooltip, advanced);
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.blastfurnace.info1"));
         tooltip.add(Localization.translate("iu.blastfurnace.info3") + Localization.translate(new ItemStack(
                 IUItem.blastfurnace,
@@ -26,9 +27,16 @@ public class TileEntityOtherPart extends TileEntityMultiBlockElement implements 
                 0
         ).getUnlocalizedName()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + Localization.translate(Ic2Items.ForgeHammer.getUnlocalizedName()));
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer).getDisplayName());
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 
+    public IMultiTileBlock getTeBlock() {
+        return BlockBlastFurnace.blast_furnace_part;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.blastfurnace;
+    }
 
 }

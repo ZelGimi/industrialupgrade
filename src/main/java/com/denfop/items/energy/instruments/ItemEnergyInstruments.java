@@ -1,33 +1,30 @@
 package com.denfop.items.energy.instruments;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.Recipes;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.api.upgrade.ILevelInstruments;
 import com.denfop.api.upgrade.IUpgradeWithBlackList;
 import com.denfop.api.upgrade.UpgradeItemInform;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemBlackListLoad;
+import com.denfop.audio.EnumSound;
 import com.denfop.items.EnumInfoUpgradeModules;
-import com.denfop.items.IHandHeldInventory;
-import com.denfop.items.energy.HandHeldUpgradeItem;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.items.energy.ItemStackUpgradeItem;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.register.Register;
 import com.denfop.utils.ExperienceUtils;
 import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.RetraceDiggingUtils;
-import ic2.api.info.Info;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.init.MainConfig;
-import ic2.core.util.ConfigUtil;
-import ic2.core.util.StackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -54,7 +51,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -72,10 +74,14 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
-public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IHandHeldInventory, IUpgradeWithBlackList,
-        IModelRegister {
+public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IItemStackInventory, IUpgradeWithBlackList,
+        IModelRegister, ILevelInstruments {
 
     private final String name;
     private final int transferLimit;
@@ -94,10 +100,8 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
     private final List<EnumOperations> operations;
     private final List<Item> item_tools;
     private final String name_type;
-    private final float fuel_balance = Math.round(10.0F * ConfigUtil.getFloat(
-            MainConfig.get(),
-            "balance/energy/generator/generator"
-    ));
+    private final float fuel_balance = 10.0F;
+    private final EnumTypeInstruments type;
     Set<String> toolType;
 
     public ItemEnergyInstruments(EnumTypeInstruments type, EnumVarietyInstruments variety, String name) {
@@ -107,6 +111,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         this.transferLimit = variety.getEnergy_transfer();
         this.maxCharge = variety.getCapacity();
         this.tier = variety.getTier();
+        this.type = type;
         this.efficiency = this.normalPower = variety.getNormal_power();
         this.bigHolePower = variety.getBig_holes();
         this.energyPerOperation = variety.getEnergyPerOperation();
@@ -120,10 +125,10 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         this.toolType = type.getToolType();
         this.operations = type.getListOperations();
         this.item_tools = type.getListItems();
-        setMaxDamage(27);
+        this.setMaxDamage(0);
         setCreativeTab(IUCore.EnergyTab);
         this.setUnlocalizedName(name);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         UpgradeSystem.system.addRecipe(this, type.getEnumInfoUpgradeModules());
 
@@ -136,6 +141,21 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                 "energy_tools" + "/" + name + extraName;
 
         return new ModelResourceLocation(loc, null);
+    }
+
+    @Override
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return type.getEnumInfoUpgradeModules();
+    }
+
+    @Override
+    public int getMaxLevel(final ItemStack stack) {
+        int maxLevel = ILevelInstruments.super.getMaxLevel(stack);
+        if (maxLevel == Integer.MAX_VALUE) {
+            return maxLevel;
+        }
+        maxLevel *= Math.max(0.5, 0.5 * tier);
+        return maxLevel;
     }
 
     public boolean onBlockDestroyed(
@@ -222,7 +242,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                                     }
                                 }
                                 if (generator) {
-                                    final int fuel = Info.itemInfo.getFuelValue(stack1, false);
+                                    final int fuel = ModUtils.getFuelValue(stack1, false);
                                     final boolean rec = fuel > 0;
                                     if (rec) {
                                         int amount = stack1.getCount();
@@ -341,13 +361,9 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         }
         if (IUCore.keyboard.isChangeKeyDown(player)) {
             int toolMode = readToolMode(itemStack) + 1;
-            if (!IC2.platform.isRendering()) {
-                IUCore.audioManager.playOnce(
-                        player,
-                        com.denfop.audio.PositionSpec.Hand,
-                        "Tools/toolChange.ogg",
-                        true,
-                        IC2.audioManager.getDefaultVolume()
+            if (!IUCore.proxy.isRendering()) {
+                worldIn.playSound(null, player.posX, player.posY, player.posZ, EnumSound.toolchange.getSoundEvent(),
+                        SoundCategory.MASTER, 1F, 1
                 );
             }
             if (toolMode >= this.operations.size()) {
@@ -355,8 +371,8 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             }
             saveToolMode(itemStack, toolMode);
             EnumOperations operation = this.operations.get(toolMode);
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(
+            if (IUCore.proxy.isSimulating()) {
+                IUCore.proxy.messagePlayer(
                         player,
                         TextFormatting.GREEN + Localization.translate("message.text.mode") + ": "
                                 + operation.getTextFormatting() + operation.getName_mode()
@@ -409,16 +425,16 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                 return getModelLocation1(name, nbt.getString("mode"));
             }
 
-            return getModelLocation1(name_type, nbt.getString("mode"));
+            return getModelLocation1(name, "_" + nbt.getString("mode"));
 
         });
         String[] mode = {"", "Zelen", "Demon", "Dark", "Cold", "Ender", "Ukraine", "Fire", "Snow", "Taiga", "Desert", "Emerald"};
         for (final String s : mode) {
-            if (s.equals("")) {
+            if (!s.isEmpty()) {
+                ModelBakery.registerItemVariants(this, getModelLocation1(name, "_" + s));
+            } else {
                 ModelBakery.registerItemVariants(this, getModelLocation1(name, s));
             }
-            ModelBakery.registerItemVariants(this, getModelLocation1(name_type, s));
-
         }
 
     }
@@ -427,17 +443,24 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
     public void onUpdate(@Nonnull ItemStack itemStack, @Nonnull World world, @Nonnull Entity entity, int slot, boolean par5) {
         NBTTagCompound nbt = ModUtils.nbt(itemStack);
 
-        if (!UpgradeSystem.system.hasInMap(itemStack)) {
+        if (world.getWorldTime() % 20 == 0 && !UpgradeSystem.system.hasInMap(itemStack)) {
             nbt.setBoolean("hasID", false);
             MinecraftForge.EVENT_BUS.post(new EventItemBlackListLoad(world, this, itemStack, itemStack.getTagCompound()));
         }
 
         if (entity instanceof EntityPlayer) {
             if (IUCore.keyboard.isBlackListModeViewKeyDown((EntityPlayer) entity)) {
-                if (IC2.platform.isSimulating() && !itemStack.isEmpty() && ((EntityPlayer) entity)
+                if (IUCore.proxy.isSimulating() && !itemStack.isEmpty() && ((EntityPlayer) entity)
                         .getHeldItem(EnumHand.MAIN_HAND)
                         .isItemEqual(itemStack)) {
-                    IUCore.proxy.launchGui((EntityPlayer) entity, this.getInventory((EntityPlayer) entity, itemStack));
+                    ((EntityPlayer) entity).openGui(
+                            IUCore.instance,
+                            1,
+                            world,
+                            (int) entity.posX,
+                            (int) entity.posY,
+                            (int) entity.posZ
+                    );
 
                 }
             }
@@ -453,7 +476,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             ElectricItem.manager.charge(stack, 2.147483647E9D, 2147483647, true, false);
             nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(stack);
-            ItemStack itemstack = new ItemStack(this, 1, 27);
+            ItemStack itemstack = new ItemStack(this, 1);
             nbt = ModUtils.nbt(itemstack);
             nbt.setInteger("ID_Item", Integer.MAX_VALUE);
             items.add(itemstack);
@@ -470,7 +493,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
     ) {
         return !this.toolType.contains(toolClass) ?
                 super.getHarvestLevel(stack, toolClass, player, blockState)
-                : this.toolMaterial.getHarvestLevel();
+                : (this.type == EnumTypeInstruments.VAJRA ? 20 : this.toolMaterial.getHarvestLevel());
     }
 
     public boolean hitEntity(@Nonnull ItemStack stack, @Nonnull EntityLivingBase damagee, @Nonnull EntityLivingBase damager) {
@@ -489,8 +512,26 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         return false;
     }
 
-    public double getMaxCharge(ItemStack itemStack) {
+    public double getMaxEnergy(ItemStack itemStack) {
         return this.maxCharge;
+    }
+
+    public boolean showDurabilityBar(final ItemStack stack) {
+        return true;
+    }
+
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return ModUtils.convertRGBcolorToInt(33, 91, 199);
+    }
+
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.min(
+                Math.max(
+                        1 - ElectricItem.manager.getCharge(stack) / ElectricItem.manager.getMaxCharge(stack),
+                        0.0
+                ),
+                1.0
+        );
     }
 
     @SideOnly(Side.CLIENT)
@@ -530,7 +571,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         }
         float energy = energy(par1ItemStack, upgradeItemInforms);
 
-        par3List.add(Localization.translate("iu.instruments.info2") + (int) energy + " EU");
+        par3List.add(Localization.translate("iu.instruments.info2") + (int) energy + " EF");
 
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             par3List.add(Localization.translate("press.lshift"));
@@ -551,14 +592,19 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
         }
         ModUtils.mode(par1ItemStack, par3List);
+        final int level = this.getLevel(par1ItemStack);
+        final int maxLevel = this.getMaxLevel(par1ItemStack);
+        final int experience = this.getExperience(par1ItemStack);
+        par3List.add(Localization.translate("iu.tier")+" "+  level);
+        par3List.add(Localization.translate("iu.space_colony_experience")+  experience + "/" + maxLevel);
         super.addInformation(par1ItemStack, worldIn, par3List, flagIn);
     }
 
-    public int getTier(ItemStack itemStack) {
-        return this.tier;
+    public short getTierItem(ItemStack itemStack) {
+        return (short) this.tier;
     }
 
-    public double getTransferLimit(ItemStack itemStack) {
+    public double getTransferEnergy(ItemStack itemStack) {
         return this.transferLimit;
     }
 
@@ -590,6 +636,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(stack);
         int speed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EFFICIENCY, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EFFICIENCY, stack, upgradeItemInforms).number : 0;
+        speed += UpgradeSystem.system.getUpgradeFromList(stack).get(0);
         return !ElectricItem.manager.canUse(stack, this.energy(stack, upgradeItemInforms))
                 ? 0.0F
                 : (canHarvestBlock(state, stack) ? (this.efficiency + (int) (this.efficiency * 0.2 * speed)) : 1.0F);
@@ -703,7 +750,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         int z = pos.getZ();
         byte dig_depth = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.DIG_DEPTH, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.DIG_DEPTH, stack, upgradeItemInforms).number : 0);
-
+        dig_depth += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(4));
         switch (mop.sideHit.ordinal()) {
             case 0:
             case 1:
@@ -721,7 +768,10 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
         boolean lowPower = false;
         boolean silktouch = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
-        int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+        int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) + UpgradeSystem.system
+                .getUpgradeFromList(stack)
+                .get(2);
+        fortune = Math.min(3, fortune);
 
         int Yy;
         Yy = yRange > 0 ? yRange - 1 : 0;
@@ -835,6 +885,14 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
         return true;
     }
 
+    public EnumTypeInstruments getType() {
+        return type;
+    }
+
+    public List<EnumOperations> getOperations() {
+        return operations;
+    }
+
     public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull EntityPlayer player) {
         EnumOperations operations = this.operations.get(readToolMode(stack));
         World world = player.getEntityWorld();
@@ -860,7 +918,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
                 byte aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
-
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms, smelter, comb, mac, generator,
                         random, black_list, list
                 );
@@ -873,6 +931,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 if (player.isSneaking()) {
                     if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
                         return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms,
@@ -901,7 +960,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
-
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 if (player.isSneaking()) {
                     if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
                         return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms,
@@ -929,6 +988,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                 }
                 aoe = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms) ?
                         UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number : 0);
+                aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                 if (player.isSneaking()) {
                     if (!mop.typeOfHit.equals(RayTraceResult.Type.MISS)) {
                         return break_block(world, block, mop, aoe, player, pos, stack, upgradeItemInforms,
@@ -1046,7 +1106,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                             ?
                             UpgradeSystem.system.getModules(EnumInfoUpgradeModules.AOE_DIG, stack, upgradeItemInforms).number
                             : 0);
-
+                    aoe += (byte) ((int) UpgradeSystem.system.getUpgradeFromList(stack).get(3));
                     return break_block(
                             world,
                             block,
@@ -1290,7 +1350,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                 for (int Zz = z - 1; Zz <= z + 1; Zz++) {
 
                     int ore = NBTTagCompound.getInteger("ore");
-                    if (ore < 16) {
+                    if (ore < 40) {
                         BlockPos pos_block = new BlockPos(Xx, Yy, Zz);
                         IBlockState state = world.getBlockState(pos_block);
                         Block localBlock = state.getBlock();
@@ -1415,6 +1475,10 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
             }
 
             if (!world.isRemote) {
+
+                if (ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos) == -1) {
+                    return false;
+                }
                 List<ItemStack> drops1 = null;
                 if (shears && block instanceof IShearable) {
                     drops1 = ((IShearable) block).onSheared(stack, world, pos,
@@ -1422,13 +1486,10 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                     );
 
                 }
-                if (ForgeHooks.onBlockBreakEvent(world, world.getWorldInfo().getGameType(), (EntityPlayerMP) entity, pos) == -1) {
-                    return false;
-                }
-
 
                 if (block.removedByPlayer(state, world, pos, (EntityPlayerMP) entity, true)) {
                     block.onBlockDestroyedByPlayer(world, pos, state);
+                    this.addExperience(stack, 1);
                     if (!shears) {
                         block.harvestBlock(world, (EntityPlayerMP) entity, pos, state, null, stack);
                         NBTTagCompound nbt = ModUtils.nbt(stack);
@@ -1477,7 +1538,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                                         }
                                     }
                                     if (generator) {
-                                        final int fuel = Info.itemInfo.getFuelValue(stack1, false);
+                                        final int fuel = ModUtils.getFuelValue(stack1, false);
                                         final boolean rec = fuel > 0;
                                         if (rec) {
                                             int amount = stack1.getCount();
@@ -1516,7 +1577,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                     } else {
 
                         for (final ItemStack stack1 : drops1) {
-                            StackUtil.dropAsEntity(world, pos, stack1);
+                            ModUtils.dropAsEntity(world, pos, stack1);
                         }
                         final NBTTagCompound nbt = ModUtils.nbt(stack);
                         List<EntityItem> items = entity.getEntityWorld().getEntitiesWithinAABB(
@@ -1564,7 +1625,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                                         }
                                     }
                                     if (generator) {
-                                        final int fuel = Info.itemInfo.getFuelValue(stack1, false);
+                                        final int fuel = ModUtils.getFuelValue(stack1, false);
                                         final boolean rec = fuel > 0;
                                         if (rec) {
                                             int amount = stack1.getCount();
@@ -1613,7 +1674,7 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
                     }
                 }
                 EntityPlayerMP mpPlayer = (EntityPlayerMP) entity;
-                mpPlayer.connection.sendPacket(new SPacketBlockChange(world, new BlockPos(pos)));
+                mpPlayer.connection.sendPacket(new SPacketBlockChange(world, pos));
             } else {
                 if (block.removedByPlayer(state, world, pos, (EntityPlayer) entity, true)) {
                     block.onBlockDestroyedByPlayer(world, pos, state);
@@ -1637,9 +1698,10 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
     }
 
     @Override
-    public IHasGui getInventory(final EntityPlayer player, final ItemStack stack) {
-        return new HandHeldUpgradeItem(player, stack);
+    public IAdvInventory getInventory(final EntityPlayer player, final ItemStack stack) {
+        return new ItemStackUpgradeItem(player, stack);
     }
+
 
     public boolean check_list(Block block, int metaFromState, final List<String> blackList) {
 
@@ -1670,8 +1732,12 @@ public class ItemEnergyInstruments extends ItemTool implements IElectricItem, IH
 
 
     public float energy(ItemStack stack, final List<UpgradeItemInform> upgradeItemInforms) {
-        int energy1 = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms) ?
+        double energy1 = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms).number : 0;
+        final List<Integer> list = UpgradeSystem.system.getUpgradeFromList(stack);
+        if (!list.isEmpty()) {
+            energy1 += (list).get(1) / 6D;
+        }
         int toolMode = readToolMode(stack);
         float energy;
         EnumOperations operations = this.operations.get(toolMode);

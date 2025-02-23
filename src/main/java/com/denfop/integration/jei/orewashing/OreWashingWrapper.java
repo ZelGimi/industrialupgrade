@@ -1,12 +1,13 @@
 package com.denfop.integration.jei.orewashing;
 
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
@@ -62,9 +63,11 @@ public class OreWashingWrapper implements IRecipeWrapper {
     }
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        minecraft.fontRenderer.drawString(Localization.translate(FluidRegistry.WATER.getUnlocalizedName()) + ": " + temperature + " " + Localization.translate(
-                "ic2" +
-                        ".generic.text.mb"), 88, 44, 4210752);
+        minecraft.fontRenderer.drawString(FluidRegistry.WATER.getLocalizedName(new FluidStack(
+                FluidRegistry.WATER,
+                1
+        )) + ": " + temperature + " " + Localization.translate(
+                "iu" + ".generic.text.mb"), 88, 44, 4210752);
     }
 
 }

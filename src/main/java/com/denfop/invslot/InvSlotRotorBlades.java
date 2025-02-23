@@ -3,15 +3,16 @@ package com.denfop.invslot;
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemWindRod;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
+import com.denfop.items.ItemWindRotor;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotRotorBlades extends InvSlot implements ITypeSlot {
 
-    private final TileEntityWindGenerator windGenerator;
+    private final TileWindGenerator windGenerator;
 
-    public InvSlotRotorBlades(TileEntityWindGenerator windGenerator) {
-        super(windGenerator, "rotors_slot", InvSlot.Access.I, 1, InvSide.ANY);
+    public InvSlotRotorBlades(TileWindGenerator windGenerator) {
+        super(windGenerator, TypeItemSlot.INPUT, 1);
         this.setStackSizeLimit(64);
         this.windGenerator = windGenerator;
 
@@ -50,8 +51,12 @@ public class InvSlotRotorBlades extends InvSlot implements ITypeSlot {
                     this.windGenerator.getRotor().getLevel(),
                     this.get().getItemDamage()
             )) {
-                if (stack.getItemDamage() >= stack.getMaxDamage() * 0.25) {
-                    this.windGenerator.slot.damage((int) -(stack.getMaxDamage() * 0.25), 0);
+                if (((ItemWindRotor) stack.getItem()).getCustomDamage(stack) <= ((ItemWindRotor) stack.getItem()).getMaxCustomDamage(
+                        stack) * 0.75) {
+                    this.windGenerator.slot.damage(
+                            (int) (-1 * ((ItemWindRotor) stack.getItem()).getMaxCustomDamage(stack) * 0.25),
+                            0
+                    );
                     this.get().shrink(1);
                 }
             }

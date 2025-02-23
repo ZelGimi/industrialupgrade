@@ -14,7 +14,7 @@ public class InvSlotDigger extends InvSlot implements ITypeSlot {
     public int stackSizeLimit;
 
     public InvSlotDigger(TileEntityAutoDigger base1) {
-        super(base1, "input4", Access.I, 3, InvSide.ANY);
+        super(base1, TypeItemSlot.INPUT, 3);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }

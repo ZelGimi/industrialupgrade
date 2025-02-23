@@ -1,6 +1,6 @@
 package com.denfop.api.hadroncollider;
 
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface IMainController extends IColliderBuilding {
 
     void setPurifierBlock(IPurifierBlock purifierBlock);
 
-    AdvEnergy getEnergy();
+    Energy getEnergy();
 
     EnumLevelCollider getEnumLevel();
 

@@ -3,7 +3,7 @@ package com.denfop.items.armour;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import ic2.core.init.BlocksItems;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -32,7 +32,7 @@ public class BaseArmor extends ItemArmor implements IModelRegister {
         this.name = name;
         this.render = slot.getSlotIndex();
         this.armor_type = name_type;
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
     }
 

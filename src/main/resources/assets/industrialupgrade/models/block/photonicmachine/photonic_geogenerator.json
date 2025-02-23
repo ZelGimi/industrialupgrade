@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/photonic_geogenerator_main",
+    "down" : "industrialupgrade:blocks/photonic_geogenerator_sides",
+    "up" : "industrialupgrade:blocks/photonic_geogenerator_top",
+    "north" : "industrialupgrade:blocks/photonic_geogenerator_main",
+    "east" : "industrialupgrade:blocks/photonic_geogenerator_sides",
+    "south" : "industrialupgrade:blocks/photonic_geogenerator_sides",
+    "west" : "industrialupgrade:blocks/photonic_geogenerator_sides"
+  }
+}

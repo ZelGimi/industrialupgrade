@@ -1,11 +1,9 @@
 package com.denfop.integration.oc;
 
 import com.denfop.api.IStorage;
-import com.denfop.api.reactors.IAdvReactor;
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.tiles.base.TileEntityMultiMachine;
-import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
-import com.denfop.tiles.reactors.IChamber;
+import com.denfop.tiles.base.TileMultiMachine;
+import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import li.cil.oc.api.Driver;
 import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
@@ -29,9 +27,7 @@ public class OCIntegration {
     )
     public static void initOC() {
         Driver.add(new OCStorageAdapter());
-        Driver.add(new OCReactorAdapter());
         Driver.add(new OCWindWaterAdapter());
-        Driver.add(new OCReactorChamberAdapter());
         Driver.add(new OCQuantumQuarryAdapter());
         Driver.add(new OCMultiMachineAdapter());
     }
@@ -42,11 +38,11 @@ public class OCIntegration {
         }
 
         public Class<?> getTileEntityClass() {
-            return TileEntityMultiMachine.class;
+            return TileMultiMachine.class;
         }
 
         public AbstractManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-            return new MultiMachineAdapter((TileEntityMultiMachine) world.getTileEntity(pos));
+            return new MultiMachineAdapter((TileMultiMachine) world.getTileEntity(pos));
         }
 
     }
@@ -57,11 +53,11 @@ public class OCIntegration {
         }
 
         public Class<?> getTileEntityClass() {
-            return TileEntityBaseQuantumQuarry.class;
+            return TileBaseQuantumQuarry.class;
         }
 
         public AbstractManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-            return new QuantumQuarryAdapter((TileEntityBaseQuantumQuarry) world.getTileEntity(pos));
+            return new QuantumQuarryAdapter((TileBaseQuantumQuarry) world.getTileEntity(pos));
         }
 
     }
@@ -81,35 +77,6 @@ public class OCIntegration {
 
     }
 
-    public static class OCReactorAdapter extends DriverSidedTileEntity {
-
-        public OCReactorAdapter() {
-        }
-
-        public Class<?> getTileEntityClass() {
-            return IAdvReactor.class;
-        }
-
-        public AbstractManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-            return new ReactorAdapter((IAdvReactor) world.getTileEntity(pos));
-        }
-
-    }
-
-    public static class OCReactorChamberAdapter extends DriverSidedTileEntity {
-
-        public OCReactorChamberAdapter() {
-        }
-
-        public Class<?> getTileEntityClass() {
-            return IChamber.class;
-        }
-
-        public AbstractManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
-            return new ReactorChamberAdapter((IChamber) world.getTileEntity(pos));
-        }
-
-    }
 
     public static class OCWindWaterAdapter extends DriverSidedTileEntity {
 

@@ -1,12 +1,13 @@
 package com.denfop.componets;
 
-import com.denfop.IUItem;
+import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.TileEntityInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,6 @@ public class ComponentUpgrade extends AbstractComponent {
     public void setChange(final boolean change) {
         this.change = change;
     }
-
 
 
     public boolean hasUpgrade(TypeUpgrade typeUpgrade) {
@@ -90,6 +90,26 @@ public class ComponentUpgrade extends AbstractComponent {
             i++;
         }
         return nbt;
+    }
+
+    public CustomPacketBuffer updateComponent() {
+        CustomPacketBuffer buffer = new CustomPacketBuffer();
+        buffer.writeInt(this.listActiveUpgrade.size());
+        for (TypeUpgrade upgrade : this.listActiveUpgrade) {
+            buffer.writeInt(upgrade.ordinal());
+
+        }
+        return buffer;
+    }
+
+    @Override
+    public void onNetworkUpdate(final CustomPacketBuffer is) throws IOException {
+        super.onNetworkUpdate(is);
+        int i = is.readInt();
+        for (int j = 0; j < i; j++) {
+            this.listActiveUpgrade.add(TypeUpgrade.values()[is.readInt()]);
+        }
+
     }
 
     @Override

@@ -1,78 +1,27 @@
 package com.denfop.tiles.mechanism.generator.energy;
 
-import com.denfop.api.inv.IHasGui;
-import com.denfop.container.ContainerSolar;
-import com.denfop.gui.GuiSolar;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.denfop.IUItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.tiles.panels.entity.EnumSolarPanels;
+import com.denfop.tiles.panels.entity.TileSolarPanel;
 
-public class TileEntitySolarGenerator extends TileEntityBaseGenerator implements IHasGui {
+public class TileEntitySolarGenerator extends TileSolarPanel {
 
-    public boolean rain;
-    public boolean noSunWorld;
-    public boolean wetBiome;
-    public boolean skyIsVisible;
-    public boolean sunIsUp;
-    private Biome biome;
 
     public TileEntitySolarGenerator() {
-        super(1.0, 1, 32);
-    }
-
-    protected void onLoaded() {
-        super.onLoaded();
-        this.biome = this.world.getBiome(this.pos);
-        this.noSunWorld = this.world.provider.isNether();
-        this.updateSunVisibility();
-    }
-
-    public boolean gainEnergy() {
-        if (this.getWorld().provider.getWorldTime() % 40 == 0) {
-            this.updateSunVisibility();
-        }
-
-        if (this.sunIsUp && skyIsVisible && !this.rain) {
-            this.energy.addEnergy(1);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean gainFuel() {
-        return false;
-    }
-
-    public void updateSunVisibility() {
-        this.wetBiome = this.biome.getRainfall() > 0.0F;
-        this.rain = this.wetBiome && (this.world.isRaining() || this.world.isThundering());
-        this.sunIsUp = this.world.isDaytime();
-        this.skyIsVisible = this.world.canBlockSeeSky(this.pos.up()) &&
-                (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
-                        MapColor.AIR) && !this.noSunWorld;
+        super(EnumSolarPanels.SOLAR_PANEL_DEFAULT);
     }
 
 
-    public boolean needsFuel() {
-        return false;
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.solar_iu;
     }
 
-    @Override
-    public ContainerSolar getGuiContainer(final EntityPlayer player) {
-        return new ContainerSolar(this, player);
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public GuiSolar getGui(final EntityPlayer player, final boolean isAdmin) {
-        return new GuiSolar(getGuiContainer(player));
-    }
-
-    protected boolean delayActiveUpdate() {
-        return true;
-    }
 
 }

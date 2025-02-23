@@ -126,8 +126,8 @@ public class CTSynthesis {
         public void apply() {
             Recipes.recipes.addAdderRecipe("synthesis", new BaseMachineRecipe(
                     new Input(
-                            new IC2RecipeInput(this.container),
-                            new IC2RecipeInput(this.fill)
+                            new InputItemStack(this.container),
+                            new InputItemStack(this.fill)
                     ),
                     new RecipeOutput(nbt, getItemStack(this.output))
             ));

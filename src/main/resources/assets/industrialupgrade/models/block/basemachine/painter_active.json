@@ -3,10 +3,10 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockpainting_bottom",
     "down" : "industrialupgrade:blocks/blockpainting_bottom",
-    "up" : "industrialupgrade:blocks/blockpainting_top",
+    "up" : "industrialupgrade:blocks/blockpainting_bottom",
     "north" : "industrialupgrade:blocks/blockpainting_main_active",
-    "east" : "industrialupgrade:blocks/blockpainting_side",
-    "south" : "industrialupgrade:blocks/blockpainting_side",
-    "west" : "industrialupgrade:blocks/blockpainting_side"
+    "east" : "industrialupgrade:blocks/blockpainting_side_active",
+    "south" : "industrialupgrade:blocks/blockpainting_bottom",
+    "west" : "industrialupgrade:blocks/blockpainting_side_active"
   }
 }

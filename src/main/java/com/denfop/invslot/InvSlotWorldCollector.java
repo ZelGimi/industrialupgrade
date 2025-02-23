@@ -2,15 +2,15 @@ package com.denfop.invslot;
 
 
 import com.denfop.items.ItemSolidMatter;
-import com.denfop.tiles.base.TileEntityBaseWorldCollector;
+import com.denfop.tiles.base.TileBaseWorldCollector;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotWorldCollector extends InvSlot {
 
-    private final TileEntityBaseWorldCollector tile;
+    private final TileBaseWorldCollector tile;
 
-    public InvSlotWorldCollector(TileEntityBaseWorldCollector base1, String string) {
-        super(base1, string, InvSlot.Access.I, 1, InvSide.ANY);
+    public InvSlotWorldCollector(TileBaseWorldCollector base1) {
+        super(base1, TypeItemSlot.INPUT, 1);
         this.tile = base1;
     }
 
@@ -18,7 +18,7 @@ public class InvSlotWorldCollector extends InvSlot {
     public void put(final int index, final ItemStack content) {
         super.put(index, content);
         this.getmatter();
-        TileEntityBaseWorldCollector tile = (TileEntityBaseWorldCollector) base;
+        TileBaseWorldCollector tile = (TileBaseWorldCollector) base;
         if (tile.getRecipeOutput() != null) {
             tile.getrequiredmatter(tile.getRecipeOutput().getRecipe().getOutput());
         }
@@ -30,6 +30,7 @@ public class InvSlotWorldCollector extends InvSlot {
             if (!get(i).isEmpty()) {
                 int col = 5;
                 col -= Math.ceil(this.tile.matter_energy / 200);
+                col = Math.min(col, get(i).getCount());
                 this.tile.matter_energy += 200 * col;
                 this.consume(i, col);
 

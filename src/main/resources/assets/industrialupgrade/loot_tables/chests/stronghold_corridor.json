@@ -368,6 +368,103 @@
             }
           ]
         },
+		{
+					"type": "item",
+					"entryName": "copper_ingot",
+					"name": "industrialupgrade:itemingots",
+					"weight": 9,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 2,
+								"max": 6
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 21
+						}
+					]
+				},
+				{
+					"type": "item",
+					"entryName": "tin_ingot",
+					"name": "industrialupgrade:itemingots",
+					"weight": 8,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 1,
+								"max": 5
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 24
+						}
+					]
+				},
+				{
+					"type": "item",
+					"entryName": "iridium_ore",
+					"name": "industrialupgrade:crafting_elements",
+					"weight": 1,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 1,
+								"max": 4
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 275
+						}
+					]
+				},
+				{
+					"type": "item",
+					"entryName": "iridium_shard",
+					"name": "industrialupgrade:crafting_elements",
+					"weight": 8,
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 4,
+								"max": 14
+							}
+						},
+						{
+							"function": "set_data",
+							"data": 291
+						}
+					]
+				},
+
+				{
+					"type": "item",
+					"name": "industrialupgrade:bronze_helmet",
+					"weight": 3
+				},
+				{
+					"type": "item",
+					"name": "industrialupgrade:bronze_chestplate",
+					"weight": 3
+				},
+				{
+					"type": "item",
+					"name": "industrialupgrade:bronze_leggings",
+					"weight": 3
+				},
+				{
+					"type": "item",
+					"name": "industrialupgrade:bronze_boots",
+					"weight": 3
+				},
         {
           "type" : "empty",
           "weight" : 44

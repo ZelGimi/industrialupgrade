@@ -1,0 +1,13 @@
+{
+    "name": "Газовый смешиватель",
+    "icon": "industrialupgrade:gas_chamber",
+    "category": "industrialupgrade:primal_stage",
+    "pages": [
+        {
+            "type": "text",
+			"text": "Аналог электрических версий в примитивном эре. Капсулой с жидкостью по механизму. Забрать жидкость - ПКМ по механизму."
+		
+		}
+	
+    ]
+}

@@ -5,13 +5,13 @@ import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
+import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -138,33 +138,33 @@ public class CTAdvAlloySmelter {
             String ore2 = "";
             final NBTTagCompound nbt = ModUtils.nbt();
             nbt.setShort("temperature", this.temperature);
-            ItemStack stack = new IC2RecipeInput(this.container).getInputs().get(0);
-            int amount = new IC2RecipeInput(this.container).getAmount();
+            ItemStack stack = new InputItemStack(this.container).getInputs().get(0);
+            int amount = new InputItemStack(this.container).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            stack = new IC2RecipeInput(this.fill).getInputs().get(0);
-            int amount1 = new IC2RecipeInput(this.fill).getAmount();
+            stack = new InputItemStack(this.fill).getInputs().get(0);
+            int amount1 = new InputItemStack(this.fill).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore1 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            stack = new IC2RecipeInput(this.fill1).getInputs().get(0);
-            int amount2 = new IC2RecipeInput(this.fill1).getAmount();
+            stack = new InputItemStack(this.fill1).getInputs().get(0);
+            int amount2 = new InputItemStack(this.fill1).getAmount();
             if (OreDictionary.getOreIDs(stack).length > 0) {
                 ore2 = OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]);
             }
-            final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
             Recipes.recipes.addAdderRecipe("advalloysmelter", new BaseMachineRecipe(
                     new Input(
                             OreDictionary.getOres(ore).isEmpty()
-                                    ? new IC2RecipeInput(this.container)
-                                    : input.forOreDict(ore, amount),
+                                    ? new InputItemStack(this.container)
+                                    : input.getInput(ore, amount),
                             OreDictionary.getOres(ore1).isEmpty()
-                                    ? new IC2RecipeInput(this.fill)
-                                    : input.forOreDict(ore1, amount1),
+                                    ? new InputItemStack(this.fill)
+                                    : input.getInput(ore1, amount1),
                             OreDictionary.getOres(ore2).isEmpty()
-                                    ? new IC2RecipeInput(this.fill1)
-                                    : input.forOreDict(ore2, amount2)
+                                    ? new InputItemStack(this.fill1)
+                                    : input.getInput(ore2, amount2)
                     ),
                     new RecipeOutput(nbt, getItemStack(this.output))
             ));

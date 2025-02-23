@@ -1,0 +1,51 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "geothermal_controller" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_controller"
+      },
+      "geothermal_exchanger" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_exchanger"
+      },
+      "geothermal_casing" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_casing"
+      },
+      "geothermal_rig" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_rig"
+      },
+      "geothermal_generator" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_generator"
+      },
+      "geothermal_transport" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_transport"
+      },
+      "geothermal_waste" : {
+        "model" : "industrialupgrade:geothermalpump/geothermal_waste"
+      }
+    },
+    "facing" : {
+      "down" : {
+        "x" : 90
+      },
+      "up" : {
+        "x" : 270
+      },
+      "north" : {
+        "transform" : "forge:default-block"
+      },
+      "south" : {
+        "y" : 180
+      },
+      "west" : {
+        "y" : 270
+      },
+      "east" : {
+        "y" : 90
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

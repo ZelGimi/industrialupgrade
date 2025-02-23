@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0" : "industrialupgrade:models/lightning_rod",
+		"particle" : "industrialupgrade:models/lightning_rod"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 16, 10],
+			"faces": {
+				"north": {"uv": [9.25, 0, 10.25, 4], "texture": "#0"},
+				"east": {"uv": [9.25, 0, 10.25, 4], "texture": "#0"},
+				"south": {"uv": [9.25, 0, 10.25, 4], "texture": "#0"},
+				"west": {"uv": [9.25, 0, 10.25, 4], "texture": "#0"},
+				"up": {"uv": [8, 0, 9, 1], "texture": "#0"},
+				"down": {"uv": [8, 0, 9, 1], "texture": "#0"}
+			}
+		}
+	]
+}

@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.base.TileEntityCombinerSolidMatter;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerCombinerSolidMatter extends ContainerFullInv<TileEntityCombinerSolidMatter> {
 
     public ContainerCombinerSolidMatter(EntityPlayer entityPlayer, TileEntityCombinerSolidMatter tileEntity1) {
@@ -24,10 +22,5 @@ public class ContainerCombinerSolidMatter extends ContainerFullInv<TileEntityCom
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        return ret;
-    }
 
 }

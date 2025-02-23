@@ -5,14 +5,12 @@ import com.denfop.container.ContainerFullInv;
 import com.denfop.container.SlotInvSlot;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerTEConverter extends ContainerFullInv<TileTEConverter> {
 
-public class ContainerTEConverter extends ContainerFullInv<TileEntityTEConverter> {
-
-    public ContainerTEConverter(EntityPlayer entityPlayer, TileEntityTEConverter tileEntity) {
-        super(entityPlayer, tileEntity, 176);
+    public ContainerTEConverter(EntityPlayer entityPlayer, TileTEConverter tileEntity) {
+        super(entityPlayer, tileEntity, 176,183);
         for (int k = 0; k < 4; k++) {
-            addSlotToContainer(new SlotInvSlot(tileEntity.upgradeSlot, k, 152, 17 + k * 18));
+            addSlotToContainer(new SlotInvSlot(tileEntity.upgradeSlot, k, 151, 19 + k * 18));
         }
     }
 
@@ -21,18 +19,5 @@ public class ContainerTEConverter extends ContainerFullInv<TileEntityTEConverter
         super.onContainerClosed(playerIn);
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy2");
-        ret.add("energy");
-        ret.add("maxStorage2");
-        ret.add("capacity");
-        ret.add("perenergy");
-        ret.add("rf");
-        ret.add("tier");
-        ret.add("differenceenergy1");
-        ret.add("differenceenergy");
-        return ret;
-    }
 
 }

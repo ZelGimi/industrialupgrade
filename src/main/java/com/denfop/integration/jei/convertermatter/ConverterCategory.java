@@ -2,8 +2,8 @@ package com.denfop.integration.jei.convertermatter;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockConverterMatter;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -75,12 +75,12 @@ public class ConverterCategory extends Gui implements IRecipeCategory<ConverterW
         );
 
 
-        drawTexturedModalRect(76, 46, 176, 24, xScale, 15);
-        drawTexturedModalRect((168) - xScale, 46, 208 - xScale, 24, xScale, 15);
+        drawTexturedModalRect(78, 46, 176, 24, xScale, 16);
+        drawTexturedModalRect((166) - xScale, 46, 208 - xScale, 24, xScale, 16);
 
-        drawTexturedModalRect(113, 11 + 1, 176, 42, 17, xScale);
+        drawTexturedModalRect(114, 9 + 1, 177, 42, 16, xScale);
 
-        drawTexturedModalRect(113, 96 - xScale, 176, 74 - xScale, 17, xScale);
+        drawTexturedModalRect(114, 98 - xScale, 177, 74 - xScale, 16, xScale);
 
     }
 

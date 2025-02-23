@@ -3,6 +3,7 @@ package com.denfop.api.windsystem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 public interface IWindMechanism {
 
@@ -20,7 +21,7 @@ public interface IWindMechanism {
 
     ItemStack getItemStack();
 
-    EnumLevelGenerators getLevel();
+    EnumLevelGenerators getLevelGenerator();
 
     float getAngle();
 
@@ -54,4 +55,7 @@ public interface IWindMechanism {
 
     int getMinWindSpeed();
 
+    void update_generator(BlockPos pos);
+
+    void setWork(boolean work);
 }

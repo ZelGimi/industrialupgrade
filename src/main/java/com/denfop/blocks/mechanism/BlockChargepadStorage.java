@@ -3,25 +3,25 @@ package com.denfop.blocks.mechanism;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IElectricBlock;
-import com.denfop.tiles.base.TileEntityElectricBlock;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadAdvMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadBarMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadBatBox;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadCESU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadGraMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadHadrMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadKvrMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadMFE;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadPerMFSU;
-import com.denfop.tiles.wiring.chargepad.TileEntityChargepadUltMFSU;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.IStorage;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileElectricBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.wiring.chargepad.TileChargepadAdvMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadBarMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadBatBox;
+import com.denfop.tiles.wiring.chargepad.TileChargepadCESU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadGraMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadHadrMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadKvrMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadMFE;
+import com.denfop.tiles.wiring.chargepad.TileChargepadMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadPerMFSU;
+import com.denfop.tiles.wiring.chargepad.TileChargepadUltMFSU;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -29,20 +29,22 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-public enum BlockChargepadStorage implements ITeBlock, IElectricBlock {
-    adv_mfsu_chargepad(TileEntityChargepadAdvMFSU.class, 0),
-    ult_mfsu_chargepad(TileEntityChargepadUltMFSU.class, 1),
-    batbox_iu_chargepad(TileEntityChargepadBatBox.class, 2),
-    cesu_iu_chargepad(TileEntityChargepadCESU.class, 3),
-    mfe_iu_chargepad(TileEntityChargepadMFE.class, 4),
-    mfsu_iu_chargepad(TileEntityChargepadMFSU.class, 5),
-    per_mfsu_chargepad(TileEntityChargepadPerMFSU.class, 6),
-    bar_mfsu_chargepad(TileEntityChargepadBarMFSU.class, 7),
-    had_mfsu_chargepad(TileEntityChargepadHadrMFSU.class, 8),
-    gra_mfsu_chargepad(TileEntityChargepadGraMFSU.class, 9),
-    qua_mfsu_chargepad(TileEntityChargepadKvrMFSU.class, 10),
+public enum BlockChargepadStorage implements IMultiTileBlock, IElectricBlock {
+    adv_mfsu_chargepad(TileChargepadAdvMFSU.class, 0),
+    ult_mfsu_chargepad(TileChargepadUltMFSU.class, 1),
+    batbox_iu_chargepad(TileChargepadBatBox.class, 2),
+    cesu_iu_chargepad(TileChargepadCESU.class, 3),
+    mfe_iu_chargepad(TileChargepadMFE.class, 4),
+    mfsu_iu_chargepad(TileChargepadMFSU.class, 5),
+    per_mfsu_chargepad(TileChargepadPerMFSU.class, 6),
+    bar_mfsu_chargepad(TileChargepadBarMFSU.class, 7),
+    had_mfsu_chargepad(TileChargepadHadrMFSU.class, 8),
+    gra_mfsu_chargepad(TileChargepadGraMFSU.class, 9),
+    qua_mfsu_chargepad(TileChargepadKvrMFSU.class, 10),
 
     ;
 
@@ -70,8 +72,15 @@ public enum BlockChargepadStorage implements ITeBlock, IElectricBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -81,17 +90,34 @@ public enum BlockChargepadStorage implements ITeBlock, IElectricBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
     }
 
     @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
+    public boolean hasOtherVersion() {
+        return true;
+    }
+
+    @Override
+    public List<ItemStack> getOtherVersion(ItemStack stack) {
+        final List<ItemStack> list = new ArrayList<>();
+        stack = stack.copy();
+        if (this.dummyTe == null) {
+            try {
+                this.dummyTe = this.teClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        ModUtils.nbt(stack).setDouble(
+                "energy",
+                ((IStorage) (((IElectricBlock) this).getDummyElec())).getEUCapacity()
+        );
+        list.add(stack);
+        return list;
     }
 
     @Override
@@ -129,7 +155,7 @@ public enum BlockChargepadStorage implements ITeBlock, IElectricBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.downSideFacings;
+        return ModUtils.downSideFacings;
     }
 
     @Override
@@ -138,26 +164,15 @@ public enum BlockChargepadStorage implements ITeBlock, IElectricBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override
@@ -171,7 +186,7 @@ public enum BlockChargepadStorage implements ITeBlock, IElectricBlock {
     }
 
     @Override
-    public TileEntityElectricBlock getDummyElec() {
-        return (TileEntityElectricBlock) this.dummyTe;
+    public TileElectricBlock getDummyElec() {
+        return (TileElectricBlock) this.dummyTe;
     }
 }

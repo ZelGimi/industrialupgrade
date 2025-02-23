@@ -1,14 +1,12 @@
 package com.denfop.container;
 
 import com.denfop.Config;
-import com.denfop.tiles.base.TileEntityCombinerMatter;
+import com.denfop.tiles.base.TileCombinerMatter;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerCombinerMatter extends ContainerFullInv<TileCombinerMatter> {
 
-public class ContainerCombinerMatter extends ContainerFullInv<TileEntityCombinerMatter> {
-
-    public ContainerCombinerMatter(EntityPlayer entityPlayer, TileEntityCombinerMatter tileEntity1) {
+    public ContainerCombinerMatter(EntityPlayer entityPlayer, TileCombinerMatter tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         if (Config.amplifierSlot) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.amplifierSlot, 0, 72, 40));
@@ -20,17 +18,10 @@ public class ContainerCombinerMatter extends ContainerFullInv<TileEntityCombiner
         }
         for (int i = 0; i < 9; i++) {
             int count = i / 3;
-            addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlot, i, 12 + (i - (3 * count)) * 18, 16 + count * 18));
+            addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlot, i, 12 + (i - (3 * count)) * 18, 22 + count * 18));
 
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("scrap");
-        ret.add("fluidTank");
-        return ret;
-    }
 
 }

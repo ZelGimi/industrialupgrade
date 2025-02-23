@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/sun_solid_active",
+    "down" : "industrialupgrade:blocks/sun_solid_active",
+    "up" : "industrialupgrade:blocks/sun_solid_active",
+    "north" : "industrialupgrade:blocks/sun_solid_active",
+    "east" : "industrialupgrade:blocks/sun_solid_active",
+    "south" : "industrialupgrade:blocks/sun_solid_active",
+    "west" : "industrialupgrade:blocks/sun_solid_active"
+  }
+}

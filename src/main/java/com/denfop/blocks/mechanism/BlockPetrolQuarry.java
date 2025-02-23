@@ -2,14 +2,12 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.TileEntityOilPump;
-import ic2.api.item.ITeBlockSpecialItem;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.item.IMultiBlockItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.TileOilPump;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -22,9 +20,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
+public enum BlockPetrolQuarry implements IMultiTileBlock, IMultiBlockItem {
 
-    petrol_quarry(TileEntityOilPump.class, 0),
+    petrol_quarry(TileOilPump.class, 0),
 
 
     ;
@@ -52,8 +50,15 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -63,17 +68,10 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -111,7 +109,7 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -120,26 +118,15 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override
@@ -154,7 +141,7 @@ public enum BlockPetrolQuarry implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public boolean doesOverrideDefault(final ItemStack itemStack) {
+    public boolean hasUniqueRender(final ItemStack itemStack) {
         return false;
     }
 

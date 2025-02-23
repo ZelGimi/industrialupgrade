@@ -2,23 +2,23 @@ package com.denfop.gui;
 
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.gui.Area;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.IUpgradeItem;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.api.upgrades.UpgradeRegistry;
+import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerMultiMatter;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.IUpgradeItem;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.api.upgrade.UpgradeRegistry;
-import ic2.core.init.Localization;
+import com.denfop.tiles.base.TileMultiMatter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,12 +37,29 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
     public GuiMultiMatter(ContainerMultiMatter container1) {
         super(container1, container1.base.getStyle());
         this.container = container1;
-        this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");
-        this.amplifierLabel = Localization.translate("ic2.Matter.gui.info.amplifier");
-        addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
-        this.xSize = 200;
-        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+        this.progressLabel = Localization.translate("Matter.gui.info.progress");
+        this.amplifierLabel = Localization.translate("Matter.gui.info.amplifier");
+
+        this.addComponent(new GuiComponent(this, 4, 15, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
+
+        this.componentList.add(new GuiComponent(this, 117, 41, EnumTypeComponent.FLUID_PART,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.componentList.add(new GuiComponent(this, 45, 60, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return ((TileMultiMatter) this.getEntityBlock()).work ? Localization.translate("turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((TileMultiMatter) this.getEntityBlock()).work;
+                    }
+                })
         ));
     }
 
@@ -66,16 +83,14 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 182 && x <= 190 && y >= 6 && y <= 14) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
-        }
+
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
 
         if (mouseX >= 0 && mouseX <= 12 && mouseY >= 0 && mouseY <= 12) {
             List<String> text = new ArrayList<>();
-            text.add(Localization.translate("ic2.generic.text.upgrade"));
+            text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
                 text.add(stack.getDisplayName());
@@ -86,51 +101,56 @@ public class GuiMultiMatter extends GuiIU<ContainerMultiMatter> {
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
-
+        super.drawForegroundLayer(par1, par2);
         this.handleUpgradeTooltip(par1, par2);
-
-        this.fontRenderer.drawString(this.progressLabel, 8, 27, 4210752);
-        this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 36, 4210752);
+        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawForeground(par1, par2);
+        this.fontRenderer.drawString(this.progressLabel, 8, 29, 4210752);
+        this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 39, 4210752);
         if ((this.container.base).scrap > 0) {
-            this.fontRenderer.drawString(this.amplifierLabel, 8, 46, 4210752);
-            this.fontRenderer.drawString("" + (this.container.base).scrap, 8, 58, 4210752);
-        }
-        FluidStack fluidstack = (this.container.base).fluidTank.getFluid();
-        if (fluidstack != null) {
-            String tooltip = Localization.translate("ic2.uumatter") + ": " + fluidstack.amount
-                    + Localization.translate("ic2.generic.text.mb");
-            new Area(this, 99, 25, 112 - 99, 73 - 25).withTooltip(tooltip).drawForeground(par1, par2);
-
-        }
-        new AdvArea(this, 182, 6, 190, 14).withTooltip(this.container.base.work ? Localization.translate("turn_off") :
-                Localization.translate("turn_on")).drawForeground(par1, par2);
-        this.mc.getTextureManager().bindTexture(this.getTexture());
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        if (this.container.base.work) {
-            this.drawTexturedModalRect(+181, +5, 203, 5, 11, 11);
-
+            this.fontRenderer.drawString(this.amplifierLabel, 8, 49, 4210752);
+            this.fontRenderer.drawString("" + (this.container.base).scrap, 8, 59, 4210752);
         }
         this.drawForeground(par1, par2);
+
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2 - 15, 6, name, 4210752, false);
-
+        TankGauge.createNormal(this, 96, 22, container.base.fluidTank).drawBackground(this.guiLeft, guiTop);
     }
 
     protected void drawBackgroundAndTitle(float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2 - 15, 6, name, 4210752, false);
+        int textWidth = this.fontRenderer.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.xSize / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6)/scale);
+
+
+        this.fontRenderer.drawString(name, textX, textY, 4210752);
+
+
+        GlStateManager.popMatrix();
     }
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GUIMatter.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

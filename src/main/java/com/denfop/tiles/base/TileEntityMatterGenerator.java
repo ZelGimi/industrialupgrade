@@ -1,18 +1,17 @@
 package com.denfop.tiles.base;
 
 import com.denfop.Config;
-import com.denfop.IUCore;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.audio.AudioSource;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerSolidMatter;
 import com.denfop.gui.GuiSolidMatter;
 import com.denfop.invslot.InvSlotUpgrade;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.init.Localization;
-import net.minecraft.client.util.ITooltipFlag;
+import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,28 +19,28 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class TileEntityMatterGenerator extends TileEntityInventory implements IHasGui,
+public abstract class TileEntityMatterGenerator extends TileEntityInventory implements
         IUpgradableBlock {
 
     public final InvSlotOutput outputSlot;
     public final ItemStack itemstack;
     public final InvSlotUpgrade upgradeSlot;
-    private final AdvEnergy energy;
+    private final Energy energy;
     private final String name;
-    public AudioSource audioSource;
     private double progress;
 
     public TileEntityMatterGenerator(ItemStack itemstack, String name) {
         this.itemstack = itemstack;
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
+        this.outputSlot = new InvSlotOutput(this, 1);
+        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.progress = 0;
         this.name = name;
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, Config.SolidMatterStorage, 10));
+        this.energy = this.addComponent(Energy.asBasicSink(this, Config.SolidMatterStorage, 10));
 
     }
 
@@ -50,19 +49,41 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        try {
+            progress = (double) DecoderHandler.decode(customPacketBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public CustomPacketBuffer writeContainerPacket() {
+        final CustomPacketBuffer packet = super.writeContainerPacket();
+        try {
+            EncoderHandler.encode(packet, progress);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return packet;
+    }
+
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.matter_solid_work_info") + (int) Config.SolidMatterStorage);
         }
-        AdvEnergy energy = this.energy;
+        Energy energy = this.energy;
         if (!energy.getSourceDirs().isEmpty()) {
-            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+            tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
         } else if (!energy.getSinkDirs().isEmpty()) {
-            tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+            tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
         }
 
 
@@ -79,22 +100,23 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
         return nbttagcompound;
     }
 
-    protected void initiate(int soundEvent) {
-        IUCore.network.get(true).initiateTileEntityEvent(this, soundEvent, true);
-    }
 
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
+        boolean active = false;
         if (this.energy.getEnergy() > 0) {
+            active = true;
             this.progress = this.energy.getEnergy() / this.energy.getCapacity();
             if (this.energy.getEnergy() >= this.energy.getCapacity()) {
                 if (this.outputSlot.add(itemstack)) {
                     this.energy.useEnergy(this.energy.getCapacity());
                     this.progress = 0;
+
                 }
             }
 
         }
+        this.setActive(active);
 
 
         if (this.upgradeSlot.tickNoMark()) {
@@ -125,19 +147,12 @@ public abstract class TileEntityMatterGenerator extends TileEntityInventory impl
     }
 
 
-    public double getEnergy() {
-        return this.energy.getEnergy();
-    }
-
-    public boolean useEnergy(double amount) {
-        return this.energy.useEnergy(amount);
-    }
-
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
                 UpgradableProperty.Transformer,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.ItemInput,
+                UpgradableProperty.ItemExtract
         );
     }
 

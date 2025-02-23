@@ -1,14 +1,21 @@
 package com.denfop.container;
 
-import com.denfop.IUCore;
+import com.denfop.api.inv.IAdvInventory;
 import com.denfop.componets.AbstractComponent;
+import com.denfop.invslot.InvSlot;
+import com.denfop.items.ItemStackInventory;
+import com.denfop.network.packet.IUpdatableItemStack;
+import com.denfop.network.packet.PacketUpdateFieldContainerItemStack;
+import com.denfop.network.packet.PacketUpdateFieldContainerTile;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.slot.SlotHologramSlot;
-import ic2.core.slot.SlotInvSlotReadOnly;
-import ic2.core.util.StackUtil;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.jetbrains.annotations.NotNull;
@@ -17,14 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public abstract class ContainerBase<T extends IInventory> extends Container {
+public abstract class ContainerBase<T extends IAdvInventory> extends Container {
 
-    protected static final int windowBorder = 8;
-    protected static final int slotSize = 16;
-    protected static final int slotDistance = 2;
-    protected static final int slotSeparator = 4;
-    protected static final int hotbarYOffset = -24;
-    protected static final int inventoryYOffset = -82;
+
     public final T base;
 
     public ContainerBase(T base1) {
@@ -32,58 +34,104 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
     }
 
     protected static boolean isValidTargetSlot(Slot slot, ItemStack stack, boolean allowEmpty, boolean requireInputOnly) {
-        if (!(slot instanceof SlotInvSlotReadOnly) && !(slot instanceof SlotHologramSlot)) {
-            if (!slot.isItemValid(stack)) {
-                return false;
-            } else if (!allowEmpty && !slot.getHasStack()) {
-                return false;
-            } else if (!requireInputOnly) {
-                return true;
-            } else {
-                return slot instanceof SlotInvSlot && ((SlotInvSlot) slot).invSlot.canInput();
-            }
-        } else {
+
+        if (!slot.isItemValid(stack)) {
             return false;
+        } else if (!allowEmpty && !slot.getHasStack()) {
+            return false;
+        } else if (!requireInputOnly) {
+            return true;
+        } else {
+            return slot instanceof SlotInvSlot && ((SlotInvSlot) slot).invSlot.canInput();
         }
+
+    }
+
+    public SlotInvSlot findClassSlot(Class<? extends InvSlot> invSlotClass) {
+        for (Slot slot : this.inventorySlots) {
+            if (slot instanceof SlotInvSlot) {
+                if (((SlotInvSlot) slot).invSlot.getClass().equals(invSlotClass)) {
+                    return (SlotInvSlot) slot;
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<SlotInvSlot> getSlots() {
+        List<SlotInvSlot> list = new ArrayList<>();
+        for (Slot slot : this.inventorySlots) {
+            if (slot instanceof SlotInvSlot) {
+                list.add((SlotInvSlot) slot);
+            }
+        }
+        return list;
+    }
+
+    public List<SlotInvSlot> findClassSlots(Class<? extends InvSlot> invSlotClass) {
+        List<SlotInvSlot> list = new ArrayList<>();
+        for (Slot slot : this.inventorySlots) {
+            if (slot instanceof SlotInvSlot) {
+                if (((SlotInvSlot) slot).invSlot.getClass().equals(invSlotClass)) {
+                    list.add((SlotInvSlot) slot);
+                }
+            }
+        }
+        return list;
     }
 
     protected void addPlayerInventorySlots(EntityPlayer player, int height) {
-        this.addPlayerInventorySlots(player, 178, height);
+        if (player != null) {
+            this.addPlayerInventorySlots(player, 178, height);
+        }
     }
 
     protected void addPlayerInventorySlots(EntityPlayer player, int width, int height) {
-        int xStart = (width - 162) / 2;
+        if (player != null) {
+            int xStart = (width - 162) / 2;
 
-        int col;
-        for (col = 0; col < 3; ++col) {
-            for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(
-                        player.inventory,
-                        col1 + col * 9 + 9,
-                        xStart + col1 * 18,
-                        height + -82 + col * 18
-                ));
+            int col;
+            for (col = 0; col < 3; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(
+                            player.inventory,
+                            col1 + col * 9 + 9,
+                            xStart + col1 * 18,
+                            height + -82 + col * 18
+                    ));
+                }
+            }
+
+            for (col = 0; col < 9; ++col) {
+                this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
             }
         }
-
-        for (col = 0; col < 9; ++col) {
-            this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
-        }
-
     }
 
     public @NotNull ItemStack slotClick(int slotId, int dragType, @NotNull ClickType clickType, @NotNull EntityPlayer player) {
-        Slot slot;
-        return slotId >= 0 && slotId < this.inventorySlots.size() && (slot = this.inventorySlots.get(slotId)) instanceof SlotHologramSlot
-                ? ((SlotHologramSlot) slot).slotClick(dragType, clickType, player)
-                : super.slotClick(slotId, dragType, clickType, player);
+        if (slotId < 0) {
+            return super.slotClick(slotId, dragType, clickType, player);
+        }
+        Slot slot = this.inventorySlots.get(slotId);
+        if (!(slot instanceof SlotVirtual)) {
+            if (slot instanceof SlotInvSlot) {
+                SlotInvSlot slot1 = (SlotInvSlot) slot;
+                if (!slot1.invSlot.canShift() && clickType == ClickType.QUICK_MOVE) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            return super.slotClick(slotId, dragType, clickType, player);
+        } else {
+            ((SlotVirtual) slot).slotClick(slotId, dragType, clickType, player);
+        }
+        return ItemStack.EMPTY;
     }
 
     public final @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int sourceSlotIndex) {
         Slot sourceSlot = this.inventorySlots.get(sourceSlotIndex);
         if (sourceSlot != null && sourceSlot.getHasStack()) {
             ItemStack sourceItemStack = sourceSlot.getStack();
-            int oldSourceItemStackSize = StackUtil.getSize(sourceItemStack);
+            int oldSourceItemStackSize = ModUtils.getSize(sourceItemStack);
             ItemStack resultStack;
             if (sourceSlot.inventory == player.inventory) {
                 resultStack = this.handlePlayerSlotShiftClick(player, sourceItemStack);
@@ -91,7 +139,7 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
                 resultStack = this.handleGUISlotShiftClick(player, sourceItemStack);
             }
 
-            if (StackUtil.isEmpty(resultStack) || StackUtil.getSize(resultStack) != oldSourceItemStackSize) {
+            if (ModUtils.isEmpty(resultStack) || ModUtils.getSize(resultStack) != oldSourceItemStackSize) {
                 sourceSlot.putStack(resultStack);
                 sourceSlot.onTake(player, sourceItemStack);
                 if (!player.getEntityWorld().isRemote) {
@@ -100,13 +148,17 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
             }
         }
 
-        return StackUtil.emptyStack;
+        return ModUtils.emptyStack;
     }
 
     protected ItemStack handlePlayerSlotShiftClick(EntityPlayer player, ItemStack sourceItemStack) {
-        for (int run = 0; run < 4 && !StackUtil.isEmpty(sourceItemStack); ++run) {
+        for (int run = 0; run < 4 && !ModUtils.isEmpty(sourceItemStack); ++run) {
 
             for (final Slot targetSlot : this.inventorySlots) {
+                if (targetSlot instanceof SlotVirtual) {
+                    continue;
+                }
+
                 if (targetSlot.inventory != player.inventory && isValidTargetSlot(
                         targetSlot,
                         sourceItemStack,
@@ -114,7 +166,7 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
                         run < 2
                 )) {
                     sourceItemStack = this.transfer(sourceItemStack, targetSlot);
-                    if (StackUtil.isEmpty(sourceItemStack)) {
+                    if (ModUtils.isEmpty(sourceItemStack)) {
                         break;
                     }
                 }
@@ -125,14 +177,17 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
     }
 
     protected ItemStack handleGUISlotShiftClick(EntityPlayer player, ItemStack sourceItemStack) {
-        for (int run = 0; run < 2 && !StackUtil.isEmpty(sourceItemStack); ++run) {
+        for (int run = 0; run < 2 && !ModUtils.isEmpty(sourceItemStack); ++run) {
             ListIterator<Slot> it = this.inventorySlots.listIterator(this.inventorySlots.size());
 
             while (it.hasPrevious()) {
                 Slot targetSlot = it.previous();
+                if (targetSlot instanceof SlotVirtual) {
+                    continue;
+                }
                 if (targetSlot.inventory == player.inventory && isValidTargetSlot(targetSlot, sourceItemStack, run == 1, false)) {
                     sourceItemStack = this.transfer(sourceItemStack, targetSlot);
-                    if (StackUtil.isEmpty(sourceItemStack)) {
+                    if (ModUtils.isEmpty(sourceItemStack)) {
                         break;
                     }
                 }
@@ -148,14 +203,17 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
 
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
+        if (this.base instanceof ItemStackInventory) {
+            for (IContainerListener crafter : this.listeners) {
+                if (crafter instanceof EntityPlayerMP) {
+                    new PacketUpdateFieldContainerItemStack((ItemStackInventory) this.base, (EntityPlayerMP) crafter);
+                }
+            }
+        }
         if (this.base instanceof TileEntity) {
-            for (final String name : this.getNetworkedFields()) {
-                for (IContainerListener var5 : this.listeners) {
-                    if (var5 instanceof EntityPlayerMP) {
-                        IUCore.network.get(true).updateTileEntityFieldTo((TileEntity) this.base, name,
-                                (EntityPlayerMP) var5
-                        );
-                    }
+            for (IContainerListener crafter : this.listeners) {
+                if (crafter instanceof EntityPlayerMP) {
+                    new PacketUpdateFieldContainerTile((TileEntityBlock) this.base, (EntityPlayerMP) crafter);
                 }
             }
 
@@ -173,28 +231,18 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
 
     }
 
-    public List<String> getNetworkedFields() {
-        return new ArrayList<>();
-    }
-
-    public List<IContainerListener> getListeners() {
-        return this.listeners;
-    }
-
-    public void onContainerEvent(String event) {
-    }
 
     protected final ItemStack transfer(ItemStack stack, Slot dst) {
         int amount = this.getTransferAmount(stack, dst);
         if (amount > 0) {
             ItemStack dstStack = dst.getStack();
-            if (StackUtil.isEmpty(dstStack)) {
-                dst.putStack(StackUtil.copyWithSize(stack, amount));
+            if (ModUtils.isEmpty(dstStack)) {
+                dst.putStack(ModUtils.setSize(stack, amount));
             } else {
-                dst.putStack(StackUtil.incSize(dstStack, amount));
+                dst.putStack(ModUtils.incSize(dstStack, amount));
             }
 
-            stack = StackUtil.decSize(stack, amount);
+            stack = ModUtils.decSize(stack, amount);
         }
         return stack;
     }
@@ -203,16 +251,18 @@ public abstract class ContainerBase<T extends IInventory> extends Container {
         int amount = Math.min(dst.inventory.getInventoryStackLimit(), dst.getSlotStackLimit());
         amount = Math.min(amount, stack.isStackable() ? stack.getMaxStackSize() : 1);
         ItemStack dstStack = dst.getStack();
-        if (!StackUtil.isEmpty(dstStack)) {
-            if (!StackUtil.checkItemEqualityStrict(stack, dstStack)) {
+        if (!ModUtils.isEmpty(dstStack)) {
+            if (!ModUtils.checkItemEqualityStrict(stack, dstStack)) {
                 return 0;
             }
 
-            amount -= StackUtil.getSize(dstStack);
+            amount -= ModUtils.getSize(dstStack);
         }
 
-        amount = Math.min(amount, StackUtil.getSize(stack));
+        amount = Math.min(amount, ModUtils.getSize(stack));
         return amount;
     }
+
+
 
 }

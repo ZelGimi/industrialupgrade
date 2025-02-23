@@ -2,15 +2,16 @@ package com.denfop.gui;
 
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerNeutronGenerator;
-import ic2.core.init.Localization;
-import net.minecraft.client.renderer.GlStateManager;
+import com.denfop.tiles.base.TileNeutronGenerator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,13 +28,28 @@ public class GuiNeutronGenerator extends GuiIU<ContainerNeutronGenerator> {
     public GuiNeutronGenerator(ContainerNeutronGenerator container1) {
         super(container1);
         this.container = container1;
-        this.progressLabel = Localization.translate("ic2.Matter.gui.info.progress");
-        this.amplifierLabel = Localization.translate("ic2.Matter.gui.info.amplifier");
-        addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
-        this.xSize = 200;
-        this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+        this.progressLabel = Localization.translate("Matter.gui.info.progress");
+        this.amplifierLabel = Localization.translate("Matter.gui.info.amplifier");
+        this.addComponent(new GuiComponent(this, 4, 15, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
+        addElement(TankGauge.createNormal(this, 96, 22, container.base.fluidTank));
+        this.componentList.add(new GuiComponent(this, 117, 41, EnumTypeComponent.FLUID_PART,
+                new Component<>(new ComponentEmpty())
+        ));
+        this.componentList.add(new GuiComponent(this, 45, 60, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return ((TileNeutronGenerator) this.getEntityBlock()).work ? Localization.translate("turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((TileNeutronGenerator) this.getEntityBlock()).work;
+                    }
+                })
         ));
     }
 
@@ -43,23 +59,14 @@ public class GuiNeutronGenerator extends GuiIU<ContainerNeutronGenerator> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 182 && x <= 190 && y >= 6 && y <= 14) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
-        }
+
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         this.fontRenderer.drawString(this.progressLabel, 8, 28, 4210752);
         this.fontRenderer.drawString(this.container.base.getProgressAsString(), 18, 39, 4210752);
-        new AdvArea(this, 182, 6, 190, 14).withTooltip(this.container.base.work ? Localization.translate("turn_off") :
-                Localization.translate("turn_on")).drawForeground(par1, par2);
-        this.mc.getTextureManager().bindTexture(this.getTexture());
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        if (this.container.base.work) {
-            this.drawTexturedModalRect(+181, +5, 203, 5, 11, 11);
 
-        }
 
     }
 
@@ -70,7 +77,7 @@ public class GuiNeutronGenerator extends GuiIU<ContainerNeutronGenerator> {
 
     public ResourceLocation getTexture() {
 
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/NeutronGeneratorGUI.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

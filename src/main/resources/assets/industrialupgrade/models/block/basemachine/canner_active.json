@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/canner_front_active",
+		"down": "industrialupgrade:blocks/canner_bottom",
+		"up": "industrialupgrade:blocks/canner_bottom",
+		"north": "industrialupgrade:blocks/canner_front_active",
+		"east": "industrialupgrade:blocks/canner_leftright_active",
+		"south": "industrialupgrade:blocks/canner_bottom",
+		"west": "industrialupgrade:blocks/canner_leftright_active"
+	}
+}

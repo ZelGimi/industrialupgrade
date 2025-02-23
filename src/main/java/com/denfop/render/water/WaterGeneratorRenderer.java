@@ -1,8 +1,8 @@
 package com.denfop.render.water;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import ic2.core.block.KineticGeneratorRotor;
+import com.denfop.render.windgenerator.RotorModel;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntityBaseWaterGenerator> {
+public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileBaseWaterGenerator> {
 
     private static final Map<Integer, ModelBase> rotorModels = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntity
             ResourceLocation rotorRL = windGen.getRotorRenderTexture();
             ModelBase model = rotorModels.get(diameter);
             if (model == null) {
-                model = new KineticGeneratorRotor(diameter);
+                model = new RotorModel(diameter);
                 rotorModels.put(diameter, model);
             }
 
@@ -46,6 +46,20 @@ public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntity
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) blockLight, (float) skyLight);
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.5F, 0.5F, 0.5F);
+            switch (facing) {
+                case NORTH:
+                    GlStateManager.translate(0F, 0F, -0.25F);
+                    break;
+                case EAST:
+                    GlStateManager.translate(0.25F, 0F, 0);
+                    break;
+                case SOUTH:
+                    GlStateManager.translate(0F, 0F, 0.25F);
+                    break;
+                case WEST:
+                    GlStateManager.translate(-0.25F, 0F, 0);
+                    break;
+            }
             switch (facing) {
                 case NORTH:
                     GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
@@ -72,7 +86,7 @@ public class WaterGeneratorRenderer extends TileEntitySpecialRenderer<TileEntity
     }
 
     public void render(
-            @Nonnull TileEntityBaseWaterGenerator te,
+            @Nonnull TileBaseWaterGenerator te,
             double x,
             double y,
             double z,

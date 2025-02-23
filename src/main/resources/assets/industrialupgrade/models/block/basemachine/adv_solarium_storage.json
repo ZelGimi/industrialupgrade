@@ -5,8 +5,8 @@
     "down" : "industrialupgrade:blocks/adv_solarium_storage_bottom",
     "up" : "industrialupgrade:blocks/adv_solarium_storage_bottom",
     "north" : "industrialupgrade:blocks/adv_solarium_storage_front",
-    "east" : "industrialupgrade:blocks/adv_solarium_storage_bottom",
-    "south" : "industrialupgrade:blocks/adv_solarium_storage_bottom",
-    "west" : "industrialupgrade:blocks/adv_solarium_storage_bottom"
+    "east" : "industrialupgrade:blocks/adv_solarium_storage_side",
+    "south" : "industrialupgrade:blocks/adv_solarium_storage_side",
+    "west" : "industrialupgrade:blocks/adv_solarium_storage_side"
   }
 }

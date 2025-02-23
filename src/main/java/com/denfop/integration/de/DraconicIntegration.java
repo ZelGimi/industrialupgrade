@@ -1,14 +1,11 @@
 package com.denfop.integration.de;
 
 import com.brandon3055.draconicevolution.DEFeatures;
-import com.brandon3055.draconicevolution.lib.RecipeManager;
 import com.denfop.Config;
-import com.denfop.IUCore;
-import com.denfop.IUItem;
+import com.denfop.api.Recipes;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.TileBlockCreator;
 import com.denfop.recipes.CompressorRecipe;
-import ic2.api.recipe.Recipes;
-import ic2.core.block.TeBlockRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +13,7 @@ public class DraconicIntegration {
 
 
     public static Item chaosingot;
-    public static Block blockDESolarPanel;
+    public static BlockTileEntity blockDESolarPanel;
     public static IUDEItem ChaosEnergyCore;
 
 
@@ -27,7 +24,7 @@ public class DraconicIntegration {
 
             chaosingot = new IUDEItem("chaosingot");
 
-            blockDESolarPanel = TeBlockRegistry.get(BlockDESolarPanel.IDENTITY).setCreativeTab(IUCore.IUTab);
+            blockDESolarPanel = TileBlockCreator.instance.create(BlockDESolarPanel.class);
 
         }
     }
@@ -40,12 +37,10 @@ public class DraconicIntegration {
                     new ItemStack(chaosingot, 1)
             );
 
-            Recipes.advRecipes.addRecipe(new ItemStack(ChaosEnergyCore, 1), " B ", "BAB", " B ", 'B',
+            Recipes.recipe.addRecipe(new ItemStack(ChaosEnergyCore, 1), " B ", "BAB", " B ", 'B',
                     new ItemStack(chaosingot, 1), 'A', DEFeatures.draconicEnergyCore
             );
-
-
-            RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL, new ItemStack(blockDESolarPanel, 1),
+       /*     RecipeManager.addFusion(RecipeManager.RecipeDifficulty.ALL, new ItemStack(blockDESolarPanel, 1),
                     new ItemStack(IUItem.blockpanel, 1), 400000000, 1, DEFeatures.wyvernCore, DEFeatures.wyvernCore,
                     DEFeatures.wyvernCore, DEFeatures.wyvernCore
             );
@@ -113,7 +108,7 @@ public class DraconicIntegration {
                     ChaosEnergyCore,
                     ChaosEnergyCore,
                     ChaosEnergyCore
-            );
+            );*/
         }
 
     }

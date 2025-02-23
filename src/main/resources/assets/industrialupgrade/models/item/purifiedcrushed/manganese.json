@@ -1,6 +1,6 @@
 {
-  "parent" : "ic2:item/default",
+  "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "industrialupgrade:items/manganese_crushed"
+    "layer0" : "industrialupgrade:items/manganese_purifiedcrushed"
   }
 }

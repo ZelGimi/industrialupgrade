@@ -1,6 +1,6 @@
 {
-  "parent" : "ic2:item/default",
+  "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "ic2:items/tool/frequency_transmitter"
+    "layer0" : "industrialupgrade:items/frequency_transmitter"
   }
 }

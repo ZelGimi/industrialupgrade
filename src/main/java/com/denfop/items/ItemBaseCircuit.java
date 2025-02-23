@@ -3,48 +3,77 @@ package com.denfop.items;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
+import com.denfop.utils.ModUtils;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemBaseCircuit extends ItemMulti<ItemBaseCircuit.Types> implements IModelRegister {
+public class ItemBaseCircuit extends ItemSubTypes<ItemBaseCircuit.Types> implements IModelRegister {
 
     protected static final String NAME = "circuit";
 
     public ItemBaseCircuit() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ItemTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
-        ModelLoader.setCustomModelResourceLocation(
-                this,
-                meta,
-                new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
-        );
+    public void registerModel(Item item, int meta, String extraName) {
+        if (meta >= 9 && meta <= 11 || meta == 21) {
+            ModelLoader.setCustomMeshDefinition(this, stack -> {
+                final NBTTagCompound nbt = ModUtils.nbt(stack);
+                int level = nbt.getInteger("level");
+                switch (stack.getItemDamage()){
+                    case 9:
+                        level = level - 5;
+                        break;
+                    case 10:
+                        level = level - 7;
+                        break;
+                    case 11:
+                        level = level - 9;
+                        break;
+                    case 21:
+                        level = level - 11;
+                        break;
+                }
+                return new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(stack.getItemDamage()).getName() + (level == 1 ? "_1" : ""),
+                        null);
+
+            });
+            String[] mode = {"", "_1"};
+            for (final String s : mode) {
+                ModelBakery.registerItemVariants(this,
+                        new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName()+s,
+                                null));
+
+            }
+        } else {
+            ModelLoader.setCustomModelResourceLocation(
+                    this,
+                    meta,
+                    new ModelResourceLocation(Constants.MOD_ID + ":" + NAME + "/" + Types.getFromID(meta).getName(), null)
+            );
+        }
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         nanocircuit_part1(0),
         quantumcircuit_part1(1),
         spectralcircuit_part1(2),

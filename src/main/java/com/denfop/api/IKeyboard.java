@@ -8,6 +8,14 @@ public interface IKeyboard {
 
     boolean isVerticalMode(final EntityPlayer player);
 
+    boolean isForwardKeyDown(EntityPlayer player);
+
+    boolean isJumpKeyDown(EntityPlayer player);
+
+    boolean isArmorKey(EntityPlayer player);
+
+    boolean isSneakKeyDown(EntityPlayer player);
+
     boolean isFlyModeKeyDown(final EntityPlayer player);
 
     boolean isBlackListModeKeyDown(final EntityPlayer player);
@@ -15,5 +23,10 @@ public interface IKeyboard {
     boolean isBlackListModeViewKeyDown(final EntityPlayer player);
 
     boolean isStreakKeyDown(final EntityPlayer player);
+
+    boolean isBootsMode(EntityPlayer player);
+
+    boolean isLeggingsMode(EntityPlayer player);
+
 
 }

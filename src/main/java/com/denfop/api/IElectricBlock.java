@@ -1,9 +1,9 @@
 package com.denfop.api;
 
-import com.denfop.tiles.base.TileEntityElectricBlock;
+import com.denfop.tiles.base.TileElectricBlock;
 
 public interface IElectricBlock {
 
-    TileEntityElectricBlock getDummyElec();
+    TileElectricBlock getDummyElec();
 
 }

@@ -25,6 +25,12 @@
       },
       "per_simply_quarry_active" : {
         "model" : "simplyquarries:per_simply_quarry_active"
+      },
+      "pho_simply_quarry" : {
+        "model" : "simplyquarries:pho_simply_quarry"
+      },
+      "pho_simply_quarry_active" : {
+        "model" : "simplyquarries:pho_simply_quarry_active"
       }
     },
     "facing" : {

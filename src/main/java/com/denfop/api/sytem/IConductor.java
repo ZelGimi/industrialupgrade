@@ -1,27 +1,17 @@
 package com.denfop.api.sytem;
 
+
+
 import java.util.List;
 
 public interface IConductor extends IEmitter, IAcceptor {
 
-    double getConductionLoss(EnergyType energyType);
+    double getConductorBreakdownEnergy(EnergyType type);
+    InfoCable getCable(EnergyType type);
 
-
-    double getInsulationEnergyAbsorption(EnergyType energyType);
-
-
-    double getInsulationBreakdownEnergy(EnergyType energyType);
-
-
-    double getConductorBreakdownEnergy(EnergyType energyType);
-
-
-    void removeInsulation(EnergyType energyType);
-
+    void setCable(EnergyType type, InfoCable cable);
 
     void removeConductor();
-
-    void update_render();
 
     EnergyType getEnergyType();
 

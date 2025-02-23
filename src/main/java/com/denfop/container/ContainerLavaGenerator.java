@@ -1,14 +1,12 @@
 package com.denfop.container;
 
 
-import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityLavaGenerator;
+import com.denfop.tiles.mechanism.generator.things.fluid.TileLavaGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerLavaGenerator extends ContainerFullInv<TileLavaGenerator> {
 
-public class ContainerLavaGenerator extends ContainerFullInv<TileEntityLavaGenerator> {
-
-    public ContainerLavaGenerator(EntityPlayer entityPlayer, TileEntityLavaGenerator tileEntity1) {
+    public ContainerLavaGenerator(EntityPlayer entityPlayer, TileLavaGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
@@ -18,12 +16,5 @@ public class ContainerLavaGenerator extends ContainerFullInv<TileEntityLavaGener
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-
-        return ret;
-    }
 
 }

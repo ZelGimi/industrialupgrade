@@ -1,0 +1,49 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "rhea_chromium" : {
+         "model" : "industrialupgrade:spaceore/rhea_chromium"
+      },
+      "rhea_osmium_ore" : {
+         "model" : "industrialupgrade:spaceore/rhea_osmium_ore"
+      },
+      "rhea_vanadium_ore" : {
+         "model" : "industrialupgrade:spaceore/rhea_vanady_ore"
+      },
+      "tethys_gallium" : {
+         "model" : "industrialupgrade:spaceore/tethys_gallium"
+      },
+      "tethys_molybdenum_ore" : {
+         "model" : "industrialupgrade:spaceore/tethys_molybdenum_ore"
+      },
+      "titan_nickel_ore" : {
+         "model" : "industrialupgrade:spaceore/titan_nickel_ore"
+      },
+      "titan_titanium_ore" : {
+         "model" : "industrialupgrade:spaceore/titan_titanium_ore"
+      },
+      "titania_polonium_ore" : {
+         "model" : "industrialupgrade:spaceore/titania_polonium_ore"
+      },
+      "titania_yttrium" : {
+         "model" : "industrialupgrade:spaceore/titania_yttrium"
+      },
+      "triton_neodymium" : {
+         "model" : "industrialupgrade:spaceore/triton_neodymium"
+      },
+      "triton_strontium" : {
+         "model" : "industrialupgrade:spaceore/triton_strontium"
+      },
+      "umbriel_spinel_ore" : {
+         "model" : "industrialupgrade:spaceore/umbriel_spinel_ore"
+      },
+      "venus_diamond_ore" : {
+         "model" : "industrialupgrade:spaceore/venus_diamond_ore"
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

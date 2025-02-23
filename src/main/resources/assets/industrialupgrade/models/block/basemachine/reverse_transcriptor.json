@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/reverse_transcriptor_main",
+    "down" : "industrialupgrade:blocks/reverse_transcriptor_side",
+    "up" : "industrialupgrade:blocks/reverse_transcriptor_top",
+    "north" : "industrialupgrade:blocks/reverse_transcriptor_main",
+    "east" : "industrialupgrade:blocks/reverse_transcriptor_side",
+    "south" : "industrialupgrade:blocks/reverse_transcriptor_side",
+    "west" : "industrialupgrade:blocks/reverse_transcriptor_side"
+  }
+}

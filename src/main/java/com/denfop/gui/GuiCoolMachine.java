@@ -1,16 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentButton;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerCoolMachine;
+import com.denfop.tiles.mechanism.cooling.TileCooling;
 import com.denfop.utils.ListInformationUtils;
-import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -27,10 +26,48 @@ public class GuiCoolMachine extends GuiIU<ContainerCoolMachine> {
     public GuiCoolMachine(ContainerCoolMachine guiContainer) {
         super(guiContainer);
         this.container = guiContainer;
-        this.componentList.clear();
         this.name = Localization.translate(guiContainer.base.getName());
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
+        ));
+        this.componentList.add(new GuiComponent(this, 113, 21, EnumTypeComponent.ENERGY_HEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
+
+        this.componentList.add(new GuiComponent(this, 51, 41, EnumTypeComponent.COOL_ENERGY_WEIGHT,
+                new Component<>(this.container.base.cold)
+        ));
+        this.componentList.add(new GuiComponent(this, 20, 37, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 2, "") {
+                    @Override
+                    public String getText() {
+                        return ((TileCooling) this.getEntityBlock()).work ? Localization.translate("turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((TileCooling) this.getEntityBlock()).work;
+                    }
+                })
+        ));
+        this.componentList.add(new GuiComponent(this, 53, 60, EnumTypeComponent.PLUS_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return "+4";
+                    }
+
+                })
+        ));
+        this.componentList.add(new GuiComponent(this, 78, 60, EnumTypeComponent.MINUS_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 1, "") {
+                    @Override
+                    public String getText() {
+                        return "-4";
+                    }
+
+                })
         ));
     }
 
@@ -56,71 +93,34 @@ public class GuiCoolMachine extends GuiIU<ContainerCoolMachine> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 53 && x <= 63 && y >= 54 && y <= 64) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
-        }
-        if (x >= 73 && x <= 83 && y >= 54 && y <= 64) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
-        }
-        if (x >= 144 && x <= 157 && y >= 33 && y <= 45) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
-        }
+
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         handleUpgradeTooltip(par1, par2);
         this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 4210752);
-        String temp = ("-" + this.container.base.cold.getEnergy() + "°C" + "/-" + this.container.base.max);
 
-        new AdvArea(this, 53, 42, 83, 53).withTooltip(temp).drawForeground(par1, par2);
-        String tooltip2 =
-                ModUtils.getString(Math.min(
-                        this.container.base.energy.getEnergy(),
-                        this.container.base.energy.getCapacity()
-                )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
-        new AdvArea(this, 113, 21, 124, 70)
-                .withTooltip(tooltip2)
-                .drawForeground(par1, par2);
-        new AdvArea(this, 144, 33, 157, 45).withTooltip(this.container.base.work ? Localization.translate("turn_off") :
-                Localization.translate("turn_on")).drawForeground(par1, par2);
 
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(getTexture());
         int xOffset = (this.width - this.xSize) / 2;
         int yOffset = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(xOffset, yOffset, 0, 0, this.xSize, this.ySize);
-        this.drawBackground();
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xOffset + 3, yOffset + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
-        int temperature = (int) (38 * this.container.base.cold.getEnergy() / this.container.base.max);
-        if (temperature > 0) {
-            drawTexturedModalRect(this.guiLeft + 53, this.guiTop + 42, 176, 104, temperature + 1, 11);
-        }
-        int chargeLevel = (int) (48.0F * this.container.base.energy.getFillRatio());
 
-        if (chargeLevel > 0) {
-            drawTexturedModalRect(xOffset + 113, yOffset + 22 + 48 - chargeLevel, 176,
-                    115 + 48 - chargeLevel, 12, chargeLevel
-            );
-        }
-        if (this.container.base.work) {
-            drawTexturedModalRect(xOffset + 143, yOffset + 32, 199,
-                    55, 239 - 224, 84 - 70
-            );
-        }
 
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guienergycolling.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
 
 
     }

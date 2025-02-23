@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.mechanism.TileEntityWaterRotorAssembler;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerWaterRotorAssembler extends ContainerFullInv<TileEntityWaterRotorAssembler> {
 
     public ContainerWaterRotorAssembler(
@@ -21,14 +19,5 @@ public class ContainerWaterRotorAssembler extends ContainerFullInv<TileEntityWat
         addSlotToContainer(new SlotInvSlot((tileEntity1).outputSlot, 0, 183, 148));
     }
 
-    @Override
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("inputSlotA");
-        ret.add("progress");
-        ret.add("guiProgress");
-        return ret;
-    }
 
 }

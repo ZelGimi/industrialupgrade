@@ -2,8 +2,8 @@ package com.denfop.integration.jei.microchip;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -73,16 +73,16 @@ public class MicrochipCategory extends Gui implements IRecipeCategory<MicrochipR
 
         mc.getTextureManager().bindTexture(getTexture());
 
-        drawTexturedModalRect(24, 10, 176, 34, (int) (xScale + 1), 28);
+        drawTexturedModalRect(25, 9, 176, 34, (int) (xScale + 1), 32);
 
 
-        drawTexturedModalRect(57, 14, 176, 64, (int) (xScale1 + 1), 19);
+        drawTexturedModalRect(57, 13, 176, 65, (int) (xScale1 + 1), 21);
 
 
-        drawTexturedModalRect(85, 20, 176, 85, (int) (xScale2 + 1), 7);
+        drawTexturedModalRect(86, 19, 176, 86, (int) (xScale2 + 1), 7);
 
 
-        drawTexturedModalRect(3, 73 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
+        drawTexturedModalRect(2, 72 - 13 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
                 14, (int) energylevel
         );
 

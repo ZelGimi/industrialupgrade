@@ -1,7 +1,8 @@
 package com.denfop.integration.jei.refiner;
 
 
-import com.denfop.blocks.FluidName;
+import com.denfop.api.Recipes;
+import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -51,12 +52,22 @@ public class RefinerHandler {
 
     public static void initRecipes() {
 
-        addRecipe(
-                new FluidStack(FluidName.fluidneft.getInstance(), 1000),
-                new FluidStack(FluidName.fluidbenz.getInstance(), 600),
-
-                new FluidStack(FluidName.fluiddizel.getInstance(), 400)
-        );
+        for (BaseFluidMachineRecipe machineRecipe : Recipes.recipes.getRecipeFluid().getRecipeList(
+                "oil_refiner")) {
+            FluidStack fluidStack = machineRecipe.getInput().getInputs().get(0);
+            FluidStack fluidStack1 = machineRecipe.getOutput_fluid().get(0);
+            FluidStack fluidStack2 = machineRecipe.getOutput_fluid().get(1);
+            double m = 1000D / fluidStack.amount;
+            addRecipe(new FluidStack(fluidStack.getFluid(), (int) (m * fluidStack.amount)), new FluidStack(
+                            fluidStack1.getFluid(),
+                            (int) (m * fluidStack1.amount)
+                    ),
+                    new FluidStack(
+                            fluidStack2.getFluid(),
+                            (int) (m * fluidStack2.amount)
+                    )
+            );
+        }
 
 
     }

@@ -1,0 +1,6 @@
+{
+	"parent": "block/leaves",
+	"textures": {
+		"all": "industrialupgrade:blocks/rubber_leaves"
+	}
+}

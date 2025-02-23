@@ -1,12 +1,11 @@
 package com.denfop.tiles.base;
 
-import com.denfop.componets.AdvEnergy;
+import com.denfop.Localization;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
-import ic2.core.init.Localization;
-import net.minecraft.client.util.ITooltipFlag;
+import com.denfop.invslot.InvSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,21 +18,22 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
 
     public TileEntityLiquidTankInventory(int tanksize) {
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000);
+        this.fluidTank = fluids.addTank("fluidTank", tanksize * 1000, InvSlot.TypeItemSlot.INPUT);
 
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.hasComp(AdvEnergy.class)) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.hasComp(Energy.class)) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
 
+        super.addInformation(stack,tooltip);
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
@@ -62,11 +62,6 @@ public abstract class TileEntityLiquidTankInventory extends TileEntityInventory 
     public boolean needsFluid() {
         return this.getFluidTank().getFluidAmount() <= this.getFluidTank().getCapacity();
     }
-
-
-    public abstract boolean canFill(Fluid var2);
-
-    public abstract boolean canDrain(Fluid var2);
 
 
 }

@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.mechanism.TileEntityAnalyzerChest;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerAnalyzerChest extends ContainerFullInv<TileEntityAnalyzerChest> {
 
     public ContainerAnalyzerChest(EntityPlayer entityPlayer, TileEntityAnalyzerChest tileEntity1) {
@@ -37,13 +35,6 @@ public class ContainerAnalyzerChest extends ContainerFullInv<TileEntityAnalyzerC
             }
 
         }
-    }
-
-
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("outputSlot");
-        return ret;
     }
 
 

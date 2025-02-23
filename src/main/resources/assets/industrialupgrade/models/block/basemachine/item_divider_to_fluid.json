@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/item_divider_to_fluid_front",
+    "down" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
+    "up" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
+    "north" : "industrialupgrade:blocks/item_divider_to_fluid_front",
+    "east" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
+    "south" : "industrialupgrade:blocks/item_divider_to_fluid_sides",
+    "west" : "industrialupgrade:blocks/item_divider_to_fluid_sides"
+  }
+}

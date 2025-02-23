@@ -1,28 +1,21 @@
 package com.denfop.items.armour;
 
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
-import com.denfop.Config;
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
+import com.denfop.api.item.IEnergyItem;
 import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.proxy.CommonProxy;
+import com.denfop.register.Register;
+import com.denfop.utils.KeyboardClient;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.ElectricItem;
-import ic2.api.item.IElectricItem;
-import ic2.api.item.IItemHudInfo;
-import ic2.api.item.IMetalArmor;
-import ic2.core.IC2;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.BaseElectricItem;
-import ic2.core.item.armor.ItemArmorElectric;
-import ic2.core.util.LogCategory;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -52,11 +45,10 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ItemLappack extends ItemArmorElectric implements IElectricItem, IModelRegister, IMetalArmor, ISpecialArmor,
-        IItemHudInfo, IUpgradeItem {
+public class ItemLappack extends ItemArmorEnergy implements IEnergyItem, IModelRegister, ISpecialArmor,
+        IUpgradeItem {
 
     private final double maxCharge;
 
@@ -73,17 +65,17 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             int Tier,
             double TransferLimit
     ) {
-        super(null, "", EntityEquipmentSlot.CHEST, MaxCharge, TransferLimit, Tier);
+        super("", EntityEquipmentSlot.CHEST, MaxCharge, TransferLimit, Tier);
 
         this.maxCharge = MaxCharge;
         this.transferLimit = TransferLimit;
         setCreativeTab(IUCore.EnergyTab);
         this.setUnlocalizedName(name);
 
+        this.setMaxDamage(0);
         this.name = name;
         this.tier = Tier;
-        setMaxDamage(27);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
         UpgradeSystem.system.addRecipe(this, EnumUpgrades.LAPPACK.list);
 
@@ -107,6 +99,10 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         return toolMode;
     }
 
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.LAPPACK.list;
+    }
+
     @Override
     public void onUpdate(
             final ItemStack stack,
@@ -125,19 +121,12 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
     public void setDamage(ItemStack stack, int damage) {
         int prev = this.getDamage(stack);
-        if (damage != prev && BaseElectricItem.logIncorrectItemDamaging) {
-            IC2.log.warn(
-                    LogCategory.Armor,
-                    new Throwable(),
-                    "Detected invalid armor damage application (%d):",
-                    damage - prev
-            );
-        }
+
 
     }
 
     public String getUnlocalizedName() {
-        return "item." + super.getUnlocalizedName().substring(4) + ".name";
+        return "item." + super.getUnlocalizedName().substring(3) + ".name";
     }
 
     @Override
@@ -182,7 +171,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             double damage,
             int slot
     ) {
-        double absorptionRatio = getBaseAbsorptionRatio() * 0;
+        double absorptionRatio = getBaseAbsorptionRatio() * this.getDamageAbsorptionRatio();
         int energyPerDamage = this.getEnergyPerDamage();
         int protect = (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PROTECTION, armor) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.PROTECTION, armor).number : 0);
@@ -194,7 +183,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
     }
 
     public int getEnergyPerDamage() {
-        return 10000;
+        return (int) (this.getMaxEnergy(null) * 0.05);
     }
 
 
@@ -203,7 +192,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
     }
 
     public int getArmorDisplay(EntityPlayer player, @Nonnull ItemStack armor, int slot) {
-        return (int) Math.round(20.0D * getBaseAbsorptionRatio() * 0);
+        return (int) Math.round(20.0D * getBaseAbsorptionRatio() * this.getDamageAbsorptionRatio());
     }
 
     public boolean isRepairable() {
@@ -221,7 +210,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             final ItemStack var4 = new ItemStack(this, 1);
             ElectricItem.manager.charge(var4, 2.147483647E9, Integer.MAX_VALUE, true, false);
             var3.add(var4);
-            var3.add(new ItemStack(this, 1, 27));
+            var3.add(new ItemStack(this, 1));
         }
     }
 
@@ -230,15 +219,15 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         return true;
     }
 
-    public double getMaxCharge(ItemStack itemStack) {
+    public double getMaxEnergy(ItemStack itemStack) {
         return this.maxCharge;
     }
 
-    public int getTier(ItemStack itemStack) {
-        return this.tier;
+    public short getTierItem(ItemStack itemStack) {
+        return (short) this.tier;
     }
 
-    public double getTransferLimit(ItemStack itemStack) {
+    public double getTransferEnergy(ItemStack itemStack) {
         return this.transferLimit;
     }
 
@@ -256,7 +245,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             @Nonnull final EnumHand hand
     ) {
         ItemStack itemStack = player.getHeldItem(hand);
-        if (IC2.keyboard.isModeSwitchKeyDown(player)) {
+        if (IUCore.keyboard.isChangeKeyDown(player)) {
             int toolMode = readToolMode(itemStack);
             toolMode++;
             if (toolMode > 1) {
@@ -274,6 +263,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                 CommonProxy.sendPlayerMessage(player, TextFormatting.GOLD + Localization.translate("iu.message.text" +
                         ".powerSupply") + " " + TextFormatting.GREEN + Localization.translate("iu.message.text.enabled"));
             }
+            return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
         }
         return new ActionResult<>(EnumActionResult.PASS, itemStack);
     }
@@ -299,7 +289,8 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
             par3List.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            par3List.add(Localization.translate("iu.changemode_key") + "M + " + Localization.translate(
+            par3List.add(Localization.translate("iu.changemode_key") + Keyboard.getKeyName(KeyboardClient.changemode.getKeyCode()) + " +" +
+                    " " + Localization.translate(
                     "iu.changemode_rcm1"));
         }
     }
@@ -332,7 +323,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                 );
             }
         }
-        if (IC2.platform.isSimulating() && toggleTimer > 0) {
+        if (IUCore.proxy.isSimulating() && toggleTimer > 0) {
             toggleTimer = (byte) (toggleTimer - 1);
             nbtData.setByte("toggleTimer", toggleTimer);
         }
@@ -349,7 +340,7 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
 
                 if (!player.inventory.armorInventory.get(i).isEmpty() && player.inventory.armorInventory
                         .get(i)
-                        .getItem() instanceof IElectricItem) {
+                        .getItem() instanceof IEnergyItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0 && !(itemStack.isItemEqual(player.inventory.armorInventory.get(
                             i)))) {
 
@@ -377,47 +368,11 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                         }
                     }
                 }
-                IEnergyContainerItem item;
-                if (!player.inventory.armorInventory.get(i).isEmpty()
-                        && player.inventory.armorInventory.get(i).getItem() instanceof IEnergyContainerItem) {
-                    if (ElectricItem.manager.getCharge(itemStack) > 0 && !(itemStack.isItemEqual(player.inventory.armorInventory.get(
-                            i)))) {
-                        item = (IEnergyContainerItem) player.inventory.armorInventory.get(i).getItem();
-
-                        int amountRfCanBeReceivedIncludesLimit = item.receiveEnergy(
-                                player.inventory.armorInventory.get(i),
-                                Integer.MAX_VALUE,
-                                true
-                        );
-                        double realSentEnergyRF = Math.min(
-                                amountRfCanBeReceivedIncludesLimit,
-                                ElectricItem.manager.getCharge(itemStack) * Config.coefficientrf
-                        );
-                        item.receiveEnergy(player.inventory.armorInventory.get(i), (int) realSentEnergyRF, false);
-                        if (realSentEnergyRF > 0) {
-                            ElectricItem.manager.discharge(
-                                    itemStack,
-                                    (realSentEnergyRF / (double) Config.coefficientrf),
-                                    Integer.MAX_VALUE,
-                                    true,
-                                    false,
-                                    false
-                            );
-                            ElectricItem.manager.charge(
-                                    itemStack,
-                                    (realSentEnergyRF / (double) Config.coefficientrf) * energy3,
-                                    2147483647,
-                                    true,
-                                    false
-                            );
-                        }
-                    }
-                }
             }
             for (int j = 0; j < player.inventory.mainInventory.size(); j++) {
 
                 if (!player.inventory.mainInventory.get(j).isEmpty()
-                        && player.inventory.mainInventory.get(j).getItem() instanceof ic2.api.item.IElectricItem) {
+                        && player.inventory.mainInventory.get(j).getItem() instanceof IEnergyItem) {
                     if (ElectricItem.manager.getCharge(itemStack) > 0) {
                         double sentPacket = ElectricItem.manager.charge(
                                 player.inventory.mainInventory.get(j),
@@ -443,41 +398,6 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
                     }
 
                 }
-                IEnergyContainerItem item;
-                if (!player.inventory.mainInventory.get(j).isEmpty()
-                        && player.inventory.mainInventory.get(j).getItem() instanceof IEnergyContainerItem) {
-                    if (ElectricItem.manager.getCharge(itemStack) > 0) {
-                        item = (IEnergyContainerItem) player.inventory.mainInventory.get(j).getItem();
-
-                        int amountRfCanBeReceivedIncludesLimit = item.receiveEnergy(
-                                player.inventory.mainInventory.get(j),
-                                Integer.MAX_VALUE,
-                                true
-                        );
-                        double realSentEnergyRF = Math.min(
-                                amountRfCanBeReceivedIncludesLimit,
-                                ElectricItem.manager.getCharge(itemStack) * Config.coefficientrf
-                        );
-                        item.receiveEnergy(player.inventory.mainInventory.get(j), (int) realSentEnergyRF, false);
-                        if (realSentEnergyRF > 0) {
-                            ElectricItem.manager.discharge(
-                                    itemStack,
-                                    (realSentEnergyRF / (double) Config.coefficientrf),
-                                    Integer.MAX_VALUE,
-                                    true,
-                                    false,
-                                    false
-                            );
-                            ElectricItem.manager.charge(
-                                    itemStack,
-                                    (realSentEnergyRF / (double) Config.coefficientrf) * energy3,
-                                    2147483647,
-                                    true,
-                                    false
-                            );
-                        }
-                    }
-                }
             }
             boolean fireResistance = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.FIRE_PROTECTION, itemStack);
             if (fireResistance) {
@@ -498,10 +418,5 @@ public class ItemLappack extends ItemArmorElectric implements IElectricItem, IMo
         }
     }
 
-    public List<String> getHudInfo(ItemStack stack, boolean advanced) {
-        List<String> info = new ArrayList<>();
-        info.add(ElectricItem.manager.getToolTip(stack));
-        return info;
-    }
 
 }

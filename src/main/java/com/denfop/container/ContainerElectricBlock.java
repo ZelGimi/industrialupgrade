@@ -1,35 +1,55 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityElectricBlock;
-import ic2.core.slot.ArmorSlot;
-import ic2.core.slot.SlotArmor;
+import com.denfop.invslot.SlotArmor;
+import com.denfop.tiles.base.TileElectricBlock;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.Slot;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ContainerElectricBlock extends ContainerFullInv<TileEntityElectricBlock> {
+public class ContainerElectricBlock extends ContainerFullInv<TileElectricBlock> {
 
-    public ContainerElectricBlock(EntityPlayer entityPlayer, TileEntityElectricBlock tileEntity) {
-        super(entityPlayer, tileEntity, 196);
-        for (int col = 0; col < ArmorSlot.getCount(); ++col) {
-            this.addSlotToContainer(new SlotArmor(entityPlayer.inventory, ArmorSlot.get(col), 8 + col * 18, 84));
+    public ContainerElectricBlock(EntityPlayer entityPlayer, TileElectricBlock tileEntity) {
+        super(null, tileEntity, 167);
+        final List<EntityEquipmentSlot> list = Arrays
+                .stream(EntityEquipmentSlot.values())
+                .filter(type -> type.getSlotType() == EntityEquipmentSlot.Type.ARMOR)
+                .collect(
+                        Collectors.toList());
+        Collections.reverse(list);
+
+        for (int col = 0; col < list.size(); ++col) {
+            this.addSlotToContainer(new SlotArmor(entityPlayer.inventory, list.get(col), 8 + col * 18, 63));
         }
-        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotA, 0, 56, 17));
-        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotB, 0, 56, 53));
-        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotC, 0, 56 - 36, 17));
-        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotC, 1, 56 - 36, 17 + 18));
+        final int width = 178;
+        final int height = 167;
+        int xStart = (width - 162) / 2;
+
+        int col;
+        for (col = 0; col < 3; ++col) {
+            for (int col1 = 0; col1 < 9; ++col1) {
+                this.addSlotToContainer(new Slot(
+                        entityPlayer.inventory,
+                        col1 + col * 9 + 9,
+                        xStart + col1 * 18,
+                        height + -82 + col * 18
+                ));
+            }
+        }
+
+        for (col = 0; col < 9; ++col) {
+            this.addSlotToContainer(new Slot(entityPlayer.inventory, col, xStart + col * 18, -1 + height + -24));
+        }
+        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotA, 0, 35, 19));
+        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotB, 0, 35, 41));
+        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotC, 0, 134, 63));
+        addSlotToContainer(new SlotInvSlot(tileEntity.inputslotC, 1, 152, 63));
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("inputslotA");
-        ret.add("inputslotB");
-        ret.add("inputslotC");
-        ret.add("redstoneMode");
-        ret.add("output_plus");
-        return ret;
-    }
 
 }

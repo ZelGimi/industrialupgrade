@@ -3,17 +3,9 @@ package com.denfop.items.armour;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import ic2.api.item.IHazmatLike;
-import ic2.api.item.IMetalArmor;
-import ic2.api.util.FluidContainerOutputMode;
-import ic2.core.IC2;
-import ic2.core.IC2DamageSource;
-import ic2.core.init.BlocksItems;
-import ic2.core.ref.FluidName;
-import ic2.core.slot.ArmorSlot;
-import ic2.core.util.LiquidUtil;
-import ic2.core.util.LiquidUtil.FluidOperationResult;
-import ic2.core.util.StackUtil;
+import com.denfop.api.item.IHazmatLike;
+import com.denfop.damagesource.IUDamageSource;
+import com.denfop.register.Register;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -41,9 +33,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Iterator;
 
-public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModelRegister, IMetalArmor, ISpecialArmor {
+public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModelRegister, ISpecialArmor {
 
     private final String name;
 
@@ -55,13 +48,17 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         }
         setCreativeTab(IUCore.EnergyTab);
         this.name = name;
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
+        Register.registerItem((Item) this, IUCore.getIdentifier(name)).setUnlocalizedName(name);
         IUCore.proxy.addIModelRegister(this);
 
     }
 
     public static boolean hasCompleteHazmat(EntityLivingBase living) {
-        Iterator var1 = ArmorSlot.getAll().iterator();
+        Iterator var1 =
+                Arrays
+                        .stream(EntityEquipmentSlot.values())
+                        .filter(slot -> slot != EntityEquipmentSlot.MAINHAND && slot != EntityEquipmentSlot.OFFHAND)
+                        .iterator();
 
         EntityEquipmentSlot slot;
         ItemStack stack;
@@ -87,7 +84,7 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
     }
 
     public static boolean hazmatAbsorbs(DamageSource source) {
-        return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE || source == IC2DamageSource.electricity || source == IC2DamageSource.radiation;
+        return source == DamageSource.IN_FIRE || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.HOT_FLOOR || source == DamageSource.ON_FIRE || source == IUDamageSource.radiation;
     }
 
     @SideOnly(Side.CLIENT)
@@ -107,16 +104,11 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
         return false;
     }
 
-    public String getArmorTexture(
-            @Nonnull ItemStack stack,
-            @Nonnull Entity entity,
-            @Nonnull EntityEquipmentSlot slot,
-            @Nonnull String type
-    ) {
-
-        int suffix = this.armorType.getSlotIndex() == 2 ? 2 : 1;
-        return Constants.TEXTURES + ":textures/armor/" + this.name + "_" + suffix + ".png";
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+        int suffix1 = this.armorType == EntityEquipmentSlot.LEGS ? 2 : 1;
+        return Constants.MOD_ID + ":textures/armor/" + "hazmat1" + '_' + suffix1 + ".png";
     }
+
 
     public ArmorProperties getProperties(
             EntityLivingBase player,
@@ -155,7 +147,7 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
             priority = EventPriority.LOW
     )
     public void onEntityLivingFallEvent(LivingFallEvent event) {
-        if (IC2.platform.isSimulating() && event.getEntity() instanceof EntityPlayer) {
+        if (IUCore.proxy.isSimulating() && event.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             ItemStack armor = player.inventory.armorInventory.get(0);
             if (!armor.isEmpty() && armor.getItem() == this) {
@@ -193,33 +185,6 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
             }
 
 
-            int air = player.getAir();
-            if (air <= 100) {
-                int needed = (300 - air) * 1000 / 150;
-                int supplied = 0;
-
-                for (int i = 0; i < player.inventory.mainInventory.size() && needed > 0; ++i) {
-                    ItemStack cStack = player.inventory.mainInventory.get(i);
-                    FluidOperationResult result = LiquidUtil.drainContainer(
-                            cStack,
-                            FluidName.air.getInstance(),
-                            needed,
-                            FluidContainerOutputMode.InPlacePreferred
-                    );
-                    if (result != null && result.fluidChange.amount >= 7 && (result.extraOutput == null || StackUtil.storeInventoryItem(
-                            result.extraOutput,
-                            player,
-                            false
-                    ))) {
-                        player.inventory.mainInventory.set(i, result.inPlaceOutput);
-                        int amount = result.fluidChange.amount;
-                        supplied += amount;
-                        needed -= amount;
-                    }
-                }
-
-                player.setAir(air + supplied * 150 / 1000);
-            }
         }
 
     }
@@ -239,6 +204,10 @@ public class ItemArmorAdvHazmat extends ItemArmor implements IHazmatLike, IModel
 
     public boolean addsProtection(EntityLivingBase entity, EntityEquipmentSlot slot, ItemStack stack) {
         return true;
+    }
+
+    public int getLevel() {
+        return 2;
     }
 
     public boolean isMetalArmor(ItemStack itemstack, EntityPlayer player) {

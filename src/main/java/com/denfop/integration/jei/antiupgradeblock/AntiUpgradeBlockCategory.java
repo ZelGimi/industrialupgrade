@@ -2,8 +2,8 @@ package com.denfop.integration.jei.antiupgradeblock;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -26,7 +26,7 @@ public class AntiUpgradeBlockCategory extends Gui implements IRecipeCategory<Ant
     public AntiUpgradeBlockCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiantiupgrade_jei.png"), 3, 3, 140,
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guiantiupgrade.png"), 3, 3, 140,
                 80
         );
     }
@@ -68,9 +68,9 @@ public class AntiUpgradeBlockCategory extends Gui implements IRecipeCategory<Ant
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 102, 30);
+        isg.init(0, true, 102, 31);
         isg.set(0, recipes.getInput());
-        isg.init(1, false, 92, 61);
+        isg.init(1, false, 89, 59);
         isg.set(1, recipes.getOutput());
     }
 

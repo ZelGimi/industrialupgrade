@@ -3,8 +3,6 @@ package com.denfop.container;
 import com.denfop.tiles.mechanism.TileEntityRodManufacturer;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
-
 public class ContainerRodManufacturer extends ContainerFullInv<TileEntityRodManufacturer> {
 
     public ContainerRodManufacturer(TileEntityRodManufacturer tile, EntityPlayer entityPlayer) {
@@ -27,11 +25,5 @@ public class ContainerRodManufacturer extends ContainerFullInv<TileEntityRodManu
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("guiProgress");
-        ret.add("energy");
-        return ret;
-    }
 
 }

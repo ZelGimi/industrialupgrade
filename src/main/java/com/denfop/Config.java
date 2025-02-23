@@ -404,7 +404,19 @@ public final class Config {
     public static int tickupdateenergysystem;
     public static int ticktransferenergy;
     public static boolean enablelosing;
+    public static boolean CopperOre;
+    public static boolean TinOre;
+    public static boolean LeadOre;
+    public static boolean UraniumOre;
+    public static boolean explodeReactor;
+    public static boolean enableProbe;
+    public static boolean optimization_network;
+    public static int optimization_network_col;
 
+    public static int speed_insert_item;
+    public static int speed_extract_item;
+    public static int speed_insert_fluid;
+    public static int speed_extract_fluid;
 
     public static void loadNormalConfig(final File configFile) {
         IUCore.log.info("Loading IU Config from " + configFile.getAbsolutePath());
@@ -412,7 +424,6 @@ public final class Config {
         final Configuration config = new Configuration(configFile);
         try {
             config.load();
-            experiment = config.get("Experiment 3.0", "Enable", false).getBoolean(false);
             tickupdateenergysystem = config.get("general", "Tick update energy system", 20).getInt(20);
             ticktransferenergy = config.get("general", "Tick transfer energy", 1).getInt(1);
             uran233RodCells = config.get("Configuration of reactor`s rods", "Uran233_Cells", 5000).getInt(5000);
@@ -527,7 +538,7 @@ public final class Config {
             PerMFSUOutput = config.get("Configuration Energy storages", "Perfectoutput", 242144).getDouble(242144);
             tierPerMFSU = config.get("Configuration Energy storages", "Perfecttier", 7).getDouble(7);
             expstorage = config.get("Basic Mechanisms", "exp storage", 500).getInt(500);
-            enerycost = config.get("Quantum Quarry", "energy consume in QE (1 QE = 16 EU)", 25000).getInt(25000);
+            enerycost = config.get("Quantum Quarry", "energy consume in QE (1 QE = 16 EF)", 25000).getInt(25000);
             coefficientrf = config.get("general", "coefficient rf", 4).getInt(4);
             if (coefficientrf < 1) {
                 coefficientrf = 4;
@@ -576,7 +587,7 @@ public final class Config {
             molecular35 = config.get("Crafts Molecular Transformer", "Magnesium ingot", 700000D).getDouble(700000D);
             molecular36 = config.get("Crafts Molecular Transformer", "Caravky ingot", 900000D).getDouble(900000D);
             molecular37 = config
-                    .get("Crafts Molecular Transformer", "Iridium ingot(from Iridium Ore Ic2)", 50000)
+                    .get("Crafts Molecular Transformer", "Iridium ingot(from Iridium Ore IUCore)", 50000)
                     .getDouble(50000);
 
             disableUpdateCheck = config.get("general", "Disable Update Check ", false).getBoolean(false);
@@ -602,7 +613,7 @@ public final class Config {
             energyPerultraLowPowerOperation1 = config.get("UltimateDrill", "energyPerUltraBigHolesOperation (7x7)", 700).getInt(
                     700);
 
-            maxVein = config.get("general", "Maximum amount of ore in a vein", 30000).getInt(30000);
+            maxVein = config.get("general", "Maximum amount of ore in a vein", 20000).getInt(20000);
             enableIC2EasyMode = config
                     .get("Transformer mode", "unchecking the tier", false)
                     .getBoolean(false);
@@ -658,7 +669,7 @@ public final class Config {
             percent_day = config.get("Modules", "percent generation day", 5).getInt(5);
             percent_night = config.get("Modules", "percent generation night", 5).getInt(5);
             Storagequantumsuit = config.get("Battery", "MaxEnergy", 100000000).getInt(100000000);
-
+            enableProbe = config.get("Integration", "Integration The One Probe", true).getBoolean(true);
             thaumcraft = config.get("Integration", "Integration Thaumcraft", true).getBoolean(true);
             Draconic = config.get("Integration", "Integration Draconic Evolution", true).getBoolean(true);
             Botania = config.get("Integration", "Integration Botania", true).getBoolean(true);
@@ -847,6 +858,10 @@ public final class Config {
             ManganeseOre = config.get("spawn ore", "Enable spawn ManganeseOre", true).getBoolean(true);
             IridiumOre = config.get("spawn ore", "Enable spawn IridiumOre", true).getBoolean(true);
             GermaniumOre = config.get("spawn ore", "Enable spawn GermaniumOre", true).getBoolean(true);
+            CopperOre = config.get("spawn ore", "Enable spawn CopperOre", true).getBoolean(true);
+            TinOre = config.get("spawn ore", "Enable spawn TinOre", true).getBoolean(true);
+            LeadOre = config.get("spawn ore", "Enable spawn LeadOre", true).getBoolean(true);
+            UraniumOre = config.get("spawn ore", "Enable spawn UraniumOre", true).getBoolean(true);
 
             MagnetiteOre = config.get("spawn ore", "Enable spawn MagnetiteOre", true).getBoolean(true);
             CalaveriteOre = config.get("spawn ore", "Enable spawn CalaveriteOre", true).getBoolean(true);
@@ -936,6 +951,15 @@ public final class Config {
                     25);
 
 
+            explodeReactor = config.get("Configuration of reactors", "Enable explode", true).getBoolean(true);
+
+
+            optimization_network = config.get("Configuration of server", "optimization network", false).getBoolean(false);
+            optimization_network_col = config.get("Configuration of server", "how many tile updates per tick", 256).getInt(256);
+            speed_insert_item = config.get("Configuration of server", "Insert item in mechanism", 4).getInt(4);
+            speed_extract_item = config.get("Configuration of server", "Extract item in mechanism", 2).getInt(2);
+            speed_insert_fluid = config.get("Configuration of server", "Insert fluid in mechanism", 4).getInt(4);
+            speed_extract_fluid = config.get("Configuration of server", "Extract fluid in mechanism", 2).getInt(2);
             //
 
             //

@@ -1,20 +1,20 @@
 package com.denfop.tiles.base;
 
 import com.denfop.IUItem;
-import com.denfop.api.inv.IHasGui;
+import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.UpgradableProperty;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockCombinerSolid;
+import com.denfop.componets.Energy;
 import com.denfop.container.ContainerCombinerSolidMatter;
 import com.denfop.gui.GuiCombinerSolidMatter;
 import com.denfop.invslot.InvSlotSolidMatter;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
-import ic2.api.upgrade.IUpgradableBlock;
-import ic2.api.upgrade.UpgradableProperty;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +30,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityCombinerSolidMatter extends TileEntityInventory implements IHasGui,
+public class TileEntityCombinerSolidMatter extends TileEntityInventory implements
         IUpgradableBlock {
 
     private static final List<AxisAlignedBB> aabbs = Collections.singletonList(new AxisAlignedBB(
@@ -44,55 +44,63 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     public final InvSlotSolidMatter inputSlot;
     public final InvSlotUpgrade upgradeSlot;
     public final InvSlotOutput outputSlot;
-    public final AdvEnergy energy;
+    public final Energy energy;
     public EnumSolidMatter[] solid;
     public int[] solid_col;
 
     public TileEntityCombinerSolidMatter() {
         this.inputSlot = new InvSlotSolidMatter(this);
 
-        this.outputSlot = new InvSlotOutput(this, "output", 9);
-        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, "upgrade", 4);
+        this.outputSlot = new InvSlotOutput(this, 9);
+        this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
 
-        this.energy = this.addComponent(AdvEnergy.asBasicSink(this, 0, 14));
+        this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
         this.solid = new EnumSolidMatter[9];
         this.solid_col = new int[9];
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
+    public IMultiTileBlock getTeBlock() {
+        return BlockCombinerSolid.combiner_solid_matter;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.combinersolidmatter;
+    }
+
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
             if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
             } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
             }
         }
     }
 
-    protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 
     @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
     }
 
-    protected boolean isNormalCube() {
+    public boolean isNormalCube() {
         return false;
     }
 
-    protected boolean doesSideBlockRendering(EnumFacing side) {
+    public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
 
-    protected boolean isSideSolid(EnumFacing side) {
+    public boolean isSideSolid(EnumFacing side) {
         return false;
     }
 
-    protected boolean clientNeedsExtraModelInfo() {
+    public boolean clientNeedsExtraModelInfo() {
         return true;
     }
 
@@ -101,7 +109,7 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     }
 
     @Override
-    protected ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
+    public ItemStack getPickBlock(final EntityPlayer player, final RayTraceResult target) {
         return new ItemStack(IUItem.combinersolidmatter);
     }
 
@@ -116,41 +124,42 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     }
 
 
-    protected void onLoaded() {
+    public void onLoaded() {
         super.onLoaded();
         this.inputSlot.update();
 
     }
 
 
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
 
         if (this.energy.getCapacity() > 0 && this.energy.getEnergy() == this.energy.getCapacity()) {
-
+            boolean need = false;
             for (int i = 0; i < this.solid_col.length; i++) {
                 if (this.solid_col[i] == 0) {
                     continue;
                 }
                 ItemStack stack = this.solid[i].stack.copy();
                 stack.setCount(this.solid_col[i]);
-                this.outputSlot.add(stack);
+                if (this.outputSlot.add(stack)) {
+                    need = true;
+                }
             }
-            this.energy.useEnergy(this.energy.getEnergy());
+            if (need) {
+                this.energy.useEnergy(this.energy.getEnergy());
+            }
         }
         this.upgradeSlot.tickNoMark();
 
 
     }
 
-    protected void onUnloaded() {
+    public void onUnloaded() {
         super.onUnloaded();
 
 
     }
-
-
-
 
 
     @SideOnly(Side.CLIENT)
@@ -172,28 +181,12 @@ public class TileEntityCombinerSolidMatter extends TileEntityInventory implement
     }
 
 
-    public double getEnergy() {
-        return this.energy.getEnergy();
-    }
-
-    public boolean useEnergy(double amount) {
-        return this.energy.useEnergy(amount);
-    }
-
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
         return EnumSet.of(
-                UpgradableProperty.Transformer,
-                UpgradableProperty.ItemProducing
+                UpgradableProperty.Transformer, UpgradableProperty.ItemExtract,
+                UpgradableProperty.ItemInput
         );
-    }
-
-    public void onGuiClosed(EntityPlayer player) {
-    }
-
-
-    public String getInventoryName() {
-        return null;
     }
 
 

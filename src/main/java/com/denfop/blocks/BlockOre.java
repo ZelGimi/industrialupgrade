@@ -3,7 +3,9 @@ package com.denfop.blocks;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -24,6 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -36,11 +39,10 @@ public class BlockOre extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("baseore");
         setCreativeTab(IUCore.OreTab);
-        setHardness(3.0F);
-        setResistance(5.0F);
+        setHardness(1.0F);
         setSoundType(SoundType.STONE);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.titanium));
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", 1);
     }
 
     @Override
@@ -76,6 +78,25 @@ public class BlockOre extends BlockCore implements IModelRegister {
         return Type.values()[meta].getRarity();
     }
 
+    @Override
+    public List<ItemStack> getDrops(final IBlockAccess world, final BlockPos pos, final IBlockState state, final int fortune) {
+        NonNullList<ItemStack> ret = NonNullList.create();
+        ret.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), getMetaFromState(state)));
+        return ret;
+    }
+
+    private int getDrop(int fortune) {
+        switch (fortune) {
+            case 0:
+                return 0;
+            case 1:
+                return WorldBaseGen.random.nextInt(100) < 25 ? 1 : 0;
+            case 2:
+                return WorldBaseGen.random.nextInt(100) < 50 ? 1 : 0;
+            default:
+                return WorldBaseGen.random.nextInt(100) < 75 ? 1 : 0;
+        }
+    }
 
     public int getMetaFromState(IBlockState state) {
         return state.getValue(VARIANT).getMetadata();

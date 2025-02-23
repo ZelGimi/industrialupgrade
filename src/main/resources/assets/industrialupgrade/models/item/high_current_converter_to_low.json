@@ -1,0 +1,6 @@
+{
+  "parent" : "industrialupgrade:item/default",
+  "textures" : {
+    "layer0" : "industrialupgrade:items/high_current_converter_to_low"
+  }
+}

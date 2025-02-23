@@ -3,7 +3,7 @@
   "variants" : {
     "type" : {
       "expcable" : {
-        "model" : "industrialupgrade:wiring/expcable"
+        "model" : "industrialupgrade:wiring/expcable/expcable_expcable"
       },
       "spec_cable" : {
         "model" : "industrialupgrade:wiring/glass_cable"

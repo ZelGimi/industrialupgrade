@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/steam_boiler_controller_active",
+    "down" : "industrialupgrade:blocks/steam_boiler_casing",
+    "up" : "industrialupgrade:blocks/steam_boiler_casing",
+    "north" : "industrialupgrade:blocks/steam_boiler_controller_active",
+    "east" : "industrialupgrade:blocks/steam_boiler_casing",
+    "south" : "industrialupgrade:blocks/steam_boiler_casing",
+    "west" : "industrialupgrade:blocks/steam_boiler_casing"
+  }
+}

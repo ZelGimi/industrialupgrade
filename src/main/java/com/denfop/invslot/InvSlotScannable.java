@@ -5,20 +5,20 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IBaseRecipe;
 import com.denfop.api.recipe.IRecipeInputStack;
 import com.denfop.api.recipe.RecipeInputStack;
-import com.denfop.tiles.base.TileEntityScanner;
+import com.denfop.tiles.base.TileScanner;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class InvSlotScannable extends InvSlotConsumable {
+public class InvSlotScannable extends InvSlot {
 
     private final IBaseRecipe recipe;
     private final List<IRecipeInputStack> accepts;
-    private final TileEntityScanner tile;
+    private final TileScanner tile;
     private final List<BaseMachineRecipe> recipes;
 
-    public InvSlotScannable(TileEntityScanner base1, String name1, int count) {
-        super(base1, name1, count);
+    public InvSlotScannable(TileScanner base1, int count) {
+        super(base1, TypeItemSlot.INPUT, count);
         this.setStackSizeLimit(1);
         this.tile = base1;
         this.recipe = Recipes.recipes.getRecipe("replicator");
@@ -28,7 +28,7 @@ public class InvSlotScannable extends InvSlotConsumable {
 
     public boolean accepts(ItemStack stack, int index) {
         return accepts.contains(
-                new RecipeInputStack(stack));
+                new RecipeInputStack(stack)) && !(this.tile.state == TileScanner.State.COMPLETED);
     }
 
     @Override

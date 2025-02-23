@@ -1,210 +1,75 @@
 package com.denfop.events;
 
 import com.denfop.Constants;
-import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.StringUtils;
-import net.minecraft.util.text.TextFormatting;
+import com.denfop.IUCore;
+import com.denfop.Localization;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 
 public class EventUpdate {
-
-    private final UpdateCheckThread thread;
-
-    private int delay = 40;
-
     private boolean playerNotified = false;
+    private int delay = 80;
 
     public EventUpdate() {
-        this.thread = new UpdateCheckThread();
-        this.thread.start();
     }
 
     @SubscribeEvent
-    public void tickStart(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) {
-            return;
-        }
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
         if (this.delay > 0) {
             this.delay--;
             return;
         }
-        if (!this.playerNotified && this.thread.isComplete()) {
+
+        EntityPlayer player = event.player;
+        if (!this.playerNotified) {
             this.playerNotified = true;
             MinecraftForge.EVENT_BUS.unregister(this);
-            if (this.thread.getVersion().equals(Constants.MOD_VERSION)) {
-
-                return;
-            }
-            EntityPlayer player = event.player;
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(
-                        player,
-                        TextFormatting.AQUA + "" + TextFormatting.BOLD + Localization.translate("updatemod4") + " " + TextFormatting.RESET + TextFormatting.BOLD + Localization.translate(
-                                "updatemod") + TextFormatting.RESET + TextFormatting.GREEN + "" + TextFormatting.BOLD + this.thread.getVersion()
-                );
-
-                IC2.platform.messagePlayer(
-                        player,
-                        TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod5")
-                );
-
-                IC2.platform.messagePlayer(player, this.thread.getChangelog());
-
-                IC2.platform.messagePlayer(
-                        player,
-                        TextFormatting.BLUE + "" + TextFormatting.BOLD + "[IU] " + Localization.translate("updatemod2")
-                );
-
-                IC2.platform.messagePlayer(player, this.thread.getDownload());
-            }
-
-
-        } else if (this.thread.isFailed()) {
-            EntityPlayer player = event.player;
-            this.playerNotified = true;
-            MinecraftForge.EVENT_BUS.unregister(this);
-            if (IC2.platform.isSimulating()) {
-                IC2.platform.messagePlayer(
-                        player,
-                        TextFormatting.DARK_PURPLE + Localization.translate("updatemod4") + TextFormatting.RED + Localization.translate(
-                                "updatemod3")
-                );
-            }
-            if (!StringUtils.isNullOrEmpty(this.thread.getNote()[0])) {
-                if (IC2.platform.isSimulating()) {
-                    IC2.platform.messagePlayer(player, TextFormatting.RED + this.thread.getNote()[0]);
-                }
-            }
+            sendModCheckMessage(player);
         }
     }
 
-    public static class UpdateCheckThread extends Thread {
+    private void sendModCheckMessage(EntityPlayer player) {
+        if (IUCore.proxy.isSimulating()) {
+            String modVersion = Constants.MOD_VERSION;
 
-        private final String[] note = new String[5];
-        private String version = null;
-        private boolean complete = false;
-
-        private boolean failed = false;
-        private String changelogurl = null;
-        private String download = null;
-
-        public void run() {
-            ModUtils.info("[Update Checker] Thread Started");
-            try {
-                URL versionURL = new URL("https://raw.githubusercontent.com/ZelGimi/industrialupgrade/1.12.2-dev/version.txt");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(versionURL.openStream()));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.contains(":")) {
-                        String value = line.substring(line.indexOf(":") + 1);
-                        if (line.contains("Version")) {
-                            this.version = value;
-                            continue;
-                        }
-                        if (line.contains("CurseForge")) {
-                            this.download = value;
-                            continue;
-                        }
-                        if (line.contains("Changelog")) {
-
-                            String url = "https://raw.githubusercontent.com/ZelGimi/industrialupgrade/1.12.2-dev/" + value;
-                            URL ChangelogURL = new URL(url);
-                            changelogurl = "https://raw.githubusercontent.com/ZelGimi/industrialupgrade/1.12.2-dev/changelog" +
-                                    ".txt";
-                            BufferedReader bufferedReader1 = new BufferedReader(new InputStreamReader(ChangelogURL.openStream()));
-                            String line1;
-                            boolean getversion = false;
-                            while ((line1 = bufferedReader1.readLine()) != null) {
-
-                                if (line1.contains("#")) {
-                                    continue;
-                                }
-                                if (line1.contains(":")) {
-                                    String value1 = line1.substring(line1.indexOf(":") + 1);
-                                    getversion = this.version.equals(value1);
-
-                                    continue;
-                                }
-                                if (getversion) {
-                                    String value1 = line1.substring(line1.indexOf(".") + 1);
-                                    if (note[0] == null) {
-                                        this.note[0] = "- " + value1;
-                                        continue;
-                                    }
-                                    if (note[1] == null) {
-                                        this.note[1] = "- " + value1;
-                                        continue;
-                                    }
-
-                                    if (note[2] == null) {
-                                        this.note[2] = "- " + value1;
-                                        continue;
-                                    }
-                                    if (note[3] == null) {
-                                        this.note[3] = "- " + value1;
-                                        continue;
-                                    }
-                                    if (note[4] == null) {
-                                        this.note[4] = "- " + value1;
-                                    }
-                                }
-                            }
+            boolean hasPowerUtilities = Loader.isModLoaded("powerutils");
+            boolean hasSimplyQuarry = Loader.isModLoaded("simplyquarries");
+            boolean hasQuantumGenerators = Loader.isModLoaded("quantum_generators");
+            boolean hasJEI = Loader.isModLoaded("jei");
+            boolean hasTopAddons = Loader.isModLoaded("topaddons");
 
 
-                        }
+            String message = TextFormatting.DARK_GRAY + "================" + "\n" +
+                    TextFormatting.GREEN + Localization.translate("iu.mod.name") + " " + modVersion + "\n" +
+                    TextFormatting.WHITE + Localization.translate("iu.addons.installed") + "\n" +
+                    formatAddonStatus("Power Utilities", hasPowerUtilities) + "\n" +
+                    formatAddonStatus("Simply Quarry", hasSimplyQuarry) + "\n" +
+                    formatAddonStatus("Quantum Generators", hasQuantumGenerators) + "\n\n" +
+                    TextFormatting.YELLOW + Localization.translate("iu.addons.required") + "\n" +
+                    formatAddonStatus("JEI", hasJEI) + "\n" +
+                    formatAddonStatus("Top Addons", hasTopAddons) + "\n" +
+                    TextFormatting.DARK_GRAY + "================";
 
-                    }
-
-
-                }
-                if (this.download != null && this.version != null) {
-                    this.complete = true;
-                } else {
-                    this.note[0] = "[Invalid Response]";
-                    this.failed = true;
-                }
-                ModUtils.info("[Update Checker] Thread Finished");
-            } catch (Exception e) {
-                ModUtils.info("[Update Checker] Check Failed");
-                this.failed = true;
-                this.note[0] = e.getClass().toString();
-                e.printStackTrace();
-            }
+            IUCore.proxy.messagePlayer(player, message);
+            sendDiscordLink(player);
         }
-
-        public String getVersion() {
-            return this.version;
-        }
-
-        public String getChangelog() {
-            return this.changelogurl;
-        }
-
-        public String getDownload() {
-            return this.download;
-        }
-
-        public String[] getNote() {
-            return this.note;
-        }
-
-        public boolean isComplete() {
-            return this.complete;
-        }
-
-        public boolean isFailed() {
-            return this.failed;
-        }
-
     }
 
+    private String formatAddonStatus(String addonName, boolean isInstalled) {
+        return " " + addonName + ": " + (isInstalled ? TextFormatting.GREEN +"["+ "\u2611" + "]" : TextFormatting.RED + "["+"\u274C" + "]");
+    }
+
+    private void sendDiscordLink(EntityPlayer player) {
+        TextComponentString discordMessage = new TextComponentString(TextFormatting.AQUA + Localization.translate("iu.discord.question") + " " + TextFormatting.UNDERLINE + "[" + Localization.translate("iu.discord.click") + "]");
+        discordMessage.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/nFHcxqVx"));
+        player.sendMessage(discordMessage);
+    }
 }

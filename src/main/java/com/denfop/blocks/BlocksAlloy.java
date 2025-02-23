@@ -36,7 +36,7 @@ public class BlocksAlloy extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("baseblockalloy");
         setCreativeTab(IUCore.RecourseTab);
-        setHardness(3.0F);
+        setHardness(1.0F);
         setResistance(5.0F);
         setSoundType(SoundType.METAL);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.muntsa));
@@ -126,7 +126,14 @@ public class BlocksAlloy extends BlockCore implements IModelRegister {
         vanadoalumite(6),
         vitalium(7),
         duralumin(8),
-        ferromanganese(9);
+        ferromanganese(9),
+        aluminium_silicon(10),
+        beryllium_bronze(11),
+        zeliber(12),
+        stainless_steel(13),
+        inconel(14),
+        nitenol(15),
+        ;
 
         private final int metadata;
         private final String name;

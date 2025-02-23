@@ -1,14 +1,12 @@
 package com.denfop.container;
 
 
-import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityWaterGenerator;
+import com.denfop.tiles.mechanism.generator.things.fluid.TileWaterGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerWaterGenerator extends ContainerFullInv<TileWaterGenerator> {
 
-public class ContainerWaterGenerator extends ContainerFullInv<TileEntityWaterGenerator> {
-
-    public ContainerWaterGenerator(EntityPlayer entityPlayer, TileEntityWaterGenerator tileEntity1) {
+    public ContainerWaterGenerator(EntityPlayer entityPlayer, TileWaterGenerator tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
 
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
@@ -18,12 +16,5 @@ public class ContainerWaterGenerator extends ContainerFullInv<TileEntityWaterGen
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-
-        return ret;
-    }
 
 }

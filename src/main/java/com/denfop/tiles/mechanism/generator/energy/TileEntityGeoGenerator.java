@@ -1,20 +1,17 @@
 package com.denfop.tiles.mechanism.generator.energy;
 
+import com.denfop.Localization;
 import com.denfop.api.gui.IType;
 import com.denfop.api.recipe.InvSlotOutput;
-import com.denfop.componets.AdvEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerGeoGenerator;
 import com.denfop.gui.GuiGeoGenerator;
 import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotConsumableLiquid;
-import com.denfop.invslot.InvSlotConsumableLiquidByTank;
-import ic2.core.init.Localization;
-import ic2.core.init.MainConfig;
-import ic2.core.util.ConfigUtil;
+import com.denfop.invslot.InvSlotFluid;
+import com.denfop.invslot.InvSlotTank;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidEvent;
@@ -30,7 +27,7 @@ import java.util.List;
 
 public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements IType {
 
-    public final InvSlotConsumableLiquid fluidSlot;
+    public final InvSlotFluid fluidSlot;
     public final InvSlotOutput outputSlot;
 
     public final FluidTank fluidTank;
@@ -41,37 +38,28 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
     public TileEntityGeoGenerator(int size, double coef, int tier) {
         super(20.0D * coef, tier, (int) (2400 * coef));
         this.fluidTank = this.fluids.addTankInsert("fluid", size * 1000, Fluids.fluidPredicate(FluidRegistry.LAVA));
-        this.production = Math.round(20.0F * coef * ConfigUtil.getFloat(MainConfig.get(), "balance/energy/generator/geothermal"));
-        this.fluidSlot = new InvSlotConsumableLiquidByTank(
+        this.production = Math.round(20.0F * coef * 1);
+        this.fluidSlot = new InvSlotTank(
                 this,
-                "fluidSlot",
-                InvSlot.Access.I,
+                InvSlot.TypeItemSlot.INPUT,
                 1,
-                InvSlot.InvSide.ANY,
-                InvSlotConsumableLiquid.OpType.Drain,
+                InvSlotFluid.TypeFluidSlot.INPUT,
                 this.fluidTank
         );
-        this.outputSlot = new InvSlotOutput(this, "output", 1);
+        this.outputSlot = new InvSlotOutput(this, 1);
         this.coef = coef;
     }
 
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.info_upgrade_energy") + this.coef);
         }
-        if (this.getComp(AdvEnergy.class) != null) {
-            AdvEnergy energy = this.getComp(AdvEnergy.class);
-            if (!energy.getSourceDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSourceTier()));
-            } else if (!energy.getSinkDirs().isEmpty()) {
-                tooltip.add(Localization.translate("ic2.item.tooltip.PowerTier", energy.getSinkTier()));
-            }
-        }
 
+        super.addInformation(stack,tooltip);
 
     }
 
@@ -80,11 +68,11 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
         return EnumTypeStyle.DEFAULT;
     }
 
-    public AdvEnergy getEnergy() {
+    public Energy getEnergy() {
         return energy;
     }
 
-    protected void updateEntityServer() {
+    public void updateEntityServer() {
         super.updateEntityServer();
         this.fluidSlot.processIntoTank(this.fluidTank, this.outputSlot);
 
@@ -115,8 +103,8 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
         return "Generators/GeothermalLoop.ogg";
     }
 
-    protected void onBlockBreak() {
-        super.onBlockBreak();
+    public void onBlockBreak(boolean wrench) {
+        super.onBlockBreak(false);
         FluidEvent.fireEvent(new FluidSpilledEvent(new FluidStack(FluidRegistry.LAVA, 1000), this.getWorld(), this.pos));
     }
 

@@ -1,12 +1,8 @@
 {
-  "parent" : "block/cube",
+  "parent" : "industrialupgrade:block/solar_side",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/Hybrid Solar Side",
-    "down" : "industrialupgrade:blocks/Hybrid Solar Bottom",
-    "up" : "industrialupgrade:blocks/Hybrid Solar Top",
-    "north" : "industrialupgrade:blocks/Hybrid Solar Side",
-    "east" : "industrialupgrade:blocks/Hybrid Solar Side",
-    "south" : "industrialupgrade:blocks/Hybrid Solar Side",
-    "west" : "industrialupgrade:blocks/Hybrid Solar Side"
+    "bottom" : "industrialupgrade:blocks/solar_panels/bottom_panels",
+    "glass" : "industrialupgrade:blocks/solar_panels/hybrid/glass",
+    "side" : "industrialupgrade:blocks/solar_panels/hybrid/side"
   }
 }

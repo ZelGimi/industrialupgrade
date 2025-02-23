@@ -1,6 +1,6 @@
 {
-  "parent" : "ic2:item/default",
+  "parent" : "industrialupgrade:item/default",
   "textures" : {
-    "layer0" : "ic2:items/cable/gold_cable_2"
+    "layer0" : "industrialupgrade:items/gold_cable_2"
   }
 }

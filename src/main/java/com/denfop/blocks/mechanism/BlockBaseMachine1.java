@@ -2,26 +2,21 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.TileEntityHandlerHeavyOre;
-import com.denfop.tiles.mechanism.TileEntityMagnet;
-import com.denfop.tiles.mechanism.TileEntityMagnetGenerator;
-import com.denfop.tiles.mechanism.TileEntityWitherMaker;
-import com.denfop.tiles.mechanism.dual.TileEntityEnrichment;
-import com.denfop.tiles.mechanism.dual.TileEntitySynthesis;
+import com.denfop.api.item.IMultiBlockItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.TileHandlerHeavyOre;
+import com.denfop.tiles.mechanism.TileMagnet;
+import com.denfop.tiles.mechanism.TileMagnetGenerator;
+import com.denfop.tiles.mechanism.TileWitherMaker;
+import com.denfop.tiles.mechanism.dual.TileEnrichment;
+import com.denfop.tiles.mechanism.dual.TileSynthesis;
 import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityAdvGeoGenerator;
 import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityImpGeoGenerator;
 import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityPerGeoGenerator;
-import com.denfop.tiles.mechanism.triple.heat.TileEntityAdvAlloySmelter;
-import com.denfop.tiles.reactors.TileEntityAdvNuclearReactorElectric;
-import com.denfop.tiles.reactors.TileEntityImpNuclearReactor;
-import com.denfop.tiles.reactors.TileEntityPerNuclearReactor;
-import ic2.api.item.ITeBlockSpecialItem;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.tiles.mechanism.triple.heat.TileAdvAlloySmelter;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -30,26 +25,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
+public enum BlockBaseMachine1 implements IMultiTileBlock, IMultiBlockItem {
 
-    adv_alloy_smelter(TileEntityAdvAlloySmelter.class, 3),
+    adv_alloy_smelter(TileAdvAlloySmelter.class, 3),
     adv_geo(TileEntityAdvGeoGenerator.class, 4),
     imp_geo(TileEntityImpGeoGenerator.class, 5),
     per_geo(TileEntityPerGeoGenerator.class, 6),
-    adv_reactor(TileEntityAdvNuclearReactorElectric.class, 7),
-    imp_reactor(TileEntityImpNuclearReactor.class, 8),
-    per_reactor(TileEntityPerNuclearReactor.class, 9),
-    enrichment(TileEntityEnrichment.class, 10),
-    synthesis(TileEntitySynthesis.class, 11),
-    handler_ho(TileEntityHandlerHeavyOre.class, 12),
-    gen_wither(TileEntityWitherMaker.class, 13),
-    magnet(TileEntityMagnet.class, 14),
-    magnet_generator(TileEntityMagnetGenerator.class, 15),
+    enrichment(TileEnrichment.class, 10),
+    synthesis(TileSynthesis.class, 11),
+    handler_ho(TileHandlerHeavyOre.class, 12),
+    gen_wither(TileWitherMaker.class, 13),
+    magnet(TileMagnet.class, 14),
+    magnet_generator(TileMagnetGenerator.class, 15),
 
     ;
 
@@ -58,9 +49,7 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
 
     private final Class<? extends TileEntityBlock> teClass;
     private final int itemMeta;
-    private final EnumRarity rarity;
     private TileEntityBlock dummyTe;
-    private TeBlock.ITePlaceHandler placeHandler;
 
 
     BlockBaseMachine1(final Class<? extends TileEntityBlock> teClass, final int itemMeta) {
@@ -71,14 +60,20 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
     BlockBaseMachine1(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
-        this.rarity = rarity;
 
         GameRegistry.registerTileEntity(teClass, IUCore.getIdentifier(this.getName()));
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -88,29 +83,10 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-    @Nullable
-    @Override
-    public TeBlock.ITePlaceHandler getPlaceHandler() {
-        return placeHandler;
-    }
-
-    public void setPlaceHandler(TeBlock.ITePlaceHandler handler) {
-        if (this.placeHandler != null) {
-            throw new RuntimeException("duplicate place handler");
-        } else {
-            this.placeHandler = handler;
-        }
-    }
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -148,35 +124,24 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
     public float getHardness() {
-        return 3.0f;
-    }
-
-    @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+        return 1.0F;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override
@@ -190,7 +155,7 @@ public enum BlockBaseMachine1 implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public boolean doesOverrideDefault(final ItemStack itemStack) {
+    public boolean hasUniqueRender(final ItemStack itemStack) {
         return false;
     }
 

@@ -2,19 +2,26 @@ package com.denfop.invslot;
 
 
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.tiles.base.TileEntityCombinerSEGenerators;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotCombinerSEG extends InvSlot {
+public class InvSlotCombinerSEG extends InvSlot implements ITypeSlot {
 
     private final TileEntityCombinerSEGenerators tile;
     private int stackSizeLimit;
 
     public InvSlotCombinerSEG(TileEntityCombinerSEGenerators base1) {
-        super(base1, "input5", InvSlot.Access.I, 9, InvSlot.InvSide.ANY);
+        super(base1, TypeItemSlot.INPUT, 9);
         this.tile = base1;
         this.stackSizeLimit = 4;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.BLOCKS;
     }
 
     public void update() {

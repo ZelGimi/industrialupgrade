@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public interface IVeinSystem {
@@ -18,7 +19,7 @@ public interface IVeinSystem {
 
     void unload();
 
-    List<ChunkPos> getChunkPos();
+    LinkedList<ChunkPos> getChunkPos();
 
     Vein getEMPTY();
 

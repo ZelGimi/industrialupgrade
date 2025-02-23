@@ -4,42 +4,133 @@ import com.denfop.api.space.BaseResource;
 import com.denfop.api.space.IBaseResource;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.IPlanet;
+import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
-import com.denfop.api.space.rovers.EnumTypeUpgrade;
-import com.denfop.api.space.rovers.IRovers;
-import com.denfop.api.space.rovers.IRoversItem;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
+import com.denfop.api.space.rovers.api.IRovers;
+import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.api.space.rovers.Rovers;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
+import com.denfop.blocks.FluidName;
+import com.denfop.utils.Timer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class FakePlanet implements IFakePlanet {
 
-    private FakePlayer player;
+    private UUID player;
     private IPlanet planet;
     private IRovers rovers;
     private IData data;
-    private int time;
-    private boolean end;
 
-    public FakePlanet(FakePlayer player, IPlanet planet, IRovers rovers, IData data) {
+    private List<IBaseResource> iBaseResourceList = new ArrayList<>();
+    private Timer timerToPlanet;
+    private Timer timerFromPlanet;
+    SpaceOperation spaceOperation;
+    public FakePlanet(UUID player, IPlanet planet, IRovers rovers, IData data, SpaceOperation spaceOperation) {
         this.player = player;
         this.planet = planet;
         this.rovers = rovers;
-        int temp = SpaceUpgradeSystem.system.getModules(EnumTypeUpgrade.PROTECTION, this.rovers.getItemStack()) != null ?
-                SpaceUpgradeSystem.system.getModules(EnumTypeUpgrade.PROTECTION, this.rovers.getItemStack()).number * 600 : 0;
-        this.time = 1800 + temp;
+        this.spaceOperation=spaceOperation;
         this.data = data;
-        this.end = false;
+        int seconds = (int) ((Math.abs(planet.getDistance() - SpaceInit.earth.getDistance())/(SpaceInit.mars.getDistance()-SpaceInit.earth.getDistance())) * (16.66*60));
+        if (SpaceUpgradeSystem.system.hasModules(
+                EnumTypeUpgrade.SOLAR,
+                rovers.getItemStack()
+        )) {
+            final int engine = SpaceUpgradeSystem.system.getModules(
+                    EnumTypeUpgrade.ENGINE,
+                    rovers.getItemStack()
+            ).number;
+            seconds = (int) (seconds * (1-(engine*0.125D)));
+        }
+        FluidStack fluidStack = rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(1,false);
+        double coef = 1;
+        if (fluidStack.getFluid().equals(FluidName.fluiddimethylhydrazine.getInstance())) {
+            coef = 1.5;
+        }
+        if (fluidStack.getFluid().equals(FluidName.fluiddecane.getInstance())) {
+            coef = 2.2;
+        }
+        if (fluidStack.getFluid().equals(FluidName.fluidxenon.getInstance())) {
+            coef = 3.75;
+        }
+        seconds= (int) (seconds/coef);
+        this.timerToPlanet = new Timer(seconds);
+        this.timerFromPlanet = new Timer(seconds);
+        timerFromPlanet.setCanWork(false);
+    }
+    public void addBaseResource(IBaseResource baseResource){
+        iBaseResourceList.add(baseResource);
     }
 
-    public FakePlanet(FakePlayer player, String name) {
-        this.readNBT(player, name);
+    @Override
+    public IBody getBody() {
+        return planet;
     }
+    @Override
+    public void resetAuto() {
+        this.spaceOperation.setAuto(!this.getSpaceOperation().getAuto());
+    }
+    @Override
+    public SpaceOperation getSpaceOperation() {
+        return spaceOperation;
+    }
+    public FakePlanet(final NBTTagCompound nbtTagCompound){
+        player = nbtTagCompound.getUniqueId("uuid");
+        this.planet = (IPlanet) SpaceNet.instance.getBodyFromName(nbtTagCompound.getString("body"));
+        this.data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(player).get(planet);
+        ItemStack stack = new ItemStack(nbtTagCompound.getCompoundTag("rover"));
+        this.rovers = new Rovers((IRoversItem) stack.getItem(),stack);
+        this.timerToPlanet = new Timer(nbtTagCompound.getCompoundTag("timerTo"));
+        this.timerFromPlanet = new Timer(nbtTagCompound.getCompoundTag("timerFrom"));
+        this.spaceOperation = new SpaceOperation(this.planet,nbtTagCompound.getCompoundTag("operation"));
+        final NBTTagList tagList = nbtTagCompound.getTagList("baseResource", 10);
+        for (int i = 0; i < tagList.tagCount();i++){
+            NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
+            IBaseResource baseResource = new BaseResource(tagCompound);
+            iBaseResourceList.add(baseResource);
+        }
+        SpaceUpgradeSystem.system.updateListFromNBT(rovers.getItem(), rovers.getItemStack());
+    }
+    @Override
+    public List<IBaseResource> getResource() {
+        return iBaseResourceList;
+    }
+    @Override
+    public Timer getTimerTo() {
+        return timerToPlanet;
+    }
+
+    @Override
+    public Timer getTimerFrom() {
+        return timerFromPlanet;
+    }
+    @Override
+    public NBTTagCompound writeNBTTagCompound(final NBTTagCompound nbtTagCompound) {
+        nbtTagCompound.setUniqueId("uuid",player);
+        nbtTagCompound.setString("body",planet.getName());
+        nbtTagCompound.setTag("rover",this.rovers.getItemStack().writeToNBT(new NBTTagCompound()));
+        nbtTagCompound.setTag("timerTo",timerToPlanet.writeNBT(new NBTTagCompound()));
+        nbtTagCompound.setTag("timerFrom",timerFromPlanet.writeNBT(new NBTTagCompound()));
+        nbtTagCompound.setTag("operation",spaceOperation.writeTag(new NBTTagCompound()));
+        NBTTagList tagList = new NBTTagList();
+        for (IBaseResource baseResource : iBaseResourceList){
+            NBTTagCompound nbt = new NBTTagCompound();
+            baseResource.writeNBTTag(nbt);
+            tagList.appendTag(nbt);
+        }
+        nbtTagCompound.setTag("baseResource",tagList);
+        return nbtTagCompound;
+    }
+
 
     @Override
     public boolean equals(final Object o) {
@@ -53,16 +144,7 @@ public class FakePlanet implements IFakePlanet {
         return Objects.equals(player, that.player) && Objects.equals(planet, that.planet);
     }
 
-    @Override
-    public void setEnd() {
-        assert !this.end;
-        this.end = true;
-    }
 
-    @Override
-    public boolean getEnd() {
-        return this.end;
-    }
 
     @Override
     public IPlanet getPlanet() {
@@ -70,7 +152,7 @@ public class FakePlanet implements IFakePlanet {
     }
 
     @Override
-    public FakePlayer getPlayer() {
+    public UUID getPlayer() {
         return this.player;
     }
 
@@ -79,16 +161,7 @@ public class FakePlanet implements IFakePlanet {
         return this.rovers;
     }
 
-    @Override
-    public int getTime() {
-        return this.time;
-    }
 
-    @Override
-    public void setTime(final int time) {
-        assert this.time > 0;
-        this.time -= time;
-    }
 
     @Override
     public IData getData() {
@@ -100,61 +173,7 @@ public class FakePlanet implements IFakePlanet {
         return this.planet.getName().equals(body.getName());
     }
 
-    @Override
-    public void readNBT(FakePlayer player, String name) {
-        this.player = player;
-        final NBTTagCompound nbt = player.getTag().getCompoundTag("space_iu");
-        this.planet = (IPlanet) SpaceNet.instance.getBodyFromName(name);
-        NBTTagCompound nbt1 = nbt.getCompoundTag(this.planet.getName());
-        this.time = nbt1.getInteger("time");
-        this.end = nbt1.getBoolean("end");
-        final NBTTagCompound rovers_tag = nbt1.getCompoundTag("rovers");
-        final ItemStack rover = new ItemStack(rovers_tag);
-        this.rovers = new Rovers((IRoversItem) rover.getItem(), rover);
-        this.data = new Data(player, this.planet);
-        List<IBaseResource> list = new ArrayList<>();
-        final NBTTagCompound resources_tag = nbt1.getCompoundTag("resource");
-        int col = resources_tag.getInteger("resource");
-        for (int i = 0; i < col; i++) {
-            list.add(new BaseResource(new ItemStack((NBTTagCompound) resources_tag.getTag("resource" + i)), this.planet));
-        }
-        SpaceNet.instance.getFakeSpaceSystem().loadFakeBody(this, list, this.player);
-    }
 
 
-    @Override
-    public void writeNBT(List<IBaseResource> list) {
-        if (!this.player.getTag().hasKey("space_iu")) {
-            final NBTTagCompound nbt = new NBTTagCompound();
-            this.player.getTag().setTag("space_iu", nbt);
-        }
-        final NBTTagCompound nbt = this.player.getTag().getCompoundTag("space_iu");
-        NBTTagCompound nbt1 = new NBTTagCompound();
-        nbt1.setInteger("time", this.time);
-        nbt1.setBoolean("end", this.end);
-        NBTTagCompound rovers_tag = new NBTTagCompound();
-        this.rovers.getItemStack().writeToNBT(rovers_tag);
-        nbt1.setTag("rovers", rovers_tag);
-
-        NBTTagCompound resources = new NBTTagCompound();
-        for (int i = 0; i < list.size(); i++) {
-            resources.setTag("resource" + i, list.get(i).getItemStack().writeToNBT(new NBTTagCompound()));
-        }
-        resources.setInteger("col", list.size());
-        nbt1.setTag("resource", resources);
-        nbt.setTag(this.planet.getName(), nbt1);
-    }
-
-    @Override
-    public NBTTagCompound write(final List<IBaseResource> list) {
-        NBTTagCompound tagCompound = new NBTTagCompound();
-        return null;
-    }
-
-    @Override
-    public void remove() {
-        final NBTTagCompound nbt = this.player.getTag().getCompoundTag("space_iu");
-        nbt.removeTag(this.planet.getName());
-    }
 
 }

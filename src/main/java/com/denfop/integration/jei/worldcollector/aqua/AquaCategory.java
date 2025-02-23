@@ -2,8 +2,8 @@ package com.denfop.integration.jei.worldcollector.aqua;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -42,7 +42,7 @@ public class AquaCategory extends Gui implements IRecipeCategory<AquaWrapper> {
     @Nonnull
     @Override
     public String getTitle() {
-        return Localization.translate(new ItemStack(IUItem.basemachine2, 1, 34).getUnlocalizedName());
+        return Localization.translate(new ItemStack(IUItem.basemachine2, 1, 35).getUnlocalizedName());
     }
 
     @Nonnull
@@ -62,10 +62,10 @@ public class AquaCategory extends Gui implements IRecipeCategory<AquaWrapper> {
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
         energy++;
-        int energylevel = (int) Math.min(14.0F * energy / 100, 14);
-        int xScale = 24 * progress / 100;
+        int energylevel = (int) Math.min(51.0F * energy / 100, 51.0F);
+        int xScale = (int) (34 * progress / 100);
 
-        if (xScale > 24) {
+        if (xScale > 34) {
             progress = 0;
         }
 
@@ -73,12 +73,12 @@ public class AquaCategory extends Gui implements IRecipeCategory<AquaWrapper> {
 
 
         drawTexturedModalRect(
-                51 + 1, 31 + 14 - energylevel, 176, 14 - energylevel,
-                14, energylevel
+                25 + 1, 12 + 51 - energylevel, 179, 2 + 51 - energylevel,
+                5, energylevel
         );
 
 
-        drawTexturedModalRect(+74, +29, 176, 14, xScale + 1, 16);
+        drawTexturedModalRect(+66 - 5, +34 - 5, 177, 60, xScale, 18);
 
 
     }
@@ -90,12 +90,12 @@ public class AquaCategory extends Gui implements IRecipeCategory<AquaWrapper> {
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 50, 11);
+        isg.init(0, true, 38, 18);
 
         isg.set(0, recipes.getInput());
 
 
-        isg.init(2, false, 110, 28);
+        isg.init(2, false, 104, 28);
         isg.set(2, recipes.getOutput());
     }
 

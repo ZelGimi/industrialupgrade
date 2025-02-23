@@ -1,15 +1,10 @@
 package com.simplequarries;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
-import com.denfop.Ic2Items;
-import ic2.api.event.TeBlockFinalCallEvent;
-import ic2.api.recipe.Recipes;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TeBlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
+import com.denfop.api.Recipes;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.TileBlockCreator;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
@@ -25,29 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public final class SimplyQuarries {
 
 
-    public Block quarry;
-
-    public static <E extends Enum<E> & ITeBlock> void register(Class<E> enumClass, ResourceLocation ref) {
-        TeBlockRegistry.addAll(enumClass, ref);
-        TeBlockRegistry.setDefaultMaterial(ref, Material.ROCK);
-        TeBlockRegistry.addCreativeRegisterer((list, block, itemblock, tab) -> {
-            if (tab == CreativeTabs.SEARCH || tab == IUCore.IUTab) {
-                block.getAllTypes().forEach(type -> {
-                    if (type.hasItem()) {
-                        list.add(block.getItemStack(type));
-                    }
-                });
-            }
-        }, ref);
-    }
-
-    @SubscribeEvent
-    public static void register(final TeBlockFinalCallEvent event) {
-
-        register(BlockQuarry.class, BlockQuarry.IDENTITY);
-
-
-    }
+    public static BlockTileEntity quarry;
 
 
     public static ResourceLocation getIdentifier(final String name) {
@@ -58,89 +31,85 @@ public final class SimplyQuarries {
     public void load(final FMLPreInitializationEvent event) {
 
         MinecraftForge.EVENT_BUS.register(this);
-        BlockQuarry.buildDummies();
-        quarry = TeBlockRegistry.get(BlockQuarry.IDENTITY).setCreativeTab(IUCore.IUTab);
+        quarry = TileBlockCreator.instance.create(BlockQuarry.class);
+        if (event.getSide() == Side.CLIENT) {
+            quarry.registerModels();
+        }
     }
 
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
-        Recipes.advRecipes.addRecipe(
-                new ItemStack(IUItem.machines, 1, 8),
-                "   ",
-                " A ",
-                " B ", 'A', new ItemStack(IUItem.crafting_elements, 1, 250),
-                'B', new ItemStack(quarry, 1)
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.machines, 1, 8), new Object[]{"   ", " A ", " B ",
 
-        );
-        Recipes.advRecipes.addRecipe(
-                new ItemStack(quarry, 1),
-                " D ",
-                "ABE",
-                " C ",
-                'A',
-                new ItemStack(IUItem.crafting_elements, 1, 158),
-                'B',
-                Ic2Items.advancedMachine,
-                'C',
-                Ic2Items.elemotor,
-                'D',
-                new ItemStack(IUItem.crafting_elements, 1, 72),
-                'E',
-                new ItemStack(IUItem.crafting_elements, 1, 44)
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 250),
+                Character.valueOf('B'), new ItemStack(this.quarry, 1)});
+        Recipes.recipe.addRecipe(new ItemStack(this.quarry, 1), new Object[]{
+                " D ", "ABE", " C ",
 
-        );
-        Recipes.advRecipes.addRecipe(
-                new ItemStack(quarry, 1, 1),
-                "D D",
-                "ABE",
-                "DCD",
-                'A',
-                new ItemStack(IUItem.crafting_elements, 1, 256),
-                'B',
-                new ItemStack(quarry, 1),
-                'C',
-                new ItemStack(IUItem.crafting_elements, 1, 20),
-                'D',
-                new ItemStack(IUItem.crafting_elements, 1, 138),
-                'E',
-                new ItemStack(IUItem.crafting_elements, 1, 47)
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 158),
 
-        );
-        Recipes.advRecipes.addRecipe(
-                new ItemStack(quarry, 1, 2),
-                "D D",
-                "ABE",
-                "DCD",
-                'A',
-                new ItemStack(IUItem.crafting_elements, 1, 252),
-                'B',
-                new ItemStack(quarry, 1, 1),
-                'C',
-                new ItemStack(IUItem.crafting_elements, 1, 96),
-                'D',
-                new ItemStack(IUItem.crafting_elements, 1, 139),
-                'E',
-                new ItemStack(IUItem.crafting_elements, 1, 49)
+                Character.valueOf('B'), IUItem.advancedMachine,
 
-        );
-        Recipes.advRecipes.addRecipe(
-                new ItemStack(quarry, 1, 3),
-                "D D",
-                "ABE",
-                "DCD",
-                'A',
-                new ItemStack(IUItem.crafting_elements, 1, 254),
-                'B',
-                new ItemStack(quarry, 1, 2),
-                'C',
-                new ItemStack(IUItem.crafting_elements, 1, 120),
-                'D',
-                new ItemStack(IUItem.crafting_elements, 1, 140),
-                'E',
-                new ItemStack(IUItem.crafting_elements, 1, 51)
+                Character.valueOf('C'), IUItem.elemotor,
 
-        );
+                Character.valueOf('D'),
+                new ItemStack((Item) IUItem.crafting_elements, 1, 72),
+
+                Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 44)});
+        Recipes.recipe.addRecipe(new ItemStack(this.quarry, 1, 1), new Object[]{
+                "D D", "ABE", "DCD",
+
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 256),
+
+                Character.valueOf('B'), new ItemStack(this.quarry, 1),
+
+                Character.valueOf('C'), new ItemStack((Item) IUItem.crafting_elements, 1, 20),
+
+                Character.valueOf('D'),
+                new ItemStack((Item) IUItem.crafting_elements, 1, 138),
+
+                Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 47)});
+        Recipes.recipe.addRecipe(new ItemStack(this.quarry, 1, 2), new Object[]{
+                "D D", "ABE", "DCD",
+
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 252),
+
+                Character.valueOf('B'), new ItemStack(this.quarry, 1, 1),
+
+                Character.valueOf('C'), new ItemStack((Item) IUItem.crafting_elements, 1, 96),
+
+                Character.valueOf('D'),
+                new ItemStack((Item) IUItem.crafting_elements, 1, 139),
+
+                Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 49)});
+        Recipes.recipe.addRecipe(new ItemStack(this.quarry, 1, 3), new Object[]{
+                "D D", "ABE", "DCD",
+
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 254),
+
+                Character.valueOf('B'), new ItemStack(this.quarry, 1, 2),
+
+                Character.valueOf('C'), new ItemStack((Item) IUItem.crafting_elements, 1, 120),
+
+                Character.valueOf('D'),
+                new ItemStack((Item) IUItem.crafting_elements, 1, 140),
+
+                Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 51)});
+
+        Recipes.recipe.addRecipe(new ItemStack(this.quarry, 1, 4), new Object[]{
+                "D D", "ABE", "DCD",
+
+                Character.valueOf('A'), new ItemStack((Item) IUItem.crafting_elements, 1, 631),
+
+                Character.valueOf('B'), new ItemStack(this.quarry, 1, 3),
+
+                Character.valueOf('C'), new ItemStack((Item) IUItem.crafting_elements, 1, 622),
+
+                Character.valueOf('D'),
+                new ItemStack((Item) IUItem.crafting_elements, 1, 623),
+
+                Character.valueOf('E'), new ItemStack((Item) IUItem.crafting_elements, 1, 52)});
     }
 
 

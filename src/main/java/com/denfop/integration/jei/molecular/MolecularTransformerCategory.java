@@ -2,8 +2,8 @@ package com.denfop.integration.jei.molecular;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockMolecular;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -26,8 +26,9 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
     public MolecularTransformerCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/moleculartransformer.png"), 8, 22, 155,
-                70
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew" +
+                        ".png"), 10, 49, 203,
+                73
         );
     }
 
@@ -59,12 +60,12 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
     @Override
     public void drawExtras(@Nonnull final Minecraft mc) {
         progress++;
-        double xScale = 15.0D * progress / 100;
-        if (xScale > 15) {
+        double xScale = 18.0D * progress / 100;
+        if (xScale > 18) {
             progress = 0;
         }
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(15, 26, 221, 7, 10, (int) xScale);
+        drawTexturedModalRect(23 - 10, 75 - 49, 242, 32, 14, (int) xScale);
 
     }
 
@@ -75,14 +76,14 @@ public class MolecularTransformerCategory extends Gui implements IRecipeCategory
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 11, 4);
+        isg.init(0, true, 11, 7);
         isg.set(0, recipes.getInput());
-        isg.init(1, false, 11, 45);
+        isg.init(1, false, 11, 47);
         isg.set(1, recipes.getOutput());
     }
 
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/moleculartransformer.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimoleculartransformernew.png");
     }
 
 

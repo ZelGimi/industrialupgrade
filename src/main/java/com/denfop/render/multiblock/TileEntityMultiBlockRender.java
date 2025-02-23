@@ -1,17 +1,20 @@
 package com.denfop.render.multiblock;
 
-import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockBase;
+import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.util.function.Function;
 
-public class TileEntityMultiBlockRender<T extends TileEntityMultiBlockBase> extends TileEntitySpecialRenderer<T> {
+public class TileEntityMultiBlockRender<T extends TileMultiBlockBase> extends TileEntitySpecialRenderer<T> {
 
 
     public void render(
-            @Nonnull TileEntityMultiBlockBase te,
+            @Nonnull TileMultiBlockBase te,
             double x,
             double y,
             double z,
@@ -20,12 +23,26 @@ public class TileEntityMultiBlockRender<T extends TileEntityMultiBlockBase> exte
             float alpha
     ) {
 
-        GlStateManager.pushMatrix(); // Push the matrix to avoid unexpected behavior (we don't want to move an entire world)
-        GlStateManager.translate(x + 0.5f, y, z + 0.5f); // The base model has an offset by default, so we move it a little
-        this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        te.render(te, x, y, z, partialTicks, destroyStage, alpha);
-        GlStateManager.popMatrix(); // Pop the matrix
+
+
+
 
     }
+    public static Function createFunction( TileMultiBlockBase te){
+        Function function= o -> {
 
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(te.getBlockPos().getX() + 0.5f, te.getBlockPos().getY(), te.getBlockPos().getZ() + 0.5f);
+                Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                GL11.glDisable(GL11.GL_BLEND);
+                GlStateManager.disableLighting();
+                te.render(te);
+                GL11.glEnable(GL11.GL_BLEND);
+                GlStateManager.enableLighting();
+                GlStateManager.popMatrix();
+
+            return 0;
+        };
+        return function;
+    }
 }

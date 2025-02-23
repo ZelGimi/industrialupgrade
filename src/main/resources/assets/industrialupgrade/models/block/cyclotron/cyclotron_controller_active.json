@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/cyclotron_controller_active",
+    "down" : "industrialupgrade:blocks/cyclotron_casing",
+    "up" : "industrialupgrade:blocks/cyclotron_casing",
+    "north" : "industrialupgrade:blocks/cyclotron_controller_active",
+    "east" : "industrialupgrade:blocks/cyclotron_casing",
+    "south" : "industrialupgrade:blocks/cyclotron_casing",
+    "west" : "industrialupgrade:blocks/cyclotron_casing"
+  }
+}

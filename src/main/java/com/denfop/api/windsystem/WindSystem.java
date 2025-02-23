@@ -1,10 +1,10 @@
 package com.denfop.api.windsystem;
 
 import com.denfop.api.windsystem.event.WindGeneratorEvent;
-import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
-import ic2.core.IC2;
-import ic2.core.util.Util;
+import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,14 +24,13 @@ import java.util.Random;
 public class WindSystem implements IWindSystem {
 
     public static IWindSystem windSystem;
-    public EnumTypeWind enumTypeWind = EnumTypeWind.ONE;
+    public EnumTypeWind enumTypeWind;
     public EnumWindSide windSide;
     public int tick = 12000;
     public EnumTypeWind[] enumTypeWinds = EnumTypeWind.values();
     List<IWindMechanism> mechanismList = new ArrayList<>();
     Random rand;
     Map<EnumFacing, EnumFacing> facingMap = new HashMap<>();
-    private int time;
     private double Wind_Strength;
 
     public WindSystem() {
@@ -42,6 +42,7 @@ public class WindSystem implements IWindSystem {
         facingMap.put(EnumFacing.NORTH, EnumFacing.WEST);
         facingMap.put(EnumFacing.WEST, EnumFacing.SOUTH);
         facingMap.put(EnumFacing.SOUTH, EnumFacing.EAST);
+        enumTypeWind = EnumTypeWind.values()[rand.nextInt(10)];
     }
 
     public EnumTypeWind getEnumTypeWind() {
@@ -61,11 +62,17 @@ public class WindSystem implements IWindSystem {
             return;
         }
         facing = facingMap.get(facing);
-        if (windMechanism instanceof TileEntityWindGenerator) {
-            ((TileEntityWindGenerator) windMechanism).setFacingWrench(facing, null);
+        if (windMechanism instanceof TileWindGenerator) {
+            ((TileWindGenerator) windMechanism).setFacingWrench(facing, null);
+            new PacketUpdateFieldTile(((TileWindGenerator) windMechanism), "facing", (byte) windMechanism.getFacing().ordinal());
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         } else {
-            ((TileEntityBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
+            ((TileBaseWaterGenerator) windMechanism).setFacingWrench(facing, null);
+            new PacketUpdateFieldTile(
+                    ((TileBaseWaterGenerator) windMechanism),
+                    "facing",
+                    (byte) windMechanism.getFacing().ordinal()
+            );
             this.changeRotorSide(windMechanism, windMechanism.getFacing());
         }
     }
@@ -78,6 +85,7 @@ public class WindSystem implements IWindSystem {
             windMechanism.setCoefficient(getCoefficient(windMechanism));
             if (windMechanism.getAuto()) {
                 this.getNewPositionOfMechanism(windMechanism);
+                windMechanism.setCoefficient(getCoefficient(windMechanism));
             }
             if (!mechanismList.contains(windMechanism)) {
                 mechanismList.add(windMechanism);
@@ -107,15 +115,27 @@ public class WindSystem implements IWindSystem {
 
     public void getNewPositionOfMechanism(IWindMechanism windMechanism) {
         final EnumFacing newFacing = getNewFacing();
-        if (windMechanism instanceof TileEntityWindGenerator) {
-            ((TileEntityWindGenerator) windMechanism).setFacingWrench(newFacing, null);
-            this.changeRotorSide(windMechanism, windMechanism.getFacing());
-            IC2.network.get(true).updateTileEntityField(((TileEntityWindGenerator) windMechanism), "facing");
-        } else {
-            ((TileEntityBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
-            this.changeRotorSide(windMechanism, windMechanism.getFacing());
-            IC2.network.get(true).updateTileEntityField(((TileEntityBaseWaterGenerator) windMechanism), "facing");
+        if (windMechanism instanceof TileWindGenerator) {
+            if (windMechanism.getFacing() != newFacing) {
+                ((TileWindGenerator) windMechanism).setFacingWrench(newFacing, null);
+                new PacketUpdateFieldTile(
+                        ((TileWindGenerator) windMechanism),
+                        "facing",
+                        (byte) windMechanism.getFacing().ordinal()
+                );
+                this.changeRotorSide(windMechanism, windMechanism.getFacing());
+            }
 
+        } else {
+            if (windMechanism.getFacing() != newFacing) {
+                ((TileBaseWaterGenerator) windMechanism).setFacingWrench(newFacing, null);
+                new PacketUpdateFieldTile(
+                        ((TileBaseWaterGenerator) windMechanism),
+                        "facing",
+                        (byte) windMechanism.getFacing().ordinal()
+                );
+                this.changeRotorSide(windMechanism, windMechanism.getFacing());
+            }
         }
     }
 
@@ -182,182 +202,147 @@ public class WindSystem implements IWindSystem {
     }
 
     public double getSpeed() {
-        return Util.limit((this.getWind_Strength()) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
+        return ModUtils.limit((this.getWind_Strength()) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
     }
 
     public double getSpeed(double speed) {
-        return Util.limit((speed) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
+        return ModUtils.limit((speed) / (EnumTypeWind.TEN.getMax() * 1.5), 0.0D, 2.0D);
     }
 
     @SubscribeEvent
     public void windTick(TickEvent.WorldTickEvent event) {
-        if (event.world.provider.getDimension() != 0) {
-            if (tick == 0) {
-                windSide = EnumWindSide.getValue(this.rand.nextInt(8));
-                for (IWindMechanism windMechanism : this.mechanismList) {
-                    windMechanism.setCoefficient(getCoefficient(windMechanism));
-                    if (windMechanism.getAuto()) {
-                        this.getNewPositionOfMechanism(windMechanism);
-                    }
-                }
-            }
+        if (event.side == Side.CLIENT) {
             return;
         }
+        if (event.phase == TickEvent.Phase.START) {
+            return;
+        }
+        if (event.world.provider.getDimension() == 0) {
+            this.tick--;
+        }
 
-        tick--;
+
         if (tick == 0) {
             windSide = EnumWindSide.getValue(this.rand.nextInt(8));
-            tick = 12000;
+
+            if (this.enumTypeWind == null) {
+                this.enumTypeWind = EnumTypeWind.values()[rand.nextInt(EnumTypeWind.values().length)];
+            } else {
+                int rand = this.rand.nextInt(100);
+                switch (this.enumTypeWind.ordinal()) {
+                    case 0:
+                        if (rand >= 10) {
+                            this.enumTypeWind = EnumTypeWind.TWO;
+                        } else {
+                            this.enumTypeWind = EnumTypeWind.ONE;
+                        }
+                        tick = 12000;
+                        break;
+                    case 1:
+                        if (rand >= 20) {
+                            this.enumTypeWind = EnumTypeWind.THREE;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.ONE;
+                            }
+                        }
+                        tick = 12000;
+                        break;
+                    case 2:
+                        if (rand >= 30) {
+                            this.enumTypeWind = EnumTypeWind.FOUR;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.TWO;
+                            }
+                        }
+                        tick = 13000;
+                        break;
+                    case 3:
+                        if (rand >= 40) {
+                            this.enumTypeWind = EnumTypeWind.FIVE;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.THREE;
+                            }
+                        }
+                        tick = 14000;
+                        break;
+                    case 4:
+                        if (rand >= 50) {
+                            this.enumTypeWind = EnumTypeWind.SIX;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.FOUR;
+                            }
+                        }
+
+                        tick = 15000;
+                        break;
+                    case 5:
+                        if (rand >= 60) {
+                            this.enumTypeWind = EnumTypeWind.SEVEN;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.FIVE;
+                            }
+                        }
+                        tick = 15000;
+                        break;
+                    case 6:
+                        if (rand >= 70) {
+                            this.enumTypeWind = EnumTypeWind.EIGHT;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.SIX;
+                            }
+                        }
+                        tick = 16000;
+                        break;
+                    case 7:
+                        if (rand >= 80) {
+                            this.enumTypeWind = EnumTypeWind.NINE;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.SEVEN;
+                            }
+                        }
+                        tick = 15000;
+                        break;
+                    case 8:
+                        if (rand >= 90) {
+                            this.enumTypeWind = EnumTypeWind.TEN;
+                        } else {
+                            if (this.rand.nextInt(100) > 50) {
+                                this.enumTypeWind = EnumTypeWind.EIGHT;
+                            }
+                        }
+                        tick = 14000;
+                        break;
+                    case 9:
+                        if (this.rand.nextInt(100) > 50) {
+                            this.enumTypeWind = EnumTypeWind.NINE;
+                        }
+
+                        tick = 12000;
+                        break;
+                }
+            }
+
             for (IWindMechanism windMechanism : this.mechanismList) {
                 windMechanism.setCoefficient(getCoefficient(windMechanism));
                 if (windMechanism.getAuto()) {
                     this.getNewPositionOfMechanism(windMechanism);
+                    windMechanism.setCoefficient(getCoefficient(windMechanism));
                 }
             }
         }
 
         World world = event.world;
         if (world.getWorldTime() % 20 == 0) {
-            if (!world.isRaining()) {
-                if (!world.isThundering()) {
-                    if (world.getWorldInfo().getCleanWeatherTime() > 0) {
-                        int time = world.getWorldInfo().getCleanWeatherTime();
-                        if (time < 11000 && time >= 8000) {
-                            this.time = time - 8000;
-                            this.enumTypeWind = EnumTypeWind.ONE;
-                        }
-                        if (time < 8000 && time >= 5000) {
-                            this.time = time - 5000;
-                            this.enumTypeWind = EnumTypeWind.TWO;
-                        }
-                        if (time < 5000 && time >= 2500) {
-                            this.time = time - 2500;
-                            this.enumTypeWind = EnumTypeWind.THREE;
-                        }
-                        if (time < 2500 && time >= 1) {
-                            this.time = time;
-                            this.enumTypeWind = EnumTypeWind.FOUR;
-                        }
-                        double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
-                        coef *= 10;
-                        this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
-                    } else if (world.getWorldInfo().getRainTime() > 0) {
-                        int time = world.getWorldInfo().getRainTime();
-                        if (time > 150000) {
-                            this.enumTypeWind = EnumTypeWind.ONE;
-                            this.time = time - 150000;
-                        } else if (time < 150000 && time >= 100000) {
-                            this.enumTypeWind = EnumTypeWind.TWO;
-                            this.time = time - 100000;
-                        } else if (time < 100000 && time >= 60000) {
-                            this.enumTypeWind = EnumTypeWind.THREE;
-                            this.time = time - 60000;
-                        } else if (time < 60000 && time >= 20000) {
-                            this.enumTypeWind = EnumTypeWind.FOUR;
-                            this.time = time - 20000;
-                        } else if (time < 20000 && time >= 1) {
-                            this.time = time;
-                            this.enumTypeWind = EnumTypeWind.FIVE;
-                        }
-                        double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
-                        coef *= 10;
-                        this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
-
-                    } else if (world.getWorldInfo().getThunderTime() > 0) {
-                        int time = world.getWorldInfo().getThunderTime();
-                        if (time > 150000) {
-                            this.enumTypeWind = EnumTypeWind.ONE;
-                            this.time = time - 100000;
-                        } else if (time < 150000 && time >= 100000) {
-                            this.enumTypeWind = EnumTypeWind.TWO;
-                            this.time = time - 100000;
-                        } else if (time < 100000 && time >= 60000) {
-                            this.enumTypeWind = EnumTypeWind.THREE;
-                            this.time = time - 60000;
-                        } else if (time < 60000 && time >= 20000) {
-                            this.enumTypeWind = EnumTypeWind.FOUR;
-                            this.time = time - 20000;
-                        } else if (time < 20000 && time >= 1) {
-                            this.enumTypeWind = EnumTypeWind.FIVE;
-                            this.time = time;
-                        }
-                        double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
-                        coef *= 10;
-                        this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
-
-
-                    }
-                } else {
-                    int time = world.getWorldInfo().getThunderTime();
-                    if (time > 20000) {
-                        this.enumTypeWind = EnumTypeWind.SEVEN;
-                        this.time = time - 20000;
-                    }
-                    if (time < 20000 && time >= 12000) {
-                        this.enumTypeWind = EnumTypeWind.EIGHT;
-                        this.time = time - 12000;
-                    }
-                    if (time < 12000 && time >= 5000) {
-                        this.time = time - 5000;
-                        this.enumTypeWind = EnumTypeWind.NINE;
-                    }
-                    if (time < 5000 && time >= 1) {
-                        this.time = time;
-                        this.enumTypeWind = EnumTypeWind.TEN;
-                    }
-                    double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
-                    coef *= 10;
-                    this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
-
-                }
-            } else {
-
-                if (world.getWorldInfo().getRainTime() > 0 && world.isRaining() && !world.isThundering()) {
-                    int time = world.getWorldInfo().getRainTime();
-                    if (time > 20000) {
-                        this.time = time - 20000;
-                        this.enumTypeWind = EnumTypeWind.FIVE;
-                    }
-                    if (time < 20000 && time >= 12000) {
-                        this.time = time - 12000;
-                        this.enumTypeWind = EnumTypeWind.SIX;
-                    }
-                    if (time < 12000 && time >= 5000) {
-                        this.time = time - 5000;
-                        this.enumTypeWind = EnumTypeWind.SEVEN;
-                    }
-                    if (time < 5000 && time >= 1) {
-                        this.time = time;
-                        this.enumTypeWind = EnumTypeWind.EIGHT;
-                    }
-                    double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
-                    coef *= 10;
-                    this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
-
-                } else if (world.getWorldInfo().getThunderTime() > 0) {
-                    int time = world.getWorldInfo().getThunderTime();
-                    if (time > 20000) {
-                        this.time = time - 20000;
-                        this.enumTypeWind = EnumTypeWind.SEVEN;
-                    }
-                    if (time < 20000 && time >= 12000) {
-                        this.time = time - 12000;
-                        this.enumTypeWind = EnumTypeWind.EIGHT;
-                    }
-                    if (time < 12000 && time >= 5000) {
-                        this.time = time - 5000;
-                        this.enumTypeWind = EnumTypeWind.NINE;
-                    }
-                    if (time < 5000 && time >= 1) {
-                        this.time = time;
-                        this.enumTypeWind = EnumTypeWind.TEN;
-                    }
-                    double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
-                    coef *= 10;
-                    this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
-
-                }
-            }
+            double coef = this.enumTypeWind.getMax() - this.enumTypeWind.getMin();
+            coef *= 10;
+            this.Wind_Strength = this.enumTypeWind.getMin() + world.rand.nextInt((int) coef + 1) / 10D;
             final double speed = getSpeed();
             for (IWindMechanism windMechanism : this.mechanismList) {
                 if (windMechanism != null) {
@@ -368,14 +353,12 @@ public class WindSystem implements IWindSystem {
     }
 
     public int getTime() {
-        return time;
+        return tick;
     }
 
     @Override
     public double getPower(final World world, final BlockPos pos, boolean min, IWindMechanism rotor) {
-        if (world.provider.getDimension() != 0) {
-            return 0;
-        }
+
         if (world.isRemote) {
             return 0;
         }

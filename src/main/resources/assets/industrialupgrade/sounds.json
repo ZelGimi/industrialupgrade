@@ -1,0 +1,830 @@
+{
+  "machines.air_collector" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/air_collector",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.teleporter" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/teleporter",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.alloysmelter" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/alloysmelter",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.analyzer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/analyzer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.assamplerscrap" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/assamplerscrap",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.blast_furnace" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/blast_furnace",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.cannerop" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/cannerop",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.gas_combiner" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/gas_combiner",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.centrifuge" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/centrifuge",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.compressorop" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/compressorop",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.cooling" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/cooling",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.cooling2" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/cooling2",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.cutter" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/cutter",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.diesel_generator" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/diesel_generator",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.electrolyzer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/electrolyzer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.enrichment" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/enrichment",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.extractorop" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/extractorop",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.extruder" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/extruder",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.fermer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/fermer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.molot" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/molot",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.primal_macerator" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/primal_macerator",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.dryer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/dryer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.mixer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/mixer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.fluid_mixer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/fluid_mixer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.solid_mixer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/solid_mixer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.steam" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/steam",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.interruptone_steam" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/interruptone_steam",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.squeezer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/squeezer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.solid_electrolyzer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/solid_electrolyzer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.primal_compressor" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/primal_compressor",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.fisher" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/fisher",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.gas" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/gas",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.gen_cobblectone" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/gen_cobblectone",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.gen_lava" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/gen_lava",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.gen_obsidiant" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/gen_obsidiant",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.genmirc" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/genmirc",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.handlerho" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/handlerho",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.hydrogen_generator" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/hydrogen_generator",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.interruptone" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/interruptone",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.maceratorop" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/maceratorop",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.magnet" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/magnet",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.magnet_generator" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/magnet_generator",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.metalformer" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/metalformer",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.molecular" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/molecular",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.oilgetter" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/oilgetter",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.oilrefiner" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/oilrefiner",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.ore_washing" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/ore_washing",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.painting" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/painting",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.pen" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/pen",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.petrol_generator" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/petrol_generator",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.plastic" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/plastic",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.plastic_plate" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/plastic_plate",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.plate" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/plate",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.pumpop" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/pumpop",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.quarry" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/quarry",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.radiation" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/radiation",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.recyclerop" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/recyclerop",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.rig" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/rig",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.synthesys" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/synthesys",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.upgrade_block" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/upgrade_block",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.welding" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/welding",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.witherdeath1" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/witherdeath1",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.witherhurt3" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/witherhurt3",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.witheridle1" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/witheridle1",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.witherspawn1" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/witherspawn1",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.zab" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/zab",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.zap" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/zap",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.batteryuse" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/batteryuse",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.bow" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/bow",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.chainsawidle" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/chainsawidle",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.chainsawstop" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/chainsawstop",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.chainsawuseone" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/chainsawuseone",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.chainsawusetwo" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/chainsawusetwo",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.crowbar" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/crowbar",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.jetpackfire" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/jetpackfire",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.jetpackloop" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/jetpackloop",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.nanosabreidle" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/nanosabreidle",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.nanosabrepowerup" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/nanosabrepowerup",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.nanosabreswing1" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/nanosabreswing1",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.nanosabreswing2" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/nanosabreswing2",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.nanosabreswing3" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/nanosabreswing3",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.painter" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/painter",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.purifier" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/purifier",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.toolchange" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/toolchange",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.treetap" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/treetap",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.katana" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/katana",
+        "stream" : false
+      }
+    ]
+  },
+  "radiation.low" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:radiation/low",
+        "stream" : false
+      }
+    ]
+  },
+  "radiation.default" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:radiation/default",
+        "stream" : false
+      }
+    ]
+  },
+  "radiation.medium" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:radiation/medium",
+        "stream" : false
+      }
+    ]
+  },
+  "radiation.high" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:radiation/high",
+        "stream" : false
+      }
+    ]
+  },
+  "radiation.very_high" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:radiation/very_high",
+        "stream" : false
+      }
+    ]
+  },
+  "tools.wrench" : {
+    "category" : "player",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:tools/wrench",
+        "stream" : false
+      }
+    ]
+  }
+}

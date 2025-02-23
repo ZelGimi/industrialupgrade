@@ -1,5 +1,6 @@
 package com.denfop.api.sytem;
 
+import com.denfop.api.energy.NodeStats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

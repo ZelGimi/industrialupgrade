@@ -9,16 +9,16 @@
         "model" : "industrialupgrade:wiring/ult_mfsu"
       },
       "batbox_iu" : {
-        "model" : "ic2:wiring/storage/batbox"
+        "model" : "industrialupgrade:wiring/batbox"
       },
       "mfe_iu" : {
-        "model" : "ic2:wiring/storage/mfe"
+        "model" : "industrialupgrade:wiring/mfe"
       },
       "mfsu_iu" : {
-        "model" : "ic2:wiring/storage/mfsu"
+        "model" : "industrialupgrade:wiring/mfsu"
       },
       "cesu_iu" : {
-        "model" : "ic2:wiring/storage/cesu"
+        "model" : "industrialupgrade:wiring/cesu"
       },
       "per_mfsu" : {
         "model" : "industrialupgrade:wiring/per_mfsu"

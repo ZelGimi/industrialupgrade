@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/basalt_pylon",
+    "down" : "industrialupgrade:blocks/basalt_pylon_up",
+    "up" : "industrialupgrade:blocks/basalt_pylon_up",
+    "north" : "industrialupgrade:blocks/basalt_pylon",
+    "east" : "industrialupgrade:blocks/basalt_pylon",
+    "south" : "industrialupgrade:blocks/basalt_pylon",
+    "west" : "industrialupgrade:blocks/basalt_pylon"
+  }
+}

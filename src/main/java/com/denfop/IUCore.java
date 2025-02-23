@@ -1,81 +1,42 @@
 package com.denfop;
 
-import com.denfop.api.IElectricBlock;
-import com.denfop.api.IStorage;
 import com.denfop.api.Recipes;
 import com.denfop.api.cool.CoolNet;
 import com.denfop.api.energy.EnergyNetGlobal;
+import com.denfop.api.gasvein.GasVeinSystem;
 import com.denfop.api.heat.HeatNet;
+import com.denfop.api.pollution.PollutionManager;
+import com.denfop.api.pressure.PressureNet;
 import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeInputStack;
 import com.denfop.api.recipe.RecipesCore;
 import com.denfop.api.sytem.EnergyBase;
+import com.denfop.api.tesseract.TesseractSystem;
+import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.transport.TransportNetGlobal;
 import com.denfop.api.upgrade.BaseUpgradeSystem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.vein.VeinSystem;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeSystem;
-import com.denfop.audio.AudioManager;
+import com.denfop.audio.Sounds;
 import com.denfop.blocks.BlockIUFluid;
-import com.denfop.blocks.mechanism.BlockAdminPanel;
-import com.denfop.blocks.mechanism.BlockAdvChamber;
-import com.denfop.blocks.mechanism.BlockAdvRefiner;
-import com.denfop.blocks.mechanism.BlockAdvSolarEnergy;
-import com.denfop.blocks.mechanism.BlockBaseMachine;
-import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import com.denfop.blocks.mechanism.BlockBaseMachine2;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.blocks.mechanism.BlockBlastFurnace;
-import com.denfop.blocks.mechanism.BlockCable;
-import com.denfop.blocks.mechanism.BlockChargepadStorage;
-import com.denfop.blocks.mechanism.BlockCombinerSolid;
-import com.denfop.blocks.mechanism.BlockConverterMatter;
-import com.denfop.blocks.mechanism.BlockCoolPipes;
-import com.denfop.blocks.mechanism.BlockDoubleMolecularTransfomer;
-import com.denfop.blocks.mechanism.BlockEnergyStorage;
-import com.denfop.blocks.mechanism.BlockExpCable;
-import com.denfop.blocks.mechanism.BlockHeatColdPipes;
-import com.denfop.blocks.mechanism.BlockImpChamber;
-import com.denfop.blocks.mechanism.BlockImpSolarEnergy;
-import com.denfop.blocks.mechanism.BlockItemPipes;
-import com.denfop.blocks.mechanism.BlockMolecular;
-import com.denfop.blocks.mechanism.BlockMoreMachine;
-import com.denfop.blocks.mechanism.BlockMoreMachine1;
-import com.denfop.blocks.mechanism.BlockMoreMachine2;
-import com.denfop.blocks.mechanism.BlockMoreMachine3;
-import com.denfop.blocks.mechanism.BlockPerChamber;
-import com.denfop.blocks.mechanism.BlockPetrolQuarry;
-import com.denfop.blocks.mechanism.BlockPipes;
-import com.denfop.blocks.mechanism.BlockQCable;
-import com.denfop.blocks.mechanism.BlockQuarryVein;
-import com.denfop.blocks.mechanism.BlockRefiner;
-import com.denfop.blocks.mechanism.BlockSCable;
-import com.denfop.blocks.mechanism.BlockSimpleMachine;
-import com.denfop.blocks.mechanism.BlockSintezator;
-import com.denfop.blocks.mechanism.BlockSolarEnergy;
-import com.denfop.blocks.mechanism.BlockSolarPanels;
-import com.denfop.blocks.mechanism.BlockSolidMatter;
-import com.denfop.blocks.mechanism.BlockSunnariumMaker;
-import com.denfop.blocks.mechanism.BlockSunnariumPanelMaker;
-import com.denfop.blocks.mechanism.BlockTank;
-import com.denfop.blocks.mechanism.BlockTransformer;
-import com.denfop.blocks.mechanism.BlockUniversalCable;
-import com.denfop.blocks.mechanism.BlockUpgradeBlock;
+import com.denfop.blocks.TileBlockCreator;
 import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.heat.HeatNetGlobal;
-import com.denfop.integration.avaritia.BlockAvaritiaSolarPanel;
-import com.denfop.integration.botania.BlockBotSolarPanel;
-import com.denfop.integration.de.BlockDESolarPanel;
-import com.denfop.integration.thaumcraft.BlockThaumSolarPanel;
+import com.denfop.integration.crafttweaker.CTVein;
 import com.denfop.items.energy.EntityAdvArrow;
+import com.denfop.items.energy.ItemNanoSaber;
 import com.denfop.items.energy.ItemQuantumSaber;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.modules.EnumModule;
+import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.network.NetworkManager;
+import com.denfop.network.Sides;
+import com.denfop.pressure.PressureNetGlobal;
 import com.denfop.proxy.CommonProxy;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.render.streak.PlayerStreakInfo;
@@ -85,32 +46,22 @@ import com.denfop.utils.KeyboardIU;
 import com.denfop.utils.Keys;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.api.event.TeBlockFinalCallEvent;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.MachineRecipe;
-import ic2.core.IC2;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TeBlockRegistry;
-import ic2.core.ref.ItemName;
-import ic2.core.util.SideGateway;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.world.WorldBaseGen;
+import com.denfop.world.vein.VeinType;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntityHusk;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -118,10 +69,10 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -134,16 +85,15 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+import java.util.Random;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
-@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]", certificateFingerprint = Constants.MOD_CERTIFICATE)
+@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, dependencies = Constants.MOD_DEPS, version = Constants.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.12.2]")
 public final class IUCore {
 
     public static final CreativeTabs IUTab = new TabCore(0, "IUTab");
@@ -156,11 +106,18 @@ public final class IUCore {
     public static final CreativeTabs UpgradeTab = new TabCore(7, "UpgradeTab");
     public static final CreativeTabs BlueprintTab = new TabCore(8, "BlueprintTab");
     public static final CreativeTabs ElementsTab = new TabCore(9, "CraftingElementsTab");
-
-    public static final List<ITeBlock> list_teBlocks = new ArrayList<>();
+    public static final CreativeTabs ReactorsBlockTab = new TabCore(10, "ReactorsBlockTab");
+    public static final CreativeTabs FluidBlockTab = new TabCore(11, "FluidBlockTab");
+    public static final CreativeTabs CropsTab = new TabCore(12, "CropsTab");
+    public static final CreativeTabs BeesTab = new TabCore(13, "BeesTab");
+    public static final CreativeTabs GenomeTab = new TabCore(14, "GenomeTab");
+    public static final CreativeTabs SpaceTab = new TabCore(15, "SpaceTab");
+    public static final List<IMultiTileBlock> list_teBlocks = new ArrayList<>();
     public static final Map<Integer, EnumModule> modules = new HashMap<>();
     public static final List<ItemStack> list = new ArrayList<>();
     public static final List<ItemStack> get_ore = new ArrayList<>();
+    public static final List<ItemStack> get_polisher = new ArrayList<>();
+    public static final List<ItemStack> get_separator = new ArrayList<>();
     public static final List<ItemStack> get_ingot = new ArrayList<>();
     public static final List<ItemStack> get_crushed = new ArrayList<>();
     public static final List<ItemStack> get_comb_crushed = new ArrayList<>();
@@ -170,6 +127,7 @@ public final class IUCore {
     public static final List<ItemStack> list_removing = new ArrayList<>();
     public static final List<ItemStack> list_furnace_adding = new ArrayList<>();
     public static final List<ItemStack> list_furnace_removing = new ArrayList<>();
+    public static final ResourceLocation VOLCANO_LOOT_TABLE = new ResourceLocation(Constants.MOD_ID, "chests/volcano");
 
     public static final List<ItemStack> list_crushed_adding = new ArrayList<>();
     public static final List<ItemStack> list_crushed_removing = new ArrayList<>();
@@ -181,6 +139,8 @@ public final class IUCore {
     public static final List<QuarryItem> get_ingot_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_crushed_quarry = new ArrayList<>();
     public static final List<QuarryItem> get_comb_crushed_quarry = new ArrayList<>();
+    public static final List<QuarryItem> get_polisher_quarry = new ArrayList<>();
+    public static final List<QuarryItem> get_separator_quarry = new ArrayList<>();
     public static final List<List<ItemStack>> removing_list = new ArrayList<>();
     public static final Map<String, PlayerStreakInfo> mapStreakInfo = new HashMap<>();
 
@@ -188,9 +148,7 @@ public final class IUCore {
     public static Logger log;
     @SidedProxy(clientSide = "com.denfop.proxy.ClientProxy", serverSide = "com.denfop.proxy.CommonProxy")
     public static CommonProxy proxy;
-    @SidedProxy(clientSide = "com.denfop.audio.AudioManagerClient", serverSide = "com.denfop.audio.AudioManager")
 
-    public static AudioManager audioManager;
     @Mod.Instance("industrialupgrade")
     public static IUCore instance;
     @SidedProxy(
@@ -198,14 +156,16 @@ public final class IUCore {
             serverSide = "com.denfop.utils.KeyboardIU"
     )
     public static KeyboardIU keyboard;
-    public static SideGateway<NetworkManager> network;
+    public static Sides<NetworkManager> network;
     public static Map<String, LootTable> lootTables = new HashMap<>();
+    public static Random random;
 
     static {
         FluidRegistry.enableUniversalBucket();
+        random = new Random();
         IUCore.instance = new IUCore();
         Keys.instance = IUCore.keyboard;
-        IUCore.network = new SideGateway<>("com.denfop.network.NetworkManager", "com.denfop.network.NetworkManagerClient");
+        IUCore.network = new Sides<>("com.denfop.network.NetworkManager", "com.denfop.network.NetworkManagerClient");
 
     }
 
@@ -221,98 +181,6 @@ public final class IUCore {
         return !FMLCommonHandler.instance().getEffectiveSide().isClient();
     }
 
-    public static <E extends Enum<E> & ITeBlock> void register(Class<E> enumClass, ResourceLocation ref) {
-        TeBlockRegistry.addAll(enumClass, ref);
-        TeBlockRegistry.setDefaultMaterial(ref, Material.ROCK);
-        TeBlockRegistry.addCreativeRegisterer((list, block, itemblock, tab) -> {
-            if (tab == CreativeTabs.SEARCH || tab == IUTab) {
-                block.getAllTypes().forEach(type -> {
-                    if (type.hasItem()) {
-                        list.add(block.getItemStack(type));
-                        if (ref.equals(BlockEnergyStorage.IDENTITY) || ref.equals(BlockChargepadStorage.IDENTITY)) {
-                            ItemStack filled = block.getItemStack(type);
-                            ModUtils.nbt(filled).setDouble(
-                                    "energy",
-                                    ((IStorage) (((IElectricBlock) type).getDummyElec())).getEUCapacity()
-                            );
-                            list.add(filled);
-                        }
-                    }
-                });
-            }
-        }, ref);
-    }
-
-    @SubscribeEvent
-    public static void register(final TeBlockFinalCallEvent event) {
-
-        register(BlockSolarPanels.class, BlockSolarPanels.IDENTITY);
-        register(BlockEnergyStorage.class, BlockEnergyStorage.IDENTITY);
-        register(BlockChargepadStorage.class, BlockChargepadStorage.IDENTITY);
-        register(BlockMoreMachine.class, BlockMoreMachine.IDENTITY);
-        register(BlockMoreMachine1.class, BlockMoreMachine1.IDENTITY);
-        register(BlockMoreMachine2.class, BlockMoreMachine2.IDENTITY);
-        register(BlockMoreMachine3.class, BlockMoreMachine3.IDENTITY);
-        register(BlockBaseMachine.class, BlockBaseMachine.IDENTITY);
-        register(BlockSolidMatter.class, BlockSolidMatter.IDENTITY);
-        register(BlockCombinerSolid.class, BlockCombinerSolid.IDENTITY);
-        register(BlockSolarEnergy.class, BlockSolarEnergy.IDENTITY);
-        register(BlockAdvSolarEnergy.class, BlockAdvSolarEnergy.IDENTITY);
-        register(BlockImpSolarEnergy.class, BlockImpSolarEnergy.IDENTITY);
-        register(BlockMolecular.class, BlockMolecular.IDENTITY);
-        register(BlockBaseMachine1.class, BlockBaseMachine1.IDENTITY);
-        register(BlockBaseMachine2.class, BlockBaseMachine2.IDENTITY);
-        register(BlockBaseMachine3.class, BlockBaseMachine3.IDENTITY);
-        register(BlockSintezator.class, BlockSintezator.IDENTITY);
-        register(BlockSunnariumMaker.class, BlockSunnariumMaker.IDENTITY);
-        register(BlockSunnariumPanelMaker.class, BlockSunnariumPanelMaker.IDENTITY);
-        register(BlockRefiner.class, BlockRefiner.IDENTITY);
-        register(BlockItemPipes.class, BlockItemPipes.IDENTITY);
-        register(BlockAdvRefiner.class, BlockAdvRefiner.IDENTITY);
-        register(BlockUpgradeBlock.class, BlockUpgradeBlock.IDENTITY);
-        register(BlockPetrolQuarry.class, BlockPetrolQuarry.IDENTITY);
-        register(BlockSimpleMachine.class, BlockSimpleMachine.IDENTITY);
-        register(BlockAdvChamber.class, BlockAdvChamber.IDENTITY);
-        register(BlockImpChamber.class, BlockImpChamber.IDENTITY);
-        register(BlockPerChamber.class, BlockPerChamber.IDENTITY);
-        register(BlockTransformer.class, BlockTransformer.IDENTITY);
-        register(BlockDoubleMolecularTransfomer.class, BlockDoubleMolecularTransfomer.IDENTITY);
-        register(BlockAdminPanel.class, BlockAdminPanel.IDENTITY);
-        register(BlockCable.class, BlockCable.IDENTITY);
-        register(BlockPipes.class, BlockPipes.IDENTITY);
-        register(BlockQuarryVein.class, BlockQuarryVein.IDENTITY);
-        register(BlockQCable.class, BlockQCable.IDENTITY);
-        register(BlockSCable.class, BlockSCable.IDENTITY);
-        register(BlockExpCable.class, BlockExpCable.IDENTITY);
-
-        register(BlockBlastFurnace.class, BlockBlastFurnace.IDENTITY);
-        register(BlockCoolPipes.class, BlockCoolPipes.IDENTITY);
-        register(BlockTank.class, BlockTank.IDENTITY);
-        register(BlockConverterMatter.class, BlockConverterMatter.IDENTITY);
-        register(BlockHeatColdPipes.class, BlockHeatColdPipes.IDENTITY);
-        register(BlockUniversalCable.class, BlockUniversalCable.IDENTITY);
-
-        Config.Thaumcraft = Loader.isModLoaded("thaumcraft");
-        Config.DraconicLoaded = Loader.isModLoaded("draconicevolution");
-        Config.AvaritiaLoaded = Loader.isModLoaded("avaritia");
-        Config.BotaniaLoaded = Loader.isModLoaded("botania");
-        if (Config.AvaritiaLoaded) {
-            register(BlockAvaritiaSolarPanel.class, BlockAvaritiaSolarPanel.IDENTITY);
-        }
-
-        if (Config.BotaniaLoaded) {
-            register(BlockBotSolarPanel.class, BlockBotSolarPanel.IDENTITY);
-        }
-        if (Config.DraconicLoaded) {
-            register(BlockDESolarPanel.class, BlockDESolarPanel.IDENTITY);
-        }
-        if (Config.Thaumcraft) {
-            register(BlockThaumSolarPanel.class, BlockThaumSolarPanel.IDENTITY);
-        }
-
-
-    }
-
     public static ResourceLocation getIdentifier(final String name) {
         return new ResourceLocation(Constants.MOD_ID, name);
     }
@@ -322,12 +190,16 @@ public final class IUCore {
 
         HeatNet.instance = HeatNetGlobal.initialize();
         CoolNet.instance = CoolNetGlobal.initialize();
+        PressureNet.instance = PressureNetGlobal.initialize();
+
         EnergyBase.init();
         TransportNetGlobal.initialize();
         new VeinSystem();
+        new GasVeinSystem();
         new RadiationSystem();
         new WindSystem();
-
+        TesseractSystem.init();
+        PollutionManager.pollutionManager = new PollutionManager();
     }
 
     public static boolean isHasVersion(String modid, String version) {
@@ -345,20 +217,54 @@ public final class IUCore {
     }
 
     @SubscribeEvent
+    public static void registerSounds(RegistryEvent.Register<SoundEvent> event) {
+        Sounds.registerSounds(event.getRegistry());
+
+    }
+
+    @SubscribeEvent
+    public void onGenerateMinable(OreGenEvent.GenerateMinable event) {
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.IRON) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.COAL) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.GOLD) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.LAPIS) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.REDSTONE) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.DIAMOND) {
+            event.setResult(Event.Result.DENY);
+        }
+        if (event.getType() == OreGenEvent.GenerateMinable.EventType.EMERALD) {
+            event.setResult(Event.Result.DENY);
+        }
+
+    }
+
+    @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (IC2.platform.isSimulating()) {
+        if (IUCore.proxy.isSimulating()) {
             keyboard.removePlayerReferences(event.player);
         }
 
     }
 
     @Mod.EventHandler
-    public void load(final FMLPreInitializationEvent event) throws Exception {
+    public void load(final FMLPreInitializationEvent event) {
+
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.ORE_GEN_BUS.register(this);
         ModUtils.log = event.getModLog();
         IUCore.log = event.getModLog();
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
-
+        new TileBlockCreator();
         Config.loadNormalConfig(event.getSuggestedConfigurationFile());
         EnergyNetGlobal.initialize();
         UpgradeSystem.system = new BaseUpgradeSystem();
@@ -367,12 +273,14 @@ public final class IUCore {
         Recipes.recipes = new RecipesCore();
         MinecraftForge.EVENT_BUS.register(new TickHandlerIU());
 
-
-        IUCore.audioManager.initialize();
         Keys.instance = IUCore.keyboard;
-
+        RelocatorNetwork.init();
+        IUPotion.radiation = new IUPotion("radiation", true, 5149489, new ItemStack[0]);
+        IUPotion.frostbite = new IUPotion("frostbite", true, 5149489, new ItemStack[0]);
+        IUPotion.poison_gas = new IUPotion("poison_gas", true, 5149489, new ItemStack[0]);
         proxy.preInit(event);
         NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+        LootTableList.register(VOLCANO_LOOT_TABLE);
 
     }
 
@@ -381,6 +289,7 @@ public final class IUCore {
         proxy.init(event);
         proxy.registerRecipe();
         initENet();
+
 
 
     }
@@ -466,8 +375,17 @@ public final class IUCore {
     @Mod.EventHandler
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);
-
-
+        for (Map.Entry<String, VeinType> entry : CTVein.veinTypeMap.entrySet()) {
+            if (entry.getValue() != null) {
+                WorldBaseGen.veinTypes.add(entry.getValue());
+            }
+        }
+        final Iterator<Block> iter = CTVein.veinList.iterator();
+        while (iter.hasNext()) {
+            Block block = iter.next();
+            WorldBaseGen.remove(block);
+        }
+        ((RecipesCore) Recipes.recipes).setCanAdd(false);
         addInList1(new ItemStack(Items.DIAMOND));
         addInList1(new ItemStack(Items.EMERALD));
         addInList1(new ItemStack(Items.REDSTONE));
@@ -499,6 +417,9 @@ public final class IUCore {
         removeOre("oreEndEmerald");
         removeOre("oreEndDiamond");
         removeOre("oreEndGold");
+        for (String s : RegisterOreDictionary.list_mineral) {
+            removeOre("ore" + s);
+        }
         removeOre("oreEndIron");
         removeOre("oreNetherGold");
         removeOre("oreNetherIron");
@@ -526,9 +447,22 @@ public final class IUCore {
         removeOre("gemNeptunium");
         removeOre("gemCurium");
         removeOre("gemThorium");
+        removeOre("gemBor");
+        removeOre("gemCrystalFlux");
+        removeOre("gemBeryllium");
         for (String name : RegisterOreDictionary.list_heavyore) {
             removeOre("ore" + name);
         }
+        for (String name : RegisterOreDictionary.spaceElementList) {
+            removeOre("ore" + name);
+        }
+        removeOre("oreSulfur");
+        removeOre("oreBoron");
+        removeOre("oreLithium");
+        removeOre("oreClathrateEnder");
+        removeOre("oreClathrateGlowstone");
+        removeOre("oreClathrateRedstone");
+        removeOre("oreCalcium");
         removeOre("oreDraconium");
         removeOre("oreClathrateOilShale");
         removeOre("oreClathrateOilSand");
@@ -558,6 +492,29 @@ public final class IUCore {
             } else {
                 this.get_ingot.add(stack);
             }
+        }
+        get_polisher.clear();
+        final List<BaseMachineRecipe> recipes = Recipes.recipes.getRecipeList("laser");
+        for (ItemStack stack : IUCore.list) {
+            BaseMachineRecipe recipe = Recipes.recipes.getRecipeOutput("laser", false, stack);
+            if (recipe != null) {
+                this.get_polisher.add(recipe.getOutput().items.get(0));
+            } else {
+                boolean can = true;
+                for (BaseMachineRecipe recipe1 : recipes) {
+                    if (recipe1.getOutput().items.get(0).isItemEqual(stack)) {
+                        final ItemStack stack1 = stack.copy();
+                        stack1.setCount(recipe1.getOutput().items.get(0).getCount());
+                        this.get_polisher.add(stack1);
+                        can = false;
+                        break;
+                    }
+                }
+                if (can) {
+                    this.get_polisher.add(stack);
+                }
+            }
+
         }
 
         IUCore.list_adding.forEach(stack -> addOre1(stack));
@@ -595,6 +552,13 @@ public final class IUCore {
                         get_crushed_quarry.add(new QuarryItem(stack));
             }
         });
+        IUCore.get_polisher.forEach(stack -> {
+            if (!stack.isEmpty()) {
+                this.
+                        get_polisher_quarry.add(new QuarryItem(stack));
+            }
+        });
+
         IUCore.list.forEach(stack -> {
             if (!stack.isEmpty()) {
                 this.
@@ -613,84 +577,9 @@ public final class IUCore {
                         get_comb_crushed_quarry.add(new QuarryItem(stack));
             }
         });
-        fish_rodding.add(new ItemStack(Items.FISH));
-        fish_rodding.add(new ItemStack(Items.FISH, 1, 1));
-        fish_rodding.add(new ItemStack(Items.FISH, 1, 2));
-        fish_rodding.add(new ItemStack(Items.FISH, 1, 3));
-        fish_rodding.add(new ItemStack(Items.BONE));
-        fish_rodding.add(new ItemStack(Items.ENCHANTED_BOOK));
-        fish_rodding.add(new ItemStack(Items.POTIONITEM));
-        fish_rodding.add(new ItemStack(Items.LEATHER_BOOTS));
-        fish_rodding.add(new ItemStack(Items.BOW));
-        fish_rodding.add(new ItemStack(Items.SADDLE));
-        fish_rodding.add(new ItemStack(Items.FISHING_ROD));
-        fish_rodding.add(new ItemStack(Blocks.WATERLILY));
-        fish_rodding.add(new ItemStack(Blocks.TRIPWIRE_HOOK));
-        fish_rodding.add(new ItemStack(Items.NAME_TAG));
-        fish_rodding.add(new ItemStack(Items.STICK));
-        fish_rodding.add(new ItemStack(Items.BOWL));
-        fish_rodding.add(new ItemStack(Items.ROTTEN_FLESH));
-        fish_rodding.add(new ItemStack(Items.STRING));
-        fish_rodding.add(new ItemStack(Items.LEATHER));
-        fish_rodding.add(new ItemStack(Items.DYE));
-        final Iterable<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> recipe2 =
-                ic2.api.recipe.Recipes.blastfurnace.getRecipes();
-        final Iterator<? extends MachineRecipe<IRecipeInput, Collection<ItemStack>>> iter2 = recipe2.iterator();
-        List<MachineRecipe<IRecipeInput, Collection<ItemStack>>> lst2 = new ArrayList<>();
-        while (iter2.hasNext()) {
-            MachineRecipe<IRecipeInput, Collection<ItemStack>> recipe3 = iter2.next();
-            List<ItemStack> list = (List<ItemStack>) recipe3.getOutput();
-            if (list.get(0).isItemEqual(Ic2Items.advIronIngot)) {
-                list.get(1).shrink(list.get(1).getCount());
-            }
-        }
-
 
     }
 
-    @SubscribeEvent
-    public void onLivingSpecialSpawn(LivingSpawnEvent.SpecialSpawn event) {
-        if (IC2.seasonal && (event.getEntityLiving() instanceof EntityHusk || event.getEntityLiving() instanceof EntityZombie || event.getEntityLiving() instanceof EntitySkeleton) && event
-                .getEntityLiving()
-                .getEntityWorld().rand.nextFloat() < 0.1F) {
-            EntityLiving entity = (EntityLiving) event.getEntityLiving();
-            for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
-                entity.setDropChance(slot, (float) (-1.0F / 0.0));
-            }
-
-            if (entity instanceof EntityZombie) {
-                entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemName.nano_saber.getItemStack());
-            }
-            if (entity instanceof EntitySkeleton) {
-                int i = event.getWorld().rand.nextInt(4);
-                switch (i) {
-                    case 1:
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(IUItem.nano_bow));
-                        break;
-                    case 2:
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(IUItem.quantum_bow));
-                        break;
-                    case 3:
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(IUItem.spectral_bow));
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            if (entity.getEntityWorld().rand.nextFloat() < 0.1F) {
-                entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IUItem.spectral_helmet));
-                entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(IUItem.spectral_chestplate));
-                entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(IUItem.spectral_leggings));
-                entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(IUItem.spectral_boots));
-            } else {
-                entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(IUItem.adv_nano_helmet));
-                entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(IUItem.adv_nano_chestplate));
-                entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(IUItem.adv_nano_leggings));
-                entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(IUItem.adv_nano_boots));
-            }
-        }
-    }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -698,7 +587,8 @@ public final class IUCore {
         if (event.getState().getBlock() instanceof BlockIUFluid) {
             event.setCanceled(true);
             Fluid fluid = ((BlockIUFluid) event.getState().getBlock()).getFluid();
-            event.setDensity((float) Util.map(Math.abs(fluid.getDensity()), 20000.0D, 2.0D));
+
+            event.setDensity((float) ((float) Math.abs(fluid.getDensity()) / 20000D * 2.0D));
         }
     }
 
@@ -707,6 +597,7 @@ public final class IUCore {
         if (event.phase == TickEvent.Phase.START) {
             ++ItemQuantumSaber.ticker;
             ++ItemSpectralSaber.ticker;
+            ++ItemNanoSaber.ticker;
         }
 
     }
@@ -724,7 +615,7 @@ public final class IUCore {
             ++ListInformationUtils.tick;
             if (ListInformationUtils.tick % 40 == 0) {
                 ListInformationUtils.index = (ListInformationUtils.index + 1) % ListInformationUtils.mechanism_info.size();
-                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1.size();
+                ListInformationUtils.index1 = (ListInformationUtils.index1 + 1) % ListInformationUtils.mechanism_info1.values().size();
                 ListInformationUtils.index2 = (ListInformationUtils.index2 + 1) % ListInformationUtils.mechanism_info2.size();
 
             }
@@ -732,14 +623,6 @@ public final class IUCore {
 
     }
 
-    @Mod.EventHandler
-    public void init(final FMLFingerprintViolationEvent event) {
-        java.util.logging.Logger.getLogger(this.getClass().getName()).log(
-                Level.SEVERE,
-                "Invalid fingerprint detected! The file " + event.getSource().getName() +
-                        " may have been tampered with. This version will NOT be supported by the author!"
-        );
-    }
 
     public void addOre(String name) {
         if (OreDictionary.getOres(name).size() >= 1) {

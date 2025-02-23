@@ -6,6 +6,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerDoubleElectricMachine;
+import com.denfop.tiles.mechanism.dual.TileEnrichment;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,7 +23,10 @@ public class GuiEnriched extends GuiIU<ContainerDoubleElectricMachine> {
         this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
-        this.addComponent(new GuiComponent(this, 26, 56, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+        this.addComponent(new GuiComponent(this, 29, 57, EnumTypeComponent.ENERGY, new Component<>(this.container.base.energy)));
+        this.addComponent(new GuiComponent(this, 80, 61, EnumTypeComponent.RAD,
+                new Component<>(((TileEnrichment) this.container.base).rad_energy)
+        ));
 
     }
 
@@ -40,7 +44,7 @@ public class GuiEnriched extends GuiIU<ContainerDoubleElectricMachine> {
 
         int progress = (int) (15 * this.container.base.getProgress());
         if (progress > 0) {
-            drawTexturedModalRect(xoffset + 67 + 1, yoffset + 35, 177, 32, progress + 1, 15);
+            drawTexturedModalRect(xoffset + 67 + 2, yoffset + 36, 177, 32, progress + 1, 15);
         }
 
     }

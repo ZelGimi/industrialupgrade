@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/collector_product_bee_main",
+    "down" : "industrialupgrade:blocks/collector_product_bee_bottom",
+    "up" : "industrialupgrade:blocks/collector_product_bee_top",
+    "north" : "industrialupgrade:blocks/collector_product_bee_main",
+    "east" : "industrialupgrade:blocks/collector_product_bee_side",
+    "south" : "industrialupgrade:blocks/collector_product_bee_bottom",
+    "west" : "industrialupgrade:blocks/collector_product_bee_side"
+  }
+}

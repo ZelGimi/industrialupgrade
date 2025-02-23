@@ -6,14 +6,14 @@ import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.items.resource.ItemIngots;
+import com.denfop.recipe.IInputHandler;
+import com.denfop.recipe.IInputItemStack;
 import com.denfop.utils.ModUtils;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import ic2.api.recipe.IRecipeInput;
-import ic2.api.recipe.IRecipeInputFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -95,16 +95,16 @@ public class CTMineralSeparator {
             for (int i = 0; i < col.length; i++) {
                 nbt.setInteger("input" + i, col[i]);
             }
-            final IRecipeInputFactory input = ic2.api.recipe.Recipes.inputFactory;
+            final IInputHandler input = com.denfop.api.Recipes.inputFactory;
 
-            ItemStack stack = new IC2RecipeInput(this.input).getInputs().get(0);
-            IRecipeInput second1;
+            ItemStack stack = new InputItemStack(this.input).getInputs().get(0);
+            IInputItemStack second1;
             if (OreDictionary.getOreIDs(stack).length > 0 && !OreDictionary
                     .getOreName(OreDictionary.getOreIDs(stack)[0])
                     .isEmpty() && stack.getItem() instanceof ItemIngots) {
-                second1 = input.forOreDict(OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]));
+                second1 = input.getInput(OreDictionary.getOreName(OreDictionary.getOreIDs(stack)[0]));
             } else {
-                second1 = input.forStack(stack);
+                second1 = input.getInput(stack);
             }
             Recipes.recipes.addAdderRecipe(
                     "handlerho",

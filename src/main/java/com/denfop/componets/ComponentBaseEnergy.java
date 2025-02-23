@@ -1,5 +1,8 @@
 package com.denfop.componets;
 
+
+import com.denfop.api.energy.IEnergyTile;
+import com.denfop.api.energy.SystemTick;
 import com.denfop.api.sytem.EnergyEvent;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.sytem.EnumTypeEvent;
@@ -9,29 +12,36 @@ import com.denfop.api.sytem.IEmitter;
 import com.denfop.api.sytem.ISink;
 import com.denfop.api.sytem.ISource;
 import com.denfop.api.sytem.ITile;
+import com.denfop.api.sytem.InfoTile;
+import com.denfop.api.sytem.Path;
 import com.denfop.invslot.InvSlot;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.IC2;
-import ic2.core.network.GrowingBuffer;
-import ic2.core.util.LogCategory;
-import ic2.core.util.Util;
+import com.denfop.utils.ModUtils;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.DataInput;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ComponentBaseEnergy extends AbstractComponent {
 
-    public static final boolean debugLoad = System.getProperty("ic2.comp.energy.debugload") != null;
 
     public final boolean fullEnergy;
     private final EnergyType type;
@@ -95,12 +105,37 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.tick = 0;
     }
 
+    public ComponentBaseEnergy(
+            EnergyType type, TileEntityInventory parent,
+            double capacity,
+            List<EnumFacing> sinkDirections,
+            List<EnumFacing> sourceDirections,
+            int sinkTier,
+            int sourceTier,
+            boolean fullEnergy
+    ) {
+        super(parent);
+        this.type = type;
+        this.multiSource = false;
+        this.sourcePackets = 1;
+        this.capacity = capacity;
+        this.defaultCapacity = capacity;
+        this.sinkTier = sinkTier;
+        this.sourceTier = sourceTier;
+        this.sinkDirections = new HashSet<>(sinkDirections);
+        this.sourceDirections = new HashSet<>(sourceDirections);
+        this.fullEnergy = fullEnergy;
+        this.pastEnergy = 0;
+        this.perenergy = 0;
+        this.tick = 0;
+    }
+
     public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityInventory parent, double capacity) {
         return asBasicSink(type, parent, capacity, 1);
     }
 
     public static ComponentBaseEnergy asBasicSink(EnergyType type, TileEntityInventory parent, double capacity, int tier) {
-        return new ComponentBaseEnergy(type, parent, capacity, Util.allFacings, Collections.emptySet(), tier);
+        return new ComponentBaseEnergy(type, parent, capacity, ModUtils.allFacings, Collections.emptySet(), tier);
     }
 
     public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityInventory parent, double capacity) {
@@ -108,7 +143,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     public static ComponentBaseEnergy asBasicSource(EnergyType type, TileEntityInventory parent, double capacity, int tier) {
-        return new ComponentBaseEnergy(type, parent, capacity, Collections.emptySet(), Util.allFacings, tier);
+        return new ComponentBaseEnergy(type, parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
     }
 
     public EnergyType getType() {
@@ -145,21 +180,12 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
         if (!this.parent.getWorld().isRemote) {
             if (this.sinkDirections.isEmpty() && this.sourceDirections.isEmpty()) {
-                if (debugLoad) {
-                    IC2.log.debug(LogCategory.Component, "Skipping Energy onLoaded for %s at %s.",
-                            this.parent,
-                            Util.formatPosition(this.parent)
-                    );
-                }
+
             } else {
-                if (debugLoad) {
-                    IC2.log.debug(LogCategory.Component, "Energy onLoaded for %s at %s.",
-                            this.parent,
-                            Util.formatPosition(this.parent)
-                    );
-                }
+
 
                 this.createDelegate();
+                this.energyConductorMap.clear();
                 MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD, this.type,
                         this.delegate
                 ));
@@ -172,7 +198,6 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     private void createDelegate() {
         if (this.delegate != null) {
-            throw new IllegalStateException();
         } else {
 
             if (this.sinkDirections.isEmpty()) {
@@ -190,36 +215,32 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     public void onUnloaded() {
         if (this.delegate != null) {
-            if (debugLoad) {
-                IC2.log.debug(LogCategory.Component, "Energy onUnloaded for %s at %s.",
-                        this.parent,
-                        Util.formatPosition(this.parent)
-                );
-            }
+
 
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD, this.type,
                     this.delegate
             ));
             this.delegate = null;
-        } else if (debugLoad) {
-            IC2.log.debug(LogCategory.Component, "Skipping Energy onUnloaded for %s at %s.",
-                    this.parent,
-                    Util.formatPosition(this.parent)
-            );
         }
 
         this.loaded = false;
     }
 
     public void onContainerUpdate(EntityPlayerMP player) {
-        GrowingBuffer buffer = new GrowingBuffer(16);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(16);
         buffer.writeDouble(this.capacity);
         buffer.writeDouble(this.storage);
-        buffer.flip();
         this.setNetworkUpdate(player, buffer);
     }
 
-    public void onNetworkUpdate(DataInput is) throws IOException {
+    public CustomPacketBuffer updateComponent() {
+        final CustomPacketBuffer buffer = super.updateComponent();
+        buffer.writeDouble(this.capacity);
+        buffer.writeDouble(this.storage);
+        return buffer;
+    }
+
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
         this.capacity = is.readDouble();
         this.storage = is.readDouble();
     }
@@ -231,6 +252,9 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     public void setCapacity(double capacity) {
         this.capacity = capacity;
+        if (this.storage > this.capacity) {
+            this.storage = capacity;
+        }
     }
 
     public double getEnergy() {
@@ -248,7 +272,59 @@ public class ComponentBaseEnergy extends AbstractComponent {
         return amount;
     }
 
+    public void blockBreak() {
+        if (this.getType() == EnergyType.RADIATION) {
+            new PacketUpdateRadiationValue(new ChunkPos(this.parent.getPos()), (int) this.storage);
+        } else if (this.getType() == EnergyType.EXPERIENCE && this.storage > 0) {
+            double f = 0.7;
+            double dx = (double) this.parent.getWorld().rand.nextFloat() * 1 + (1.0 - f) * 0.5;
+            double dy = (double) this.parent.getWorld().rand.nextFloat() * f + (1.0 - f) * 0.5;
+            double dz = (double) this.parent.getWorld().rand.nextFloat() * f + (1.0 - f) * 0.5;
+            int j = EntityXPOrb.getXPSplit((int) this.storage);
+            EntityXPOrb entityItem = new EntityXPOrb(
+                    this.parent.getWorld(),
+                    (double) this.parent.getPos().getX() + dx,
+                    (double) this.parent.getPos().getY() + dy,
+                    (double) this.parent.getPos().getZ() + dz,
+                    j
+            );
+            this.parent.getWorld().spawnEntity(entityItem);
+        }
+    }
+    public Map<EnumFacing, ITile> getConductors() {
+        return energyConductorMap;
+    }
 
+    Map<EnumFacing, ITile> energyConductorMap = new HashMap<>();
+
+    public void RemoveTile(EnergyType type,ITile tile, final EnumFacing facing1) {
+        if (!this.parent.getWorld().isRemote) {
+            this.energyConductorMap.remove(facing1);
+            final Iterator<InfoTile<ITile>> iter = validReceivers.iterator();
+            while (iter.hasNext()) {
+                InfoTile<ITile> tileInfoTile = iter.next();
+                if (tileInfoTile.tileEntity == tile) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    List<InfoTile<ITile>> validReceivers = new LinkedList<>();
+
+
+    public List<InfoTile<ITile>> getValidReceivers() {
+        return validReceivers;
+    }
+
+    public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
+        if (!this.parent.getWorld().isRemote) {
+            this.energyConductorMap.put(facing1, tile);
+            validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
+
+        }
+    }
     public boolean canUseEnergy(double amount) {
         return this.storage >= amount;
     }
@@ -285,6 +361,15 @@ public class ComponentBaseEnergy extends AbstractComponent {
     public void setSourceTier(int tier) {
         this.sourceTier = tier;
     }
+    public long getIdNetwork() {
+        return this.id;
+    }
+
+
+    public void setId(final long id) {
+        this.id = id;
+    }
+    private long id;
 
     public void setEnabled(boolean enabled) {
         this.receivingDisabled = this.sendingSidabled = !enabled;
@@ -304,15 +389,10 @@ public class ComponentBaseEnergy extends AbstractComponent {
         this.sinkDirections = sinkDirections;
         this.sourceDirections = sourceDirections;
         if (this.delegate != null) {
-            if (debugLoad) {
-                IC2.log.debug(
-                        LogCategory.Component,
-                        "Energy setDirections unload for %s at %s.",
-                        this.parent, Util.formatPosition(this.parent)
-                );
-            }
+
 
             assert !this.parent.getWorld().isRemote;
+            this.energyConductorMap.clear();
 
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.UNLOAD, this.type,
                     this.delegate
@@ -322,29 +402,18 @@ public class ComponentBaseEnergy extends AbstractComponent {
         if (sinkDirections.isEmpty() && sourceDirections.isEmpty()) {
             this.delegate = null;
         } else if (this.delegate == null && this.loaded) {
+            this.energyConductorMap.clear();
             this.createDelegate();
         }
 
         if (this.delegate != null) {
-            if (debugLoad) {
-                IC2.log.debug(
-                        LogCategory.Component,
-                        "Energy setDirections load for %s at %s, sink: %s, source: %s.",
-                        this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections
-                );
-            }
 
             assert !this.parent.getWorld().isRemote;
+            this.energyConductorMap.clear();
 
             MinecraftForge.EVENT_BUS.post(new EnergyEvent(this.parent.getWorld(), EnumTypeEvent.LOAD, this.type,
                     this.delegate
             ));
-        } else if (debugLoad) {
-            IC2.log.debug(
-                    LogCategory.Component,
-                    "Skipping Energy setDirections load for %s at %s, sink: %s, source: %s, loaded: %b.",
-                    this.parent, Util.formatPosition(this.parent), sinkDirections, sourceDirections, this.loaded
-            );
         }
 
 
@@ -379,7 +448,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
     }
 
     private class EnergyNetDelegateDual extends ComponentBaseEnergy.EnergyNetDelegate implements IDual {
-
+        List<ISource> systemTicks = new LinkedList<>();
         private EnergyNetDelegateDual() {
             super();
         }
@@ -397,7 +466,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.parent.getPos();
         }
 
-        public double getOffered() {
+        public double canProvideEnergy() {
             return !ComponentBaseEnergy.this.sendingSidabled && !ComponentBaseEnergy.this.sourceDirections.isEmpty()
                     ? ComponentBaseEnergy.this.getSourceEnergy()
                     : 0.0D;
@@ -420,9 +489,8 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
 
         @Override
-        public double inject(final EnumFacing var1, final double var2, final double var4) {
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage + var2;
-            return 0.0D;
+        public void receivedEnergy(final double var2) {
+            ComponentBaseEnergy.this.addEnergy(var2);
         }
 
         @Override
@@ -456,10 +524,10 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.tick1;
         }
 
-        public void draw(double amount) {
+        public void extractEnergy(double amount) {
             assert amount <= ComponentBaseEnergy.this.storage;
 
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage - amount;
+            ComponentBaseEnergy.this.useEnergy(amount);
         }
 
 
@@ -504,6 +572,66 @@ public class ComponentBaseEnergy extends AbstractComponent {
         }
 
         @Override
+        public List<ISource> getEnergyTickList() {
+            return systemTicks;
+        }
+
+        public long getIdNetwork() {
+            return ComponentBaseEnergy.this.getIdNetwork();
+        }
+        int hashCodeSource;
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+
+        public void setId(final long id) {
+            ComponentBaseEnergy.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.AddTile(type,tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(EnergyType type,final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type,tile, dir);
+        }
+
+        @Override
+        public Map<EnumFacing, ITile> getTiles(EnergyType energyType) {
+            return ComponentBaseEnergy.this.energyConductorMap;
+        }
+
+
+        @Override
+        public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
+            return validReceivers;
+        }
+
+        private int hashCode;
+        boolean hasHashCode = false;
+
+
+        @Override
+        public int hashCode() {
+            if (!hasHashCode) {
+                hasHashCode = true;
+                this.hashCode = ComponentBaseEnergy.this.parent.hashCode();
+                return hashCode;
+            } else {
+                return hashCode;
+            }
+        }
+
+        @Override
         public TileEntity getTile() {
             return ComponentBaseEnergy.this.parent;
         }
@@ -523,7 +651,65 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean acceptsFrom(IEmitter emitter, EnumFacing dir) {
             return ComponentBaseEnergy.this.sinkDirections.contains(dir);
         }
+        public long getIdNetwork() {
+            return ComponentBaseEnergy.this.getIdNetwork();
+        }
+        int hashCodeSource;
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
 
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+        @Override
+        public List<ISource> getEnergyTickList() {
+            return systemTicks;
+        }
+
+
+        public void setId(final long id) {
+            ComponentBaseEnergy.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.AddTile(type,tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(EnergyType type,final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type,tile, dir);
+        }
+
+        @Override
+        public Map<EnumFacing, ITile> getTiles(EnergyType energyType) {
+            return ComponentBaseEnergy.this.energyConductorMap;
+        }
+
+
+        @Override
+        public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
+            return validReceivers;
+        }
+
+        private int hashCode;
+        boolean hasHashCode = false;
+
+
+        @Override
+        public int hashCode() {
+            if (!hasHashCode) {
+                hasHashCode = true;
+                this.hashCode = ComponentBaseEnergy.this.parent.hashCode();
+                return hashCode;
+            } else {
+                return hashCode;
+            }
+        }
         @Override
         public @NotNull BlockPos getBlockPos() {
             return ComponentBaseEnergy.this.parent.getPos();
@@ -542,9 +728,8 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.parent;
         }
 
-        public double inject(EnumFacing directionFrom, double amount, double voltage) {
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage + amount;
-            return 0.0D;
+        public void receivedEnergy(double amount) {
+            ComponentBaseEnergy.this.addEnergy(amount);
         }
 
         @Override
@@ -581,6 +766,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean isSink() {
             return true;
         }
+        List<ISource> systemTicks = new LinkedList<>();
 
     }
 
@@ -597,13 +783,69 @@ public class ComponentBaseEnergy extends AbstractComponent {
         public boolean emitsTo(IAcceptor receiver, EnumFacing dir) {
             return ComponentBaseEnergy.this.sourceDirections.contains(dir);
         }
+        public long getIdNetwork() {
+            return ComponentBaseEnergy.this.getIdNetwork();
+        }
+        int hashCodeSource;
+        @Override
+        public void setHashCodeSource(final int hashCode) {
+            hashCodeSource = hashCode;
+        }
+
+        @Override
+        public int getHashCodeSource() {
+            return hashCodeSource;
+        }
+
+
+
+
+        public void setId(final long id) {
+            ComponentBaseEnergy.this.setId(id);
+        }
+
+        @Override
+        public void AddTile(EnergyType type, final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.AddTile(type,tile, dir);
+        }
+
+        @Override
+        public void RemoveTile(EnergyType type,final ITile tile, final EnumFacing dir) {
+            ComponentBaseEnergy.this.RemoveTile(type,tile, dir);
+        }
+
+        @Override
+        public Map<EnumFacing, ITile> getTiles(EnergyType energyType) {
+            return ComponentBaseEnergy.this.energyConductorMap;
+        }
+
+
+        @Override
+        public List<InfoTile<ITile>> getValidReceivers(final EnergyType energyType) {
+            return validReceivers;
+        }
+
+        private int hashCode;
+        boolean hasHashCode = false;
+
+
+        @Override
+        public int hashCode() {
+            if (!hasHashCode) {
+                hasHashCode = true;
+                this.hashCode = ComponentBaseEnergy.this.parent.hashCode();
+                return hashCode;
+            } else {
+                return hashCode;
+            }
+        }
 
         @Override
         public @NotNull BlockPos getBlockPos() {
             return ComponentBaseEnergy.this.parent.getPos();
         }
 
-        public double getOffered() {
+        public double canProvideEnergy() {
             assert !ComponentBaseEnergy.this.sourceDirections.isEmpty();
 
             return !ComponentBaseEnergy.this.sendingSidabled ? ComponentBaseEnergy.this.getSourceEnergy() : 0.0D;
@@ -614,10 +856,9 @@ public class ComponentBaseEnergy extends AbstractComponent {
             return ComponentBaseEnergy.this.parent;
         }
 
-        public void draw(double amount) {
+        public void extractEnergy(double amount) {
             assert amount <= ComponentBaseEnergy.this.storage;
-
-            ComponentBaseEnergy.this.storage = ComponentBaseEnergy.this.storage - amount;
+            ComponentBaseEnergy.this.useEnergy(amount);
         }
 
         @Override

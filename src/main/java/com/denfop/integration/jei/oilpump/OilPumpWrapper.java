@@ -1,6 +1,6 @@
 package com.denfop.integration.jei.oilpump;
 
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -37,7 +37,7 @@ public class OilPumpWrapper implements IRecipeWrapper {
         minecraft.fontRenderer.drawSplitString(
                 Localization.translate("iu.oilpump.info"),
                 10,
-                30,
+                5,
                 recipeWidth - 10,
                 4210752
         );

@@ -346,6 +346,11 @@
             }
           ]
         },
+		{
+					"type": "item",
+					"name": "industrialupgrade:treetap",
+					"weight": 8
+				},
         {
           "type" : "item",
           "entryName" : "germanium_ingot",

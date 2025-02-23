@@ -2,8 +2,8 @@ package com.denfop.integration.jei.blastfurnace;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBlastFurnace;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -26,7 +26,7 @@ public class BFCategory extends Gui implements IRecipeCategory<BFWrapper> {
     public BFCategory(
             final IGuiHelper guiHelper
     ) {
-        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/guivein.png"), 3, 3, 200,
+        bg = guiHelper.createDrawable(new ResourceLocation(Constants.MOD_ID, "textures/gui/common3.png"), 3, 3, 200,
                 150
         );
     }

@@ -1,67 +1,77 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseSunnariumMaker;
+import com.denfop.tiles.base.TileSunnariumMaker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 
-import java.util.List;
+public class ContainerSunnariumMaker extends ContainerFullInv<TileSunnariumMaker> {
 
-public class ContainerSunnariumMaker extends ContainerFullInv<TileEntityBaseSunnariumMaker> {
-
-    public ContainerSunnariumMaker(EntityPlayer entityPlayer, TileEntityBaseSunnariumMaker tileEntity1) {
-        this(entityPlayer, tileEntity1, 166, 152, 8);
+    public ContainerSunnariumMaker(EntityPlayer entityPlayer, TileSunnariumMaker tileEntity1) {
+        this(entityPlayer, tileEntity1, 167, 152, 8);
     }
 
     public ContainerSunnariumMaker(
             EntityPlayer entityPlayer,
-            TileEntityBaseSunnariumMaker tileEntity1,
+            TileSunnariumMaker tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
     ) {
-        super(entityPlayer, tileEntity1, height);
+        super(null, tileEntity1, height);
         if ((tileEntity1).inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA,
-                    0, 38, 17
+                    0, 32, 21
+            ));
+        }
+        addSlotToContainer(new SlotInvSlot(tileEntity1.input_slot,
+                0, -20, 84
+        ));
+        if ((tileEntity1).inputSlotA != null) {
+            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA,
+                    1, 68, 21
             ));
         }
 
         if ((tileEntity1).inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA,
-                    1, 74, 17
-            ));
-        }
-
-        if ((tileEntity1).inputSlotA != null) {
-            addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA,
-                    2, 38, 39
+                    2, 32, 43
             ));
         }
         if ((tileEntity1).inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).inputSlotA,
-                    3, 74, 39
+                    3, 68, 43
             ));
         }
 
         if ((tileEntity1).outputSlot != null) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).outputSlot,
-                    0, 110 + 5, 34
+                    0, 110 - 7, 32
             ));
         }
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot((tileEntity1).upgradeSlot,
-                    i, upgradeX, upgradeY + i * 18
+                    i, upgradeX, upgradeY + 1 + i * 18
             ));
         }
+        int xStart = (178 - 162) / 2;
+
+        int col;
+        for (col = 0; col < 3; ++col) {
+            for (int col1 = 0; col1 < 9; ++col1) {
+                this.addSlotToContainer(new Slot(
+                        entityPlayer.inventory,
+                        col1 + col * 9 + 9,
+                        xStart + col1 * 18,
+                        height + -82 + col * 18
+                ));
+            }
+        }
+
+        for (col = 0; col < 9; ++col) {
+            this.addSlotToContainer(new Slot(entityPlayer.inventory, col, xStart + col * 18, height + -25));
+        }
+
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("tier");
-        ret.add("guiChargeLevel");
-        ret.add("sunenergy");
-        ret.add("energy");
-        ret.add("sound");
-        return ret;
-    }
 
 }

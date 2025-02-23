@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "industrialupgrade:blocks/compressor_bottom",
+		"down": "industrialupgrade:blocks/compressor_bottom",
+		"up": "industrialupgrade:blocks/compressor_bottom",
+		"north": "industrialupgrade:blocks/compressor_front",
+		"east": "industrialupgrade:blocks/compressor_bottom",
+		"south": "industrialupgrade:blocks/compressor_bottom",
+		"west": "industrialupgrade:blocks/compressor_bottom"
+	}
+}

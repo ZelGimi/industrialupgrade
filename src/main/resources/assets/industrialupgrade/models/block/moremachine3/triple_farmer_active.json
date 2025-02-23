@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockfermer2_bottom",
-    "down" : "industrialupgrade:blocks/blockfermer2_bottom",
+    "particle" : "industrialupgrade:blocks/blockfermer2_side",
+    "down" : "industrialupgrade:blocks/blockfermer2_side",
     "up" : "industrialupgrade:blocks/blockfermer2_top_active",
     "north" : "industrialupgrade:blocks/blockfermer2_main_active",
-    "east" : "industrialupgrade:blocks/blockfermer2_side_active",
-    "south" : "industrialupgrade:blocks/blockfermer2_side2_active",
-    "west" : "industrialupgrade:blocks/blockfermer2_side_active"
+    "east" : "industrialupgrade:blocks/blockfermer2_side",
+    "south" : "industrialupgrade:blocks/blockfermer2_side",
+    "west" : "industrialupgrade:blocks/blockfermer2_side"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/fluid_separator_front",
+    "down" : "industrialupgrade:blocks/fluid_separator_sides",
+    "up" : "industrialupgrade:blocks/fluid_separator_sides",
+    "north" : "industrialupgrade:blocks/fluid_separator_front",
+    "east" : "industrialupgrade:blocks/fluid_separator_left-right",
+    "south" : "industrialupgrade:blocks/fluid_separator_sides",
+    "west" : "industrialupgrade:blocks/fluid_separator_left-right"
+  }
+}
+

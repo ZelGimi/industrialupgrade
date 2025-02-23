@@ -1,8 +1,8 @@
 {
   "display" : {
     "icon" : {
-      "item" : "ic2:crafting",
-      "data" : 1
+      "item" : "industrialupgrade:crafting_elements",
+      "data" : 272
     },
     "title" : {
       "translate" : "achievement.basic_circuit"
@@ -18,8 +18,8 @@
       "conditions" : {
         "items" : [
           {
-            "item" : "ic2:crafting",
-            "data" : 1
+            "item" : "industrialupgrade:crafting_elements",
+            "data" : 272
           }
         ]
       }

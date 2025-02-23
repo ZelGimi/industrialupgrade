@@ -1,26 +1,32 @@
 package com.denfop.api.space.colonies;
 
+import com.denfop.api.space.colonies.api.IColony;
+import com.denfop.api.space.colonies.api.IColonyBuilding;
+import com.denfop.network.packet.CustomPacketBuffer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class Building implements IColonyBuilding {
 
-    private final String name;
+
     private final IColony colonie;
 
-    public Building(String name, IColony colonie) {
-        this.name = name;
+    public Building(IColony colonie) {
         this.colonie = colonie;
-        this.getColony().addBuilding(this);
+    }
+    @Override
+    public CustomPacketBuffer writePacket(final CustomPacketBuffer customPacketBuffer) {
+        customPacketBuffer.writeByte(this.getId());
+        return customPacketBuffer;
     }
 
     @Override
-    public String getName() {
-        return this.name;
+    public boolean isIgnore() {
+        return false;
     }
 
     @Override
     public NBTTagCompound writeTag(final NBTTagCompound tag) {
-        tag.setString("name", this.name);
+        tag.setByte("type", this.getId());
         return tag;
     }
 

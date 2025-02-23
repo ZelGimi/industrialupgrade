@@ -2,16 +2,13 @@ package com.denfop.items.energy;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
-import ic2.api.item.IBoxable;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
+import com.denfop.register.Register;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,57 +17,29 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ItemToolIU extends ItemTool implements IModelRegister, IBoxable {
+public abstract class ItemToolIU extends ItemTool implements IModelRegister {
 
     protected final String name;
-    protected final Set<? extends IToolClass> toolClasses;
     protected EnumRarity rarity;
-
-    protected ItemToolIU(String name, HarvestLevel harvestLevel, Set<? extends IToolClass> toolClasses) {
-        this(name, harvestLevel, toolClasses, new HashSet<>());
-    }
-
-    protected ItemToolIU(
-            String name,
-            HarvestLevel harvestLevel,
-            Set<? extends IToolClass> toolClasses,
-            Set<Block> mineableBlocks
-    ) {
-        this(name, 0.0F, 0.0F, harvestLevel, toolClasses, mineableBlocks);
-    }
 
     protected ItemToolIU(
             String name,
             float damage,
             float speed,
-            HarvestLevel harvestLevel,
-            Set<? extends IToolClass> toolClasses,
             Set<Block> mineableBlocks
     ) {
-        super(damage, speed, harvestLevel.toolMaterial, mineableBlocks);
+        super(damage, speed, ToolMaterial.IRON, mineableBlocks);
         this.rarity = EnumRarity.COMMON;
-        this.toolClasses = toolClasses;
         this.setMaxStackSize(1);
         this.setCreativeTab(IUCore.EnergyTab);
         this.name = name;
-        for (final IToolClass toolClass : toolClasses) {
-            if (toolClass.getName() != null) {
-                this.setHarvestLevel(toolClass.getName(), harvestLevel.level);
-            }
-        }
 
-        if (toolClasses.contains(ToolClass.Pickaxe) && harvestLevel.toolMaterial == ToolMaterial.DIAMOND) {
-            mineableBlocks.add(Blocks.OBSIDIAN);
-            mineableBlocks.add(Blocks.REDSTONE_ORE);
-            mineableBlocks.add(Blocks.LIT_REDSTONE_ORE);
-        }
 
         if (name != null) {
             this.setUnlocalizedName(name);
-            BlocksItems.registerItem(this, IUCore.getIdentifier(name));
+            Register.registerItem(this, IUCore.getIdentifier(name));
         }
         IUCore.proxy.addIModelRegister(this);
 
@@ -131,20 +100,9 @@ public abstract class ItemToolIU extends ItemTool implements IModelRegister, IBo
 
 
     public boolean canHarvestBlock(IBlockState state, ItemStack itemStack) {
-        Material material = state.getMaterial();
 
 
-        for (IToolClass toolClass : this.toolClasses) {
-            if (toolClass.getBlacklist().contains(state.getBlock()) || toolClass.getBlacklist().contains(material)) {
-                return false;
-            }
-
-            if (toolClass.getWhitelist().contains(state.getBlock()) || toolClass.getWhitelist().contains(material)) {
-                return true;
-            }
-        }
-
-        return super.canHarvestBlock(state, itemStack);
+        return true;
     }
 
     public float getDestroySpeed(ItemStack itemStack, IBlockState state) {

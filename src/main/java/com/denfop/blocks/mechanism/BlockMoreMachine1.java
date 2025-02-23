@@ -2,22 +2,20 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityCombDoubleMacerator;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleCombRecycler;
-import com.denfop.tiles.mechanism.multimechanism.dual.TileEntityDoubleRecycler;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityCombQuadMacerator;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadCombRecycler;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityQuadRecycler;
-import com.denfop.tiles.mechanism.multimechanism.simple.TileEntityCombMacerator;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityCombTripleMacerator;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleCombRecycler;
-import com.denfop.tiles.mechanism.multimechanism.triple.TileEntityTripleRecycler;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileCombDoubleMacerator;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleCombRecycler;
+import com.denfop.tiles.mechanism.multimechanism.dual.TileDoubleRecycler;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileCombQuadMacerator;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadCombRecycler;
+import com.denfop.tiles.mechanism.multimechanism.quad.TileQuadRecycler;
+import com.denfop.tiles.mechanism.multimechanism.simple.TileCombMacerator;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileCombTripleMacerator;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleCombRecycler;
+import com.denfop.tiles.mechanism.multimechanism.triple.TileTripleRecycler;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -28,17 +26,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockMoreMachine1 implements ITeBlock {
-    double_recycler(TileEntityDoubleRecycler.class, 0),
-    triple_recycler(TileEntityTripleRecycler.class, 1),
-    quad_recycler(TileEntityQuadRecycler.class, 2),
-    double_comb_recycler(TileEntityDoubleCombRecycler.class, 3),
-    triple_comb_recycler(TileEntityTripleCombRecycler.class, 4),
-    quad_comb_recycler(TileEntityQuadCombRecycler.class, 5),
-    comb_macerator(TileEntityCombMacerator.class, 6),
-    double_comb_macerator(TileEntityCombDoubleMacerator.class, 7),
-    triple_comb_macerator(TileEntityCombTripleMacerator.class, 8),
-    quad_comb_macerator(TileEntityCombQuadMacerator.class, 9),
+public enum BlockMoreMachine1 implements IMultiTileBlock {
+    double_recycler(TileDoubleRecycler.class, 0),
+    triple_recycler(TileTripleRecycler.class, 1),
+    quad_recycler(TileQuadRecycler.class, 2),
+    double_comb_recycler(TileDoubleCombRecycler.class, 3),
+    triple_comb_recycler(TileTripleCombRecycler.class, 4),
+    quad_comb_recycler(TileQuadCombRecycler.class, 5),
+    comb_macerator(TileCombMacerator.class, 6),
+    double_comb_macerator(TileCombDoubleMacerator.class, 7),
+    triple_comb_macerator(TileCombTripleMacerator.class, 8),
+    quad_comb_macerator(TileCombQuadMacerator.class, 9),
 
     ;
 
@@ -65,8 +63,15 @@ public enum BlockMoreMachine1 implements ITeBlock {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -76,17 +81,10 @@ public enum BlockMoreMachine1 implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -124,7 +122,7 @@ public enum BlockMoreMachine1 implements ITeBlock {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -133,26 +131,15 @@ public enum BlockMoreMachine1 implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override

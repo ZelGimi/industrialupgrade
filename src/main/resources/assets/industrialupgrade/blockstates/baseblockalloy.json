@@ -55,7 +55,38 @@
         "textures" : {
           "all" : "industrialupgrade:blocks/ferromanganese_block"
         }
+      },
+	  "aluminium_silicon" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/aluminium_silicon_block"
+        }
+      },
+      "beryllium_bronze" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/beryllium_bronze_block"
+        }
+      },
+      "zeliber" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/zeliber_block"
+        }
+      },
+      "stainless_steel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/stainless_steel_block"
+        }
+      },
+      "inconel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/inconel_block"
+        }
+      },
+      "nitenol" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/nitenol_block"
+        }
       }
+     
     },
     "inventory" : [
       {}

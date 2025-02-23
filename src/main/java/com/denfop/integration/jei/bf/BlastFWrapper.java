@@ -1,6 +1,5 @@
 package com.denfop.integration.jei.bf;
 
-import com.denfop.Ic2Items;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -8,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -16,22 +14,33 @@ import javax.annotation.Nonnull;
 public class BlastFWrapper implements IRecipeWrapper {
 
 
-    public BlastFWrapper(BlastFHandler container) {
+    private final ItemStack input;
+    private final ItemStack output;
 
+    public BlastFWrapper(BlastFHandler container) {
+        this.input = container.getStack();
+        this.output = container.getOutput();
 
     }
 
+    public ItemStack getOutput() {
+        return output;
+    }
+
+    public ItemStack getInput() {
+        return input;
+    }
 
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInput(VanillaTypes.ITEM, new ItemStack(Items.IRON_INGOT));
-        ingredients.setOutput(VanillaTypes.ITEM, Ic2Items.advIronIngot);
+        ingredients.setInput(VanillaTypes.ITEM, input);
+        ingredients.setOutput(VanillaTypes.ITEM, output);
 
     }
 
 
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        int temperature = 38 * 5000 / 5000;
-        drawTexturedModalRect(62, 55, 177, 39, temperature + 1, 11);
+
+        drawTexturedModalRect(77, 73, 180, 34, 50, 8);
     }
 
     public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {

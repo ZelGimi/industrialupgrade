@@ -1,5 +1,6 @@
 package com.denfop.gui;
 
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -9,21 +10,23 @@ import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerBase;
 import com.denfop.invslot.InvSlot;
 import com.denfop.utils.ModUtils;
-import ic2.core.init.Localization;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> extends GuiIC2<T> {
+public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> extends GuiCore<T> {
 
     private final EnumTypeStyle style;
     public boolean isBlack = false;
     protected GuiComponent inventory;
     protected GuiComponent slots;
     protected List<InvSlot> invSlotList = new ArrayList<>();
-    List<GuiComponent> componentList = new ArrayList<>();
+    protected List<GuiComponent> componentList = new ArrayList<>();
 
     public GuiIU(final T container) {
         super(container);
@@ -52,6 +55,175 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         componentList.add(inventory);
         componentList.add(slots);
     }
+    public float adjustTextScale(String text, int canvasWidth, int canvasHeight, float scale, float scaleStep) {
+        FontRenderer fontRenderer = mc.fontRenderer;
+        float newScale = scale;
+        float min = 70;
+        float max = 0;
+        boolean prevScaleDecrease = false;
+        boolean prevScaleIncrease = false;
+        while (true) {
+
+
+            if (newScale < min) {
+                min = newScale;
+            }
+            if (newScale > max) {
+                max = newScale;
+            }
+            List<String> lines = splitTextToLines(text, canvasWidth, newScale, fontRenderer);
+
+            int totalTextHeight = (int) (lines.size() * fontRenderer.FONT_HEIGHT * newScale);
+
+            if (isTextTooLarge(lines, canvasWidth, canvasHeight, newScale, fontRenderer)) {
+
+                newScale *= 1 - scaleStep;
+                prevScaleDecrease = true;
+                if (prevScaleIncrease) {
+                    newScale = (min + max) * 0.95f / 2;
+                    break;
+                }
+            } else if (totalTextHeight < canvasHeight * 0.8F) {
+                prevScaleIncrease = true;
+                newScale *= (1 + scaleStep);
+                if (prevScaleDecrease) {
+                    newScale = (min + max) * 1.2f / 2;
+                    break;
+                }
+            } else {
+
+                break;
+            }
+        }
+        return newScale;
+    }
+    public boolean isTextTooLarge(
+            List<String> lines,
+            int canvasWidth,
+            int canvasHeight,
+            float scale,
+            FontRenderer fontRenderer
+    ) {
+        int totalHeight = (int) (lines.size() * fontRenderer.FONT_HEIGHT * scale);
+
+        for (String line : lines) {
+            int lineWidth = (int) (fontRenderer.getStringWidth(line) * scale);
+            if (lineWidth > canvasWidth) {
+                return true;
+            }
+        }
+        return totalHeight > canvasHeight;
+    }
+    public List<String> wrapTextWithNewlines(String text, int maxWidth) {
+        List<String> lines = new ArrayList<>();
+        String[] paragraphs = text.split("\n");
+
+        for (String paragraph : paragraphs) {
+            List<String> wrappedLines = wrapText(paragraph, maxWidth);
+            lines.addAll(wrappedLines);
+        }
+
+        return lines;
+    }
+
+    public List<String> wrapText(String text, int maxWidth) {
+        List<String> lines = new ArrayList<>();
+        StringBuilder currentLine = new StringBuilder();
+        String[] words = text.split(" ");
+        for (String word : words) {
+            if (fontRenderer.getStringWidth(currentLine + word) <= maxWidth) {
+                currentLine.append(word).append(" ");
+            } else {
+                lines.add(currentLine.toString().trim());
+                while (fontRenderer.getStringWidth(word) > maxWidth) {
+                    int partLength = maxWidth / fontRenderer.getCharWidth(' ');
+                    String part = word.substring(0, partLength);
+                    lines.add(part);
+                    word = word.substring(part.length());
+                }
+
+                currentLine.setLength(0);
+                currentLine.append(word).append(" ");
+            }
+        }
+
+        if (currentLine.length() > 0) {
+            lines.add(currentLine.toString().trim());
+        }
+
+        return lines;
+    }
+    public void drawTextInCanvas(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale) {
+        int maxWidth = (int) (canvasWidth / scale);
+        int lineHeight = (int) (10 * scale);
+        int x = canvasX;
+        int y = canvasY;
+
+
+        List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+
+        for (String line : lines) {
+            if (y + lineHeight > canvasY + canvasHeight) {
+                break;
+            }
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(scale, scale, scale);
+            fontRenderer.drawString(line, (int) (x / scale), (int) (y / scale), 0xFFFFFF);
+            GlStateManager.popMatrix();
+
+            y += lineHeight;
+        }
+    }
+    public void drawTextInCanvas(String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, float scale,
+                                 int color) {
+        int maxWidth = (int) (canvasWidth / scale);
+        int lineHeight = (int) (10 * scale);
+        int x = canvasX;
+        int y = canvasY;
+
+
+        List<String> lines = wrapTextWithNewlines(text, maxWidth);
+
+
+        for (String line : lines) {
+            if (y + lineHeight > canvasY + canvasHeight) {
+                break;
+            }
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(scale, scale, scale);
+            fontRenderer.drawString(line, (int) (x / scale), (int) (y / scale), color);
+            GlStateManager.popMatrix();
+
+            y += lineHeight;
+        }
+    }
+    public List<String> splitTextToLines(String text, int canvasWidth, float scale, FontRenderer fontRenderer) {
+        List<String> lines = new LinkedList<>();
+        String[] manualLines = text.split("\n");
+
+        for (String manualLine : manualLines) {
+            StringBuilder currentLine = new StringBuilder();
+            String[] words = manualLine.split(" ");
+
+            for (String word : words) {
+                String testLine = currentLine.length() == 0 ? word : currentLine + " " + word;
+                int lineWidth = (int) (fontRenderer.getStringWidth(testLine) * scale);
+
+                if (lineWidth > canvasWidth) {
+                    lines.add(currentLine.toString());
+                    currentLine = new StringBuilder(word);
+                } else {
+                    currentLine.append(currentLine.length() == 0 ? word : " " + word);
+                }
+            }
+
+            if (currentLine.length() > 0) {
+                lines.add(currentLine.toString());
+            }
+        }
+        return lines;
+    }
 
     public GuiIU(final T container, EnumTypeComponent style) {
         super(container);
@@ -75,9 +247,21 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
                 return EnumTypeComponent.IMPROVED;
             case PERFECT:
                 return EnumTypeComponent.PERFECT;
+            case PHOTONIC:
+                return EnumTypeComponent.PHOTONIC;
+            case STEAM:
+                return EnumTypeComponent.STEAM_DEFAULT;
+            case BIO:
+                return EnumTypeComponent.BIO_DEFAULT;
+            case SPACE:
+                return EnumTypeComponent.SPACE_DEFAULT;
             default:
                 return EnumTypeComponent.DEFAULT;
         }
+    }
+
+    public FontRenderer getFontRenderer() {
+        return fontRenderer;
     }
 
     public EnumTypeStyle getStyle(EnumTypeComponent style) {
@@ -88,6 +272,14 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
                 return EnumTypeStyle.IMPROVED;
             case PERFECT:
                 return EnumTypeStyle.PERFECT;
+            case PHOTONIC:
+                return EnumTypeStyle.PHOTONIC;
+            case STEAM_DEFAULT:
+                return EnumTypeStyle.STEAM;
+            case BIO_DEFAULT:
+                return EnumTypeStyle.BIO;
+            case SPACE_DEFAULT:
+                return EnumTypeStyle.SPACE;
             default:
                 return EnumTypeStyle.DEFAULT;
         }
@@ -139,11 +331,28 @@ public abstract class GuiIU<T extends ContainerBase<? extends IInventory>> exten
         this.bindTexture();
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         String name = Localization.translate(this.container.base.getName());
-        if (!this.isBlack) {
-            this.drawXCenteredString(this.xSize / 2, 6, name, 4210752, false);
-        } else {
-            this.drawXCenteredString(this.xSize / 2, 6, name, ModUtils.convertRGBcolorToInt(216, 216, 216), false);
+        int textWidth = this.fontRenderer.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
         }
+
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.xSize / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6)/scale);
+
+
+        this.fontRenderer.drawString(name, textX, textY, 4210752);
+
+
+        GlStateManager.popMatrix();
 
     }
 

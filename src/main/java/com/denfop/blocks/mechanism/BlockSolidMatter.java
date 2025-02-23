@@ -2,6 +2,9 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.solidmatter.TileEntityAerSolidEntityMatter;
 import com.denfop.tiles.solidmatter.TileEntityAquaSolidEntityMatter;
 import com.denfop.tiles.solidmatter.TileEntityEarthSolidEntityMatter;
@@ -10,12 +13,7 @@ import com.denfop.tiles.solidmatter.TileEntityNetherSolidEntityMatter;
 import com.denfop.tiles.solidmatter.TileEntityNightSolidEntityMatter;
 import com.denfop.tiles.solidmatter.TileEntitySolidEntityMatter;
 import com.denfop.tiles.solidmatter.TileEntitySunSolidEntityMatter;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.utils.ModUtils;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +24,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockSolidMatter implements ITeBlock {
+public enum BlockSolidMatter implements IMultiTileBlock {
     aer_solidmatter(TileEntityAerSolidEntityMatter.class, 0),
     aqua_solidmatter(TileEntityAquaSolidEntityMatter.class, 1),
     earth_solidmatter(TileEntityEarthSolidEntityMatter.class, 2),
@@ -50,7 +48,14 @@ public enum BlockSolidMatter implements ITeBlock {
         this(teClass, itemMeta, EnumRarity.UNCOMMON);
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
     BlockSolidMatter(final Class<? extends TileEntityBlock> teClass, final int itemMeta, final EnumRarity rarity) {
         this.teClass = teClass;
         this.itemMeta = itemMeta;
@@ -61,7 +66,7 @@ public enum BlockSolidMatter implements ITeBlock {
 
     }
 
-    public static void buildDummies() {
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -71,17 +76,10 @@ public enum BlockSolidMatter implements ITeBlock {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -113,13 +111,13 @@ public enum BlockSolidMatter implements ITeBlock {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -128,26 +126,15 @@ public enum BlockSolidMatter implements ITeBlock {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override

@@ -1,12 +1,12 @@
 {
   "parent" : "block/cube",
   "textures" : {
-    "particle" : "industrialupgrade:blocks/blockcompressor_side",
-    "down" : "industrialupgrade:blocks/blockcompressor_side",
-    "up" : "industrialupgrade:blocks/blockcompressor_side",
+    "particle" : "simplyquarries:blocks/adv_simply_quarry_side",
+    "down" : "simplyquarries:blocks/adv_simply_quarry_side",
+    "up" : "simplyquarries:blocks/adv_simply_quarry_up",
     "north" : "simplyquarries:blocks/adv_simply_quarry",
-    "east" : "industrialupgrade:blocks/blockcompressor_side",
-    "south" : "industrialupgrade:blocks/blockcompressor_side",
-    "west" : "industrialupgrade:blocks/blockcompressor_side"
+    "east" : "simplyquarries:blocks/adv_simply_quarry_side",
+    "south" : "simplyquarries:blocks/adv_simply_quarry_side",
+    "west" : "simplyquarries:blocks/adv_simply_quarry_side"
   }
 }

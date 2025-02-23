@@ -1,15 +1,15 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerFisher;
 import com.denfop.utils.ListInformationUtils;
 import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,10 +26,21 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
     public GuiFisher(ContainerFisher container1) {
         super(container1);
         this.container = container1;
-        this.componentList.clear();
-        this.addComponent(new GuiComponent(this, 3, 14, EnumTypeComponent.SOUND_BUTTON,
+        this.addComponent(new GuiComponent(this, 5, 20, EnumTypeComponent.SOUND_BUTTON,
                 new Component<>(new ComponentSoundButton(this.container.base, 10, this.container.base))
         ));
+        this.addComponent(new GuiComponent(this, 140 + 1 + 5, 28, EnumTypeComponent.ENERGY_HEIGHT,
+                new Component<>(this.container.base.energy)
+        ));
+        this.addComponent(new GuiComponent(this, 41, 45, EnumTypeComponent.PROGRESS4,
+                new Component<>(new ComponentProgress(this.container.base, 1, (short) 0) {
+                    @Override
+                    public double getBar() {
+                        return container.base.progress / 100D;
+                    }
+                })
+        ));
+
     }
 
     protected void drawForegroundLayer(int par1, int par2) {
@@ -47,7 +58,7 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
                         this.container.base.energy.getEnergy(),
                         this.container.base.energy.getCapacity()
                 )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                        "EU";
+                        "EF";
         String tooltip =
                 ModUtils.getString(Math.min(
                         this.container.base.progress,
@@ -84,7 +95,7 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         this.drawBackground();
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(this.guiLeft + 3, this.guiTop + 3, 0, 0, 10, 10);
         this.mc.getTextureManager().bindTexture(getTexture());
         int chargeLevel = (int) (48.0F * this.container.base.energy.getEnergy()
@@ -108,7 +119,7 @@ public class GuiFisher extends GuiIU<ContainerFisher> {
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/GuiFisher.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

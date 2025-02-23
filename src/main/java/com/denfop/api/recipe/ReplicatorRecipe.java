@@ -1,26 +1,29 @@
 package com.denfop.api.recipe;
 
-import com.denfop.Ic2Items;
-import ic2.api.recipe.IRecipeInputFactory;
+import com.denfop.IUItem;
+import com.denfop.api.Recipes;
+import com.denfop.recipe.IInputHandler;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
+
+import static com.denfop.register.RegisterOreDictionary.list_baseore1;
+import static com.denfop.register.RegisterOreDictionary.list_string;
 
 public class ReplicatorRecipe {
 
     public static void init() {
         add(Items.IRON_INGOT, 1.066);
         add(Items.COAL, 0.9144);
-        add(Ic2Items.bronzeIngot, 0.9611);
+        add(IUItem.bronzeIngot, 0.9611);
         add("ingotTin", 1.082);
         add("ingotSteel", 1.066);
         add("ingotCopper", 0.9174);
         add("ingotSilver", 79.25);
-        add(Ic2Items.rubber, 100.7);
+        add(IUItem.rubber, 100.7);
         add(Items.REDSTONE, 1.221);
         add(Items.GLOWSTONE_DUST, 39.94);
         add(new ItemStack(Items.DYE, 1, 4), 6.633);
@@ -79,21 +82,21 @@ public class ReplicatorRecipe {
         add(Blocks.DIAMOND_BLOCK, 399.7);
         add(Blocks.EMERALD_BLOCK, 3616);
         add(Blocks.REDSTONE_BLOCK, 11);
-        add(Ic2Items.copperOre, 1.415);
-        add(Ic2Items.tinOre, 1.744);
-        add(Ic2Items.uraniumOre, 22.26);
-        add(Ic2Items.leadOre, 10.73);
+        add(IUItem.copperOre, 1.415);
+        add(IUItem.tinOre, 1.744);
+        add(IUItem.uraniumOre, 22.26);
+        add(IUItem.leadOre, 10.73);
         add(Blocks.COAL_BLOCK, 8.24);
-        add(Ic2Items.copperBlock, 8.266);
-        add(Ic2Items.tinBlock, 9.749);
-        add(Ic2Items.bronzeBlock, 8.659);
-        add(Ic2Items.uraniumBlock, 20.67);
-        add(Ic2Items.leadBlock, 50.2);
+        add(IUItem.copperBlock, 8.266);
+        add(IUItem.tinBlock, 9.749);
+        add(IUItem.bronzeBlock, 8.659);
+        add(IUItem.uraniumBlock, 20.67);
+        add(IUItem.leadBlock, 50.2);
         add(new ItemStack(Items.COAL, 1, 1), 30.12);
-        add(Ic2Items.Plutonium, 291.3);
-        add(Ic2Items.smallUran235, 5.74);
-        add(Ic2Items.Uran238, 2.296);
-        add(Ic2Items.iridiumOre, 120);
+        add(IUItem.Plutonium, 291.3);
+        add(IUItem.smallUran235, 5.74);
+        add(IUItem.Uran238, 2.296);
+        add(IUItem.iridiumOre, 35);
         add(new ItemStack(Blocks.PLANKS, 1, 0), 5.019);
         add(new ItemStack(Blocks.PLANKS, 1, 1), 5.7);
         add(new ItemStack(Blocks.PLANKS, 1, 2), 9.37);
@@ -106,7 +109,7 @@ public class ReplicatorRecipe {
         add(new ItemStack(Blocks.LOG, 1, 3), 80.65);
         add(new ItemStack(Blocks.LOG2, 1, 0), 646);
         add(new ItemStack(Blocks.LOG2, 1, 1), 29.98);
-        add(Ic2Items.rubberWood, 1018);
+        add(IUItem.rubWood, 1018);
         add(Items.STICK, 1.696);
         add(new ItemStack(Blocks.SAPLING, 1, 0), 60.12);
         add(new ItemStack(Blocks.SAPLING, 1, 1), 119.8);
@@ -114,7 +117,7 @@ public class ReplicatorRecipe {
         add(new ItemStack(Blocks.SAPLING, 1, 3), 960.6);
         add(new ItemStack(Blocks.SAPLING, 1, 4), 1473);
         add(new ItemStack(Blocks.SAPLING, 1, 5), 235.6);
-        add(Ic2Items.rubberSapling, 3881);
+        add(IUItem.rubberSapling, 3881);
         add(Blocks.YELLOW_FLOWER, 370.8);
         add(new ItemStack(Blocks.RED_FLOWER, 1, 0), 639.3);
         add(new ItemStack(Blocks.RED_FLOWER, 1, 1), 12900);
@@ -167,23 +170,41 @@ public class ReplicatorRecipe {
         add(Items.ENDER_PEARL, 1001);
         add(Items.BLAZE_ROD, 2003);
         add(Items.BLAZE_POWDER, 400.7);
-        add(Ic2Items.latex, 400);
+        add(IUItem.latex, 400);
         add(Items.SLIME_BALL, 133.2);
         add(Items.LEATHER, 80.57);
         add(Items.GUNPOWDER, 2.361);
         add(Items.STRING, 146.8);
         add(Items.BONE, 80.57);
+        for (String s : list_string) {
+            add("ingot" + s, 25);
+        }
+        for (String s : list_baseore1) {
+            add("ingot" + s, 25);
+        }
+        for (String s : list_string) {
+            add("block" + s, 25 * 9 * 0.9);
+        }
+        for (String s : list_baseore1) {
+            add("block" + s, 25 * 9 * 0.9);
+        }
+
+    }
+
+    public static double getInBuckets(ItemStack request) {
+        double ret = Recipes.recipes.getRecipeOutput("replicator", false, request).output.metadata.getDouble("matter");
+        return ret;
     }
 
     public static void add(ItemStack stack, double col) {
-        final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setDouble("matter", col / 1000);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "replicator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(stack)
+                                input1.getInput(stack)
                         ),
                         new RecipeOutput(tag, stack)
                 )
@@ -191,14 +212,14 @@ public class ReplicatorRecipe {
     }
 
     public static void add(Item stack, double col) {
-        final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setDouble("matter", col / 1000);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "replicator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(new ItemStack(stack))
+                                input1.getInput(new ItemStack(stack))
                         ),
                         new RecipeOutput(tag, new ItemStack(stack))
                 )
@@ -206,14 +227,14 @@ public class ReplicatorRecipe {
     }
 
     public static void add(Block block, double col) {
-        final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setDouble("matter", col / 1000);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "replicator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forStack(new ItemStack(block))
+                                input1.getInput(new ItemStack(block))
                         ),
                         new RecipeOutput(tag, new ItemStack(block))
                 )
@@ -221,16 +242,16 @@ public class ReplicatorRecipe {
     }
 
     public static void add(String stack, double col) {
-        final IRecipeInputFactory input1 = ic2.api.recipe.Recipes.inputFactory;
+        final IInputHandler input1 = com.denfop.api.Recipes.inputFactory;
         NBTTagCompound tag = new NBTTagCompound();
         tag.setDouble("matter", col / 1000);
         com.denfop.api.Recipes.recipes.addRecipe(
                 "replicator",
                 new BaseMachineRecipe(
                         new Input(
-                                input1.forOreDict(stack)
+                                input1.getInput(stack)
                         ),
-                        new RecipeOutput(tag, OreDictionary.getOres(stack).get(0))
+                        new RecipeOutput(tag, input1.getInput(stack).getInputs().get(0))
                 )
         );
     }

@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blockexpstorage_top",
     "north" : "industrialupgrade:blocks/blockexpstorage_main",
     "east" : "industrialupgrade:blocks/blockexpstorage_side",
-    "south" : "industrialupgrade:blocks/blockexpstorage_side2",
+    "south" : "industrialupgrade:blocks/blockexpstorage_bottom",
     "west" : "industrialupgrade:blocks/blockexpstorage_side"
   }
 }

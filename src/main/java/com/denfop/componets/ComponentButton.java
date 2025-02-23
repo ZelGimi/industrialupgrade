@@ -1,7 +1,7 @@
 package com.denfop.componets;
 
-import com.denfop.IUCore;
-import ic2.core.block.TileEntityBlock;
+import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.tiles.base.TileEntityBlock;
 
 public class ComponentButton {
 
@@ -21,6 +21,10 @@ public class ComponentButton {
         this.text = text;
     }
 
+    public boolean active() {
+        return false;
+    }
+
     public int getEvent() {
         return event;
     }
@@ -30,7 +34,7 @@ public class ComponentButton {
     }
 
     public void ClickEvent() {
-        IUCore.network.get(false).initiateClientTileEntityEvent(entityBlock, event);
+        new PacketUpdateServerTile(entityBlock, event);
     }
 
     public String getText() {

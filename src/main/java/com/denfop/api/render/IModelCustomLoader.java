@@ -1,7 +1,6 @@
 package com.denfop.api.render;
 
 import net.minecraft.util.ResourceLocation;
-import thaumcraft.client.lib.obj.WavefrontObject.ModelFormatException;
 
 public interface IModelCustomLoader {
 
@@ -9,6 +8,6 @@ public interface IModelCustomLoader {
 
     String[] getSuffixes();
 
-    IModelCustom loadInstance(ResourceLocation var1) throws ModelFormatException;
+    IModelCustom loadInstance(ResourceLocation var1);
 
 }

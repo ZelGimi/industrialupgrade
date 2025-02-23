@@ -4,16 +4,16 @@ package com.denfop.invslot;
 import com.denfop.items.modules.EnumSpawnerModules;
 import com.denfop.items.modules.EnumSpawnerType;
 import com.denfop.items.modules.ItemSpawnerModules;
-import com.denfop.tiles.base.TileEntityAutoSpawner;
+import com.denfop.tiles.base.TileAutoSpawner;
 import net.minecraft.item.ItemStack;
 
 public class InvSlotUpgradeModule extends InvSlot {
 
-    private final TileEntityAutoSpawner tile;
+    private final TileAutoSpawner tile;
     private int stackSizeLimit;
 
-    public InvSlotUpgradeModule(TileEntityAutoSpawner base1) {
-        super(base1, "ItemUpgradeModule", InvSlot.Access.I, 4, InvSlot.InvSide.ANY);
+    public InvSlotUpgradeModule(TileAutoSpawner base1) {
+        super(base1, TypeItemSlot.INPUT, 4);
         this.tile = base1;
         this.stackSizeLimit = 1;
     }

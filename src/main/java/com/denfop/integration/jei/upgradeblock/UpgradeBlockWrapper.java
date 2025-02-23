@@ -1,6 +1,6 @@
 package com.denfop.integration.jei.upgradeblock;
 
-import ic2.core.init.Localization;
+import com.denfop.Localization;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -78,7 +78,7 @@ public class UpgradeBlockWrapper implements IRecipeWrapper {
                 this.nbt.getString("type").isEmpty() ?
                         Localization.translate("upgradeblock_upgrade") : Localization.translate("upgradeblock_modification"),
                 64,
-                52,
+                58,
                 4210752
         );
 

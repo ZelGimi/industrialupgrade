@@ -3,10 +3,10 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockcombmacerator1_side",
     "down" : "industrialupgrade:blocks/blockcombmacerator1_side",
-    "up" : "industrialupgrade:blocks/blockcombmacerator1_side",
+    "up" : "industrialupgrade:blocks/blockcombmacerator1_top_active",
     "north" : "industrialupgrade:blocks/blockcombmacerator1_main_active",
-    "east" : "industrialupgrade:blocks/blockcombmacerator1_side2_active",
+    "east" : "industrialupgrade:blocks/blockcombmacerator1_side",
     "south" : "industrialupgrade:blocks/blockcombmacerator1_side",
-    "west" : "industrialupgrade:blocks/blockcombmacerator1_side2_active"
+    "west" : "industrialupgrade:blocks/blockcombmacerator1_side"
   }
 }

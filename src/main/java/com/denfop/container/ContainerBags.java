@@ -1,25 +1,26 @@
 package com.denfop.container;
 
-import com.denfop.items.bags.HandHeldBags;
-import ic2.core.slot.SlotHologramSlot;
-import ic2.core.util.StackUtil;
+import com.denfop.IUItem;
+import com.denfop.items.bags.ItemStackBags;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketHeldItemChange;
 
 import java.util.Objects;
 
-public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
+public class ContainerBags extends ContainerHandHeldInventory<ItemStackBags> {
 
 
     public final int inventorySize;
-    private final HandHeldBags Toolbox1;
+    private final ItemStackBags Toolbox1;
     private final int current;
 
-    public ContainerBags(EntityPlayer player, HandHeldBags Toolbox1) {
+    public ContainerBags(EntityPlayer player, ItemStackBags Toolbox1) {
         super(Toolbox1);
         this.Toolbox1 = Toolbox1;
         inventorySize = Toolbox1.inventorySize;
@@ -28,13 +29,49 @@ public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
         slots = slots / 9;
 
         int col;
-        for (col = 0; col < slots; ++col) {
-            for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 24 + col * 18));
+        Item item = Toolbox1.itemStack1.getItem();
+        if (item == IUItem.bags) {
+            for (col = 0; col < slots; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 30 + col * 18));
+                }
+            }
+        }else if (item == IUItem.adv_bags){
+            for (col = 0; col < slots; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18));
+                }
+            }
+        }else{
+            for (col = 0; col < slots; ++col) {
+                for (int col1 = 0; col1 < 9; ++col1) {
+                    this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 19 + col * 18));
+                }
             }
         }
 
-        addPlayerInventorySlots(player, 233);
+        if (item == IUItem.bags) {
+            for (int i = 0; i < Toolbox1.list.length; i++) {
+                addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 180, 9 + (i) * 18,
+                        new VirtualSlotItem(Toolbox1.list, inventorySize)
+                ));
+            }
+        } else {
+            for (int i = 0; i < Toolbox1.list.length; i++) {
+                addSlotToContainer(new SlotVirtual(Toolbox1, slots * 9 + i, 180, 25 + (i) * 18,
+                        new VirtualSlotItem(Toolbox1.list, inventorySize)
+                ));
+            }
+        }
+        int y;
+        if (item == IUItem.bags) {
+            y = 177;
+        }else if (item == IUItem.adv_bags){
+            y = 202;
+        }else{
+            y = 238;
+        }
+        addPlayerInventorySlots(player, y);
 
     }
 
@@ -75,7 +112,7 @@ public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
                 if (slot >= 0 && slot < this.inventorySlots.size() && this.base.isThisContainer(this.inventorySlots
                         .get(slot)
                         .getStack())) {
-                    return StackUtil.emptyStack;
+                    return ModUtils.emptyStack;
                 }
                 break;
             case SWAP:
@@ -119,10 +156,14 @@ public class ContainerBags extends ContainerHandHeldInventory<HandHeldBags> {
         return stack;
     }
 
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+    }
+
     public ItemStack slotClick1(int slotId, int dragType, ClickType clickType, EntityPlayer player) {
-        Slot slot;
-        return slotId >= 0 && slotId < this.inventorySlots.size() && (slot = this.inventorySlots.get(slotId)) instanceof SlotHologramSlot
-                ? ((SlotHologramSlot) slot).slotClick(dragType, clickType, player) : super.slotClick(
+        return super.slotClick(
                 slotId,
                 dragType,
                 clickType,

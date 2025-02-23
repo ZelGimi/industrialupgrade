@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/earth_rig",
+    "down" : "industrialupgrade:blocks/earth_rig_down",
+    "up" : "industrialupgrade:blocks/earth_rig_up",
+    "north" : "industrialupgrade:blocks/earth_rig",
+    "east" : "industrialupgrade:blocks/earth_rig",
+    "south" : "industrialupgrade:blocks/earth_rig",
+    "west" : "industrialupgrade:blocks/earth_rig"
+  }
+}

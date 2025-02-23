@@ -4,7 +4,7 @@ import com.denfop.api.windsystem.WindSystem;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.CoolComponent;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.mechanism.water.TileEntityBaseWaterGenerator;
+import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -62,10 +62,10 @@ public class ComponentClientEffectRender extends AbstractComponent {
                 }
                 break;
             case WATER_GENERATOR:
-                if (!(this.parent instanceof TileEntityBaseWaterGenerator)) {
+                if (!(this.parent instanceof TileBaseWaterGenerator)) {
                     break;
                 }
-                TileEntityBaseWaterGenerator baseWaterGenerator = (TileEntityBaseWaterGenerator) this.parent;
+                TileBaseWaterGenerator baseWaterGenerator = (TileBaseWaterGenerator) this.parent;
                 if (baseWaterGenerator.getActive()) {
                     rnd = this.parent.getWorld().rand;
                     if (WindSystem.windSystem.getLevelWind() <= 3) {

@@ -36,7 +36,7 @@ public class BlockIngots1 extends BlockCore implements IModelRegister {
         super(Material.ROCK, Constants.MOD_ID);
         setUnlocalizedName("baseblockingot1");
         setCreativeTab(IUCore.RecourseTab);
-        setHardness(3.0F);
+        setHardness(1.0F);
         setResistance(5.0F);
         setSoundType(SoundType.METAL);
         setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Type.manganese));
@@ -106,7 +106,6 @@ public class BlockIngots1 extends BlockCore implements IModelRegister {
         itemBlock.setRegistryName(Objects.requireNonNull(getRegistryName()));
         ForgeRegistries.ITEMS.register(itemBlock);
         IUCore.proxy.addIModelRegister(this);
-
         return true;
     }
 
@@ -117,6 +116,9 @@ public class BlockIngots1 extends BlockCore implements IModelRegister {
         iridium(1),
         germanium(2),
 
+        osmium(3),
+        tantalum(4),
+        cadmium(5),
         ;
 
         private final int metadata;

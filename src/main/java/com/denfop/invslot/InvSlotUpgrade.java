@@ -1,14 +1,20 @@
 package com.denfop.invslot;
 
-import com.denfop.Ic2Items;
+import com.denfop.Config;
+import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.api.recipe.InvSlotOutput;
+import com.denfop.api.upgrades.IUpgradableBlock;
+import com.denfop.api.upgrades.IUpgradeItem;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.Redstone;
+import com.denfop.items.IItemStackInventory;
+import com.denfop.items.ItemStackUpgradeModules;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.upgrade.*;
-import ic2.core.util.StackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -16,6 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -27,9 +35,15 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class InvSlotUpgrade extends InvSlot {
+public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
     private final TileEntityInventory tile;
     private final Map<EnumFacing, HandlerInventory> iItemHandlerMap;
@@ -40,7 +54,6 @@ public class InvSlotUpgrade extends InvSlot {
     private final List<Fluids.InternalFluidTank> fluidTankList = new ArrayList<>();
     private final IItemHandler main_handler;
     public boolean isUpdate = false;
-    public int augmentation;
     public int extraProcessTime;
     public double processTimeMultiplier;
     public double extraEnergyDemand;
@@ -57,7 +70,8 @@ public class InvSlotUpgrade extends InvSlot {
     List<InvSlotOutput> slots = new ArrayList<>();
     List<InvSlot> inv_slots = new ArrayList<>();
     private EnumFacing[] facings;
-    private List<Redstone.IRedstoneModifier> redstoneModifiers = Collections.emptyList();
+    private List<List<ItemStack>> whiteList;
+    private List<List<Fluid>> whiteList1;
     private boolean ejectorUpgrade;
     private boolean fluidEjectorUpgrade;
     private boolean pullingUpgrade;
@@ -65,12 +79,14 @@ public class InvSlotUpgrade extends InvSlot {
 
     public InvSlotUpgrade(
             TileEntityInventory base,
-            String name,
             int count
     ) {
-        super(base, name, Access.I, count);
+        super(base, TypeItemSlot.INPUT, count);
         this.resetRates();
         this.facings = new EnumFacing[count];
+        this.whiteList = new ArrayList<>(Collections.nCopies(count, Collections.emptyList()));
+        this.whiteList1 = new ArrayList<>(Collections.nCopies(count, Collections.emptyList()));
+
         base.getInvSlots().forEach(slot -> {
             if (slot instanceof InvSlotOutput) {
                 slots.add((InvSlotOutput) slot);
@@ -92,8 +108,8 @@ public class InvSlotUpgrade extends InvSlot {
         this.iFluidHandlerMap = new HashMap<>();
     }
 
-    private static int applyModifier(int base, int extra, double multiplier) {
-        double ret = (double) Math.round(((double) base + (double) extra) * multiplier);
+    private static int applyModifier(int base, int extra) {
+        double ret = (double) Math.round(((double) base + (double) extra));
         return ret > 2.147483647E9D ? 2147483647 : (int) ret;
     }
 
@@ -101,11 +117,18 @@ public class InvSlotUpgrade extends InvSlot {
         return (double) Math.round((base + extra) * multiplier);
     }
 
-    private static EnumFacing getDirection(ItemStack stack) {
-        int rawDir = StackUtil.getOrCreateNbtData(stack).getByte("dir");
+    public static EnumFacing getDirection(ItemStack stack) {
+        int rawDir = ModUtils.nbt(stack).getByte("dir");
         return rawDir >= 1 && rawDir <= 6 ? EnumFacing.VALUES[rawDir - 1] : null;
     }
 
+    @Override
+    public EnumTypeSlot getTypeSlot(int slotid) {
+
+
+        return EnumTypeSlot.UPGRADE;
+
+    }
 
     public boolean accepts(ItemStack stack, final int index) {
         Item rawItem = stack.getItem();
@@ -145,78 +168,30 @@ public class InvSlotUpgrade extends InvSlot {
         }
     }
 
-    private boolean add(List<ItemStack> stacks, boolean simulate) {
-        if (stacks != null && !stacks.isEmpty()) {
-
-            for (ItemStack stack : stacks) {
-                for (int i = 0; i < this.size(); i++) {
-                    if (this.get(i).isEmpty()) {
-                        if (!simulate) {
-                            this.put(i, stack.copy());
-
-                        }
-                        return true;
-                    } else {
-                        if (this.get(i).isItemEqual(stack)) {
-                            if (this.get(i).getCount() + stack.getCount() <= stack.getMaxStackSize()) {
-                                if (stack.getTagCompound() == null && this.get(i).getTagCompound() == null) {
-                                    if (!simulate) {
-                                        this.get(i).grow(stack.getCount());
-                                    }
-                                    return true;
-                                } else {
-                                    if (stack.getTagCompound() != null &&
-                                            stack.getTagCompound().equals(this.get(i).getTagCompound())) {
-                                        if (!simulate) {
-                                            this.get(i).grow(stack.getCount());
-
-                                        }
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        return true;
-    }
 
     public void onChanged() {
         this.resetRates();
-        IUpgradableBlock block = (IUpgradableBlock) this.base;
-        List<Redstone.IRedstoneModifier> newRedstoneModifiers = new ArrayList<>();
 
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
-            if (!StackUtil.isEmpty(stack)) {
+            if (!ModUtils.isEmpty(stack)) {
                 IUpgradeItem upgrade = (IUpgradeItem) stack.getItem();
-                boolean all = upgrade instanceof IFullUpgrade;
-                int size = StackUtil.getSize(stack);
-                if (all || upgrade instanceof IAugmentationUpgrade) {
-                    this.augmentation += ((IAugmentationUpgrade) upgrade).getAugmentation(stack, block) * size;
+                int size = ModUtils.getSize(stack);
+                if (upgrade.getProcessTimeMultiplier(stack) < 1) {
+                    this.extraProcessTime += size;
+                } else {
+                    extraProcessTime = 1;
                 }
-
-                if (all || upgrade instanceof IProcessingUpgrade) {
-                    IProcessingUpgrade procUpgrade = (IProcessingUpgrade) upgrade;
-                    this.extraProcessTime += procUpgrade.getExtraProcessTime(stack, block) * size;
-                    this.processTimeMultiplier *= Math.pow(procUpgrade.getProcessTimeMultiplier(stack, block), size);
-                    this.extraEnergyDemand += procUpgrade.getExtraEnergyDemand(stack, block) * size;
-                    this.energyDemandMultiplier *= Math.pow(procUpgrade.getEnergyDemandMultiplier(stack, block), size);
+                this.processTimeMultiplier *= Math.pow(upgrade.getProcessTimeMultiplier(stack), size);
+                if (upgrade.getProcessTimeMultiplier(stack) < 1) {
+                    this.extraEnergyDemand += size;
+                } else {
+                    extraEnergyDemand = 1;
                 }
-
-                if (all || upgrade instanceof IEnergyStorageUpgrade) {
-                    IEnergyStorageUpgrade engUpgrade = (IEnergyStorageUpgrade) upgrade;
-                    this.extraEnergyStorage += engUpgrade.getExtraEnergyStorage(stack, block) * size;
-                    this.energyStorageMultiplier *= Math.pow(engUpgrade.getEnergyStorageMultiplier(stack, block), size);
-                }
-
-                if (all || upgrade instanceof ITransformerUpgrade) {
-                    this.extraTier += ((ITransformerUpgrade) upgrade).getExtraTier(stack, block) * size;
-                }
-
+                this.energyDemandMultiplier *= Math.pow(upgrade.getEnergyDemandMultiplier(stack), size) * operationsPerTick;
+                this.extraEnergyStorage += upgrade.getExtraEnergyStorage(stack) * size;
+                this.energyStorageMultiplier *= Math.pow(1, size);
+                this.extraTier += upgrade.getExtraTier(stack) * size;
             }
 
         }
@@ -224,32 +199,74 @@ public class InvSlotUpgrade extends InvSlot {
         for (final AbstractComponent component : this.base.getParent().getComps()) {
             if (component instanceof Redstone) {
                 Redstone rs = (Redstone) component;
-                rs.removeRedstoneModifiers(this.redstoneModifiers);
-                rs.addRedstoneModifiers(newRedstoneModifiers);
                 rs.update();
             }
         }
-        this.redstoneModifiers = newRedstoneModifiers;
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
-            if (stack.isItemEqual(Ic2Items.ejectorUpgrade)) {
+            if (stack.isItemEqual(IUItem.ejectorUpgrade)) {
                 this.ejectorUpgrade = true;
                 this.facings[i] = getDirection(stack);
-            } else if (stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                List<ItemStack> stacks =
+                        Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(null, stack))).getList());
+                stacks = stacks.stream()
+                        .filter(stack1 -> !stack1.isEmpty())
+                        .collect(Collectors.toList());
+                this.whiteList.set(i, stacks);
+            } else if (stack.isItemEqual(IUItem.fluidEjectorUpgrade)) {
                 this.fluidEjectorUpgrade = true;
                 this.facings[i] = getDirection(stack);
-            } else if (stack.isItemEqual(Ic2Items.pullingUpgrade)) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(null, stack)).fluidStackList;
+                List<Fluid> fluidStacks1 = new ArrayList<>();
+
+                for (FluidStack stacks : fluidStacks) {
+                    if (stacks != null) {
+                        if (stacks.getFluid() == FluidName.fluidwater.getInstance()) {
+                            fluidStacks1.add(FluidRegistry.WATER);
+                        } else if (stacks.getFluid() == FluidName.fluidlava.getInstance()) {
+                            fluidStacks1.add(FluidRegistry.LAVA);
+                        } else {
+                            fluidStacks1.add(stacks.getFluid());
+                        }
+                    }
+                }
+                this.whiteList1.set(i, fluidStacks1);
+            } else if (stack.isItemEqual(IUItem.pullingUpgrade)) {
                 this.pullingUpgrade = true;
                 this.facings[i] = getDirection(stack);
-            } else if (stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                List<ItemStack> stacks =
+                        Arrays.asList(((ItemStackUpgradeModules) (inventory.getInventory(null, stack))).getList());
+                stacks = stacks.stream()
+                        .filter(stack1 -> !stack1.isEmpty())
+                        .collect(Collectors.toList());
+                this.whiteList.set(i, stacks);
+            } else if (stack.isItemEqual(IUItem.fluidpullingUpgrade)) {
                 this.fluidPullingUpgrade = true;
                 this.facings[i] = getDirection(stack);
+                IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
+                List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(null, stack)).fluidStackList;
+                List<Fluid> fluidStacks1 = new ArrayList<>();
+
+                for (FluidStack stacks : fluidStacks) {
+                    if (stacks != null) {
+                        if (stacks.getFluid() == FluidName.fluidwater.getInstance()) {
+                            fluidStacks1.add(FluidRegistry.WATER);
+                        } else if (stacks.getFluid() == FluidName.fluidlava.getInstance()) {
+                            fluidStacks1.add(FluidRegistry.LAVA);
+                        } else {
+                            fluidStacks1.add(stacks.getFluid());
+                        }
+                    }
+                }
+                this.whiteList1.set(i, fluidStacks1);
             }
         }
     }
 
     private void resetRates() {
-        this.augmentation = 0;
         this.extraProcessTime = 0;
         this.processTimeMultiplier = 1.0D;
         this.extraEnergyDemand = 0;
@@ -339,7 +356,7 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
     public int getTier(int defaultTier) {
-        return applyModifier(defaultTier, this.extraTier, 1.0D);
+        return applyModifier(defaultTier, this.extraTier);
     }
 
     public boolean tickNoMark() {
@@ -382,15 +399,15 @@ public class InvSlotUpgrade extends InvSlot {
         boolean update = false;
         for (int i = 0; i < this.size(); ++i) {
             ItemStack stack = this.get(i);
-            if (!StackUtil.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
+            if (!ModUtils.isEmpty(stack) && stack.getItem() instanceof IUpgradeItem) {
                 update = true;
-                if (this.tick % 2 == 0 && stack.isItemEqual(Ic2Items.ejectorUpgrade) || stack.isItemEqual(Ic2Items.advejectorUpgrade)) {
+                if (this.tick % Config.speed_extract_item == 0 && stack.isItemEqual(IUItem.ejectorUpgrade)) {
                     this.tick(i);
-                } else if (this.tick % 2 == 0 && stack.isItemEqual(Ic2Items.fluidEjectorUpgrade)) {
+                } else if (this.tick % Config.speed_extract_fluid == 0 && stack.isItemEqual(IUItem.fluidEjectorUpgrade)) {
                     this.tick_fluid(i);
-                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.pullingUpgrade) || stack.isItemEqual(Ic2Items.advpullingUpgrade)) {
+                } else if (this.tick % Config.speed_insert_item == 0 && stack.isItemEqual(IUItem.pullingUpgrade)) {
                     this.tickPullIn(i);
-                } else if (this.tick % 4 == 0 && stack.isItemEqual(Ic2Items.fluidpullingUpgrade)) {
+                } else if (this.tick % Config.speed_insert_fluid == 0 && stack.isItemEqual(IUItem.fluidpullingUpgrade)) {
                     this.tickPullIn_fluid(i);
                 }
                 ret = true;
@@ -405,6 +422,7 @@ public class InvSlotUpgrade extends InvSlot {
 
     private void tickPullIn_fluid(int i) {
         EnumFacing facing = this.facings[i];
+        final List<Fluid> itemStackList = this.whiteList1.get(i);
         if (facing != null) {
 
             final IFluidHandler handler = this.iFluidHandlerMap.get(facing);
@@ -420,9 +438,15 @@ public class InvSlotUpgrade extends InvSlot {
             for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
                 if (fluidTankProperties.getContents() != null) {
                     for (Fluids.InternalFluidTank tank : this.fluidTankList) {
+                        if (tank.getFluidAmount() >= tank.getCapacity()) {
+                            continue;
+                        }
                         final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
-                        if (fluid != null && fluid.amount > 0 && tank.canFillFluidType(fluid)) {
-                            tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
+                        if (fluid != null && fluid.amount > 0 && tank.canFillFluidType(fluid) && (itemStackList.isEmpty() || itemStackList.contains(
+                                fluid.getFluid()))) {
+                            int amount = tank.getCapacity() - tank.getFluidAmount();
+                            FluidStack fluidStack = handler.drain(amount, true);
+                            tank.fill(fluidStack, true);
                         }
                     }
                 }
@@ -443,9 +467,15 @@ public class InvSlotUpgrade extends InvSlot {
                 for (IFluidTankProperties fluidTankProperties : handler.getTankProperties()) {
                     if (fluidTankProperties.getContents() != null) {
                         for (Fluids.InternalFluidTank tank : this.fluidTankList) {
+                            if (tank.getFluidAmount() >= tank.getCapacity()) {
+                                continue;
+                            }
                             final FluidStack fluid = handler.drain(fluidTankProperties.getContents(), false);
-                            if (fluid != null && fluid.amount > 0 && tank.acceptsFluid(fluid.getFluid())) {
-                                tank.fill(handler.drain(fluidTankProperties.getContents(), true), true);
+                            if (fluid != null && fluid.amount > 0 && tank.acceptsFluid(fluid.getFluid()) && (itemStackList.isEmpty() || itemStackList.contains(
+                                    fluid.getFluid()))) {
+                                int amount = tank.getCapacity() - tank.getFluidAmount();
+                                FluidStack fluidStack = handler.drain(amount, true);
+                                tank.fill(fluidStack, true);
                             }
                         }
                     }
@@ -496,23 +526,149 @@ public class InvSlotUpgrade extends InvSlot {
 
     private void tickPullIn(int i) {
         EnumFacing facing = this.facings[i];
+        final List<ItemStack> itemStackList = this.whiteList.get(i);
         if (facing != null) {
 
             final HandlerInventory handler = this.iItemHandlerMap.get(facing);
             if (handler == null) {
                 return;
             }
-            int slots = 0;
-            try {
-                slots = this.slotHandler.get(handler.getHandler());
-            } catch (Exception ignored) {
-            }
-            for (int j = 0; j < slots; j++) {
-                ItemStack took = handler.getHandler().extractItem(j, 64, true);
-                if (!took.isEmpty()) {
-                    if (ModUtils.insertItem(this.main_handler, took, true, slots).isEmpty()) {
-                        took = handler.getHandler().extractItem(j, took.getCount(), false);
-                        ModUtils.insertItem(this.main_handler, took, false, slots);
+            if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
+                final List<InvSlot> inputs = this.base.getParent().getInputSlots();
+                TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
+                final List<InvSlot> outputs = inventory.getOutputSlots();
+                cycle:
+                for (InvSlot slot : outputs) {
+                    cycle1:
+                    for (InvSlot invSlot : inputs) {
+                        if (invSlot.acceptAllOrIndex()) {
+                            cycle2:
+                            for (int j = 0; j < slot.size(); j++) {
+                                ItemStack output = slot.get(j);
+                                if (output.isEmpty()) {
+                                    continue;
+                                }
+                                boolean find = false;
+                                if (!itemStackList.isEmpty()) {
+                                    for (ItemStack stack : itemStackList) {
+                                        if (stack.isItemEqual(output)) {
+                                            find = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!find) {
+                                        continue;
+                                    }
+                                }
+                                if (invSlot.accepts(output, 0)) {
+                                    for (int jj = 0; jj < invSlot.size(); jj++) {
+                                        if (output.isEmpty()) {
+                                            continue cycle2;
+                                        }
+                                        ItemStack input = invSlot.get(jj);
+
+                                        if (input.isEmpty()) {
+                                            if (invSlot.add(output)) {
+                                                slot.put(j, ItemStack.EMPTY);
+                                                output = ItemStack.EMPTY;
+                                            }
+                                        } else {
+                                            if (!ModUtils.checkItemEquality(input, output)) {
+                                                continue;
+                                            }
+                                            int maxCount = Math.min(
+                                                    input.getMaxStackSize() - input.getCount(),
+                                                    output.getCount()
+                                            );
+                                            if (maxCount > 0) {
+                                                input.grow(maxCount);
+                                                output.shrink(maxCount);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            cycle3:
+                            for (int jj = 0; jj < slot.size(); jj++) {
+
+                                for (int j = 0; j < invSlot.size(); j++) {
+                                    ItemStack output = slot.get(jj);
+                                    if (output.isEmpty()) {
+                                        continue cycle3;
+                                    }
+                                    boolean find = false;
+                                    if (!itemStackList.isEmpty()) {
+                                        for (ItemStack stack : itemStackList) {
+                                            if (stack.isItemEqual(output)) {
+                                                find = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!find) {
+                                            continue cycle3;
+                                        }
+                                    }
+                                    ItemStack input = invSlot.get(j);
+
+                                    if (input.isEmpty()) {
+                                        if (invSlot.accepts(output, j)) {
+                                            if (invSlot.add(output)) {
+                                                slot.put(j, ItemStack.EMPTY);
+                                                output = ItemStack.EMPTY;
+                                            }
+                                        }
+                                    } else {
+                                        if (!output.isItemEqual(input)) {
+                                            continue;
+                                        }
+                                        int maxCount = Math.min(
+                                                input.getMaxStackSize() - input.getCount(),
+                                                output.getCount()
+                                        );
+                                        if (maxCount > 0) {
+                                            input.grow(maxCount);
+                                            output.shrink(maxCount);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                int slots = 0;
+                try {
+                    slots = this.slotHandler.get(handler.getHandler());
+                } catch (Exception ignored) {
+                }
+                for (int j = 0; j < slots; j++) {
+                    ItemStack took = handler.getHandler().extractItem(j, 64, true);
+
+                    if (!took.isEmpty()) {
+                        boolean find = false;
+                        if (!itemStackList.isEmpty()) {
+                            for (ItemStack stack : itemStackList) {
+                                if (stack.isItemEqual(took)) {
+                                    find = true;
+                                    break;
+                                }
+                            }
+                            if (!find) {
+                                continue;
+                            }
+                        }
+                        final ItemStack took1 = ModUtils.insertItem(this.main_handler, took, true, this.main_handler.getSlots());
+                        if (took1.isEmpty()) {
+                            took = handler.getHandler().extractItem(j, took.getCount(), false);
+
+                            ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
+                        } else if (took1 != took) {
+                            int count = took1.getCount() - took.getCount();
+                            count = Math.abs(count);
+                            took = handler.getHandler().extractItem(j, count, false);
+                            ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
+                        }
                     }
                 }
             }
@@ -523,19 +679,151 @@ public class InvSlotUpgrade extends InvSlot {
                 if (handler == null) {
                     continue;
                 }
-                int slots = 0;
-                try {
-                    slots = this.slotHandler.get(handler.getHandler());
-                } catch (Exception ignored) {
-                }
+                if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
+                    final List<InvSlot> inputs = this.base.getParent().getInputSlots();
+                    TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
+                    final List<InvSlot> outputs = inventory.getOutputSlots();
+                    cycle:
+                    for (InvSlot slot : outputs) {
+                        cycle1:
+                        for (InvSlot invSlot : inputs) {
+                            if (invSlot.acceptAllOrIndex()) {
+                                cycle2:
+                                for (int j = 0; j < slot.size(); j++) {
+                                    ItemStack output = slot.get(j);
+                                    if (output.isEmpty()) {
+                                        continue;
+                                    }
+                                    boolean find = false;
+                                    if (!itemStackList.isEmpty()) {
+                                        for (ItemStack stack : itemStackList) {
+                                            if (stack.isItemEqual(output)) {
+                                                find = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!find) {
+                                            continue;
+                                        }
+                                    }
+                                    if (invSlot.accepts(output, 0)) {
+                                        for (int jj = 0; jj < invSlot.size(); jj++) {
+                                            if (output.isEmpty()) {
+                                                continue cycle2;
+                                            }
 
-                for (int j = 0; j < slots; j++) {
-                    ItemStack took = handler.getHandler().extractItem(j, 64, true);
+                                            ItemStack input = invSlot.get(jj);
 
-                    if (!took.isEmpty()) {
-                        if (ModUtils.insertItem(this.main_handler, took, true, slots).isEmpty()) {
-                            took = handler.getHandler().extractItem(j, took.getCount(), false);
-                            ModUtils.insertItem(this.main_handler, took, false, slots);
+                                            if (input.isEmpty()) {
+                                                if (invSlot.add(output)) {
+                                                    slot.put(jj, ItemStack.EMPTY);
+                                                    output = ItemStack.EMPTY;
+                                                }
+                                            } else {
+                                                if (!output.isItemEqual(input)) {
+                                                    continue;
+                                                }
+                                                int maxCount = Math.min(
+                                                        input.getMaxStackSize() - input.getCount(),
+                                                        output.getCount()
+                                                );
+                                                if (maxCount > 0) {
+                                                    input.grow(maxCount);
+                                                    output.shrink(maxCount);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                cycle3:
+                                for (int jj = 0; jj < slot.size(); jj++) {
+
+                                    for (int j = 0; j < invSlot.size(); j++) {
+                                        ItemStack output = slot.get(jj);
+                                        if (output.isEmpty()) {
+                                            continue cycle3;
+                                        }
+                                        boolean find = false;
+                                        if (!itemStackList.isEmpty()) {
+                                            for (ItemStack stack : itemStackList) {
+                                                if (stack.isItemEqual(output)) {
+                                                    find = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!find) {
+                                                continue cycle3;
+                                            }
+                                        }
+                                        ItemStack input = invSlot.get(j);
+
+                                        if (input.isEmpty()) {
+                                            if (invSlot.accepts(output, j)) {
+                                                if (invSlot.add(output)) {
+                                                    slot.put(jj, ItemStack.EMPTY);
+                                                    output = ItemStack.EMPTY;
+                                                }
+                                            }
+                                        } else {
+                                            if (!output.isItemEqual(input)) {
+                                                continue;
+                                            }
+                                            if (input.getCount() == input.getMaxStackSize()) {
+                                                continue;
+                                            }
+                                            int maxCount = Math.min(
+                                                    input.getMaxStackSize() - input.getCount(),
+                                                    output.getCount()
+                                            );
+                                            if (maxCount > 0) {
+                                                input.grow(maxCount);
+                                                output.shrink(maxCount);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    int slots = 0;
+                    try {
+                        slots = this.slotHandler.get(handler.getHandler());
+                    } catch (Exception ignored) {
+                    }
+
+                    for (int j = 0; j < slots; j++) {
+                        ItemStack took = handler.getHandler().extractItem(j, 64, true);
+
+                        if (!took.isEmpty()) {
+                            final ItemStack took1 = ModUtils.insertItem(
+                                    this.main_handler,
+                                    took,
+                                    true,
+                                    this.main_handler.getSlots()
+                            );
+                            if (took1.isEmpty()) {
+                                boolean find = false;
+                                if (!itemStackList.isEmpty()) {
+                                    for (ItemStack stack : itemStackList) {
+                                        if (stack.isItemEqual(took)) {
+                                            find = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!find) {
+                                        continue;
+                                    }
+                                }
+                                took = handler.getHandler().extractItem(j, took.getCount(), false);
+                                ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
+                            } else if (took1 != took) {
+                                int count = took1.getCount() - took.getCount();
+                                count = Math.abs(count);
+                                took = handler.getHandler().extractItem(j, count, false);
+                                ModUtils.insertItem(this.main_handler, took, false, this.main_handler.getSlots());
+                            }
                         }
                     }
                 }
@@ -545,6 +833,7 @@ public class InvSlotUpgrade extends InvSlot {
 
     private void tick(final int i) {
         EnumFacing facing = this.facings[i];
+        List<ItemStack> itemStackList = this.whiteList.get(i);
         if (facing != null) {
 
             final HandlerInventory handler = this.iItemHandlerMap.get(facing);
@@ -552,53 +841,107 @@ public class InvSlotUpgrade extends InvSlot {
                 return;
             }
             int slots = 0;
-            try {
-                slots = this.slotHandler.get(handler.getHandler());
-            } catch (Exception ignored) {
-            }
-            if (handler.getInventory() != null) {
+            if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
+                TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
+                cycle:
                 for (InvSlotOutput slot : this.slots) {
-                    for (int j = 0; j < slot.size(); j++) {
-                        ItemStack took = slot.get(j);
-                        if (took.isEmpty()) {
-                            continue;
+                    cycle1:
+                    for (InvSlot invSlot : inventory.getInputSlots()) {
+                        if (invSlot.acceptAllOrIndex()) {
+                            cycle2:
+                            for (int j = 0; j < slot.size(); j++) {
+                                ItemStack output = slot.get(j);
+                                if (output.isEmpty()) {
+                                    continue;
+                                }
+                                boolean find = false;
+                                if (!itemStackList.isEmpty()) {
+                                    for (ItemStack stack : itemStackList) {
+                                        if (stack.isItemEqual(output)) {
+                                            find = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!find) {
+                                        continue;
+                                    }
+                                }
+                                if (invSlot.accepts(output, 0)) {
+                                    for (int jj = 0; jj < invSlot.size(); jj++) {
+                                        if (output.isEmpty()) {
+                                            continue cycle2;
+                                        }
+                                        ItemStack input = invSlot.get(jj);
+
+                                        if (input.isEmpty()) {
+                                            if (invSlot.add(output)) {
+                                                slot.put(j, ItemStack.EMPTY);
+                                                output = ItemStack.EMPTY;
+                                            }
+                                        } else {
+                                            if (!ModUtils.checkItemEquality(input, output)) {
+                                                continue;
+                                            }
+                                            int maxCount = Math.min(
+                                                    input.getMaxStackSize() - input.getCount(),
+                                                    output.getCount()
+                                            );
+                                            if (maxCount > 0) {
+                                                input.grow(maxCount);
+                                                output.shrink(maxCount);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            cycle3:
+                            for (int jj = 0; jj < slot.size(); jj++) {
+
+                                for (int j = 0; j < invSlot.size(); j++) {
+                                    ItemStack output = slot.get(jj);
+                                    ItemStack input = invSlot.get(j);
+                                    if (output.isEmpty()) {
+                                        continue cycle3;
+                                    }
+                                    boolean find = false;
+                                    if (!itemStackList.isEmpty()) {
+                                        for (ItemStack stack : itemStackList) {
+                                            if (stack.isItemEqual(output)) {
+                                                find = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!find) {
+                                            continue cycle3;
+                                        }
+                                    }
+                                    if (input.isEmpty()) {
+                                        if (invSlot.accepts(output, j)) {
+                                            if (invSlot.add(output)) {
+                                                slot.put(j, ItemStack.EMPTY);
+                                                output = ItemStack.EMPTY;
+                                            }
+                                        }
+                                    } else {
+                                        if (!output.isItemEqual(input)) {
+                                            continue;
+                                        }
+                                        int maxCount = Math.min(
+                                                input.getMaxStackSize() - input.getCount(),
+                                                output.getCount()
+                                        );
+                                        if (maxCount > 0) {
+                                            input.grow(maxCount);
+                                            output.shrink(maxCount);
+                                        }
+                                    }
+                                }
+                            }
                         }
-
-
-                        if (insertItem1(handler, took, true, slots).isEmpty()) {
-
-                            slot.put(j, ItemStack.EMPTY);
-                            insertItem1(handler, took, false, slots);
-
-                        }
-
-
                     }
                 }
             } else {
-                for (InvSlotOutput slot : this.slots) {
-                    for (int j = 0; j < slot.size(); j++) {
-                        ItemStack took = slot.get(j);
-                        if (took.isEmpty()) {
-                            continue;
-                        }
-                        took = took.copy();
-                        if (ModUtils.insertItem(handler.getHandler(), took, true, slots).isEmpty()) {
-                            slot.put(j, ItemStack.EMPTY);
-                            ModUtils.insertItem(handler.getHandler(), took, false, slots);
-                        }
-
-                    }
-                }
-            }
-        } else {
-            for (EnumFacing facing1 : enumFacings) {
-                final HandlerInventory handler = this.iItemHandlerMap.get(facing1);
-                if (handler == null) {
-                    continue;
-                }
-
-                int slots = 0;
                 try {
                     slots = this.slotHandler.get(handler.getHandler());
                 } catch (Exception ignored) {
@@ -610,10 +953,27 @@ public class InvSlotUpgrade extends InvSlot {
                             if (took.isEmpty()) {
                                 continue;
                             }
-                            if (insertItem1(handler, took, true, slots).isEmpty()) {
+                            boolean find = false;
+                            if (!itemStackList.isEmpty()) {
+                                for (ItemStack stack : itemStackList) {
+                                    if (stack.isItemEqual(took)) {
+                                        find = true;
+                                        break;
+                                    }
+                                }
+                                if (!find) {
+                                    continue;
+                                }
+                            }
+                            final ItemStack stack = insertItem1(handler, took, true, slots);
+                            if (stack.isEmpty()) {
                                 slot.put(j, ItemStack.EMPTY);
                                 insertItem1(handler, took, false, slots);
-
+                            } else if (stack != took) {
+                                int col = slot.get(j).getCount() - stack.getCount();
+                                slot.get(j).shrink(col);
+                                stack.setCount(col);
+                                insertItem1(handler, stack, false, slots);
                             }
 
 
@@ -626,21 +986,221 @@ public class InvSlotUpgrade extends InvSlot {
                             if (took.isEmpty()) {
                                 continue;
                             }
+                            boolean find = false;
+                            if (!itemStackList.isEmpty()) {
+                                for (ItemStack stack : itemStackList) {
+                                    if (stack.isItemEqual(took)) {
+                                        find = true;
+                                        break;
+                                    }
+                                }
+                                if (!find) {
+                                    continue;
+                                }
+                            }
                             took = took.copy();
-                            if (ModUtils.insertItem(handler.getHandler(), took, true, slots).isEmpty()) {
+                            final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
+                            if (stack.isEmpty()) {
                                 slot.put(j, ItemStack.EMPTY);
                                 ModUtils.insertItem(handler.getHandler(), took, false, slots);
+                            } else if (stack != took) {
+                                int col = slot.get(j).getCount() - stack.getCount();
+                                slot.get(j).shrink(col);
+                                stack.setCount(col);
+                                ModUtils.insertItem(handler.getHandler(), stack, false, slots);
                             }
 
                         }
                     }
                 }
             }
+        } else {
+            for (EnumFacing facing1 : enumFacings) {
+                final HandlerInventory handler = this.iItemHandlerMap.get(facing1);
+                if (handler == null) {
+                    continue;
+                }
+
+                int slots = 0;
+                if (handler.getInventory() != null && handler.getInventory() instanceof TileEntityInventory) {
+                    TileEntityInventory inventory = (TileEntityInventory) handler.getInventory();
+                    cycle:
+                    for (InvSlotOutput slot : this.slots) {
+                        cycle1:
+                        for (InvSlot invSlot : inventory.getInputSlots()) {
+                            if (invSlot.acceptAllOrIndex()) {
+                                cycle2:
+                                for (int j = 0; j < slot.size(); j++) {
+                                    ItemStack output = slot.get(j);
+                                    if (output.isEmpty()) {
+                                        continue;
+                                    }
+                                    boolean find = false;
+                                    if (!itemStackList.isEmpty()) {
+                                        for (ItemStack stack : itemStackList) {
+                                            if (stack.isItemEqual(output)) {
+                                                find = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!find) {
+                                            continue;
+                                        }
+                                    }
+                                    if (invSlot.accepts(output, 0)) {
+                                        for (int jj = 0; jj < invSlot.size(); jj++) {
+                                            if (output.isEmpty()) {
+                                                continue cycle2;
+                                            }
+                                            ItemStack input = invSlot.get(jj);
+
+                                            if (input.isEmpty()) {
+                                                if (invSlot.add(output)) {
+                                                    slot.put(j, ItemStack.EMPTY);
+                                                    output = ItemStack.EMPTY;
+                                                }
+                                            } else {
+                                                if (!output.isItemEqual(input)) {
+                                                    continue;
+                                                }
+                                                int maxCount = Math.min(
+                                                        input.getMaxStackSize() - input.getCount(),
+                                                        output.getCount()
+                                                );
+                                                if (maxCount > 0) {
+                                                    input.grow(maxCount);
+                                                    output.shrink(maxCount);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                cycle3:
+                                for (int jj = 0; jj < slot.size(); jj++) {
+
+                                    for (int j = 0; j < invSlot.size(); j++) {
+                                        ItemStack output = slot.get(jj);
+                                        if (output.isEmpty()) {
+                                            continue cycle3;
+                                        }
+                                        boolean find = false;
+                                        if (!itemStackList.isEmpty()) {
+                                            for (ItemStack stack : itemStackList) {
+                                                if (stack.isItemEqual(output)) {
+                                                    find = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!find) {
+                                                continue cycle3;
+                                            }
+                                        }
+                                        ItemStack input = invSlot.get(j);
+
+                                        if (input.isEmpty()) {
+                                            if (invSlot.accepts(output, j)) {
+                                                if (invSlot.add(output)) {
+                                                    slot.put(j, ItemStack.EMPTY);
+                                                    output = ItemStack.EMPTY;
+                                                }
+                                            }
+                                        } else {
+                                            if (!output.isItemEqual(input)) {
+                                                continue;
+                                            }
+                                            int maxCount = Math.min(
+                                                    input.getMaxStackSize() - input.getCount(),
+                                                    output.getCount()
+                                            );
+                                            if (maxCount > 0) {
+                                                input.grow(maxCount);
+                                                output.shrink(maxCount);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    try {
+                        slots = this.slotHandler.get(handler.getHandler());
+                    } catch (Exception ignored) {
+                    }
+                    if (handler.getInventory() != null) {
+                        for (InvSlotOutput slot : this.slots) {
+                            for (int j = 0; j < slot.size(); j++) {
+                                ItemStack took = slot.get(j);
+                                if (took.isEmpty()) {
+                                    continue;
+                                }
+                                boolean find = false;
+                                if (!itemStackList.isEmpty()) {
+                                    for (ItemStack stack : itemStackList) {
+                                        if (stack.isItemEqual(took)) {
+                                            find = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!find) {
+                                        continue;
+                                    }
+                                }
+                                final ItemStack stack = insertItem1(handler, took, true, slots);
+                                if (stack.isEmpty()) {
+                                    slot.put(j, ItemStack.EMPTY);
+                                    insertItem1(handler, took, false, slots);
+                                } else if (stack != took) {
+                                    slot.get(j).shrink(stack.getCount());
+                                    insertItem1(handler, stack, false, slots);
+                                }
+
+
+                            }
+                        }
+
+                    } else {
+                        for (InvSlotOutput slot : this.slots) {
+                            for (int j = 0; j < slot.size(); j++) {
+                                ItemStack took = slot.get(j);
+                                if (took.isEmpty()) {
+                                    continue;
+                                }
+                                boolean find = false;
+                                if (!itemStackList.isEmpty()) {
+                                    for (ItemStack stack : itemStackList) {
+                                        if (stack.isItemEqual(took)) {
+                                            find = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!find) {
+                                        continue;
+                                    }
+                                }
+                                took = took.copy();
+                                final ItemStack stack = ModUtils.insertItem(handler.getHandler(), took, true, slots);
+                                if (stack.isEmpty()) {
+                                    slot.put(j, ItemStack.EMPTY);
+                                    ModUtils.insertItem(handler.getHandler(), took, false, slots);
+                                } else if (stack != took) {
+                                    slot.get(j).shrink(stack.getCount());
+                                    ModUtils.insertItem(handler.getHandler(), stack, false, slots);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
     private void tick_fluid(final int i) {
         EnumFacing facing = this.facings[i];
+        final List<Fluid> itemStackList = this.whiteList1.get(i);
         if (facing != null) {
 
             final IFluidHandler handler = this.iFluidHandlerMap.get(facing);
@@ -654,7 +1214,9 @@ public class InvSlotUpgrade extends InvSlot {
                 if (tank.getFluidAmount() <= 0) {
                     continue;
                 }
-
+                if (!itemStackList.isEmpty() && !itemStackList.contains(tank.getFluid().getFluid())) {
+                    continue;
+                }
                 int amount = handler.fill(tank.getFluid(), false);
                 if (amount > 0 && tank.canDrain(facing)) {
                     tank.drain(handler.fill(tank.getFluid(), true), true);
@@ -674,6 +1236,9 @@ public class InvSlotUpgrade extends InvSlot {
                     if (tank.getFluidAmount() <= 0) {
                         continue;
                     }
+                    if (!itemStackList.isEmpty() && !itemStackList.contains(tank.getFluid().getFluid())) {
+                        continue;
+                    }
                     int amount = handler.fill(tank.getFluid(), false);
                     if (amount > 0 && tank.canDrain(facing1)) {
                         tank.drain(handler.fill(tank.getFluid(), true), true);
@@ -690,10 +1255,12 @@ public class InvSlotUpgrade extends InvSlot {
         }
 
         for (int i = 0; i < slot; i++) {
-            stack = this.insertItem2(dest, i, stack, simulate);
+            final ItemStack stack2 = this.insertItem2(dest, i, stack, simulate);
 
-            if (stack.isEmpty()) {
+            if (stack2.isEmpty()) {
                 return ItemStack.EMPTY;
+            } else if (stack2 != stack) {
+                return stack2;
             }
         }
 
@@ -746,7 +1313,7 @@ public class InvSlotUpgrade extends InvSlot {
                     inventory.setInventorySlotContents(slot, copy);
                     return ItemStack.EMPTY;
                 }
-
+                return ItemStack.EMPTY;
             } else {
                 // copy the stack to not modify the original one
                 stack = stack.copy();
@@ -755,9 +1322,11 @@ public class InvSlotUpgrade extends InvSlot {
                     copy.grow(stackInSlot.getCount());
                     inventory.setInventorySlotContents(slot, copy);
                     return stack;
+                } else {
+                    stack.shrink(m);
+                    return stack;
                 }
             }
-            return stack;
         } else {
 
 
@@ -790,22 +1359,14 @@ public class InvSlotUpgrade extends InvSlot {
     }
 
 
-    private static class UpgradeRedstoneModifier implements Redstone.IRedstoneModifier {
-
-        private final IRedstoneSensitiveUpgrade upgrade;
-        private final ItemStack stack;
-        private final IUpgradableBlock block;
-
-        UpgradeRedstoneModifier(IRedstoneSensitiveUpgrade upgrade, ItemStack stack, IUpgradableBlock block) {
-            this.upgrade = upgrade;
-            this.stack = stack.copy();
-            this.block = block;
-        }
-
-        public int getRedstoneInput(int redstoneInput) {
-            return this.upgrade.getRedstoneInput(this.stack, this.block, redstoneInput);
-        }
-
+    public double getEnergyStorage(int defaultEnergyStorage, int defaultOperationLength, int defaultEnergyDemand) {
+        int opLen = this.getOperationLength(defaultOperationLength);
+        double energyDemand = this.getEnergyDemand(defaultEnergyDemand);
+        return applyModifier(
+                defaultEnergyStorage,
+                this.extraEnergyStorage + opLen * energyDemand,
+                this.energyStorageMultiplier
+        );
     }
 
 }

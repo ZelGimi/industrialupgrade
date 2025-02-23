@@ -1,13 +1,11 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityOilPump;
+import com.denfop.tiles.mechanism.TileOilPump;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerOilPump extends ContainerFullInv<TileOilPump> {
 
-public class ContainerOilPump extends ContainerFullInv<TileEntityOilPump> {
-
-    public ContainerOilPump(EntityPlayer entityPlayer, TileEntityOilPump tileEntity1) {
+    public ContainerOilPump(EntityPlayer entityPlayer, TileOilPump tileEntity1) {
         super(entityPlayer, tileEntity1, 166);
         addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 125, 59));
         addSlotToContainer(new SlotInvSlot(tileEntity1.containerslot, 0, 125, 23));
@@ -16,17 +14,5 @@ public class ContainerOilPump extends ContainerFullInv<TileEntityOilPump> {
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-        ret.add("count");
-        ret.add("find");
-        ret.add("maxcount");
-        ret.add("level");
-        ret.add("type");
-        ret.add("vein");
-        return ret;
-    }
 
 }

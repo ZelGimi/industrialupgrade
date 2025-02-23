@@ -1,0 +1,6 @@
+{
+  "parent" : "block/cube_all",
+  "textures" : {
+    "all" : "industrialupgrade:blocks/heat_reactor/chamber/adv_chamber_side"
+  }
+}

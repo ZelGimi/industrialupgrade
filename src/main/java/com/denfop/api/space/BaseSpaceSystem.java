@@ -1,11 +1,11 @@
 package com.denfop.api.space;
 
 import com.denfop.api.space.colonies.ColonyNet;
-import com.denfop.api.space.colonies.IColonyNet;
+import com.denfop.api.space.colonies.api.IColonyNet;
 import com.denfop.api.space.fakebody.FakeSpaceSystemBase;
 import com.denfop.api.space.fakebody.IFakeSpaceSystemBase;
 import com.denfop.api.space.research.BaseSpaceResearchSystem;
-import com.denfop.api.space.research.IResearchSystem;
+import com.denfop.api.space.research.api.IResearchSystem;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
@@ -18,16 +18,19 @@ public class BaseSpaceSystem implements ISpaceNet {
     public IColonyNet colonienet;
     public IFakeSpaceSystemBase spaceSystemBase;
     public IResearchSystem spaceResearch;
+
+    List<ISystem> systemList;
     Map<IBody, ISystem> systemIBodyMap;
+    Map<ISystem, List<IStar>> starSystemMap;
     Map<IPlanet, List<ISatellite>> planetISatelliteMap;
     Map<IStar, List<IPlanet>> starListMap;
     Map<IPlanet, ISystem> systemIPlanetMap;
     Map<IStar, ISystem> systemIStarMap;
+    Map<IStar, List<IAsteroid>> starAsteroidMap;
     List<IPlanet> planetList;
     List<IAsteroid> asteroidList;
     List<ISatellite> satelliteList;
     List<IStar> starList;
-    List<ISystem> systemList;
     Map<String, IBody> bodyMap;
     List<IBody> bodies;
 
@@ -40,6 +43,7 @@ public class BaseSpaceSystem implements ISpaceNet {
         this.planetList = new ArrayList<>();
         this.satelliteList = new ArrayList<>();
         this.starListMap = new HashMap<>();
+        this.starSystemMap = new HashMap<>();
         this.starList = new ArrayList<>();
         this.bodyMap = new HashMap<>();
         this.bodies = new ArrayList<>();
@@ -47,6 +51,7 @@ public class BaseSpaceSystem implements ISpaceNet {
         this.spaceSystemBase = new FakeSpaceSystemBase();
         this.spaceResearch = new BaseSpaceResearchSystem();
         this.asteroidList = new ArrayList<>();
+        this.starAsteroidMap = new HashMap<>();
         this.colonienet = new ColonyNet();
 
     }
@@ -96,6 +101,21 @@ public class BaseSpaceSystem implements ISpaceNet {
     }
 
     @Override
+    public List<IStar> getPlanetList(final ISystem star) {
+        return null;
+    }
+
+    @Override
+    public List<IPlanet> getPlanetList(final IStar star) {
+        return null;
+    }
+
+    @Override
+    public List<ISatellite> getSatelliteList(final IPlanet Plant) {
+        return null;
+    }
+
+    @Override
     public void addPlanet(final IPlanet planet) {
         this.planetList.add(planet);
         this.planetISatelliteMap.put(planet, planet.getSatelliteList());
@@ -106,8 +126,6 @@ public class BaseSpaceSystem implements ISpaceNet {
         if (this.starListMap.containsKey(planet.getStar())) {
             List<IPlanet> planetList = this.starListMap.get(planet.getStar());
             planetList.add(planet);
-            planet.getStar().getPlanetList().clear();
-            planet.getStar().getPlanetList().addAll(planetList);
         }
     }
 
@@ -117,7 +135,10 @@ public class BaseSpaceSystem implements ISpaceNet {
         this.bodies.add(asteroid);
         this.systemIBodyMap.put(asteroid, asteroid.getSystem());
         this.bodyMap.put(asteroid.getName(), asteroid);
-
+        if (this.starAsteroidMap.containsKey(asteroid.getStar())) {
+            List<IAsteroid> asteroids = this.starAsteroidMap.get(asteroid.getStar());
+            asteroids.add(asteroid);
+        }
     }
 
     @Override
@@ -125,7 +146,12 @@ public class BaseSpaceSystem implements ISpaceNet {
         this.starList.add(star);
         this.systemIStarMap.put(star, star.getSystem());
         this.starListMap.put(star, star.getPlanetList());
+        this.starAsteroidMap.put(star, star.getAsteroidList());
         this.systemIBodyMap.put(star, star.getSystem());
+        if (this.starSystemMap.containsKey(star.getSystem())) {
+            List<IStar> satelliteList = this.starSystemMap.get(star.getSystem());
+            satelliteList.add(star);
+        }
     }
 
     @Override
@@ -137,14 +163,17 @@ public class BaseSpaceSystem implements ISpaceNet {
         if (this.planetISatelliteMap.containsKey(satellite.getPlanet())) {
             List<ISatellite> satelliteList = this.planetISatelliteMap.get(satellite.getPlanet());
             satelliteList.add(satellite);
-            satellite.getPlanet().getSatelliteList().clear();
-            satellite.getPlanet().getSatelliteList().addAll(satelliteList);
         }
     }
 
     @Override
     public void addSystem(final ISystem system) {
         this.systemList.add(system);
+        starSystemMap.put(system, system.getStarList());
+    }
+
+    public List<ISystem> getSystem() {
+        return systemList;
     }
 
     @Override

@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blockelectrolyzer_top",
     "north" : "industrialupgrade:blocks/blockelectrolyzer_main",
     "east" : "industrialupgrade:blocks/blockelectrolyzer_side2",
-    "south" : "industrialupgrade:blocks/blockelectrolyzer_side2",
+    "south" : "industrialupgrade:blocks/blockelectrolyzer_bottom",
     "west" : "industrialupgrade:blocks/blockelectrolyzer_side2"
   }
 }

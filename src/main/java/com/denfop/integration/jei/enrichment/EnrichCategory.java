@@ -2,8 +2,8 @@ package com.denfop.integration.jei.enrichment;
 
 import com.denfop.Constants;
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.blocks.mechanism.BlockBaseMachine1;
-import ic2.core.init.Localization;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -70,12 +70,9 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
         }
 
         mc.getTextureManager().bindTexture(getTexture());
-        drawTexturedModalRect(+22, 54 + 14 - (int) energylevel, 176, 14 - (int) energylevel,
-                14, (int) energylevel
-        );
 
 
-        drawTexturedModalRect(64 + 1, +32, 177, 32, (int) xScale + 1, 15);
+        drawTexturedModalRect(64 + 2, +33, 177, 32, (int) xScale + 1, 15);
 
     }
 
@@ -86,12 +83,12 @@ public class EnrichCategory extends Gui implements IRecipeCategory<EnrichRecipeW
             @Nonnull final IIngredients ingredients
     ) {
         IGuiItemStackGroup isg = layout.getItemStacks();
-        isg.init(0, true, 10, 30);
+        isg.init(0, true, 12, 32);
         isg.set(0, recipes.getInput());
-        isg.init(1, true, 32, 30);
+        isg.init(1, true, 34, 32);
         isg.set(1, recipes.getInput1());
 
-        isg.init(2, false, 102, 30);
+        isg.init(2, false, 98, 32);
         isg.set(2, recipes.getOutput());
     }
 

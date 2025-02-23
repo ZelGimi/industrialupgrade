@@ -1,10 +1,12 @@
 package com.denfop.invslot;
 
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.modules.ItemAdditionModule;
 import com.denfop.items.modules.ItemQuarryModule;
-import com.denfop.tiles.base.TileEntityAnalyzer;
-import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
+import com.denfop.tiles.base.TileAnalyzer;
+import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import com.denfop.utils.ModUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,17 +16,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("ALL")
-public class InvSlotAnalyzer extends InvSlot {
+public class InvSlotAnalyzer extends InvSlot implements ITypeSlot {
 
     private final int type;
-    private final TileEntityAnalyzer tile;
+    private final TileAnalyzer tile;
     private int stackSizeLimit;
 
-    public InvSlotAnalyzer(TileEntityAnalyzer base1, String name, int count, int type) {
-        super(base1, name, InvSlot.Access.I, count, InvSide.ANY);
+    public InvSlotAnalyzer(TileAnalyzer base1, String name, int count, int type) {
+        super(base1, TypeItemSlot.INPUT, count);
         this.type = type;
         this.stackSizeLimit = 1;
         this.tile = base1;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        if (this.type == 0) {
+            return EnumTypeSlot.QUARRY1;
+        }
+
+        return EnumTypeSlot.BLOCKS;
     }
 
     public void update() {
@@ -33,8 +44,12 @@ public class InvSlotAnalyzer extends InvSlot {
             this.tile.whitelist = this.getwhitelist();
             this.tile.size = this.getChunksize();
             this.tile.lucky = this.lucky();
+            this.tile.macerator = this.macerator();
+            this.tile.comb_macerator = this.comb_macerator();
+            this.tile.polisher = this.polisher();
             this.tile.consume = this.getenergycost();
             this.tile.update_chunk();
+            this.tile.furnace = this.getFurnaceModule();
         }
     }
 
@@ -47,6 +62,10 @@ public class InvSlotAnalyzer extends InvSlot {
             this.tile.size = this.getChunksize();
             this.tile.lucky = this.lucky();
             this.tile.consume = this.getenergycost();
+            this.tile.macerator = this.macerator();
+            this.tile.polisher = this.polisher();
+            this.tile.comb_macerator = this.comb_macerator();
+            this.tile.furnace = this.getFurnaceModule();
         }
     }
 
@@ -93,6 +112,42 @@ public class InvSlotAnalyzer extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 if (this.get(i).getItem().equals(IUItem.quarrymodule)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean macerator() {
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 14) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean comb_macerator() {
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 15) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean polisher() {
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!this.get(i).isEmpty()) {
+                if (this.get(i).getItem() instanceof ItemQuarryModule && this.get(i).getItemDamage() == 16) {
                     return true;
                 }
             }
@@ -226,7 +281,7 @@ public class InvSlotAnalyzer extends InvSlot {
         return list;
     }
 
-    public double getenergycost(TileEntityBaseQuantumQuarry target1) {
+    public double getenergycost(TileBaseQuantumQuarry target1) {
         double energy = target1.energyconsume;
         double proccent;
         for (int i = 0; i < this.size(); i++) {

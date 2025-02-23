@@ -2,29 +2,27 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.tiles.base.TileEntityAdvPump;
-import com.denfop.tiles.base.TileEntityAnalyzer;
-import com.denfop.tiles.base.TileEntityCombinerMatter;
-import com.denfop.tiles.base.TileEntityElectrolyzer;
-import com.denfop.tiles.base.TileEntityFisher;
-import com.denfop.tiles.base.TileEntityImpPump;
-import com.denfop.tiles.base.TileEntityObsidianGenerator;
-import com.denfop.tiles.base.TileEntityPainting;
-import com.denfop.tiles.mechanism.TileEntityPlasticCreator;
-import com.denfop.tiles.mechanism.TileEntityPlasticPlateCreator;
-import com.denfop.tiles.mechanism.exp.TileEntityStorageExp;
-import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityDieselGenerator;
-import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityHydrogenGenerator;
-import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityPetrolGenerator;
-import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityHeliumGenerator;
-import com.denfop.tiles.mechanism.generator.things.fluid.TileEntityLavaGenerator;
-import ic2.api.item.ITeBlockSpecialItem;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.api.item.IMultiBlockItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileAdvPump;
+import com.denfop.tiles.base.TileAnalyzer;
+import com.denfop.tiles.base.TileCombinerMatter;
+import com.denfop.tiles.base.TileElectrolyzer;
+import com.denfop.tiles.base.TileEntityBlock;
+import com.denfop.tiles.base.TileFisher;
+import com.denfop.tiles.base.TileImpPump;
+import com.denfop.tiles.base.TileObsidianGenerator;
+import com.denfop.tiles.base.TilePainting;
+import com.denfop.tiles.mechanism.TilePlasticCreator;
+import com.denfop.tiles.mechanism.TilePlasticPlateCreator;
+import com.denfop.tiles.mechanism.exp.TileStorageExp;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileDieselGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileHydrogenGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TilePetrolGenerator;
+import com.denfop.tiles.mechanism.generator.things.fluid.TileHeliumGenerator;
+import com.denfop.tiles.mechanism.generator.things.fluid.TileLavaGenerator;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -37,24 +35,24 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public enum BlockBaseMachine2 implements ITeBlock, ITeBlockSpecialItem {
+public enum BlockBaseMachine2 implements IMultiTileBlock, IMultiBlockItem {
 
-    combiner_matter(TileEntityCombinerMatter.class, 0),
-    fisher(TileEntityFisher.class, 1),
-    analyzer(TileEntityAnalyzer.class, 2),
-    painter(TileEntityPainting.class, 3),
-    gen_disel(TileEntityDieselGenerator.class, 4),
-    gen_pet(TileEntityPetrolGenerator.class, 5),
-    adv_pump(TileEntityAdvPump.class, 6),
-    imp_pump(TileEntityImpPump.class, 7),
-    expierence_block(TileEntityStorageExp.class, 8),
-    gen_hyd(TileEntityHydrogenGenerator.class, 9),
-    gen_obsidian(TileEntityObsidianGenerator.class, 10),
-    plastic_creator(TileEntityPlasticCreator.class, 11),
-    lava_gen(TileEntityLavaGenerator.class, 12),
-    plastic_plate_creator(TileEntityPlasticPlateCreator.class, 13),
-    helium_generator(TileEntityHeliumGenerator.class, 14),
-    electrolyzer_iu(TileEntityElectrolyzer.class, 15),
+    combiner_matter(TileCombinerMatter.class, 0),
+    fisher(TileFisher.class, 1),
+    analyzer(TileAnalyzer.class, 2),
+    painter(TilePainting.class, 3),
+    gen_disel(TileDieselGenerator.class, 4),
+    gen_pet(TilePetrolGenerator.class, 5),
+    adv_pump(TileAdvPump.class, 6),
+    imp_pump(TileImpPump.class, 7),
+    expierence_block(TileStorageExp.class, 8),
+    gen_hyd(TileHydrogenGenerator.class, 9),
+    gen_obsidian(TileObsidianGenerator.class, 10),
+    plastic_creator(TilePlasticCreator.class, 11),
+    lava_gen(TileLavaGenerator.class, 12),
+    plastic_plate_creator(TilePlasticPlateCreator.class, 13),
+    helium_generator(TileHeliumGenerator.class, 14),
+    electrolyzer_iu(TileElectrolyzer.class, 15),
 
     ;
 
@@ -81,8 +79,15 @@ public enum BlockBaseMachine2 implements ITeBlock, ITeBlockSpecialItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -92,17 +97,10 @@ public enum BlockBaseMachine2 implements ITeBlock, ITeBlockSpecialItem {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -140,35 +138,24 @@ public enum BlockBaseMachine2 implements ITeBlock, ITeBlockSpecialItem {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
     public float getHardness() {
-        return 3.0f;
-    }
-
-    @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+        return 1.0F;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Machine;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Machine;
     }
 
     @Override
@@ -182,7 +169,7 @@ public enum BlockBaseMachine2 implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public boolean doesOverrideDefault(final ItemStack itemStack) {
+    public boolean hasUniqueRender(final ItemStack itemStack) {
         return false;
     }
 

@@ -2,14 +2,13 @@ package com.denfop.items;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.windsystem.upgrade.EnumInfoRotorUpgradeModules;
 import com.denfop.api.windsystem.upgrade.RotorUpgradeItemInform;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.init.Localization;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.items.resource.ItemSubTypes;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -25,14 +24,14 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemRotorsUpgrade extends ItemMulti<ItemRotorsUpgrade.Types> implements IModelRegister {
+public class ItemRotorsUpgrade extends ItemSubTypes<ItemRotorsUpgrade.Types> implements IModelRegister {
 
     protected static final String NAME = "rotors_upgrade";
 
     public ItemRotorsUpgrade() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.ModuleTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
@@ -69,17 +68,13 @@ public class ItemRotorsUpgrade extends ItemMulti<ItemRotorsUpgrade.Types> implem
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, int meta, String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -87,7 +82,7 @@ public class ItemRotorsUpgrade extends ItemMulti<ItemRotorsUpgrade.Types> implem
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         rotorupgrade(0),
         rotorupgrade1(1),
         rotorupgrade2(2),

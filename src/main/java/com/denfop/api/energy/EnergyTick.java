@@ -2,28 +2,37 @@ package com.denfop.api.energy;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class EnergyTick {
 
-    private final IAdvEnergySource source;
+    private final IEnergySource source;
     private final boolean isAdv;
     private final boolean isDual;
-    private IAdvEnergySource advSource = null;
-    private List<EnergyNetLocal.EnergyPath> energyPaths;
+    List<Integer> conductors = new LinkedList<>();
+    private IEnergySource advSource = null;
+    private List<Path> energyPaths;
+    private int hash;
 
-    public EnergyTick(IAdvEnergySource source, List<EnergyNetLocal.EnergyPath> list) {
+
+    public EnergyTick(IEnergySource source, List<Path> list) {
         this.source = source;
         this.energyPaths = list;
         this.isAdv = source != null;
-        this.isDual = source instanceof IAdvDual;
+        this.isDual = source instanceof IDual;
         if (this.isAdv) {
             this.advSource = source;
         }
     }
 
-    public IAdvEnergySource getSource() {
+
+
+    public IEnergySource getSource() {
         return source;
     }
 
@@ -40,7 +49,7 @@ public class EnergyTick {
             if (!this.isDual && this.advSource.isSource()) {
                 this.advSource.setPastEnergy(this.advSource.getPerEnergy());
             } else if (this.isDual && (this.advSource.isSource())) {
-                ((IAdvDual) this.advSource).setPastEnergy1(((IAdvDual) this.advSource).getPerEnergy1());
+                ((IDual) this.advSource).setPastEnergy1(((IDual) this.advSource).getPerEnergy1());
 
             }
         }
@@ -51,7 +60,7 @@ public class EnergyTick {
             if (!this.isDual && this.advSource.isSource()) {
                 this.advSource.addPerEnergy(amount);
             } else if (this.isDual && this.advSource.isSource()) {
-                ((IAdvDual) advSource).addPerEnergy1(amount);
+                ((IDual) advSource).addPerEnergy1(amount);
             }
         }
     }
@@ -68,44 +77,44 @@ public class EnergyTick {
         return source == that.source;
     }
 
-    public IAdvEnergySource getAdvSource() {
+    public IEnergySource getAdvSource() {
         return advSource;
     }
 
+    public boolean hasHash = false;
+
     @Override
     public int hashCode() {
+        if (source != null && !hasHash) {
+            this.hash = Objects.hash(source);
+            hasHash = true;
+            return hash;
+        } else if (hasHash) {
+            return hash;
+        }
         return Objects.hash(source);
     }
 
-    public List<EnergyNetLocal.EnergyPath> getList() {
+    public List<Path> getList() {
         return energyPaths;
     }
 
-    public void setList(final List<EnergyNetLocal.EnergyPath> energyPaths) {
+    public void setList(final List<Path> energyPaths) {
         this.energyPaths = energyPaths;
+        if (this.energyPaths == null)
+            this.conductors.clear();
     }
 
     public void rework() {
-        List<EnergyNetLocal.EnergyPath> energyPaths1 = new ArrayList<>();
-        int i = 1;
-        while (!energyPaths.isEmpty()) {
-            if (i < 14) {
-                final int finalI = i;
-                energyPaths.removeIf(energyPath -> {
-                    if (energyPath.target.getSinkTier() == finalI) {
-                        energyPaths1.add(energyPath);
-                        return true;
-                    }
-                    return false;
-                });
-            } else {
-                energyPaths1.addAll(energyPaths);
-                energyPaths.clear();
-                break;
-            }
-            i++;
-        }
-        this.energyPaths = energyPaths1;
+        energyPaths.sort(Comparator.comparingInt(path -> path.target.getSinkTier()));
+    }
+
+    public List<Integer> getConductors() {
+        return conductors;
+    }
+
+    public void setConductors(final List<Integer> conductors) {
+        this.conductors = conductors;
     }
 
 }

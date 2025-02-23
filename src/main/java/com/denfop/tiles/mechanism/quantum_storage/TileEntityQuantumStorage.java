@@ -1,21 +1,18 @@
 package com.denfop.tiles.mechanism.quantum_storage;
 
+import com.denfop.IUItem;
+import com.denfop.Localization;
+import com.denfop.api.energy.EnergyNetGlobal;
 import com.denfop.api.gui.IType;
-import com.denfop.api.inv.IHasGui;
 import com.denfop.api.sytem.EnergyType;
+import com.denfop.blocks.BlockResource;
 import com.denfop.componets.ComponentBaseEnergy;
 import com.denfop.componets.EnumTypeStyle;
 import com.denfop.container.ContainerQuantumStorage;
 import com.denfop.gui.GuiQuantumStorage;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.ModUtils;
-import ic2.api.energy.EnergyNet;
-import ic2.core.block.type.ResourceBlock;
-import ic2.core.init.Localization;
-import ic2.core.ref.BlockName;
-import ic2.core.ref.TeBlock;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,41 +22,40 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
-public class TileEntityQuantumStorage extends TileEntityInventory implements IHasGui, IType {
+public class TileEntityQuantumStorage extends TileEntityInventory implements IType {
 
     public final ComponentBaseEnergy qe;
     private final EnumTypeStyle enumTypeStyle;
 
     public TileEntityQuantumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
         this.qe = this.addComponent((new ComponentBaseEnergy(EnergyType.QUANTUM, this, maxStorage1,
-                new HashSet<>(
-                        Arrays.asList(EnumFacing.values())), new HashSet<>(
-                Arrays.asList(EnumFacing.values())),
-                EnergyNet.instance.getTierFromPower(14),
-                EnergyNet.instance.getTierFromPower(14), false
+
+                Arrays.asList(EnumFacing.values()),
+                Arrays.asList(EnumFacing.values()),
+                EnergyNetGlobal.instance.getTierFromPower(14),
+                EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
         this.enumTypeStyle = enumTypeStyle;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(final ItemStack stack, final List<String> tooltip, final ITooltipFlag advanced) {
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");
-        tooltip.add(Localization.translate("ic2.item.tooltip.Capacity") + " " + ModUtils.getString(this.qe.getCapacity()) + " " +
+        tooltip.add(Localization.translate("iu.item.tooltip.Capacity") + " " + ModUtils.getString(this.qe.getCapacity()) + " " +
                 "QE");
 
         if (energy1 != 0) {
-            tooltip.add(Localization.translate("ic2.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
+            tooltip.add(Localization.translate("iu.item.tooltip.Store") + " " + ModUtils.getString(energy1) + "/" + ModUtils.getString(
                     qe.getCapacity())
                     + " QE");
         }
     }
 
-    protected ItemStack adjustDrop(ItemStack drop, boolean wrench) {
+    public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         if (!wrench) {
             switch (this.teBlock.getDefaultDrop()) {
                 case Self:
@@ -75,11 +71,11 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
                 case None:
                     return null;
                 case Generator:
-                    return BlockName.te.getItemStack(TeBlock.generator);
+                    return new ItemStack(IUItem.basemachine2, 1, 78);
                 case Machine:
-                    return BlockName.resource.getItemStack(ResourceBlock.machine);
+                    return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                 case AdvMachine:
-                    return BlockName.resource.getItemStack(ResourceBlock.advanced_machine);
+                    return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
             }
         }
 
@@ -114,10 +110,6 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements IHa
         return new GuiQuantumStorage(getGuiContainer(entityPlayer));
     }
 
-    @Override
-    public void onGuiClosed(final EntityPlayer entityPlayer) {
-
-    }
 
     @Override
     public EnumTypeStyle getStyle() {

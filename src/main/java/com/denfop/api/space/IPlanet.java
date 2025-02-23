@@ -8,7 +8,6 @@ public interface IPlanet extends IBody {
 
     ResourceLocation getResource();
 
-    List<IBaseResource> getResources();
 
     EnumLevels getLevels();
 
@@ -27,5 +26,7 @@ public interface IPlanet extends IBody {
     boolean hasOxygen();
 
     boolean canHaveColonies();
+
+    EnumRing getRing();
 
 }

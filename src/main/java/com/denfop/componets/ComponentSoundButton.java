@@ -1,8 +1,8 @@
 package com.denfop.componets;
 
+import com.denfop.Localization;
 import com.denfop.api.audio.IAudioFixer;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.init.Localization;
+import com.denfop.tiles.base.TileEntityBlock;
 
 public class ComponentSoundButton extends ComponentButton {
 

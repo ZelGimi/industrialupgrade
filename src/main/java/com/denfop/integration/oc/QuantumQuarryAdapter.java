@@ -1,7 +1,7 @@
 package com.denfop.integration.oc;
 
 import com.denfop.IUItem;
-import com.denfop.tiles.mechanism.quarry.TileEntityBaseQuantumQuarry;
+import com.denfop.tiles.mechanism.quarry.TileBaseQuantumQuarry;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.machine.Arguments;
@@ -13,9 +13,9 @@ import net.minecraft.item.ItemStack;
 
 public class QuantumQuarryAdapter extends AbstractManagedEnvironment implements ManagedPeripheral, NamedBlock {
 
-    private final TileEntityBaseQuantumQuarry quantumQuarry;
+    private final TileBaseQuantumQuarry quantumQuarry;
 
-    public QuantumQuarryAdapter(TileEntityBaseQuantumQuarry quantumQuarry) {
+    public QuantumQuarryAdapter(TileBaseQuantumQuarry quantumQuarry) {
         this.quantumQuarry = quantumQuarry;
         this.setNode(Network.newNode(this, Visibility.Network).withComponent("quantumQuarry", Visibility.Network).create());
     }
@@ -62,7 +62,7 @@ public class QuantumQuarryAdapter extends AbstractManagedEnvironment implements 
                         return new Object[]{};
                     }
                 case "isWork":
-                    return new Object[]{quantumQuarry.analyzer && quantumQuarry.consume < quantumQuarry.getEnergy()};
+                    return new Object[]{quantumQuarry.analyzer && quantumQuarry.consume < quantumQuarry.energy.getEnergy()};
                 case "getMainModuleName":
                     if (!quantumQuarry.inputslotA.get().isEmpty()) {
                         return new Object[]{quantumQuarry.inputslotA.get().getDisplayName()};

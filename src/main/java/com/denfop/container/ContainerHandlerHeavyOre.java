@@ -1,19 +1,17 @@
 package com.denfop.container;
 
-import com.denfop.tiles.base.TileEntityBaseHandlerHeavyOre;
+import com.denfop.tiles.base.TileBaseHandlerHeavyOre;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerHandlerHeavyOre extends ContainerFullInv<TileBaseHandlerHeavyOre> {
 
-public class ContainerHandlerHeavyOre extends ContainerFullInv<TileEntityBaseHandlerHeavyOre> {
-
-    public ContainerHandlerHeavyOre(EntityPlayer entityPlayer, TileEntityBaseHandlerHeavyOre tileEntity1) {
+    public ContainerHandlerHeavyOre(EntityPlayer entityPlayer, TileBaseHandlerHeavyOre tileEntity1) {
         this(entityPlayer, tileEntity1, 166, 152, 8);
     }
 
     public ContainerHandlerHeavyOre(
             EntityPlayer entityPlayer,
-            TileEntityBaseHandlerHeavyOre tileEntity1,
+            TileBaseHandlerHeavyOre tileEntity1,
             int height,
             int upgradeX,
             int upgradeY
@@ -21,29 +19,24 @@ public class ContainerHandlerHeavyOre extends ContainerFullInv<TileEntityBaseHan
         super(entityPlayer, tileEntity1, height);
         if (tileEntity1.inputSlotA != null) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.inputSlotA,
-                    0, 25, 29
+                    0, 37, 36
             ));
         }
 
         for (int i = 0; i < tileEntity1.outputSlot.size(); i++) {
 
             addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot,
-                    i, 96 + (18 * (i / 3)), 15 + 18 * (i % 3)
+                    i, 111 + (18 * (i / 3)), 18 + 18 * (i % 3)
             ));
 
         }
 
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntity1.upgradeSlot,
-                    i, upgradeX, upgradeY + i * 18
+                    i, 16, upgradeY + i * 18
             ));
         }
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("sound");
-        return ret;
-    }
 
 }

@@ -2,18 +2,16 @@ package com.denfop.blocks.mechanism;
 
 import com.denfop.Constants;
 import com.denfop.IUCore;
-import com.denfop.blocks.IIdProvider;
+import com.denfop.api.item.IMultiBlockItem;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.tank.TileEntityAdvTank;
 import com.denfop.tiles.tank.TileEntityImpTank;
 import com.denfop.tiles.tank.TileEntityPerTank;
 import com.denfop.tiles.tank.TileEntityTank;
-import ic2.api.item.ITeBlockSpecialItem;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TileEntityBlock;
-import ic2.core.ref.IC2Material;
-import ic2.core.ref.TeBlock;
-import ic2.core.util.Util;
-import net.minecraft.block.material.Material;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -27,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Set;
 
-public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
+public enum BlockTank implements IMultiTileBlock, IMultiBlockItem {
 
     tank_iu(TileEntityTank.class, 0),
     adv_tank(TileEntityAdvTank.class, 1),
@@ -58,8 +56,15 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
 
 
     }
+    int idBlock;
+    public  int getIDBlock(){
+        return idBlock;
+    };
 
-    public static void buildDummies() {
+    public void setIdBlock(int id){
+        idBlock = id;
+    };
+    public void buildDummies() {
         final ModContainer mc = Loader.instance().activeModContainer();
         if (mc == null || !Constants.MOD_ID.equals(mc.getModId())) {
             throw new IllegalAccessError("Don't mess with this please.");
@@ -69,17 +74,10 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
                 try {
                     block.dummyTe = block.teClass.newInstance();
                 } catch (Exception e) {
-                    if (Util.inDev()) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
         }
-    }
-
-    @Override
-    public Material getMaterial() {
-        return IC2Material.MACHINE;
     }
 
     @Override
@@ -117,7 +115,7 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
     @Override
     @Nonnull
     public Set<EnumFacing> getSupportedFacings() {
-        return Util.horizontalFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override
@@ -126,26 +124,15 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public float getExplosionResistance() {
-        return 0.0f;
+    @Nonnull
+    public MultiTileBlock.HarvestTool getHarvestTool() {
+        return MultiTileBlock.HarvestTool.Wrench;
     }
 
     @Override
     @Nonnull
-    public TeBlock.HarvestTool getHarvestTool() {
-        return TeBlock.HarvestTool.Wrench;
-    }
-
-    @Override
-    @Nonnull
-    public TeBlock.DefaultDrop getDefaultDrop() {
-        return TeBlock.DefaultDrop.Self;
-    }
-
-    @Override
-    @Nonnull
-    public EnumRarity getRarity() {
-        return this.rarity;
+    public MultiTileBlock.DefaultDrop getDefaultDrop() {
+        return MultiTileBlock.DefaultDrop.Self;
     }
 
     @Override
@@ -159,8 +146,8 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
     }
 
     @Override
-    public boolean doesOverrideDefault(final ItemStack itemStack) {
-        return true;
+    public boolean hasUniqueRender(final ItemStack itemStack) {
+        return false;
     }
 
     @Override
@@ -169,7 +156,7 @@ public enum BlockTank implements ITeBlock, ITeBlockSpecialItem {
     }
 }
 
-enum Types implements IIdProvider {
+enum Types implements ISubEnum {
     fluid_tank_normal(0),
     fluid_tank_normal_adv(1),
     fluid_tank_normal_imp(2),

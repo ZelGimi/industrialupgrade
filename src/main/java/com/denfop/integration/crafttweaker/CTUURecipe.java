@@ -77,7 +77,7 @@ public class CTUURecipe {
                     "replicator",
                     new BaseMachineRecipe(
                             new Input(
-                                    new IC2RecipeInput(output)
+                                    new InputItemStack(output)
                             ),
                             new RecipeOutput(nbt, CraftTweakerMC.getItemStacks(output))
                     )

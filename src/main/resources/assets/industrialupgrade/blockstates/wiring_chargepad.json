@@ -15,28 +15,28 @@
         "model" : "industrialupgrade:chargepad/ult_mfsu_chargepad_active"
       },
       "batbox_iu_chargepad" : {
-        "model" : "ic2:wiring/chargepad/chargepad_batbox"
+        "model" : "industrialupgrade:chargepad/chargepad_batbox"
       },
       "batbox_iu_chargepad_active" : {
-        "model" : "ic2:wiring/chargepad/chargepad_batbox_active"
+        "model" : "industrialupgrade:chargepad/chargepad_batbox_active"
       },
       "cesu_iu_chargepad" : {
-        "model" : "ic2:wiring/chargepad/chargepad_cesu"
+        "model" : "industrialupgrade:chargepad/chargepad_cesu"
       },
       "cesu_iu_chargepad_active" : {
-        "model" : "ic2:wiring/chargepad/chargepad_cesu_active"
+        "model" : "industrialupgrade:chargepad/chargepad_cesu_active"
       },
       "mfe_iu_chargepad" : {
-        "model" : "ic2:wiring/chargepad/chargepad_mfe"
+        "model" : "industrialupgrade:chargepad/chargepad_mfe"
       },
       "mfe_iu_chargepad_active" : {
-        "model" : "ic2:wiring/chargepad/chargepad_mfe_active"
+        "model" : "industrialupgrade:chargepad/chargepad_mfe_active"
       },
       "mfsu_iu_chargepad" : {
-        "model" : "ic2:wiring/chargepad/chargepad_mfsu"
+        "model" : "industrialupgrade:chargepad/chargepad_mfsu"
       },
       "mfsu_iu_chargepad_active" : {
-        "model" : "ic2:wiring/chargepad/chargepad_mfsu_active"
+        "model" : "industrialupgrade:chargepad/chargepad_mfsu_active"
       },
       "per_mfsu_chargepad" : {
         "model" : "industrialupgrade:chargepad/per_mfsu_chargepad"

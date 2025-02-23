@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/electronic_assembler_front_active",
+    "down" : "industrialupgrade:blocks/electronic_assembler_sides",
+    "up" : "industrialupgrade:blocks/electronic_assembler_top_active",
+    "north" : "industrialupgrade:blocks/electronic_assembler_front_active",
+    "east" : "industrialupgrade:blocks/electronic_assembler_sides",
+    "south" : "industrialupgrade:blocks/electronic_assembler_sides",
+    "west" : "industrialupgrade:blocks/electronic_assembler_sides"
+  }
+}

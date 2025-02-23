@@ -1,15 +1,17 @@
 package com.denfop.api.heat;
 
-import net.minecraft.util.EnumFacing;
+import com.denfop.api.cool.CoolTick;
+import com.denfop.api.cool.ICoolSource;
+
+import java.util.List;
 
 public interface IHeatSink extends IHeatAcceptor {
 
     double getDemandedHeat();
 
-    double injectHeat(EnumFacing var1, double var2, double var4);
+    void receivedHeat(double var2);
 
     boolean needTemperature();
 
-    boolean setNeedTemperature(boolean need);
-
+    List<IHeatSource> getEnergyTickList();
 }

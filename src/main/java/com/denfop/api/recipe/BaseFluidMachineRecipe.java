@@ -23,6 +23,11 @@ public class BaseFluidMachineRecipe {
         this.output = output;
     }
 
+    public BaseFluidMachineRecipe(IInputFluid input, RecipeOutput output, List<FluidStack> output_fluid) {
+        this.input = input;
+        this.output_fluid = output_fluid;
+        this.output = output;
+    }
 
     public boolean matches(List<FluidStack> stacks) {
         for (int i = 0; i < stacks.size(); i++) {

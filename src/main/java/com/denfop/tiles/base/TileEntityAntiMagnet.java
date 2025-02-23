@@ -1,9 +1,11 @@
 package com.denfop.tiles.base;
 
-import com.denfop.tiles.mechanism.TileEntityMagnet;
-import ic2.core.ExplosionIC2;
-import ic2.core.init.Localization;
-import net.minecraft.client.util.ITooltipFlag;
+import com.denfop.IUItem;
+import com.denfop.Localization;
+import com.denfop.api.tile.IMultiTileBlock;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.mechanism.BlockBaseMachine3;
+import com.denfop.tiles.mechanism.TileMagnet;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,28 +42,28 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
         return false;
     }
 
-    protected List<AxisAlignedBB> getAabbs(boolean forCollision) {
+    public List<AxisAlignedBB> getAabbs(boolean forCollision) {
         return aabbs;
     }
 
     @SideOnly(Side.CLIENT)
-    protected boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
+    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
         return false;
     }
 
-    protected boolean isNormalCube() {
+    public boolean isNormalCube() {
         return false;
     }
 
-    protected boolean doesSideBlockRendering(EnumFacing side) {
+    public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
 
-    protected boolean isSideSolid(EnumFacing side) {
+    public boolean isSideSolid(EnumFacing side) {
         return false;
     }
 
-    protected boolean clientNeedsExtraModelInfo() {
+    public boolean clientNeedsExtraModelInfo() {
         return true;
     }
 
@@ -69,8 +71,7 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
         return true;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, List<String> tooltip, ITooltipFlag advanced) {
+    public void addInformation(ItemStack stack, List<String> tooltip) {
         tooltip.add(Localization.translate("iu.antimagnet.info"));
 
     }
@@ -90,8 +91,8 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
                                 y,
                                 z
                         ).equals(this.pos))) {
-                            if (tileEntity instanceof TileEntityMagnet) {
-                                TileEntityMagnet tile = (TileEntityMagnet) tileEntity;
+                            if (tileEntity instanceof TileMagnet) {
+                                TileMagnet tile = (TileMagnet) tileEntity;
                                 if (!tile.player.equals(this.player)) {
                                     tile.work = false;
                                 }
@@ -101,13 +102,15 @@ public class TileEntityAntiMagnet extends TileEntityInventory {
                 }
             }
 
-        } else {
-            final ExplosionIC2 explosion = new ExplosionIC2(this.world, null, pos.getX(), pos.getY(), pos.getZ(),
-                    1,
-                    1f
-            );
-            explosion.doExplosion();
         }
+    }
+
+    public IMultiTileBlock getTeBlock() {
+        return BlockBaseMachine3.antimagnet;
+    }
+
+    public BlockTileEntity getBlock() {
+        return IUItem.basemachine2;
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {

@@ -1,7 +1,7 @@
 package com.denfop.utils;
 
 import com.denfop.IUCore;
-import ic2.core.IC2;
+import com.denfop.network.packet.PacketKeys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.GameSettings;
@@ -25,6 +25,11 @@ public class KeyboardClient extends KeyboardIU {
     public static final KeyBinding blackmode = new KeyBinding("BlackList Key", Keyboard.KEY_J, "IndustrialUpgrade");
     public static final KeyBinding streakmode = new KeyBinding("Streak Key", Keyboard.KEY_V, "IndustrialUpgrade");
 
+    public static final KeyBinding armormode = new KeyBinding("Armor Key", Keyboard.KEY_M, "IndustrialUpgrade");
+    public static final KeyBinding bootsmode = new KeyBinding("Boots Key", Keyboard.KEY_B, "IndustrialUpgrade");
+    public static final KeyBinding leggingsmode = new KeyBinding("Leggings Key", Keyboard.KEY_N, "IndustrialUpgrade");
+
+    private final Minecraft mc = Minecraft.getMinecraft();
     private int lastKeyState = 0;
 
     public KeyboardClient() {
@@ -35,6 +40,9 @@ public class KeyboardClient extends KeyboardIU {
         ClientRegistry.registerKeyBinding(savemode);
         ClientRegistry.registerKeyBinding(blackmode);
         ClientRegistry.registerKeyBinding(streakmode);
+        ClientRegistry.registerKeyBinding(armormode);
+        ClientRegistry.registerKeyBinding(bootsmode);
+        ClientRegistry.registerKeyBinding(leggingsmode);
     }
 
     public void sendKeyUpdate() {
@@ -46,6 +54,15 @@ public class KeyboardClient extends KeyboardIU {
             }
             if (GameSettings.isKeyDown(flymode)) {
                 keys.add(Key.FLYMODE);
+            }
+            if (GameSettings.isKeyDown(armormode)) {
+                keys.add(Key.ARMOR);
+            }
+            if (GameSettings.isKeyDown(this.mc.gameSettings.keyBindForward)) {
+                keys.add(Key.FORWARD);
+            }
+            if (GameSettings.isKeyDown(this.mc.gameSettings.keyBindJump)) {
+                keys.add(Key.JUMP);
             }
             if (GameSettings.isKeyDown(verticalmode)) {
                 keys.add(Key.VERTICALMODE);
@@ -62,12 +79,18 @@ public class KeyboardClient extends KeyboardIU {
             if (GameSettings.isKeyDown(streakmode)) {
                 keys.add(Key.STREAK);
             }
+            if (GameSettings.isKeyDown(bootsmode)) {
+                keys.add(Key.BOOTS);
+            }
+            if (GameSettings.isKeyDown(leggingsmode)) {
+                keys.add(Key.LEGGINGS);
+            }
         }
 
         int currentKeyState = Key.toInt(keys);
         if (currentKeyState != this.lastKeyState) {
-            IUCore.network.get(false).initiateKeyUpdate(currentKeyState);
-            super.processKeyUpdate(IC2.platform.getPlayerInstance(), currentKeyState);
+            new PacketKeys(currentKeyState);
+            super.processKeyUpdate(IUCore.proxy.getPlayerInstance(), currentKeyState);
             this.lastKeyState = currentKeyState;
         }
 

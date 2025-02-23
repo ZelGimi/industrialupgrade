@@ -1,31 +1,23 @@
 package com.denfop.container;
 
-import com.denfop.tiles.mechanism.TileEntityAdvOilRefiner;
+import com.denfop.tiles.mechanism.TileAdvOilRefiner;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.List;
+public class ContainerAdvOilRefiner extends ContainerFullInv<TileAdvOilRefiner> {
 
-public class ContainerAdvOilRefiner extends ContainerFullInv<TileEntityAdvOilRefiner> {
-
-    public ContainerAdvOilRefiner(EntityPlayer entityPlayer, TileEntityAdvOilRefiner tileEntity1) {
-        super(entityPlayer, tileEntity1, 166);
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot[0], 0, 14, 63));
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 76, 63));
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 1, 108, 63));
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.containerslot[0], 0, 54, 16));
-        this.addSlotToContainer(new SlotInvSlot(tileEntity1.containerslot[1], 0, 130, 16));
+    public ContainerAdvOilRefiner(EntityPlayer entityPlayer, TileAdvOilRefiner tileEntity1) {
+        super(entityPlayer, tileEntity1, 202);
+        this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot1, 0, 39, 21));
+        this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 0, 62, 95));
+        this.addSlotToContainer(new SlotInvSlot(tileEntity1.outputSlot, 1, 110, 95));
+        this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot2, 0, 87, 21));
+        this.addSlotToContainer(new SlotInvSlot(tileEntity1.fluidSlot3, 0, 134, 21));
         for (int i = 0; i < 4; i++) {
             addSlotToContainer(
-                    new SlotInvSlot((tileEntity1).upgradeSlot, i, 152, 8 + i * 18));
+                    new SlotInvSlot((tileEntity1).upgradeSlot, i, 152, 42 + i * 18));
         }
 
     }
 
-    public List<String> getNetworkedFields() {
-        List<String> ret = super.getNetworkedFields();
-        ret.add("energy");
-        ret.add("fluidTank");
-        return ret;
-    }
 
 }

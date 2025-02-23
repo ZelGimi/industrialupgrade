@@ -4,6 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ImageInterface;
 import com.denfop.api.windsystem.IWindRotor;
 import com.denfop.container.ContainerWaterRotorAssembler;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,14 +21,15 @@ public class GuiWaterRotorAssembler extends GuiIU<ContainerWaterRotorAssembler> 
         this.xSize = 206;
         this.ySize = 256;
         this.inventory.setY(172);
-        this.addComponent(new GuiComponent(this, 142, 150, EnumTypeComponent.ENERGY_WEIGHT,
+        this.elements.add(new ImageInterface(this, 0, 0, this.xSize, this.ySize));
+        this.addComponent(new GuiComponent(this, 137, 150, EnumTypeComponent.ENERGY_WEIGHT,
                 new Component<>(this.container.base.energy)
         ));
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guirotorcreate.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
 
     }
 

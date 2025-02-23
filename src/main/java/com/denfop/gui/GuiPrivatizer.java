@@ -1,9 +1,9 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
+import com.denfop.api.gui.CustomButton;
 import com.denfop.container.ContainerPrivatizer;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,20 +13,20 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 @SideOnly(Side.CLIENT)
-public class GuiPrivatizer extends GuiIC2<ContainerPrivatizer> {
+public class GuiPrivatizer extends GuiIU<ContainerPrivatizer> {
 
     public final ContainerPrivatizer container;
 
     public GuiPrivatizer(ContainerPrivatizer container1) {
         super(container1);
         this.container = container1;
+        this.addElement(new CustomButton(this, 103, 21, 68, 17, container1.base, 0, Localization.translate("button.write")));
+
     }
 
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 21,
-                68, 17, Localization.translate("button.write")
-        ));
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -38,14 +38,11 @@ public class GuiPrivatizer extends GuiIC2<ContainerPrivatizer> {
 
     protected void actionPerformed(@Nonnull GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
-        if (guibutton.id == 0) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
 
-        }
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.TEXTURES, "textures/gui/GuiPrivatizer.png");
+        return new ResourceLocation(Constants.TEXTURES, "textures/gui/guimachine.png");
     }
 
 }

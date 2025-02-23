@@ -3,10 +3,8 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -15,28 +13,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemSmallDust extends ItemMulti<ItemSmallDust.Types> implements IModelRegister {
+public class ItemSmallDust extends ItemSubTypes<ItemSmallDust.Types> implements IModelRegister {
 
     protected static final String NAME = "smalldust";
 
     public ItemSmallDust() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item stack, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -44,7 +38,7 @@ public class ItemSmallDust extends ItemMulti<ItemSmallDust.Types> implements IMo
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         mikhail(0),
         aluminium(1),
         vanady(2),
@@ -64,6 +58,38 @@ public class ItemSmallDust extends ItemMulti<ItemSmallDust.Types> implements IMo
         manganese(16),
         iridium(17),
         germanium(18),
+        bronze(19),
+        copper(20),
+        gold(21),
+        iron(22),
+        lapis(23),
+        lead(24),
+        obsidian(25),
+        sulfur(26),
+        tin(27),
+        diamond(28),
+        osmium(29),
+        tantalum(30),
+        cadmium(31),
+        arsenic(32),
+        barium(33),
+        bismuth(34),
+        gadolinium(35),
+        gallium(36),
+        hafnium(37),
+        yttrium(38),
+        molybdenum(39),
+        neodymium(40),
+        niobium(41),
+        palladium(42),
+        polonium(43),
+        strontium(44),
+        thallium(45),
+        zirconium(46),
+        emerald(47),
+        quartz(48),
+        ender_pearl(49),
+        ghast(50),
         ;
 
         private final String name;

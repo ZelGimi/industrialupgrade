@@ -1,14 +1,10 @@
 package com.quantumgenerators;
 
-import com.denfop.IUCore;
 import com.denfop.IUItem;
-import ic2.api.event.TeBlockFinalCallEvent;
-import ic2.api.recipe.Recipes;
-import ic2.core.block.ITeBlock;
-import ic2.core.block.TeBlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
+import com.denfop.api.Recipes;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.TileBlockCreator;
+import com.denfop.tiles.mechanism.TileGenerationMicrochip;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings({"ALL", "UnnecessaryFullyQualifiedName"})
 @Mod.EventBusSubscriber
@@ -24,30 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public final class QGCore {
 
 
-    public Block qg;
-
-
-    public static <E extends Enum<E> & ITeBlock> void register(Class<E> enumClass, ResourceLocation ref) {
-        TeBlockRegistry.addAll(enumClass, ref);
-        TeBlockRegistry.setDefaultMaterial(ref, Material.ROCK);
-        TeBlockRegistry.addCreativeRegisterer((list, block, itemblock, tab) -> {
-            if (tab == CreativeTabs.SEARCH || tab == IUCore.IUTab) {
-                block.getAllTypes().forEach(type -> {
-                    if (type.hasItem()) {
-                        list.add(block.getItemStack(type));
-                    }
-                });
-            }
-        }, ref);
-    }
-
-    @SubscribeEvent
-    public static void register(final TeBlockFinalCallEvent event) {
-
-        register(BlockQG.class, BlockQG.IDENTITY);
-
-
-    }
+    public static BlockTileEntity qg;
 
 
     public static ResourceLocation getIdentifier(final String name) {
@@ -57,50 +30,40 @@ public final class QGCore {
     @Mod.EventHandler
     public void load(final FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
-        BlockQG.buildDummies();
-        qg = TeBlockRegistry.get(BlockQG.IDENTITY).setCreativeTab(IUCore.IUTab);
+        qg = TileBlockCreator.instance.create(BlockQG.class);
+        if (event.getSide() == Side.CLIENT) {
+            qg.registerModels();
+        }
     }
 
 
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
-        Recipes.advRecipes.addRecipe(new ItemStack(qg, 1, 0),
-                "CBC",
-                "BAB",
-                "DBD", 'A', new ItemStack(IUItem.blockpanel, 1, 7), 'B', new ItemStack(IUItem.core, 1, 8),
-                'C', new ItemStack(IUItem.advQuantumtool), 'D', IUItem.circuitSpectral
+        Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 0), new Object[]{
+                "CBC", "BAB", "DBD",
 
-        );
-        Recipes.advRecipes.addRecipe(new ItemStack(qg, 1, 1),
-                " B ",
-                "BAB",
-                " B ", 'A', new ItemStack(qg, 1, 0), 'B', new ItemStack(IUItem.core, 1, 9)
+                Character.valueOf('A'), new ItemStack(IUItem.blockpanel, 1, 7), Character.valueOf('B'), new ItemStack(
+                IUItem.core,
+                1,
+                8
+        ),
+                Character.valueOf('C'), new ItemStack(IUItem.advQuantumtool), Character.valueOf('D'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral,9)});
+        Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 1), new Object[]{" B ", "BAB", " B ",
 
-        );
-        Recipes.advRecipes.addRecipe(new ItemStack(qg, 1, 2),
-                " B ",
-                "BAB",
-                " B ", 'A', new ItemStack(qg, 1, 1), 'B', new ItemStack(IUItem.core, 1, 10)
+                Character.valueOf('A'), new ItemStack(this.qg, 1, 0), Character.valueOf('B'), new ItemStack(IUItem.core, 1, 9)});
+        Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 2), new Object[]{" B ", "BAB", " B ",
 
-        );
-        Recipes.advRecipes.addRecipe(new ItemStack(qg, 1, 3),
-                " B ",
-                "BAB",
-                " B ", 'A', new ItemStack(qg, 1, 2), 'B', new ItemStack(IUItem.core, 1, 11)
+                Character.valueOf('A'), new ItemStack(this.qg, 1, 1), Character.valueOf('B'), new ItemStack(IUItem.core, 1, 10)});
+        Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 3), new Object[]{" B ", "BAB", " B ",
 
-        );
-        Recipes.advRecipes.addRecipe(new ItemStack(qg, 1, 4),
-                " B ",
-                "BAB",
-                " B ", 'A', new ItemStack(qg, 1, 3), 'B', new ItemStack(IUItem.core, 1, 12)
+                Character.valueOf('A'), new ItemStack(this.qg, 1, 2), Character.valueOf('B'), new ItemStack(IUItem.core, 1, 11)});
+        Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 4), new Object[]{" B ", "BAB", " B ",
 
-        );
-        Recipes.advRecipes.addRecipe(new ItemStack(qg, 1, 5),
-                " B ",
-                "BAB",
-                " B ", 'A', new ItemStack(qg, 1, 4), 'B', new ItemStack(IUItem.core, 1, 13)
+                Character.valueOf('A'), new ItemStack(this.qg, 1, 3), Character.valueOf('B'), new ItemStack(IUItem.core, 1, 12)});
+        Recipes.recipe.addRecipe(new ItemStack(this.qg, 1, 5), new Object[]{" B ", "BAB", " B ",
 
-        );
+                Character.valueOf('A'), new ItemStack(this.qg, 1, 4), Character.valueOf('B'), new ItemStack(IUItem.core, 1, 13)});
     }
 
 

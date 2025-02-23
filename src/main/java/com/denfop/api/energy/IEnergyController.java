@@ -1,6 +1,6 @@
 package com.denfop.api.energy;
 
-public interface IEnergyController extends IAdvEnergyTile {
+public interface IEnergyController extends IEnergyTile {
 
     boolean getWork();
 

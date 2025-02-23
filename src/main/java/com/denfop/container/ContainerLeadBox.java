@@ -1,8 +1,8 @@
 package com.denfop.container;
 
-import com.denfop.items.bags.HandHeldLeadBox;
-import ic2.core.slot.SlotHologramSlot;
-import ic2.core.util.StackUtil;
+import com.denfop.items.bags.ItemStackLeadBox;
+import com.denfop.items.reactors.IRadioactiveItemType;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
@@ -12,13 +12,13 @@ import net.minecraft.network.play.server.SPacketHeldItemChange;
 
 import java.util.Objects;
 
-public class ContainerLeadBox extends ContainerHandHeldInventory<HandHeldLeadBox> {
+public class ContainerLeadBox extends ContainerHandHeldInventory<ItemStackLeadBox> {
 
 
     public final int inventorySize;
     private final int current;
 
-    public ContainerLeadBox(EntityPlayer player, HandHeldLeadBox Toolbox1) {
+    public ContainerLeadBox(EntityPlayer player, ItemStackLeadBox Toolbox1) {
         super(Toolbox1);
 
         inventorySize = Toolbox1.inventorySize;
@@ -28,7 +28,12 @@ public class ContainerLeadBox extends ContainerHandHeldInventory<HandHeldLeadBox
         int col;
         for (col = 0; col < slots; ++col) {
             for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 24 + col * 18));
+                this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 24 + col * 18) {
+                    @Override
+                    public boolean isItemValid(final ItemStack stack) {
+                        return stack.getItem() instanceof IRadioactiveItemType;
+                    }
+                });
             }
         }
         this.current = player.inventory.currentItem;
@@ -73,7 +78,7 @@ public class ContainerLeadBox extends ContainerHandHeldInventory<HandHeldLeadBox
                 if (slot >= 0 && slot < this.inventorySlots.size() && this.base.isThisContainer(this.inventorySlots.get(
                                 slot)
                         .getStack())) {
-                    return StackUtil.emptyStack;
+                    return ModUtils.emptyStack;
                 }
                 break;
             case SWAP:
@@ -118,9 +123,7 @@ public class ContainerLeadBox extends ContainerHandHeldInventory<HandHeldLeadBox
     }
 
     public ItemStack slotClick1(int slotId, int dragType, ClickType clickType, EntityPlayer player) {
-        Slot slot;
-        return slotId >= 0 && slotId < this.inventorySlots.size() && (slot = this.inventorySlots.get(slotId)) instanceof SlotHologramSlot
-                ? ((SlotHologramSlot) slot).slotClick(dragType, clickType, player) : super.slotClick(
+        return super.slotClick(
                 slotId,
                 dragType,
                 clickType,

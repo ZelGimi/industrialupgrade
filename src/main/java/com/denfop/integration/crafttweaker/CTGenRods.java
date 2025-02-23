@@ -153,12 +153,12 @@ public class CTGenRods {
         public void apply() {
             Recipes.recipes.addAdderRecipe("rod_assembler", new BaseMachineRecipe(
                     new Input(
-                            new IC2RecipeInput(this.container),
-                            new IC2RecipeInput(this.fill),
-                            new IC2RecipeInput(this.fill1),
-                            new IC2RecipeInput(this.fill2),
-                            new IC2RecipeInput(this.fill3),
-                            new IC2RecipeInput(this.fill4)
+                            new InputItemStack(this.container),
+                            new InputItemStack(this.fill),
+                            new InputItemStack(this.fill1),
+                            new InputItemStack(this.fill2),
+                            new InputItemStack(this.fill3),
+                            new InputItemStack(this.fill4)
                     ),
                     new RecipeOutput(null, getItemStack(this.output))
             ));

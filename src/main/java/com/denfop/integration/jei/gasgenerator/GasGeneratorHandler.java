@@ -52,7 +52,7 @@ public class GasGeneratorHandler {
 
     public static void initRecipes() {
 
-        addRecipe(100000, new FluidStack(FluidName.fluidgas.getInstance(), 1000));
+        addRecipe(225000, new FluidStack(FluidName.fluidgas.getInstance(), 1000));
 
 
     }

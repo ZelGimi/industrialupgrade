@@ -1,17 +1,37 @@
 package com.denfop.container;
 
-import com.denfop.items.HandHeldInventory;
-import ic2.core.util.StackUtil;
+import com.denfop.api.inv.IAdvInventory;
+import com.denfop.items.ItemStackInventory;
+import com.denfop.utils.ModUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketHeldItemChange;
 
-public class ContainerHandHeldInventory<T extends HandHeldInventory> extends ContainerBase<T> {
+public class ContainerHandHeldInventory<T extends ItemStackInventory & IAdvInventory> extends ContainerBase<T> {
 
     public ContainerHandHeldInventory(T inventory) {
         super(inventory);
+    }
+
+    protected void addPlayerInventorySlots(EntityPlayer player, int width, int height) {
+        int xStart = (width - 162) / 2;
+
+        int col;
+        for (col = 0; col < 3; ++col) {
+            for (int col1 = 0; col1 < 9; ++col1) {
+                this.addSlotToContainer(new Slot(player.inventory, col1 + col * 9 + 9, xStart + col1 * 18,
+                        height + -82 + col * 18
+                ));
+            }
+        }
+
+        for (col = 0; col < 9; ++col) {
+            this.addSlotToContainer(new Slot(player.inventory, col, xStart + col * 18, height + -24));
+        }
+
     }
 
     public ItemStack slotClick(int slot, int button, ClickType type, EntityPlayer player) {
@@ -32,7 +52,7 @@ public class ContainerHandHeldInventory<T extends HandHeldInventory> extends Con
                 if (slot >= 0 && slot < this.inventorySlots.size() && this.base.isThisContainer(this.inventorySlots.get(
                                 slot)
                         .getStack())) {
-                    return StackUtil.emptyStack;
+                    return ModUtils.emptyStack;
                 }
                 break;
             case SWAP:
@@ -82,7 +102,6 @@ public class ContainerHandHeldInventory<T extends HandHeldInventory> extends Con
     }
 
     public void onContainerClosed(EntityPlayer player) {
-        this.base.onGuiClosed(player);
         super.onContainerClosed(player);
     }
 

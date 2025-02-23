@@ -1,0 +1,59 @@
+{
+  "forge_marker" : 1,
+  "variants" : {
+    "type" : {
+      "deposits_iridium" : {
+         "model" : "industrialupgrade:deposits/iridium"
+      },
+      "deposits_germanium" : {
+         "model" : "industrialupgrade:deposits/germanium"
+      },
+      "deposits_vanadium" : {
+         "model" : "industrialupgrade:deposits/vanadium"
+      },
+	  "deposits_osmium" : {
+         "model" : "industrialupgrade:deposits/osmium"
+      },
+      "deposits_cadmium" : {
+         "model" : "industrialupgrade:deposits/cadmium"
+      },
+      "deposits_tantalum" : {
+         "model" : "industrialupgrade:deposits/tantalum"
+      },
+      "deposits_copper" : {
+         "model" : "industrialupgrade:deposits/copper"
+      },
+      "deposits_tin" : {
+         "model" : "industrialupgrade:deposits/tin"
+      },
+	  
+	  "deposits_arsenopyrite" : {
+         "model" : "industrialupgrade:deposits/deposits_arsenopyrite"
+      },
+      "deposits_braggite" : {
+         "model" : "industrialupgrade:deposits/deposits_braggite"
+      },
+      "deposits_wolframite" : {
+         "model" : "industrialupgrade:deposits/deposits_wolframite"
+      },
+	  "deposits_xenotime" : {
+         "model" : "industrialupgrade:deposits/deposits_xenotime"
+      },
+      "deposits_tetrahedrite" : {
+         "model" : "industrialupgrade:deposits/deposits_tetrahedrite"
+      },
+      "deposits_crocoite" : {
+         "model" : "industrialupgrade:deposits/deposits_crocoite"
+      },
+      "deposits_zircon" : {
+         "model" : "industrialupgrade:deposits/deposits_zircon"
+      },
+      "deposits_celestine" : {
+         "model" : "industrialupgrade:deposits/deposits_celestine"
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

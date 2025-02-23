@@ -3,10 +3,8 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.item.ItemMulti;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -15,28 +13,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Locale;
 
-public class ItemPlate extends ItemMulti<ItemPlate.ItemPlateTypes> implements IModelRegister {
+public class ItemPlate extends ItemSubTypes<ItemPlate.ItemPlateTypes> implements IModelRegister {
 
     protected static final String NAME = "itemplates";
 
     public ItemPlate() {
-        super(null, ItemPlateTypes.class);
+        super(ItemPlateTypes.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
     @Override
-    public void registerModels() {
-        registerModels(null);
-    }
 
     public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
+        return "iu." + super.getUnlocalizedName().substring(3);
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item stack, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -44,7 +39,7 @@ public class ItemPlate extends ItemMulti<ItemPlate.ItemPlateTypes> implements IM
         );
     }
 
-    public enum ItemPlateTypes implements IIdProvider {
+    public enum ItemPlateTypes implements ISubEnum {
         mikhail_plate(0),
         aluminium_plate(1),
         vanady_plate(2),
@@ -64,6 +59,40 @@ public class ItemPlate extends ItemMulti<ItemPlate.ItemPlateTypes> implements IM
         manganese_plate(16),
         iridium_plate(17),
         germanium_plate(18),
+        bronze_plate(19),
+        copper_plate(20),
+        gold_plate(21),
+        iron_plate(22),
+        lapis_plate(23),
+        lead_plate(24),
+        obsidian_plate(25),
+        steel_plate(26),
+        tin_plate(27),
+
+        osmium(28),
+        tantalum(29),
+        cadmium(30),
+        arsenic(31),
+        barium(32),
+        bismuth(33),
+        gadolinium(34),
+        gallium(35),
+        hafnium(36),
+        yttrium(37),
+        molybdenum(38),
+        neodymium(39),
+        niobium(40),
+        palladium(41),
+        polonium(42),
+        strontium(43),
+        thallium(44),
+        zirconium(45),
+        adamantite(46),
+        bloodstone(47),
+        draconid(48),
+        meteoric_iron(49),
+        mythril(50),
+        orichalcum(51),
         ;
 
         private final String name;

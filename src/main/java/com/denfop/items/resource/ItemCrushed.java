@@ -3,9 +3,8 @@ package com.denfop.items.resource;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
-import com.denfop.blocks.IIdProvider;
-import ic2.core.init.BlocksItems;
-import ic2.core.ref.ItemName;
+import com.denfop.blocks.ISubEnum;
+import com.denfop.register.Register;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,30 +17,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemCrushed extends ItemMulti<ItemCrushed.Types> implements IModelRegister {
+public class ItemCrushed extends ItemSubTypes<ItemCrushed.Types> implements IModelRegister {
 
     protected static final String NAME = "crushed";
 
     public ItemCrushed() {
-        super(null, Types.class);
+        super(Types.class);
         this.setCreativeTab(IUCore.RecourseTab);
-        BlocksItems.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
+        Register.registerItem((Item) this, IUCore.getIdentifier(NAME)).setUnlocalizedName(NAME);
         IUCore.proxy.addIModelRegister(this);
     }
 
-    @Override
-    public void registerModels() {
-        registerModels(null);
-    }
-
-    public String getUnlocalizedName() {
-        return "iu." + super.getUnlocalizedName().substring(4);
-    }
 
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab)) {
 
-            for (final Types type : this.typeProperty.getShownValues()) {
+            for (final Types type : this.typeProperty.getAllowedValues()) {
                 if (type != Types.invar && type != Types.electrium && type != Types.caravky) {
                     subItems.add(this.getItemStackUnchecked(type));
                 }
@@ -51,7 +42,7 @@ public class ItemCrushed extends ItemMulti<ItemCrushed.Types> implements IModelR
     }
 
     @SideOnly(Side.CLIENT)
-    protected void registerModel(final int meta, final ItemName name, final String extraName) {
+    public void registerModel(Item item, final int meta, final String extraName) {
         ModelLoader.setCustomModelResourceLocation(
                 this,
                 meta,
@@ -59,7 +50,7 @@ public class ItemCrushed extends ItemMulti<ItemCrushed.Types> implements IModelR
         );
     }
 
-    public enum Types implements IIdProvider {
+    public enum Types implements ISubEnum {
         mikhail(0),
         aluminium(1),
         vanady(2),
@@ -79,6 +70,30 @@ public class ItemCrushed extends ItemMulti<ItemCrushed.Types> implements IModelR
         manganese(16),
         iridium(17),
         germanium(18),
+        copper(19),
+        gold(20),
+        iron(21),
+        lead(22),
+        tin(23),
+        uranium(24),
+        osmium(25),
+        tantalum(26),
+        cadmium(27),
+        arsenic(28),
+        barium(29),
+        bismuth(30),
+        gadolinium(31),
+        gallium(32),
+        hafnium(33),
+        yttrium(34),
+        molybdenum(35),
+        neodymium(36),
+        niobium(37),
+        palladium(38),
+        polonium(39),
+        strontium(40),
+        thallium(41),
+        zirconium(42),
         ;
 
         private final String name;

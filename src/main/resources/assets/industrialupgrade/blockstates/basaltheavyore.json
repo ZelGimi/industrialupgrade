@@ -1,0 +1,94 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "magnetite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/magnetit"
+        }
+      },
+      "calaverite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/calaverite"
+        }
+      },
+      "galena" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/galena"
+        }
+      },
+      "nickelite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/nickelite"
+        }
+      },
+      "pyrite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/pyrite"
+        }
+      },
+      "quartzite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/quartzite"
+        }
+      },
+      "uranite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/uranite"
+        }
+      },
+      "azurite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/azurite"
+        }
+      },
+      "rhodonite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/rhodonite"
+        }
+      },
+      "alfildit" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/alfildit"
+        }
+      },
+      "euxenite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/euxenite"
+        }
+      },
+      "smithsonite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/smithsonite"
+        }
+      },
+      "ilmenite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/ilmenite"
+        }
+      },
+      "todorokite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/todorokite"
+        }
+      },
+      "ferroaugite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/ferroaugite"
+        }
+      },
+      "sheelite" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/mineral/sheelite"
+        }
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

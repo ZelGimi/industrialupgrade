@@ -1,0 +1,94 @@
+{
+  "forge_marker" : 1,
+  "defaults" : {
+    "model" : "cube_all",
+    "transform" : "forge:default-block"
+  },
+  "variants" : {
+    "type" : {
+      "lithium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/lithium"
+        }
+      },
+      "beryllium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/beryllium"
+        }
+      },
+      "bor" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/bor"
+        }
+      },
+      "osmium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/osmium_ore"
+        }
+      },
+      "cadmium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/cadmium_ore"
+        }
+      },
+      "tantalum" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/tantalum_ore"
+        }
+      },
+      "saltpeter" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/saltpeter"
+        }
+      },
+      "calcium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/calcium"
+        }
+      },
+      "titanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/titanium_ore"
+        }
+      },
+      "chromium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/chromium_ore"
+        }
+      },
+      "spinel" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/spinel_ore"
+        }
+      },
+      "silver" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/silver_ore"
+        }
+      },
+      "zinc" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/zinc_ore"
+        }
+      },
+      "manganese" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/manganese_ore"
+        }
+      },
+      "iridium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/iridium_ore"
+        }
+      },
+      "germanium" : {
+        "textures" : {
+          "all" : "industrialupgrade:blocks/germanium_ore"
+        }
+      }
+    },
+    "inventory" : [
+      {}
+    ]
+  }
+}

@@ -1,54 +1,94 @@
 package com.denfop.items.reactors;
 
+import com.denfop.Constants;
 import com.denfop.IUCore;
+import com.denfop.IUPotion;
+import com.denfop.Localization;
+import com.denfop.api.item.IHazmatLike;
+import com.denfop.api.reactors.EnumTypeComponent;
+import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.api.reactors.IReactorItem;
 import com.denfop.utils.ModUtils;
-import ic2.api.reactor.IReactor;
-import ic2.core.init.Localization;
-import ic2.core.item.type.IRadioactiveItemType;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class ItemBaseRod extends ItemReactor implements IRadioactiveItemType {
+public class ItemBaseRod extends ItemDamage implements IRadioactiveItemType, IReactorItem {
 
-    private final ItemStack[] depletedreactorrod;
+    public final int numberOfCells;
     private final int heat;
-
     private final float power;
+    private final String name;
+    private final int level;
+    private final double radiation;
+    double[] p = new double[]{5.0D, 20D, 60D, 200D};
 
-    public ItemBaseRod(String internalName, int cells, int time, int heat, float power, ItemStack[] depletedrod) {
-        super(internalName, cells, time);
+    public ItemBaseRod(String internalName, int cells, int heat, float power, int level) {
+        super(internalName, 1);
         this.heat = heat;
         this.power = power;
-        this.depletedreactorrod = depletedrod;
         this.setCreativeTab(IUCore.ReactorsTab);
+        this.setMaxStackSize(1);
+        this.numberOfCells = cells;
+        this.setNoRepair();
+        this.setCreativeTab(IUCore.ReactorsTab);
+        this.name = internalName;
+        this.level = level;
+        this.radiation = power * level * cells;
     }
 
-    protected int getFinalHeat(ItemStack stack, IReactor reactor, int x, int y, int heat) {
-        if (reactor.isFluidCooled()) {
-            float breedereffectiveness = (float) reactor.getHeat() / (float) reactor.getMaxHeat();
-            if (breedereffectiveness > 0.5D) {
-                heat *= this.heat;
+    @SideOnly(Side.CLIENT)
+    public static ModelResourceLocation getModelLocation(String name) {
+
+        final String loc = Constants.MOD_ID +
+                ':' +
+                "reactors" + "/" + name;
+        return new ModelResourceLocation(loc, null);
+    }
+
+    @Override
+    public boolean showDurabilityBar(@NotNull final ItemStack stack) {
+        return false;
+    }
+
+    public void onUpdate(ItemStack stack, World world, Entity rawEntity, int slotIndex, boolean isCurrentItem) {
+        if (rawEntity instanceof EntityLivingBase) {
+            EntityLivingBase entity = (EntityLivingBase) rawEntity;
+            if (!IHazmatLike.hasCompleteHazmat(entity)) {
+                IUPotion.radiation.applyTo(
+                        entity,
+                        this.getRadiationDuration(),
+                        this.getRadiationAmplifier()
+                );
             }
         }
-
-        return heat;
     }
 
-    protected ItemStack getDepletedStack(ItemStack stack, IReactor reactor) {
-        ItemStack ret;
-        double temp = Math.log10(this.numberOfCells);
-        double temp1 = Math.log10(2);
-        double p = temp / temp1;
-        if (depletedreactorrod[(int) p] != null) {
-            ret = depletedreactorrod[(int) p];
-            return new ItemStack(ret.getItem(), 1);
-        }
-        throw new RuntimeException("invalid cell count: " + this.numberOfCells);
+    public String getItemStackDisplayName(ItemStack stack) {
+        return I18n.translateToLocal(this.getUnlocalizedName(stack).replace("item", "iu").replace(".name", ""));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void registerModel(Item item, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
+    @Override
+    public void registerModels() {
+        registerModels(this.name);
     }
 
     @Override
@@ -59,35 +99,17 @@ public class ItemBaseRod extends ItemReactor implements IRadioactiveItemType {
             @Nonnull final ITooltipFlag advanced
     ) {
         super.addInformation(stack, world, tooltip, advanced);
-        double[] p = new double[]{5.0D, 20D, 60D, 200D};
-
         double temp = Math.log10(this.numberOfCells);
         double temp1 = Math.log10(2);
         double m = temp / temp1;
-        tooltip.add(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power) + " EU");
-        tooltip.add(Localization.translate("reactor.info1") + ModUtils.getString((p[(int) m] * this.power) + p[(int) m] * (power / 2) * 0.99) + " EU");
+        tooltip.add(Localization.translate("reactor.info") + ModUtils.getString(p[(int) m] * this.power * this.level) + " EF");
+        tooltip.add(Localization.translate("reactor.rod.radiation") + (int) this.radiation);
+        tooltip.add(Localization.translate("reactor.rod.heat") + this.heat);
+        tooltip.add(Localization.translate("reactor.rod_level") + this.level);
+        tooltip.add(Localization.translate("reactor.rod_level1"));
 
     }
 
-
-    public boolean acceptUraniumPulse(
-            ItemStack stack,
-            IReactor reactor,
-            ItemStack pulsingStack,
-            int youX,
-            int youY,
-            int pulseX,
-            int pulseY,
-            boolean heatrun
-    ) {
-        if (!heatrun) {
-            float breedereffectiveness = (float) reactor.getHeat() / (float) reactor.getMaxHeat();
-            float ReaktorOutput = (this.power / 2) * breedereffectiveness + this.power;
-            reactor.addOutput(ReaktorOutput);
-        }
-
-        return true;
-    }
 
     @Override
     public int getRadiationDuration() {
@@ -97,6 +119,75 @@ public class ItemBaseRod extends ItemReactor implements IRadioactiveItemType {
     @Override
     public int getRadiationAmplifier() {
         return 100;
+    }
+
+
+    @Override
+    public EnumTypeComponent getType() {
+        return EnumTypeComponent.ROD;
+    }
+
+    @Override
+    public int getLevel() {
+        return this.level;
+    }
+
+    public double getRadiation() {
+        return radiation;
+    }
+
+    @Override
+    public int getAutoRepair(final IAdvReactor reactor) {
+        return 0;
+    }
+
+    @Override
+    public int getRepairOther(final IAdvReactor reactor) {
+        return 0;
+    }
+
+    @Override
+    public int getDamageCFromHeat(final int heat, final IAdvReactor reactor) {
+        return 1;
+    }
+
+    @Override
+    public int getHeat(final IAdvReactor reactor) {
+        return this.heat;
+    }
+
+    @Override
+    public double getHeatRemovePercent(final IAdvReactor reactor) {
+        return 0;
+    }
+
+    @Override
+    public void damageItem(ItemStack stack, final int damage) {
+
+    }
+
+    @Override
+    public boolean updatableItem() {
+        return true;
+    }
+
+    @Override
+    public boolean caneExtractHeat() {
+        return true;
+    }
+
+    @Override
+    public double getEnergyProduction(final IAdvReactor reactor) {
+        double temp = Math.log10(this.numberOfCells);
+        double temp1 = Math.log10(2);
+        double m = temp / temp1;
+        return p[(int) m] * this.power * this.level;
+    }
+
+    @Override
+    public boolean needClear(ItemStack stack) {
+        return this.getMaxCustomDamage(stack) - this.getCustomDamage(
+                stack) == 0;
     }
 
 }

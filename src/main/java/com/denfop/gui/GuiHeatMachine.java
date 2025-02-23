@@ -1,14 +1,17 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.ComponentEmpty;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerHeatMachine;
+import com.denfop.tiles.base.TileBaseHeatMachine;
 import com.denfop.utils.ListInformationUtils;
-import com.denfop.utils.ModUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -17,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
+public class GuiHeatMachine extends GuiIU<ContainerHeatMachine> {
 
-    protected static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("textures/gui/widgets.png");
     public ContainerHeatMachine container;
     public String name;
 
@@ -27,10 +29,52 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
         super(guiContainer);
         this.container = guiContainer;
         this.name = Localization.translate(guiContainer.base.getName());
-        if (this.container.base.hasFluid) {
-            this.addElement(TankGauge.createNormal(this, 96, 22, (container.base).fluidTank));
-        }
 
+        if (this.container.base.hasFluid) {
+            this.componentList.add(new GuiComponent(this, 117, 41, EnumTypeComponent.FLUID_PART,
+                    new Component<>(new ComponentEmpty())
+            ));
+            this.addElement(TankGauge.createNormal(this, 96, 22, (container.base).fluidTank));
+        } else {
+            this.componentList.add(new GuiComponent(this, 113, 21, EnumTypeComponent.ENERGY_HEIGHT,
+                    new Component<>(this.container.base.energy)
+            ));
+        }
+        this.componentList.add(new GuiComponent(this, 51, 41, EnumTypeComponent.HEAT,
+                new Component<>(this.container.base.heat)
+        ));
+        this.componentList.add(new GuiComponent(this, 20, 37, EnumTypeComponent.WORK_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 2, "") {
+                    @Override
+                    public String getText() {
+                        return ((TileBaseHeatMachine) this.getEntityBlock()).work ? Localization.translate("turn_off") :
+                                Localization.translate("turn_on");
+                    }
+
+                    @Override
+                    public boolean active() {
+                        return !((TileBaseHeatMachine) this.getEntityBlock()).work;
+                    }
+                })
+        ));
+        this.componentList.add(new GuiComponent(this, 53, 60, EnumTypeComponent.PLUS_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 0, "") {
+                    @Override
+                    public String getText() {
+                        return "+1000";
+                    }
+
+                })
+        ));
+        this.componentList.add(new GuiComponent(this, 78, 60, EnumTypeComponent.MINUS_BUTTON,
+                new Component<>(new ComponentButton(this.container.base, 1, "") {
+                    @Override
+                    public String getText() {
+                        return "-1000";
+                    }
+
+                })
+        ));
     }
 
     protected void mouseClicked(int i, int j, int k) throws IOException {
@@ -39,15 +83,7 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
         int yMin = (this.height - this.ySize) / 2;
         int x = i - xMin;
         int y = j - yMin;
-        if (x >= 53 && x <= 63 && y >= 54 && y <= 64) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
-        }
-        if (x >= 73 && x <= 83 && y >= 54 && y <= 64) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
-        }
-        if (x >= 61 && x <= 74 && y >= 26 && y <= 38) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 2);
-        }
+
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -69,65 +105,25 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
     protected void drawForegroundLayer(int par1, int par2) {
         super.drawForegroundLayer(par1, par2);
         handleUpgradeTooltip(par1, par2);
-        this.fontRenderer.drawString(this.name, (this.xSize - this.fontRenderer.getStringWidth(this.name)) / 2, 6, 4210752);
-        String temp = (int) this.container.base.heat.storage + "°C" + "/" + (int) this.container.base.maxtemperature + "°C";
-        new AdvArea(this, 53, 42, 83, 53).withTooltip(temp).drawForeground(par1, par2);
-        if (!this.container.base.hasFluid) {
-            String tooltip2 =
-                    ModUtils.getString(Math.min(
-                            this.container.base.energy.getEnergy(),
-                            this.container.base.energy.getCapacity()
-                    )) + "/" + ModUtils.getString(this.container.base.energy.getCapacity()) + " " +
-                            "EU";
-            new AdvArea(this, 113, 21, 124, 70)
-                    .withTooltip(tooltip2)
-                    .drawForeground(par1, par2);
-        }
 
-        new AdvArea(this, 61, 26, 74, 38).withTooltip(this.container.base.work ? Localization.translate("turn_off") :
-                Localization.translate("turn_on")).drawForeground(par1, par2);
 
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+        super.drawGuiContainerBackgroundLayer(f, x, y);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(getTexture());
-        int xOffset = (this.width - this.xSize) / 2;
-        int yOffset = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(xOffset, yOffset, 0, 0, this.xSize, this.ySize);
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
-        drawTexturedModalRect(xOffset + 3, yOffset + 3, 0, 0, 10, 10);
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(this.guiLeft + 3, guiTop + 3, 0, 0, 10, 10);
 
         this.mc.getTextureManager().bindTexture(getTexture());
 
-        int temperature = 0;
-        if (this.container.base.maxtemperature > 0) {
-            temperature = (int) (30 * this.container.base.heat.getEnergy() / this.container.base.maxtemperature);
-        }
-        if (temperature > 0) {
-            drawTexturedModalRect(this.guiLeft + 53, this.guiTop + 42, 176, 104, temperature + 1, 11);
-        }
-        if (!this.container.base.hasFluid) {
-            int chargeLevel = (int) (48.0F * this.container.base.energy.getFillRatio());
 
-            if (chargeLevel > 0) {
-                drawTexturedModalRect(xOffset + 113, yOffset + 22 + 48 - chargeLevel, 176,
-                        115 + 48 - chargeLevel, 12, chargeLevel
-                );
-            }
-        }
-        if (this.container.base.work) {
-            drawTexturedModalRect(xOffset + 60, yOffset + 25, 172,
-                    166, 239 - 224, 84 - 70
-            );
-        }
         x -= this.guiLeft;
         y -= this.guiTop;
         for (final GuiElement<?> guiElement : this.elements) {
-            if (guiElement.isEnabled()) {
-                guiElement.drawBackground(x, y);
-            }
+            guiElement.drawBackground(x, y);
+
         }
 
 
@@ -135,11 +131,7 @@ public class GuiHeatMachine extends GuiIC2<ContainerHeatMachine> {
 
     @Override
     protected ResourceLocation getTexture() {
-        if (this.container.base.hasFluid) {
-            return new ResourceLocation(Constants.MOD_ID, "textures/gui/guifluidheater.png");
-        } else {
-            return new ResourceLocation(Constants.MOD_ID, "textures/gui/guienergyheater.png");
-        }
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
 
     }
 

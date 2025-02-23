@@ -3,21 +3,28 @@ package com.denfop.invslot;
 
 import com.denfop.Config;
 import com.denfop.IUItem;
+import com.denfop.api.gui.EnumTypeSlot;
+import com.denfop.api.gui.ITypeSlot;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.tiles.base.TileEntityCombinerSolidMatter;
 import com.denfop.tiles.solidmatter.EnumSolidMatter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class InvSlotSolidMatter extends InvSlot {
+public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
 
     private final TileEntityCombinerSolidMatter tile;
     private int stackSizeLimit;
 
     public InvSlotSolidMatter(TileEntityCombinerSolidMatter base1) {
-        super(base1, "input5", InvSlot.Access.I, 9, InvSlot.InvSide.ANY);
+        super(base1, TypeItemSlot.INPUT, 9);
         this.tile = base1;
         this.stackSizeLimit = 64;
+    }
+
+    @Override
+    public EnumTypeSlot getTypeSlot() {
+        return EnumTypeSlot.BLOCKS;
     }
 
     public void update() {
@@ -28,8 +35,8 @@ public class InvSlotSolidMatter extends InvSlot {
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty()) {
                 this.tile.solid[i] = ItemSolidMatter.getsolidmatter(this.get(i).getItemDamage());
-                this.tile.solid_col[i] = 1;
-                this.tile.energy.addCapacity(Config.SolidMatterStorage);
+                this.tile.solid_col[i] = this.get(i).getCount();
+                this.tile.energy.addCapacity(Config.SolidMatterStorage * this.get(i).getCount());
             }
         }
     }

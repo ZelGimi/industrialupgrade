@@ -1,6 +1,6 @@
 package com.denfop.utils;
 
-import ic2.api.item.IElectricItem;
+import com.denfop.api.item.IEnergyItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -75,7 +75,7 @@ public class MatterRecipe {
         }
         int damage = left.getItemDamage();
         int damage1 = right.getItemDamage();
-        if (left.getItem() instanceof IElectricItem && right.getItem() instanceof IElectricItem) {
+        if (left.getItem() instanceof IEnergyItem && right.getItem() instanceof IEnergyItem) {
             return true;
         }
         if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE && damage != OreDictionary.WILDCARD_VALUE && damage1 != OreDictionary.WILDCARD_VALUE) {

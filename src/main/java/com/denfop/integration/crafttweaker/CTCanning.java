@@ -1,7 +1,7 @@
 package com.denfop.integration.crafttweaker;
 
 
-import com.denfop.Ic2Items;
+import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
@@ -123,16 +123,9 @@ public class CTCanning {
         public void apply() {
             Recipes.recipes.addAdderRecipe("cannerenrich", new BaseMachineRecipe(
                     new Input(
-                            ic2.api.recipe.Recipes.inputFactory.forStack(ModUtils.getCellFromFluid(((FluidStack) this.container.getInternal()).getFluid())),
-                            new IC2RecipeInput(this.fill)
-                    ),
-                    new RecipeOutput(null, ModUtils.getCellFromFluid(((FluidStack) this.container.getInternal()).getFluid()))
-            ));
-            Recipes.recipes.addAdderRecipe("cannerenrich", new BaseMachineRecipe(
-                    new Input(
                             (FluidStack) this.container.getInternal(),
-                            ic2.api.recipe.Recipes.inputFactory.forStack(Ic2Items.FluidCell),
-                            new IC2RecipeInput(this.fill)
+                            com.denfop.api.Recipes.inputFactory.getInput(IUItem.FluidCell),
+                            new InputItemStack(this.fill)
                     ),
                     new RecipeOutput(null, ModUtils.getCellFromFluid(((FluidStack) this.container.getInternal()).getFluid()))
             ));

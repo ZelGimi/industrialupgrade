@@ -3,7 +3,7 @@
   "textures" : {
     "particle" : "industrialupgrade:blocks/blockpergenerator_side",
     "down" : "industrialupgrade:blocks/blockpergenerator_side",
-    "up" : "industrialupgrade:blocks/blockpergenerator_side",
+    "up" : "industrialupgrade:blocks/blockpergenerator_top",
     "north" : "industrialupgrade:blocks/blockpergenerator_main",
     "east" : "industrialupgrade:blocks/blockpergenerator_side",
     "south" : "industrialupgrade:blocks/blockpergenerator_side",

@@ -1,58 +1,123 @@
 package com.denfop.items.book.core;
 
-import net.minecraft.util.ResourceLocation;
+import com.denfop.api.gui.GuiElement;
+import com.denfop.gui.GuiCore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class AddPages {
 
     public final String mainParent;
-    public final String textBefore;
-    public final ResourceLocation resource;
-    public final int x;
-    public final int x1;
-    public final int y;
-    public final int y1;
-    public final String textAfter;
-    public final String description;
-    public final boolean renderCenter;
-    public final String centerDescription;
-    public final String name;
     public final int index;
-    public final String text;
+    private final String name;
+    public List<GuiElement> elements;
+    public GuiCore guiCore;
     List<AddPages> lst = new ArrayList<>();
 
+
     public AddPages(
-            String name, String mainParent, int index, String text,
-            String description
+            String mainParent, int index, GuiElement element
     ) {
-        this(name, mainParent, index, text, "", null, 0, 0, 0, 0, "", description, false, "");
+        this.index = index;
+        this.mainParent = mainParent;
+        this.elements = new ArrayList<>(Collections.singletonList(element));
+        this.name = "";
+        lst.add(this);
+        addToMainPage(this);
     }
 
     public AddPages(
-            String name, String mainParent, int index, String text,
-            String textBefore, ResourceLocation resource, int x, int y, int x1,
-            int y1,
-            String textAfter, String description, boolean renderCenter, String centerDescription
+            String mainParent, int index, List<GuiElement> elements
     ) {
-        this.name = name;
         this.index = index;
-        this.text = text;
         this.mainParent = mainParent;
-        this.textBefore = textBefore;
-        this.resource = resource;
-        this.x = x;
-        this.x1 = x1;
-        this.y = y;
-        this.y1 = y1;
-        this.textAfter = textAfter;
-        this.description = description;
-        this.renderCenter = renderCenter;
-        this.centerDescription = centerDescription;
+        this.elements = elements;
+        this.name = "";
         lst.add(this);
         addToMainPage(this);
+    }
+
+    public AddPages(
+            String mainParent, int index, GuiElement element, String name
+    ) {
+        this.index = index;
+        this.mainParent = mainParent;
+        this.elements = new ArrayList<>(Collections.singletonList(element));
+        this.name = name;
+        lst.add(this);
+        addToMainPage(this);
+    }
+
+    public AddPages(
+            String mainParent, int index, List<GuiElement> elements, String name
+    ) {
+        this.index = index;
+        this.mainParent = mainParent;
+        this.elements = elements;
+        this.name = name;
+        lst.add(this);
+        addToMainPage(this);
+    }
+
+    public List<GuiElement> getElements() {
+        return elements;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMainParent() {
+        return mainParent;
+    }
+
+    public GuiCore getGuiCore() {
+        return guiCore;
+    }
+
+    public void setGuiCore(final GuiCore guiCore) {
+        this.guiCore = guiCore;
+    }
+
+    public void drawBackground(int mouseX, int mouseY) {
+        GuiElement preElement = null;
+        for (GuiElement element : this.elements) {
+            if (element != null) {
+                int y = preElement == null ? 0 : preElement.getHeight();
+                if (this.guiCore != null) {
+                    if (element.getGui() != null) {
+                        element.drawBackground(mouseX, mouseY);
+                    } else {
+                        element.setGui(this.guiCore);
+                        element.drawBackground(mouseX, mouseY);
+
+                    }
+                }
+                preElement = element;
+            }
+        }
+    }
+
+    public void drawForeground(int mouseX, int mouseY) {
+        GuiElement preElement = null;
+        for (GuiElement element : this.elements) {
+            if (element != null) {
+                if (this.guiCore != null) {
+                    int y = preElement == null ? 0 : preElement.getHeight();
+                    if (element.getGui() != null) {
+                        element.drawForeground(mouseX, mouseY);
+                    } else {
+                        element.setGui(this.guiCore);
+                        element.drawForeground(mouseX, mouseY);
+
+                    }
+                }
+                preElement = element;
+            }
+        }
     }
 
     public void addToMainPage(final AddPages pages) {

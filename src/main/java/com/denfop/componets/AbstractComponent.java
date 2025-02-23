@@ -1,9 +1,9 @@
 package com.denfop.componets;
 
-import com.denfop.IUCore;
 import com.denfop.invslot.InvSlotUpgrade;
-import com.denfop.tiles.base.TileEntityInventory;
-import ic2.core.network.GrowingBuffer;
+import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketAbstractComponent;
+import com.denfop.tiles.base.TileEntityBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,7 +17,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,17 +31,17 @@ enum TypePurifierJob {
 
 public abstract class AbstractComponent {
 
-    protected TileEntityInventory parent;
+    protected TileEntityBlock parent;
 
-    public AbstractComponent(final TileEntityInventory parent) {
+    public AbstractComponent(final TileEntityBlock parent) {
         this.parent = parent;
     }
 
-    public TileEntityInventory getParent() {
+    public TileEntityBlock getParent() {
         return this.parent;
     }
 
-    public void setParent(final TileEntityInventory parent) {
+    public void setParent(final TileEntityBlock parent) {
         this.parent = parent;
     }
 
@@ -69,9 +68,11 @@ public abstract class AbstractComponent {
     public void ActionPurifier() {
 
     }
-    public boolean canUpgradeBlock(){
+
+    public boolean canUpgradeBlock() {
         return false;
     }
+
     public void markDirty() {
 
     }
@@ -135,8 +136,8 @@ public abstract class AbstractComponent {
         return false;
     }
 
-    protected void setNetworkUpdate(EntityPlayerMP player, GrowingBuffer data) {
-        IUCore.network.get(true).sendComponentUpdate(this.parent, this.toString(), player, data);
+    protected void setNetworkUpdate(EntityPlayerMP player, CustomPacketBuffer data) {
+        new PacketAbstractComponent(this.parent, this.toString(), player, data);
     }
 
     @Override
@@ -163,7 +164,11 @@ public abstract class AbstractComponent {
     public void onContainerUpdate(EntityPlayerMP player) {
     }
 
-    public void onNetworkUpdate(DataInput is) throws IOException {
+    public CustomPacketBuffer updateComponent() {
+        return new CustomPacketBuffer();
+    }
+
+    public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
     }
 
     public Collection<? extends Capability<?>> getProvidedCapabilities(EnumFacing side) {
@@ -177,4 +182,9 @@ public abstract class AbstractComponent {
     public void onPlaced(ItemStack stack, EntityLivingBase placer, EnumFacing facing) {
     }
 
+    public void blockBreak() {
+    }
+
+    public void addInformation(ItemStack stack, List<String> tooltip) {
+    }
 }

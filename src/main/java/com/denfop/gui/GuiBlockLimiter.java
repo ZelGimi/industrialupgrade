@@ -1,13 +1,19 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
-import com.denfop.api.gui.TextBox;
+import com.denfop.Localization;
+import com.denfop.api.gui.Component;
+import com.denfop.api.gui.EnumTypeComponent;
+import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.gui.ImageScreen;
+import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerBlockLimiter;
+import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.utils.ListInformationUtils;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
+import com.denfop.utils.ModUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,13 +22,56 @@ import java.util.List;
 
 public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
 
-    private final TextBox textBox;
 
     public GuiBlockLimiter(ContainerBlockLimiter guiContainer) {
         super(guiContainer);
-        this.textBox = new TextBox(this, 5, 15, 80, 20, String.valueOf(guiContainer.base.getEnergy().limit_amount));
+        for (int m = 0; m < 6; m++) {
+            final int finalM = m;
+            this.componentList.add(new GuiComponent(this, 10 + m * 15, 50, EnumTypeComponent.PLUS_BUTTON,
+                    new Component<>(new ComponentButton(this.container.base, 0, "") {
+                        @Override
+                        public String getText() {
+                            int mod = 1;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? mod * 10 : mod;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) ? mod * 10 : mod;
+                            return "+" + ModUtils.getString(Math.pow(10, finalM) * mod);
+                        }
 
-        this.addElement(textBox);
+                        @Override
+                        public void ClickEvent() {
+                            int mod = 1;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? mod * 10 : mod;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) ? mod * 10 : mod;
+                            new PacketUpdateServerTile(getEntityBlock(), Math.pow(10, finalM) * mod);
+                        }
+                    })
+            ));
+        }
+        for (int m = 0; m < 6; m++) {
+            final int finalM = m;
+            this.componentList.add(new GuiComponent(this, 10 + m * 15, 65, EnumTypeComponent.MINUS_BUTTON,
+                    new Component<>(new ComponentButton(this.container.base, 0, "") {
+                        @Override
+                        public String getText() {
+                            int mod = 1;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? mod * 10 : mod;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) ? mod * 10 : mod;
+
+                            return "-" + ModUtils.getString(Math.pow(10, finalM) * mod);
+                        }
+
+                        @Override
+                        public void ClickEvent() {
+                            int mod = 1;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? mod * 10 : mod;
+                            mod = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) ? mod * 10 : mod;
+                            new PacketUpdateServerTile(getEntityBlock(), -1 * Math.pow(10, finalM) * mod);
+                        }
+
+                    })
+            ));
+        }
+        this.addElement(new ImageScreen(this, 10, 25, 86, 18));
 
     }
 
@@ -45,25 +94,18 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
     @Override
     protected void mouseClicked(final int i, final int j, final int k) throws IOException {
         super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.xSize) / 2;
-        int yMin = (this.height - this.ySize) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
-        if (x >= 12 && x <= 46 && y >= 36 && y <= 48) {
-            try {
-                IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, Integer.parseInt(textBox.getText()));
 
-                this.textBox.setText(String.valueOf((int) Math.min( Integer.parseInt(textBox.getText()), this.container.base.max_value)));
-            } catch (Exception ignored) {
-            }
-        }
     }
 
     @Override
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
-        this.fontRenderer.drawString(Localization.translate("button.write"), 14, 38, 4210752);
         handleUpgradeTooltip(par1, par2);
+        this.fontRenderer.drawString(TextFormatting.GREEN + ModUtils.getString(this.container.base.getEnergy().limit_amount),
+                (64 - getStringWidth(ModUtils.getString(this.container.base.getEnergy().limit_amount))), 31,
+                ModUtils.convertRGBcolorToInt(217, 217, 217)
+        );
+
 
     }
 
@@ -73,7 +115,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
         int yoffset = (this.height - this.ySize) / 2;
 
         this.mc.getTextureManager()
-                .bindTexture(new ResourceLocation(IC2.RESOURCE_DOMAIN, "textures/gui/infobutton.png"));
+                .bindTexture(new ResourceLocation(Constants.MOD_ID, "textures/gui/infobutton.png"));
         drawTexturedModalRect(xoffset + 3, yoffset + 3, 0, 0, 10, 10);
 
         this.mc.getTextureManager().bindTexture(getTexture());
@@ -81,7 +123,7 @@ public class GuiBlockLimiter extends GuiIU<ContainerBlockLimiter> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guilimiter.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

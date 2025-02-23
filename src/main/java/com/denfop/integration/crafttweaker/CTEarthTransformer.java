@@ -71,7 +71,7 @@ public class CTEarthTransformer {
 
             final NBTTagCompound nbt = ModUtils.nbt();
             nbt.setDouble("need", this.matter);
-            final IC2RecipeInput stack = new IC2RecipeInput(this.container);
+            final InputItemStack stack = new InputItemStack(this.container);
 
             Recipes.recipes.addAdderRecipe("earthcollector", new BaseMachineRecipe(
                     new Input(

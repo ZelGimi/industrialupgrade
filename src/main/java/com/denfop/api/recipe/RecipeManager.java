@@ -6,12 +6,14 @@ public class RecipeManager implements IBaseRecipe {
     private final int size;
     private final boolean consume;
     private final boolean require;
+    private final boolean workbench;
 
     public RecipeManager(String name, int size, boolean consume) {
         this.name = name;
         this.size = size;
         this.consume = consume;
         this.require = false;
+        this.workbench = false;
     }
 
     public RecipeManager(String name, int size, boolean consume, boolean require) {
@@ -19,6 +21,15 @@ public class RecipeManager implements IBaseRecipe {
         this.size = size;
         this.consume = consume;
         this.require = require;
+        this.workbench = false;
+    }
+
+    public RecipeManager(String name, int size, boolean consume, boolean require, boolean workbench) {
+        this.name = name;
+        this.size = size;
+        this.consume = consume;
+        this.require = require;
+        this.workbench = workbench;
     }
 
     @Override
@@ -39,6 +50,11 @@ public class RecipeManager implements IBaseRecipe {
     @Override
     public boolean require() {
         return this.require;
+    }
+
+    @Override
+    public boolean workbench() {
+        return this.workbench;
     }
 
 }

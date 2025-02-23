@@ -1,9 +1,10 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.Localization;
+import com.denfop.api.gui.CustomButton;
+import com.denfop.api.gui.ImageScreen;
 import com.denfop.container.ContainerController;
-import ic2.core.init.Localization;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -19,9 +20,19 @@ public class GuiEnergyController extends GuiIU<ContainerController> {
     public GuiEnergyController(ContainerController container1) {
         super(container1);
         this.container = container1;
-        this.ySize = 178;
-        this.inventory.setX(7);
-        this.inventory.setY(96);
+        this.addElement(new CustomButton(
+                this,
+                83,
+                21,
+                88,
+                15,
+                container1.base,
+                0,
+                Localization.translate("button.find_energypaths")
+        ));
+        this.addElement(new CustomButton(this, 83, 40, 88, 15, container1.base, 1, Localization.translate("button" +
+                ".set_value_energypaths")));
+        this.addElement(new ImageScreen(this, 7, 32, 65, 15));
     }
 
 
@@ -34,12 +45,7 @@ public class GuiEnergyController extends GuiIU<ContainerController> {
 
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new GuiButton(0, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 21,
-                68, 9, Localization.translate("button.find_energypaths")
-        ));
-        this.buttonList.add(new GuiButton(1, (this.width - this.xSize) / 2 + 103, (this.height - this.ySize) / 2 + 39,
-                68, 9, Localization.translate("button.set_value_energypaths")
-        ));
+
     }
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
@@ -53,7 +59,7 @@ public class GuiEnergyController extends GuiIU<ContainerController> {
         super.drawForegroundLayer(par1, par2);
 
         this.fontRenderer.drawString(Localization.translate("iu.energy_controller_info") + (this.container.base.size), 11, 36,
-                4210752
+                2157374
         );
 
     }
@@ -61,18 +67,11 @@ public class GuiEnergyController extends GuiIU<ContainerController> {
 
     protected void actionPerformed(GuiButton guibutton) {
 
-        if (guibutton.id == 0) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 0);
 
-        }
-        if (guibutton.id == 1) {
-            IUCore.network.get(false).initiateClientTileEntityEvent(this.container.base, 1);
-
-        }
     }
 
     public ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guicontroller.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
     }
 
 }

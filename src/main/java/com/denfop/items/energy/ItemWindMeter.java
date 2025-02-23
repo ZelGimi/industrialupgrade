@@ -1,14 +1,13 @@
 package com.denfop.items.energy;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.windsystem.WindSystem;
-import com.denfop.items.BaseElectricItem;
-import ic2.api.item.ElectricItem;
-import ic2.core.IC2;
-import ic2.core.init.Localization;
-import ic2.core.util.StackUtil;
+import com.denfop.items.BaseEnergyItem;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,7 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemWindMeter extends BaseElectricItem implements IModelRegister {
+public class ItemWindMeter extends BaseEnergyItem implements IModelRegister {
 
     public ItemWindMeter() {
         super("wind_meter", 5000, 500, 1);
@@ -48,8 +47,8 @@ public class ItemWindMeter extends BaseElectricItem implements IModelRegister {
             @NotNull EntityPlayer player,
             @NotNull EnumHand hand
     ) {
-        ItemStack stack = StackUtil.get(player, hand);
-        if (!IC2.platform.isSimulating() || world.provider.getDimension() != 0) {
+        ItemStack stack = ModUtils.get(player, hand);
+        if (!IUCore.proxy.isSimulating() || world.provider.getDimension() != 0) {
             return new ActionResult<>(EnumActionResult.PASS, stack);
         } else if (!ElectricItem.manager.canUse(stack, 10)) {
             return new ActionResult<>(EnumActionResult.PASS, stack);
@@ -57,7 +56,7 @@ public class ItemWindMeter extends BaseElectricItem implements IModelRegister {
             ElectricItem.manager.use(stack, 10, player);
 
 
-            IC2.platform.messagePlayer(
+            IUCore.proxy.messagePlayer(
                     player,
                     Localization.translate("iu.wind_meter.info") + String.format(
                             "%.1f",

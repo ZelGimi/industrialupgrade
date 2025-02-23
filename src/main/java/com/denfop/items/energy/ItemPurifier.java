@@ -1,6 +1,7 @@
 package com.denfop.items.energy;
 
 import com.denfop.Constants;
+import com.denfop.ElectricItem;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.IModelRegister;
@@ -8,15 +9,15 @@ import com.denfop.api.upgrade.EnumUpgrades;
 import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
+import com.denfop.audio.EnumSound;
 import com.denfop.componets.AbstractComponent;
-import com.denfop.items.BaseElectricItem;
+import com.denfop.items.BaseEnergyItem;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.tiles.base.IManufacturerBlock;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
-import com.denfop.tiles.base.TileEntityMultiMachine;
+import com.denfop.tiles.base.TileMultiMachine;
 import com.denfop.utils.ModUtils;
-import ic2.api.item.ElectricItem;
-import ic2.core.IC2;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -39,12 +40,11 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemPurifier extends BaseElectricItem implements IModelRegister, IUpgradeItem {
+public class ItemPurifier extends BaseEnergyItem implements IModelRegister, IUpgradeItem {
 
 
     public ItemPurifier(String name, double maxCharge, double transferLimit, int tier) {
         super(name, maxCharge, transferLimit, tier);
-        this.setMaxDamage(27);
         setMaxStackSize(1);
 
         IUCore.proxy.addIModelRegister(this);
@@ -63,6 +63,10 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
     @SideOnly(Side.CLIENT)
     public static void registerModel(Item item, int meta, String name) {
         ModelLoader.setCustomModelResourceLocation(item, meta, getModelLocation(name));
+    }
+
+    public List<EnumInfoUpgradeModules> getUpgradeModules() {
+        return EnumUpgrades.PURIFIER.list;
     }
 
     public int getItemEnchantability() {
@@ -133,8 +137,8 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
         double coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, player.getHeldItem(hand)).number * 0.25D : 0);
 
-        if (tile instanceof TileEntityInventory) {
-            TileEntityInventory base = (TileEntityInventory) tile;
+        if (tile instanceof TileEntityBlock) {
+            TileEntityBlock base = (TileEntityBlock) tile;
             double energy = 10000;
             if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.PURIFIER, itemstack)) {
                 energy = 0;
@@ -149,16 +153,18 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                 }
             }
         }
-        if (tile instanceof TileEntityMultiMachine) {
+        if (tile instanceof TileMultiMachine) {
             if (!ElectricItem.manager.canUse(itemstack, 500 * coef)) {
                 return EnumActionResult.PASS;
             }
             if (!player.isSneaking()) {
-                TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
+                TileMultiMachine base = (TileMultiMachine) tile;
                 ItemStack stack_quickly = ItemStack.EMPTY;
                 ItemStack stack_modulesize = ItemStack.EMPTY;
                 ItemStack stack_modulestorage = ItemStack.EMPTY;
                 ItemStack panel = ItemStack.EMPTY;
+                ItemStack module_infinity_water = ItemStack.EMPTY;
+                ItemStack module_separate = ItemStack.EMPTY;
                 if (base.multi_process.quickly) {
                     stack_quickly = new ItemStack(IUItem.module_quickly);
                 }
@@ -168,10 +174,16 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                 if (base.multi_process.modulestorage) {
                     stack_modulestorage = new ItemStack(IUItem.module_storage);
                 }
+                if (base.multi_process.modulestorage) {
+                    module_infinity_water = new ItemStack(IUItem.module_infinity_water);
+                }
+                if (base.multi_process.module_separate) {
+                    module_separate = new ItemStack(IUItem.module_separate);
+                }
                 if (base.solartype != null) {
                     panel = new ItemStack(IUItem.module6, 1, base.solartype.meta);
                 }
-                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty()) {
+                if (!stack_quickly.isEmpty() || !stack_modulesize.isEmpty() || !panel.isEmpty() || !module_infinity_water.isEmpty() || !module_separate.isEmpty()) {
                     final EntityItem item = new EntityItem(world);
                     if (!stack_quickly.isEmpty()) {
                         item.setItem(stack_quickly);
@@ -180,6 +192,14 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                     } else if (!stack_modulesize.isEmpty()) {
                         item.setItem(stack_modulesize);
                         base.multi_process.setModulesize(false);
+                        base.multi_process.shrinkModule(1);
+                    } else if (!module_infinity_water.isEmpty()) {
+                        item.setItem(module_infinity_water);
+                        base.multi_process.module_infinity_water = false;
+                        base.multi_process.shrinkModule(1);
+                    } else if (!module_separate.isEmpty()) {
+                        item.setItem(module_separate);
+                        base.multi_process.module_separate = false;
                         base.multi_process.shrinkModule(1);
                     } else if (!panel.isEmpty()) {
                         item.setItem(panel);
@@ -194,20 +214,15 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                         item.setPickupDelay(0);
                         world.spawnEntity(item);
                         ElectricItem.manager.use(itemstack, 500 * coef, player);
-                        if (IC2.platform.isRendering()) {
-                            IUCore.audioManager.playOnce(
-                                    player,
-                                    com.denfop.audio.PositionSpec.Hand,
-                                    "Tools/purifier.ogg",
-                                    true,
-                                    IC2.audioManager.getDefaultVolume()
-                            );
+                        if (IUCore.proxy.isRendering()) {
+                            player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
                         }
                         return EnumActionResult.SUCCESS;
                     }
                 }
             } else {
-                TileEntityMultiMachine base = (TileEntityMultiMachine) tile;
+                TileMultiMachine base = (TileMultiMachine) tile;
                 List<ItemStack> stack_list = new ArrayList<>();
                 if (base.multi_process.quickly) {
                     stack_list.add(new ItemStack(IUItem.module_quickly));
@@ -229,6 +244,18 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                     base.multi_process.shrinkModule(1);
 
                 }
+                if (base.multi_process.module_infinity_water) {
+                    stack_list.add(new ItemStack(IUItem.module_infinity_water));
+                    base.multi_process.module_infinity_water = false;
+                    base.multi_process.shrinkModule(1);
+
+                }
+                if (base.multi_process.module_separate) {
+                    stack_list.add(new ItemStack(IUItem.module_separate));
+                    base.multi_process.module_separate = false;
+                    base.multi_process.shrinkModule(1);
+
+                }
                 for (ItemStack stack : stack_list) {
                     final EntityItem item = new EntityItem(world);
                     if (!player.getEntityWorld().isRemote) {
@@ -236,14 +263,9 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                         item.setPickupDelay(0);
                         item.setItem(stack);
                         world.spawnEntity(item);
-                        if (IC2.platform.isRendering()) {
-                            IUCore.audioManager.playOnce(
-                                    player,
-                                    com.denfop.audio.PositionSpec.Hand,
-                                    "Tools/purifier.ogg",
-                                    true,
-                                    IC2.audioManager.getDefaultVolume()
-                            );
+                        if (IUCore.proxy.isRendering()) {
+                            player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
                         }
 
                     }
@@ -267,14 +289,9 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                     item.setPickupDelay(0);
                     world.spawnEntity(item);
                     ElectricItem.manager.use(itemstack, 500, player);
-                    if (IC2.platform.isRendering()) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                com.denfop.audio.PositionSpec.Hand,
-                                "Tools/purifier.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
+                    if (IUCore.proxy.isRendering()) {
+                        player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
                     }
                     return EnumActionResult.SUCCESS;
                 }
@@ -292,14 +309,9 @@ public class ItemPurifier extends BaseElectricItem implements IModelRegister, IU
                     item.setPickupDelay(0);
                     world.spawnEntity(item);
                     ElectricItem.manager.use(itemstack, 500, player);
-                    if (IC2.platform.isRendering()) {
-                        IUCore.audioManager.playOnce(
-                                player,
-                                com.denfop.audio.PositionSpec.Hand,
-                                "Tools/purifier.ogg",
-                                true,
-                                IC2.audioManager.getDefaultVolume()
-                        );
+                    if (IUCore.proxy.isRendering()) {
+                        player.playSound(EnumSound.purifier.getSoundEvent(), 1F, 1);
+
                     }
                     return EnumActionResult.SUCCESS;
                 }

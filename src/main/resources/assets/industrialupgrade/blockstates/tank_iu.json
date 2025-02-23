@@ -6,13 +6,13 @@
         "model" : "industrialupgrade:basemachine/tank_iu"
       },
       "adv_tank" : {
-        "model" : "industrialupgrade:basemachine/tank_iu"
+        "model" : "industrialupgrade:basemachine/adv_tank_iu"
       },
       "imp_tank" : {
-        "model" : "industrialupgrade:basemachine/tank_iu"
+        "model" : "industrialupgrade:basemachine/imp_tank_iu"
       },
       "per_tank" : {
-        "model" : "industrialupgrade:basemachine/tank_iu"
+        "model" : "industrialupgrade:basemachine/per_tank_iu"
       }
     },
     "facing" : {

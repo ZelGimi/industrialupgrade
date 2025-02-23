@@ -6,7 +6,7 @@
     "up" : "industrialupgrade:blocks/blockenriched_top_active",
     "north" : "industrialupgrade:blocks/blockenriched_main_active",
     "east" : "industrialupgrade:blocks/blockenriched_side_active",
-    "south" : "industrialupgrade:blocks/blockenriched_side2",
+    "south" : "industrialupgrade:blocks/blockenriched_bottom",
     "west" : "industrialupgrade:blocks/blockenriched_side_active"
   }
 }

@@ -1,11 +1,13 @@
 package com.denfop.tiles.transport.types;
 
-import com.denfop.blocks.IIdProvider;
+import com.denfop.Constants;
+import com.denfop.blocks.ISubEnum;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum CoolType implements IIdProvider {
+public enum CoolType implements ISubEnum, ICableItem {
     cool(0, 0, 0.25F, 0.02D, 4),
     cool1(0, 0, 0.25F, 0.02D, 8),
     cool2(0, 0, 0.25F, 0.2D, 16),
@@ -30,6 +32,7 @@ public enum CoolType implements IIdProvider {
     public final float thickness;
     public final double loss;
     public final double capacity;
+    private final ResourceLocation texture;
 
     CoolType(int maxInsulation, int minColoredInsulation, float thickness, double loss, double capacity) {
         this.maxInsulation = maxInsulation;
@@ -37,6 +40,11 @@ public enum CoolType implements IIdProvider {
         this.thickness = thickness;
         this.loss = loss;
         this.capacity = capacity;
+        this.texture = new ResourceLocation(
+                Constants.MOD_ID,
+                "blocks/wiring/" + this.getMainPath() + "/" + this
+                        .getNameCable()
+        );
     }
 
     public static CoolType get(String name) {
@@ -47,8 +55,28 @@ public enum CoolType implements IIdProvider {
         return this.name() + "_pipes";
     }
 
+    @Override
+    public float getThickness() {
+        return thickness;
+    }
 
     public int getId() {
         return this.ordinal();
+    }
+
+    @Override
+    public String getNameCable() {
+        return this.name() + "_pipes";
+    }
+
+    @Override
+    public String getMainPath() {
+        return "cool";
+    }
+
+
+    @Override
+    public ResourceLocation getRecourse() {
+        return texture;
     }
 }

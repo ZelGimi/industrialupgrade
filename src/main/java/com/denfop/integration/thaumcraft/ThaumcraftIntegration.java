@@ -2,10 +2,9 @@ package com.denfop.integration.thaumcraft;
 
 
 import com.denfop.Constants;
-import com.denfop.IUCore;
+import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.TileBlockCreator;
 import com.denfop.utils.ModUtils;
-import ic2.core.block.TeBlockRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import thaumcraft.api.aspects.Aspect;
 
@@ -15,10 +14,10 @@ public class ThaumcraftIntegration {
     public static Aspect MATTERY;
     public static Aspect DAY;
     public static Aspect ENERGY;
-    public static Block blockThaumSolarPanel;
+    public static BlockTileEntity blockThaumSolarPanel;
 
     public static void init() {
-        blockThaumSolarPanel = TeBlockRegistry.get(BlockThaumSolarPanel.IDENTITY).setCreativeTab(IUCore.IUTab);
+        blockThaumSolarPanel = TileBlockCreator.instance.create(BlockThaumSolarPanel.class);
         ENERGY = new Aspect("energy", ModUtils.convertRGBcolorToInt(208, 52, 10), new Aspect[]{Aspect.ENERGY, Aspect.FIRE},
                 new ResourceLocation(Constants.TEXTURES, "textures/aspect/energy.png"), 771
         );

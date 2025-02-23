@@ -1,0 +1,13 @@
+{
+    "name": "Примитивная сушилка латекса",
+    "icon": "industrialupgrade:dryer",
+    "category": "industrialupgrade:primal_stage",
+    "pages": [
+        {
+            "type": "text",
+			"text": "Нажмите пкм держая в руке капсулу, чтобы залить жидкость внутрь. Подождите немного, чтобы получить латекс"
+		
+		}
+	
+    ]
+}

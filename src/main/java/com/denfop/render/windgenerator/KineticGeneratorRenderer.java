@@ -1,8 +1,7 @@
 package com.denfop.render.windgenerator;
 
 import com.denfop.api.windsystem.IWindMechanism;
-import com.denfop.tiles.mechanism.wind.TileEntityWindGenerator;
-import ic2.core.block.KineticGeneratorRotor;
+import com.denfop.tiles.mechanism.wind.TileWindGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileEntityWindGenerator> {
+public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileWindGenerator> {
 
     private static final Map<Integer, ModelBase> rotorModels = new HashMap<>();
 
@@ -47,6 +46,20 @@ public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileEnti
             GlStateManager.translate(0.5F, 0.5F, 0.5F);
             switch (facing) {
                 case NORTH:
+                    GlStateManager.translate(0F, 0F, -0.25F);
+                    break;
+                case EAST:
+                    GlStateManager.translate(0.25F, 0F, 0);
+                    break;
+                case SOUTH:
+                    GlStateManager.translate(0F, 0F, 0.25F);
+                    break;
+                case WEST:
+                    GlStateManager.translate(-0.25F, 0F, 0);
+                    break;
+            }
+            switch (facing) {
+                case NORTH:
                     GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                     break;
                 case EAST:
@@ -71,7 +84,7 @@ public class KineticGeneratorRenderer extends TileEntitySpecialRenderer<TileEnti
     }
 
     public void render(
-            @Nonnull TileEntityWindGenerator te,
+            @Nonnull TileWindGenerator te,
             double x,
             double y,
             double z,
