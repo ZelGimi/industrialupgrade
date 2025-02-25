@@ -60,6 +60,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
     public TileEntityRadioactiveOreHandler() {
         super(200, 1, 1);
         Recipes.recipes.addInitRecipes(this);
+        this.outputSlot1 = new InvSlotOutput(this, 1);
         this.upgradeSlot = new com.denfop.invslot.InvSlotUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -75,7 +76,7 @@ public class TileEntityRadioactiveOreHandler extends TileElectricMachine impleme
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 100
         ));
-        this.outputSlot1 = new InvSlotOutput(this, 1);
+
         this.inputSlotA = new InvSlotRecipes(this, "radioactive_handler", this);
         this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1) {
             @Override

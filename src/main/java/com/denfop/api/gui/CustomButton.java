@@ -17,7 +17,7 @@ public class CustomButton extends GuiElement<CustomButton> {
     private final TileEntityBlock tile;
     private final int x1;
     private final int y1;
-    private boolean highlighted = false;
+    protected boolean highlighted = false;
 
     public CustomButton(
             GuiCore gui, int x, int y, int x1, int y1, TileEntityBlock entityBlock, int event,
@@ -45,7 +45,9 @@ public class CustomButton extends GuiElement<CustomButton> {
     public void drawForeground(int mouseX, int mouseY) {
         super.drawForeground(mouseX, mouseY);
         highlighted = this.contains(mouseX, mouseY);
-
+        if (highlighted&&visible()){
+            new Area(this.gui,x,y,x1,y1).withTooltip(getText()).drawForeground(mouseX, mouseY);
+        }
     }
 
     public void drawBackground(int mouseX, int mouseY) {

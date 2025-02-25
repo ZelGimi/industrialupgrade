@@ -1,6 +1,7 @@
 package com.denfop.tiles.crop;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.agriculture.CropBase;
 import com.denfop.api.agriculture.CropInit;
 import com.denfop.api.agriculture.CropNetwork;
@@ -21,6 +22,7 @@ import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.blocks.FluidName;
 import com.denfop.componets.AirPollutionComponent;
+import com.denfop.componets.Energy;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerMultiCrop;
@@ -390,6 +392,19 @@ public class TileEntityMultiCrop extends TileEntityInventory {
 
     private void useWater(ICrop crop) {
         this.fluidWaterTank.drain(crop.getWaterRequirement(), true);
+    }
+
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
+            if (!energy.getSourceDirs().isEmpty()) {
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
+            } else if (!energy.getSinkDirs().isEmpty()) {
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
+            }
+        }
     }
 
     private void canAdaptationCrop(int i) {

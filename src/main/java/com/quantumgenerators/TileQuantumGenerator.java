@@ -168,8 +168,10 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
                     this.upgrade += 1;
                     this.gen = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
                     this.genmax = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
+                    this.energy.setCapacity(genmax * 32);
+                    this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(this.gen));
                     stack.setCount(stack.getCount() - 1);
-                    return false;
+                    return true;
                 }
             } else if (stack.getItem() instanceof ItemPurifier) {
                 if (!ElectricItem.manager.canUse(stack, 500)) {
@@ -183,7 +185,10 @@ public class TileQuantumGenerator extends TileEntityInventory implements IUpdata
                 this.upgrade -= 1;
                 this.gen = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
                 this.genmax = 5 * (1 + 0.25 * this.upgrade) * Math.pow(4, (this.tier - 1)) / 16;
+                this.energy.setCapacity(genmax * 32);
+                this.energy.setSourceTier(EnergyNetGlobal.instance.getTierFromPower(this.gen));
                 player.inventory.addItemStackToInventory(new ItemStack(IUItem.core, 1, this.meta));
+                return true;
             }
         }
 

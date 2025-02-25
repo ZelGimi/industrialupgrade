@@ -561,7 +561,7 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (this.getWorld().isRemote) {
+        if (this.getWorld().isRemote || facing == 0 || facing == 1) {
             return;
         }
         this.timers = WindSystem.windSystem.getTime();

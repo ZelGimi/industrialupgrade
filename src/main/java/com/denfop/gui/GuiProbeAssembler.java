@@ -16,15 +16,13 @@ public class GuiProbeAssembler extends GuiIU<ContainerProbeAssembler> {
 
     public GuiProbeAssembler(ContainerProbeAssembler guiContainer) {
         super(guiContainer, EnumTypeStyle.SPACE);
-        this.xSize+=240-178;
-        this.ySize+=216+18-166;
-        this.inventory.addY(50+18);
-        this.inventory.setX(7+210-178-16);
-        this.elements.add(new ImageSpaceInterface(this, 0, 0, this.xSize, this.ySize));
-        this.addComponent(new GuiComponent(this, 176+18, 90, EnumTypeComponent.ENERGY,
+        this.xSize=214;
+        this.ySize=225;
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 180, 92, EnumTypeComponent.ENERGY_WEIGHT_2,
                 new Component<>(this.container.base.energy)
         ));
-        this.addComponent(new GuiComponent(this, 176, 64, EnumTypeComponent.PROCESS,
+        this.addComponent(new GuiComponent(this, 152, 60, EnumTypeComponent.SPACE_PROGRESS,
                 new Component<>(this.container.base.componentProgress)
         ));
     }
@@ -43,12 +41,13 @@ public class GuiProbeAssembler extends GuiIU<ContainerProbeAssembler> {
 
     @Override
     protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guiprobe_assembler.png");
     }
 
 }

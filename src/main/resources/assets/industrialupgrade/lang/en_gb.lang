@@ -2048,7 +2048,7 @@ industrialupgrade.basemachine2.gen_pet=Gasoline Generator
 industrialupgrade.basemachine2.gen_hyd=Hydrogen Generator
 
 #Substance and more generators by energy
-industrialupgrade.basemachine.gen_stone=Cobblestone Generator
+industrialupgrade.basemachine.gen_stone=Stone Generator
 industrialupgrade.basemachine2.gen_obsidian=Obsidian Generator
 industrialupgrade.basemachine2.lava_gen=Lava Generator
 industrialupgrade.basemachine2.helium_generator=Helium Generator
@@ -2292,7 +2292,7 @@ iu.quarryinformation9=The "Region" module allows you to mine more blocks (3x3, 5
 
 iu.analyzerinformation=Analyzer Information
 iu.analyzerinformation1=To scan a chunk, click on the "Analyze" button.
-iu.analyzerinformation2=To mine blocks, first place it close to the quarry mechanism.
+iu.analyzerinformation2=To mine blocks, first place it close to the quarry machine.
 iu.analyzerinformation3=Then insert the "Quarry" module into the analyzer.
 iu.analyzerinformation4=If the conditions above are met, click on the "Mine" button.
 iu.analyzerinformation5=The same modules work in the analyzer as well.
@@ -2975,11 +2975,11 @@ wind.need_level1=to
 wind.need_level2=tiers
 wind.need_level3=Right-click on the Wind Turbine to restore the durability of the corresponding rotor
 iu.heat_storage.info_main=Basic information about the Heater 
-iu.heat_storage.info=Works only when the mechanisms need heat
+iu.heat_storage.info=Works only when the machines need heat
 iu.heat_storage.info1=Consumes energy or fluid depending on temperature
 iu.heat_storage.info2=Heats up faster in warm biomes and slower in cold biomes
 iu.cool_storage.info_main=Basic information about the refrigerator
-iu.cool_storage.info=Works only when the mechanisms need cooling
+iu.cool_storage.info=Works only when the machines need cooling
 iu.cool_storage.info1=Consumes energy depending on temperature
 iu.cool_storage.info2=Cools slower in warm biomes and faster in cold biomes
 iu.wind_generator.info_main=Basic information about the Wind Turbine 
@@ -3067,13 +3067,13 @@ iu.molecular_info1=Change GUI color
 iu.molecular_info2=and tranformer plasma color
 iu.molecular_info3=from stack to single mode and vice versa
 iu.bow.maxdamage=Max bow damage (hp): 
-iu.need_colling=Cool the mechanism with a refrigerator
-iu.need_colling1=Urgently cool the mechanism with a refrigerator
-iu.need_colling2=Mechanism stopped, waiting for cooling
-iu.need_heat=Heat the mechanism using a Liquid or Electric heater
-iu.sound.enable=Mechanism Sound Enabled
-iu.sound.disable=Mechanism Sound Disabled
-iu.info.module.sorting=Sorts the items in the mechanism by slots
+iu.need_colling=Cool the machine with a refrigerator
+iu.need_colling1=Urgently cool the machine with a refrigerator
+iu.need_colling2=Machine stopped, waiting for cooling
+iu.need_heat=Heat the machine using a Liquid or Electric heater
+iu.sound.enable=Machine Sound Enabled
+iu.sound.disable=Machine Sound Disabled
+iu.info.module.sorting=Sorts the items in the machine by slots
 iu.info.module.speed=Speeds up the process up to 100%, consuming more power
 iu.info.module.stack=Processes the maximum number of items in one process
 iu.water_change_time=The flow will change in: 
@@ -4307,6 +4307,7 @@ death.attack.current=%1$s died from electric shock
 death.attack.radiation=%1$s died from radiation
 death.attack.frostbite=%1$s died of frostbite
 death.attack.cropEating=%1$s got eaten by an EatingPlant
+death.attack.bee=%1$s stirred up the wrong hive
 
 iu.painter=Painter
 iu.painter.black=Black Painter
@@ -4446,7 +4447,7 @@ iu.special_armor_nightvision_3=Night vision does not turn off in the morning
 iu.special_armor_speed=Speed
 
 industrialupgrade.basemachine3.facademechanism=Facade Machine
-iu.connect_item.name=Cable Connection Customizer
+iu.connect_item.name=Connection Configurator
 iu.facadeItem=Facade Tool
 
 facademechanism_text=Facade Machine
@@ -4959,7 +4960,7 @@ iu.anvil.jei2=RMB on the anvil with a hammer to get the output product
 
 iu.radiationpurifier.info=Information about radiation purifier
 iu.radiationpurifier.info1=Place close to the soil analyzer
-iu.radiationpurifier.info2=Perform analysis in that mechanism
+iu.radiationpurifier.info2=Perform analysis in that machine
 iu.radiationpurifier.info3=If the radiation is more than 500 nSv you will receive an item
 
 iu.pellets.info=Coefficient of conversion of radiation into energy: 
@@ -5029,7 +5030,7 @@ industrialupgrade.basemachine3.wireless_mineral_quarry=§bWireless Mineral Quarr
 industrialupgrade.basemachine3.wireless_oil_pump=§bWireless Oil Pump
 industrialupgrade.basemachine3.wireless_gas_pump=§bWireless Gas Installation
 industrialupgrade.basemachine3.gas_pump=Gas Installation
-industrialupgrade.basemachine3.automatic_mechanism=Automatic Mechanism
+industrialupgrade.basemachine3.automatic_mechanism=Automatic Machine
 industrialupgrade.basemachine3.machine_charger=§6Mechanical Charger
 industrialupgrade.basemachine3.matter_collector=§dMatter Collector
 industrialupgrade.basemachine3.rolling_machine=Primitive Rolling Machine
@@ -5378,7 +5379,7 @@ iu.electronic_stabilizers.name=Electronic Stabilizers
 iu.graphene_plate.name=Graphene Plate
 iu.graphene.name=Graphene
 iu.vanadiumaluminummesh=Vanadium-Aluminium Mesh
-iu.voltage_sensor_for_mechanism.name=Mechanism Voltage Sensor
+iu.voltage_sensor_for_mechanism.name=Machine Voltage Sensor
 iu.imp_motors_with_improved_bearings_.name=Advanced Motor with Improved Bearings
 iu.polonium_palladium_composite.name=Polonium-Palladium Composite
 iu.cooling_mixture.name=Cooling Mixture
@@ -5449,7 +5450,7 @@ industrialupgrade.smeltery.smeltery_tank=Smeltery Tank
 industrialupgrade.smeltery.smeltery_furnace=Smeltery Furnace
 industrialupgrade.smeltery.smeltery_casting=Smeltery Casting Block
 
-##Steam Mechanisms
+##Steam Machines
 
 industrialupgrade.basemachine3.steamboiler=Steam Boiler
 industrialupgrade.basemachine3.steampressureconverter=Steam Pressure Converter
@@ -5708,7 +5709,7 @@ industrialupgrade.photonic_machine.photonic_fermer=Photonic Autonomous Farm
 industrialupgrade.photonic_machine.photonic_assembler=Photonic Scrap Assembler
 industrialupgrade.photonic_machine.photonic_centrifuge=§ePhotonic Centrifuge
 industrialupgrade.photonic_machine.photonic_orewashing=§ePhotonic Ore Washing Machine
-industrialupgrade.photonic_machine.photonic_gearing=§ePhotonic Mechanical Stamping
+industrialupgrade.photonic_machine.photonic_gearing=§ePhotonic Mechanical Stamp
 industrialupgrade.photonic_machine.photonic_gen_matter=§ePhotonic Matter Generator
 industrialupgrade.photonic_machine.photonic_comb_mac=§ePhotonic Combination Macerator
 industrialupgrade.photonic_machine.photonic_scanner=§ePhotonic Scanner
@@ -5756,7 +5757,7 @@ industrialupgrade.basemachine3.quarry_pipe=Quarry Pipe
 industrialupgrade.basemachine3.steam_quarry=Steam Quarry
 industrialupgrade.basemachine3.adv_steam_quarry=Improved Steam Quarry
 industrialupgrade.basemachine3.steam_rolling=Steam Rolling Mill
-industrialupgrade.basemachine3.steam_wire_insulator=Steam Wire Insulator
+industrialupgrade.basemachine3.steam_wire_insulator=Steam Cable Insulator
 industrialupgrade.basemachine3.steam_crystal_charge=Steam Crystal Charger  
 industrialupgrade.basemachine3.crystal_charge=Crystal Charger
 industrialupgrade.basemachine3.ampere_generator=Current Converter
@@ -5775,7 +5776,7 @@ industrialupgrade.basemachine3.bio_gearing=Bio Mechanical Stamp
 
 industrialupgrade.basemachine3.electric_refractory_furnace=Electric Refractory Furnace
 industrialupgrade.basemachine3.chicken_farm=Chicken Farm
-industrialupgrade.basemachine3.electric_wire_insulator=Electric Wire Insulator
+industrialupgrade.basemachine3.electric_wire_insulator=Electric Cable Insulator
 industrialupgrade.basemachine3.sheep_farm=Sheep Farm
 industrialupgrade.basemachine3.cow_farm=Cow Farm
 industrialupgrade.basemachine3.sapling_gardener=Sapling Gardener
@@ -5864,11 +5865,11 @@ industrialupgrade.steam_boiler.steam_boiler_tank=Steam Boiler Reservoir
 industrialupgrade.steam_boiler.steam_boiler_heater=Steam Boiler Heater
 industrialupgrade.steam_boiler.steam_boiler_heat_exchanger=Steam Boiler Heat Exchanger
 
-industrialupgrade.primal_wire_insulator.primal_wire_insulator=Primitive Wire Insulator
+industrialupgrade.primal_wire_insulator.primal_wire_insulator=Primitive Cable Insulator
 industrialupgrade.crop.crop=Crop Stake
 
 iu.tempered_glass.name=Tempered Glass
-iu.bio_machine.name=Bio-Mechanical Casing
+iu.bio_machine.name=Bio-machine Casing
 iu.asphalt.name=Asphalt
 
 industrialupgrade.barrel.barrel=Fermentation Barrel
@@ -6323,7 +6324,7 @@ iu.crafting_elements.crafting_704_element=Small Lead Solar Battery
 iu.crafting_elements.crafting_705_element=Orientation Stabilizer
 iu.crafting_elements.crafting_706_element=Steel Shield
 iu.crafting_elements.crafting_707_element=Alumide-Titanium Casing
-iu.crafting_elements.crafting_708_element=Beryllium Steel Thermal Coating
+iu.crafting_elements.crafting_708_element=Beryllium Bronze Thermal Coating
 iu.crafting_elements.crafting_709_element=Tungsten Track
 iu.crafting_elements.crafting_710_element=Hydrostabilizer
 iu.crafting_elements.crafting_711_element=Draconium Casing
@@ -6527,7 +6528,7 @@ multiblock.chemicalplantmultiblock=Chemical Plant
 multiblock.geothermalpumpmultiblock=Geothermal Pump
 multiblock.cyclotronmultiblock=Cyclotron
 multiblock.cokeovenmultiblock=Coke Oven
-iu.steam_info=Use lava under the mechanism
+iu.steam_info=Use lava under the machine
 iu.steam_info1=Use superheated steam
 deposists.jei=Information about vein
 deposists.jei1=Vein name: 
@@ -6629,53 +6630,53 @@ programming_table.info6=The red color reduces the recipe progress.
 programming_table.info7=The green color increases the recipe progress.
 programming_table.info8=If the arrow hits the gray color, nothing happens.
 
-wire_insulator.info1=§6Right-click§r on the mechanism while holding an §ewire§r.
-wire_insulator.info2=Then right-click on the mechanism while holding §ainsulation§r.
-wire_insulator.info3=§cUse wire cutters§r to complete the process.
+wire_insulator.info1=§6Right-click§r on the machine while holding an §ecable§r.
+wire_insulator.info2=Then right-click on the machine while holding §ainsulation§r.
+wire_insulator.info3=§cUse cutter§r to complete the process.
 
-refractory_furnace.info1=To operate the mechanism, place §6lava§r underneath.
-refractory_furnace.info2=Hold §ecrushed ore§r in your hand and right-click on the mechanism.
-refractory_furnace.info3=The process will finish when the mechanism's status returns to §7its original state§r.
-refractory_furnace.info4=Hold §9capsule§r and right-click on the mechanism to collect the liquid.
+refractory_furnace.info1=To operate the machine, place §6lava§r underneath.
+refractory_furnace.info2=Hold §ecrushed ore§r in your hand and right-click on the machine.
+refractory_furnace.info3=The process will finish when the machine's status returns to §7its original state§r.
+refractory_furnace.info4=Hold §9cell§r and right-click on the machine to collect the liquid.
 
-mini_smeltery.info1=Hold §9capsule with molten ore§r in your hand and right-click on the mechanism.
+mini_smeltery.info1=Hold §9cell with molten ore§r in your hand and right-click on the machine.
 mini_smeltery.info2=The process will finish when an §eunprocessed ingot§r appears at the top.
 mini_smeltery.info3=§6Right-click§r to collect the ingot.
 
-squeezer.info1=Hold §esap latex§r in your hand and right-click on the mechanism.
-squeezer.info2=Hold §9tap§r in your hand and right-click on the mechanism.
+squeezer.info1=Hold §esap latex§r in your hand and right-click on the machine.
+squeezer.info2=Hold §9tap§r in your hand and right-click on the machine.
 squeezer.info3=After the process is finished, §aliquid latex§r will appear in the tank.
-squeezer.info4=To collect the liquid, right-click with §9capsule§r on the mechanism.
+squeezer.info4=To collect the liquid, right-click with §9cell§r on the machine.
 
-dryer.info1=Hold §9capsule with raw latex§r in your hand and right-click on the mechanism.
+dryer.info1=Hold §9cell with raw latex§r in your hand and right-click on the machine.
 dryer.info2=Wait a few seconds until §alatex§r appears.
-dryer.info3=§6Right-click§r on the mechanism to collect the latex.
+dryer.info3=§6Right-click§r on the machine to collect the latex.
 
-fluid_heater.info1=Place §6lava§r beneath the mechanism.
-fluid_heater.info2=To fill with liquid, hold §9capsule§r and right-click.
-fluid_heater.info3=The process progress is shown above the mechanism.
-fluid_heater.info4=To collect the liquid, use §9capsule§r and right-click.
+fluid_heater.info1=Place §6lava§r beneath the machine.
+fluid_heater.info2=To fill with liquid, hold §9cell§r and right-click.
+fluid_heater.info3=The process progress is shown above the machine.
+fluid_heater.info4=To collect the liquid, use §9cell§r and right-click.
 
 primitive_pump.info1=Encompasses the area of §63×1×3§r.
 primitive_pump.info2=For operation, the liquid must be beneath the pump.
 primitive_pump.info3=Hold right-click to start the process.
-primitive_pump.info4=To collect the liquid, use §9capsule§r and right-click on the mechanism.
-primitive_pump.info5=The amount of liquid is displayed above the mechanism.
+primitive_pump.info4=To collect the liquid, use §9cell§r and right-click on the machine.
+primitive_pump.info5=The amount of liquid is displayed above the machine.
 
-fluid_integrator.info1=To add liquid, use §9capsule§r and right-click on the mechanism.
-fluid_integrator.info2=To add an item, hold it in your hand and right-click on the mechanism.
-fluid_integrator.info3=The work progress is shown above the mechanism.
+fluid_integrator.info1=To add liquid, use §9cell§r and right-click on the machine.
+fluid_integrator.info2=To add an item, hold it in your hand and right-click on the machine.
+fluid_integrator.info3=The work progress is shown above the machine.
 fluid_integrator.info4=Collect the processed item by right-clicking — this is necessary to continue the recipe.
-fluid_integrator.info5=To collect the liquid, use §9capsule§r and right-click on the mechanism.
+fluid_integrator.info5=To collect the liquid, use §9cell§r and right-click on the machine.
 
-gas_chamber.info1=To add liquid, use §9capsule§r and right-click on the mechanism.
-gas_chamber.info2=The work progress is shown above the mechanism.
-gas_chamber.info3=To collect the liquid, use §9capsule§r and right-click on the mechanism.
+gas_chamber.info1=To add liquid, use §9cell§r and right-click on the machine.
+gas_chamber.info2=The work progress is shown above the machine.
+gas_chamber.info3=To collect the liquid, use §9cell§r and right-click on the machine.
 
 steam_machine.info=§6Information about steam machines§r
 steam_machine.info1=§eThis information applies to all steam machines.§r
 steam_machine.info2=§eTo operate the machine, you need §6steam§r§e, as well as §6pressure§r§e or §6electricity§r§e.§r
-steam_machine.info3=§cSteam cannot be added or removed via capsules§r§e — use §6steam pipes§r§e, §6boilers§r§e, or §6generators§r§e.§r
+steam_machine.info3=§cSteam cannot be added or removed via cells§r§e — use §6steam pipes§r§e, §6boilers§r§e, or §6generators§r§e.§r
 steam_machine.info4=§6Pressure§r§e is generated in the §6pressure converter§r§e, which requires §6superheated steam§r§e.§r
 steam_machine.info5=§aSet the pressure according to the machine's requirements.§r
 steam_machine.info6=§eTo find out the required pressure, hover over the §6value 0.0§r§e (if it is displayed).§r
@@ -6730,7 +6731,7 @@ iu.crop.info13=To collect the crop bag, hold Shift and right-click it.
 iu.crop.info14=Some crops need light to grow.
 iu.crop.info15=Air pollution, soil contamination, or radiation negatively affect crop growth.
 
-iu.wrench.info=The block must be twisted with a wrench
+iu.wrench.info=Can be removed with a wrench
 
 iu.gas_find.info=Can be detected with a 22.5% probability in any biome using a gas sensor.
 iu.iodine_find.info=Can be detected with an 11.25% probability in the "River" and "Ocean" biomes using a gas sensor.
@@ -6741,7 +6742,7 @@ iu.colonial_building.info=Required colony level:
 
 iu.coke_oven_recipe.info=Coke oven information
 iu.coke_oven_recipe.info1=Use a heater for heating
-iu.coke_oven_recipe.info2=Place a steam capsule in the designated slot
+iu.coke_oven_recipe.info2=Place a steam cell in the designated slot
 iu.coke_oven_recipe.info3=The process will start after placing coal in the slot
 iu.coke_oven_recipe.info4=Maintain the oven with steam
 iu.coke_oven_recipe.info5=Increasing the pressure will make the oven work faster,
@@ -6829,14 +6830,14 @@ iu.space_rover_probe=Probe
 iu.space_rover_satellite=Satellite
 iu.space_rover_rovers=Rovers
 iu.cop.crossing=Connect the crops with crossbars, place a double crossbar between them and wait.
-iu.apiary.honey=Harvested from the beehive. To get honey, place a capsule under the food tank. Details in the bee analyzer.
-iu.apiary.royaljelly=Harvested from the beehive. To get royal jelly, place a capsule under the tank with it. Details in the bee analyzer.
+iu.apiary.honey=Harvested from the beehive. To get honey, place a cell under the food tank. Details in the bee analyzer.
+iu.apiary.royaljelly=Harvested from the beehive. To get royal jelly, place a cell under the tank with it. Details in the bee analyzer.
 
 iu.dir.up=Upper
 iu.dir.down=Lower
 iu.use_bee=Take the bee in your hand and right-click on the apiary to populate the queen. The apiary interface will open after the queen is populated.
 
-iu.barrel.info=Use hops, wheat, and water capsules to make beer.
+iu.barrel.info=Use hops, wheat, and water cells to make beer.
 iu.barrel.info1=The beer must ferment to improve its taste and effects.
 iu.barrel.info2=To collect the beer, take the mug in your hand and right-click on it.
 
@@ -6844,7 +6845,7 @@ iu.beer.recipe.info=To make beer, use a barrel.
 iu.beer.recipe=Beer recipe:
 iu.beer.recipe1=Hops (pcs.):
 iu.beer.recipe2=Wheat (pcs.):
-iu.beer.recipe3=Water capsules (pcs.):
+iu.beer.recipe3=Water cells (pcs.):
 iu.beer.recipe4=Infusion (hrs.):
 iu.beer.recipe5=Beer:
 
@@ -6888,7 +6889,7 @@ iu.wireless_oil_vein.info4=If an oil vein is found, insert this item
 iu.wireless_oil_vein.info5=Connect power, and the installation will remotely extract oil
 
 iu.wireless_graphite_controller.info=Information about the wireless graphite reactor controller
-iu.wireless_graphite_controller.info1=This mechanism allows easy control of rod controllers
+iu.wireless_graphite_controller.info1=This machine allows easy control of rod controllers
 iu.wireless_graphite_controller.info2=To connect the reactor, hold the "Reactor Sensor" in your hand
 iu.wireless_graphite_controller.info3=Right-click on the graphite reactor controller
 iu.wireless_graphite_controller.info4=When the data is recorded, place the item in the slot
@@ -6896,7 +6897,7 @@ iu.wireless_graphite_controller.info5=After that, the rod controller blocks will
 iu.wireless_graphite_controller.info6=To open the required controller, click on it
 
 iu.wireless_heat_controller.info=Information about the wireless high-temperature reactor controller
-iu.wireless_heat_controller.info1=This mechanism allows easy control of rod controllers
+iu.wireless_heat_controller.info1=This machine allows easy control of rod controllers
 iu.wireless_heat_controller.info2=To connect the reactor, hold the "Reactor Sensor" in your hand
 iu.wireless_heat_controller.info3=Right-click on the high-temperature reactor controller
 iu.wireless_heat_controller.info4=When the data is recorded, place the item in the slot
@@ -6904,7 +6905,7 @@ iu.wireless_heat_controller.info5=After that, the rod controller blocks will bec
 iu.wireless_heat_controller.info6=To open the required controller, click on it
 
 iu.wireless_reactor_controller.info=Information about the wireless reactor controller
-iu.wireless_reactor_controller.info1=This mechanism allows easy control of reactors
+iu.wireless_reactor_controller.info1=This machine allows easy control of reactors
 iu.wireless_reactor_controller.info2=To connect the reactor, hold the "Reactor Sensor" in your hand
 iu.wireless_reactor_controller.info3=Right-click on the controller of the desired reactor
 iu.wireless_reactor_controller.info4=When the data is recorded, place the sensor in the slot
@@ -6912,31 +6913,31 @@ iu.wireless_reactor_controller.info5=After that, reactor control will become ava
 iu.wireless_reactor_controller.info6=To open the controller interface, click on it
 
 
-iu.analyzer.jei=To mine a mineral vein, use one of the following mechanisms: analyzer, wireless mineral quarry, Simply Quarries quarry, or quantum quarry. To mine resources with the analyzer, place chests for storage next to it, install the "Quarry" module, and after the analysis is complete, click the "Mine" button. The process for the wireless mineral quarry is described in the mechanism's interface. The quantum quarry automatically digs under the vein. The regular quarry needs to be configured in the interface by selecting the "Vein from ore" mode, after which it will start mining.
+iu.analyzer.jei=To mine a mineral vein, use one of the following machines: analyzer, wireless mineral quarry, Simply Quarries quarry, or quantum quarry. To mine resources with the analyzer, place chests for storage next to it, install the "Quarry" module, and after the analysis is complete, click the "Mine" button. The process for the wireless mineral quarry is described in the machine's interface. The quantum quarry automatically digs under the vein. The regular quarry needs to be configured in the interface by selecting the "Vein from ore" mode, after which it will start mining.
 
 iu.rolling.jei=Right-click on the rolling mill with the input item
 iu.rolling.jei1=The item cannot be retrieved afterward
 iu.rolling.jei2=Right-click on the anvil with the pliers to get the output product
 
-bio_machine.info=Information about biomechanisms
-bio_machine.info1=This information applies to all biomechanisms.
-bio_machine.info2=The mechanism requires biomass to operate.
-bio_machine.info3=Biomass cannot be added or removed through capsules — use biotubes or a generator.
+bio_machine.info=Information about biomachines
+bio_machine.info1=This information applies to all biomachines.
+bio_machine.info2=The machine requires biomass to operate.
+bio_machine.info3=Biomass cannot be added or removed through cells — use biotubes or a generator.
 bio_machine.info4=Biomass or waste can be loaded into the biogenerator to produce liquid biomass.
-bio_machine.info5=The biogenerator requires steam and pressure to operate, as it is partially a steam mechanism.
-bio_machine.info6=Biomechanisms do not require pressure and do not pollute the air or soil.
-bio_machine.info7=Biomechanisms do not need lava beneath them, and they have no access to upgrades.
-bio_machine.info8=If the mechanism requires heating, install a heater.
+bio_machine.info5=The biogenerator requires steam and pressure to operate, as it is partially a steam machine.
+bio_machine.info6=Biomachines do not require pressure and do not pollute the air or soil.
+bio_machine.info7=Biomachines do not need lava beneath them, and they have no access to upgrades.
+bio_machine.info8=If the machine requires heating, install a heater.
 
 bio_machine.info9=Use the biogenerator to create liquid biomass
 
-iu.pollution.info=Pollution occurs when the mechanism operates.
+iu.pollution.info=Pollution occurs when the machine operates.
 iu.pollution.air.info=Air pollution:
 iu.pollution.air.info1=kg/s
 iu.pollution.soil.info=Soil pollution:
 iu.pollution.soil.info1=g/s
 iu.pollution.info1=To reduce pollution, use anti-pollution modules.
-iu.pollution.info2=Apply them to the mechanism only after installing the module at 50%.
+iu.pollution.info2=Apply them to the machine only after installing the module at 50%.
 iu.pollution.info3=First, use the module at 50%.
 
 iu.steam_turbine.info=Information about the steam turbine
@@ -6959,11 +6960,11 @@ iu.steam_turbine.info16=The following modifiers are available for the cooling sy
 iu.steam_turbine.info17=Hydrogen — 1, Nitrogen — 1.5, Refrigerant — 2.5, Helium — 4, Cryogen — 8.
 iu.steam_turbine.info18=Some liquids and gases are unavailable at low levels — improve the turbine.
 
-iu.steam_fluid_heater=Uses incoming steam from the steam mechanism and converts it into superheated steam.
+iu.steam_fluid_heater=Uses incoming steam from the steam machine and converts it into superheated steam.
 
 iu.fluidchromium=Chromium
 iu.fluidnichrome=Nichrome
-iu.fluidduralumin=Duralumin
+iu.fluidduralumin=Molten Duralumin
 iu.fluidsodiumhydroxide=Sodium Hydroxide
 iu.fluidsodium_hypochlorite=Sodium Hypochlorite
 iu.fluidtungsten=Tungsten
@@ -7005,7 +7006,7 @@ iu.fluidmoltencobalt=Molten Cobalt
 iu.fluidmoltenmagnesium=Molten Magnesium
 iu.fluidmoltennickel=Molten Nickel
 iu.fluidmoltenplatinum=Molten Platinum
-iu.fluidmoltentitanium=Molten Titanium
+iu.fluidmoltentitanium=Molten Titanium Mixture
 iu.fluidmoltenchromium=Molten Chromium
 iu.fluidmoltenspinel=Molten Spinel
 iu.fluidmoltensilver=Molten Silver
@@ -7022,7 +7023,7 @@ iu.fluidmoltenuranium=Molten Uranium
 iu.fluidmoltenosmium=Molten Osmium
 iu.fluidmoltentantalum=Molten Tantalum
 iu.fluidmoltencadmium=Molten Cadmium
-iu.fluidmoltenarsenic=Molten Arsenic
+iu.fluidmoltenarsenic=Molten Arsenic Mixture
 iu.fluidmoltenbarium=Molten Barium
 iu.fluidmoltenbismuth=Molten Bismuth
 iu.fluidmoltengadolinium=Molten Gadolinium
@@ -7044,7 +7045,7 @@ iu.fluidxenon=Xenon
 
 fluid.fluidchromium=Chromium
 fluid.fluidnichrome=Nichrome
-fluid.fluidduralumin=Duralumin
+fluid.fluidduralumin=Molten Duralumin
 fluid.fluidsodiumhydroxide=Sodium Hydroxide
 fluid.fluidsodium_hypochlorite=Sodium Hypochlorite
 fluid.fluidtungsten=Tungsten
@@ -7086,7 +7087,7 @@ fluid.fluidmoltencobalt=Molten Cobalt
 fluid.fluidmoltenmagnesium=Molten Magnesium
 fluid.fluidmoltennickel=Molten Nickel
 fluid.fluidmoltenplatinum=Molten Platinum
-fluid.fluidmoltentitanium=Molten Titanium
+fluid.fluidmoltentitanium=Molten Titanium Mixture
 fluid.fluidmoltenchromium=Molten Chromium
 fluid.fluidmoltenspinel=Molten Spinel
 fluid.fluidmoltensilver=Molten Silver
@@ -7103,7 +7104,7 @@ fluid.fluidmoltenuranium=Molten Uranium
 fluid.fluidmoltenosmium=Molten Osmium
 fluid.fluidmoltentantalum=Molten Tantalum
 fluid.fluidmoltencadmium=Molten Cadmium
-fluid.fluidmoltenarsenic=Molten Arsenic
+fluid.fluidmoltenarsenic=Molten Arsenic Mixture
 fluid.fluidmoltenbarium=Molten Barium
 fluid.fluidmoltenbismuth=Molten Bismuth
 fluid.fluidmoltengadolinium=Molten Gadolinium
@@ -7526,7 +7527,7 @@ iu.collector_product_bee.info=Covers an area with a radius of 8 blocks, collects
 
 
 iu.start_space.info=Used for space exploration — space research table.
-iu.speed_canister.info=Use the canister with motor oil to reduce heat and speed up the mechanism for 15 seconds
+iu.speed_canister.info=Use the canister with motor oil to reduce heat and speed up the machine for 15 seconds
 iu.radioprotector.info=Use the radioprotector to remove accumulated radiation
 
 
@@ -7573,3 +7574,17 @@ iu.hydroturbine.info=Removes dependence on biome and flow direction
 fluid.tile.lava=Lava
 fluid.tile.water=Water
 iu.can_upgrade_item=Can be improved with the following modules: 
+
+iu.mod.name=IndustrialUpgrade
+iu.addons.installed=Installed addons:
+iu.addons.required=Required mods for easier survival:
+iu.discord.question=Ask a question in Discord:
+iu.discord.click=Click here
+
+iu.crop.breeding=For crossing you need:
+iu.primitive_master=Skill:
+iu.primitive_anvil_durability=Durability:
+iu.bee_negative=Bees hostile to this bee:
+
+iu.remove_genome=Remove genome
+iu.terra_wart.name=Terra Wart

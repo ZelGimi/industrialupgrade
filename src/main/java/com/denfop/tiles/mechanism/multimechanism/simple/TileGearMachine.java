@@ -59,6 +59,15 @@ public class TileGearMachine extends TileMultiMachine {
 
 
         }
+        for (int i = 0; i < RegisterOreDictionary.itemNames7().size(); i++) {
+
+            addrecipe(
+                    "ingot" + RegisterOreDictionary.itemNames7().get(i),
+                    "gear" + RegisterOreDictionary.itemNames7().get(i)
+            );
+
+
+        }
         for (int i = 0; i < RegisterOreDictionary.itemNames1().size(); i++) {
 
             addrecipe(

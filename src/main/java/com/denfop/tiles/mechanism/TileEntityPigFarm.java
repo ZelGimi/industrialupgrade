@@ -1,6 +1,7 @@
 package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.api.upgrades.IUpgradableBlock;
@@ -83,7 +84,18 @@ public class TileEntityPigFarm extends TileEntityInventory  implements IUpgradab
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
     }
-
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
+            if (!energy.getSourceDirs().isEmpty()) {
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
+            } else if (!energy.getSinkDirs().isEmpty()) {
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
+            }
+        }
+    }
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockBaseMachine3.pig_farm;

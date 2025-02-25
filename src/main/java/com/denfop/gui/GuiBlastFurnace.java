@@ -92,7 +92,7 @@ public class GuiBlastFurnace extends GuiIU<ContainerBlastFurnace> {
                 if (container.base.tank1 == null) {
                     ret.add(Localization.translate("iu.generic.text.empty"));
                 } else {
-                    FluidStack fs = this.tank.getFluid();
+                    FluidStack fs = container.base.tank1.getFluid();
                     if (fs != null && fs.amount > 0) {
                         Fluid fluid = fs.getFluid();
                         if (fluid != null) {

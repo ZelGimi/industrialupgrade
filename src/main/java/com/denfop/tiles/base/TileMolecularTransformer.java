@@ -630,7 +630,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
         for (int i = 0; i < maxAmount; i++) {
             MachineRecipe output = this.getRecipeOutput(i);
             if (!queue) {
-                if (output != null && this.outputSlot[i].canAdd(output.getRecipe().output.items) && this.maxEnergySlots[i] > 0) {
+                if (output != null && this.outputSlot[i].canAdd(output.getRecipe().output.items) && this.guiProgress[i] >= 0) {
                     if (!this.getActive()) {
                         if (this.world.provider.getWorldTime() % 2 == 0) {
                             initiate(0);
@@ -640,8 +640,7 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                     }
                     active = true;
 
-                    this.guiProgress[i] = (this.energySlots[i] / this.maxEnergySlots[i]);
-
+                    this.guiProgress[i] = (Math.ceil(this.energySlots[i]) / this.maxEnergySlots[i]);
                     if (this.guiProgress[i] >= 1 && this.guiProgress[i] != Double.POSITIVE_INFINITY) {
                         operate(i, output);
                         this.guiProgress[i] = 0;

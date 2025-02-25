@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.denfop.api.bee.genetics.EnumGenetic.AIR;
+import static com.denfop.api.bee.genetics.EnumGenetic.BIRTH;
 import static com.denfop.api.bee.genetics.EnumGenetic.COEF_BIOME;
 import static com.denfop.api.bee.genetics.EnumGenetic.FOOD;
 import static com.denfop.api.bee.genetics.EnumGenetic.GENOME_ADAPTIVE;
@@ -43,9 +44,9 @@ public enum GeneticTraits {
     PRODUCT_I(PRODUCT, 1.075,null),
     PRODUCT_II(PRODUCT, 1.15,PRODUCT_I),
     PRODUCT_III(PRODUCT, 1.225,PRODUCT_II),
-    BIRTH_I(HARDENING, 1.2,null),
-    BIRTH_II(HARDENING, 1.4,BIRTH_I),
-    BIRTH_III(HARDENING, 1.6,BIRTH_II),
+    BIRTH_I(BIRTH, 1.2,null),
+    BIRTH_II(BIRTH, 1.4,BIRTH_I),
+    BIRTH_III(BIRTH, 1.6,BIRTH_II),
 
     HARDENING_I(HARDENING, 0.8,null),
     HARDENING_II(HARDENING, 0.6,HARDENING_I),

@@ -70,7 +70,7 @@ public class InvSlotPanel extends InvSlot {
 
     public void checkmodule() {
         TileSolarPanel tile = (TileSolarPanel) base;
-
+        tile.charge = false;
         double temp_day = tile.defaultDay;
         double temp_night = tile.defaultNight;
         double temp_storage = tile.defaultMaxStorage;
@@ -89,6 +89,8 @@ public class InvSlotPanel extends InvSlot {
                 }
             }
         }
+        if (tile.tier < 1)
+            tile.tier = 1;
         for (int i = 0; i < this.size(); i++) {
             if (!this.get(i).isEmpty() && this.get(i).getItem() instanceof ItemModuleTypePanel) {
                 int g = this.get(i).getItemDamage();

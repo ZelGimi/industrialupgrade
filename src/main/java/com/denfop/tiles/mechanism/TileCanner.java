@@ -255,12 +255,7 @@ public class TileCanner extends TileElectricLiquidTankInventory
     public void init() {
 
 
-        addEnrichRecipe(new FluidStack(FluidName.fluiddistilled_water.getInstance(), 8000), 16, "dustLapis",
-                FluidName.fluidcoolant.getInstance()
-        );
-        addEnrichRecipe(new FluidStack(FluidRegistry.WATER, 1000), IUItem.cfPowder,
-                FluidName.fluidconstruction_foam.getInstance()
-        );
+
 
     }
 

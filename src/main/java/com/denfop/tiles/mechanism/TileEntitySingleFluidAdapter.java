@@ -175,6 +175,13 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidapianroyaljelly.getInstance()
                         , 200)
         );
+        addRecipe(new ItemStack(Items.DYE,16,4), new FluidStack(FluidName.fluiddistilled_water.getInstance(), 8000),
+                new FluidStack(FluidName.fluidcoolant.getInstance(),1000)
+        );
+        addRecipe( IUItem.cfPowder,new FluidStack(FluidRegistry.WATER, 1000),
+                new FluidStack(FluidName.fluidconstruction_foam.getInstance(),1000)
+        );
+
     }
 
     @Override
@@ -365,7 +372,8 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
                 UpgradableProperty.Transformer,
                 UpgradableProperty.EnergyStorage,
                 UpgradableProperty.ItemInput,
-                UpgradableProperty.FluidExtract
+                UpgradableProperty.FluidExtract,
+                UpgradableProperty.ItemExtract
         );
     }
 

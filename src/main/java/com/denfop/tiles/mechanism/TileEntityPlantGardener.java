@@ -85,6 +85,14 @@ public class TileEntityPlantGardener extends TileEntityInventory  implements IUp
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.plant_gardener.info"));
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
+            if (!energy.getSourceDirs().isEmpty()) {
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
+            } else if (!energy.getSinkDirs().isEmpty()) {
+                tooltip.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
+            }
+        }
     }
 
     List<List<TileEntityCrop>> list = new ArrayList<>();

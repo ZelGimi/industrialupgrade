@@ -34,10 +34,18 @@ import com.denfop.tiles.base.TileEntityAnvil;
 import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.base.TileEntityLiquedTank;
+import com.denfop.tiles.base.TileEntityStrongAnvil;
 import com.denfop.tiles.base.TileMultiMatter;
 import com.denfop.tiles.base.TileObsidianGenerator;
 import com.denfop.tiles.bee.TileEntityApiary;
 import com.denfop.tiles.crop.TileEntityCrop;
+import com.denfop.tiles.mechanism.TileEntityCompressor;
+import com.denfop.tiles.mechanism.TileEntityDryer;
+import com.denfop.tiles.mechanism.TileEntityMacerator;
+import com.denfop.tiles.mechanism.TileEntityPrimalLaserPolisher;
+import com.denfop.tiles.mechanism.TileEntityPrimalWireInsulator;
+import com.denfop.tiles.mechanism.TileEntityRollingMachine;
+import com.denfop.tiles.mechanism.TileEntitySqueezer;
 import com.denfop.tiles.mechanism.TilePlasticCreator;
 import com.denfop.tiles.mechanism.TilePlasticPlateCreator;
 import com.denfop.tiles.mechanism.TilePump;
@@ -239,8 +247,146 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                 final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
                 final String percentString = String.format("%.1f", percent);
                 IProbeInfo cropInfo = probeInfo.vertical();
-                cropInfo.horizontal().text(TextFormatting.GREEN +Localization.translate("iu.primitive_master")+" "+percentString);
-                cropInfo.horizontal().text(TextFormatting.GRAY +Localization.translate("iu.primitive_anvil_durability")+" "+anvil.durability);
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityStrongAnvil) {
+                TileEntityStrongAnvil anvil = (TileEntityStrongAnvil) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityCompressor) {
+                TileEntityCompressor anvil = (TileEntityCompressor) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityMacerator) {
+                TileEntityMacerator anvil = (TileEntityMacerator) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GRAY + Localization.translate("iu.primitive_anvil_durability") + " " + anvil.durability);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityPrimalWireInsulator) {
+                TileEntityPrimalWireInsulator anvil = (TileEntityPrimalWireInsulator) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityRollingMachine) {
+                TileEntityRollingMachine anvil = (TileEntityRollingMachine) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityPrimalLaserPolisher) {
+                TileEntityPrimalLaserPolisher anvil = (TileEntityPrimalLaserPolisher) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo.progress(anvil.progress, 100,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 100)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntitySqueezer) {
+                TileEntitySqueezer anvil = (TileEntitySqueezer) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
+                cropInfo.progress(anvil.progress, 150,
+                        probeInfo.defaultProgressStyle()
+                                .suffix(" / " + 150)
+                                .showText(true)
+                                .filledColor(0xFFFFA500)
+                );
+
+            }
+            if (te instanceof TileEntityDryer) {
+                TileEntityDryer anvil = (TileEntityDryer) te;
+                final Double percent = anvil.data.getOrDefault(entityPlayer.getUniqueID(), 0.0);
+                final String percentString = String.format("%.1f", percent);
+                IProbeInfo cropInfo = probeInfo.vertical();
+                cropInfo
+                        .horizontal()
+                        .text(TextFormatting.GREEN + Localization.translate("iu.primitive_master") + " " + percentString);
                 cropInfo.progress(anvil.progress, 100,
                         probeInfo.defaultProgressStyle()
                                 .suffix(" / " + 100)
@@ -251,18 +397,16 @@ public class AddonIndustrialUpgrade extends AddonBlank {
             }
             if (te instanceof TileEntityCrop) {
                 TileEntityCrop tileEntityCrop = (TileEntityCrop) te;
-                if (tileEntityCrop.getCrop() != null){
+                if (tileEntityCrop.getCrop() != null) {
                     ICrop crop = tileEntityCrop.getCrop();
                     IProbeInfo cropInfo = probeInfo.vertical();
-
-
 
 
                     int tick = crop.getTick();
                     int maxTick = crop.getMaxTick();
                     cropInfo.progress(tick, maxTick,
                             probeInfo.defaultProgressStyle()
-                                    .suffix(" / " + maxTick + " "+Localization.translate("iu.crop.oneprobe.growth"))
+                                    .suffix(" / " + maxTick + " " + Localization.translate("iu.crop.oneprobe.growth"))
                                     .showText(true)
                                     .filledColor(0xFFFFA500)
                     );
@@ -270,21 +414,29 @@ public class AddonIndustrialUpgrade extends AddonBlank {
 
                     ItemStack soil = crop.getSoil().getStack();
                     if (!soil.isEmpty()) {
-                        cropInfo.horizontal().text(TextFormatting.YELLOW +Localization.translate("iu.crop.oneprobe.soil")).item(soil);
+                        cropInfo.horizontal().text(TextFormatting.YELLOW + Localization.translate("iu.crop.oneprobe.soil")).item(
+                                soil);
                     }
 
                     if (!crop.getDrops().isEmpty()) {
                         ItemStack stack = crop.getDrops().get(0);
                         if (!stack.isEmpty()) {
-                            cropInfo.horizontal().text(TextFormatting.AQUA + Localization.translate("iu.crop.oneprobe.drop")).item(stack);
+                            cropInfo
+                                    .horizontal()
+                                    .text(TextFormatting.AQUA + Localization.translate("iu.crop.oneprobe.drop"))
+                                    .item(stack);
                         }
                     }
-                    cropInfo.horizontal().text(TextFormatting.GREEN +  Localization.translate("iu.crop.oneprobe.using")+" " +
-                            Localization.translate("iu.crop.oneprobe.fertilizer")  + " " + tileEntityCrop.getPestUse() + " / " + 40).item(new ItemStack(IUItem.fertilizer));
+                    cropInfo
+                            .horizontal()
+                            .text(TextFormatting.GREEN + Localization.translate("iu.crop.oneprobe.using") + " " +
+                                    Localization.translate("iu.crop.oneprobe.fertilizer") + " " + tileEntityCrop.getPestUse() + " / " + 40)
+                            .item(new ItemStack(IUItem.fertilizer));
 
                     int pesticidesTime = tileEntityCrop.getTickPest();
                     int maxPesticidesTime = 7000;
-                    cropInfo.text(Localization.translate("iu.crop.oneprobe.pesticide_time")).progress( pesticidesTime == 0 ? pesticidesTime : maxPesticidesTime - pesticidesTime,
+                    cropInfo.text(Localization.translate("iu.crop.oneprobe.pesticide_time")).progress(
+                            pesticidesTime == 0 ? pesticidesTime : maxPesticidesTime - pesticidesTime,
                             maxPesticidesTime,
                             probeInfo.defaultProgressStyle()
                                     .suffix(" / " + maxPesticidesTime + " t")
@@ -294,7 +446,13 @@ public class AddonIndustrialUpgrade extends AddonBlank {
 
                     int generation = crop.getGeneration();
                     cropInfo.text(TextFormatting.LIGHT_PURPLE + Localization.translate("iu.crop.oneprobe.generation") + generation);
-                    cropInfo.horizontal().text(TextFormatting.YELLOW + Localization.translate("iu.crop.oneprobe.genes") + tileEntityCrop.getGenome().getGeneticTraitsMap().values().size());
+                    cropInfo
+                            .horizontal()
+                            .text(TextFormatting.YELLOW + Localization.translate("iu.crop.oneprobe.genes") + tileEntityCrop
+                                    .getGenome()
+                                    .getGeneticTraitsMap()
+                                    .values()
+                                    .size());
 
                     boolean isWeed = crop.getId() == 3;
                     if (isWeed) {
@@ -314,11 +472,12 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                     apiaryInfo.progress((int) apiary.food, (int) apiary.maxFood,
                             probeInfo.defaultProgressStyle()
                                     .suffix(" / " + (int) apiary.maxFood + " " + Localization.translate("iu.crop.oneprobe.honey"))
-                                    .showText(true) .filledColor(0xFFFFA500) .alternateFilledColor(0xFFFFA500)
+                                    .showText(true).filledColor(0xFFFFA500).alternateFilledColor(0xFFFFA500)
                     );
                     apiaryInfo.progress((int) apiary.royalJelly, (int) apiary.maxJelly,
                             probeInfo.defaultProgressStyle()
-                                    .suffix(" / " + (int) apiary.maxJelly + " " + Localization.translate("iu.crop.oneprobe.royal_jelly"))
+                                    .suffix(" / " + (int) apiary.maxJelly + " " + Localization.translate(
+                                            "iu.crop.oneprobe.royal_jelly"))
                                     .showText(true)
                     );
                     apiaryInfo.text(TextFormatting.GREEN + Localization.translate("iu.crop.oneprobe.workers") + apiary.workers);
@@ -357,7 +516,11 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                         framesInfo.text(TextFormatting.DARK_GRAY + Localization.translate("iu.crop.oneprobe.no_frames"));
                     }
                     framesInfo = apiaryInfo.horizontal();
-                    framesInfo.text(TextFormatting.YELLOW + Localization.translate("iu.crop.oneprobe.genes_count") + apiary.getGenome().getGeneticTraitsMap().values().size());
+                    framesInfo.text(TextFormatting.YELLOW + Localization.translate("iu.crop.oneprobe.genes_count") + apiary
+                            .getGenome()
+                            .getGeneticTraitsMap()
+                            .values()
+                            .size());
 
                 }
             }
@@ -368,7 +531,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                 IProbeInfo inputRow = probeInfo.horizontal();
                 IProbeInfo outputRow = probeInfo.horizontal();
 
-                inputRow.text(TextFormatting.YELLOW +Localization.translate("iu.probe.recipe.input"));
+                inputRow.text(TextFormatting.YELLOW + Localization.translate("iu.probe.recipe.input"));
                 outputRow.text(TextFormatting.AQUA + Localization.translate("iu.probe.recipe.output"));
 
                 for (int i = 0; i < component2.getSizeWorkingSlot(); i++) {
@@ -424,7 +587,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                                 .getRecipe().output.items;
                         if (!inputs.isEmpty()) {
                             IProbeInfo inputInfo = probeInfo.horizontal();
-                            inputInfo.text(TextFormatting.YELLOW + Localization.translate("iu.probe.recipe.input")+" ");
+                            inputInfo.text(TextFormatting.YELLOW + Localization.translate("iu.probe.recipe.input") + " ");
                             for (IInputItemStack input : inputs) {
                                 int index = (int) (world.getTotalWorldTime() % input.getInputs().size());
                                 inputInfo.item(input.getInputs().get(index));
@@ -434,7 +597,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
 
                         if (!outputs.isEmpty()) {
                             IProbeInfo outputInfo = probeInfo.horizontal();
-                            outputInfo.text(TextFormatting.AQUA + Localization.translate("iu.probe.recipe.output")+" ");
+                            outputInfo.text(TextFormatting.AQUA + Localization.translate("iu.probe.recipe.output") + " ");
 
                             int index = (int) (world.getTotalWorldTime() % outputs.size());
                             outputInfo.item(outputs.get(index));
@@ -442,7 +605,7 @@ public class AddonIndustrialUpgrade extends AddonBlank {
                     }
                 }
 
-                probeInfo.text(TextFormatting.GREEN + Localization.translate("iu.probe.recipe.progress")+" " + percentage + "%");
+                probeInfo.text(TextFormatting.GREEN + Localization.translate("iu.probe.recipe.progress") + " " + percentage + "%");
             }
             if (te instanceof IManufacturerBlock) {
                 IManufacturerBlock manufacturerBlock = (IManufacturerBlock) te;
@@ -474,35 +637,37 @@ public class AddonIndustrialUpgrade extends AddonBlank {
             if (conductor.hasEnergies()) {
                 for (EnergyType type : conductor.getEnergies()) {
                     NodeStats node = EnergyBase.getGlobal(type).getNodeStats((ITile) tile, world);
-                    if (type == EnergyType.QUANTUM) {
+                    if (node != null) {
+                        if (type == EnergyType.QUANTUM) {
 
-                        qeBar(probeInfo, (int) node.getEnergyOut(),
-                                (int) conductor.getConductorBreakdownEnergy(type)
-                        );
-                    } else if (type == EnergyType.SOLARIUM) {
-
-
-                        seBar(probeInfo, (int) node.getEnergyOut(),
-                                (int) conductor.getConductorBreakdownEnergy(type)
-                        );
-                    } else if (type == EnergyType.EXPERIENCE) {
+                            qeBar(probeInfo, (int) node.getEnergyOut(),
+                                    (int) conductor.getConductorBreakdownEnergy(type)
+                            );
+                        } else if (type == EnergyType.SOLARIUM) {
 
 
-                        eeBar(probeInfo, (int) node.getEnergyOut(),
-                                (int) conductor.getConductorBreakdownEnergy(type)
-                        );
-                    } else if (type == EnergyType.RADIATION) {
+                            seBar(probeInfo, (int) node.getEnergyOut(),
+                                    (int) conductor.getConductorBreakdownEnergy(type)
+                            );
+                        } else if (type == EnergyType.EXPERIENCE) {
 
 
-                        radBar(probeInfo, (int) node.getEnergyOut(),
-                                (int) conductor.getConductorBreakdownEnergy(type)
-                        );
-                    } else if (type == EnergyType.POSITRONS) {
+                            eeBar(probeInfo, (int) node.getEnergyOut(),
+                                    (int) conductor.getConductorBreakdownEnergy(type)
+                            );
+                        } else if (type == EnergyType.RADIATION) {
 
 
-                        posBar(probeInfo, (int) node.getEnergyOut(),
-                                (int) conductor.getConductorBreakdownEnergy(type)
-                        );
+                            radBar(probeInfo, (int) node.getEnergyOut(),
+                                    (int) conductor.getConductorBreakdownEnergy(type)
+                            );
+                        } else if (type == EnergyType.POSITRONS) {
+
+
+                            posBar(probeInfo, (int) node.getEnergyOut(),
+                                    (int) conductor.getConductorBreakdownEnergy(type)
+                            );
+                        }
                     }
                 }
             } else {

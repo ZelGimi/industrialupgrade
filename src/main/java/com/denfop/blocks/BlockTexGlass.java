@@ -48,7 +48,7 @@ public class BlockTexGlass extends BlockBase {
     }
 
     public int quantityDropped(Random random) {
-        return 0;
+        return 1;
     }
 
     public boolean isOpaqueCube(IBlockState state) {

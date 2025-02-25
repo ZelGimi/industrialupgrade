@@ -241,7 +241,7 @@ public class TileEnergySubstitute extends TileEntityInventory implements
         size = 0;
         final List<IEnergyConductor> reachedTileEntities = new ArrayList<>();
         final List<IEnergyTile> tileEntitiesToCheck = new ArrayList<>();
-        tileEntitiesToCheck.add(this);
+        tileEntitiesToCheck.add(this.getComp(Energy.class).delegate);
         EnergyNetLocal energyNetLocal = EnergyNetGlobal.getForWorld(this.getWorld());
         while (!tileEntitiesToCheck.isEmpty()) {
             final IEnergyTile currentTileEntity = tileEntitiesToCheck.remove(0);

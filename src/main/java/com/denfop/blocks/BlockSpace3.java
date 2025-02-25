@@ -134,7 +134,7 @@ public class BlockSpace3 extends BlockCore implements IModelRegister {
             stack.setCount(1 + getDrop(fortune));
             ret.add(stack);
         }else {
-            final int i = WorldBaseGen.random.nextInt(fortune + 2) - 1;
+            final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
             ret.add(new ItemStack(Items.DIAMOND,i));
         }
         return ret;

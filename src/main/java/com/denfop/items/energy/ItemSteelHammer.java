@@ -265,7 +265,7 @@ public class ItemSteelHammer extends ItemToolIU {
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (
                         block == Blocks.MONSTER_EGG)) {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         onBlockDestroyed(stack, world, state, pos,
                                 player
                         );
@@ -277,7 +277,7 @@ public class ItemSteelHammer extends ItemToolIU {
 
 
                 } else {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         return onBlockDestroyed(stack, world, state, pos,
                                 player
                         );

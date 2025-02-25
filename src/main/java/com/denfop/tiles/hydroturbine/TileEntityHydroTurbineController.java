@@ -618,6 +618,9 @@ public class TileEntityHydroTurbineController extends TileMultiBlockBase impleme
     @Override
     public void onLoaded() {
         super.onLoaded();
+        if (this.getWorld().isRemote || facing == 0 || facing == 1) {
+            return;
+        }
         this.timers = WindSystem.windSystem.getTime();
         this.wind_side = WindSystem.windSystem.getWindSide();
         this.enumTypeWind = WindSystem.windSystem.getEnumTypeWind();

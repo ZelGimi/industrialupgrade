@@ -142,7 +142,7 @@ public class BlockSpace1 extends BlockCore implements IModelRegister {
             final int i = WorldBaseGen.random.nextInt(fortune + 1) + 1;
             ret.add(new ItemStack(Items.EMERALD,i));
         }else if (type.ordinal() == 11){
-            ret.add(ModUtils.setSize(IUItem.smallSulfurDust,4 +  WorldBaseGen.random.nextInt(fortune)));
+            ret.add(ModUtils.setSize(IUItem.smallSulfurDust,4 +  WorldBaseGen.random.nextInt(fortune+1)));
         }else if (type.ordinal() == 9){
             final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
             ret.add(new ItemStack(Items.QUARTZ,i));

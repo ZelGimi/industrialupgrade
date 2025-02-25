@@ -242,6 +242,24 @@
       }
     ]
   },
+  "machines.biomass_progress" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/biomass_progress",
+        "stream" : false
+      }
+    ]
+  },
+  "machines.biomass_interrupt" : {
+    "category" : "block",
+    "sounds" : [
+      {
+        "name" : "industrialupgrade:machines/biomass_interrupt",
+        "stream" : false
+      }
+    ]
+  },
   "machines.squeezer" : {
     "category" : "block",
     "sounds" : [

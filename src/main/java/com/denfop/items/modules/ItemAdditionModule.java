@@ -145,8 +145,6 @@ public class ItemAdditionModule extends ItemSubTypes<ItemAdditionModule.Crafting
 
                 break;
             case 4:
-                info.add(Localization.translate("modulerfinfo"));
-                info.add(Localization.translate("modulerfinfo1"));
                 break;
             case 5:
             case 8:

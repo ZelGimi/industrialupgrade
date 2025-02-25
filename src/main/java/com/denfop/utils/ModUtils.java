@@ -183,11 +183,13 @@ public class ModUtils {
                     IFluidHandlerItem containerFluidHandler =
                             FluidUtil.getFluidHandler(ItemHandlerHelper.copyStackWithSize(heldItem, 1));
                     for (IFluidTankProperties fluidTankProperties : tanks) {
-                        if ((fluidTankProperties.getContents() == null && fluidTankProperties.canFill()) || (fluidTankProperties.getContents() != null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(containerFluidHandler.drain(Integer.MAX_VALUE,false)))) {
-                            capacity = fluidTankProperties.getCapacity();
+                        if ((fluidTankProperties.getContents() == null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(containerFluidHandler.drain(Integer.MAX_VALUE,false))) || (fluidTankProperties.getContents() != null && fluidTankProperties.canFill() && fluidTankProperties.canFillFluidType(containerFluidHandler.drain(Integer.MAX_VALUE,false)))) {
+                            capacity = fluidTankProperties.getCapacity() - (fluidTankProperties.getContents() == null ? 0 :
+                                    fluidTankProperties.getContents().amount);
+
                         }
                     }
-                    if (capacity == -1) {
+                    if (capacity <= 0) {
                         fluidActionResult = FluidActionResult.FAILURE;
                     } else {
                         fluidActionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, handler, playerInventory,

@@ -518,5 +518,30 @@ public class BaseRecipeFour {
                 ('A') ,"plateSteel",'B',new ItemStack(IUItem.lightning_rod,1,1),'C',
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit,3),'D',new ItemStack(IUItem.crafting_elements,1,356)
         );
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.ampere_storage), " A ", " B ",
+                " C ",
+                ('A') ,IUItem.reBattery,'B',IUItem.advancedMachine,
+               'C',new ItemStack(IUItem.crafting_elements,1,
+                        276)
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.gen_bio), "   ", "ABD",
+                " C ",
+                ('A') ,new ItemStack(IUItem.crafting_elements,1,
+                        27),'B',IUItem.machine,
+                'C',new ItemStack(IUItem.crafting_elements,1,
+                        276),'D',new ItemStack(IUItem.crafting_elements,1,
+                        64)
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_generator), " A ", " B ",
+                " C ",
+                ('A') ,getBlockStack(BlockBaseMachine3.steam_bio_generator),'B',IUItem.machine,
+                'C',new ItemStack(IUItem.crafting_elements,1,
+                        276),'D',new ItemStack(IUItem.crafting_elements,1,
+                        64)
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.amperepipes), "   ", "ABA",
+                " C ",
+                ('A') ,"platePlatinum",'B',IUItem.copperCableItem
+        );
     }
 }

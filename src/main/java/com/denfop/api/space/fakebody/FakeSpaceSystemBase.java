@@ -119,6 +119,7 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
             IRocketLaunchPad rocketLaunchPad = rocketLaunchPadMap.get(fakeBody.getPlayer());
             IResearchTable researchTable = getResearchTableMap().get(fakeBody.getPlayer());
             if (rocketLaunchPad != null) {
+
                 handleSuccessfulOperation(fakeBody, rocketLaunchPad, researchTable);
             }
         }

@@ -63,6 +63,7 @@ import com.denfop.blocks.mechanism.BlockAdminPanel;
 import com.denfop.blocks.mechanism.BlockAdvCokeOven;
 import com.denfop.blocks.mechanism.BlockAdvRefiner;
 import com.denfop.blocks.mechanism.BlockAdvSolarEnergy;
+import com.denfop.blocks.mechanism.BlockAmpereCable;
 import com.denfop.blocks.mechanism.BlockApiary;
 import com.denfop.blocks.mechanism.BlockBarrel;
 import com.denfop.blocks.mechanism.BlockBaseMachine;
@@ -291,6 +292,7 @@ import com.denfop.items.space.ItemColonialBuilding;
 import com.denfop.items.space.ItemResearchLens;
 import com.denfop.items.space.ItemRover;
 import com.denfop.items.space.ItemSpace;
+import com.denfop.items.transport.ItemAmpereCable;
 import com.denfop.items.transport.ItemBioPipe;
 import com.denfop.items.transport.ItemCable;
 import com.denfop.items.transport.ItemCoolPipes;
@@ -645,6 +647,7 @@ public class Register {
         IUItem.cokeoven = TileBlockCreator.instance.create(BlockCokeOven.class);
         IUItem.adv_cokeoven = TileBlockCreator.instance.create(BlockAdvCokeOven.class);
         IUItem.coolpipesblock = TileBlockCreator.instance.create(BlockCoolPipes.class);
+        IUItem.amperecableblock = TileBlockCreator.instance.create(BlockAmpereCable.class);
         IUItem.rad_pipesBlock = TileBlockCreator.instance.create(BlockRadPipes.class);
         IUItem.geothermalpump = TileBlockCreator.instance.create(BlockGeothermalPump.class);
         IUItem.tank = TileBlockCreator.instance.create(BlockTank.class);
@@ -949,7 +952,6 @@ public class Register {
                 Config.durability4 * 64, Config.efficiency4 * 8,
                 new ResourceLocation(Constants.MOD_ID, "textures/items/carbon_rotor_model_9.png"), 14, 13
         ));
-        //TODO:    IUItem.blueprint = new ItemBlueprint();
         IUItem.neutroniumingot = new IUItemBase("neutroniumingot");
         IUItem.connect_item = new IUItemBase("connect_item");
         IUItem.nether_star_ingot = new IUItemBase("nether_star_ingot");
@@ -961,6 +963,7 @@ public class Register {
         IUItem.apatite_cube = (IUItemBase) new IUItemBase("apatite_cube").setCreativeTab(IUCore.RecourseTab);
         IUItem.hops = (IUItemBase) new IUItemBase("hops").setCreativeTab(IUCore.CropsTab);
         IUItem.tomato =  new ItemFoodIU("tomato",3, 0.6F).setCreativeTab(IUCore.CropsTab);
+        IUItem.terra_wart =  new ItemFoodIU("terra_wart",1, 0.4F).setAlwaysEdible().setCreativeTab(IUCore.CropsTab);
         IUItem.corn =  new ItemFoodIU("corn",2, 0.4f).setCreativeTab(IUCore.CropsTab);
         IUItem.raspberry =  new ItemFoodIU("raspberry",2, 0.4f).setCreativeTab(IUCore.CropsTab);
         IUItem.fertilizer = (IUItemBase) new IUItemBase("fertilizer");
@@ -1317,6 +1320,7 @@ public class Register {
         IUItem.coolpipes = new ItemCoolPipes();
         IUItem.biopipes = new ItemBioPipe();
         IUItem.nightpipes =  new ItemNightPipe();
+        IUItem.amperepipes =  new ItemAmpereCable();
         IUItem.photonglass = new ItemPhotoniumGlass();
         IUItem.matter = new ItemSolidMatter();
         IUItem.spawnermodules = new ItemSpawnerModules();

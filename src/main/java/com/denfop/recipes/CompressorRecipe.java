@@ -47,7 +47,7 @@ public class CompressorRecipe {
 
             addcompressor(
                     "smalldust" + RegisterOreDictionary.list_baseore1.get(i),
-                    1,
+                    9,
                     "dust" + RegisterOreDictionary.list_baseore1.get(i)
             );
 
@@ -275,7 +275,7 @@ public class CompressorRecipe {
         );
         addcompressor(
                 "dustLapis",
-                1,
+                9,
                 "plateLapis"
         );
         addcompressor(

@@ -18,15 +18,13 @@ public class GuiRocketAssembler extends GuiIU<ContainerRocketAssembler> {
 
     public GuiRocketAssembler(ContainerRocketAssembler guiContainer) {
         super(guiContainer, EnumTypeStyle.SPACE);
-        this.xSize+=240-178;
+        this.xSize=176;
         this.ySize=255;
-        this.inventory.addY(50+18+30-8);
-        this.inventory.setX(7+210-178-16);
-        this.elements.add(new ImageSpaceInterface(this, 0, 0, this.xSize, this.ySize));
-        this.addComponent(new GuiComponent(this, 176+18, 90, EnumTypeComponent.ENERGY,
+        this.componentList.clear();
+        this.addComponent(new GuiComponent(this, 136, 116, EnumTypeComponent.ENERGY_WEIGHT_2,
                 new Component<>(this.container.base.energy)
         ));
-        this.addComponent(new GuiComponent(this, 176-50, 64, EnumTypeComponent.PROCESS,
+        this.addComponent(new GuiComponent(this, 103, 83, EnumTypeComponent.SPACE_PROGRESS,
                 new Component<>(this.container.base.componentProgress)
         ));
     }
@@ -45,12 +43,13 @@ public class GuiRocketAssembler extends GuiIU<ContainerRocketAssembler> {
 
     @Override
     protected void drawBackgroundAndTitle(final float partialTicks, final int mouseX, final int mouseY) {
-        super.drawBackgroundAndTitle(partialTicks, mouseX, mouseY);
+        this.bindTexture();
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guirocket_assembler.png");
     }
 
 }

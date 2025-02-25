@@ -66,6 +66,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMain,
@@ -82,7 +83,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     public ItemStack outputStack = ItemStack.EMPTY;
     public InvSlotBlastFurnace invSlotBlastFurnace = new InvSlotBlastFurnace(this);
     public InvSlotOutput output = new InvSlotOutput(this, 1);
-    public FluidTank tank1 = null;
+    public FluidTank tank1 = new FluidTank(12000);
 
     public IBlastHeat blastHeat;
     public IBlastInputFluid blastInputFluid;
@@ -121,12 +122,10 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         if (this.getActive() && this.getWorld().getWorldTime() % 5 == 0) {
             final Random rand = WorldBaseGen.random;
 
-            // Получаем текущее направление блока
             EnumFacing facing = this.getFacing();
 
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dz = -1; dz <= 1; dz++) {
-                    // Определяем смещение в зависимости от направления EnumFacing
                     double offsetX = 0;
                     double offsetZ = 0;
 
@@ -147,7 +146,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                             break;
                     }
 
-                    // Добавляем искры с случайными вариациями
+
                     int sparkCount = 1 + rand.nextInt(2);
                     for (int i = 0; i < sparkCount; i++) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(new SparkParticle(
@@ -158,7 +157,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         ));
                     }
 
-                    // Добавляем дым с случайной прозрачностью и размером
+
                     int smokeCount = 1 + rand.nextInt(2);
                     for (int j = 0; j < smokeCount; j++) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(new SmokeParticle(
@@ -169,7 +168,6 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         ));
                     }
 
-                    // Добавляем стандартные частицы огня
                     if (rand.nextInt(3) == 0) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(
                                 new ParticleFlame.Factory().createParticle(
@@ -182,7 +180,6 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         );
                     }
 
-                    // Добавляем красные частицы (reddust) для жаркого свечения
                     if (rand.nextInt(3) == 0) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(
                                 new ParticleRedstone.Factory().createParticle(
@@ -195,16 +192,16 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                         );
                     }
 
-                    // Добавляем редкие частицы лавы
+
                     if (rand.nextInt(5) == 0) {
                         Minecraft.getMinecraft().effectRenderer.addEffect(
-                                new ParticleLava.Factory().createParticle(
+                                Objects.requireNonNull(new ParticleLava.Factory().createParticle(
                                         0, this.getWorld(),
                                         this.getPos().getX() + 0.5 + dx + offsetX * -4 + rand.nextDouble() * 0.4 - 0.2,
                                         this.getPos().getY() + 1.6,
                                         this.getPos().getZ() + 0.5 + dz + offsetZ * -4 + rand.nextDouble() * 0.4 - 0.2,
                                         0, 0.1, 0
-                                )
+                                ))
                         );
                     }
                 }
@@ -217,23 +214,25 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
 
     @SideOnly(Side.CLIENT)
     public void renderUniqueMultiBlock() {
+        if (this.dataBlock.getBlockState().getBlock() == IUItem.invalid)
+            return;
         GlStateManager.popMatrix();
         switch (facing) {
             case 2:
-                GlStateManager.translate(this.pos.getX() - 1, this.pos.getY() - 1, this.pos.getZ());
+                GlStateManager.translate(this.pos.getX() - 1.05, this.pos.getY() - 1, this.pos.getZ() - 0.05);
                 break;
             case 3:
-                GlStateManager.translate(this.pos.getX() - 1, this.pos.getY() - 1, this.pos.getZ() - 2);
+                GlStateManager.translate(this.pos.getX() - 1.05, this.pos.getY() - 1.05, this.pos.getZ() - 2.05);
                 break;
             case 4:
-                GlStateManager.translate(this.pos.getX(), this.pos.getY() - 1, this.pos.getZ() - 1);
+                GlStateManager.translate(this.pos.getX() - 0.05, this.pos.getY() - 1.05, this.pos.getZ() - 1);
                 break;
             case 5:
-                GlStateManager.translate(this.pos.getX() - 2, this.pos.getY() - 1, this.pos.getZ() - 1);
+                GlStateManager.translate(this.pos.getX() - 2.05, this.pos.getY() - 1.05, this.pos.getZ() - 1.05);
                 break;
         }
 
-        GlStateManager.scale(3, 3, 3);
+        GlStateManager.scale(3.08, 3.08, 3.08);
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -546,9 +545,11 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     public void setInputFluid(final IBlastInputFluid blastInputFluid) {
         this.blastInputFluid = blastInputFluid;
         if (this.blastInputFluid == null) {
-            this.tank1 = null;
+            this.tank1 = new FluidTank(12000);
+            new PacketUpdateFieldTile(this,"fluidtank1",false);
         } else {
             this.tank1 = this.blastInputFluid.getFluidTank();
+            new PacketUpdateFieldTile(this,"fluidtank2",tank1);
         }
     }
 
@@ -619,10 +620,8 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
             final float hitY,
             final float hitZ
     ) {
-        if (this.getWorld().isRemote) {
-            return false;
-        }
-        if (!(!this.full || !this.activate)) {
+
+        if ((this.full && this.activate)) {
             if (!this.getWorld().isRemote && player
                     .getHeldItem(hand)
                     .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
@@ -631,6 +630,8 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                                 .getFluid()
                                 .getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
                 );
+            }else {
+                return super.onActivated(player, hand, side, hitX, hitY, hitZ);
             }
         }
 

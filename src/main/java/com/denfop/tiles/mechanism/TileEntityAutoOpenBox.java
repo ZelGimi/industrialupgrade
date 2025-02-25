@@ -17,9 +17,11 @@ import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -64,7 +66,14 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
 
     @Override
     public void addInformation(final ItemStack itemStack, final List<String> info) {
-
+        if (this.getComp(Energy.class) != null) {
+            Energy energy = this.getComp(Energy.class);
+            if (!energy.getSourceDirs().isEmpty()) {
+                info.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSourceTier()));
+            } else if (!energy.getSinkDirs().isEmpty()) {
+                info.add(Localization.translate("iu.item.tooltip.PowerTier", energy.getSinkTier()));
+            }
+        }
 
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             info.add(Localization.translate("press.lshift"));
@@ -128,7 +137,8 @@ public class TileEntityAutoOpenBox extends TileEntityInventory implements IUpgra
 
     @Override
     public Set<UpgradableProperty> getUpgradableProperties() {
-        return EnumSet.of(UpgradableProperty.ItemExtract, UpgradableProperty.Transformer);
+        return EnumSet.of(UpgradableProperty.ItemExtract,UpgradableProperty.ItemInput,UpgradableProperty.EnergyStorage,
+                UpgradableProperty.Transformer);
     }
 
 }

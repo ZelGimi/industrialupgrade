@@ -325,12 +325,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                     break;
                 case RADIATION:
                     this.radiation = true;
-                    MinecraftForge.EVENT_BUS.post(new EnergyEvent(
-                            this.getWorld(),
-                            EnumTypeEvent.LOAD,
-                            EnergyType.RADIATION,
-                            this
-                    ));
+
                     break;
             }
             enumTypeOperation = null;
@@ -405,26 +400,32 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
         if (stack.getItem() == IUItem.qcable && !quantum){
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.QUANTUM;
+            return true;
         }
         if (stack.getItem() == IUItem.scable && !solarium){
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.SOLARIUM;
+            return true;
         }
         if (stack.getItem() == IUItem.radcable_item && !radiation){
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.RADIATION;
+            return true;
         }
         if (stack.getItem() == IUItem.expcable && !experience){
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.EXPERIENCE;
+            return true;
         }
         if (stack.getItem() == IUItem.coolpipes && stack.getItemDamage() == 4 && !cold){
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.COLD;
+            return true;
         }
         if (stack.getItem() == IUItem.pipes && stack.getItemDamage() == 4 && !heat){
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.HEAT;
+            return true;
         }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
@@ -764,7 +765,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     public void AddTile(EnergyType type, ITile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
             final Map<EnumFacing, ITile> map = this.energyTypeConductorMap.computeIfAbsent(type, k -> new HashMap<>());
-            if (map.containsKey(facing1)) {
+            if (!map.containsKey(facing1)) {
                 map.put(facing1, tile);
                 validTypeReceivers.computeIfAbsent(type, k -> new LinkedList<>()).add(new InfoTile<>(
                         tile,

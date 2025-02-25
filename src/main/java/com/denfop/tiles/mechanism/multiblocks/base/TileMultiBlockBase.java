@@ -89,41 +89,13 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         return packet;
     }
 
-    public boolean doesSideBlockRendering(EnumFacing side) {
-        return isFull();
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(EnumFacing side, BlockPos otherPos) {
-        return !(isFull() && this.getMultiBlockStucture().hasUniqueModels);
-    }
-
-    @Override
-    public boolean isNormalCube() {
-        return !isFull();
-    }
-
-    @Override
-    public boolean clientNeedsExtraModelInfo() {
-        return !isFull();
-    }
 
     public boolean onRemovedByPlayer(EntityPlayer player, boolean willHarvest) {
-        if (full && this.multiBlockStructure.isHasUniqueModels() && this.getWorld().isRemote) {
-            multiBlockStructure.markDirty(this, false);
-            Minecraft.getMinecraft().renderGlobal.loadRenderers();
-        }
+
         return true;
     }
 
 
-    public boolean isSideSolid(EnumFacing side) {
-        return !isFull();
-    }
-
-    public boolean shouldRenderInPass(int pass) {
-        return isFull();
-    }
 
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
@@ -223,14 +195,18 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                         rotation = EnumFacing.EAST;
                     }
                 }
-            } else if (facing == EnumFacing.WEST) {
+            }  else if (facing == EnumFacing.WEST) {
                 if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
-                    rotation = rotation.getOpposite();
-                } else {
-                    if (rotation == EnumFacing.NORTH) {
-                        rotation = rotation.rotateAround(EnumFacing.Axis.X);
+                    if (rotation == EnumFacing.WEST) {
+                        rotation = EnumFacing.NORTH;
                     } else {
+                        rotation = EnumFacing.SOUTH;
+                    }
+                } else {
+                    if (rotation == EnumFacing.SOUTH) {
                         rotation = EnumFacing.EAST;
+                    } else {
+                        rotation = EnumFacing.WEST;
                     }
                 }
             }
@@ -280,6 +256,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     private void renderBlock(
             TileMultiBlockBase tile
     ) {
+        if (facing == 0 || facing == 1){
+           return;
+        }
         for (Map.Entry<BlockPos, ItemStack> entry : this.multiBlockStructure.ItemStackMap.entrySet()) {
             BlockPos pos1;
             if (entry.getValue().isEmpty()) {
@@ -448,11 +427,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         if (name.equals("full")) {
             try {
                 this.full = (boolean) DecoderHandler.decode(is);
-                boolean full = this.full;
-                if (this.multiBlockStructure.hasUniqueModels) {
-                    multiBlockStructure.markDirty(this, full);
-                    Minecraft.getMinecraft().renderGlobal.loadRenderers();
-                }
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

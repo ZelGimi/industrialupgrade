@@ -24,17 +24,11 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
 
     public GuiRocketLaunchPad(ContainerRocketLaunchPad guiContainer) {
         super(guiContainer);
-        this.inventory.addY(25 + 9 + 20);
         ySize = 220;
-        this.addElement(new ImageRocketPadScreen(this, 0, 0, xSize, ySize));
+        this.componentList.clear();
+        this.addElement( new TankGauge(this,106, 15, 12, 35, guiContainer.base.tank, TankGauge.TankGuiStyle.Plain));
 
-        this.addElement(TankGauge.createNormal(this, 148, 5, guiContainer.base.tank));
-        for (int i = 0; i < 9; i++) {
-            this.componentList.add(new GuiComponent(this, 6 + i * 18, 80 - 20, EnumTypeComponent.FLUIDS_SLOT,
-                    new Component<>(new ComponentEmpty())
-            ));
-        }
-        this.componentList.add(new GuiComponent(this, 130, 15, EnumTypeComponent.ENERGY_HEIGHT,
+        this.componentList.add(new GuiComponent(this, 56, 12, EnumTypeComponent.ENERGY_HEIGHT_1,
                 new Component<>(guiContainer.base.energy)
         ));
     }
@@ -46,7 +40,7 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
             if (container.base.tanks[i].getFluidAmount() <= 0)
                 continue;
             FluidStack fs = container.base.tanks[i].getFluid();
-            new Area(this,6 + i * 18,80 - 20,18,18).withTooltip(fs.getFluid().getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb")).drawForeground(par1, par2);
+            new Area(this,8 + i * 18,60,18,18).withTooltip(fs.getFluid().getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb")).drawForeground(par1, par2);
         }
     }
 
@@ -89,7 +83,7 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
 
     @Override
     protected ResourceLocation getTexture() {
-        return new ResourceLocation(Constants.MOD_ID, "textures/gui/guimachine.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/gui/gui_rocket_pad.png");
     }
 
 }

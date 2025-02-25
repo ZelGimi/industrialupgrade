@@ -54,7 +54,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
     public final FluidHandlerRecipe fluid_handler;
     public final Fluids.InternalFluidTank fluidTank1;
     public InvSlotOutput outputSlot;
-    protected short progress;
+    public short progress;
 
     public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
     public TileEntityDryer() {

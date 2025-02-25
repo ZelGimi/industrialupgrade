@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/gen_bio_front",
+    "down" : "industrialupgrade:blocks/gen_bio_side",
+    "up" : "industrialupgrade:blocks/gen_bio_side",
+    "north" : "industrialupgrade:blocks/gen_bio_front",
+    "east" : "industrialupgrade:blocks/gen_bio_left",
+    "south" : "industrialupgrade:blocks/gen_bio_side",
+    "west" : "industrialupgrade:blocks/gen_bio_left"
+  }
+}
