@@ -143,12 +143,16 @@ public class ItemPlaner extends Item implements IModelRegister {
                                             }
                                         } else if (facing == EnumFacing.WEST) {
                                             if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
-                                                rotation = rotation.getOpposite();
-                                            } else {
-                                                if (rotation == EnumFacing.NORTH) {
-                                                    rotation = rotation.rotateAround(EnumFacing.Axis.X);
+                                                if (rotation == EnumFacing.WEST) {
+                                                    rotation = EnumFacing.NORTH;
                                                 } else {
+                                                    rotation = EnumFacing.SOUTH;
+                                                }
+                                            } else {
+                                                if (rotation == EnumFacing.SOUTH) {
                                                     rotation = EnumFacing.EAST;
+                                                } else {
+                                                    rotation = EnumFacing.WEST;
                                                 }
                                             }
                                         }
@@ -203,12 +207,16 @@ public class ItemPlaner extends Item implements IModelRegister {
                                     }
                                 } else if (facing == EnumFacing.WEST) {
                                     if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
-                                        rotation = rotation.getOpposite();
-                                    } else {
-                                        if (rotation == EnumFacing.NORTH) {
-                                            rotation = rotation.rotateAround(EnumFacing.Axis.X);
+                                        if (rotation == EnumFacing.WEST) {
+                                            rotation = EnumFacing.NORTH;
                                         } else {
+                                            rotation = EnumFacing.SOUTH;
+                                        }
+                                    } else {
+                                        if (rotation == EnumFacing.SOUTH) {
                                             rotation = EnumFacing.EAST;
+                                        } else {
+                                            rotation = EnumFacing.WEST;
                                         }
                                     }
                                 }

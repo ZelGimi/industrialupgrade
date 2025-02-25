@@ -3827,6 +3827,35 @@ public class BaseRecipes {
                 ('C'), "gearMagnesium", ('D'),
                 "plateTitanium"
         );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 98), "CBC", "BAB", "DBD",
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidsour_light_oil.getInstance()),
+                ('C'), "gearMagnesium", ('D'),
+                "plateTitanium"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 98), "CBC", "BAB", "DBD",
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidsour_medium_oil.getInstance()),
+                ('C'), "gearMagnesium", ('D'),
+                "plateTitanium"
+        );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 98), "CBC", "BAB", "DBD",
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidsour_heavy_oil.getInstance()),
+                ('C'), "gearMagnesium", ('D'),
+                "plateTitanium"
+        );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 98), "CBC", "BAB", "DBD",
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidsweet_medium_oil.getInstance()),
+                ('C'), "gearMagnesium", ('D'),
+                "plateTitanium"
+        );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 98), "CBC", "BAB", "DBD",
+                ('A'), DEFAULT_SENSOR, ('B'), ModUtils.getCellFromFluid(FluidName.fluidsweet_heavy_oil.getInstance()),
+                ('C'), "gearMagnesium", ('D'),
+                "plateTitanium"
+        );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 99), "CBC", "BAB", "DBD",
                 ('A'), DEFAULT_SENSOR, ('B'), IUItem.Uran238,
                 ('C'), "gearVanadium", ('D'),

@@ -9,6 +9,7 @@ import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.GuiElement;
 import com.denfop.api.gui.ImageInterface;
+import com.denfop.api.gui.ItemStackImage;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.componets.ComponentProcessRender;
 import com.denfop.componets.ComponentSoundButton;
@@ -120,7 +121,7 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         }
         i = 0;
         for (ItemStack stack : this.itemStackList) {
-            new Area(this, 177, 5 + i * 18, 16, 16).withTooltip(stack.getDisplayName()).drawForeground(mouseX, mouseY);
+            new Area(this, xSize, 5 + i * 18, 16, 16).withTooltip(stack.getDisplayName()).drawForeground(mouseX, mouseY);
             i++;
         }
     }
@@ -182,32 +183,12 @@ public class GuiMultiMachine extends GuiIU<ContainerMultiMachine> {
         this.fontRenderer.drawString(name, textX, textY, 4210752);
 
 
-        GlStateManager.popMatrix();
 
+        GlStateManager.popMatrix();
 
         i = 0;
         for (ItemStack stack : this.itemStackList) {
-
-            RenderHelper.enableGUIStandardItemLighting();
-            GL11.glPushMatrix();
-            GL11.glColor4f(0.1F, 1, 0.1F, 1);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GlStateManager.disableLighting();
-            GlStateManager.enableDepth();
-            this.zLevel = 100.0F;
-            mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            itemRender.renderItemAndEffectIntoGUI(
-                    stack,
-                    j + 177,
-                    k + 5 + i * 18
-            );
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GlStateManager.enableLighting();
-
-            RenderHelper.enableStandardItemLighting();
-            GL11.glColor4f(0.1F, 1, 0.1F, 1);
-            GL11.glPopMatrix();
+            new ItemStackImage(this,  this.xSize , 5 + i * 18, () -> stack).drawBackground(this.guiLeft,guiTop);
             i++;
         }
 

@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.IModelRegister;
 import com.denfop.api.multiblock.IMainMultiBlock;
-import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.register.Register;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -65,16 +64,7 @@ public class ItemDeplanner extends Item implements IModelRegister {
             final float hitZ,
             final EnumHand hand
     ) {
-        if (world.isRemote) {
-            TileEntity tile = world.getTileEntity(pos);
-            if (tile instanceof IMainMultiBlock) {
-                IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
-                if (mainMultiBlock.isFull()) {
-                    ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
-                }
-            }
-            return EnumActionResult.PASS;
-        }
+
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof IMainMultiBlock) {
             IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
@@ -83,6 +73,9 @@ public class ItemDeplanner extends Item implements IModelRegister {
 
                 for (Map.Entry<BlockPos, ItemStack> entry : mainMultiBlock.getMultiBlockStucture().ItemStackMap.entrySet()) {
                     BlockPos pos1;
+                    if (entry.getKey().equals(BlockPos.ORIGIN)) {
+                        continue;
+                    }
                     if (entry.getValue().isEmpty()) {
                         continue;
                     }
@@ -104,9 +97,16 @@ public class ItemDeplanner extends Item implements IModelRegister {
                             throw new IllegalStateException("Unexpected value: ");
                     }
                     itemStackList.add(entry.getValue().copy());
+                    world.removeTileEntity(pos.add(pos1));
                     world.setBlockToAir(pos.add(pos1));
-                }
 
+                }
+                itemStackList.add(mainMultiBlock.getMultiBlockStucture().ItemStackMap.get(BlockPos.ORIGIN).copy());
+
+                ((TileMultiBlockBase) mainMultiBlock).onUnloaded();
+                world.removeTileEntity(pos);
+                world.setBlockToAir(pos);
+                if (!world.isRemote)
                 for (ItemStack stack : itemStackList) {
                     EntityItem item = new EntityItem(world, player.posX, player.posY, player.posZ, stack);
                     item.setPickupDelay(0);

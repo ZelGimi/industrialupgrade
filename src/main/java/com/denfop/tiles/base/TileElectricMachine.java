@@ -49,9 +49,11 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     public TileElectricMachine(double MaxEnergy, int tier, int count) {
 
         this.tier = tier;
-        this.dischargeSlot = new InvSlotDischarge(this, InvSlot.TypeItemSlot.INPUT, tier, false);
+
         if (MaxEnergy != 0) {
-            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier).addManagedSlot(this.dischargeSlot));
+            energy = this.addComponent(Energy.asBasicSink(this, MaxEnergy, tier));
+            dischargeSlot = new InvSlotDischarge(this,14);
+            energy.addManagedSlot(dischargeSlot);
         }
 
         if (count != 0) {

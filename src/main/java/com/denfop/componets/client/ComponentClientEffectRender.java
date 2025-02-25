@@ -5,6 +5,9 @@ import com.denfop.componets.AbstractComponent;
 import com.denfop.componets.CoolComponent;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.tiles.mechanism.water.TileBaseWaterGenerator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +27,8 @@ public class ComponentClientEffectRender extends AbstractComponent {
 
     @SideOnly(Side.CLIENT)
     public void render() {
+
+
         switch (effectType) {
             case HEAT:
                 CoolComponent comp = parent.getComp(CoolComponent.class);

@@ -1,6 +1,6 @@
 package com.denfop.tiles.base;
 
-import com.denfop.componets.Energy;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.HeatComponent;
 import com.denfop.container.ContainerHeatMachine;
@@ -41,23 +41,14 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
     public TileBaseHeatMachine(boolean hasFluid) {
         super(hasFluid ? 0D : 10000D, 14, 1);
         this.hasFluid = hasFluid;
-        this.fluidTank = new FluidTank(12000);
-        if (this.hasFluid) {
-            this.energy = this.addComponent(Energy.asBasicSink(this, 0, 14));
-        }
         if (this.hasFluid) {
             this.fluids = this.addComponent(new Fluids(this));
             this.fluidTank = this.fluids.addTank("fluidTank", 12000, InvSlot.TypeItemSlot.INPUT, Fluids.fluidPredicate(
-                    FluidRegistry.getFluid("cryotheum"), FluidRegistry.getFluid("petrotheum"),
-                    FluidRegistry.getFluid("redstone"), FluidRegistry.getFluid("ic2pahoehoe_lava"),
-                    FluidRegistry.LAVA, FluidRegistry.getFluid("iufluiddizel"),
-                    FluidRegistry.getFluid("iufluidbenz"),
-                    FluidRegistry.getFluid("biocrude"),
-                    FluidRegistry.getFluid("biofuel"),
-                    FluidRegistry.getFluid("ic2biogas"),
-                    FluidRegistry.getFluid("refined_biofuel"),
-                    FluidRegistry.getFluid("ic2biomass"),
-                    FluidRegistry.getFluid("biomass")
+                    FluidName.fluidpahoehoe_lava.getInstance(),
+                    FluidRegistry.LAVA, FluidName.fluiddizel.getInstance(),
+                    FluidName.fluidbenz.getInstance(),
+                    FluidName.fluidbiogas.getInstance(),
+                    FluidName.fluidbiomass.getInstance()
             ));
             this.fluidSlot = new InvSlotFluidByList(
                     this,
@@ -65,19 +56,11 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
                     1,
 
                     InvSlotFluid.TypeFluidSlot.INPUT,
-                    FluidRegistry.getFluid("cryotheum"),
-                    FluidRegistry.getFluid("petrotheum"),
-                    FluidRegistry.getFluid("redstone"),
-                    FluidRegistry.getFluid("ic2pahoehoe_lava"),
-                    FluidRegistry.LAVA,
-                    FluidRegistry.getFluid("iufluiddizel"),
-                    FluidRegistry.getFluid("iufluidbenz"),
-                    FluidRegistry.getFluid("ic2biomass"),
-                    FluidRegistry.getFluid("biocrude"),
-                    FluidRegistry.getFluid("biofuel"),
-                    FluidRegistry.getFluid("ic2biogas"),
-                    FluidRegistry.getFluid("refined_biofuel"),
-                    FluidRegistry.getFluid("biomass")
+                    FluidName.fluidpahoehoe_lava.getInstance(),
+                    FluidRegistry.LAVA, FluidName.fluiddizel.getInstance(),
+                    FluidName.fluidbenz.getInstance(),
+                    FluidName.fluidbiogas.getInstance(),
+                    FluidName.fluidbiomass.getInstance()
             );
         }
 
@@ -145,7 +128,9 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
 
     public void readFromNBT(NBTTagCompound nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.fluidTank.readFromNBT(nbttagcompound.getCompoundTag("fluidTank"));
+        if (this.hasFluid) {
+            this.fluidTank.readFromNBT(nbttagcompound.getCompoundTag("fluidTank"));
+        }
         this.maxtemperature = nbttagcompound.getShort("maxtemperature");
         this.auto = nbttagcompound.getBoolean("auto");
         this.work = nbttagcompound.getBoolean("work");
@@ -153,9 +138,11 @@ public class TileBaseHeatMachine extends TileElectricMachine implements IUpdatab
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         super.writeToNBT(nbttagcompound);
-        NBTTagCompound fluidTankTag = new NBTTagCompound();
-        this.fluidTank.writeToNBT(fluidTankTag);
-        nbttagcompound.setTag("fluidTank", fluidTankTag);
+        if (this.hasFluid) {
+            NBTTagCompound fluidTankTag = new NBTTagCompound();
+            this.fluidTank.writeToNBT(fluidTankTag);
+            nbttagcompound.setTag("fluidTank", fluidTankTag);
+        }
         nbttagcompound.setShort("maxtemperature", this.maxtemperature);
         nbttagcompound.setBoolean("auto", this.auto);
         nbttagcompound.setBoolean("work", this.work);

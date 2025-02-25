@@ -944,7 +944,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
 
                 this.progress = this.energy.getEnergy();
                 double k = this.progress;
-                this.guiProgress = (k / this.energy.getCapacity());
+                this.guiProgress = (Math.ceil(k) / this.energy.getCapacity());
                 if (this.energy.getEnergy() >= this.energy.getCapacity()) {
                     operate(output);
 

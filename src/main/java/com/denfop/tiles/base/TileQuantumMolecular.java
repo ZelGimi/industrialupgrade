@@ -329,11 +329,30 @@ public class TileQuantumMolecular extends TileElectricMachine implements
             }
             this.setOverclockRates();
         }
-
+        if (event == 0) {
+            this.redstoneMode = (byte) (this.redstoneMode + 1);
+            if (this.redstoneMode >= 8) {
+                this.redstoneMode = 0;
+            }
+            new PacketUpdateFieldTile(this, "redstoneMode", this.redstoneMode);
+        }
+        if (event == -1) {
+            this.redstoneMode = (byte) (this.redstoneMode - 1);
+            if (this.redstoneMode < 0) {
+                this.redstoneMode = 7;
+            }
+            new PacketUpdateFieldTile(this, "redstoneMode", this.redstoneMode);
+        }
     }
 
     public void updateField(String name, CustomPacketBuffer is) {
-
+        if (name.equals("redstoneMode")) {
+            try {
+                redstoneMode = (byte) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         if (name.equals("output")) {
             try {
@@ -542,7 +561,7 @@ public class TileQuantumMolecular extends TileElectricMachine implements
 
                 this.progress = this.energy.getEnergy();
                 double k = this.progress;
-                this.guiProgress = (k / this.energy.getCapacity());
+                this.guiProgress = (Math.ceil(k) / this.energy.getCapacity());
                 if (this.energy.getEnergy() >= this.energy.getCapacity()) {
                     operate(output);
 

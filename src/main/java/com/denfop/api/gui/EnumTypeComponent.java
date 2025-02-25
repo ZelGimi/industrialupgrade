@@ -2,6 +2,9 @@ package com.denfop.api.gui;
 
 public enum EnumTypeComponent {
     ENERGY(103, 0, 116, 1, 12, 16, EnumTypeRender.HEIGHT, 0, 1, true),
+    AMPERE(84, 175, 84, 194, 162, 20, EnumTypeRender.HEIGHT, 0, 0, true,false,true),
+    ENERGY_WEIGHT_2(114, 136, 142, 136, 142-114, 10, EnumTypeRender.WEIGHT, 0, 0, true,false,true),
+    SPACE_PROGRESS(89, 221, 117, 221, 117-89, 33, EnumTypeRender.WEIGHT, 0, 0, true,false,true),
     ENERGY_WEIGHT(170, 0, 213, 0, 43, 16, EnumTypeRender.WEIGHT, 0, 0, true),
     ADVANCED(36, 0, 220, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),
     IMPROVED(18, 0, 202, 0, 18, 18, EnumTypeRender.WEIGHT, 0, 0, false),
@@ -84,6 +87,7 @@ public enum EnumTypeComponent {
     RAD_1(195, 88, 195, 102, 60, 15, EnumTypeRender.WEIGHT, 0, 0, true),
     ENERGY_WEIGHT_1(215, 116, 215, 130, 183 - 143, 191 - 178, EnumTypeRender.WEIGHT, 0, 0, true),
     ENERGY_HEIGHT(183, 119, 197, 119, 191 - 178, 183 - 143, EnumTypeRender.HEIGHT, 0, 0, true),
+    ENERGY_HEIGHT_1(219, 104, 237, 104, 237 - 219, 145 - 104, EnumTypeRender.HEIGHT, 0, 0, true,false,true),
     STEAM_ENERGY_HEIGHT(94, 1, 94, 21, 167 - 94, 19, EnumTypeRender.HEIGHT, 0, 0, true, false, true),
 
     QUANTUM_ENERGY_HEIGHT(1, 1, 21, 1, 18, 72, EnumTypeRender.HEIGHT, 0, 0, true, true),

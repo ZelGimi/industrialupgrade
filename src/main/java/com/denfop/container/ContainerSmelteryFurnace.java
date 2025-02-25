@@ -9,8 +9,8 @@ public class ContainerSmelteryFurnace extends ContainerFullInv<TileEntitySmelter
             TileEntitySmelteryFurnace tileEntityGeothermalExchanger,
             EntityPlayer var1
     ) {
-        super(var1, tileEntityGeothermalExchanger, 182);
-        this.addSlotToContainer(new SlotInvSlot(tileEntityGeothermalExchanger.getInvSlot(), 0, 81, 45));
+        super(var1, tileEntityGeothermalExchanger, 166);
+        this.addSlotToContainer(new SlotInvSlot(tileEntityGeothermalExchanger.getInvSlot(), 0, 77, 34));
     }
 
 }

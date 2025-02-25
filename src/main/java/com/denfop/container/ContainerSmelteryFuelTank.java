@@ -10,7 +10,7 @@ public class ContainerSmelteryFuelTank extends ContainerFullInv<TileEntitySmelte
             TileEntitySmelteryFuelTank tileEntityGeothermalExchanger,
             EntityPlayer var1
     ) {
-        super(var1, tileEntityGeothermalExchanger, 182);
+        super(var1, tileEntityGeothermalExchanger, 166);
       }
 
 }

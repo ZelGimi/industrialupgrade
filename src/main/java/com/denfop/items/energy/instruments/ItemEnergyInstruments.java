@@ -798,7 +798,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                             if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                                     && state.getBlockHardness(world, pos_block) >= 0.0F
                             ) {
-                                if (state.getBlockHardness(world, pos_block) > 0.0F) {
+                                if (state.getBlockHardness(world, pos_block) >= 0.0F) {
                                     onBlockDestroyed(stack, world, state, pos_block,
                                             player, energy, smelter, comb, mac, generator, random, black_list, blackList
                                     );
@@ -825,7 +825,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (
                         block == Blocks.MONSTER_EGG)) {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -839,7 +839,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
 
                 } else {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         return onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -858,7 +858,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (block == Blocks.MONSTER_EGG)) {
 
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -872,7 +872,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
 
                 } else {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         return onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -1152,7 +1152,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
             if (!block.equals(Blocks.AIR) && canHarvestBlock(state, itemstack)
                     && state.getBlockHardness(world, pos) >= 0.0F
             ) {
-                if (state.getBlockHardness(world, pos) > 0.0F) {
+                if (state.getBlockHardness(world, pos) >= 0.0F) {
                     onBlockDestroyed(itemstack, world, state, pos,
                             player, energy, smelter, comb, mac, generator, random, blackList, list, true
                     );
@@ -1237,7 +1237,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                             if (!localBlock.equals(Blocks.AIR) && canHarvestBlock(state, stack)
                                     && state.getBlockHardness(world, pos_block) >= 0.0F
                             ) {
-                                if (state.getBlockHardness(world, pos_block) > 0.0F) {
+                                if (state.getBlockHardness(world, pos_block) >= 0.0F) {
                                     onBlockDestroyed(stack, world, state, pos_block,
                                             player, energy, smelter, comb, mac, generator, random, black_list
                                             , list
@@ -1269,7 +1269,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (
                         block == Blocks.MONSTER_EGG)) {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -1283,7 +1283,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
 
                 } else {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         return onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -1302,7 +1302,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
                         && state.getBlockHardness(world, pos) >= 0.0F
                         || (block == Blocks.MONSTER_EGG)) {
 
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,
@@ -1316,7 +1316,7 @@ public class ItemEnergyInstruments extends ItemTool implements IEnergyItem, IIte
 
 
                 } else {
-                    if (state.getBlockHardness(world, pos) > 0.0F) {
+                    if (state.getBlockHardness(world, pos) >= 0.0F) {
                         return onBlockDestroyed(stack, world, state, pos,
                                 player, energy,
                                 smelter, comb, mac, generator, random,

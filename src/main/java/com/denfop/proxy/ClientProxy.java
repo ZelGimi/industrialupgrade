@@ -87,6 +87,7 @@ import com.denfop.tiles.mechanism.worlcollector.TileCrystallize;
 import com.denfop.tiles.panels.entity.TileEntityMiniPanels;
 import com.denfop.tiles.panels.entity.TileSolarPanel;
 import com.denfop.tiles.transport.tiles.TileEntityMultiCable;
+import com.denfop.tiles.transport.types.AmpereType;
 import com.denfop.tiles.transport.types.BioType;
 import com.denfop.tiles.transport.types.CableType;
 import com.denfop.tiles.transport.types.CoolType;
@@ -234,6 +235,7 @@ public class ClientProxy extends CommonProxy {
         loader.register("models/block/wiring/expcable/expcable_expcable", new ModelCable(ExpType.values()));
         loader.register("models/block/wiring/spipe/spipe_spipe", new ModelCable(SteamType.values()));
         loader.register("models/block/wiring/bpipe/bpipe_bpipe", new ModelCable(BioType.values()));
+        loader.register("models/block/wiring/acable/acable_acable", new ModelCable(AmpereType.values()));
 
         cropRender = new CropRender();
         loader.register("models/block/crop/crop", cropRender);

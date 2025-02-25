@@ -62,7 +62,7 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
     private int level;
 
     public TileElectrolyzer() {
-        super(24000, 1, 3);
+        super(24000, 1, 2);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, InvSlot.TypeItemSlot.INPUT);
 

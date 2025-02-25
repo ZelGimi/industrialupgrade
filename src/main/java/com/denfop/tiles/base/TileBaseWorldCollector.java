@@ -66,7 +66,7 @@ public class TileBaseWorldCollector extends TileElectricMachine implements IUpda
         this.defaultOperationLength = this.operationLength = 800;
         this.operationsPerTick = 1;
         this.matter_energy = 0;
-        this.max_matter_energy = 1000;
+        this.max_matter_energy = 10000;
         Recipes.recipes.addInitRecipes(this);
     }
 

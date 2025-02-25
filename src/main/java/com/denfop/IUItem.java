@@ -54,6 +54,7 @@ import com.denfop.items.space.ItemColonialBuilding;
 import com.denfop.items.space.ItemResearchLens;
 import com.denfop.items.space.ItemRover;
 import com.denfop.items.space.ItemSpace;
+import com.denfop.items.transport.ItemAmpereCable;
 import com.denfop.items.transport.ItemBioPipe;
 import com.denfop.items.transport.ItemCoolPipes;
 import com.denfop.items.transport.ItemExpCable;
@@ -886,6 +887,9 @@ public class IUItem {
     public static BlockTileEntity adv_cokeoven;
     public static BlockTileEntity watermill;
     public static BlockTileEntity lightning_rod;
+    public static Item terra_wart;
+    public static ItemAmpereCable amperepipes;
+    public static BlockTileEntity amperecableblock;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

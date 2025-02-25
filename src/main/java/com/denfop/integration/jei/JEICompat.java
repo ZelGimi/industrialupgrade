@@ -254,6 +254,9 @@ import com.denfop.integration.jei.gearing.GearingWrapper;
 import com.denfop.integration.jei.genaddstone.GenAddStoneCategory;
 import com.denfop.integration.jei.genaddstone.GenAddStoneHandler;
 import com.denfop.integration.jei.genaddstone.GenAddStoneRecipeWrapper;
+import com.denfop.integration.jei.genbio.GenBioCategory;
+import com.denfop.integration.jei.genbio.GenBioHandler;
+import com.denfop.integration.jei.genbio.GenBioWrapper;
 import com.denfop.integration.jei.gendiesel.GenDieselCategory;
 import com.denfop.integration.jei.gendiesel.GenDieselHandler;
 import com.denfop.integration.jei.gendiesel.GenDieselWrapper;
@@ -814,6 +817,7 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new ChargedRedstoneCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new GeneticPolymizerCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new BiomassCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new GenBioCategory(registry.getJeiHelpers().getGuiHelper()));
 
 
     }
@@ -963,6 +967,23 @@ public final class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3.steam_bio_generator),
                 new BiomassCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
         );
+
+        registry.addRecipes(
+                GenBioHandler.getRecipes(),
+                new    GenBioCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                GenBioHandler.class,  GenBioWrapper::new,
+                BlockBaseMachine3.gen_bio.getName()
+        );
+
+        registry.addRecipeCatalyst(
+                getBlockStack(BlockBaseMachine3.gen_bio),
+                new GenBioCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+
         registry.addRecipes(
                 DepositsHandler.getRecipes(),
                 new DepositsCategory(registry.getJeiHelpers().getGuiHelper()).getUid()

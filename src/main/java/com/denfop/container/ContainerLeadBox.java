@@ -28,7 +28,7 @@ public class ContainerLeadBox extends ContainerHandHeldInventory<ItemStackLeadBo
         int col;
         for (col = 0; col < slots; ++col) {
             for (int col1 = 0; col1 < 9; ++col1) {
-                this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 24 + col * 18) {
+                this.addSlotToContainer(new Slot(Toolbox1, col1 + col * 9, 8 + col1 * 18, 18 + col * 18) {
                     @Override
                     public boolean isItemValid(final ItemStack stack) {
                         return stack.getItem() instanceof IRadioactiveItemType;
@@ -37,7 +37,7 @@ public class ContainerLeadBox extends ContainerHandHeldInventory<ItemStackLeadBo
             }
         }
         this.current = player.inventory.currentItem;
-        addPlayerInventorySlots(player, 233);
+        addPlayerInventorySlots(player, 166);
 
     }
 

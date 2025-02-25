@@ -81,6 +81,7 @@ public class ItemBooze extends Item implements IModelRegister {
                         nbtTagCompound.setByte("waterVariety", (byte) enumWaterVariety.ordinal());
                         nbtTagCompound.setByte("timeVariety", (byte) enumTimeVariety.ordinal());
                         nbtTagCompound.setByte("beerVariety", (byte) enumBeerVariety.ordinal());
+                        nbtTagCompound.setByte("amount", (byte) 5);
                         subItems.add(stack);
                     }
                 }

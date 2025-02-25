@@ -30,7 +30,7 @@ public class GuiBioMultiMachine extends GuiIU<ContainerBioMultiMachine> {
     private final GuiComponent process;
 
     public GuiBioMultiMachine(ContainerBioMultiMachine container1) {
-        super(container1, EnumTypeStyle.STEAM);
+        super(container1, EnumTypeStyle.BIO);
         this.container = container1;
         this.process = new GuiComponent(this, 0, 0, EnumTypeComponent.BIO_MULTI_PROCESS,
                 new Component<>(new ComponentBioProcessRender(container1.base.multi_process, container1.base.getTypeMachine()))

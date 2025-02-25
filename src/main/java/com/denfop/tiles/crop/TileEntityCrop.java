@@ -397,6 +397,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 chunkPosListMap.put(chunkPos, BeeNetwork.instance.getApiaryFromChunk(world, chunkPos));
             }
             sendUpdatePacket("texture", 0);
+            sendUpdatePacket("hasDouble", hasDouble);
         }
 
         if (this.getWorld().isRemote) {

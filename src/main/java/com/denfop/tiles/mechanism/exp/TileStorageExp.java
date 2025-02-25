@@ -51,7 +51,7 @@ public class TileStorageExp extends TileEntityInventory implements
 
     public TileStorageExp() {
         this.inputSlot = new InvSlotExpStorage(this);
-        this.energy = this.addComponent(new ComponentBaseEnergy(EnergyType.EXPERIENCE, this, 2000000000, ModUtils.allFacings,
+        this.energy = this.addComponent(new ComponentBaseEnergy(EnergyType.EXPERIENCE, this, 4000000000d, ModUtils.allFacings,
                 ModUtils.allFacings, 14
         ));
         this.energy.setDirections(ModUtils.allFacings, ModUtils.allFacings);
@@ -275,7 +275,7 @@ public class TileStorageExp extends TileEntityInventory implements
         this.expirencelevel = ExperienceUtils.getLevelForExperience((int) Math.min(this.energy.getEnergy(), 2000000000));
         this.expirencelevel1 =
                 ExperienceUtils.getLevelForExperience((int) Math.min(
-                        Math.min(this.energy.getEnergy() - 2000000000, 0),
+                        Math.max(this.energy.getEnergy() - 2000000000, 0),
                         2000000000
                 ));
 

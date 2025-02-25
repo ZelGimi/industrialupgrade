@@ -129,7 +129,7 @@ public class BlockSpace extends BlockCore implements IModelRegister {
             final int i = quantityRedstoneDroppedWithBonus(fortune, WorldBaseGen.random);
             ret.add(new ItemStack(Items.REDSTONE,i));
         }else if (type.ordinal() == 3){
-            final int i = WorldBaseGen.random.nextInt(fortune + 2) - 1;
+            final int i = WorldBaseGen.random.nextInt(fortune + 2) + 1;
             ret.add(new ItemStack(Items.DYE,i,4));
         }else {
             ret.add(new ItemStack(this,1,type.ordinal()));

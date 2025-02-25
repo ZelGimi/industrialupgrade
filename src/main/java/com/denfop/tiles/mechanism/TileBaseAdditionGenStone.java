@@ -9,6 +9,8 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerAdditionGenStone;
 import com.denfop.gui.GuiAdditionGenStone;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -66,6 +68,7 @@ public abstract class TileBaseAdditionGenStone extends TileElectricMachine imple
         this.granite = new ItemStack(Blocks.STONE, 8,1);
         this.diorite = new ItemStack(Blocks.STONE, 8,3);
         this.andesite = new ItemStack(Blocks.STONE, 8,5);
+
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {

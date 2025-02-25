@@ -175,6 +175,9 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
                 (this.world.getBlockState(this.pos.up()).getMaterial().getMaterialMapColor() ==
                         MapColor.AIR) && !this.noSunWorld;
         this.sunIsUp = this.world.isDaytime();
+        this.coef_day = this.lst.get(0);
+        this.coef_night = this.lst.get(1);
+        this.update_night = this.lst.get(2);
     }
 
     public void updateEntityServer() {

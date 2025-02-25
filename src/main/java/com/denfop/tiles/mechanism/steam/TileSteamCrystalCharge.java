@@ -217,7 +217,7 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
 
         if (this.output != null && !this.inputSlotA.isEmpty() && this.outputSlot.canAdd(this.output
                 .getRecipe()
-                .getOutput().items)&&ampere.canUseEnergy(4000) && this.inputSlotA.continue_process(this.output) && this.steam.canUseEnergy(energyConsume) ) {
+                .getOutput().items)&&ampere.canUseEnergy(20) && this.inputSlotA.continue_process(this.output) && this.steam.canUseEnergy(energyConsume) ) {
             if (!this.getActive()) {
                 setActive(true);
             }
@@ -231,7 +231,7 @@ public class TileSteamCrystalCharge extends TileElectricMachine implements
             this.guiProgress = (k / this.operationLength);
             if (this.progress >= this.operationLength) {
                 this.guiProgress = 0;
-                ampere.useEnergy(4000);
+                ampere.useEnergy(20);
                 operate();
                 this.progress = 0;
                 initiate(2);

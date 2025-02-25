@@ -5,6 +5,8 @@ import com.denfop.IUCore;
 import com.denfop.api.item.IMultiBlockItem;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.MultiTileBlock;
+import com.denfop.tiles.mechanism.TileEntityAmpereStorage;
+import com.denfop.tiles.mechanism.TileEntityBioGenerator;
 import com.denfop.tiles.mechanism.TileEntityNightConverter;
 import com.denfop.tiles.mechanism.TileEntityNightTransformer;
 import com.denfop.tiles.base.TileAntiUpgradeBlock;
@@ -177,8 +179,10 @@ import com.denfop.tiles.mechanism.energy.TileEnergySubstitute;
 import com.denfop.tiles.mechanism.generator.energy.TileEntitySolarGenerator;
 import com.denfop.tiles.mechanism.generator.energy.TilePeatGenerator;
 import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileBioFuelGenerator;
 import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityGeoGenerator;
 import com.denfop.tiles.mechanism.generator.energy.fluid.TileGasGenerator;
+import com.denfop.tiles.mechanism.generator.energy.fluid.TileHydrogenGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileAdvRedstoneGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileImpRedstoneGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TilePerRedstoneGenerator;
@@ -519,6 +523,9 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     night_converter(TileEntityNightConverter.class,255),
     rover_assembler(TileEntityRoverAssembler.class, 256),
     steam_fluid_heater(TileEntitySteamFluidHeater.class, 257,EnumTypeCasing.STEAM),
+    gen_bio(TileBioFuelGenerator.class, 258),
+    ampere_storage(TileEntityAmpereStorage.class,259),
+    bio_generator(TileEntityBioGenerator.class, 260),
     ;
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("basemachine3");

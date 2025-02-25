@@ -57,9 +57,7 @@ public class GuiStorageExp extends GuiIU<ContainerStorageExp> {
         drawTexturedModalRect(xoffset + 7, yoffset + 22, 18,
                 34, 24, 55
         );
-        String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(this.xSize / 2, 6, name, 4210752, false);
-        int chargeLevel = (int) (47.0F * Math.min(this.container.base.expirencelevel
+         int chargeLevel = (int) (47.0F * Math.min(this.container.base.expirencelevel
                 / 23926D, 1));
         int chargeLevel1 = 0;
         if (this.container.base.energy.getCapacity() > 2000000000) {

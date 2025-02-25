@@ -106,6 +106,7 @@ public class CropInit {
     public static CropBase americium_moss;
     public static CropBase thorium_fist;
     public static CropBase nether_wart;
+    public static CropBase terra_wart;
 
     public static void init(){
         CropNetwork.init();
@@ -546,7 +547,11 @@ public class CropInit {
                  titanium_fantasy,tungsten_moon_flower), 2,
                 false, 4500, 50, true, false, Arrays.asList(new ItemStack(IUItem.nuclear_res,1,16)), 10, Collections.emptyList()
                  , 1);
-
+        terra_wart = new CropBase("terra_wart", 82, EnumSoil.SOULSAND, 1, 0, 1, 1, 60, 4, 0,
+                new ResourceLocation(Constants.MOD_ID, "blocks/crop/terra_wart"), false, Arrays.asList(ender_lily,
+                ghast_dew,nether_wart), 2,
+                false, 4500, 50, true, false, Arrays.asList(new ItemStack(IUItem.terra_wart)), 10, Collections.emptyList()
+                , 1);
         weed_seed.setIgnoreSoil(true);
         GeneticsManager.init();
         com.denfop.api.bee.genetics.GeneticsManager.init();
@@ -640,6 +645,7 @@ public class CropInit {
             americium_moss.addBiome(biome);
             thorium_fist.addBiome(biome);
             nether_wart.addBiome(biome);
+            terra_wart.addBiome(biome);
             FOREST_BEE.addBiome(biome);
             PLAINS_BEE.addBiome(biome);
         });
@@ -647,12 +653,14 @@ public class CropInit {
             weed_seed.addBiome(biome);
             hops.addBiome(biome);
             nether_wart.addBiome(biome);
+            terra_wart.addBiome(biome);
             TROPICAL_BEE.addBiome(biome);
             SWAMP_BEE.addBiome(biome);
         });
         geneticBiomes.get(GeneticTraits.BIOME_II).forEach(biome -> {
             weed_seed.addBiome(biome);
             nether_wart.addBiome(biome);
+            terra_wart.addBiome(biome);
         });
         geneticBiomes.get(GeneticTraits.BIOME_III).forEach(biome -> {
             weed_seed.addBiome(biome);

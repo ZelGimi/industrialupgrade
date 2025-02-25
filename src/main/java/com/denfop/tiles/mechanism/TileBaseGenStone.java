@@ -9,6 +9,8 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.gui.GuiGenStone;
+import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;

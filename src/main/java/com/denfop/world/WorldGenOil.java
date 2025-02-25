@@ -6,7 +6,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 import javax.annotation.Nonnull;
@@ -14,160 +13,110 @@ import java.util.Random;
 
 public class WorldGenOil extends WorldGenerator {
 
+    private final Block block;
     private final Block spreadBlock;
 
-    public WorldGenOil(Block spreadBlock) {
+    public WorldGenOil(Block block, Block spreadBlock) {
+        this.block = block;
         this.spreadBlock = spreadBlock;
     }
 
 
     @Override
     public boolean generate(@Nonnull final World world, @Nonnull final Random rand, final BlockPos pos) {
-        if (WorldBaseGen.random.nextInt(10) > 0) {
-            return false;
-        }
-        int x = pos.getX();
-        int z = pos.getZ();
-        int y;
-        if (world.isRemote) {
-            return false;
-        }
-        final Chunk chuck = world.getChunkFromBlockCoords(pos);
-        int height = chuck.getHeight(pos);
-        y = height;
-        IBlockState block_state = world.getBlockState(pos);
+        int x = pos.getX() - 8;
+        int z = pos.getZ() - 8;
+        int y = pos.getY();
+        final IBlockState block_state = world.getBlockState(pos);
         while (y > 40 && block_state.getMaterial() == Material.AIR) {
             y--;
-            block_state = world.getBlockState(new BlockPos(x, y, z));
+        }
+        if (y <= 40) {
+            return false;
         }
 
-        int length = rand.nextInt(20) + 5;
-        int weight = rand.nextInt(15) + 5;
-        int depth = rand.nextInt(4) + 3;
-        int weight1 = 0;
-        int weight2 = 0;
-        int length1 = 0;
-        int length2 = 0;
-        if (weight % 3 == 1 || weight % 3 == 2) {
-            if (weight % 3 == 2) {
-                weight2 = (weight + 1) / 3;
-                weight1 = weight2 - 1;
-            } else {
-                weight2 = (weight - 1) / 3;
-                weight1 = weight2 + 1;
-            }
-        } else {
-            weight1 = weight2 = (weight) / 3;
-        }
+        y -= 4;
+        boolean[] arrayOfBoolean = new boolean[2048];
+        int i = rand.nextInt(4) + 4;
 
-        if (length % 3 == 1 || length % 3 == 2) {
-            if (length % 3 == 2) {
-                length2 = (length + 1) / 3;
-                length1 = length2 - 1;
-            } else {
-                length2 = (length - 1) / 3;
-                length1 = length2 + 1;
-            }
-        } else {
-            length1 = length2 = (length) / 3;
-        }
-        for (int x1 = -1; x1 > -3; x1--) {
-            for (int z1 = 0; z1 < weight; z1++) {
-                if (x1 == -1 && (z1 < weight2 || z1 >= weight1 + weight2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                } else if (x1 == -1 && (z1 >= weight2 && z1 < weight1 + weight2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, this.spreadBlock.getDefaultState(), 3);
-                } else if (x1 == -2 && (z1 >= weight2 && z1 < weight1 + weight2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                }
-            }
-        }
-        for (int x1 = length; x1 < length + 2; x1++) {
-            for (int z1 = 0; z1 < weight; z1++) {
-                if (x1 == length && (z1 < weight2 || z1 >= weight1 + weight2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                } else if (x1 == length && (z1 >= weight2 && z1 < weight1 + weight2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, this.spreadBlock.getDefaultState(), 3);
-                } else if (x1 == length + 1 && (z1 >= weight2 && z1 < weight1 + weight2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                }
-            }
-        }
+        for (int j = 0; j < i; j++) {
+            double d1 = rand.nextDouble() * 6.0D + 3.0D;
+            double d2 = rand.nextDouble() * 4.0D + 2.0D;
+            double d3 = rand.nextDouble() * 6.0D + 3.0D;
+            double d4 = rand.nextDouble() * (16.0D - d1 - 2.0D) + 1.0D + d1 / 2.0D;
+            double d5 = rand.nextDouble() * (8.0D - d2 - 4.0D) + 2.0D + d2 / 2.0D;
+            double d6 = rand.nextDouble() * (16.0D - d3 - 2.0D) + 1.0D + d3 / 2.0D;
 
+            for (int i2 = 1; i2 < 15; i2++) {
+                for (int i3 = 1; i3 < 15; i3++) {
+                    for (int i4 = 1; i4 < 7; i4++) {
+                        double d7 = (i2 - d4) / (d1 / 2.0D);
+                        double d8 = (i4 - d5) / (d2 / 2.0D);
+                        double d9 = (i3 - d6) / (d3 / 2.0D);
+                        double d10 = d7 * d7 + d8 * d8 + d9 * d9;
 
-        for (int z1 = -1; z1 > -3; z1--) {
-            for (int x1 = 0; x1 < length; x1++) {
-                if (z1 == -1 && (x1 < length2 || x1 >= length1 + length2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                } else if (z1 == -1 && (x1 >= length2 && x1 < length1 + length2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, this.spreadBlock.getDefaultState(), 3);
-                } else if (z1 == -2 && (x1 >= length2 && x1 < length1 + length2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                }
-            }
-        }
-        for (int z1 = weight; z1 < weight + 2; z1++) {
-            for (int x1 = 0; x1 < length; x1++) {
-                if (z1 == weight && (x1 < length2 || x1 >= length1 + length2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                } else if (z1 == weight && (x1 >= length2 && x1 < length1 + length2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, this.spreadBlock.getDefaultState(), 3);
-                } else if (z1 == weight + 1 && (x1 >= length2 && x1 < length1 + length2)) {
-                    final BlockPos pos1 = new BlockPos(x + x1, y, z + z1);
-                    world.setBlockState(pos1, Blocks.SAND.getDefaultState(), 3);
-                }
-            }
-        }
-        for (int y1 = 0; y1 < depth; y1++) {
-            for (int x1 = y1 * 2; x1 < length - y1 * 2; x1++) {
-                for (int z1 = y1 * 2; z1 < weight - y1 * 2; z1++) {
-
-                    BlockPos stonePos = new BlockPos(x + x1, y - y1, z + z1);
-                    final IBlockState oldState = world.getBlockState(stonePos);
-                    if (!oldState.getMaterial().isLiquid()) {
-                        world.setBlockState(stonePos, this.spreadBlock.getDefaultState(), 3);
-                    }
-
-                }
-            }
-        }
-        int geyser = rand.nextInt(2) + 1;
-        if (length > weight) {
-            int p = length / (geyser + 1);
-            for (int x1 = p; geyser != 0; x1 += p, geyser--) {
-                height = rand.nextInt(5) + 2;
-                for (int y1 = y + 1; y1 < y + 1 + height; y1++) {
-                    BlockPos stonePos = new BlockPos(x + x1, y1, z + weight / 2);
-                    final IBlockState oldState = world.getBlockState(stonePos);
-                    if (!oldState.getMaterial().isLiquid()) {
-                        world.setBlockState(stonePos, this.spreadBlock.getDefaultState(), 3);
+                        if (d10 < 1.0D) {
+                            arrayOfBoolean[(i2 * 16 + i3) * 8 + i4] = true;
+                        }
                     }
                 }
-
             }
-        } else {
-            int p = weight / (geyser + 1);
-            for (int z1 = p; geyser != 0; z1 += p, geyser--) {
-                height = rand.nextInt(5 * depth) + depth;
-                for (int y1 = y + 1; y1 < y + 1 + height; y1++) {
-                    BlockPos stonePos = new BlockPos(x + length / 2, y1, z + z1);
-                    final IBlockState oldState = world.getBlockState(stonePos);
-                    if (!oldState.getMaterial().isLiquid()) {
-                        world.setBlockState(stonePos, this.spreadBlock.getDefaultState(), 3);
+        }
+
+        int k;
+        int m;
+
+        for (int j = 0; j < 16; j++) {
+            for (k = 0; k < 16; k++) {
+                for (m = 0; m < 8; m++) {
+                    int i1 = (j * 16 + k) * 8 + m;
+                    int n = arrayOfBoolean[i1]
+                            && (j < 15 && arrayOfBoolean[((j + 1) * 16 + k) * 8 + m]
+                            || j > 0 && arrayOfBoolean[((j - 1) * 16 + k) * 8 + m]
+                            || k < 15 && arrayOfBoolean[(j * 16 + k + 1) * 8 + m]
+                            || k > 0 && arrayOfBoolean[(j * 16 + k - 1) * 8 + m]
+                            || m < 7 && arrayOfBoolean[(j * 16 + k) * 8 + m + 1]
+                            || m > 0 && arrayOfBoolean[i1 - 1]) ? 1 : 0;
+
+                    if (n != 0) {
+                        final IBlockState block_state1 = world.getBlockState(new BlockPos(x + j, y + m, z + k));
+                        Material localMaterial = block_state1.getMaterial();
+
+
+                        if (m >= 4 && localMaterial.isLiquid()) {
+                            return false;
+                        }
+                        if (m < 4 && !localMaterial.isSolid() && block_state1
+                                .getBlock() != this.block) {
+                            return false;
+                        }
                     }
                 }
+            }
+        }
+        for (int j = 0; j < 16; j++) {
+            for (k = 0; k < 16; k++) {
+                for (m = 0; m < 8; m++) {
+                    boolean need = arrayOfBoolean[(j * 16 + k) * 8 + m];
+                    if (need) {
 
+                        world.setBlockState(new BlockPos(x + j, y + m, z + k), m >= 4 ? Blocks.AIR.getDefaultState() :
+                                this.block.getDefaultState(), 2);
+
+                    }
+                    if (m >= 4) {
+                        IBlockState block_states = null;
+                        if (need) {
+                            block_states = world.getBlockState(new BlockPos(x + j, y + m - 1, z + k));
+                        }
+                        if (need
+                                && (block_states.getBlock() == Blocks.DIRT || block_states
+                                .getBlock() == Blocks.WATER)
+                                && world.getSkylightSubtracted() > 0) {
+                            world.setBlockState(new BlockPos(x + j, y + m - 1, z + k), Blocks.GRASS.getDefaultState());
+                        }
+                    }
+                }
             }
         }
         return true;

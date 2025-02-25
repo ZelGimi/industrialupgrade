@@ -7,6 +7,7 @@ public abstract class ContainerElectricMachine<T extends TileElectricMachine> ex
 
     public ContainerElectricMachine(EntityPlayer player, T base1, int height, int dischargeX, int dischargeY) {
         super(player, base1, height);
+        if (base1.dischargeSlot != null)
         this.addSlotToContainer(new SlotInvSlot(base1.dischargeSlot, 0, dischargeX, dischargeY));
     }
 

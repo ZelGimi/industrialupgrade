@@ -176,7 +176,7 @@ public class BlockResource extends BlockCore implements IModelRegister {
         return state.getValue(VARIANT).getLight();
     }
     public int quantityDropped(Random random) {
-        return 0;
+        return 1;
     }
 
     public boolean isOpaqueCube(IBlockState state) {

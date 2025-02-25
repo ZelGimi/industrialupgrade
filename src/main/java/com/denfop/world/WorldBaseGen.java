@@ -43,8 +43,9 @@ public class WorldBaseGen implements IWorldGenerator {
     public static List<VeinType> veinTypes = new ArrayList<>();
     public static List<VeinType> veinTypes1 = new ArrayList<>();
     public static Random random = new Random();
-    final Fluid fluid = FluidName.fluidneft.getInstance();
-    final Block block = fluid.getBlock();
+    final FluidName[] fluids = new FluidName[]{ FluidName.fluidneft, FluidName.fluidsweet_medium_oil,
+            FluidName.fluidsweet_heavy_oil, FluidName.fluidsour_light_oil, FluidName.fluidsour_medium_oil,
+            FluidName.fluidsour_heavy_oil};;
 
     public static void init() {
         GameRegistry.registerWorldGenerator(new WorldBaseGen(), 0);
@@ -118,8 +119,9 @@ public class WorldBaseGen implements IWorldGenerator {
                     var3 = chunkX * 16 + random.nextInt(16) + 8;
                     var4 = random.nextInt(random.nextInt(random.nextInt(112) + 8) + 8) + 60;
                     var5 = chunkZ * 16 + random.nextInt(16) + 8;
-                    if (block != null) {
-                        new WorldGenOil(block)
+                    FluidName fluidName = fluids[random.nextInt(fluids.length)];
+                    if (fluidName != null) {
+                        new WorldGenOil(fluidName.getInstance().getBlock(),fluidName.getInstance().getBlock())
                                 .generate(world, random, new BlockPos(var3, var4, var5));
                     }
 

@@ -125,8 +125,9 @@ public class BlockOres2 extends BlockCore implements IModelRegister {
         if (meta >= 3&& meta <= 5) {
 
             drops.add(new ItemStack(IUItem.rawMetals, 1 + getDrop(fortune), getMetaFromState(state)-3+22));
+            return;
         }
-        return;
+        super.getDrops(drops,world,pos,state,fortune);
     }
 
 

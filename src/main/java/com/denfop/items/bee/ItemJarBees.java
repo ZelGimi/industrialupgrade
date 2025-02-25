@@ -70,6 +70,14 @@ public class ItemJarBees extends ItemSubTypes<ItemJarBees.Types> implements IMod
     ) {
         p_77624_3_.add(Localization.translate("iu.use_bee_analyzer") + Localization.translate(IUItem.bee_analyzer.getUnlocalizedName()));
         super.addInformation(p_77624_1_, p_77624_2_, p_77624_3_, p_77624_4_);
+        p_77624_3_.add(Localization.translate("iu.bee_negative"));
+        IBee bee = getBee(p_77624_1_);
+        if (bee != null){
+          List<IBee> unCompatibleBees =  bee.getUnCompatibleBees();
+          for (IBee bee1 : unCompatibleBees){
+              p_77624_3_.add(Localization.translate("bee_"+bee1.getName()));
+          }
+        }
     }
 
 
@@ -128,7 +136,10 @@ public class ItemJarBees extends ItemSubTypes<ItemJarBees.Types> implements IMod
     }
     public  static  IBee getBee(final ItemStack stack){
         final NBTTagCompound nbt = ModUtils.nbt(stack);
-        return  BeeNetwork.instance.getBee(nbt.getInteger("bee_id")).copy();
+        IBee bee =  BeeNetwork.instance.getBee(nbt.getInteger("bee_id"));
+        if (bee == null)
+            return null;
+        return bee.copy();
     }
     @Override
     public String getItemStackDisplayName(final ItemStack stack) {

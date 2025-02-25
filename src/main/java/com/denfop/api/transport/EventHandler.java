@@ -146,7 +146,7 @@ public class EventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void update(TilesUpdateEvent event) {
 
-        for (TileEntity tile : event.tiles) {
+        for (TileEntity tile : new ArrayList<>(event.tiles)) {
             final BlockPos pos = tile.getPos();
             if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null) && tile.hasCapability(
                     CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,

@@ -1356,6 +1356,21 @@
       }, 
 	  "steam_fluid_heater_active" : {
         "model" : "industrialupgrade:basemachine/steam_fluid_heater_active"
+      }, 
+	  "gen_bio" : {
+        "model" : "industrialupgrade:basemachine/gen_bio"
+      }, 
+	  "gen_bio_active" : {
+        "model" : "industrialupgrade:basemachine/gen_bio_active"
+      }, 
+	  "bio_generator" : {
+        "model" : "industrialupgrade:basemachine/bio_generator"
+      }, 
+	  "bio_generator_active" : {
+        "model" : "industrialupgrade:basemachine/bio_generator_active"
+      }, 
+	  "ampere_storage" : {
+        "model" : "industrialupgrade:basemachine/ampere_storage"
       }
 	  
 	  

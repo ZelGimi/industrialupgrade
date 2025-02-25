@@ -2833,6 +2833,74 @@ public class BasicRecipeTwo {
                 ('C'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
+
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 251),
+                "BCB",
+                "BAB",
+                "BCB",
+
+                ('A'),
+                DEFAULT_SENSOR,
+                ('B'),
+                ModUtils.getCellFromFluid(FluidName.fluidsour_light_oil.getName()),
+                ('C'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 251),
+                "BCB",
+                "BAB",
+                "BCB",
+
+                ('A'),
+                DEFAULT_SENSOR,
+                ('B'),
+                ModUtils.getCellFromFluid(FluidName.fluidsour_medium_oil.getName()),
+                ('C'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+        );
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 251),
+                "BCB",
+                "BAB",
+                "BCB",
+
+                ('A'),
+                DEFAULT_SENSOR,
+                ('B'),
+                ModUtils.getCellFromFluid(FluidName.fluidsour_heavy_oil.getName()),
+                ('C'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+        );
+
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 251),
+                "BCB",
+                "BAB",
+                "BCB",
+
+                ('A'),
+                DEFAULT_SENSOR,
+                ('B'),
+                ModUtils.getCellFromFluid(FluidName.fluidsweet_medium_oil.getName()),
+                ('C'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+        );
+
+        Recipes.recipe.addRecipe(
+                new ItemStack(IUItem.crafting_elements, 1, 251),
+                "BCB",
+                "BAB",
+                "BCB",
+
+                ('A'),
+                DEFAULT_SENSOR,
+                ('B'),
+                ModUtils.getCellFromFluid(FluidName.fluidsweet_heavy_oil.getName()),
+                ('C'),
+                TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
+        );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.oilgetter), " A ", " B ", " D ",
 
                 ('D'), IUItem.elemotor,

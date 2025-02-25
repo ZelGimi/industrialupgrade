@@ -312,7 +312,7 @@ public class WorldSavedDataIU extends WorldSavedData {
                 NBTTagCompound player = new NBTTagCompound();
                 player.setUniqueId("uuid", entry1.getKey());
                 player.setDouble("value", entry1.getValue());
-                players.appendTag(players);
+                players.appendTag(player);
             }
             primitives.setTag("listPlayers", players);
             primitives.setInteger("id", entry.getKey().ordinal());

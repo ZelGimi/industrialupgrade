@@ -72,12 +72,12 @@ public class TileCrystalCharger extends TileElectricMachine implements
         this.componentProcess = this.addComponent(new ComponentProcess(this, 200, 1){
             @Override
             public boolean checkRecipe() {
-                return ampere.getEnergy() == 4000;
+                return ampere.getEnergy() >= 20D*(this.defaultOperationLength * 1D/this.operationLength);
             }
 
             @Override
-            public void consumeEnergy1() {
-                ampere.useEnergy(4000);
+            public void consumeEnergy() {
+                ampere.useEnergy(20D*(this.defaultOperationLength * 1D/this.operationLength));
             }
         });
         this.componentProcess.setHasAudio(false);
