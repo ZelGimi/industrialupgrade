@@ -26,13 +26,15 @@ You can freely use this mod in any projects, games and modifications subject to 
 You can make any changes to the mod, including changes to the code and game mechanics.
 You may distribute a modified version of a mod, provided you clearly indicate that it is a modification of the original and provide a link to the original source (CurseForge or Modrinth).
 If you want to create a complete analogue of this mod, which means creating a software product in which key aspects of the mod (functionality more than 50% similar to the original, graphical interface and block textures) are clearly copied, you must obtain written permission from the author. The author reserves the right to refuse such permission.
+A beginner developer or a developer who wants to learn something new has the right to use the mod's code exclusively for educational purposes.
+
 2.3. Inclusion in modpacks
 
 You can include this mod in any modpacks and distribute it as part of modpacks without the need to obtain separate permission from the author. The mod may be included in both free and paid modpacks, provided that all conditions specified in this section of the license are met, including a link to the original source.
 
 2.4. Texture usage: License CC BY-NC-ND
 
-Textures contained in this mod are licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-ND) license . This means the following:
+Textures contained in this mod are licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives (CC BY-NC-SA) license . This means the following:
 
 You can distribute textures provided you credit the author and link to the original source.
 Textures may not be used for commercial purposes. You cannot sell textures or use them in products that make money.
@@ -51,13 +53,17 @@ In case of violation of one or more license terms, the mod author reserves the f
 Prohibition of using the mod in any projects distributed on a commercial or non-commercial basis.
 A requirement to remove the mod from platforms where it is distributed in violation of the license terms.
 Taking legal measures to protect your rights in case of repeated or malicious violations of the terms.
-3. Definition of analogue
+3. Definition of analogue and independent expert commission
 
 An analogue is a mod that basically copies the following three aspects of a given mod:
 
-Functionality : If more than 50% of the game mechanics or functionality of your mod are similar to the original mod, it will be considered a borrowing of functionality.
-GUI : Any copying of GUI elements such as icons, buttons, panels and other visual elements without significant changes will be considered an infringement.
-Block textures : Using original or slightly modified block textures from this mod without permission from the author is also considered creating an analogue.
+Functionality: If more than 50% of the game mechanics or functionality of your mod are similar to the original mod, it will be considered a borrowing of functionality.
+GUI: Any copying of GUI elements such as icons, buttons, panels, and other visual elements without significant changes will be considered an infringement.
+Block textures: Using original or slightly modified block textures from this mod without permission from the author is also considered creating an analogue.
+
+If all three aspects are present in your mod, it will be considered a complete analogue. The creation of analogues without the written consent of the author is strictly prohibited.
+
+To determine whether a mod is an analogue, an independent expert commission will be assembled. This commission will include experienced modders and community representatives who will analyze the functionality, interface, and textures of the mod. The commission’s evaluation will be based on an in-depth comparison, and their decision will be final and not subject to appeal.
 
 If all three aspects are present in your mod, it will be considered complete analogue. The creation of analogues without the written consent of the author is strictly prohibited.
 
@@ -78,4 +84,4 @@ The mod is incompatible with other mods or game versions.
 
 The use of the mod, its modification and distribution is carried out by users at their own peril and risk. The author reserves the right to make changes to the license terms for future versions of the mod.
 
-©2024 IU
+©2024-25 IU
