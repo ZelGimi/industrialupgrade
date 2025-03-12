@@ -34,6 +34,7 @@ import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -85,7 +86,7 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultOperationLength = this.operationLength = 300;
+        this.defaultOperationLength = this.operationLength = 200;
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 1000);
         this.fluidTank2 = fluids.addTank("fluidTank2", 1000, InvSlot.TypeItemSlot.OUTPUT);
@@ -361,7 +362,11 @@ public class TileEntityPrimalFluidIntegrator extends TileElectricMachine impleme
                         , 100)
         );
 
-
+        addRecipe(new ItemStack(Blocks.DIRT), new ItemStack(Blocks.MYCELIUM),
+                new FluidStack(FluidName.fluidhoney.getInstance(), 1000),
+                new FluidStack(FluidName.fluidoxy.getInstance()
+                        , 75)
+        );
     }
 
     @Override

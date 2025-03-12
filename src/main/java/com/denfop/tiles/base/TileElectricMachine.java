@@ -8,7 +8,6 @@ import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.Energy;
-import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -24,8 +23,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.List;
@@ -136,7 +133,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 new PacketStopSound(getWorld(), this.pos);
 
@@ -187,7 +184,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
         super.addInformation(stack,tooltip);
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -206,7 +203,7 @@ public class TileElectricMachine extends TileEntityInventory implements IAudioFi
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

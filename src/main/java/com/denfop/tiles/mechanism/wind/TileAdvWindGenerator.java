@@ -10,11 +10,10 @@ import com.denfop.componets.EnumTypeStyle;
 
 public class TileAdvWindGenerator extends TileWindGenerator {
 
-    private final AirPollutionComponent pollutionAir;
+
 
     public TileAdvWindGenerator() {
         super(EnumLevelGenerators.TWO);
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
 
     @Override

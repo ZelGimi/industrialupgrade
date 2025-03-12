@@ -54,7 +54,7 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
     public final HeatComponent heat;
 
     public TileEntityElectricRefractoryFurnace() {
-        super(1, 300, 1);
+        super(1, 200, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this,1000));
         this.inputSlotA = new InvSlotRecipes(this, "elec_refractory_furnace", this, this.fluidTank);
         fluidTank.setTypeItemSlot(InvSlot.TypeItemSlot.INPUT);

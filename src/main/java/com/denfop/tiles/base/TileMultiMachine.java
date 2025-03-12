@@ -255,10 +255,10 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            if (!this.cold.upgrade) {
+            if (!this.cold.upgrade && this.getMachine().sizeWorkingSlot != 8 ) {
                 tooltip.add(Localization.translate("iu.multimachine.info"));
             }
-            if (this.heat != null) {
+            if (this.heat != null && !this.heat.auto) {
                 tooltip.add(Localization.translate("iu.heatmachine.info"));
             }
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.multi_process.energyConsume + Localization.translate(
@@ -285,7 +285,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     }
 
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -299,7 +299,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -553,7 +553,7 @@ public abstract class TileMultiMachine extends TileEntityInventory implements
             new PacketUpdateFieldTile(this, "sound", this.sound);
 
             if (!sound) {
-                if (this.getType() == EnumTypeAudio.ON) {
+                if (this.getTypeAudio() == EnumTypeAudio.ON) {
                     setType(EnumTypeAudio.OFF);
                     new PacketStopSound(getWorld(), this.pos);
 

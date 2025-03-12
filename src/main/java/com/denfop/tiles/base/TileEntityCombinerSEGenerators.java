@@ -211,13 +211,14 @@ public class TileEntityCombinerSEGenerators extends TileEntityInventory implemen
         super.updateEntityServer();
         if (this.world.provider.getWorldTime() % 80 == 0) {
             updateVisibility();
+            this.inputSlot.update();
         }
         long tick = this.getWorld().provider.getWorldTime() % 24000L;
         generation = 0;
         if (this.skyIsVisible) {
             energy(tick);
-            while (this.sunenergy.getEnergy() >= 2500 && this.outputSlot.add(itemstack)) {
-                this.sunenergy.addEnergy(-2500);
+            while (this.sunenergy.getEnergy() >= 9000 && this.outputSlot.add(itemstack)) {
+                this.sunenergy.addEnergy(-9000);
             }
         }
         this.upgradeSlot.tickNoMark();

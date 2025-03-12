@@ -63,13 +63,19 @@ public class TileEntityMultiBlockElement extends TileEntityInventory implements 
     }
 
     @Override
-    public void onUnloaded() {
+    public void onBlockBreak(final boolean wrench) {
+        super.onBlockBreak(wrench);
         if (this.getMain() != null) {
             if (this.getMain().isFull()) {
-                getMain().setFull(false);
                 getMain().setActivated(false);
+                getMain().setFull(false);
             }
         }
+    }
+
+    @Override
+    public void onUnloaded() {
+
         super.onUnloaded();
     }
 

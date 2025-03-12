@@ -1080,6 +1080,10 @@
   "custom" : {
     "fluid" : "iufluidcropgenetic"
   }
+},"fluidsteam_oil" : {
+  "custom" : {
+    "fluid" : "iufluidsteam_oil"
+  }
 }
 
 	  

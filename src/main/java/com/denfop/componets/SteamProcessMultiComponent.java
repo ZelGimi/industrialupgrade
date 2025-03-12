@@ -1,6 +1,7 @@
 package com.denfop.componets;
 
 import com.denfop.IUCore;
+import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.inv.IAdvInventory;
 import com.denfop.api.recipe.IMultiUpdateTick;
@@ -81,7 +82,13 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
     public void setOverclockRates() {
 
     }
-
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        if (parent.getWorld() == null) {
+            tooltip.add(Localization.translate("iu.speed_canister.info1"));
+        }
+    }
     @Override
     public void onContainerUpdate(final EntityPlayerMP player) {
         CustomPacketBuffer buffer = new CustomPacketBuffer(16);
@@ -150,7 +157,7 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
                     this.guiProgress[i] = 0;
                     this.progress[i] = 0;
                     operate(i, output);
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getType() != EnumTypeAudio.VALUES[2 % EnumTypeAudio.VALUES.length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[2 % EnumTypeAudio.VALUES.length])) {
                         if (type == -1) {
                             this.multimachine.initiate(2);
                             type = 2;
@@ -159,7 +166,7 @@ public class SteamProcessMultiComponent extends AbstractComponent implements IMu
                 }
             } else {
                 if (this.progress[i] != 0 && this.parent.getActive()) {
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getType() !=EnumTypeAudio.VALUES[1 % EnumTypeAudio.VALUES.length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() !=EnumTypeAudio.VALUES[1 % EnumTypeAudio.VALUES.length])) {
                         if (type == -1) {
                             this.multimachine.initiate(1);
                             type = 1;

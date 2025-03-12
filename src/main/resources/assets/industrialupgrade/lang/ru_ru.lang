@@ -618,11 +618,11 @@ iu.fly=§3Включён полёт:
 iu.fly1=Нажмите Mode Switch Key + Boost Key, чтобы включить полёт
 iu.effect=Включена огнестойкость:
 storagemodul=Работает только в хранилищах энергии
-storagemodul1=По хранилищу нажать SHIFT + ПКМ
+storagemodul1=По хранилищу нажать Shift + ПКМ
 press.lshift=Зажмите левый Shift для подробной информации
 iu.changemode=Для переключения режима, нажмите Mode Switch Key + ПКМ
 iu.changemodebattery=Для переключения режима нажмите ПКМ
-iu.purifiermode=Нажмите SHIFT + ПКМ по панели, чтобы очистить панель
+iu.purifiermode=Нажмите Shift + ПКМ по панели, чтобы очистить панель
 iu.saberon=Нажмите ПКМ, чтобы активировать саблю
 
 industrialupgrade.tank_iu.tank_iu=Жидкостный бак
@@ -697,7 +697,7 @@ gui.movementcharge=Мгновенная зарядка брони EF
 gui.movementchargeitem=Мгновенная зарядка предметов EF
 gui.movementchargerf=Мгновенная зарядка брони RF
 gui.movementchargeitemrf=Мгновенная зарядка предметов RF
-gui.movement=Зажмите <SHIFT> и ПКМ по блоку
+gui.movement=Используйте Shift + ПКМ по блоку
 
 modulechange=Позволяет панели заряжать предметы
 modulerfinfo=Позволяет вырабатывать RF-энергию
@@ -1779,103 +1779,6 @@ iu.purifiedcrushed.thallium=Талиевая очищенная дроблёна
 iu.purifiedcrushed.zirconium=Циркониевая очищенная дроблёная руда
 
 
-##Интеграция Ex Nihilo
-#Разбитые руды металлов
-mikhail_gravelcrushed.name=Разбитая михаловая руда
-aluminium_gravelcrushed.name=Разбитая алюминиевая руда
-vanady_gravelcrushed.name=Разбитая ванадиевая руда
-wolfram_gravelcrushed.name=Разбитая вольфрамовая руда
-cobalt_gravelcrushed.name=Разбитая кобальтовая руда
-magnesium_gravelcrushed.name=Разбитая магниевая руда
-nickel_gravelcrushed.name=Разбитая никелевая руда
-platium_gravelcrushed.name=Разбитая платиновая руда
-titanium_gravelcrushed.name=Разбитая титановая руда
-chromium_gravelcrushed.name=Разбитая хромовая руда
-spinel_gravelcrushed.name=Разбитая шпинелевая руда
-silver_gravelcrushed.name=Разбитая серебряная руда
-zinc_gravelcrushed.name=Разбитая цинковая руда
-manganese_gravelcrushed.name=Разбитая марганцевая руда
-
-#Гравиевые руды металлов
-mikhail_gravelore.name=Михаловая гравиевая руда
-aluminium_gravelore.name=Алюминиевая гравиевая руда
-vanady_gravelore.name=Ванадиевая гравиевая руда
-wolfram_gravelore.name=Вольфрамовая гравиевая руда
-cobalt_gravelore.name=Кобальтовая гравиевая руда
-magnesium_gravelore.name=Магниевая гравиевая руда
-nickel_gravelore.name=Никелевая гравиевая руда
-platium_gravelore.name=Платиновая гравиевая руда
-titanium_gravelore.name=Титановая гравиевая руда
-chromium_gravelore.name=Хромовая гравиевая руда
-spinel_gravelore.name=Шпинелевая гравиевая руда
-silver_gravelore.name=Серебряная гравиевая руда
-zinc_gravelore.name=Цинковая гравиевая руда
-manganese_gravelore.name=Марганцевая гравиевая руда
-
-#Измельчённые руды металлов
-mikhail_sandcrushed.name=Измельчённая михаловая руда
-aluminium_sandcrushed.name=Измельчённая алюминиевая руда
-vanady_sandcrushed.name=Измельчённая ванадиевая руда
-wolfram_sandcrushed.name=Измельчённая вольфрамовая руда
-cobalt_sandcrushed.name=Измельчённая кобальтовая руда
-magnesium_sandcrushed.name=Измельчённая магниевая руда
-nickel_sandcrushed.name=Измельчённая никелевая руда
-platium_sandcrushed.name=Измельчённая платиновая руда
-titanium_sandcrushed.name=Измельчённая титановая руда
-chromium_sandcrushed.name=Измельчённая хромовая руда
-spinel_sandcrushed.name=Измельчённая шпинелевая руда
-silver_sandcrushed.name=Измельчённая серебряная руда
-zinc_sandcrushed.name=Измельчённая цинковая руда
-manganese_sandcrushed.name=Измельчённая марганцевая руда
-
-#Песчаные руды металлов
-mikhail_sandore.name=Михаловая песчаная руда
-aluminium_sandore.name=Алюминиевая песчаная руда
-vanady_sandore.name=Ванадиевая песчаная руда
-wolfram_sandore.name=Вольфрамовая песчаная руда
-cobalt_sandore.name=Кобальтовая песчаная руда
-magnesium_sandore.name=Магниевая песчаная руда
-nickel_sandore.name=Никелевая песчаная руда
-platium_sandore.name=Платиновая песчаная руда
-titanium_sandore.name=Титановая песчаная руда
-chromium_sandore.name=Хромовая песчаная руда
-spinel_sandore.name=Шпинелевая песчаная руда
-silver_sandore.name=Серебряная песчаная руда
-zinc_sandore.name=Цинковая песчаная руда
-manganese_sandore.name=Марганцевая песчаная руда
-
-#Порошкообразные руды металлов
-mikhail_dustcrushed.name=Порошкообразная михаловая руда
-aluminium_dustcrushed.name=Порошкообразная алюминиевая руда
-vanady_dustcrushed.name=Порошкообразная ванадиевая руда
-wolfram_dustcrushed.name=Порошкообразная вольфрамовая руда
-cobalt_dustcrushed.name=Порошкообразная кобальтовая руда
-magnesium_dustcrushed.name=Порошкообразная магниевая руда
-nickel_dustcrushed.name=Порошкообразная никелевая руда
-platium_dustcrushed.name=Порошкообразная платиновая руда
-titanium_dustcrushed.name=Порошкообразная титановая руда
-chromium_dustcrushed.name=Порошкообразная хромовая руда
-spinel_dustcrushed.name=Порошкообразная шпинелевая руда
-silver_dustcrushed.name=Порошкообразная серебряная руда
-zinc_dustcrushed.name=Порошкообразная цинковая руда
-manganese_dustcrushed.name=Порошкообразная марганцевая руда
-
-#Пыльные руды металлов
-mikhail_dustore.name=Михаловая пыльная руда
-aluminium_dustore.name=Алюминиевая пыльная руда
-vanady_dustore.name=Ванадиевая пыльная руда
-wolfram_dustore.name=Вольфрамовая пыльная руда
-cobalt_dustore.name=Кобальтовая пыльная руда
-magnesium_dustore.name=Магниевая пыльная руда
-nickel_dustore.name=Никелевая пыльная руда
-platium_dustore.name=Платиновая пыльная руда
-titanium_dustore.name=Титановая пыльная руда
-chromium_dustore.name=Хромовая пыльная руда
-spinel_dustore.name=Шпинелевая пыльная руда
-silver_dustore.name=Серебряная пыльная руда
-zinc_dustore.name=Цинковая пыльная руда
-manganese_dustore.name=Марганцевая пыльная руда
-
 industrialupgrade.transformer_iu.lv=Трансформатор НН
 industrialupgrade.transformer_iu.mv=Трансформатор СН
 industrialupgrade.transformer_iu.hv=Трансформатор ВН
@@ -2308,7 +2211,7 @@ iu.electricstorageinformation3=Если установлен модуль "RF", 
 iu.electricstorageinformation4=Использовать модули можно в слотах в левой части.
 iu.electricstorageinformation5=Чтобы связать хранилище с беспроводным модулем, вставьте его в слот для модулей.
 iu.electricstorageinformation6=При успешной связи, поместите модуль в солнечную панель.
-iu.electricstorageinformation7=Мгновенная беспроводная зарядка работает только при SHIFT + ПКМ по хранилищу.
+iu.electricstorageinformation7=Мгновенная беспроводная зарядка работает только при Shift + ПКМ по хранилищу.
 
 button.deny=Выключить
 button.allow=Включить
@@ -4559,8 +4462,8 @@ iu.rad_cable=Радиационная труба
 tile.industrialupgrade.nuclear_bomb.name=Ядерная бомба
 iu.component_vent=Термопластический компонентный теплоотвод
 iu.adv_component_vent=Алюминиевый компонентный теплоотвод
-iu.imp_component_vent=Алюминиевый-Бронзовый компонентный теплоотвод
-iu.per_component_vent=Графито-Алмазный компонентный теплоотвод
+iu.imp_component_vent=Алюминиево-бронзовый компонентный теплоотвод
+iu.per_component_vent=Графито-алмазный компонентный теплоотвод
 iu.vent=Медный теплоотвод
 iu.adv_vent=Золотой теплоотвод
 iu.imp_vent=Алмазный теплоотвод
@@ -4571,8 +4474,8 @@ iu.imp_heat_exchange=Графитовый теплообменник
 iu.per_heat_exchange=Геликоидный теплообменник
 iu.reactor_plate=Обычная пластина
 iu.adv_reactor_plate=Композитная пластина
-iu.imp_reactor_plate=Медно-Композитная пластина
-iu.per_reactor_plate=Стальная-Композитная пластина
+iu.imp_reactor_plate=Медно-композитная пластина
+iu.per_reactor_plate=Стале-композитная пластина
 iu.capacitor=Керамический конденсатор
 iu.adv_capacitor=Алюминиевый электролитический конденсатор
 iu.imp_capacitor=Полимерный конденсатор
@@ -6450,8 +6353,8 @@ iu.research_lens.lens_7=Исследовательская линза VII
 iu.adv_probe=Улучшенный зонд
 iu.imp_probe=Продвинутый зонд
 iu.per_probe=Совершенный зонд
-iu.imp_rocket=Улучшенная ракета
-iu.adv_rocket=Продвинутая ракета
+iu.imp_rocket=Продвинутая ракета
+iu.adv_rocket=Улучшенная ракета
 iu.per_satellite=Совершенный спутник
 iu.adv_satellite=Улучшенный спутник
 iu.imp_satellite=Продвинутый спутник
@@ -6552,7 +6455,7 @@ iu.research3.info11=Чтобы автоматизировать экспедиц
 iu.research3.info12=Следите за уровнем топлива и энергии. Включённый режим автоматизации сам будет заправлять и заряжать аппарат.
 iu.research3.info13=Если исследование достигнет 100%, появится кнопка «Создать колонию».
 iu.research3.info14=Такой же интерфейс будет у спутников с аналогичным функционалом.
-iu.research3.info15=Для создания колонии нужно: три "Жилый модуль I", два "Завод I", один "Кислородный модуль I"
+iu.research3.info15=Для создания колонии нужно: три "Жилой модуль I", два "Завод I", один "Кислородный модуль I"
 iu.research3.info16=Один "Защита I", один "Солнечная панель I", всё должно быть в инвентаре
 
 recipe_tuner.change_mode=Сменить режим
@@ -7048,7 +6951,7 @@ iu.fluidcropgenetic=Генетика растения
 iu.fluidwater=Вода
 iu.fluidlava=Лава
 iu.fluidroyaljelly=Королевское желе
-iu.fluidhoney=Мед
+iu.fluidhoney=Мёд
 iu.fluidmoltenmikhail=Расплавленный михал
 iu.fluidmoltenaluminium=Расплавленный алюминий
 iu.fluidmoltenvanadium=Расплавленный ванадий
@@ -7129,7 +7032,7 @@ fluid.fluidcropgenetic=Генетика растения
 fluid.fluidwater=Вода
 fluid.fluidlava=Лава
 fluid.fluidroyaljelly=Королевское желе
-fluid.fluidhoney=Мед
+fluid.fluidhoney=Мёд
 fluid.fluidmoltenmikhail=Расплавленный михал
 fluid.fluidmoltenaluminium=Расплавленный алюминий
 fluid.fluidmoltenvanadium=Расплавленный ванадий
@@ -7259,7 +7162,7 @@ iu.iuspace.asteroids_boulder=Глыба с астероидов
 iu.iuspace.callisto_boulder=Глыба с Каллисто
 iu.iuspace.ceres_boulder=Глыба с Цереры
 iu.iuspace.charon_boulder=Глыба с Харона
-iu.iuspace.deimos_boulder=Глыба с Фобоса
+iu.iuspace.deimos_boulder=Глыба с Деймоса
 iu.iuspace.dione_boulder=Глыба с Дионы
 iu.iuspace.enceladus_boulder=Глыба с Энцелада
 iu.iuspace.eris_boulder=Глыба с Эрис
@@ -7290,7 +7193,7 @@ iu.iuspace.asteroids_pebble=Камешек с астероидов
 iu.iuspace.callisto_pebble=Камешек с Каллисто
 iu.iuspace.ceres_pebble=Камешек с Цереры
 iu.iuspace.charon_pebble=Камешек с Харона
-iu.iuspace.deimos_pebble=Камешек с Фобоса
+iu.iuspace.deimos_pebble=Камешек с Деймоса
 iu.iuspace.dione_pebble=Камешек с Дионы
 iu.iuspace.enceladus_pebble=Камешек с Энцелада
 iu.iuspace.eris_pebble=Камешек с Эрис
@@ -7658,7 +7561,7 @@ iu.collector_product_bee.info=Охватывает область радиусо
 
 iu.start_space.info=Используется для исследования космоса — стол космических исследований.
 
-iu.speed_canister.info=Используйте канистру с моторным маслом, чтобы уменьшить нагрев и ускорить механизм на 15 секунд
+iu.speed_canister.info=Используйте канистру с моторным маслом, чтобы уменьшить нагрев и ускорить механизм на 35 секунд
 iu.radioprotector.info=Используйте радиопротектор, чтобы устранить накопившуюся радиацию.
 
 
@@ -7720,8 +7623,41 @@ iu.bee_negative=Пчёлы, враждебные к этой пчеле:
 iu.remove_genome=Удалить геном
 iu.terra_wart.name=Земляной нарост
 
-industrialupgrade.basemachine3.gen_bio=Генератор биомассы
-industrialupgrade.basemachine3.ampere_storage=Хранилище тока
 industrialupgrade.basemachine3.bio_generator=Электрический био-генератор
+iu.tome_research=Том исследования космоса
+iu.tome_research1=Используйте Shift + ПКМ, чтобы записать данные
+iu.tome_research2=Используйте ПКМ, чтобы изучить данные
+iu.pollution_device=Сканер загрязнения
+message.pollution.air.very_low=Загрязнение воздуха очень низкое.
+message.pollution.air.low=Загрязнение воздуха низкое.
+message.pollution.air.medium=Уровень загрязнения воздуха средний.
+message.pollution.air.high=Загрязнение воздуха высокое.
+message.pollution.air.very_high=Загрязнение воздуха очень высокое.
 
-iu.acable=Кабель тока
+message.pollution.soil.very_low=Загрязнение почвы очень низкое.
+message.pollution.soil.low=Загрязнение почвы низкое.
+message.pollution.soil.medium=Уровень загрязнения почвы средний.
+message.pollution.soil.high=Загрязнение почвы высокое.
+message.pollution.soil.very_high=Загрязнение почвы очень высокое.
+
+industrialupgrade.basemachine3.gen_bio=Биогенератор
+
+iu.acable=Амперный провод
+
+iu.fluidsteam_oil=Паровая смазка
+fluid.fluidsteam_oil=Паровая смазка
+item.ruby_pickaxe.name=Рубиновая кирка
+item.sapphire_pickaxe.name=Сапфировая кирка
+item.topaz_pickaxe.name=Топазовая кирка
+item.ruby_axe.name=Рубиновый топор
+item.sapphire_axe.name=Сапфировый топор
+item.topaz_axe.name=Топазовый топор
+item.ruby_shovel.name=Рубиновая лопата
+item.sapphire_shovel.name=Сапфировая лопата
+item.topaz_shovel.name=Топазовая лопата
+iu.iron_hammer=Железный молот
+industrialupgrade.basemachine3.ampere_storage=Хранилище тока
+iu.coal_concentration=Концентрация угольной пыли:
+iu.space_colony_problem=Проблемы:
+
+iu.speed_canister.info1=Используйте канистру с паровой смазкой, чтобы уменьшить нагрев и ускорить механизм на 40 секунд

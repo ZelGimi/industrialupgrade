@@ -1,12 +1,20 @@
 package com.denfop.componets;
 
+import com.denfop.IUItem;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.blocks.FluidName;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Timer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
 
@@ -59,7 +67,22 @@ public class ComponentSteamProcess extends AbstractComponent {
         }
         return false;
     }
-
+    private Timer timer1 = new Timer(0, 0, 0);
+    private Timer timer = null;
+    @Override
+    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem().equals(IUItem.canister)) {
+            FluidStack fluid = FluidUtil.getFluidContained(stack);
+            if (fluid != null && fluid.getFluid() == FluidName.fluidsteam_oil.getInstance() &&fluid.amount >= 250 && (!timer1.canWork()  || timer1.getBar() == 0)&& (timer == null || !timer.canWork())) {
+                this.timer = new Timer(0, 0, 40);
+                final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+                handler.drain(250, true);
+                return true;
+            }
+        }
+        return super.onBlockActivated(player, hand);
+    }
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -169,6 +192,10 @@ public class ComponentSteamProcess extends AbstractComponent {
                 }
             }
             this.componentProgress.addProgress();
+            if (timer != null && timer.canWork()) {
+                this.componentProgress.addProgress();
+
+            }
             if (action != null && action.needAction(TypeLoad.PROGRESS)) {
                 action.doAction();
             }

@@ -12,6 +12,6 @@ public interface IBioMachine {
 
     void initiate(int soundEvent);
 
-    EnumTypeAudio getType();
+    EnumTypeAudio getTypeAudio();
 
 }

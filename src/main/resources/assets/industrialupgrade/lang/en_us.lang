@@ -618,11 +618,11 @@ iu.fly=§3Flight activated:
 iu.fly1=Press Mode Switch Key + Boost Key to enable flight
 iu.effect=Fire resistance enabled:
 storagemodul=Only in energy storage
-storagemodul1=Press SHIFT + Right Click on the storage
+storagemodul1=Use Shift + Right Click on the storage
 press.lshift=Hold Left Shift for details
 iu.changemode=To switch the mode, press Mode Switch Key + Right Click
 iu.changemodebattery=Right Click to switch the mode
-iu.purifiermode=Press SHIFT + Right Click on the panel to clear the panel
+iu.purifiermode=Use Shift + Right Click on the panel to clear the panel
 iu.saberon=Right Click to activate the saber
 
 industrialupgrade.tank_iu.tank_iu=Liquid Tank
@@ -697,7 +697,7 @@ gui.movementcharge=Instant Armor Charge EF
 gui.movementchargeitem=Instant Item Charging EF
 gui.movementchargerf=Instant Armor Charge RF
 gui.movementchargeitemrf=Instant Item Charging RF
-gui.movement=Hold <SHIFT> and Right Click on the block
+gui.movement=Use Shift + Right Click on the block
 
 modulechange=Allows the panel to charge items
 modulerfinfo=Allows the generation of RF energy
@@ -1744,102 +1744,6 @@ iu.purifiedcrushed.strontium=Purified Crushed Strontium Ore
 iu.purifiedcrushed.thallium=Purified Crushed Thallium Ore
 iu.purifiedcrushed.zirconium=Purified Crushed Zirconium Ore
 
-##Ex Nihilo Integration
-#Broken Metal Ores
-mikhail_gravelcrushed.name=Broken Michalov Ore
-aluminium_gravelcrushed.name=Broken Aluminum Ore
-vanady_gravelcrushed.name=Broken Vanadium Ore
-wolfram_gravelcrushed.name=Broken Tungsten Ore
-cobalt_gravelcrushed.name=Broken Cobalt Ore
-magnesium_gravelcrushed.name=Broken Magnesium Ore
-nickel_gravelcrushed.name=Broken Nickel Ore
-platium_gravelcrushed.name=Broken Platinum Ore
-titanium_gravelcrushed.name=Broken Titanium Ore
-chromium_gravelcrushed.name=Broken Chromium Ore
-spinel_gravelcrushed.name=Broken Spinel Ore
-silver_gravelcrushed.name=Broken Silver Ore
-zinc_gravelcrushed.name=Broken Zinc Ore
-manganese_gravelcrushed.name=Broken Manganese Ore
-
-#Metal Ores Gravel
-mikhail_gravelore.name=Michalov Ore Gravel
-aluminium_gravelore.name=Aluminum Ore Gravel
-vanady_gravelore.name=Vanadium Ore Gravel
-wolfram_gravelore.name=Tungsten Ore Gravel
-cobalt_gravelore.name=Cobalt Ore Gravel
-magnesium_gravelore.name=Magnesium Ore Gravel
-nickel_gravelore.name=Nickel Ore Gravel
-platium_gravelore.name=Platinum Ore Gravel
-titanium_gravelore.name=Titanium Ore Gravel
-chromium_gravelore.name=Chromium Ore Gravel
-spinel_gravelore.name=Spinel Ore Gravel
-silver_gravelore.name=Silver Ore Gravel
-zinc_gravelore.name=Zinc Ore Gravel
-manganese_gravelore.name=Manganese Ore Gravel
-
-#Crushed Metal Ores
-mikhail_sandcrushed.name=Crushed Michalov Ore
-aluminium_sandcrushed.name=Crushed Aluminum Ore
-vanady_sandcrushed.name=Crushed Vanadium Ore
-wolfram_sandcrushed.name=Crushed Tungsten Ore
-cobalt_sandcrushed.name=Crushed Cobalt Ore
-magnesium_sandcrushed.name=Crushed Magnesium Ore
-nickel_sandcrushed.name=Crushed Nickel Ore
-platium_sandcrushed.name=Crushed Platinum Ore
-titanium_sandcrushed.name=Crushed Titanium Ore
-chromium_sandcrushed.name=Crushed Chromium Ore
-spinel_sandcrushed.name=Crushed Spinel Ore
-silver_sandcrushed.name=Crushed Silver Ore
-zinc_sandcrushed.name=Crushed Zinc Ore
-manganese_sandcrushed.name=Crushed Manganese Ore
-
-#Metal Ores Sand
-mikhail_sandore.name=Michalov Ore Sand
-aluminium_sandore.name=Aluminum Ore Sand
-vanady_sandore.name=Vanadium Ore Sand
-wolfram_sandore.name=Tungsten Ore Sand
-cobalt_sandore.name=Cobalt Ore Sand
-magnesium_sandore.name=Magnesium Ore Sand
-nickel_sandore.name=Nickel Ore Sand
-platium_sandore.name=Platinum Ore Sand
-titanium_sandore.name=Titanium Ore Sand
-chromium_sandore.name=Chromium Ore Sand
-spinel_sandore.name=Spinel Ore Sand
-silver_sandore.name=Silver Ore Sand
-zinc_sandore.name=Zinc Ore Sand
-manganese_sandore.name=Manganese Ore Sand
-
-#Powdered Metal Ores
-mikhail_dustcrushed.name=Powdered Michalov Ore
-aluminium_dustcrushed.name=Powdered Aluminum Ore
-vanady_dustcrushed.name=Powdered Vanadium Ore
-wolfram_dustcrushed.name=Powdered Tungsten Ore
-cobalt_dustcrushed.name=Powdered Cobalt Ore
-magnesium_dustcrushed.name=Powdered Magnesium Ore
-nickel_dustcrushed.name=Powdered Nickel Ore
-platium_dustcrushed.name=Powdered Platinum Ore
-titanium_dustcrushed.name=Powdered Titanium Ore
-chromium_dustcrushed.name=Powdered Chromium Ore
-spinel_dustcrushed.name=Powdered Spinel Ore
-silver_dustcrushed.name=Powdered Silver Ore
-zinc_dustcrushed.name=Powdered Zinc Ore
-manganese_dustcrushed.name=Powdered Manganese Ore
-
-#Metal Ores Dust
-mikhail_dustore.name=Michalov Ore Dust
-aluminium_dustore.name=Aluminum Ore Dust
-vanady_dustore.name=Vanadium Ore Dust
-wolfram_dustore.name=Tungsten Ore Dust
-cobalt_dustore.name=Cobalt Ore Dust
-magnesium_dustore.name=Magnesium Ore Dust
-nickel_dustore.name=Nickel Ore Dust
-platium_dustore.name=Platinum Ore Dust
-titanium_dustore.name=Titanium Ore Dust
-chromium_dustore.name=Chromium Ore Dust
-spinel_dustore.name=Spinel Ore Dust
-silver_dustore.name=Silver Ore Dust
-zinc_dustore.name=Zinc Ore Dust
-manganese_dustore.name=Manganese Ore Dust
 
 industrialupgrade.transformer_iu.lv=LV-Transformer
 industrialupgrade.transformer_iu.mv=MV-Transformer
@@ -2272,7 +2176,7 @@ iu.electricstorageinformation3=If the "RF" module is installed, you can charge i
 iu.electricstorageinformation4=You can use the modules in the slots on the left.
 iu.electricstorageinformation5=To associate the storage with a wireless module, insert it into the module slot.
 iu.electricstorageinformation6=If communication is successful, insert the module in the solar panel.
-iu.electricstorageinformation7=Instant wireless charging only works with SHIFT + Right Click on storage.
+iu.electricstorageinformation7=Instant wireless charging only works with Shift + Right Click on storage.
 
 button.deny=Off
 button.allow=On
@@ -7527,7 +7431,7 @@ iu.collector_product_bee.info=Covers an area with a radius of 8 blocks, collects
 
 
 iu.start_space.info=Used for space exploration — space research table.
-iu.speed_canister.info=Use the canister with motor oil to reduce heat and speed up the machine for 15 seconds
+iu.speed_canister.info=Use the canister with motor oil to reduce heat and speed up the machine for 35 seconds
 iu.radioprotector.info=Use the radioprotector to remove accumulated radiation
 
 
@@ -7589,8 +7493,38 @@ iu.bee_negative=Bees hostile to this bee:
 iu.remove_genome=Remove genome
 iu.terra_wart.name=Terra Wart
 
-industrialupgrade.basemachine3.gen_bio=Biomass Generator
-industrialupgrade.basemachine3.ampere_storage=Current Storage
 industrialupgrade.basemachine3.bio_generator=Electric Bio-Generator
+iu.tome_research=Space Research Tome
+iu.tome_research1=Use Shift + Right Click to write data
+iu.tome_research2=Use Right Click to examine data
+iu.pollution_device=Pollution Scanner
+message.pollution.air.very_low=Air pollution is very low.
+message.pollution.air.low=Air pollution is low.
+message.pollution.air.medium=Air pollution is medium.
+message.pollution.air.high=Air pollution is high.
+message.pollution.air.very_high=Air pollution is very high.
 
-iu.acable=Current Cable
+message.pollution.soil.very_low=Soil pollution is very low.
+message.pollution.soil.low=Soil pollution is low.
+message.pollution.soil.medium=Soil pollution level is medium.
+message.pollution.soil.high=Soil pollution is high.
+message.pollution.soil.very_high=Soil pollution is very high.
+
+industrialupgrade.basemachine3.gen_bio=Biogenerator
+
+iu.acable=Ampere cable
+item.ruby_pickaxe.name=Ruby Pickaxe
+item.sapphire_pickaxe.name=Sapphire Pickaxe
+item.topaz_pickaxe.name=Topaz Pickaxe
+item.ruby_axe.name=Ruby Axe
+item.sapphire_axe.name=Sapphire Axe
+item.topaz_axe.name=Topaz Axe
+item.ruby_shovel.name=Ruby Shovel
+item.sapphire_shovel.name=Sapphire Shovel
+item.topaz_shovel.name=Topaz Shovel
+iu.iron_hammer=Iron Hammer
+industrialupgrade.basemachine3.ampere_storage=Ampere Storage
+iu.coal_concentration=Coal dust concentration:
+iu.space_colony_problem=Problems:
+
+iu.speed_canister.info1=Use the canister with steam oil to reduce heating and speed up the mechanism for 40 seconds.

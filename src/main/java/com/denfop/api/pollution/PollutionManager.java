@@ -228,7 +228,12 @@ public class PollutionManager {
             for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionSoil.entrySet()) {
                 ChunkLevel chunkLevel = entry.getValue();
                 if (chunkLevel != null) {
-                    chunkLevel.removePollution(chunkLevel.getPollution() / 2);
+                    chunkLevel.setPollution(chunkLevel.getPollution() / 2);
+                    if (chunkLevel.getPollution() < 10 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW){
+                        chunkLevel.setPollution(10);
+                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
+                                chunkLevel.getLevelPollution().ordinal()-1)]);
+                    }
                 }
             }
         }
@@ -236,7 +241,12 @@ public class PollutionManager {
             for (Map.Entry<ChunkPos, ChunkLevel> entry : pollutionAir.entrySet()) {
                 ChunkLevel chunkLevel = entry.getValue();
                 if (chunkLevel != null) {
-                    chunkLevel.removePollution(chunkLevel.getPollution() / 2);
+                    chunkLevel.setPollution(chunkLevel.getPollution() / 2);
+                    if (chunkLevel.getPollution() < 10 && chunkLevel.getLevelPollution() != LevelPollution.VERY_LOW){
+                        chunkLevel.setPollution(10);
+                        chunkLevel.setLevelPollution(LevelPollution.values()[Math.max(0,
+                                chunkLevel.getLevelPollution().ordinal()-1)]);
+                    }
                 }
             }
         }

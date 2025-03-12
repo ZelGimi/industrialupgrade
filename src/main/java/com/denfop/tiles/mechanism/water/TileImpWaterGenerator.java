@@ -10,11 +10,10 @@ import com.denfop.componets.SoilPollutionComponent;
 
 public class TileImpWaterGenerator extends TileBaseWaterGenerator {
 
-    private final SoilPollutionComponent pollutionSoil;
+
 
     public TileImpWaterGenerator() {
         super(EnumLevelGenerators.THREE);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
     }
 
     @Override

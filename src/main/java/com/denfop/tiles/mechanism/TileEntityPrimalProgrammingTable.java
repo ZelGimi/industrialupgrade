@@ -199,7 +199,7 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
 
     public void updateTileServer(EntityPlayer var1, double var2) {
         if (start && var2 == 0) {
-            this.componentProgress.addProgress(0, (short) ((short) 30*(1+data1.getOrDefault(var1.getUniqueID(),0.0)/50D)));
+            this.componentProgress.addProgress(0, (short) ((short) 60*(1+data1.getOrDefault(var1.getUniqueID(),0.0)/66D)));
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
                 if (!this.getWorld().isRemote)
@@ -209,7 +209,7 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
             RED_PERCENT = (int) (35 * (1 + 0.5 * componentProgress.getBar()));
             this.data = generateColorStrip();
         } else if (start && var2 == 1) {
-            this.componentProgress.addProgress(0, (short) -10);
+            this.componentProgress.addProgress(0, (short) -20);
             if (componentProgress.getProgress(0) < 0) {
                 componentProgress.setProgress((short) 0);
             }

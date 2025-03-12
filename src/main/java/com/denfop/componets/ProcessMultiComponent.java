@@ -9,6 +9,7 @@ import com.denfop.api.recipe.IMultiUpdateTick;
 import com.denfop.api.recipe.InvSlotMultiRecipes;
 import com.denfop.api.recipe.InvSlotOutput;
 import com.denfop.api.recipe.MachineRecipe;
+import com.denfop.blocks.FluidName;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.EnumMultiMachine;
@@ -86,7 +87,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 enumMultiMachine.sizeWorkingSlot + (enumMultiMachine.output ? 2 : 0)
         );
         this.upgradeSlot = new InvSlotUpgrade((TileEntityInventory) parent, 4);
-        this.energy = ((TileEntityInventory)parent).getComp(Energy.class);
+        this.energy = ((TileEntityInventory) parent).getComp(Energy.class);
         this.enumMultiMachine = enumMultiMachine;
         this.sizeWorkingSlot = enumMultiMachine.sizeWorkingSlot;
         this.progress = new short[sizeWorkingSlot];
@@ -105,9 +106,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         this.max = enumMultiMachine.getMax();
         this.random = enumMultiMachine.type == EnumTypeMachines.RECYCLER;
         this.output = new MachineRecipe[sizeWorkingSlot];
-        this.cold =  ((TileEntityInventory)parent).getComp(CoolComponent.class);
-        this.exp =  ((TileEntityInventory)parent).getComp(ComponentBaseEnergy.class);
-        this.heat =  ((TileEntityInventory)parent).getComp(HeatComponent.class);
+        this.cold = ((TileEntityInventory) parent).getComp(CoolComponent.class);
+        this.exp = ((TileEntityInventory) parent).getComp(ComponentBaseEnergy.class);
+        this.heat = ((TileEntityInventory) parent).getComp(HeatComponent.class);
         this.isCentrifuge = enumMultiMachine.type == EnumTypeMachines.Centrifuge;
     }
 
@@ -257,7 +258,9 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 }
                 if (!this.enumMultiMachine.recipe.equals("recycler")) {
                     if (this.multimachine.getTank() != null) {
-                        if (this.multimachine.getTank().getFluid() == null || this.multimachine.getTank().getFluid().amount < 1000) {
+                        if (this.multimachine.getTank().getFluid() == null || this.multimachine
+                                .getTank()
+                                .getFluid().amount < 1000) {
                             break;
                         }
                     }
@@ -346,7 +349,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        if (parent.getWorld() == null){
+        if (parent.getWorld() == null) {
             tooltip.add(Localization.translate("iu.speed_canister.info"));
         }
     }
@@ -356,10 +359,10 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         ItemStack stack = player.getHeldItem(hand);
         if (stack.getItem().equals(IUItem.canister)) {
             FluidStack fluid = FluidUtil.getFluidContained(stack);
-            if (fluid != null && fluid.amount >= 150 && !timer1.canWork() && (timer == null || !timer.canWork())) {
-                this.timer = new Timer(0, 0, 25);
+            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() &&fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0 )&& (timer == null || !timer.canWork())) {
+                this.timer = new Timer(0, 0, 35);
                 final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
-                handler.drain(150, true);
+                handler.drain(125, true);
                 return true;
             }
         }
@@ -538,7 +541,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     }
 
                     operate(i, output, size);
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getType() != EnumTypeAudio.values()[2 % EnumTypeAudio.values().length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.values()[2 % EnumTypeAudio.values().length])) {
                         if (type == -1) {
                             this.multimachine.initiate(2);
                             type = 2;
@@ -547,7 +550,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                 }
             } else {
                 if (this.progress[i] != 0 && this.parent.getActive()) {
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getType() != EnumTypeAudio.values()[1 % EnumTypeAudio.values().length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.values()[1 % EnumTypeAudio.values().length])) {
                         if (type == -1) {
                             this.multimachine.initiate(1);
                             type = 1;
@@ -579,15 +582,30 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
         if (fillratio >= 0.5 && fillratio < 0.75) {
             this.operationLength = (int) (this.operationLength * 1.5);
         }
-        if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
-            if (this.timer != null && this.timer.canWork()) {
-                this.timer.work();
-                if (!this.timer.canWork()) {
-                    timer1 = new Timer(0, 0, 10);
+        if (this.parent.getActive()) {
+            if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
+                if (this.timer != null && this.timer.canWork()) {
+                    this.timer.work();
+                    if (!this.timer.canWork()) {
+                        timer1 = new Timer(0, 0, 10);
+                    }
+                }
+                if (timer1.canWork()) {
+                    timer1.work();
                 }
             }
-            if (timer1.canWork()) {
-                timer1.work();
+        }
+        if (this.parent.getActive()) {
+            if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
+                if (this.timer != null && this.timer.canWork()) {
+                    this.timer.work();
+                    if (!this.timer.canWork()) {
+                        timer1 = new Timer(0, 0, 10);
+                    }
+                }
+                if (timer1.canWork()) {
+                    timer1.work();
+                }
             }
         }
     }

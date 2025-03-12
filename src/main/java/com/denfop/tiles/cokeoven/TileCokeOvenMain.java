@@ -145,7 +145,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
 
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -164,7 +164,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -384,7 +384,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                 new PacketUpdateFieldTile(this, "sound", this.sound);
 
                 if (!sound) {
-                    if (this.getType() == EnumTypeAudio.ON) {
+                    if (this.getTypeAudio() == EnumTypeAudio.ON) {
                         setType(EnumTypeAudio.OFF);
                         initiate(2);
 

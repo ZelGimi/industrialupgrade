@@ -161,7 +161,12 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidmethylpentane.getInstance()
                         , 200)
         );
-
+        addRecipe(
+                new ItemStack(IUItem.wolframite),
+                new FluidStack(FluidName.fluidquartz.getInstance(), 144),
+                new FluidStack(FluidName.fluidtemperedglass.getInstance()
+                        , 144)
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 465),
                 new FluidStack(FluidRegistry.WATER, 50),

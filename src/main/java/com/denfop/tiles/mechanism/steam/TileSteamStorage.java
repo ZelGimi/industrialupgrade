@@ -38,7 +38,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TileSteamStorage extends TileEntityInventory {
 
@@ -56,8 +59,8 @@ public class TileSteamStorage extends TileEntityInventory {
         this.steam = this.addComponent((new ComponentSteamEnergy(
                 EnergyType.STEAM, this, 64000,
 
-                Arrays.asList(EnumFacing.values()),
-                Arrays.asList(EnumFacing.values()),
+                Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
+                Collections.singletonList(this.getFacing()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
                 EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
@@ -325,6 +328,10 @@ public class TileSteamStorage extends TileEntityInventory {
         super.onLoaded();
         if (IUCore.proxy.isSimulating()) {
             setUpgradestat();
+            this.steam.setDirections(
+                    new HashSet<>(Arrays.stream(EnumFacing.VALUES)
+                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                            .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
         }
     }
 

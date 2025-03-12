@@ -5,7 +5,7 @@ import net.minecraft.util.SoundEvent;
 
 public interface IAudioFixer {
 
-    EnumTypeAudio getType();
+    EnumTypeAudio getTypeAudio();
 
     void setType(EnumTypeAudio type);
 

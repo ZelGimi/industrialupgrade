@@ -15,9 +15,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.Fluids;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerBiomassGenerator;
-import com.denfop.container.ContainerHydrogenGenerator;
 import com.denfop.gui.GuiBiomassGenerator;
-import com.denfop.gui.GuiHydrogenGenerator;
 import com.denfop.invslot.InvSlotCharge;
 import com.denfop.invslot.InvSlotFluid;
 import com.denfop.invslot.InvSlotFluidByList;
@@ -73,7 +71,7 @@ public class TileBioFuelGenerator extends TileEntityLiquidTankInventory implemen
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -124,7 +122,7 @@ public class TileBioFuelGenerator extends TileEntityLiquidTankInventory implemen
         return nbttagcompound;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -138,7 +136,7 @@ public class TileBioFuelGenerator extends TileEntityLiquidTankInventory implemen
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

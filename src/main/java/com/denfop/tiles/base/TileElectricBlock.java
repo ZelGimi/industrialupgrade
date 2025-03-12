@@ -227,29 +227,29 @@ public class TileElectricBlock extends TileEntityInventory implements
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
 
     }
+    public boolean addedToEnergyNet = false;
 
     @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!this.chargepad) {
-            this.energy.setDirections(
+        if(!addedToEnergyNet) {
+            this.addedToEnergyNet = true;
+            if (!this.chargepad) {
+                this.energy.setDirections(
 
-                    Arrays
-                            .asList(EnumFacing.VALUES)
-                            .stream()
-                            .filter(facing -> facing != this.getFacing())
-                            .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
+                        Arrays.stream(EnumFacing.VALUES)
+                                .filter(facing -> facing != this.getFacing())
+                                .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
-        } else {
-            this.energy.setDirections(
+            } else {
+                this.energy.setDirections(
 
-                    Arrays
-                            .asList(EnumFacing.VALUES)
-                            .stream()
-                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
-                            .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
+                        Arrays.stream(EnumFacing.VALUES)
+                                .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                                .collect(Collectors.toList()), Collections.singletonList(this.getFacing()));
 
 
+            }
         }
         wirelessComponent.setEnergySource((IEnergySource) this.energy.getDelegate());
     }

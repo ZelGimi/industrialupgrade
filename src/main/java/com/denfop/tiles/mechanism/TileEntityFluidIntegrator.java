@@ -199,11 +199,15 @@ public class TileEntityFluidIntegrator extends TileElectricMachine implements
 
 
         addRecipe(new ItemStack(IUItem.crafting_elements, 1, 492), new ItemStack(IUItem.crafting_elements, 1, 493),
-                new FluidStack(FluidName.fluidsteam.getInstance(), 250),
+                new FluidStack(FluidRegistry.WATER, 250),
                 new FluidStack(FluidName.fluidhyd.getInstance()
                         , 50)
         );
-
+        addRecipe(new ItemStack(Blocks.DIRT), new ItemStack(Blocks.MYCELIUM),
+                new FluidStack(FluidName.fluidhoney.getInstance(), 1000),
+                new FluidStack(FluidName.fluidoxy.getInstance()
+                        , 75)
+        );
         addRecipe(new ItemStack(IUItem.iuingot, 4, 14), new ItemStack(IUItem.iudust, 1, 62),
                 new FluidStack(FluidName.fluidnitricacid.getInstance(), 200),
                 new FluidStack(FluidName.fluidnitrogendioxide.getInstance()

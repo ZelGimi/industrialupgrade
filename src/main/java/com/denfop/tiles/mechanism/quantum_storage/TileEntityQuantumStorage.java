@@ -1,5 +1,6 @@
 package com.denfop.tiles.mechanism.quantum_storage;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.energy.EnergyNetGlobal;
@@ -22,7 +23,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TileEntityQuantumStorage extends TileEntityInventory implements IType {
 
@@ -32,16 +36,24 @@ public class TileEntityQuantumStorage extends TileEntityInventory implements ITy
     public TileEntityQuantumStorage(double maxStorage1, EnumTypeStyle enumTypeStyle) {
         this.qe = this.addComponent((new ComponentBaseEnergy(EnergyType.QUANTUM, this, maxStorage1,
 
-                Arrays.asList(EnumFacing.values()),
-                Arrays.asList(EnumFacing.values()),
+                Arrays.stream(EnumFacing.VALUES).filter(f -> f != this.getFacing()).collect(Collectors.toList()),
+                Collections.singletonList(this.getFacing()),
                 EnergyNetGlobal.instance.getTierFromPower(14),
                 EnergyNetGlobal.instance.getTierFromPower(14), false
         )));
         this.enumTypeStyle = enumTypeStyle;
     }
+    public void onLoaded() {
+        super.onLoaded();
+        if (IUCore.proxy.isSimulating()) {
+            this.qe.setDirections(
+                    new HashSet<>(Arrays.stream(EnumFacing.VALUES)
+                            .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                            .collect(Collectors.toList())), new HashSet<>(Collections.singletonList(this.getFacing())));
+        }
+    }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         final NBTTagCompound nbt = ModUtils.nbt(stack);
         final double energy1 = nbt.getDouble("energy");

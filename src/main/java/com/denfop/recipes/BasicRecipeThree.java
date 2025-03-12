@@ -2013,12 +2013,13 @@ public class BasicRecipeThree {
                 ,'D', new ItemStack(IUItem.crafting_elements,1,589),'E', new ItemStack(IUItem.crafting_elements,1,397)
         );
 
-        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_casing), " B ", "BAB", " B ",
+        Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_casing), " C ", "BAB", " C ",
                 'A',Blocks.BRICK_BLOCK,'B'
-                , new ItemStack(IUItem.casing,1,46)
+                , new ItemStack(IUItem.casing,1,49),'C', "plateVanadoalumite"
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_transport),
-                "BDB", "DAD", "BDB", 'B', new ItemStack(IUItem.item_pipes, 1, 3), 'D', new ItemStack(IUItem.item_pipes,1,2), 'A',
+                "BDB", "DAD", "BDB", 'B', new ItemStack(IUItem.item_pipes, 1, 27), 'D', new ItemStack(IUItem.item_pipes,1,28),
+                'A',
                 getBlockStack(BlockGasWell.gas_well_casing)
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockGasWell.gas_well_drill),
@@ -2369,7 +2370,7 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 21), "BBB", "CAC", "BBB",
 
-                ('A'),"plateOsmiridium",
+                ('A'),"plateNichrome",
 
                 ('B'), "plateCobalt",
 
@@ -2377,13 +2378,13 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 22), "BBB", " A ", "BBB",
 
-                ('A'), "plateOsmiridium",
+                ('A'), "plateNichrome",
 
                 ('B'), "plateCobalt"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.item_pipes, 6, 23), "BBB", "CAC", "BBB",
 
-                ('A'), "plateOsmiridium",
+                ('A'), "plateNichrome",
 
                 ('B'), "plateCobalt",
 

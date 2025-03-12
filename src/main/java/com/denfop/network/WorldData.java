@@ -26,7 +26,7 @@ public class WorldData {
     public final Map<TileEntityBlock, Map<EntityPlayer, CustomPacketBuffer>> mapUpdateContainer = new HashMap<>();
     public final Map<ItemStackInventory, Map<EntityPlayer, CustomPacketBuffer>> mapUpdateItemStackContainer = new HashMap<>();
 
-    public final List<TileEntityBlock> listUpdateTile = new LinkedList<>();
+    public final List<TileEntityBlock> listUpdateTile = new ArrayList<>();
     public final Map<TileEntityBlock, List<CustomPacketBuffer>> mapUpdateField = new HashMap<>();
 
     public final Map<BlockPos, TileEntityBlock> mapUpdateOvertimeField = new HashMap<>();

@@ -189,10 +189,10 @@ public class TileSolarGeneratorEnergy extends TileEntityInventory implements
         this.generation = 0;
         if (this.skyIsVisible) {
             energy();
-            if (this.sunenergy.getEnergy() >= 6500) {
+            if (this.sunenergy.getEnergy() >= 9000) {
                 if (this.outputSlot.get().getCount() < 64 || this.outputSlot.isEmpty()) {
                     if (this.outputSlot.add(itemstack)) {
-                        this.sunenergy.addEnergy(-6500);
+                        this.sunenergy.addEnergy(-9000);
                     }
                 }
             }

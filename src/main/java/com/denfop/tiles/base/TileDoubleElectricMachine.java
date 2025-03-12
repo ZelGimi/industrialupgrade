@@ -27,8 +27,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -113,7 +111,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 new PacketStopSound(getWorld(), this.pos);
 
@@ -207,7 +205,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
         super.addInformation(stack,tooltip);
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -221,7 +219,7 @@ public abstract class TileDoubleElectricMachine extends TileEntityInventory impl
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);

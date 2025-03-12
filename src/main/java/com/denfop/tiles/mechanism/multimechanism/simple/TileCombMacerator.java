@@ -69,7 +69,7 @@ public class TileCombMacerator extends TileMultiMachine {
     public void init() {
         for (String name : OreDictionary.getOreNames()) {
 
-            if (name.startsWith("crushed") && !name.startsWith("crushedPurified")) {
+            if (name.startsWith("crushed") && !name.startsWith("purifiedcrushed")) {
                 String name1 = name.substring("crushed".length());
                 if (name1.startsWith("Uranium"))
                     continue;

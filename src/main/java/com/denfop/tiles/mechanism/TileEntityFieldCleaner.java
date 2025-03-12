@@ -115,7 +115,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
     }
 
     List<List<TileEntityCrop>> list = new ArrayList<>();
-
+    List<Chunk> chunks;
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -126,7 +126,7 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
             int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
             int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
             int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            List<Chunk> chunks = new ArrayList<>();
+            chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
                     final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
@@ -163,10 +163,18 @@ public class TileEntityFieldCleaner extends TileEntityInventory  implements IUpg
             return false;
         }
     }
-
+    private void updateCrop() {
+        list.clear();
+        for (Chunk chunk : chunks) {
+            this.list.add(CropNetwork.instance.getCropsFromChunk(world, chunk.getPos()));
+        }
+    }
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getWorld().getWorldTime() % 100 == 0){
+            updateCrop();
+        }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(10)) {
             cycle:
             for (List<TileEntityCrop> crops : list) {

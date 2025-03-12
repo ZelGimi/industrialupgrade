@@ -219,6 +219,7 @@ public enum FluidName implements ISubEnum {
     fluidglucose(fluidbenzene),
     fluidsodiumhydroxide(fluidbenzene),
     fluidsodium_hypochlorite(fluidbenzene),
+    fluidsteam_oil(fluidindustrialoil)
     ;
     public static final FluidName[] values = values();
     private final boolean hasFlowTexture;

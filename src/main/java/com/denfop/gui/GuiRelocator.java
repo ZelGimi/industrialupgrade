@@ -17,6 +17,7 @@ import com.denfop.componets.ComponentButton;
 import com.denfop.container.ContainerBase;
 import com.denfop.items.relocator.ItemStackRelocator;
 import com.denfop.items.relocator.Point;
+import com.denfop.items.relocator.RelocatorNetwork;
 import com.denfop.network.packet.PacketAddRelocatorPoint;
 import com.denfop.network.packet.PacketRelocatorTeleportPlayer;
 import com.denfop.network.packet.PacketRemoveRelocatorPoint;
@@ -29,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuiRelocator extends GuiIU<ContainerBase<ItemStackRelocator>> {
@@ -41,6 +43,10 @@ public class GuiRelocator extends GuiIU<ContainerBase<ItemStackRelocator>> {
         this.xSize = 138;
         this.ySize = 220;
         this.componentList.clear();
+        if (guiContainer.base.player.getEntityWorld().isRemote){
+            container.base.points =   new ArrayList<>(RelocatorNetwork.instance.getPoints(guiContainer.base.player));
+            value =   0;
+        }
         this.addElement(new ImageInterface(this, 0, 0, this.xSize, ySize));
         this.componentList.add(new GuiComponent(this, 117, 10, EnumTypeComponent.SCROLL_UP,
                 new Component<>(new ComponentButton(null, 0, ""){

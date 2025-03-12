@@ -23,6 +23,7 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileBasePlasticCreator;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -109,6 +110,7 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.plast))
         ));
+
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidRegistry.WATER, 1000),
@@ -117,7 +119,14 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.iudust, 1, 39))
         ));
-
+        Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                new Input(
+                        new FluidStack(FluidName.fluidoxy.getInstance(), 150),
+                        input.getInput(new ItemStack(Items.REDSTONE, 6)),
+                        input.getInput("ingotBarium", 1)
+                ),
+                new RecipeOutput(null, new ItemStack(Blocks.GLOWSTONE))
+        ));
 
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
@@ -206,6 +215,14 @@ public class TilePlasticCreator extends TileBasePlasticCreator implements IHasRe
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.polished_stick))
         ));
+        for (int i = 0; i < 14; i++) {
+            Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
+                    new Input( new FluidStack(FluidName.fluidtemperedglass.getInstance(), 144),
+                            input.getInput(new ItemStack(IUItem.solar_day_glass, 1, i)),
+                            input.getInput(new ItemStack(IUItem.solar_night_glass, 1, i))),
+                    new RecipeOutput(null, new ItemStack(IUItem.solar_night_day_glass, 1, i))
+            ));
+        }
     }
 
     @Override

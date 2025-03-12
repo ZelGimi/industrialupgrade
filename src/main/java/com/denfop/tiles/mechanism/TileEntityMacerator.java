@@ -142,7 +142,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     }
 
     @Override
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;
     }
 
@@ -260,7 +260,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
         ItemStack stack = player.getHeldItem(hand);
         if (!this.getWorld().isRemote) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (2 + (data.getOrDefault(player.getUniqueID(),0.0)/20d));
+                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(),0.0)/10d));
                 this.getCooldownTracker().setTick(10);
                 this.setActive(!this.getActive());
                 if (!this.getWorld().isRemote) {

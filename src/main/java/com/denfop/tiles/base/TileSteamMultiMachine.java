@@ -5,8 +5,6 @@ import com.denfop.Localization;
 import com.denfop.api.audio.EnumTypeAudio;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IHasRecipe;
-import com.denfop.api.upgrades.IUpgradableBlock;
-import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockResource;
 import com.denfop.componets.ComponentSteamEnergy;
@@ -39,9 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 public abstract class TileSteamMultiMachine extends TileEntityInventory implements
         IAudioFixer, IUpdatableTileEvent, IHasRecipe,ISteamMechanism {
@@ -123,7 +119,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     }
 
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -137,7 +133,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -247,7 +243,7 @@ public abstract class TileSteamMultiMachine extends TileEntityInventory implemen
             new PacketUpdateFieldTile(this, "sound", this.sound);
 
             if (!sound) {
-                if (this.getType() == EnumTypeAudio.ON) {
+                if (this.getTypeAudio() == EnumTypeAudio.ON) {
                     setType(EnumTypeAudio.OFF);
                     new PacketStopSound(getWorld(), this.pos);
 

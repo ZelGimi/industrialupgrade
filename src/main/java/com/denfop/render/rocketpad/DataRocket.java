@@ -7,10 +7,11 @@ import net.minecraft.util.math.BlockPos;
 
 public class DataRocket {
 
-    private BlockPos pos;
+
+    private double y;
     private ItemStack item;
 
-    public DataRocket(IRoversItem roversItem, BlockPos pos){
+    public DataRocket(IRoversItem roversItem, double y){
         switch (roversItem.getLevel()){
             case ONE:
                 item = new ItemStack(IUItem.rocket);
@@ -25,19 +26,19 @@ public class DataRocket {
                 item = new ItemStack(IUItem.per_rocket);
                 break;
         }
-        this.pos = pos;
+        this.y = y;
     }
 
-    public BlockPos getPos() {
-        return pos;
+    public double getPos() {
+        return y;
     }
 
     public ItemStack getItem() {
         return item;
     }
 
-    public void setPos(final BlockPos pos) {
-        this.pos = pos;
+    public void setPos(final double pos) {
+        this.y = pos;
     }
 
 }

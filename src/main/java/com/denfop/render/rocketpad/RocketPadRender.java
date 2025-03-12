@@ -19,9 +19,9 @@ import java.util.Iterator;
 public class RocketPadRender {
 
     public void render(TileEntityRocketLaunchPad te) {
-        if (!te.roverSlot.get().isEmpty()) {
+        if (te.rocketList.isEmpty() && !te.roverSlot.get().isEmpty()) {
             ItemStack rocket = te.roverSlot.get();
-            switch (((IRoversItem)rocket.getItem()).getLevel()){
+            switch (((IRoversItem) rocket.getItem()).getLevel()) {
                 case ONE:
                     rocket = new ItemStack(IUItem.rocket);
                     break;
@@ -60,6 +60,7 @@ public class RocketPadRender {
         } else {
             for (Iterator<DataRocket> iterator = te.rocketList.iterator(); iterator.hasNext(); ) {
                 DataRocket rocket = iterator.next();
+
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(te.getPos().getX() + 0.5f, te.getPos().getY() + 1 + 0.25,
                         te.getPos().getZ() + 0.5f
@@ -69,10 +70,10 @@ public class RocketPadRender {
                         .getRenderItem()
                         .getItemModelWithOverrides(rocket.getItem(), null, null);
 
-                BlockPos pos = rocket.getPos();
-                final BlockPos pos1 = pos.add(-te.getBlockPos().getX(), -te.getBlockPos().getY(), -te.getBlockPos().getZ());
-                GlStateManager.translate(pos1.getX(), pos1.getY(),
-                        pos1.getZ()
+                double y = rocket.getPos();
+                final double y1 = y - te.getPos().getY();
+                GlStateManager.translate(0, y1,
+                        0
                 );
                 Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 GlStateManager.scale(2F, 3F, 2F);
@@ -91,7 +92,7 @@ public class RocketPadRender {
 
                 GlStateManager.popAttrib();
                 GlStateManager.popMatrix();
-
+                final BlockPos pos = new BlockPos(te.getPos().getX(), y, te.getPos().getZ());
 
                 for (int i = 0; i < 10; i++) {
                     double offsetX = (Math.random() - 0.5) * 0.5;
@@ -99,7 +100,7 @@ public class RocketPadRender {
                     te.getWorld().spawnParticle(
                             EnumParticleTypes.SMOKE_LARGE,
                             pos.getX() + 0.5 + offsetX,
-                            pos.getY(),
+                           y,
                             pos.getZ() + 0.5 + offsetZ,
                             0, -0.1, 0
                     );
@@ -112,7 +113,7 @@ public class RocketPadRender {
                     te.getWorld().spawnParticle(
                             EnumParticleTypes.FLAME,
                             pos.getX() + 0.5 + offsetX,
-                            pos.getY(),
+                            y,
                             pos.getZ() + 0.5 + offsetZ,
                             0, -0.05, 0
                     );
@@ -123,7 +124,7 @@ public class RocketPadRender {
                     te.getWorld().spawnParticle(
                             EnumParticleTypes.EXPLOSION_LARGE,
                             pos.getX() + 0.5,
-                            pos.getY(),
+                            y,
                             pos.getZ() + 0.5,
                             0, 0, 0
                     );
@@ -136,7 +137,7 @@ public class RocketPadRender {
                     te.getWorld().spawnParticle(
                             EnumParticleTypes.REDSTONE,
                             pos.getX() + 0.5 + offsetX,
-                            pos.getY(),
+                            y,
                             pos.getZ() + 0.5 + offsetZ,
                             0.2, 0.5, 1.0
                     );
@@ -153,11 +154,11 @@ public class RocketPadRender {
                             1.0F + (float) (Math.random() * 0.2 - 0.1)
                     );
                 }
-                pos = new BlockPos(pos.getX(), pos.getY() + 1, pos.getZ());
-                rocket.setPos(pos);
+              
+                rocket.setPos(rocket.getPos()+0.1);
 
 
-                if (pos.getY() + 1 > 255) {
+                if (rocket.getPos() + 0.25 > 255) {
                     iterator.remove();
 
                 }

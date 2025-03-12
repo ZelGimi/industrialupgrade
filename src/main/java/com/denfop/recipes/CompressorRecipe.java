@@ -32,7 +32,14 @@ public class CompressorRecipe {
         addcompressor(new ItemStack(IUItem.neutronium), 9, new ItemStack(IUItem.neutroniumingot, 1));
         addcompressor(IUItem.coalBall, 1, IUItem.compressedCoalBall);
         addcompressor(IUItem.coal_chunk, 9, new ItemStack(IUItem.coal_chunk1)
+
         );
+        addcompressor(new ItemStack(IUItem.smalldust, 1,49),9,new ItemStack(IUItem.iudust, 1,75));
+        addcompressor(new ItemStack(IUItem.smalldust, 1,50),9,new ItemStack(IUItem.iudust, 1,77));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 47),9,new ItemStack(IUItem.iudust, 1, 74));
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 24),9,new ItemStack(IUItem.iudust, 1, 28) );
+        addcompressor(new ItemStack(IUItem.smalldust, 1, 48),9,new ItemStack(IUItem.iudust, 1, 76) );
+
         for (int i = 0; i < RegisterOreDictionary.itemNames().size(); i++) {
 
             addcompressor(
@@ -229,6 +236,7 @@ public class CompressorRecipe {
                 9,
                 "plateDenseBronze"
         );
+
         addcompressor(
                 "plateSteel",
                 9,

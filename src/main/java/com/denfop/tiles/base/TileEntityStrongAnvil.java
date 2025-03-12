@@ -63,7 +63,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     public final InvSlotOutput outputSlot;
     public int progress;
     public MachineRecipe output;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.STRONG_ANVIL);
+    public Map<UUID,Double> data;
 
     public TileEntityStrongAnvil() {
 
@@ -139,7 +139,9 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
     @Override
     public void onLoaded() {
         super.onLoaded();
+        this.data = PrimitiveHandler.getPlayersData(EnumPrimitive.STRONG_ANVIL);
         if (!this.getWorld().isRemote) {
+
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
 
@@ -355,7 +357,7 @@ public class TileEntityStrongAnvil extends TileEntityInventory implements IUpdat
 
     }
     @Override
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;
     }
 

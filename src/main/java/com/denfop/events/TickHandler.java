@@ -119,6 +119,7 @@ public class TickHandler {
                     return ModUtils.convertRGBcolorToInt(168, 176, 150);
                 case 3:
                     return ModUtils.convertRGBcolorToInt(89, 158, 73);
+
             }
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
         } else if (block instanceof BlocksRadiationOre) {
@@ -141,6 +142,8 @@ public class TickHandler {
                     return ModUtils.convertRGBcolorToInt(38, 60, 143);
                 case 2:
                     return ModUtils.convertRGBcolorToInt(204, 180, 47);
+                case 3:
+                    return ModUtils.convertRGBcolorToInt(221, 221, 221);
             }
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
         } else if (block instanceof BlockOre) {
@@ -281,6 +284,8 @@ public class TickHandler {
                     return ModUtils.convertRGBcolorToInt(121, 229, 71);
                 case 14:
                     return ModUtils.convertRGBcolorToInt(255, 225, 136);
+                    case 15:
+                    return ModUtils.convertRGBcolorToInt(194, 189, 56);
             }
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
         } else if (block instanceof BlockOres2) {

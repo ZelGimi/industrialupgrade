@@ -3,6 +3,8 @@ package com.denfop.tiles.mechanism;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.primitive.EnumPrimitive;
+import com.denfop.api.primitive.PrimitiveHandler;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -528,20 +530,20 @@ public class TileEntityPrimalSolderingMechanism extends TileElectricMachine impl
 
     public void updateTileServer(EntityPlayer var1, double var2) {
         if (start && var2 == 0) {
-            this.componentProgress.addProgress(0, (short) 5);
+            this.componentProgress.addProgress(0, (short) 8);
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
             }
             this.solderingIronSlot.put(0, this.solderingIronSlot.get().getItem().getContainerItem(this.solderingIronSlot.get()));
         } else if (start && var2 == 1) {
-            this.componentProgress.addProgress(0, (short) -10);
+            this.componentProgress.addProgress(0, (short) -5);
             if (componentProgress.getProgress(0) < 0) {
                 componentProgress.setProgress((short) 0);
             }
             this.solderingIronSlot.put(0, this.solderingIronSlot.get().getItem().getContainerItem(this.solderingIronSlot.get()));
             failed++;
         } else if (start && var2 == 2) {
-            this.componentProgress.addProgress(0, (short) -5);
+            this.componentProgress.addProgress(0, (short) -2);
             if (componentProgress.getProgress(0) < 0) {
                 componentProgress.setProgress((short) 0);
             }

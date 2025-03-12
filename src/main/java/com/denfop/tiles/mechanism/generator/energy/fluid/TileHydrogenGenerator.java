@@ -71,7 +71,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -122,7 +122,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
         return nbttagcompound;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -136,7 +136,7 @@ public class TileHydrogenGenerator extends TileEntityLiquidTankInventory impleme
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

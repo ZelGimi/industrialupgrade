@@ -555,14 +555,7 @@ public class TileDoubleMolecular extends TileElectricMachine implements
                 new ItemStack(IUItem.upgrademodule, 1, 39),
                 1500000
         );
-        for (int i = 0; i < 14; i++) {
-            addrecipe(
-                    new ItemStack(IUItem.solar_day_glass, 1, i),
-                    new ItemStack(IUItem.solar_night_glass, 1, i),
-                    new ItemStack(IUItem.solar_night_day_glass, 1, i),
-                    10000 * Math.pow(2,i)
-            );
-        }
+
     }
 
     public ItemStack getBlockStack(IMultiTileBlock block) {

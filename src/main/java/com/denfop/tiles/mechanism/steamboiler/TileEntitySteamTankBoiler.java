@@ -4,11 +4,13 @@ import com.denfop.IUItem;
 import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockSteamBoiler;
 import com.denfop.componets.ComponentSteamEnergy;
 import com.denfop.componets.Fluids;
-import com.denfop.componets.SteamProcessMultiComponent;
+import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
+import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.tank.DataFluid;
@@ -19,14 +21,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
-public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement implements ITank{
+public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement implements ITank {
 
     private final Fluids fluids;
     private final Fluids.InternalFluidTank tank;
@@ -35,10 +36,13 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
     private ComponentSteamEnergy steam;
     private int amount;
 
-    public TileEntitySteamTankBoiler(){
+    public TileEntitySteamTankBoiler() {
         this.fluids = this.addComponent(new Fluids(this));
-        this.tank = this.fluids.addTank("tank",4000);
+        this.tank = this.fluids.addTank("tank", 4000);
+        this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this, 4000));
+        this.steam.setFluidTank(tank);
     }
+
     public void updateField(String name, CustomPacketBuffer is) {
 
         if (name.equals("fluidTank")) {
@@ -50,6 +54,38 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
         }
         super.updateField(name, is);
     }
+
+    @Override
+    public void readPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        try {
+            this.tank.setFluid(((FluidTank) DecoderHandler.decode(customPacketBuffer)).getFluid());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public CustomPacketBuffer writePacket() {
+
+        CustomPacketBuffer customPacketBuffer = super.writePacket();
+        try {
+            EncoderHandler.encode(customPacketBuffer,tank);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return customPacketBuffer;
+    }
+
+    @Override
+    public void onLoaded() {
+        super.onLoaded();
+        if (!this.getWorld().isRemote) {
+            new PacketUpdateFieldTile(this, "fluidTank", tank);
+
+        }
+    }
+
     public void updateEntityServer() {
         super.updateEntityServer();
         if (amount != tank.getFluidAmount()) {
@@ -58,6 +94,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
         }
 
     }
+
     public boolean doesSideBlockRendering(EnumFacing side) {
         return false;
     }
@@ -83,7 +120,7 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
     ) {
         if (!this.getWorld().isRemote && player
                 .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null) && steam == null) {
+                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
 
             return ModUtils.interactWithFluidHandler(player, hand,
                     this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
@@ -99,14 +136,10 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
 
     @Override
     public void setSteam() {
-        if (this.steam == null) {
-            this.steam = this.addComponent(ComponentSteamEnergy.asBasicSource(this,4000));
-            this.steam.setFluidTank(tank);
-            this.steam.onLoaded();
-        } else{
-            this.steam.onLoaded();
-        }
+        this.tank.setTypeItemSlot(InvSlot.TypeItemSlot.NONE);
+        this.steam.onLoaded();
     }
+
     @Override
     public IMultiTileBlock getTeBlock() {
         return BlockSteamBoiler.steam_boiler_tank;
@@ -116,16 +149,23 @@ public class TileEntitySteamTankBoiler extends TileEntityMultiBlockElement imple
     public BlockTileEntity getBlock() {
         return IUItem.steam_boiler;
     }
+
     @Override
     public ComponentSteamEnergy getSteam() {
         return steam;
     }
 
     @Override
+    public void setUnloaded() {
+        this.steam.onUnloaded();
+    }
+
+    @Override
     public void setMainMultiElement(final IMainMultiBlock main) {
         super.setMainMultiElement(main);
-        if (main == null && steam != null){
+        if (main == null && steam != null) {
             steam.onUnloaded();
+
         }
     }
 

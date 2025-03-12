@@ -10,19 +10,22 @@ import com.denfop.api.space.research.event.ResearchTableUnLoadEvent;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.events.WorldSavedDataIU;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public class EventHandlerPlanet {
 
     private final boolean load;
-    public WorldSavedDataIU data;
+    public static WorldSavedDataIU data;
 
     public EventHandlerPlanet() {
         this.load = false;
@@ -40,33 +43,29 @@ public class EventHandlerPlanet {
 
     }
 
-    @SubscribeEvent
-    public void onQuit(final WorldEvent.Unload event) {
-        if (event.getWorld().provider.getDimension() == 0 && !event.getWorld().isRemote) {
-            if (data != null) {
-                event.getWorld().getMapStorage().saveData(data);
-            }
-        }
-    }
+
 
     @SubscribeEvent
     public void load(final ResearchTableLoadEvent event) {
-        if (event.getWorld().isRemote)
+        if (event.getWorld().isRemote) {
             return;
+        }
         final Map<UUID, IResearchTable> map = SpaceNet.instance
                 .getFakeSpaceSystem()
                 .getResearchTableMap();
         if (!map.containsKey(event.table.getPlayer())) {
             map.put(event.table.getPlayer(), event.table);
-        }else{
-            map.replace(event.table.getPlayer(),event.table);
+        } else {
+            map.replace(event.table.getPlayer(), event.table);
         }
 
     }
+
     @SubscribeEvent
     public void unLoad(final ResearchTableUnLoadEvent event) {
-        if (event.getWorld().isRemote)
+        if (event.getWorld().isRemote) {
             return;
+        }
         final Map<UUID, IResearchTable> map = SpaceNet.instance
                 .getFakeSpaceSystem()
                 .getResearchTableMap();
@@ -76,22 +75,25 @@ public class EventHandlerPlanet {
 
     @SubscribeEvent
     public void loadRocketPad(final RocketPadLoadEvent event) {
-        if (event.getWorld().isRemote)
+        if (event.getWorld().isRemote) {
             return;
+        }
         final Map<UUID, IRocketLaunchPad> map = SpaceNet.instance
                 .getFakeSpaceSystem()
                 .getRocketPadMap();
         if (!map.containsKey(event.table.getPlayer())) {
             map.put(event.table.getPlayer(), event.table);
-        }else{
-            map.replace(event.table.getPlayer(),event.table);
+        } else {
+            map.replace(event.table.getPlayer(), event.table);
         }
 
     }
+
     @SubscribeEvent
     public void unLoadRocketPad(final RocketPadUnLoadEvent event) {
-        if (event.getWorld().isRemote)
+        if (event.getWorld().isRemote) {
             return;
+        }
         final Map<UUID, IRocketLaunchPad> map = SpaceNet.instance
                 .getFakeSpaceSystem()
                 .getRocketPadMap();
@@ -99,25 +101,21 @@ public class EventHandlerPlanet {
 
     }
 
-    @SubscribeEvent
-    public void loadWorld(final WorldEvent.Load event) {
-        if (event.getWorld().provider.getDimension() == 0 && !event.getWorld().isRemote) {
-
-            this.data = (WorldSavedDataIU) Objects.requireNonNull(event.getWorld().getMapStorage())
-                    .getOrLoadData(
-                            WorldSavedDataIU.class,
-                            Constants.MOD_ID
-                    );
-            if (data == null) {
-                data = new WorldSavedDataIU();
-                data.setWorld(event.getWorld());
-                data.readFromNBT(new NBTTagCompound());
-                event.getWorld().getMapStorage().setData(Constants.MOD_ID, data);
-            } else {
-                data.setWorld(event.getWorld());
-            }
-            data.markDirty();
+     @SubscribeEvent
+    public void onSave(WorldEvent.Save event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && data != null && event.getWorld().provider.getDimension() == 0) {
+            data.setDirty(true);
         }
     }
+
+    @SubscribeEvent
+    public void onUnload(WorldEvent.Unload event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && data != null && event.getWorld().provider.getDimension() == 0) {
+            data.setDirty(true);
+        }
+    }
+
+
+
 
 }

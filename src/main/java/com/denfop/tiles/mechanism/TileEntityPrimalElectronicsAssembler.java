@@ -533,7 +533,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
 
     public void updateTileServer(EntityPlayer var1, double var2) {
         if (start && var2 == 0) {
-            this.componentProgress.addProgress(0, (short) ((short) 30*(1+data1.getOrDefault(var1.getUniqueID(),0.0)/50D)));
+            this.componentProgress.addProgress(0, (short) ((short) 60*(1+data1.getOrDefault(var1.getUniqueID(),0.0)/66D)));
             if (componentProgress.getProgress(0) >= 300) {
                 componentProgress.setProgress((short) 300);
                 if (!this.getWorld().isRemote)

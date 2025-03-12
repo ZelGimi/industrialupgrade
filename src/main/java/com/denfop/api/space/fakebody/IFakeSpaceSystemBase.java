@@ -67,4 +67,5 @@ public interface IFakeSpaceSystemBase {
 
     void addDataBody(UUID name, Map<IBody, Data> map);
 
+    void copyData(Map<IBody, Data> data, UUID uniqueID);
 }

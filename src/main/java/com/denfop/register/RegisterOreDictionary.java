@@ -624,6 +624,8 @@ public class RegisterOreDictionary {
         add("smalldustOsmium", new ItemStack(IUItem.smalldust, 1, 29));
         add("smalldustTantalum", new ItemStack(IUItem.smalldust, 1, 30));
         add("smalldustCadmium", new ItemStack(IUItem.smalldust, 1, 31));
+        add("dustQuartz", new ItemStack(IUItem.iudust, 1, 76));
+        add("dustNetherQuartz", new ItemStack(IUItem.iudust, 1, 76));
 
         add("verysmalldustOsmium", new ItemStack(IUItem.verysmalldust, 1, 19));
         add("verysmalldustTantalum", new ItemStack(IUItem.verysmalldust, 1, 20));

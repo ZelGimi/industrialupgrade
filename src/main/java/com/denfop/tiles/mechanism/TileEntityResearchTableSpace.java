@@ -124,11 +124,14 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2;
     }
-
+    boolean added = false;
     @Override
     public void onLoaded() {
         super.onLoaded();
-        MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
+        if (!added) {
+            MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
+            added = true;
+        }
         if (!this.getWorld().isRemote) {
             this.getSpaceBody();
             dataMap.clear();
@@ -146,7 +149,10 @@ public class TileEntityResearchTableSpace extends TileEntityInventory implements
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
+        if (added) {
+            MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
+            added = false;
+        }
     }
 
     @Override

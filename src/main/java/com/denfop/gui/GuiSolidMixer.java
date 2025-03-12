@@ -5,6 +5,7 @@ import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.componets.ComponentSoundButton;
 import com.denfop.container.ContainerSolidMixer;
@@ -51,6 +52,10 @@ public class GuiSolidMixer extends GuiIU<ContainerSolidMixer> {
 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(f, x, y);
+        if (this.container.base instanceof IUpgradableBlock) {
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        }
         this.mc.getTextureManager().bindTexture(getTexture());
 
 

@@ -11,4 +11,7 @@ public interface ITank extends IMultiElement {
     void setSteam();
 
     ComponentSteamEnergy getSteam();
+
+    void setUnloaded();
+
 }

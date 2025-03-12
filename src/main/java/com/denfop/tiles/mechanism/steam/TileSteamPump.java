@@ -51,7 +51,7 @@ public class TileSteamPump extends TileElectricLiquidTankInventory {
 
     public TileSteamPump() {
         super(0, 1, 10);
-        this.defaultEnergyConsume = this.energyConsume = 4;
+        this.defaultEnergyConsume = this.energyConsume = 2;
         this.defaultOperationLength = this.operationLength = 25;
         this.defaultTier = 1;
         this.defaultEnergyStorage = this.operationLength;

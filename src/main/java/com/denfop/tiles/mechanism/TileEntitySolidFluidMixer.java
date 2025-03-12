@@ -37,6 +37,7 @@ import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.tiles.base.TileElectricMachine;
+import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -197,6 +198,13 @@ public class TileEntitySolidFluidMixer extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidsodiumhydroxide.getInstance()
                         , 250), new FluidStack(FluidName.fluidhyd.getInstance()
                         , 250)
+        );
+
+        addRecipe(new ItemStack(IUItem.crafting_elements,1,295),
+                new FluidStack(FluidRegistry.WATER, 1000),
+                new FluidStack(FluidName.fluidsteam_oil.getInstance()
+                        , 500), new FluidStack(FluidName.fluidoxy.getInstance()
+                        , 125)
         );
     }
 

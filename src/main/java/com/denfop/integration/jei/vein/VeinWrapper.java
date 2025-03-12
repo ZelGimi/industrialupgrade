@@ -9,10 +9,10 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class VeinWrapper implements IRecipeWrapper {
@@ -37,13 +37,13 @@ public class VeinWrapper implements IRecipeWrapper {
     public void getIngredients(IIngredients ingredients) {
         ingredients.setOutputs(VanillaTypes.ITEM, this.getInputs());
         ingredients.setOutputs(VanillaTypes.FLUID,
-                Arrays.asList(new FluidStack[]{new FluidStack(FluidName.fluidneft.getInstance(),
+                Arrays.asList(new FluidStack(FluidName.fluidneft.getInstance(),
             1000), new FluidStack(FluidName.fluidgas.getInstance(), 1000)
                         , new FluidStack(FluidName.fluidsour_heavy_oil.getInstance(), 1000)
                         , new FluidStack(FluidName.fluidsour_medium_oil.getInstance(), 1000)
                         , new FluidStack(FluidName.fluidsour_light_oil.getInstance(), 1000)
                         , new FluidStack(FluidName.fluidsweet_medium_oil.getInstance(), 1000)
-                        , new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), 1000)}));
+                        , new FluidStack(FluidName.fluidsweet_heavy_oil.getInstance(), 1000)));
     }
 
 

@@ -99,7 +99,9 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
                 && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer)) {
             preCancelEvent = true;
         }
-
+        IBlockState state = world.getBlockState(pos);
+        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0)
+            return -1;
         if (gameType.hasLimitedInteractions()) {
             if (gameType == GameType.SPECTATOR) {
                 preCancelEvent = true;
@@ -119,7 +121,7 @@ public class TileAdvSteamQuarry extends TileEntityInventory {
         }
 
         // Post the block break event
-        IBlockState state = world.getBlockState(pos);
+
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
         event.setCanceled(preCancelEvent);
         MinecraftForge.EVENT_BUS.post(event);

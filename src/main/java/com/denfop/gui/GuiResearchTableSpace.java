@@ -27,6 +27,7 @@ import com.denfop.api.space.MiniAsteroid;
 import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.colonies.api.IColony;
+import com.denfop.api.space.colonies.enums.EnumProblems;
 import com.denfop.api.space.fakebody.Data;
 import com.denfop.api.space.fakebody.IFakeBody;
 import com.denfop.api.space.rovers.enums.EnumRoversLevel;
@@ -42,6 +43,7 @@ import com.denfop.network.packet.PacketReturnRoversToPlanet;
 import com.denfop.network.packet.PacketSendResourceToEarth;
 import com.denfop.network.packet.PacketSendRoversToPlanet;
 import com.denfop.network.packet.PacketUpdateBody;
+import com.denfop.tiles.bee.EnumProblem;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
 import net.minecraft.client.Minecraft;
@@ -1693,7 +1695,8 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                             + "\n" + Localization.translate("iu.space_colony_to_auto_delete") + (colony.getToDelete() != 30 ?
                             colony.getToDelete() + "s" : Localization.translate("iu.space_no"))
                             + "\n" + Localization.translate("iu.space_colony_has_problem") + (colony.getProblems().isEmpty()
-                            ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"));
+                            ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"))
+                            + "\n" + Localization.translate("iu.space_colony_has_problem") + getProblem(colony);
 
 
             ;
@@ -1818,6 +1821,22 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         } else if (mode == 2) {
             Data data = container.base.dataMap.get(planet);
             IPlanet focusedPlanet = planet;
+            for (int i = value2, j = 0; i < Math.min(
+                    planet.getSatelliteList().size(),
+                    value2 + 2
+            ); i++, j++) {
+                if (i < planet.getSatelliteList().size()) {
+                    ISatellite planet1 = planet.getSatelliteList().get(i);
+                    double progress;
+                    Data data1 = container.base.dataMap.get(planet1);
+                    progress = data1.getPercent() / 100D;
+                    new Area(this, 192, 8 + 32 * (i % 2) + 5 * 31, 30, 30)
+                            .withTooltip(Localization.translate("iu.space_research") + " " + (int) (progress * 100) + "%")
+                            .drawForeground(par1, par2);
+                }
+
+
+            }
             String text = getInformationFromBody(focusedPlanet, data);
             int canvasX = 69;
             int canvasY = 26;
@@ -1938,6 +1957,17 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
 
             }
         }
+    }
+
+    private String getProblem(IColony colony) {
+        if (!colony.getProblems().isEmpty()){
+            StringBuilder problem = new StringBuilder();
+            for (EnumProblems problems : colony.getProblems()){
+                problem.append(problems.name()).append("\n");
+            }
+            return problem.toString();
+        }
+        return "";
     }
 
     private void renderTooltipResource(IBody asteroid, Data data, int par1, int par2) {

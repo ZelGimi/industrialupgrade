@@ -286,7 +286,7 @@ public class TileEntityShield extends TileEntityInventory implements IUpdatableT
                 for (Entity entity : mobs) {
                     if (this.energy.getEnergy() >= 25) {
                         new PacketUpdateFieldTile(this, "uuid", entity.getUniqueID());
-                        entity.attackEntityFrom(DamageSource.MAGIC, 1F);
+                        entity.attackEntityFrom(DamageSource.MAGIC, 4F);
                         this.energy.useEnergy(25);
                     } else {
                         break;

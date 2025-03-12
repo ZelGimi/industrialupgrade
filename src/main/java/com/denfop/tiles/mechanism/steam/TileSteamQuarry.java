@@ -110,7 +110,9 @@ public class TileSteamQuarry extends TileEntityInventory {
                 && !itemstack.getItem().canDestroyBlockInCreative(world, pos, itemstack, entityPlayer)) {
             preCancelEvent = true;
         }
-
+        IBlockState state = world.getBlockState(pos);
+        if (state.getMaterial() != Material.AIR && state.getBlock().getHarvestLevel(state) < 0)
+            return -1;
         if (gameType.hasLimitedInteractions()) {
             if (gameType == GameType.SPECTATOR) {
                 preCancelEvent = true;
@@ -123,14 +125,14 @@ public class TileSteamQuarry extends TileEntityInventory {
             }
         }
 
-        // Tell client the block is gone immediately then process events
+
         if (world.getTileEntity(pos) == null) {
             SPacketBlockChange packet = new SPacketBlockChange(world, pos);
             packet.blockState = Blocks.AIR.getDefaultState();
         }
 
-        // Post the block break event
-        IBlockState state = world.getBlockState(pos);
+
+        state = world.getBlockState(pos);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, entityPlayer);
         event.setCanceled(preCancelEvent);
         MinecraftForge.EVENT_BUS.post(event);
@@ -217,7 +219,8 @@ public class TileSteamQuarry extends TileEntityInventory {
             Block block1 = state.getBlock();
             int meta = block1.getMetaFromState(state);
             steam.useEnergy(2);
-            if (state.getMaterial() == Material.AIR && onBlockBreakEvent(world, world.getWorldInfo().getGameType(),
+            if ( state.getMaterial() == Material.AIR && onBlockBreakEvent(world,
+                    GameType.SURVIVAL,
                     entity, pos1
             ) != -1) {
                 if (x == pos.getX() && z == pos.getZ()) {
@@ -245,7 +248,7 @@ public class TileSteamQuarry extends TileEntityInventory {
                 }
                 return;
             }
-            if (onBlockBreakEvent(world, world.getWorldInfo().getGameType(), entity, pos1) == -1) {
+            if (onBlockBreakEvent(world,GameType.SURVIVAL, entity, pos1) == -1) {
                 if (x == pos1.getX() && z == pos1.getZ()) {
                     work = false;
                 }

@@ -107,7 +107,7 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     }
 
     List<List<TileEntityApiary>> list = new ArrayList<>();
-
+    List<Chunk> chunks;
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -118,7 +118,7 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
             int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
             int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
             int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            List<Chunk> chunks = new ArrayList<>();
+           chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
                     final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
@@ -137,7 +137,12 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     public ContainerCollectorProductBee getGuiContainer(final EntityPlayer var1) {
         return new ContainerCollectorProductBee(this, var1);
     }
-
+    private void updateBee() {
+        list.clear();
+        for (Chunk chunk : chunks) {
+            this.list.add(BeeNetwork.instance.getApiaryFromChunk(world, chunk.getPos()));
+        }
+    }
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(final EntityPlayer var1, final boolean var2) {
@@ -159,6 +164,9 @@ public class TileEntityCollectorProductBee extends TileEntityInventory implement
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getWorld().getWorldTime() % 100 == 0){
+            updateBee();
+        }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(20)) {
             cycle:
             for (List<TileEntityApiary> bees : list) {

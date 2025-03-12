@@ -1838,7 +1838,7 @@ public class BasicRecipeTwo {
                 ('F'), new ItemStack(IUItem.crafting_elements, 1, 231),
                 ('H'), new ItemStack(IUItem.crafting_elements, 1, 11)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 10), "BAB", " C ", " D ",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 10), "BAB", " C ", "EDE",
 
                 ('D'), new ItemStack(IUItem.crafting_elements, 1, 96),
 
@@ -1847,7 +1847,7 @@ public class BasicRecipeTwo {
                 ('A'), new ItemStack(IUItem.crafting_elements, 1, 11),
 
                 ('B'),
-                new ItemStack(IUItem.crafting_elements, 1, 72)
+                new ItemStack(IUItem.crafting_elements, 1, 72),'E',"platePermalloy"
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine, 1, 12), " D ", "BAC", "E H",
 
@@ -3562,12 +3562,7 @@ public class BasicRecipeTwo {
                 ), ('D'),
                 new ItemStack(IUItem.preciousblock)
         );
-        Recipes.recipe.addShapelessRecipe(
-                ModUtils.setSize(IUItem.copperCableItem, 2), "craftingToolWireCutter", "plateCopper");
-        Recipes.recipe.addShapelessRecipe(
-                ModUtils.setSize(IUItem.tinCableItem, 3), "craftingToolWireCutter", "plateTin");
-        Recipes.recipe.addShapelessRecipe(
-                ModUtils.setSize(IUItem.goldCableItem, 4), "craftingToolWireCutter", "plateGold");
+
         Recipes.recipe.addRecipe(
                 ModUtils.setSize(IUItem.reinforcedGlass, 7),
                 "BAB", "BBB", "BAB", ('B'), Blocks.GLASS, ('A'), IUItem.advancedAlloy
@@ -3786,7 +3781,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(IUItem.plantBall, "AAA", "A A", "AAA",
                 ('A'), "treeSapling"
         );
-        Recipes.recipe.addRecipe(IUItem.fluidCell, " A ", "ABA", " A ",
+        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.fluidCell,3), " A ", "ABA", " A ",
 
                 ('A'), "casingTin",
 
@@ -3871,11 +3866,11 @@ public class BasicRecipeTwo {
                 ('B'), IUItem.Plutonium
         );
 
-        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.energiumDust, 9), "ABA", "BAB", "ABA",
+        Recipes.recipe.addRecipe(ModUtils.setSize(IUItem.energiumDust, 9), "ABA", "BCB", "ABA",
 
-                ('A'), Items.REDSTONE,
+                ('A'), IUItem.charged_redstone,
 
-                ('B'), IUItem.diamondDust
+                ('B'), IUItem.diamondDust, 'C', Items.QUARTZ
         );
 
         Recipes.recipe.addRecipe(

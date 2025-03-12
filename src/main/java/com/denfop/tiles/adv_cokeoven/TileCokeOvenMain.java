@@ -11,14 +11,11 @@ import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.FluidName;
 import com.denfop.blocks.mechanism.BlockAdvCokeOven;
-import com.denfop.blocks.mechanism.BlockCokeOven;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.HeatComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAdvCokeOven;
-import com.denfop.container.ContainerCokeOven;
 import com.denfop.gui.GuiAdvCokeOven;
-import com.denfop.gui.GuiCokeOven;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotDrainTank;
 import com.denfop.invslot.InvSlotFluid;
@@ -148,7 +145,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
 
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -167,7 +164,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -387,7 +384,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                 new PacketUpdateFieldTile(this, "sound", this.sound);
 
                 if (!sound) {
-                    if (this.getType() == EnumTypeAudio.ON) {
+                    if (this.getTypeAudio() == EnumTypeAudio.ON) {
                         setType(EnumTypeAudio.OFF);
                         initiate(2);
 

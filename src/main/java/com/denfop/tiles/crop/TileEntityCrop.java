@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -339,14 +340,15 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (!this.getWorld().isRemote) {
+        if (!this.getWorld().isRemote && added) {
             CropNetwork.instance.removeCropFromWorld(this);
+            this.added = false;
         }
         if (this.getWorld().isRemote) {
             GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
     }
-
+    boolean added = false;
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
@@ -373,7 +375,10 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     cropMap.put(pos1, (TileEntityCrop) tile);
                 }
             }
-            CropNetwork.instance.addNewCropToWorld(this);
+            if (!added) {
+                added = true;
+                CropNetwork.instance.addNewCropToWorld(this);
+            }
             this.axisAlignedBB = new AxisAlignedBB(
                     pos.getX() - 4,
                     pos.getY() - 2,
@@ -387,7 +392,8 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             int minZ = (int) Math.floor(axisAlignedBB.minZ) >> 4;
             int maxZ = (int) Math.floor(axisAlignedBB.maxZ) >> 4;
 
-
+            chunkPositions.clear();;
+            chunkPosListMap.clear();
             for (int chunkX = minX; chunkX <= maxX; chunkX++) {
                 for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++) {
                     chunkPositions.add(new ChunkPos(chunkX, chunkZ));
@@ -518,7 +524,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             for (ItemStack stack1 : crop.getDrops()) {
                 ModUtils.dropAsEntity(world, pos, stack1, this.crop.getYield());
             }
-            if (WorldBaseGen.random.nextInt(100) < 50) {
+            if (WorldBaseGen.random.nextInt(100) < 25) {
                 ModUtils.dropAsEntity(world, pos, this.cropItem, WorldBaseGen.random.nextInt(crop.getSizeSeed() + 1));
             }
         }
@@ -1070,12 +1076,41 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         return BeeId;
     }
 
+    @Override
+    public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
+        List<ItemStack> list =  new LinkedList<>(super.getSelfDrops(fortune, wrench));
+        if (this.hasDouble){
+            list.add(this.getPickBlock(null,null));
+        }
+        if (crop != null&& crop.getId() != 3){
+            list.add(this.cropItem);
+        }
+        return list;
+    }
+
     public void updateEntityServer() {
         super.updateEntityServer();
         if (crop != null) {
             BeeId = 0;
             boolean work = false;
             if (this.getWorld().getWorldTime() % 20 == 0) {
+                if (chunk == null){
+                    this.chunkPos = new ChunkPos(pos);
+                    Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
+                    if (radiation1 == null) {
+                        radiation1 = new Radiation(chunkPos);
+                        RadiationSystem.rad_system.addRadiation(radiation1);
+                    }
+                    this.radLevel = radiation1;
+                    ChunkLevel chunkLevel = PollutionManager.pollutionManager.getChunkLevelSoil(chunkPos);
+                    if (chunkLevel == null) {
+                        chunkLevel = new ChunkLevel(chunkPos, LevelPollution.VERY_LOW, 0);
+                        PollutionManager.pollutionManager.addChunkLevelSoil(chunkLevel);
+                    }
+                    this.chunkLevel = chunkLevel;
+                    this.chunk = this.getWorld().getChunkFromBlockCoords(pos);
+                    this.biome = this.getWorld().getBiome(pos);
+                }
                 if (CropNetwork.instance.canGrow(world, pos, chunkPos, crop, radLevel, chunk, biome, chunkLevel) && (this
                         .getWorld()
                         .getWorldTime() % 400 != 0 || canGrow())) {
@@ -1394,6 +1429,9 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             final float hitZ
     ) {
         if (!this.cropItem.isEmpty() && crop != null && !this.getWorld().isRemote && crop.getId() != 3) {
+            if (this.crop != null && this.crop.getTick() == this.crop.getMaxTick() && this.crop.getId() != 3) {
+                harvest(true);
+            }
             ModUtils.dropAsEntity(world, pos,this.cropItem, 1);
             this.cropItem = ItemStack.EMPTY;
             this.crop = null;

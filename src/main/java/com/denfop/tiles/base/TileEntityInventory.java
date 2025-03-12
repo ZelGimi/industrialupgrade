@@ -517,6 +517,7 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
                 }
             }
         }
+
         for (AbstractComponent component : this.getComponentList()) {
             if (!component.getDrops().isEmpty()) {
                 ret.addAll(component.getDrops());

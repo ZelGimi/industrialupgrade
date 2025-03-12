@@ -6,20 +6,15 @@ import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
-import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.rovers.api.IRovers;
+import com.denfop.api.space.rovers.enums.EnumTypeUpgrade;
 import com.denfop.api.space.upgrades.SpaceUpgradeSystem;
-import com.denfop.tiles.tank.TileEntityTank;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -341,6 +336,16 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
         }
     }
 
+    @Override
+    public void copyData(final Map<IBody, Data> data, final UUID uniqueID) {
+        if (dataMap.containsKey(uniqueID)) {
+            dataMap.replace(uniqueID, data);
+        } else {
+            dataMap.put(uniqueID, data);
+        }
+
+    }
+
     private void processTimers(IFakeBody fakeBody) {
         if (fakeBody.getTimerTo().canWork()) {
             fakeBody.getTimerTo().work();
@@ -393,14 +398,17 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
         IRocketLaunchPad rocketLaunchPad = getRocketPadMap().get(playerId);
         if (table != null && rocketLaunchPad != null) {
             for (IBaseResource resource : fakeBody.getResource()) {
-                if (resource.getItemStack() != null)
+                if (resource.getItemStack() != null) {
                     rocketLaunchPad.getSlotOutput().add(resource.getItemStack());
-                if (resource.getFluidStack() != null)
+                }
+                if (resource.getFluidStack() != null) {
                     rocketLaunchPad.addFluidStack(resource.getFluidStack());
+                }
             }
             fakeBody.getSpaceOperation().setOperation(EnumOperation.SUCCESS);
-            if (fakeBody.getTimerTo().getTime() == 0)
-                fakeBody.getData().addInformation(fakeBody.getRover().getItem().getAddProgress());
+            if (fakeBody.getTimerTo().getTime() == 0) {
+                fakeBody.getData().addInformation(5);
+            }
             removeFakeBody(fakeBody, playerId, uuidListMap);
         }
     }

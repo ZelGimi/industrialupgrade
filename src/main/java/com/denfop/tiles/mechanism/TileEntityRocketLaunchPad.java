@@ -155,14 +155,18 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
         nbtTagCompound.setUniqueId("player",player);
         return nbtTagCompound;
     }
+    boolean added = false;
     @Override
     public void onLoaded() {
         super.onLoaded();
 
         if (this.getWorld().isRemote) {
             GlobalRenderManager.addRender(world, pos, createFunction(this));
-        }else{
-            MinecraftForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
+        }else {
+            if (!added) {
+                MinecraftForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
+                added = true;
+            }
         }
     }
     @SideOnly(Side.CLIENT)
@@ -178,7 +182,10 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     @Override
     public void onUnloaded() {
         super.onUnloaded();
-        MinecraftForge.EVENT_BUS.post(new RocketPadUnLoadEvent(this.getWorld(), this));
+        if (added) {
+            MinecraftForge.EVENT_BUS.post(new RocketPadUnLoadEvent(this.getWorld(), this));
+            added = false;
+        }
         if (this.getWorld().isRemote) {
             GlobalRenderManager.removeRender(world, pos);
         }
@@ -225,7 +232,8 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
         if (name.equals("datarocket")){
             try {
                 ItemStack stack = is.readItemStack();
-                this.rocketList.add(new DataRocket((IRoversItem) stack.getItem(),this.pos));
+                this.rocketList.add(new DataRocket((IRoversItem) stack.getItem(),this.pos.getY()));
+                this.roverSlot.put(0,ItemStack.EMPTY);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

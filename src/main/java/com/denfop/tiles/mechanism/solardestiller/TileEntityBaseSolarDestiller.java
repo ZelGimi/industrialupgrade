@@ -168,26 +168,26 @@ public class TileEntityBaseSolarDestiller extends TileEntityInventory implements
                 case DEFAULT:
                     return 36;
                 case ADVANCED:
-                    return 30;
+                    return 20;
                 case IMPROVED:
-                    return 24;
+                    return 11;
                 case PERFECT:
-                    return 15;
+                    return 6;
                 case PHOTONIC:
-                    return 8;
+                    return 4;
             }
         } else {
             switch (style) {
                 case DEFAULT:
                     return BiomeDictionary.hasType(biome, Type.COLD) ? 144 : 72;
                 case ADVANCED:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 120 : 60;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 80 : 40;
                 case IMPROVED:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 96 : 48;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 44 : 22;
                 case PERFECT:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 60 : 30;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 24 : 12;
                 case PHOTONIC:
-                    return BiomeDictionary.hasType(biome, Type.COLD) ? 35 : 17;
+                    return BiomeDictionary.hasType(biome, Type.COLD) ? 16 : 8;
             }
 
         }

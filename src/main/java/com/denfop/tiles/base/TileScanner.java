@@ -290,6 +290,7 @@ public abstract class TileScanner extends TileElectricMachine implements IType,
     }
 
     public void updateTileServer(EntityPlayer player, double event) {
+        if (!this.iPatternStorageList.isEmpty() || !this.diskSlot.isEmpty())
         switch ((int) event) {
             case 0:
                 this.reset();

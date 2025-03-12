@@ -1,15 +1,19 @@
 package com.denfop.invslot;
 
+import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.recipe.IInputHandler;
+import com.denfop.tiles.base.FakePlayerSpawner;
 import com.denfop.tiles.base.TileEntityAutoDigger;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +42,23 @@ public class InvSlotInput extends InvSlot {
             final List<ItemStack> list = block.getDrops(this.tile.getWorld(), new BlockPos(0, 0, 0),
                     block.getStateFromMeta(content.getItemDamage()), this.tile.chance
             );
+            if (block == Blocks.IRON_ORE || block == Blocks.GOLD_ORE){
+                list.clear();
+                if (block == Blocks.GOLD_ORE) {
+                    list.add(new ItemStack(IUItem.rawMetals, Math.min(
+                            4,
+                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1,this.tile.chance)))
+                    )
+                            , 17));
+                }
+                if (block == Blocks.IRON_ORE) {
+                    list.add(new ItemStack(IUItem.rawMetals, Math.min(
+                            4,
+                            1 + tile.getWorld().rand.nextInt(Math.min(4, Math.max(1,this.tile.chance)))
+                    )
+                            , 18));
+                }
+            }
 
             if (this.tile.comb_mac_enabled) {
                 final List<ItemStack> list1 = new ArrayList<>();
@@ -54,7 +75,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
-                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
+                        stack1.setCount(stack1.getCount() * (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -71,7 +92,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
-                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
+                        stack1.setCount(stack1.getCount() * (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -92,7 +113,7 @@ public class InvSlotInput extends InvSlot {
                     final List<ItemStack> list3 = new ArrayList<>();
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
-                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
+                        stack1.setCount(stack1.getCount() * (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list3.add(stack1);
                     });
                     list3.forEach(stack1 -> stack1.setCount(stack.getCount()));
@@ -138,7 +159,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
-                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
+                        stack1.setCount(stack1.getCount() * (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -156,7 +177,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
-                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
+                        stack1.setCount(stack1.getCount() * (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
@@ -177,7 +198,7 @@ public class InvSlotInput extends InvSlot {
                     list1.add(stack);
                     recipe.getOutput().items.forEach(stack1 -> {
                         stack1 = stack1.copy();
-                        stack1.setCount(stack1.getCount() *  (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
+                        stack1.setCount(stack1.getCount() * (stack.getCount() / recipe.input.getInputs().get(0).getAmount()));
                         list2.add(stack1);
                     });
                 }
