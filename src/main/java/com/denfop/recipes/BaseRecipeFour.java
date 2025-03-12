@@ -384,6 +384,7 @@ public class BaseRecipeFour {
 
 
         );
+
         Recipes.recipe.addRecipe(new ItemStack(IUItem.quad_molecular), " B ", "CAC",
                 " B ",
 
@@ -542,6 +543,53 @@ public class BaseRecipeFour {
         Recipes.recipe.addRecipe(new ItemStack(IUItem.amperepipes), "   ", "ABA",
                 " C ",
                 ('A') ,"platePlatinum",'B',IUItem.copperCableItem
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.tomeResearch), "   ", "ABA",
+                " C ",
+                ('A') ,"plateMeteoric",'B',Items.BOOK,'C',"gemRuby"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.pollutionDevice), "AAA", "ABA",
+                " C ",
+                ('A') ,"plateIron",'B',TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit,2),'C',"gemAmericium"
+        );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.ruby_axe), "AA", "AB ",
+                " B ",
+                ('A') ,"gemRuby",'B',"stickWood"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.sapphire_axe), "AA", "AB ",
+                " B ",
+                ('A') ,"gemSapphire",'B',"stickWood"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.topaz_axe), "AA", "AB ",
+                " B ",
+                ('A') ,"gemTopaz",'B',"stickWood"
+        );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.ruby_pickaxe), "AAA", " B ",
+                " B ",
+                ('A') ,"gemRuby",'B',"stickWood"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.sapphire_pickaxe), "AAA", " B ",
+                " B ",
+                ('A') ,"gemSapphire",'B',"stickWood"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.topaz_pickaxe), "AAA", " B ",
+                " B ",
+                ('A') ,"gemTopaz",'B',"stickWood"
+        );
+
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.ruby_shovel), " A ", " B ",
+                " B ",
+                ('A') ,"gemRuby",'B',"stickWood"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.sapphire_shovel), " A ", " B ",
+                " B ",
+                ('A') ,"gemSapphire",'B',"stickWood"
+        );
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.topaz_shovel), " A ", " B ",
+                " B ",
+                ('A') ,"gemTopaz",'B',"stickWood"
         );
     }
 }

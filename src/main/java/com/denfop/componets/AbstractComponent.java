@@ -187,4 +187,9 @@ public abstract class AbstractComponent {
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
     }
+
+    public List<ItemStack> getAuxDrops(List<ItemStack> ret) {
+        return Collections.emptyList();
+    }
+
 }

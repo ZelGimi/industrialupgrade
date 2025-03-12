@@ -214,7 +214,7 @@ public class TransportNetLocal {
         if (!this.chunkCoordinatesITransportTileMap.containsKey(tile.getBlockPos())) {
             return;
         }
-        this.chunkCoordinatesITransportTileMap.remove(tile.getBlockPos(), tile);
+        this.chunkCoordinatesITransportTileMap.remove(tile.getBlockPos());
         if (tile instanceof ITransportAcceptor) {
             this.removeAll(this.getSources((ITransportAcceptor) tile));
         }
@@ -549,7 +549,7 @@ public class TransportNetLocal {
                 }
             }
         } catch (Exception exception) {
-            System.out.println(exception);
+            System.out.println("IUERROR:"+ exception.getMessage());
         }
         tick++;
     }

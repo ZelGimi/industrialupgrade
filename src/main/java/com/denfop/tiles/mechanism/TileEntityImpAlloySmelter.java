@@ -19,7 +19,6 @@ import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
-import com.denfop.componets.Energy;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentProcess;
 import com.denfop.componets.ComponentProgress;
@@ -263,7 +262,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -289,7 +288,7 @@ public class TileEntityImpAlloySmelter extends TileElectricMachine implements IH
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

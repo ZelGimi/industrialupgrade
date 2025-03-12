@@ -171,7 +171,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
                     this.guiProgress[i] = 0;
                     this.progress[i] = 0;
                     operate(i, output);
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getType() != EnumTypeAudio.VALUES[2 %  EnumTypeAudio.VALUES.length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[2 %  EnumTypeAudio.VALUES.length])) {
                         if (type == -1) {
                             this.multimachine.initiate(2);
                             type = 2;
@@ -180,7 +180,7 @@ public class BioProcessMultiComponent extends AbstractComponent implements IMult
                 }
             } else {
                 if (this.progress[i] != 0 && this.parent.getActive()) {
-                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getType() != EnumTypeAudio.VALUES[1 %  EnumTypeAudio.VALUES.length])) {
+                    if (this.operationLength > this.defaultOperationLength * 0.1 || (this.multimachine.getTypeAudio() != EnumTypeAudio.VALUES[1 %  EnumTypeAudio.VALUES.length])) {
                         if (type == -1) {
                             this.multimachine.initiate(1);
                             type = 1;

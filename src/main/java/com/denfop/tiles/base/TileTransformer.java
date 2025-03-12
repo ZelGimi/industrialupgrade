@@ -231,9 +231,9 @@ public abstract class TileTransformer extends TileEntityInventory implements
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        tooltip.add(Localization.translate("iu.item.tooltip.Low") + " " + +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
-                + Localization.translate("iu.generic.text.EUt") + " " + Localization.translate("iu.item.tooltip.High") + " " +
-                +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier() + 1) + " " + Localization.translate(
+        tooltip.add(Localization.translate("iu.item.tooltip.High") + " " + +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
+                + Localization.translate("iu.generic.text.EUt") + " " + Localization.translate("iu.item.tooltip.Low") + " " +
+                +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier()) + " " + Localization.translate(
                 "iu" +
                         ".generic.text.EUt"));
 

@@ -506,7 +506,7 @@ public class GeneratorVolcano {
         TileEntityVolcanoChest te = (TileEntityVolcanoChest) TileEntityBlock.instantiate(teClass);
         if (world.setBlockState(pos, newState, 0)) {
             world.setTileEntity(pos, te);
-            te.onPlaced(ItemStack.EMPTY, null, EnumFacing.UP);
+            te.onPlaced(ItemStack.EMPTY, null, EnumFacing.NORTH);
             world.markAndNotifyBlock(pos, world.getChunkFromBlockCoords(pos), oldState, te.getBlockState(), 3);
             if (!world.isRemote) {
                 new PacketUpdateTile(te);

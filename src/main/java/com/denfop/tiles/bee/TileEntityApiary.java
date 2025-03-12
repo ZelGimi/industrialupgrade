@@ -977,7 +977,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
                     }
                 }
             }
-            if (this.getWorld().getWorldTime() % 6000 == 0){
+            if (this.getWorld().getWorldTime() % 3600 == 0){
                 generation++;
                 canAdaptationBee();
             }
@@ -1755,7 +1755,7 @@ public class TileEntityApiary extends TileEntityInventory implements IApiaryTile
         }
 
 
-        if (harvest >= 4 / coef) {
+        if (harvest >= 3 / coef) {
             if (addFood){
                 this.tickDrainFood++;
             }

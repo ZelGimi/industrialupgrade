@@ -6,6 +6,6 @@ public interface ISteamMechanism {
 
     void initiate(int soundEvent);
 
-    EnumTypeAudio getType();
+    EnumTypeAudio getTypeAudio();
 
 }

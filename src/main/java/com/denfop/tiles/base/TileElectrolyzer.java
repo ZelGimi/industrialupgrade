@@ -100,7 +100,7 @@ public class TileElectrolyzer extends TileElectricMachine implements IManufactur
                 new FluidStack(
                         FluidName.fluidhyd.getInstance(),
                         2
-                ), new FluidStack(FluidName.fluidoxy.getInstance(), 2))));
+                ), new FluidStack(FluidName.fluidoxy.getInstance(), 1))));
         Recipes.recipes.getRecipeFluid().addRecipe("electrolyzer", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5)), Arrays.asList(
                 new FluidStack(

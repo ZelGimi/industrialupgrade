@@ -4,6 +4,7 @@ import com.denfop.Constants;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
+import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.container.ContainerBrewingPlant;
 import com.denfop.container.ContainerCentrifuge;
 import com.denfop.container.ContainerInoculator;
@@ -32,6 +33,10 @@ public class GuiInoculator extends GuiIU<ContainerInoculator> {
     @Override
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+        if (this.container.base instanceof IUpgradableBlock) {
+            this.mc.getTextureManager().bindTexture(new ResourceLocation("industrialupgrade", "textures/gui/infobutton.png"));
+            this.drawTexturedRect(3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
+        }
     }
 
     @Override

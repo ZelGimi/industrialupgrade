@@ -59,7 +59,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
                 InvSlotFluid.TypeFluidSlot.INPUT
         );
         this.outputSlot = new InvSlotOutput(this, 1);
-        this.energy = this.addComponent(Energy.asBasicSource(this, 50000000, 14));
+        this.energy = this.addComponent(Energy.asBasicSource(this, 50000000, 3));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidgas.getInstance()));
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.3));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.75));
@@ -79,7 +79,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -100,7 +100,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -161,7 +161,7 @@ public class TileGasGenerator extends TileEntityLiquidTankInventory implements
         return packet;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 

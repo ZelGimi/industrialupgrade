@@ -89,7 +89,7 @@ public class ItemGasSensor extends Item implements IModelRegister {
                     }
                     IUCore.proxy.messagePlayer(
                             player,
-                            (chunkPos1.getXStart()) + " " + (typeGas.getY()) + " " + (chunkPos1.getZStart()) + " " + text
+                            (chunkPos1.getXStart()+16) + " " + (typeGas.getY()) + " " + (chunkPos1.getZStart()+16) + " " + text
                     );
                 }
             }

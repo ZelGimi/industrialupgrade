@@ -29,6 +29,7 @@ public class ItemCanister extends ItemFluidContainer {
         if (this.isInCreativeTab(tab)) {
             subItems.add(new ItemStack(this));
             subItems.add(this.getItemStack(FluidName.fluidmotoroil));
+            subItems.add(this.getItemStack(FluidName.fluidsteam_oil));
         }
     }
 
@@ -48,7 +49,7 @@ public class ItemCanister extends ItemFluidContainer {
 
 
     public boolean canfill(Fluid fluid) {
-        return fluid == FluidName.fluidmotoroil.getInstance();
+        return fluid == FluidName.fluidmotoroil.getInstance() || fluid == FluidName.fluidsteam_oil.getInstance();
     }
 
 

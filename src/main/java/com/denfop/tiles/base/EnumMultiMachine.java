@@ -199,7 +199,7 @@ public enum EnumMultiMachine {
             1, 2
     ),
     Pho_RECYCLER(
-            1, 45, 8, IUItem.pho_machine, 20, -1, 20, EnumTypeMachines.RECYCLER, IUItem.pho_machine,
+            1, 45, 8, IUItem.pho_machine, 20, -1, 20, EnumTypeMachines.COMBRECYCLER, IUItem.pho_machine,
             1, 2
     ),
     DOUBLE_COMB_RECYCLER(

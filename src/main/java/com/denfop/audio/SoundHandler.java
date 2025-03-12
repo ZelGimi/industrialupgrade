@@ -20,37 +20,22 @@ public class SoundHandler {
 
     private static final SoundManager soundManager = Minecraft.getMinecraft().getSoundHandler().sndManager;
 
-    /**
-     * Останавливает звук по позиции.
-     *
-     * @param pos Позиция звука.
-     */
+
     public static void stopSound(BlockPos pos) {
         getSoundAtPosition(pos).ifPresent(soundManager::stopSound);
     }
 
-    /**
-     * Останавливает все звуки мода.
-     */
+
     public static void stopAllSounds() {
         getAllSoundsFromMod().forEach(soundManager::stopSound);
     }
 
-    /**
-     * Останавливает звуки по категории.
-     *
-     * @param sound EnumSound для фильтрации.
-     */
+
     public static void stopSound(EnumSound sound) {
         getSoundsMatching(sound.getNameSounds().toLowerCase()).forEach(soundManager::stopSound);
     }
 
-    /**
-     * Воспроизводит звук для игрока.
-     *
-     * @param player Игрок.
-     * @param sound  EnumSound или строка.
-     */
+
     public static void playSound(EntityPlayer player, Object sound) {
         if (player == null || sound == null) return;
 
@@ -63,22 +48,12 @@ public class SoundHandler {
         }
     }
 
-    /**
-     * Проверяет, воспроизводится ли звук с указанным именем.
-     *
-     * @param soundName Имя звука.
-     * @return true, если звук воспроизводится.
-     */
+
     private static boolean isSoundPlaying(String soundName) {
         return soundManager.invPlayingSounds.keySet().stream()
                 .anyMatch(sound -> isSoundFromMod(sound) && sound.getSoundLocation().getResourcePath().contains(soundName));
     }
 
-    /**
-     * Возвращает список всех звуков мода.
-     *
-     * @return Список звуков.
-     */
     private static List<ISound> getAllSoundsFromMod() {
         List<ISound> sounds = new ArrayList<>();
         soundManager.invPlayingSounds.keySet().stream()
@@ -87,12 +62,7 @@ public class SoundHandler {
         return sounds;
     }
 
-    /**
-     * Возвращает список звуков, соответствующих имени.
-     *
-     * @param soundName Имя звука.
-     * @return Список звуков.
-     */
+
     private static List<ISound> getSoundsMatching(String soundName) {
         List<ISound> sounds = new ArrayList<>();
         soundManager.invPlayingSounds.keySet().stream()
@@ -101,37 +71,21 @@ public class SoundHandler {
         return sounds;
     }
 
-    /**
-     * Находит звук по позиции.
-     *
-     * @param pos Позиция звука.
-     * @return Звук или пустое значение.
-     */
+
     private static Optional<ISound> getSoundAtPosition(BlockPos pos) {
         return soundManager.invPlayingSounds.keySet().stream()
                 .filter(sound -> isSoundFromMod(sound) && isSoundAtPosition(sound, pos))
                 .findFirst();
     }
 
-    /**
-     * Проверяет, является ли звук частью мода.
-     *
-     * @param sound Звук.
-     * @return true, если звук из мода.
-     */
+
     private static boolean isSoundFromMod(ISound sound) {
         return sound.getCategory() == SoundCategory.PLAYERS &&
                 sound.getSoundLocation().getResourceDomain().equals(Constants.MOD_ID);
     }
 
-    /**
-     * Проверяет, находится ли звук на указанной позиции.
-     *
-     * @param sound Звук.
-     * @param pos   Позиция.
-     * @return true, если звук на позиции.
-     */
+
     private static boolean isSoundAtPosition(ISound sound, BlockPos pos) {
-        return new BlockPos(sound.getXPosF() - 0.5, sound.getYPosF() - 0.5, sound.getZPosF() - 0.5).equals(pos);
+        return new BlockPos(sound.getXPosF(), sound.getYPosF(), sound.getZPosF()).equals(pos);
     }
 }

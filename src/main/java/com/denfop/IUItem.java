@@ -890,6 +890,18 @@ public class IUItem {
     public static Item terra_wart;
     public static ItemAmpereCable amperepipes;
     public static BlockTileEntity amperecableblock;
+    public static ItemTomeResearchSpace tomeResearch;
+    public static ItemPollutionDevice pollutionDevice;
+    public static ItemPickaxe ruby_pickaxe;
+    public static ItemPickaxe topaz_pickaxe;
+    public static ItemPickaxe sapphire_pickaxe;
+    public static ItemIronHammer ironHammer;
+    public static ItemAxe ruby_axe;
+    public static ItemAxe sapphire_axe;
+    public static ItemAxe topaz_axe;
+    public static ItemShovel ruby_shovel;
+    public static ItemShovel topaz_shovel;
+    public static ItemShovel sapphire_shovel;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();

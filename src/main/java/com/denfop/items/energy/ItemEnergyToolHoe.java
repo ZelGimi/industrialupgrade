@@ -25,8 +25,8 @@ public class ItemEnergyToolHoe extends ItemEnergyTool {
         this.maxCharge = 10000;
         this.transferLimit = 100;
         this.tier = 1;
-        this.efficiency = 16.0F;
-        this.setHarvestLevel("hoe", 4);
+        this.efficiency = 0.5F;
+        this.setHarvestLevel("hoe", 1);
     }
 
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {

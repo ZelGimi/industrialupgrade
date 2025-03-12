@@ -1,11 +1,13 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiComponent;
 import com.denfop.api.gui.TankGauge;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSmelteryCasting;
 import com.denfop.container.ContainerSmelteryFuelTank;
 import com.denfop.tiles.smeltery.TileEntitySmelteryController;
@@ -15,6 +17,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
 
@@ -24,6 +30,28 @@ public class GuiSmelteryFuelTank extends GuiIU<ContainerSmelteryFuelTank> {
 
         this.addElement(new TankGauge(this, 67, 15, 37, 49, container.base.getFuelTank(), TankGauge.TankGuiStyle.Normal) {
 
+            protected List<String> getToolTip() {
+                List<String> ret = new ArrayList<>();
+                FluidStack fs =  container.base.getFuelTank().getFluid();
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                    if (this.tank instanceof Fluids.InternalFluidTank) {
+                        Fluids.InternalFluidTank tank1 = (Fluids.InternalFluidTank) this.tank;
+                        ret.add(Localization.translate("iu.tank.fluids"));
+                        ret.addAll(tank1.getFluidList());
+                    }
+                } else if (fs != null && fs.amount > 0) {
+                    Fluid fluid = fs.getFluid();
+                    if (fluid != null) {
+                        ret.add(fluid.getLocalizedName(fs) + ": " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
+                    } else {
+                        ret.add("invalid fluid stack");
+                    }
+                } else {
+                    ret.add(Localization.translate("iu.generic.text.empty"));
+                }
+
+                return ret;
+            }
 
             @Override
             public void drawBackground(final int mouseX, final int mouseY) {

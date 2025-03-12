@@ -110,6 +110,7 @@ public class TileEntitySteamControllerBoiler extends TileMultiBlockBase implemen
             this.steamTank.getTank().drain(this.steamTank.getTank().getFluidAmount(), true);
         this.steamTank.getTank().setTypeItemSlot(InvSlot.TypeItemSlot.OUTPUT);
         this.steamTank.getTank().setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidsteam.getInstance()));
+        this.waterTank.setUnloaded();
         this.steamTank.setSteam();
     }
     @Override

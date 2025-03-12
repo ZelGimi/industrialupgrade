@@ -9,6 +9,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3;
 import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.ComponentBaseEnergy;
+import com.denfop.componets.Energy;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.base.IManufacturerBlock;
@@ -27,13 +28,13 @@ import java.util.List;
 
 public class TileEntityPurifierSoil extends TileEntityInventory implements IManufacturerBlock {
 
-    public final ComponentBaseEnergy energy;
+    public final Energy energy;
     public ChunkLevel chunkLevel;
     public ChunkPos chunkPos;
     public int level;
 
     public TileEntityPurifierSoil() {
-        energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.QUANTUM, this, 1000));
+        energy = this.addComponent(Energy.asBasicSink(this, 10000));
         this.chunkLevel = null;
     }
     @Override
@@ -138,13 +139,13 @@ public class TileEntityPurifierSoil extends TileEntityInventory implements IManu
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.world.provider.getWorldTime() % 20 == 0 && this.energy.getEnergy() > 50) {
+        if (this.world.provider.getWorldTime() % 20 == 0 && this.energy.getEnergy() > 100) {
             this.chunkLevel = PollutionManager.pollutionManager.getChunkLevelSoil(this.chunkPos);
             if (this.chunkLevel != null) {
                 final ChunkLevel chunkLevel1 = PollutionManager.pollutionManager.getChunkLevelAir(this.chunkPos);
-                if (this.chunkLevel.removePollution(10+level*10)) {
-                    chunkLevel1.addPollution(2.5+level*2.5);
-                    this.energy.useEnergy(25);
+                if (this.chunkLevel.removePollution(10+level*50)) {
+                    chunkLevel1.addPollution(25+level*25);
+                    this.energy.useEnergy(100);
                     this.setActive(true);
                 } else {
                     this.setActive(false);

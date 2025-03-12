@@ -82,7 +82,7 @@ public class Colony implements IColony {
     public Colony(IBody body, UUID player) {
         this.body = body;
         this.list = new ArrayList<>();
-        this.toDelete = 30;
+        this.toDelete = 120;
         this.fakeplayer = player;
         this.level = 1;
         this.experience = 0;
@@ -370,8 +370,8 @@ public class Colony implements IColony {
 
             enumProblemsList.clear();
         } else {
-            if (toDelete < 30) {
-                toDelete = 30;
+            if (toDelete < 120) {
+                toDelete = 120;
                 this.tick = 0;
             }
             if (this.level < 200 && this.tick == 10){

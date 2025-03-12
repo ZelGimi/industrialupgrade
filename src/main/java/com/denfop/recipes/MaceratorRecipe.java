@@ -76,6 +76,7 @@ public class MaceratorRecipe {
         addmacerator("ingotCadmium", "dustCadmium");
         addmacerator("ingotElectrum", "dustElectrum");
         addmacerator("ingotInvar", "dustInvar");
+        addmacerator("gemQuartz", "dustQuartz");
 
         addmacerator("ingotBronze", "dustBronze");
         addmacerator("ingotLead", "dustLead");
@@ -95,6 +96,7 @@ public class MaceratorRecipe {
         addmacerator("treeSapling", 4, IUItem.biochaff);
         addmacerator("plateDenseIron", "dustIron", 9);
         addmacerator("crushedIron", "dustIron");
+        addmacerator("gemEmerald",new ItemStack(IUItem.iudust, 1,74));
 
         addmacerator(new ItemStack(IUItem.apatite, 1, 2), new ItemStack(IUItem.iudust, 1, 66));
         addmacerator(new ItemStack(IUItem.apatite, 1, 3), new ItemStack(IUItem.iudust, 1, 69));
@@ -190,7 +192,20 @@ public class MaceratorRecipe {
                 )
         );
     }
+    public static void addmacerator(String input, ItemStack output) {
+        final IInputHandler input1 = Recipes.inputFactory;
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "macerator",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input, 1)
+                        ),
+                        new RecipeOutput(null, output)
+                )
+        );
 
+
+    }
     public static void addmacerator(String input, String output) {
         ItemStack stack = OreDictionary.getOres(output).get(0).copy();
         stack.setCount(1);

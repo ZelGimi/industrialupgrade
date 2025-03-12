@@ -9,8 +9,6 @@ import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.container.ContainerGenStone;
 import com.denfop.gui.GuiGenStone;
-import com.denfop.invslot.InvSlot;
-import com.denfop.invslot.InvSlotDischarge;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -203,14 +201,14 @@ public abstract class TileBaseGenStone extends TileElectricMachine implements
                 this.guiProgress = 0;
                 operate(output);
                 this.progress = 0;
-                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[2 % valuesAudio.length])) {
+                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getTypeAudio() != valuesAudio[2 % valuesAudio.length])) {
                     initiate(2);
                 }
             }
         } else {
             if (output == null && this.getActive()) {
                 this.progress = 0;
-                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getType() != valuesAudio[1 % valuesAudio.length])) {
+                if (this.operationLength > this.defaultOperationLength * 0.1 || (this.getTypeAudio() != valuesAudio[1 % valuesAudio.length])) {
                     initiate(1);
                 }
             }

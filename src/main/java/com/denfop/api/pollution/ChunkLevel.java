@@ -99,7 +99,7 @@ public class ChunkLevel implements INetworkObject {
         if (this.levelPollution == LevelPollution.VERY_LOW) {
             if (this.pollution == 0)
                 return false;
-            if (this.pollution == 99 && pollution == 100) {
+            if (this.pollution == 249 && pollution == 250) {
                 this.pollution = 0;
                 return true;
             }
@@ -122,7 +122,7 @@ public class ChunkLevel implements INetworkObject {
         }
         if (this.pollution - pollution == 0) {
             if (this.levelPollution != LevelPollution.VERY_LOW) {
-                this.pollution = 100;
+                this.pollution = 250;
             } else {
                 this.pollution = 0;
             }
@@ -132,7 +132,7 @@ public class ChunkLevel implements INetworkObject {
             )];
             removed = true;
         } else if (this.pollution - pollution < 0) {
-            this.pollution = 100 - (pollution - this.pollution);
+            this.pollution = 250 - (pollution - this.pollution);
             this.levelPollution = LevelPollution.values()[Math.max(
                     this.levelPollution.ordinal() - 1,
                     0
@@ -162,15 +162,15 @@ public class ChunkLevel implements INetworkObject {
             if (this.levelPollution == LevelPollution.VERY_HIGH) {
                 pollution /= 10000;
             }
-            if (this.pollution + pollution == 100) {
+            if (this.pollution + pollution == 250) {
                 pollution = 0;
                 this.levelPollution = LevelPollution.values()[Math.min(
                         this.levelPollution.ordinal() + 1,
                         LevelPollution.values().length - 1
                 )];
-            } else if (this.pollution + pollution > 100) {
+            } else if (this.pollution + pollution > 250) {
                 this.pollution = 0;
-                pollution -= (100 - this.pollution);
+                pollution -= (250 - this.pollution);
                 this.levelPollution = LevelPollution.values()[Math.min(
                         this.levelPollution.ordinal() + 1,
                         LevelPollution.values().length - 1

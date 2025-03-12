@@ -9,11 +9,10 @@ import com.denfop.componets.AirPollutionComponent;
 
 public class TileSimpleWindGenerator extends TileWindGenerator {
 
-    private final AirPollutionComponent pollutionAir;
+
 
     public TileSimpleWindGenerator() {
         super(EnumLevelGenerators.ONE);
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
     }
 
     public IMultiTileBlock getTeBlock() {

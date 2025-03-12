@@ -73,7 +73,10 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             }
         }
     }
-
+    @Override
+    public boolean isMain() {
+        return true;
+    }
     public MultiBlockStructure getMultiBlockStructure() {
         return multiBlockStructure;
     }
@@ -442,6 +445,14 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         super.updateField(name, is);
     }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (this.full && !this.activate){
+            this.setFull(false);
+        }
+    }
+
     public void updateFull() {
         setFull(getMultiBlockStucture().getFull(getFacing(), getBlockPos(), getWorld()));
         if (isFull()) {
@@ -560,6 +571,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                     }
                 }
             }
+            this.setFull(false);
         }
         super.onUnloaded();
     }

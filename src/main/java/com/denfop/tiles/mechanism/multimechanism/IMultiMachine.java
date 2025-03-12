@@ -19,5 +19,5 @@ public interface IMultiMachine {
 
     void initiate(int soundEvent);
 
-    EnumTypeAudio getType();
+    EnumTypeAudio getTypeAudio();
 }

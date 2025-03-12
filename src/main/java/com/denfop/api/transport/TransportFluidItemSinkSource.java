@@ -73,7 +73,7 @@ public class TransportFluidItemSinkSource implements ITransportSource, ITranspor
             final Iterator<InfoTile<ITransportTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
                 InfoTile<ITransportTile> tileInfoTile = iter.next();
-                if (tileInfoTile.tileEntity == tile) {
+                if (tileInfoTile.tileEntity.getBlockPos().equals(tile.getBlockPos())) {
                     iter.remove();
                     break;
                 }

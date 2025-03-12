@@ -34,7 +34,7 @@ public abstract class TileEntityBaseGenerator extends TileEntityInventory {
                 this.addComponent(Energy.asBasicSource(this, maxStorage, tier).addManagedSlot(this.chargeSlot));
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
 
         if (this.getComp(Energy.class) != null) {

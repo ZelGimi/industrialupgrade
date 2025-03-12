@@ -138,7 +138,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
     @Override
     public void RemoveTile(IEnergyTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
-            this.energyConductorMap.remove(facing1);
+             this.energyConductorMap.remove(facing1);
             final Iterator<InfoTile<IEnergyTile>> iter = validReceivers.iterator();
             while (iter.hasNext()) {
                 InfoTile<IEnergyTile> tileInfoTile = iter.next();
@@ -466,7 +466,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
 
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
-        List<ItemStack> stacks =  super.getSelfDrops(fortune, wrench);
+        List<ItemStack> stacks =  new LinkedList<>(super.getSelfDrops(fortune, wrench));
         if (quantum)
             stacks.add(new ItemStack(IUItem.qcable));
         if (solarium)
@@ -499,16 +499,7 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
             }
             Object tile = energyConductorMap.get(dir);
             if (tile != null) {
-                if ((tile instanceof IEnergyAcceptor && ((IEnergyAcceptor) tile).acceptsEnergyFrom(
-                        this,
-                        dir.getOpposite()
-                ) || tile instanceof IEnergyEmitter && ((IEnergyEmitter) tile).emitsEnergyTo(
-                        this,
-                        dir.getOpposite()
-                )) && this.canInteractWith()) {
-                    newConnectivity = (byte) (newConnectivity + 1);
-
-                }
+                newConnectivity = (byte) (newConnectivity + 1);
             } else {
                 Map<EnumFacing, ITile> map = this.energyTypeConductorMap.computeIfAbsent(
                         EnergyType.SOLARIUM,
@@ -517,42 +508,17 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                 tile = map.get(dir);
 
                 if (tile != null) {
-                    if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
-                            this,
-                            dir.getOpposite()
-                    ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
-                            this,
-                            dir.getOpposite()
-                    ))) {
-                        newConnectivity = (byte) (newConnectivity + 1);
+                    newConnectivity = (byte) (newConnectivity + 1);
 
-                    }
                 } else {
                     tile = energyHeatConductorMap.get(dir);
                     if (tile != null) {
-                        if ((tile instanceof IHeatAcceptor && ((IHeatAcceptor) tile).acceptsHeatFrom(
-                                this,
-                                dir.getOpposite()
-                        ) || tile instanceof IHeatEmitter && ((IHeatEmitter) tile).emitsHeatTo(
-                                this,
-                                dir.getOpposite()
-                        )) && this.canInteractWith()) {
-                            newConnectivity = (byte) (newConnectivity + 1);
-
-                        }
+                        newConnectivity = (byte) (newConnectivity + 1);
                     } else {
                         tile = this.energyCoolConductorMap.get(dir);
                         if (tile != null) {
-                            if ((tile instanceof ICoolAcceptor && ((ICoolAcceptor) tile).acceptsCoolFrom(
-                                    this,
-                                    dir.getOpposite()
-                            ) || tile instanceof ICoolEmitter && ((ICoolEmitter) tile).emitsCoolTo(
-                                    this,
-                                    dir.getOpposite()
-                            )) && this.canInteractWith()) {
-                                newConnectivity = (byte) (newConnectivity + 1);
+                            newConnectivity = (byte) (newConnectivity + 1);
 
-                            }
                         } else {
                             map = this.energyTypeConductorMap.computeIfAbsent(
                                     EnergyType.QUANTUM,
@@ -561,16 +527,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                             tile = map.get(dir);
 
                             if (tile != null) {
-                                if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
-                                        this,
-                                        dir.getOpposite()
-                                ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
-                                        this,
-                                        dir.getOpposite()
-                                )) && this.canInteractWith()) {
-                                    newConnectivity = (byte) (newConnectivity + 1);
+                                newConnectivity = (byte) (newConnectivity + 1);
 
-                                }
 
                             } else {
                                 map = this.energyTypeConductorMap.computeIfAbsent(
@@ -580,16 +538,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                                 tile = map.get(dir);
 
                                 if (tile != null) {
-                                    if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
-                                            this,
-                                            dir.getOpposite()
-                                    ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
-                                            this,
-                                            dir.getOpposite()
-                                    )) && this.canInteractWith()) {
-                                        newConnectivity = (byte) (newConnectivity + 1);
+                                    newConnectivity = (byte) (newConnectivity + 1);
 
-                                    }
 
                                 } else {
                                     map = this.energyTypeConductorMap.computeIfAbsent(
@@ -598,16 +548,8 @@ public class TileEntityUniversalCable extends TileEntityMultiCable implements IE
                                     );
                                     tile = map.get(dir);
                                     if (tile != null) {
-                                        if ((tile instanceof IAcceptor && ((IAcceptor) tile).acceptsFrom(
-                                                this,
-                                                dir.getOpposite()
-                                        ) || tile instanceof IEmitter && ((IEmitter) tile).emitsTo(
-                                                this,
-                                                dir.getOpposite()
-                                        )) && this.canInteractWith()) {
-                                            newConnectivity = (byte) (newConnectivity + 1);
+                                        newConnectivity = (byte) (newConnectivity + 1);
 
-                                        }
                                     }
                                 }
                             }

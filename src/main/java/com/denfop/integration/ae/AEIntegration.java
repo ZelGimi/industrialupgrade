@@ -15,14 +15,17 @@ import com.denfop.tiles.base.TileSunnariumMaker;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +35,7 @@ import java.util.Map;
 
 public class AEIntegration {
 
-    public static Map<Integer, List<AEBasePoweredTile>> worldAE = new HashMap<>();
+    public static Map<Integer, Map<ChunkPos, List<DataAE>>> worldAE = new HashMap<>();
     public static List<AEBasePoweredTile> basePoweredTileAdderList = new LinkedList<>();
     public static List<AEBasePoweredTile> basePoweredTileRemoverList = new LinkedList<>();
 
@@ -71,34 +74,81 @@ public class AEIntegration {
     public static boolean isTile(TileEntity tileentity) {
         return tileentity instanceof AEBasePoweredTile;
     }
-
     @SubscribeEvent(priority = EventPriority.LOW)
     public void load(TileLoadEvent event) {
         if (event.tileentity instanceof AEBasePoweredTile) {
-            basePoweredTileAdderList.add((AEBasePoweredTile) event.tileentity);
+            Map<ChunkPos, List<DataAE>> listAE = worldAE.computeIfAbsent(
+                    event.getWorld().provider.getDimension(),
+                    k -> new HashMap<>()
+            );
+            boolean remove =
+                    listAE.computeIfAbsent(new ChunkPos(event.tileentity.getPos()), k -> new ArrayList<>()).remove(new DataAE ((AEBasePoweredTile) event.tileentity,true));
+            if (remove)
+                MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
+                        event.tileentity.getWorld(),
+                        EnergyNetGlobal.instance.getTile(event.tileentity.getWorld(), event.tileentity.getPos())
+                ));
+            listAE.computeIfAbsent(new ChunkPos(event.tileentity.getPos()), k -> new ArrayList<>()).add(new DataAE ((AEBasePoweredTile) event.tileentity,true));
+
         }
     }
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void unLoad(TileUnLoadEvent event) {
-        if (event.tileentity instanceof AEBasePoweredTile) {
-            basePoweredTileRemoverList.add((AEBasePoweredTile) event.tileentity);
-        }
-    }
+
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void update(TilesUpdateEvent event) {
 
             for (TileEntity entity : event.tiles) {
                 if (entity instanceof AEBasePoweredTile) {
-                    List<AEBasePoweredTile> listAE = worldAE.computeIfAbsent(
+                   Map<ChunkPos, List<DataAE>> listAE = worldAE.computeIfAbsent(
                             event.getWorld().provider.getDimension(),
-                            k -> new LinkedList<>()
+                            k -> new HashMap<>()
                     );
-                    listAE.add((AEBasePoweredTile) entity);
+                    listAE.computeIfAbsent(new ChunkPos(entity.getPos()), k -> new ArrayList<>()).add(new DataAE ((AEBasePoweredTile) entity,true));
                 }
 
         }
     }
-
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void unLoad(TileUnLoadEvent event) {
+        if (event.tileentity instanceof AEBasePoweredTile) {
+            Map<ChunkPos, List<DataAE>> listAE = worldAE.computeIfAbsent(
+                    event.getWorld().provider.getDimension(),
+                    k -> new HashMap<>()
+            );
+          boolean remove =
+                  listAE.computeIfAbsent(new ChunkPos(event.tileentity.getPos()), k -> new ArrayList<>()).remove(new DataAE ((AEBasePoweredTile) event.tileentity,true));
+            if (remove)
+          MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
+                    event.tileentity.getWorld(),
+                    EnergyNetGlobal.instance.getTile(event.tileentity.getWorld(), event.tileentity.getPos())
+            ));
+        }
+    }
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void breakBlock(BlockEvent.BreakEvent event) {
+        final Map<ChunkPos, List<DataAE>> map = worldAE.computeIfAbsent(
+                event.getWorld().provider.getDimension(),
+                k -> new HashMap<>()
+        );
+        if (!map.isEmpty()){
+            List<DataAE> list = map.computeIfAbsent(
+                    new ChunkPos(event.getPos()),
+                    k -> new ArrayList<>()
+            );
+            TileEntity tile = event.getWorld().getTileEntity(event.getPos());
+            if (tile instanceof AEBasePoweredTile) {
+                if (!list.isEmpty()) {
+                  boolean remove =  list.remove(new DataAE((AEBasePoweredTile) tile));
+                  if (remove){
+                      MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
+                              tile.getWorld(),
+                              EnergyNetGlobal.instance.getTile(tile.getWorld(),tile.getPos())
+                      ));
+                  }
+                }
+            }
+        }
+    }
     @SubscribeEvent(priority = EventPriority.LOW)
     public void tick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
@@ -107,54 +157,34 @@ public class AEIntegration {
         if (event.side == Side.CLIENT) {
             return;
         }
-        for (Map.Entry<Integer, List<AEBasePoweredTile>> entry : worldAE.entrySet()) {
-            List<AEBasePoweredTile> list = entry.getValue();
-            if (list != null) {
-                final Iterator<AEBasePoweredTile> iter = list.iterator();
-                while (iter.hasNext()) {
-                    AEBasePoweredTile poweredTile = iter.next();
-                    if (poweredTile.isInvalid()) {
-                        MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
-                                poweredTile.getWorld(),
-                                EnergyNetGlobal.instance.getTile(poweredTile.getWorld(), poweredTile.getPos())
-                        ));
-                        iter.remove();
+        for (Map.Entry<Integer, Map<ChunkPos, List<DataAE>>> entry : worldAE.entrySet()) {
+            Map<ChunkPos,List<DataAE>> map = entry.getValue();
+            if (map != null) {
+                for (Map.Entry<ChunkPos,List<DataAE>> entry1 : map.entrySet()) {
+                    final List<DataAE> list = entry1.getValue();
+                    if (list != null) {
+                        for (DataAE poweredTile : list) {
+                            if (!poweredTile.isLoaded()) {
+                                poweredTile.setRemove(false);
+                                poweredTile.setLoaded(true);
+                                MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(poweredTile.getTile().getWorld(),
+                                        new AESink(poweredTile.getTile())));
+
+                            }
+                        }
                     }
                 }
-
             }
         }
-        for (AEBasePoweredTile poweredTile : basePoweredTileAdderList) {
-            List<AEBasePoweredTile> listAE = worldAE.computeIfAbsent(
-                    poweredTile.getWorld().provider.getDimension(),
-                    k -> new LinkedList<>()
-            );
-            listAE.add(poweredTile);
-            MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(poweredTile.getWorld(), new AESink(poweredTile)));
 
-        }
-        basePoweredTileAdderList.clear();
-        for (AEBasePoweredTile poweredTile : basePoweredTileRemoverList) {
-            List<AEBasePoweredTile> listAE = worldAE.computeIfAbsent(
-                    poweredTile.getWorld().provider.getDimension(),
-                    k -> new LinkedList<>()
-            );
-            listAE.remove(poweredTile);
-            MinecraftForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(
-                    poweredTile.getWorld(),
-                    EnergyNetGlobal.instance.getTile(poweredTile.getWorld(), poweredTile.getPos())
-            ));
-
-        }
-        basePoweredTileRemoverList.clear();
     }
 
     @SubscribeEvent
     public void worldLoad(WorldEvent.Unload event) {
         World world = event.getWorld();
         if (!world.isRemote) {
-            List<AEBasePoweredTile> listAE = worldAE.computeIfAbsent(world.provider.getDimension(), k -> new LinkedList<>());
-            listAE.clear();
+            worldAE.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>()).clear();
+
         }
     }
 

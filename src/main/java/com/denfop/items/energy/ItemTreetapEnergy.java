@@ -19,6 +19,7 @@ public class ItemTreetapEnergy extends ItemEnergyTool {
         super("electric_treetap", 50);
         this.maxCharge = 10000;
         this.transferLimit = 100;
+        this.efficiency = 0.5F;
         this.tier = 1;
     }
 

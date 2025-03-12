@@ -123,7 +123,7 @@ public class TileEntityPrimalPump extends TileElectricLiquidTankInventory {
     ) {
         if (!this.getWorld().isRemote && this.fluidTank.getFluidAmount() + 1000 <= this.fluidTank.getCapacity()) {
             if (componentProgress.getProgress() < componentProgress.getMaxValue()) {
-                componentProgress.addProgress(0, (short) 2);
+                componentProgress.addProgress(0, (short) 4);
             } else {
                 if (this.canoperate()) {
                     componentProgress.setProgress((short) 0);

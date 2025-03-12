@@ -37,7 +37,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements IEnergyItem {
             String name,
             int operationEnergyCost
     ) {
-        this(name, 2.0F, -3.0F, operationEnergyCost, new HashSet());
+        this(name, 2.0F, 0.5F, operationEnergyCost, new HashSet());
     }
 
     private ItemEnergyTool(

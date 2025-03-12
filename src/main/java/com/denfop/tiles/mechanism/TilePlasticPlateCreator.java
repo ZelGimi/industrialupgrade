@@ -27,6 +27,7 @@ import com.denfop.tiles.base.TileBasePlasticPlateCreator;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
@@ -93,20 +94,7 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                 new FluidStack(FluidName.fluidoxy.getInstance(), 1000),
                 input.getInput(new ItemStack(IUItem.plast))
         ), new RecipeOutput(null, new ItemStack(IUItem.plastic_plate))));
-        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidoxy.getInstance(), 100),
-                        input.getInput(ModUtils.getCellFromFluid(FluidName.fluidpolyprop.getInstance()))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 484))
-        ));
-        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(
-                new Input(
-                        new FluidStack(FluidName.fluidoxy.getInstance(), 100),
-                        input.getInput(ModUtils.getCellFromFluid(FluidName.fluidpolyeth.getInstance()))
-                ),
-                new RecipeOutput(null, new ItemStack(IUItem.crafting_elements, 1, 483))
-        ));
+
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidglucose.getInstance(), 200),
@@ -122,6 +110,10 @@ public class TilePlasticPlateCreator extends TileBasePlasticPlateCreator impleme
                 new FluidStack(FluidRegistry.WATER, 500),
                 input.getInput(new ItemStack(IUItem.iudust, 2, 66))
         ), new RecipeOutput(null, new ItemStack(IUItem.raw_apatite))));
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidRegistry.WATER, 500),
+                input.getInput(new ItemStack(Blocks.DIRT))
+        ), new RecipeOutput(null, new ItemStack(Blocks.CLAY))));
 
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidoxy.getInstance(), 200),

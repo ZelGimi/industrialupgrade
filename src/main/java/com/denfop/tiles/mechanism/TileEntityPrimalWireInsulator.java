@@ -130,7 +130,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     }
 
     @Override
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;
     }
 
@@ -233,7 +233,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
         if (!this.getWorld().isRemote) {
             if (stack.getItem() == IUItem.cutter && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output)) {
                 this.getCooldownTracker().setTick(10);
-                progress += (short) (20 + (short) (data.getOrDefault(player.getUniqueID(),0.0) / 10d));
+                progress += (short) (20 + (short) (data.getOrDefault(player.getUniqueID(),0.0) / 3.3d));
                 if (!this.getWorld().isRemote) {
                     this.initiate(0);
                 }

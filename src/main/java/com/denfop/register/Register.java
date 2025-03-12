@@ -168,12 +168,14 @@ import com.denfop.items.ItemMesh;
 import com.denfop.items.ItemPaints;
 import com.denfop.items.ItemPhotoniumGlass;
 import com.denfop.items.ItemPlaner;
+import com.denfop.items.ItemPollutionDevice;
 import com.denfop.items.ItemRadioprotector;
 import com.denfop.items.ItemReactorData;
 import com.denfop.items.ItemRecipeSchedule;
 import com.denfop.items.ItemRotorsUpgrade;
 import com.denfop.items.ItemSolidMatter;
 import com.denfop.items.ItemSteamRod;
+import com.denfop.items.ItemTomeResearchSpace;
 import com.denfop.items.ItemToolCrafting;
 import com.denfop.items.ItemToolCutter;
 import com.denfop.items.ItemToolHammer;
@@ -203,17 +205,21 @@ import com.denfop.items.bee.ItemBeeAnalyzer;
 import com.denfop.items.bee.ItemJarBees;
 import com.denfop.items.crop.ItemAgriculturalAnalyzer;
 import com.denfop.items.crop.ItemCrops;
+import com.denfop.items.energy.ItemAxe;
 import com.denfop.items.energy.ItemBattery;
 import com.denfop.items.energy.ItemBatterySU;
 import com.denfop.items.energy.ItemEnergyBow;
 import com.denfop.items.energy.ItemEnergyToolHoe;
 import com.denfop.items.energy.ItemGraviTool;
 import com.denfop.items.energy.ItemHammer;
+import com.denfop.items.energy.ItemIronHammer;
 import com.denfop.items.energy.ItemKatana;
 import com.denfop.items.energy.ItemMagnet;
 import com.denfop.items.energy.ItemNanoSaber;
+import com.denfop.items.energy.ItemPickaxe;
 import com.denfop.items.energy.ItemPurifier;
 import com.denfop.items.energy.ItemQuantumSaber;
+import com.denfop.items.energy.ItemShovel;
 import com.denfop.items.energy.ItemSpectralSaber;
 import com.denfop.items.energy.ItemSprayer;
 import com.denfop.items.energy.ItemSteelHammer;
@@ -404,6 +410,7 @@ public class Register {
         registerfluid(FluidName.fluidblackoil, 3000, 500, false);
         registerfluid(FluidName.fluidcreosote, 3000, 500, false);
         registerfluid(FluidName.fluidindustrialoil, 3000, 500, false);
+        registerfluid(FluidName.fluidsteam_oil, 3000, 500, false);
         registerfluid(FluidName.fluidpolyeth, -3000, 2000, true);
         registerfluid(FluidName.fluidpolyprop, -3000, 2000, true);
         registerfluid(FluidName.fluidacetylene, -3000, 2000, true);
@@ -681,6 +688,9 @@ public class Register {
         IUItem.ObsidianForgeHammer = new ItemToolHammer("obsidian_hammer", 240);
         IUItem.solderingIron = new ItemToolCrafting("solderingIron", 1500);
         IUItem.laser = new ItemToolCrafting("laser", 60);
+        IUItem.tomeResearch = new ItemTomeResearchSpace();
+        IUItem.pollutionDevice = new ItemPollutionDevice();
+
         IUItem.cutter = new ItemToolCutter();
         IUItem.pellets = new RadiationPellets();
         IUItem.radcable_item = new ItemRadCable();
@@ -738,6 +748,7 @@ public class Register {
 
         };
         IUItem.steelHammer = new ItemSteelHammer();
+        IUItem.ironHammer = new ItemIronHammer();
         new ItemFeature();
         IUItem.bronze_chestplate = new BaseArmor(
                 "bronze_chestplate",
@@ -1682,7 +1693,15 @@ public class Register {
         IUItem.machine = IUItem.blockResource.getItemStack(BlockResource.Type.machine);
         IUItem.advancedMachine = IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
 
-
+        IUItem.ruby_pickaxe = new ItemPickaxe("ruby_pickaxe");
+        IUItem.topaz_pickaxe = new ItemPickaxe("topaz_pickaxe");
+        IUItem.sapphire_pickaxe = new ItemPickaxe("sapphire_pickaxe");
+        IUItem.ruby_axe = new ItemAxe("ruby_axe");
+        IUItem.topaz_axe = new ItemAxe("topaz_axe");
+        IUItem.sapphire_axe = new ItemAxe("sapphire_axe");
+        IUItem.ruby_shovel = new ItemShovel("ruby_shovel");
+        IUItem.topaz_shovel = new ItemShovel("topaz_shovel");
+        IUItem.sapphire_shovel = new ItemShovel("sapphire_shovel");
         IUItem.UranFuel = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.uranium);
         IUItem.Plutonium = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.plutonium);
         IUItem.smallPlutonium = IUItem.nuclear_res.getItemStack(ItemNuclearResource.Types.small_plutonium);

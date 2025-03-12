@@ -42,21 +42,14 @@ public class ItemStackRelocator extends ItemStackInventory {
     @Override
     public CustomPacketBuffer writeContainer() {
         CustomPacketBuffer customPacketBuffer = super.writeContainer();
-        customPacketBuffer.writeInt(points.size());
-        for (Point point : points){
-            point.writeToBuffer(customPacketBuffer);
-        }
+
         return customPacketBuffer;
     }
 
     @Override
     public void readContainer(final CustomPacketBuffer buffer) {
         super.readContainer(buffer);
-        this.points.clear();
-        int size = buffer.readInt();
-        for (int i =0; i < size;i++){
-            points.add(new Point(buffer));
-        }
+
     }
 
     public ContainerBase<ItemStackRelocator> getGuiContainer(EntityPlayer player) {

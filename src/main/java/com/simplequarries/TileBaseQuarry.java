@@ -282,7 +282,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
         return drop;
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -301,7 +301,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
         setType(valuesAudio[soundEvent % valuesAudio.length]);
@@ -829,7 +829,7 @@ public class TileBaseQuarry extends TileEntityInventory implements IAudioFixer,
                 new PacketUpdateFieldTile(this, "sound", this.sound);
 
                 if (!sound) {
-                    if (this.getType() == EnumTypeAudio.ON) {
+                    if (this.getTypeAudio() == EnumTypeAudio.ON) {
                         setType(EnumTypeAudio.OFF);
                         initiate(2);
                     }

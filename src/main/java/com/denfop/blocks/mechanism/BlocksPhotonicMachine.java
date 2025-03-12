@@ -13,6 +13,7 @@ import com.denfop.tiles.mechanism.generator.energy.coal.TileEntityPhoGenerator;
 import com.denfop.tiles.mechanism.generator.energy.fluid.TileEntityPhoGeoGenerator;
 import com.denfop.tiles.mechanism.generator.energy.redstone.TileEntityPhoRedstoneGenerator;
 import com.denfop.tiles.mechanism.generator.things.matter.TilePhotonicMatter;
+import com.denfop.tiles.mechanism.multimechanism.photonic.TileEntityPhoCombRecycler;
 import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicAssemblerScrap;
 import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicCentrifuge;
 import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicCombMacerator;
@@ -26,7 +27,6 @@ import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicGearMachin
 import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicMacerator;
 import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicOreWashing;
 import com.denfop.tiles.mechanism.multimechanism.photonic.TilePhotonicRolling;
-import com.denfop.tiles.mechanism.multimechanism.quad.TileEntityPhoCombRecycler;
 import com.denfop.tiles.mechanism.quantum_storage.TileEntityPhoQuantumStorage;
 import com.denfop.tiles.mechanism.solardestiller.TilePhotonicDestiller;
 import com.denfop.tiles.mechanism.solarium_storage.TileEntityPhoSolariumStorage;

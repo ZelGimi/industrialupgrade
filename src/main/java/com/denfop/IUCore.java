@@ -11,6 +11,7 @@ import com.denfop.api.radiationsystem.RadiationSystem;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.RecipeInputStack;
 import com.denfop.api.recipe.RecipesCore;
+import com.denfop.api.space.fakebody.EventHandlerPlanet;
 import com.denfop.api.sytem.EnergyBase;
 import com.denfop.api.tesseract.TesseractSystem;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -25,6 +26,7 @@ import com.denfop.blocks.BlockIUFluid;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.cool.CoolNetGlobal;
 import com.denfop.events.TickHandlerIU;
+import com.denfop.events.WorldSavedDataIU;
 import com.denfop.heat.HeatNetGlobal;
 import com.denfop.integration.crafttweaker.CTVein;
 import com.denfop.items.energy.EntityAdvArrow;
@@ -55,6 +57,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -72,6 +75,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -371,7 +375,20 @@ public final class IUCore {
         }
 
     }
-
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
+            if (!world.isRemote && world.provider.getDimension() == 0) {
+                EventHandlerPlanet.data = (WorldSavedDataIU) world.loadData(WorldSavedDataIU.class, Constants.MOD_ID);
+                if ( EventHandlerPlanet.data == null) {
+                    EventHandlerPlanet.data = new WorldSavedDataIU();
+                    EventHandlerPlanet.data.setWorld(world);
+                    world.setData(Constants.MOD_ID,  EventHandlerPlanet.data);
+                }
+            }
+        }
+    }
     @Mod.EventHandler
     public void postInit(final FMLPostInitializationEvent event) {
         proxy.postInit(event);

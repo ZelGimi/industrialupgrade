@@ -187,6 +187,8 @@ public class IUEventHandler {
 
 
         for (EntityItem item : nearbyItems) {
+            if (item.isDead)
+                continue;
             ItemStack stack = item.getItem();
 
             if (stack.getItem() == Items.REDSTONE && redstoneNeeded > 0) {

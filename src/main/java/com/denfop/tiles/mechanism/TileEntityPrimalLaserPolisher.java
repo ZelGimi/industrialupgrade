@@ -49,7 +49,7 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
     public int progress;
     public MachineRecipe output;
     public int tick = 0;
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.LASER);
+    public Map<UUID,Double> data;
 
     public TileEntityPrimalLaserPolisher() {
 
@@ -97,6 +97,7 @@ public class TileEntityPrimalLaserPolisher extends TileEntityInventory implement
     @Override
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.LASER);
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);

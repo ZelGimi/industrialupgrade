@@ -156,7 +156,6 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.heatmachine.info"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
             tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
@@ -340,7 +339,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
 
 
         addRecipe(
-                new ItemStack(IUItem.basecircuit, 1, 16),
+                new ItemStack(IUItem.basecircuit, 1, 15),
                 new ItemStack(IUItem.crafting_elements, 1, 582),
                 new ItemStack(IUItem.crafting_elements, 1, 494),
                 new ItemStack(IUItem.crafting_elements, 2, 568),
@@ -351,7 +350,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 2, 16),
                 new ItemStack(IUItem.crafting_elements, 1, 582),
-                new ItemStack(IUItem.crafting_elements, 1, 533),
+                new ItemStack(IUItem.crafting_elements, 1, 494),
                 new ItemStack(IUItem.crafting_elements, 2, 568),
                 new ItemStack(IUItem.crafting_elements, 1, 588),
                 new ItemStack(IUItem.crafting_elements, 1, 541)
@@ -360,7 +359,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 1, 13),
                 new ItemStack(IUItem.crafting_elements, 1, 599),
-                new ItemStack(IUItem.crafting_elements, 1, 541),
+                new ItemStack(IUItem.crafting_elements, 1, 533),
                 new ItemStack(IUItem.crafting_elements, 2, 568),
                 new ItemStack(IUItem.crafting_elements, 1, 588),
                 new ItemStack(IUItem.crafting_elements, 1, 543)
@@ -369,7 +368,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 2, 13),
                 new ItemStack(IUItem.crafting_elements, 1, 599),
-                new ItemStack(IUItem.crafting_elements, 1, 543),
+                new ItemStack(IUItem.crafting_elements, 1, 541),
                 new ItemStack(IUItem.crafting_elements, 2, 567),
                 new ItemStack(IUItem.crafting_elements, 1, 588),
                 new ItemStack(IUItem.crafting_elements, 1, 545)
@@ -378,7 +377,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 1, 3),
                 new ItemStack(IUItem.crafting_elements, 1, 583),
-                new ItemStack(IUItem.crafting_elements, 1, 545),
+                new ItemStack(IUItem.crafting_elements, 1, 543),
                 new ItemStack(IUItem.crafting_elements, 2, 567),
                 new ItemStack(IUItem.crafting_elements, 1, 598),
                 new ItemStack(IUItem.crafting_elements, 1, 549)
@@ -387,7 +386,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 2, 3),
                 new ItemStack(IUItem.crafting_elements, 1, 583),
-                new ItemStack(IUItem.crafting_elements, 1, 549),
+                new ItemStack(IUItem.crafting_elements, 1, 545),
                 new ItemStack(IUItem.crafting_elements, 2, 567),
                 new ItemStack(IUItem.crafting_elements, 1, 598),
                 new ItemStack(IUItem.crafting_elements, 1, 551)
@@ -396,7 +395,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 1, 4),
                 new ItemStack(IUItem.crafting_elements, 1, 583),
-                new ItemStack(IUItem.crafting_elements, 1, 551),
+                new ItemStack(IUItem.crafting_elements, 1, 549),
                 new ItemStack(IUItem.crafting_elements, 2, 565),
                 new ItemStack(IUItem.crafting_elements, 1, 592),
                 new ItemStack(IUItem.crafting_elements, 1, 555)
@@ -405,7 +404,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 2, 4),
                 new ItemStack(IUItem.crafting_elements, 1, 583),
-                new ItemStack(IUItem.crafting_elements, 1, 555),
+                new ItemStack(IUItem.crafting_elements, 1, 551),
                 new ItemStack(IUItem.crafting_elements, 2, 565),
                 new ItemStack(IUItem.crafting_elements, 1, 592),
                 new ItemStack(IUItem.crafting_elements, 1, 556)
@@ -414,7 +413,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 2, 5),
                 new ItemStack(IUItem.crafting_elements, 1, 597),
-                new ItemStack(IUItem.crafting_elements, 1, 556),
+                new ItemStack(IUItem.crafting_elements, 1, 555),
                 new ItemStack(IUItem.crafting_elements, 2, 565),
                 new ItemStack(IUItem.crafting_elements, 1, 594),
                 new ItemStack(IUItem.crafting_elements, 1, 558)
@@ -423,7 +422,7 @@ public class TileEntityElectronicsAssembler extends TileElectricMachine implemen
         addRecipe(
                 new ItemStack(IUItem.basecircuit, 3, 19),
                 new ItemStack(IUItem.crafting_elements, 1, 597),
-                new ItemStack(IUItem.crafting_elements, 1, 558),
+                new ItemStack(IUItem.crafting_elements, 1, 556),
                 new ItemStack(IUItem.crafting_elements, 2, 565),
                 new ItemStack(IUItem.crafting_elements, 1, 594),
                 new ItemStack(IUItem.crafting_elements, 1, 534)

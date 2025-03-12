@@ -55,23 +55,25 @@ public class TileEntitySmelteryCasting extends TileEntityMultiBlockElement imple
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                ((TileEntitySmelteryCasting) this.base).fluid_handler.setName("empty");
-                int damage = content.getItemDamage();
-                ((TileEntitySmelteryCasting) this.base).fluid_handler.setOutput(null);
-                if (damage == 496) {
-                    ((TileEntitySmelteryCasting) this.base).fluid_handler.setName("ingot_casting");
-                    if (((TileEntitySmelteryCasting) this.base).getMain() != null) {
+                if (!getWorld().isRemote) {
+                    ((TileEntitySmelteryCasting) this.base).fluid_handler.setName("empty");
+                    int damage = content.getItemDamage();
+                    ((TileEntitySmelteryCasting) this.base).fluid_handler.setOutput(null);
+                    if (damage == 496) {
+                        ((TileEntitySmelteryCasting) this.base).fluid_handler.setName("ingot_casting");
+                        if (((TileEntitySmelteryCasting) this.base).getMain() != null) {
+                            TileEntitySmelteryController controller = (TileEntitySmelteryController) ((TileEntitySmelteryCasting) this.base).getMain();
+                            fluid_handler.load();
+                            ((TileEntitySmelteryCasting) this.base).fluid_handler.getOutput(controller.getFirstTank());
+                            ;
+                        }
+                    } else if (damage == 497) {
+                        ((TileEntitySmelteryCasting) this.base).fluid_handler.setName("gear_casting");
                         TileEntitySmelteryController controller = (TileEntitySmelteryController) ((TileEntitySmelteryCasting) this.base).getMain();
                         fluid_handler.load();
                         ((TileEntitySmelteryCasting) this.base).fluid_handler.getOutput(controller.getFirstTank());
                         ;
                     }
-                } else if (damage == 497) {
-                    ((TileEntitySmelteryCasting) this.base).fluid_handler.setName("gear_casting");
-                    TileEntitySmelteryController controller = (TileEntitySmelteryController) ((TileEntitySmelteryCasting) this.base).getMain();
-                    fluid_handler.load();
-                    ((TileEntitySmelteryCasting) this.base).fluid_handler.getOutput(controller.getFirstTank());
-                    ;
                 }
             }
         };

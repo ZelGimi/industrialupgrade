@@ -110,7 +110,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
     }
 
     @Override
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;
     }
 
@@ -252,7 +252,7 @@ public class TileEntityCompressor extends TileEntityInventory implements IUpdate
         ItemStack stack = player.getHeldItem(hand);
         if (!this.getWorld().isRemote) {
             if (stack.isEmpty() && this.output != null && this.outputSlot.isEmpty() && this.inputSlotA.continue_process(this.output) && durability > 0) {
-                progress += (int) (2 + (data.getOrDefault(player.getUniqueID(),0.0)/20d));
+                progress += (int) (4 + (data.getOrDefault(player.getUniqueID(),0.0)/10d));
                 this.getCooldownTracker().setTick(15);
                 this.setActive(String.valueOf((int) ((progress * 9D) / 100)));
                 if (!this.getWorld().isRemote) {

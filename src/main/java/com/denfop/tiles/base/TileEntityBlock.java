@@ -106,13 +106,9 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
     public int hashCode() {
         if (!hasHashCode) {
 
-            if (pos != null) {
-                hasHashCode = true;
-                this.hashCode = super.hashCode();
-                return hashCode;
-            } else {
-                return super.hashCode();
-            }
+            hasHashCode = true;
+            this.hashCode = super.hashCode();
+            return hashCode;
         } else {
             return hashCode;
         }
@@ -322,6 +318,8 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         }
     }
 
+
+
     public void onUnloaded() {
         if (isLoadedFirst) {
             isLoadedFirst = false;
@@ -477,6 +475,10 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
         drop = this.adjustDrop(drop, wrench, fortune);
         if (drop == null) {
             drop = ItemStack.EMPTY;
+        }
+        for (AbstractComponent component : this.getComponentList()) {
+            component.getAuxDrops(Collections.singletonList(drop));
+
         }
         if (!drop.isEmpty()) {
             for (AbstractComponent component : this.componentList) {
@@ -1005,7 +1007,7 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
                     drop = getPickBlock(null, null);
                     break;
                 case Generator:
-                    if (fortune < 10) {
+                    if (fortune < 3) {
                         drop = new ItemStack(IUItem.basemachine2, 1, 78);
                     }
                     break;
@@ -1013,11 +1015,11 @@ public abstract class TileEntityBlock extends TileEntity implements ITickable {
                     drop = null;
                     break;
                 case Machine:
-                    if (fortune < 10) {
+                    if (fortune < 3) {
                         return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                     }
                 case AdvMachine:
-                    if (fortune < 10) {
+                    if (fortune < 3) {
                         return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
                     }
             }

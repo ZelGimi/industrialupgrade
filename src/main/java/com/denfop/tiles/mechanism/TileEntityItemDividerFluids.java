@@ -156,7 +156,21 @@ public class TileEntityItemDividerFluids extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidpahoehoe_lava.getInstance(), 125),
                 new FluidStack(FluidName.fluidfluorhyd.getInstance(), 50)
         );
-
+        addRecipe(
+                new ItemStack(IUItem.basalts,1,9),
+                new FluidStack(FluidName.fluidpahoehoe_lava.getInstance(), 125),
+                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 100)
+        );
+        addRecipe(
+                new ItemStack(IUItem.basalts,1,4),
+                new FluidStack(FluidName.fluidpahoehoe_lava.getInstance(), 250),
+                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 50)
+        );
+        addRecipe(
+                new ItemStack(Blocks.OBSIDIAN),
+                new FluidStack(FluidRegistry.LAVA, 1000),
+                new FluidStack(FluidName.fluidoxy.getInstance(), 10)
+        );
         addRecipe(
                 new ItemStack(IUItem.crafting_elements, 1, 454),
                 new FluidStack(FluidName.fluidnitricoxide.getInstance(), 200),

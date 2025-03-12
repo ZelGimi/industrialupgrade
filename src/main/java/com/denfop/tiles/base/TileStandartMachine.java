@@ -29,7 +29,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
 
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -38,7 +38,7 @@ public abstract class TileStandartMachine extends TileEntityInventory implements
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

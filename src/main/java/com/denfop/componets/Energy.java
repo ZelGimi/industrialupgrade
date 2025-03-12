@@ -543,12 +543,14 @@ public class Energy extends AbstractComponent {
             this.delegate = null;
         } else if (this.delegate == null && this.loaded) {
             this.energyConductorMap.clear();
+            validReceivers.clear();
             this.createDelegate();
         }
         if (this.delegate != null) {
 
 
             this.energyConductorMap.clear();
+            validReceivers.clear();
             assert !this.parent.getWorld().isRemote;
             MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.parent.getWorld(), this.delegate));
         }

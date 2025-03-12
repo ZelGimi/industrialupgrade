@@ -1,4 +1,4 @@
-package com.denfop.tiles.mechanism.multimechanism.quad;
+package com.denfop.tiles.mechanism.multimechanism.photonic;
 
 import com.denfop.IUItem;
 import com.denfop.api.tile.IMultiTileBlock;

@@ -5,13 +5,16 @@ import com.denfop.Localization;
 import com.denfop.api.gui.CustomButton;
 import com.denfop.api.gui.FluidItem;
 import com.denfop.api.gui.GuiElement;
+import com.denfop.componets.Fluids;
 import com.denfop.container.ContainerSmelteryController;
 import com.denfop.network.packet.PacketUpdateServerTile;
 import com.denfop.tiles.smeltery.ITank;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -135,7 +138,32 @@ public class GuiSmelteryController extends GuiIU<ContainerSmelteryController> {
         tanksRefresh();
         handleUpgradeTooltip(par1, par2);
         for (int i = 0; i < fluidTanks1.size(); i++) {
-            new FluidItem(this, 21 + (i % 6) * 18, 17 + (i / 6) * 18, fluidTanks1.get(i).getFluid()).drawForeground(par1, par2);
+            final int finalI = i;
+            (new FluidItem(this, 21 + (finalI % 6) * 18, 17 + (finalI / 6) * 18, fluidTanks1.get(finalI).getFluid()){
+                protected List<String> getToolTip() {
+                    List<String> ret = new ArrayList<>();
+                    FluidStack fs = fluidTanks1.get(finalI).getFluid();
+                    if (fs != null && fs.amount > 0) {
+                        Fluid fluid = fs.getFluid();
+                        if (fluid != null) {
+                            ret.add(fluid.getLocalizedName(fs));
+                            ret.add("Amount: " + fs.amount + " " + Localization.translate("iu.generic.text.mb"));
+                            String state = fs.getFluid().isGaseous() ? "Gas" : "Liquid";
+                            ret.add("Type: " + state);
+                            ret.add("Ingots: " + fs.amount/144);
+                        } else {
+                            ret.add("Invalid FluidStack instance.");
+                        }
+                    } else {
+                        ret.add("No Fluid");
+                        ret.add("Amount: 0 " + Localization.translate("iu.generic.text.mb"));
+                        ret.add("Type: Not Available");
+                    }
+
+                    return ret;
+                }
+            }).drawForeground(par1,
+                par2);
         }
     }
 

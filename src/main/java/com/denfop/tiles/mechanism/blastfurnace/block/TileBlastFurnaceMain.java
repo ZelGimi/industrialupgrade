@@ -216,6 +216,46 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     public void renderUniqueMultiBlock() {
         if (this.dataBlock.getBlockState().getBlock() == IUItem.invalid)
             return;
+        IBakedModel model2 = this.dataBlock.getState();
+        Class<?> clazz = model2.getClass();
+        Class<?> clazz1 = null;
+
+        while (clazz != null) {
+            if (clazz.getName().equals("net.minecraftforge.client.model.FancyMissingModel$BakedModel")) {
+                clazz1 = clazz;
+                break;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        if (clazz1 != null){
+            IBlockState blockState1 = this.block
+                    .getDefaultState()
+                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global"))
+                    .withProperty(
+                            BlockTileEntity.facingProperty,
+                            this.getFacing()
+                    );
+            this.dataBlock = new DataBlock(blockState1);
+            IBakedModel model = Minecraft
+                    .getMinecraft()
+                    .getBlockRendererDispatcher()
+                    .getModelForState(blockState1);
+            this.dataBlock.setState(model);
+
+            blockState1 = this.block
+                    .getDefaultState()
+                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global_active"))
+                    .withProperty(
+                            BlockTileEntity.facingProperty,
+                            this.getFacing()
+                    );
+            this.dataBlock_active = new DataBlock(blockState1);
+            model = Minecraft
+                    .getMinecraft()
+                    .getBlockRendererDispatcher()
+                    .getModelForState(blockState1);
+            this.dataBlock_active.setState(model);
+        }
         GlStateManager.popMatrix();
         switch (facing) {
             case 2:
@@ -318,7 +358,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -337,7 +377,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
     }
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 
@@ -404,11 +444,10 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                 }
             }
         } else {
-            boolean isActive = this.getActive();
-            this.setActive("global");
+
             IBlockState blockState1 = this.block
                     .getDefaultState()
-                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global"))
                     .withProperty(
                             BlockTileEntity.facingProperty,
                             this.getFacing()
@@ -419,21 +458,19 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                     .getBlockRendererDispatcher()
                     .getModelForState(blockState1);
             this.dataBlock.setState(model);
-            this.setActive("global_active");
-            blockState1 = this.block
+            IBlockState  blockState2 = this.block
                     .getDefaultState()
-                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, this.active))
+                    .withProperty(this.block.typeProperty, this.block.typeProperty.getState(this.teBlock, "global_active"))
                     .withProperty(
                             BlockTileEntity.facingProperty,
                             this.getFacing()
                     );
-            this.dataBlock_active = new DataBlock(blockState1);
-            model = Minecraft
+            this.dataBlock_active = new DataBlock(blockState2);
+            IBakedModel model1 = Minecraft
                     .getMinecraft()
                     .getBlockRendererDispatcher()
-                    .getModelForState(blockState1);
-            this.dataBlock_active.setState(model);
-            this.setActive(isActive);
+                    .getModelForState(blockState2);
+            this.dataBlock_active.setState(model1);
         }
 
     }
@@ -589,7 +626,7 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
                 new PacketUpdateFieldTile(this, "sound", this.sound);
 
                 if (!sound) {
-                    if (this.getType() == EnumTypeAudio.ON) {
+                    if (this.getTypeAudio() == EnumTypeAudio.ON) {
                         setType(EnumTypeAudio.OFF);
                         initiate(2);
 

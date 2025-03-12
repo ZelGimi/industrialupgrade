@@ -85,7 +85,7 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
     public double getMaxEnergy(InvSlotMatter inputSlot) {
         double maxEnergy = 0;
         for (int i = 0; i < 9; i++) {
-            if (inputSlot.get(i) != null) {
+            if (!inputSlot.get(i).isEmpty()) {
                 maxEnergy += (getMatterenergy(inputSlot.get(i)) * inputSlot.get(i).getCount());
             }
 
@@ -97,7 +97,7 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
         double cost = 0;
         int k = 0;
         for (int i = 0; i < 9; i++) {
-            if (inputSlot.get(i) != null) {
+            if (!inputSlot.get(i).isEmpty()) {
                 cost += (getMattercostenergy(inputSlot.get(i)) * inputSlot.get(i).getCount());
                 k += (inputSlot.get(i).getCount());
 
@@ -110,7 +110,7 @@ public class InvSlotMatter extends InvSlot implements ITypeSlot {
     public int getFluidTank(InvSlotMatter inputSlot) {
         int count = 0;
         for (int i = 0; i < 9; i++) {
-            if (inputSlot.get(i) != null) {
+            if (!inputSlot.get(i).isEmpty()) {
                 count += (getMattertank(inputSlot.get(i)) * inputSlot.get(i).getCount());
             }
         }

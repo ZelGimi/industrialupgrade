@@ -34,6 +34,7 @@ import com.denfop.tiles.base.TileElectricMachine;
 import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -170,11 +171,13 @@ public class TileEntityLaserPolisher extends TileElectricMachine implements
         addRecipe("oreSulfur", new ItemStack(IUItem.iudust, 4, 31));
         addRecipe("oreBoron", new ItemStack(IUItem.crafting_elements, 1, 448));
         addRecipe("oreRedstone", new ItemStack(Items.REDSTONE, 5));
+        addRecipe("dustQuartz", new ItemStack(Items.QUARTZ));
         addRecipe(319, new ItemStack(IUItem.crafting_elements, 1, 357));
         addRecipe(new ItemStack(IUItem.crafting_elements, 1, 493), new ItemStack(IUItem.crafting_elements, 1, 495));
         addRecipe(IUItem.sulfurDust, new ItemStack(IUItem.crafting_elements, 1, 476));
         addRecipe(ModUtils.setSize(IUItem.UranFuel, 8), new ItemStack(IUItem.crafting_elements, 1, 443));
 
+        addRecipe(new ItemStack(IUItem.basalts, 1, 2), new ItemStack(Blocks.OBSIDIAN));
 
         addRecipe(new ItemStack(IUItem.crafting_elements, 1, 503), new ItemStack(IUItem.crafting_elements, 1, 504));
         addRecipe(new ItemStack(IUItem.ore2), new ItemStack(IUItem.crafting_elements, 1, 447));

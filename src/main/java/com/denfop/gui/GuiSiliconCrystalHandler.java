@@ -1,6 +1,7 @@
 package com.denfop.gui;
 
 import com.denfop.Constants;
+import com.denfop.Localization;
 import com.denfop.api.gui.Component;
 import com.denfop.api.gui.EnumTypeComponent;
 import com.denfop.api.gui.GuiComponent;
@@ -24,7 +25,8 @@ public class GuiSiliconCrystalHandler extends GuiIU<ContainerSiliconCrystalHandl
     protected void drawForegroundLayer(final int par1, final int par2) {
         super.drawForegroundLayer(par1, par2);
         GlStateManager.scale(0.7,0.7,0.7);
-        this.fontRenderer.drawString("Coal dust concentration: " + (int) ((this.container.base.col / 90D) * 100) + "%", 10, 30,
+        this.fontRenderer.drawString(
+                Localization.translate("iu.coal_concentration") +" " + (int) ((this.container.base.col / 90D) * 100) + "%", 10, 30,
                 4210752
         );
 

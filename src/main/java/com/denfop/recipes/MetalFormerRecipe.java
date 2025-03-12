@@ -174,6 +174,11 @@ public class MetalFormerRecipe {
                 9
         );
         addmolot(
+                "blockBronze",
+                "plateBronze",
+                9
+        );
+        addmolot(
                 "blockTin",
                 "plateTin",
                 9

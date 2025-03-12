@@ -64,14 +64,16 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     public MachineRecipe output;
     public int durability = 300;
 
-    public Map<UUID,Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.ANVIL);
+    public Map<UUID, Double> data;
+
     public TileEntityAnvil() {
 
-        this.inputSlotA = new InvSlotRecipes(this, "anvil", this){
+        this.inputSlotA = new InvSlotRecipes(this, "anvil", this) {
             @Override
             public boolean accepts(final ItemStack itemStack, final int index) {
-                if (index == 4)
-                    return super.accepts(itemStack,0);
+                if (index == 4) {
+                    return super.accepts(itemStack, 0);
+                }
                 return false;
             }
         };
@@ -144,6 +146,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     @Override
     public void onLoaded() {
         super.onLoaded();
+        this.data = PrimitiveHandler.getPlayersData(EnumPrimitive.ANVIL);;
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
@@ -268,97 +271,102 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
             final float hitZ
     ) {
         ItemStack stack = player.getHeldItem(hand);
-
-        if (durability > 0 && (stack.getItem() == IUItem.ForgeHammer || stack.getItem() == IUItem.ObsidianForgeHammer) && this.output != null && this.outputSlot.canAdd(
-                this.output.getRecipe().output.items.get(
-                        0))) {
-            progress += 10;
-            this.getCooldownTracker().setTick(10);
-            if (stack.getItem() == IUItem.ObsidianForgeHammer) {
+        if (!this.getWorld().isRemote) {
+            if (durability > 0 && (stack.getItem() == IUItem.ForgeHammer || stack.getItem() == IUItem.ObsidianForgeHammer) && this.output != null && this.outputSlot.canAdd(
+                    this.output.getRecipe().output.items.get(
+                            0))) {
                 progress += 10;
-            }
-            progress += (int) (data.getOrDefault(player.getUniqueID(),0.0)/5D);
-            if (!this.getWorld().isRemote) {
-                this.initiate(0);
-            }
-            if (progress >= 100) {
-                this.progress = 0;
-                if (!this.getWorld().isRemote)
-                PrimitiveHandler.addExperience(EnumPrimitive.ANVIL,0.5,player.getUniqueID());
-                durability--;
-                if (durability > 200) {
-                    this.setActive("");
-                } else if (durability > 100) {
-                    this.setActive("1");
-                } else if (durability > 0) {
-                    this.setActive("2");
-                } else {
-                    this.setActive("3");
+                this.getCooldownTracker().setTick(10);
+                if (stack.getItem() == IUItem.ObsidianForgeHammer) {
+                    progress += 10;
                 }
-                player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
-                this.outputSlot.add(this.output.getRecipe().output.items.get(0));
-                this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
-                if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {
-                    this.output = null;
-
+                progress += (int) (data.getOrDefault(player.getUniqueID(), 0.0) / 5D);
+                if (!this.getWorld().isRemote) {
+                    this.initiate(0);
                 }
-                if (!world.isRemote) {
-                    new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
-                    new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
-                    new PacketUpdateFieldTile(this, "durability", this.durability);
-
-
-                }
-            }
-
-            return this.getWorld().isRemote;
-        } else {
-            if (!stack.isEmpty()) {
-                if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
-                    this.inputSlotA.put(0, stack.copy());
-                    stack.setCount(0);
-                    if (!world.isRemote) {
-                        new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                if (progress >= 100) {
+                    this.progress = 0;
+                    if (!this.getWorld().isRemote) {
+                        PrimitiveHandler.addExperience(EnumPrimitive.ANVIL, 0.5, player.getUniqueID());
                     }
-                    return true;
-                } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).isItemEqual(stack)) {
-                    int minCount = 64 - this.inputSlotA.get(0).getCount();
-                    minCount = Math.min(stack.getCount(), minCount);
-                    this.inputSlotA.get(0).grow(minCount);
-                    stack.grow(-minCount);
-                    if (!world.isRemote) {
-                        new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                    durability--;
+                    if (durability > 200) {
+                        this.setActive("");
+                    } else if (durability > 100) {
+                        this.setActive("1");
+                    } else if (durability > 0) {
+                        this.setActive("2");
+                    } else {
+                        this.setActive("3");
                     }
-                    return true;
-                }
-            } else {
-                if (!outputSlot.isEmpty()) {
-                    if (!world.isRemote) {
-                        ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
-                    }
-                    outputSlot.put(0, ItemStack.EMPTY);
-                    if (!world.isRemote) {
-                        new PacketUpdateFieldTile(this, "slot2", false);
-                    }
-                    return true;
-                } else {
-                    if (!inputSlotA.isEmpty()) {
-                        if (!world.isRemote) {
-                            ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
-                        }
-                        inputSlotA.put(0, ItemStack.EMPTY);
+                    player.setHeldItem(hand, stack.getItem().getContainerItem(stack));
+                    this.outputSlot.add(this.output.getRecipe().output.items.get(0));
+                    this.inputSlotA.consume(0, this.output.getRecipe().input.getInputs().get(0).getAmount());
+                    if (this.inputSlotA.isEmpty() || this.outputSlot.get().getCount() >= 64) {
                         this.output = null;
+
+                    }
+                    if (!world.isRemote) {
+                        if (!this.inputSlotA.get().isEmpty()) {
+                            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                        } else {
+                            new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
+                        }
+                        new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+                        new PacketUpdateFieldTile(this, "durability", this.durability);
+
+
+                    }
+                }
+
+                return this.getWorld().isRemote;
+            } else {
+                if (!stack.isEmpty()) {
+                    if (this.inputSlotA.get(0).isEmpty() && this.inputSlotA.accepts(stack, 4)) {
+                        this.inputSlotA.put(0, stack.copy());
+                        stack.setCount(0);
                         if (!world.isRemote) {
-                            new PacketUpdateFieldTile(this, "slot3", false);
+                            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+                        }
+                        return true;
+                    } else if (!this.inputSlotA.get(0).isEmpty() && this.inputSlotA.get(0).isItemEqual(stack)) {
+                        int minCount = 64 - this.inputSlotA.get(0).getCount();
+                        minCount = Math.min(stack.getCount(), minCount);
+                        this.inputSlotA.get(0).grow(minCount);
+                        stack.grow(-minCount);
+                        if (!world.isRemote) {
+                            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
                         }
                         return true;
                     }
+                } else {
+                    if (!outputSlot.isEmpty()) {
+                        if (!world.isRemote) {
+                            ModUtils.dropAsEntity(world, pos, outputSlot.get(), player);
+                        }
+                        outputSlot.put(0, ItemStack.EMPTY);
+                        if (!world.isRemote) {
+                            new PacketUpdateFieldTile(this, "slot2", false);
+                        }
+                        return true;
+                    } else {
+                        if (!inputSlotA.isEmpty()) {
+                            if (!world.isRemote) {
+                                ModUtils.dropAsEntity(world, pos, inputSlotA.get(), player);
+                            }
+                            inputSlotA.put(0, ItemStack.EMPTY);
+                            this.output = null;
+                            if (!world.isRemote) {
+                                new PacketUpdateFieldTile(this, "slot3", false);
+                            }
+                            return true;
+                        }
+                    }
                 }
             }
+
         }
-
-
-        return false;
+        return true;
     }
 
     @Override
@@ -612,7 +620,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
     }
 
     @Override
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;
     }
 

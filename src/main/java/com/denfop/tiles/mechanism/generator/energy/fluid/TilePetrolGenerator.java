@@ -75,7 +75,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
         this.energy = this.addComponent(Energy.asBasicSource(
                 this,
                 (double) 5000000,
-                EnergyNetGlobal.instance.getTierFromPower(this.production)
+               3
         ).addManagedSlot(chargeSlot));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(
                 FluidName.fluidbenz.getInstance(), FluidName.fluidpetrol90.getInstance(), FluidName.fluidpetrol95.getInstance()
@@ -133,7 +133,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
         new PacketUpdateFieldTile(this, "sound", this.sound);
 
         if (!sound) {
-            if (this.getType() == EnumTypeAudio.ON) {
+            if (this.getTypeAudio() == EnumTypeAudio.ON) {
                 setType(EnumTypeAudio.OFF);
                 initiate(2);
 
@@ -153,7 +153,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
         super.updateField(name, is);
     }
 
-    public EnumTypeAudio getType() {
+    public EnumTypeAudio getTypeAudio() {
         return typeAudio;
     }
 
@@ -168,7 +168,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
 
 
     public void initiate(int soundEvent) {
-        if (this.getType() == valuesAudio[soundEvent % valuesAudio.length]) {
+        if (this.getTypeAudio() == valuesAudio[soundEvent % valuesAudio.length]) {
             return;
         }
 

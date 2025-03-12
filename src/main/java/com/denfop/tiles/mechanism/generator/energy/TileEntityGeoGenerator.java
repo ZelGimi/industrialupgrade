@@ -50,7 +50,7 @@ public class TileEntityGeoGenerator extends TileEntityBaseGenerator implements I
         this.coef = coef;
     }
 
-    @SideOnly(Side.CLIENT)
+
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));

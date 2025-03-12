@@ -12,6 +12,7 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerAlkalineEarthQuarry;
 import com.denfop.gui.GuiAlkalineEarthQuarry;
 import com.denfop.invslot.InvSlot;
+import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.items.ItemMesh;
 import com.denfop.tiles.base.IManufacturerBlock;
 import com.denfop.tiles.base.TileElectricMachine;
@@ -43,6 +44,7 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
     public final ComponentTimer timer;
     public final InvSlot inputSlotA;
     public final InvSlot inputSlotB;
+    public final InvSlotUpgrade upgradeSlot;
     public int level;
     public int level_mesh;
     public int type_block;
@@ -106,6 +108,7 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
                 return (int) Math.max(1, 20 - ((TileEntityAlkalineEarthQuarry) this.parent).getLevel() * 1.1);
             }
         });
+        this.upgradeSlot = new InvSlotUpgrade(this,2);
         this.level = 0;
     }
 
@@ -245,7 +248,7 @@ public class TileEntityAlkalineEarthQuarry extends TileElectricMachine implement
             this.setActive(false);
             return;
         }
-
+        this.upgradeSlot.tickNoMark();
     }
 
     private boolean getChance() {

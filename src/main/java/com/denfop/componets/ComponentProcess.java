@@ -1,5 +1,7 @@
 package com.denfop.componets;
 
+import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.audio.IAudioFixer;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InvSlotOutput;
@@ -7,9 +9,16 @@ import com.denfop.api.recipe.InvSlotRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.api.sytem.IDual;
 import com.denfop.api.sytem.ISource;
+import com.denfop.blocks.FluidName;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.tiles.base.TileEntityInventory;
+import com.denfop.utils.Timer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
 
@@ -79,7 +88,22 @@ public class ComponentProcess extends AbstractComponent {
         this.audoFix = this.getParent() instanceof IAudioFixer;
         this.componentUpgrade = this.getParent().getComp(ComponentUpgrade.class);
     }
-
+    private Timer timer1 = new Timer(0, 0, 0);
+    private Timer timer = null;
+    @Override
+    public boolean onBlockActivated(final EntityPlayer player, final EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem().equals(IUItem.canister)) {
+            FluidStack fluid = FluidUtil.getFluidContained(stack);
+            if (fluid != null && fluid.getFluid() == FluidName.fluidmotoroil.getInstance() &&fluid.amount >= 125 && (!timer1.canWork() || timer1.getBar() == 0)&& (timer == null || !timer.canWork())) {
+                this.timer = new Timer(0, 0, 35);
+                final IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+                handler.drain(125, true);
+                return true;
+            }
+        }
+        return super.onBlockActivated(player, hand);
+    }
 
     public void setSlotOutput(final InvSlotOutput slotOutput) {
         this.outputSlot = slotOutput;
@@ -201,7 +225,13 @@ public class ComponentProcess extends AbstractComponent {
     public void updateRecipe() {
 
     }
-
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        if (parent.getWorld() == null) {
+            tooltip.add(Localization.translate("iu.speed_canister.info"));
+        }
+    }
     public boolean checkRecipe() {
         return true;
     }
@@ -272,6 +302,10 @@ public class ComponentProcess extends AbstractComponent {
                 }
             }
             this.componentProgress.addProgress();
+            if (timer != null && timer.canWork()) {
+                this.componentProgress.addProgress();
+
+            }
             if (action != null && action.needAction(TypeLoad.PROGRESS)) {
                 action.doAction();
             }
@@ -356,6 +390,19 @@ public class ComponentProcess extends AbstractComponent {
                 }
             }
             this.getOperationDefaultLength();
+        }
+        if (this.parent.getActive()) {
+            if (this.parent.getWorld().provider.getWorldTime() % 20 == 0) {
+                if (this.timer != null && this.timer.canWork()) {
+                    this.timer.work();
+                    if (!this.timer.canWork()) {
+                        timer1 = new Timer(0, 0, 10);
+                    }
+                }
+                if (timer1.canWork()) {
+                    timer1.work();
+                }
+            }
         }
     }
 

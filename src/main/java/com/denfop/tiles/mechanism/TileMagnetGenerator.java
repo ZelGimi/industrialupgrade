@@ -105,6 +105,15 @@ public class TileMagnetGenerator extends TileElectricMachine {
         }
     }
 
+    @Override
+    public List<ItemStack> getWrenchDrops(final EntityPlayer player, final int fortune) {
+        List<ItemStack> list = super.getWrenchDrops(player, fortune);
+        NBTTagCompound nbt = ModUtils.nbt(list.get(0));
+        nbt.setInteger("timer", this.timer);
+        nbt.setBoolean("work", true);
+        return  list;
+    }
+
     public ItemStack adjustDrop(ItemStack drop, boolean wrench) {
         drop = super.adjustDrop(drop, wrench);
         if (drop.isItemEqual(this.getPickBlock(

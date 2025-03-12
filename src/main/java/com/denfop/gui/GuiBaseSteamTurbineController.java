@@ -34,7 +34,7 @@ public class GuiBaseSteamTurbineController extends GuiIU<ContainerBaseSteamTurbi
         elements.add(TankGauge.createNormal(this, 10, 5, guiContainer.base.getWaterFluid()));
         elements.add(TankGauge.createNormal(this, 40, 5, guiContainer.base.getSteamFluid()));
 
-        for (int i = 0; i < guiContainer.base.listCoolant.size();i++){
+        for (int i = 0; i < 2;i++){
             elements.add(TankGauge.createNormal(this, 155+30*i, 5, guiContainer.base.listCoolant.get(i).getCoolant()));
         }
         this.addComponent(new GuiComponent(this, 88, 15, EnumTypeComponent.ENERGY_WEIGHT,

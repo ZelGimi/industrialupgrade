@@ -78,7 +78,6 @@ public class TileEntityAdvGenerator extends TileEntityBaseGenerator implements I
         return packet;
     }
 
-    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, List<String> tooltip) {
         if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("press.lshift"));

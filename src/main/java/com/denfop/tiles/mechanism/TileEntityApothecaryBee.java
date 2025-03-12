@@ -2,6 +2,7 @@ package com.denfop.tiles.mechanism;
 
 import com.denfop.IUItem;
 import com.denfop.Localization;
+import com.denfop.api.agriculture.CropNetwork;
 import com.denfop.api.bee.BeeNetwork;
 import com.denfop.api.sytem.EnergyType;
 import com.denfop.api.tile.IMultiTileBlock;
@@ -59,7 +60,7 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
         tooltip.add(Localization.translate("iu.apothecary_bee.info"));
     }
     List<List<TileEntityApiary>> list = new ArrayList<>();
-
+    List<Chunk> chunks;
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -70,7 +71,7 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
             int k2 = MathHelper.ceil((aabb.maxX + 2) / 16.0D);
             int l2 = MathHelper.floor((aabb.minZ - 2) / 16.0D);
             int i3 = MathHelper.ceil((aabb.maxZ + 2) / 16.0D);
-            List<Chunk> chunks = new ArrayList<>();
+           chunks = new ArrayList<>();
             for (int j3 = j2; j3 < k2; ++j3) {
                 for (int k3 = l2; k3 < i3; ++k3) {
                     final Chunk chunk = world.getChunkFromChunkCoords(j3, k3);
@@ -107,10 +108,18 @@ public class TileEntityApothecaryBee extends TileEntityInventory {
             return false;
         }
     }
-
+    private void updateBee() {
+        list.clear();
+        for (Chunk chunk : chunks) {
+            this.list.add(BeeNetwork.instance.getApiaryFromChunk(world, chunk.getPos()));
+        }
+    }
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
+        if (this.getWorld().getWorldTime() % 100 == 0){
+            updateBee();
+        }
         if (this.getWorld().provider.getWorldTime() % 20 == 0 && this.energy.canUseEnergy(50)) {
             cycle:
             for (List<TileEntityApiary> bees : list) {

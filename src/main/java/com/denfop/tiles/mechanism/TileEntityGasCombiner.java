@@ -112,34 +112,34 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 2000), new FluidStack(
+                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
                 FluidName.fluidneft.getInstance(),
                 1000
         )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 2000), new FluidStack(
+                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
                 FluidName.fluidsweet_medium_oil.getInstance(),
                 800
         )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 2000), new FluidStack(
+                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
                 FluidName.fluidsweet_heavy_oil.getInstance(),
                 600
         )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 2000), new FluidStack(
+                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000), new FluidStack(
                 FluidName.fluidsour_light_oil.getInstance(),
                 1100
         )), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 2000),
+                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000),
                 new FluidStack(
                         FluidName.fluidsour_medium_oil.getInstance(),
                         1300
                 )
         ), Collections.singletonList(new FluidStack(FluidName.fluidindustrialoil.getInstance(), 1000))));
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidhyd.getInstance(), 200),
+                new FluidStack(FluidName.fluidhyd.getInstance(), 1000),
                 new FluidStack(
                         FluidName.fluidfluor.getInstance(),
                         200
@@ -147,7 +147,7 @@ public class TileEntityGasCombiner extends TileElectricMachine implements IUpgra
         ), Collections.singletonList(new FluidStack(FluidName.fluidfluorhyd.getInstance(), 200))));
 
         Recipes.recipes.getRecipeFluid().addRecipe("gas_combiner", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcreosote.getInstance(), 2000),
+                new FluidStack(FluidName.fluidcreosote.getInstance(), 1000),
                 new FluidStack(
                         FluidName.fluidsour_heavy_oil.getInstance(),
                         1500
