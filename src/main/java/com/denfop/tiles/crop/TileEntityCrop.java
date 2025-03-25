@@ -105,6 +105,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
     @SideOnly(Side.CLIENT)
     private Function render;
     private boolean humus;
+    private boolean canGrow;
 
     public TileEntityCrop() {
 
@@ -174,12 +175,13 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         }
         return nbt;
     }
-    public void event(){
-        if (!world.isRemote)
-        {
+
+    public void event() {
+        if (!world.isRemote) {
             world.playEvent(2005, pos, 0);
         }
     }
+
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
@@ -348,7 +350,9 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
     }
+
     boolean added = false;
+
     public void onLoaded() {
         super.onLoaded();
         if (!this.getWorld().isRemote) {
@@ -392,7 +396,8 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             int minZ = (int) Math.floor(axisAlignedBB.minZ) >> 4;
             int maxZ = (int) Math.floor(axisAlignedBB.maxZ) >> 4;
 
-            chunkPositions.clear();;
+            chunkPositions.clear();
+            ;
             chunkPosListMap.clear();
             for (int chunkX = minX; chunkX <= maxX; chunkX++) {
                 for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++) {
@@ -934,7 +939,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                                         crop.setGrowthSpeed(level);
                                     } else {
                                         GeneticTraits traits = genome.getGenome(enumGenetic);
-                                        int level = traits.getValue(Integer.class);
+                                        double level = traits.getValue(Double.class);
                                         boolean needDecrease =
                                                 WorldBaseGen.random.nextBoolean();
                                         if (needDecrease) {
@@ -1078,11 +1083,11 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
 
     @Override
     public List<ItemStack> getSelfDrops(final int fortune, final boolean wrench) {
-        List<ItemStack> list =  new LinkedList<>(super.getSelfDrops(fortune, wrench));
-        if (this.hasDouble){
-            list.add(this.getPickBlock(null,null));
+        List<ItemStack> list = new LinkedList<>(super.getSelfDrops(fortune, wrench));
+        if (this.hasDouble) {
+            list.add(this.getPickBlock(null, null));
         }
-        if (crop != null&& crop.getId() != 3){
+        if (crop != null && crop.getId() != 3) {
             list.add(this.cropItem);
         }
         return list;
@@ -1094,7 +1099,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             BeeId = 0;
             boolean work = false;
             if (this.getWorld().getWorldTime() % 20 == 0) {
-                if (chunk == null){
+                if (chunk == null) {
                     this.chunkPos = new ChunkPos(pos);
                     Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
                     if (radiation1 == null) {
@@ -1111,7 +1116,10 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     this.chunk = this.getWorld().getChunkFromBlockCoords(pos);
                     this.biome = this.getWorld().getBiome(pos);
                 }
-                if (CropNetwork.instance.canGrow(world, pos, chunkPos, crop, radLevel, chunk, biome, chunkLevel) && (this
+                if (this.getWorld().getWorldTime() % 60 == 0) {
+                    this.canGrow = CropNetwork.instance.canGrow(world, pos, chunkPos, crop, radLevel, chunk, biome, chunkLevel);
+                }
+                if (this.canGrow && (this
                         .getWorld()
                         .getWorldTime() % 400 != 0 || canGrow())) {
 
@@ -1135,7 +1143,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     }
                     if (tickPest >= 20) {
                         tickPest -= 20;
-                    }else{
+                    } else {
                         tickPest = 0;
                     }
                     if (crop.getTick() < crop.getMaxTick()) {
@@ -1152,7 +1160,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
         if (this.getWorld().getWorldTime() % 200 == 0 && pestUse > 0) {
             pestUse--;
         }
-        if ( this
+        if (this
                 .getWorld()
                 .getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && !hasDouble && WorldBaseGen.random.nextInt(200) == 0) {
             this.crop = CropInit.weed_seed.copy();
@@ -1170,7 +1178,9 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                     .collect(Collectors.toList());
 
             if (crops.size() < 2) {
-                if (this.getWorld().getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
+                if (this
+                        .getWorld()
+                        .getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
                     this.hasDouble = false;
                     new PacketUpdateFieldTile(this, "hasDouble", this.hasDouble);
                     this.crop = CropInit.weed_seed.copy();
@@ -1311,7 +1321,9 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
                 break;
             }
             if (!can) {
-                if (this.getWorld().getWorldTime() % 400 == 0  && tickPest == 0&& this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
+                if (this
+                        .getWorld()
+                        .getWorldTime() % 400 == 0 && tickPest == 0 && this.crop == null && WorldBaseGen.random.nextInt(200) == 0) {
                     this.hasDouble = false;
                     new PacketUpdateFieldTile(this, "hasDouble", this.hasDouble);
                     this.crop = CropInit.weed_seed.copy();
@@ -1432,7 +1444,7 @@ public class TileEntityCrop extends TileEntityBlock implements ICropTile {
             if (this.crop != null && this.crop.getTick() == this.crop.getMaxTick() && this.crop.getId() != 3) {
                 harvest(true);
             }
-            ModUtils.dropAsEntity(world, pos,this.cropItem, 1);
+            ModUtils.dropAsEntity(world, pos, this.cropItem, 1);
             this.cropItem = ItemStack.EMPTY;
             this.crop = null;
             this.genome = null;

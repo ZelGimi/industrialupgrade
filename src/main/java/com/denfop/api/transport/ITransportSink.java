@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ITransportSink<T, E> extends ITransportAcceptor<T, E> {
 
-    List<Integer> getDemanded(IItemHandler handler);
+    List<Integer> getDemanded(EnumFacing facing);
 
     boolean isSink();
 

@@ -120,11 +120,11 @@ public class TileEntitySteamBioGenerator extends TileElectricMachine implements 
     public void init() {
         addRecipe(
                 IUItem.biochaff,
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 200)
+                new FluidStack(FluidName.fluidbiomass.getInstance(), 800)
         );
         addRecipe(
                 IUItem.plantBall,
-                new FluidStack(FluidName.fluidbiomass.getInstance(), 150)
+                new FluidStack(FluidName.fluidbiomass.getInstance(), 400)
         );
 
     }

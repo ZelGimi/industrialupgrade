@@ -62,6 +62,7 @@ public interface IColony {
 
     int getMaxOxygen();
 
+    byte getTick();
     List<IBuildingHouse> getBuildingHouseList();
 
     List<IColonyMiningFactory> getBuildingMiningList();

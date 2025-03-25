@@ -42,7 +42,8 @@ public class TileEntityExchanger extends TileEntityMultiBlockElement implements 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()) {
+                if (!world.isRemote)
+                    if (content.isEmpty()) {
                     ((TileEntityExchanger) this.base).percent = 1;
                 } else {
                     ((TileEntityExchanger) this.base).percent = 1 - ((IExchangerItem) content.getItem()).getPercent();

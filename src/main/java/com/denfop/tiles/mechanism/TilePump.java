@@ -163,6 +163,7 @@ public class TilePump extends TileElectricLiquidTankInventory implements IUpgrad
                         if (this.getFluidTank().fill(liquid, false) > 0) {
                             this.getFluidTank().fill(liquid, true);
                             canOperate = true;
+                            componentProgress.setProgress((short) 0);
                         }
                     }
                 }

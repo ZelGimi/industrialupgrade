@@ -115,13 +115,6 @@ public class TileGasPump extends TileElectricLiquidTankInventory implements IUpg
             tooltip.add(Localization.translate("iu.machines_work_energy") + 2 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
-            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((NBTTagCompound) stack.getTagCompound().getTag("fluid"));
-
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getLocalizedName());
-            tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.amount / 1000 + " B");
-
-        }
         super.addInformation(stack, tooltip);
     }
 

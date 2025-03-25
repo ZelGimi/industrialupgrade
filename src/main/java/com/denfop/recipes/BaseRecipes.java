@@ -973,13 +973,14 @@ public class BaseRecipes {
                 ('A'),
                 ("plateZinc")
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.module7, 1, 9), "ABA", "BCB", "ABA",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.module7, 1, 9), "DBD", "BCB", "ABA",
 
                 ('C'), new ItemStack(IUItem.purifier, 1, 32767),
 
                 ('B'), new ItemStack(IUItem.nanoBox),
 
-                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4)
+                ('A'), TileGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),'D',new ItemStack(IUItem.crafting_elements, 1,
+                        543)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.module9, 1, 9), "ABA", "BCB", "ABA",
 
@@ -1057,7 +1058,7 @@ public class BaseRecipes {
                 ('A'),
                 ("plateElectrum")
         );
-        Recipes.recipe.addShapelessRecipe(new ItemStack(IUItem.fertilizer, 8),
+        Recipes.recipe.addShapelessRecipe(new ItemStack(IUItem.fertilizer, 16),
                 new ItemStack(IUItem.iudust, 1, 69), new ItemStack(IUItem.iudust, 1, 70), new ItemStack(IUItem.iudust, 1, 66)
         );
         Recipes.recipe.addRecipe(IUItem.module2, "AAA", "BCB", "EDE",
@@ -3126,21 +3127,21 @@ public class BaseRecipes {
                 ('D'),
                 TileGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 25), "CCC", "BAB", "EDE",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 25), "CCC", "DAD", "EBE",
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6), ('A'),
                 new ItemStack(IUItem.crafting_elements, 1, 21), ('C'), new ItemStack(
                         IUItem.nanoBox),
                 ('D'),
                 new ItemStack(IUItem.crafting_elements, 1, 16),'E',new ItemStack(IUItem.crafting_elements, 1, 651)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 23), "CCC", "BAB", "EDE",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 23), "CCC", "DAD", "EBE",
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), ('A'),
                 new ItemStack(IUItem.crafting_elements, 1, 25), ('C'), new ItemStack(
                         IUItem.quantumtool),
                 ('D'),
                 new ItemStack(IUItem.crafting_elements, 1, 92),'E',  new ItemStack(IUItem.crafting_elements, 1, 652)
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 24), "CCC", "BAB", "EDE",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 24), "CCC", "DAD", "EBE",
                 ('B'), TileGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), ('A'),
                 new ItemStack(IUItem.crafting_elements, 1, 23), ('C'), new ItemStack(
                         IUItem.spectral_box),
@@ -5247,8 +5248,8 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements, 1, 620),
                 "AAA",
-                "CDC",
-                "EBE",
+                "BDB",
+                "ECE",
                 'A',
                 new ItemStack(IUItem.crafting_elements, 1, 625),
                 'F', new ItemStack(IUItem.crafting_elements, 1, 44),
@@ -6649,14 +6650,14 @@ public class BaseRecipes {
                 'A', IUItem.polonium_palladium_composite,
                 'B', new ItemStack(IUItem.module_schedule),
                 'C', new ItemStack(IUItem.alloysplate, 1, 5),
-                'D', new ItemStack(IUItem.adv_motors_with_improved_bearings_)
+                'D', new ItemStack(IUItem.crafting_elements, 1, 20)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.antisoilpollution), "CCC", "ABA", " D ",
 
                 'A', IUItem.polonium_palladium_composite,
                 'B', new ItemStack(IUItem.module_schedule),
                 'C', new ItemStack(IUItem.alloysplate, 1, 11),
-                'D', new ItemStack(IUItem.adv_motors_with_improved_bearings_)
+                'D', new ItemStack(IUItem.crafting_elements, 1, 20)
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.antiairpollution1), "CCC", "ABA", "ADA",
@@ -6664,14 +6665,14 @@ public class BaseRecipes {
                 'A', IUItem.polonium_palladium_composite,
                 'B', new ItemStack(IUItem.module_schedule),
                 'C', new ItemStack(IUItem.alloysdoubleplate, 1, 5),
-                'D', new ItemStack(IUItem.imp_motors_with_improved_bearings_)
+                'D', new ItemStack(IUItem.crafting_elements, 1, 96)
         );
         Recipes.recipe.addRecipe(new ItemStack(IUItem.antisoilpollution1), "CCC", "ABA", "ADA",
 
                 'A', IUItem.polonium_palladium_composite,
                 'B', new ItemStack(IUItem.module_schedule),
                 'C', new ItemStack(IUItem.alloysdoubleplate, 1, 11),
-                'D', new ItemStack(IUItem.imp_motors_with_improved_bearings_)
+                'D', new ItemStack(IUItem.crafting_elements, 1, 96)
         );
 
         Recipes.recipe.addRecipe(new ItemStack(IUItem.basemachine2, 1, 191), "   ", "ABC", " D ",

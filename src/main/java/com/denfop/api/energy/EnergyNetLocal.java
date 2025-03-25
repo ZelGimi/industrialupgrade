@@ -91,12 +91,10 @@ public class EnergyNetLocal {
             final BlockPos pos = entity.getPos();
             final ITransportTile IEnergyTile = TransportNetGlobal.instance.getSubTile(world, pos);
             if (IEnergyTile != null) {
-                if (IEnergyTile.getHandler() instanceof IItemHandler) {
-                    MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
-                            world,
-                            IEnergyTile
-                    ));
-                }
+                MinecraftForge.EVENT_BUS.post(new TransportTileUnLoadEvent(
+                        world,
+                        IEnergyTile
+                ));
             }
 
             Explosion explosion = new Explosion(this.world, null, pos.getX(), pos.getY() + 1, pos.getZ(), 4, false, false);

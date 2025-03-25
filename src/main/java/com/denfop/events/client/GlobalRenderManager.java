@@ -63,7 +63,7 @@ public class GlobalRenderManager {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
 
-        if (player == null || mc.world == null) {
+        if (player == null || mc.world == null ) {
             return;
         }
         try {
@@ -76,7 +76,14 @@ public class GlobalRenderManager {
 
                         GlStateManager.pushMatrix();
                         GlStateManager.translate(-x, -y, -z);
+                        if (mc.world.getWorldTime() % 24000 > 13000)
+                            GlStateManager.enableLighting();
+                        GlStateManager.enableDepth();
+                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
                         function.apply(0);
+                        GlStateManager.disableLighting();
+
                         GlStateManager.popMatrix();
                     }
                 }

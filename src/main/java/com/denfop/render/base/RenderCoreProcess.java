@@ -96,11 +96,8 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> extends
         float posY = (float) y + 0.5F;
         float posZ = (float) z + 0.5F;
         Color color = new Color(12648447);
-        GL11.glPushMatrix();
-        GL11.glDepthMask(false);
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 1);
-        (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(plazmaTextloc);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
         int i = this.ticker % 16;
         float size4 = (size1 * 4);
         float float_sizeMinus0_01 = size1 - 0.01F;
@@ -108,8 +105,13 @@ public class RenderCoreProcess<T extends TileEntityBlock & IIsMolecular> extends
         float x1 = ((i % 4 * size1) + float_sizeMinus0_01) / size4;
         float x2 = ((i / 4F * size1) + 0.0F) / size4;
         float x3 = ((i / 4F * size1) + float_sizeMinus0_01) / size4;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        GL11.glPushMatrix();
+        GL11.glDepthMask(false);
+        GL11.glEnable(3042);
+        GL11.glBlendFunc(770, 1);
+        (FMLClientHandler.instance().getClient()).renderEngine.bindTexture(plazmaTextloc);
+
+
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         buffer
                 .pos((posX - f1 * scaleCore - f4 * scaleCore), (posY - f2 * scaleCore), (posZ - f3 * scaleCore - f5 * scaleCore))

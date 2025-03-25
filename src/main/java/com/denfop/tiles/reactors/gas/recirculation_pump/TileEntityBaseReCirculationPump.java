@@ -30,12 +30,14 @@ public class TileEntityBaseReCirculationPump extends TileEntityMultiBlockElement
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()) {
-                    ((TileEntityBaseReCirculationPump) this.base).setEnergy(0);
-                    ((TileEntityBaseReCirculationPump) this.base).setPower(0);
-                } else {
-                    ((TileEntityBaseReCirculationPump) this.base).setEnergy(((ItemsPumps) content.getItem()).getEnergy());
-                    ((TileEntityBaseReCirculationPump) this.base).setPower(((ItemsPumps) content.getItem()).getPower());
+                if (!world.isRemote) {
+                    if (content.isEmpty()) {
+                        ((TileEntityBaseReCirculationPump) this.base).setEnergy(0);
+                        ((TileEntityBaseReCirculationPump) this.base).setPower(0);
+                    } else {
+                        ((TileEntityBaseReCirculationPump) this.base).setEnergy(((ItemsPumps) content.getItem()).getEnergy());
+                        ((TileEntityBaseReCirculationPump) this.base).setPower(((ItemsPumps) content.getItem()).getPower());
+                    }
                 }
             }
         };

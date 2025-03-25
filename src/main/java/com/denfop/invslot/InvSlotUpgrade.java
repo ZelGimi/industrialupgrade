@@ -716,7 +716,7 @@ public class InvSlotUpgrade extends InvSlot implements ITypeSlot {
 
                                             if (input.isEmpty()) {
                                                 if (invSlot.add(output)) {
-                                                    slot.put(jj, ItemStack.EMPTY);
+                                                    slot.put(j, ItemStack.EMPTY);
                                                     output = ItemStack.EMPTY;
                                                 }
                                             } else {

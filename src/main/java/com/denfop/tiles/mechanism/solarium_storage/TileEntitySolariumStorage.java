@@ -108,7 +108,19 @@ public class TileEntitySolariumStorage extends TileEntityInventory implements IT
             this.se.addEnergy(energy1);
         }
     }
+    public void setFacing(EnumFacing facing) {
+        super.setFacing(facing);
+        this.se.setDirections(
 
+                new HashSet<>( Arrays
+                        .asList(EnumFacing.VALUES)
+                        .stream()
+                        .filter(facing1 -> facing1 != EnumFacing.UP && facing1 != getFacing())
+                        .collect(Collectors.toList())),  new HashSet<>(Collections.singletonList(this.getFacing())));
+
+
+
+    }
     @Override
     public ContainerSolariumStorage getGuiContainer(final EntityPlayer entityPlayer) {
         return new ContainerSolariumStorage(entityPlayer, this);

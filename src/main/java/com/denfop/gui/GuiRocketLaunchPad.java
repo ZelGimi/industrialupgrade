@@ -51,8 +51,8 @@ public class GuiRocketLaunchPad extends GuiIU<ContainerRocketLaunchPad> {
             if (container.base.tanks[i].getFluidAmount() <= 0)
                 continue;
             FluidStack fs = container.base.tanks[i].getFluid();
-            int fluidX = 6 + i * 18 + 1;
-            int fluidY = 80 - 20 + 1;
+            int fluidX = 7 + i * 18 + 1;
+            int fluidY = 79 - 20 + 1;
             int fluidWidth = 16;
             int fluidHeight = 16;
             Fluid fluid = fs.getFluid();

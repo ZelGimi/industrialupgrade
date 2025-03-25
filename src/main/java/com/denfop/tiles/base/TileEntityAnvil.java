@@ -19,6 +19,7 @@ import com.denfop.api.tile.IMultiTileBlock;
 import com.denfop.audio.EnumSound;
 import com.denfop.blocks.BlockAnvil;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.effects.ParticleItemCustom;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -27,6 +28,8 @@ import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.recipe.IInputHandler;
 import com.denfop.register.RegisterOreDictionary;
 import com.denfop.utils.ModUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleItemPickup;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -37,6 +40,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -48,6 +52,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick, IHasRecipe, IAudioFixer {
@@ -195,6 +200,10 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         if (name.equals("slot2")) {
             outputSlot.put(0, ItemStack.EMPTY);
         }
+        if (name.equals("effect")){
+
+            spawnItemParticles(world, pos, this.inputSlotA.get(0));
+        }
     }
 
     @Override
@@ -260,7 +269,22 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
         }
         return super.onSneakingActivated(player, hand, side, hitX, hitY, hitZ);
     }
+    private void spawnItemParticles(World world, BlockPos pos, ItemStack stack) {
+        Random rand = new Random();
 
+        for (int i = 0; i < 1; i++) {
+            double offsetX =-0.05;
+            double offsetY =0.05;
+            double offsetZ = -0.05;
+
+            Minecraft.getMinecraft().effectRenderer.addEffect(
+                    new ParticleItemCustom(world,
+                            pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5,
+                            offsetX, offsetY, offsetZ,
+                            stack)
+            );
+        }
+    }
     @Override
     public boolean onActivated(
             final EntityPlayer player,
@@ -280,6 +304,7 @@ public class TileEntityAnvil extends TileEntityInventory implements IUpdateTick,
                 if (stack.getItem() == IUItem.ObsidianForgeHammer) {
                     progress += 10;
                 }
+                new PacketUpdateFieldTile(this, "effect", true);
                 progress += (int) (data.getOrDefault(player.getUniqueID(), 0.0) / 5D);
                 if (!this.getWorld().isRemote) {
                     this.initiate(0);

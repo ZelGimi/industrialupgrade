@@ -164,6 +164,7 @@ public class TileEntitySqueezer extends TileEntityInventory implements IUpdateTi
 
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.SQUEEZER);
         if (IUCore.proxy.isSimulating()) {
             inputSlotA.load();
             this.fluid_handler.load(this.inputSlotA.get());

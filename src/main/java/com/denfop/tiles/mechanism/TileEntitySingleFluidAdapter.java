@@ -143,9 +143,9 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
 
         addRecipe(
                 new ItemStack(IUItem.iudust, 2, 73),
-                new FluidStack(FluidName.fluidchloroethane.getInstance(), 400),
+                new FluidStack(FluidName.fluidchloroethane.getInstance(), 250),
                 new FluidStack(FluidName.fluidtetraethyllead.getInstance()
-                        , 100)
+                        , 250)
         );
 
 
@@ -180,7 +180,7 @@ public class TileEntitySingleFluidAdapter extends TileElectricMachine implements
                 new FluidStack(FluidName.fluidapianroyaljelly.getInstance()
                         , 200)
         );
-        addRecipe(new ItemStack(Items.DYE,16,4), new FluidStack(FluidName.fluiddistilled_water.getInstance(), 8000),
+        addRecipe(new ItemStack(Items.DYE,16,4), new FluidStack(FluidName.fluiddistilled_water.getInstance(), 4000),
                 new FluidStack(FluidName.fluidcoolant.getInstance(),1000)
         );
         addRecipe( IUItem.cfPowder,new FluidStack(FluidRegistry.WATER, 1000),

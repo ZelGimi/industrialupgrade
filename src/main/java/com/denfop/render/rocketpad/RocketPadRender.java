@@ -45,17 +45,12 @@ public class RocketPadRender {
             Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             GlStateManager.scale(2F, 3F, 2F);
 
-            GlStateManager.pushAttrib();
+
             GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.enableAlpha();
-            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
             GlStateManager.disableLighting();
-            GlStateManager.depthMask(true);
-
             Minecraft.getMinecraft().getRenderItem().renderItem(rocket, model);
-
-            GlStateManager.popAttrib();
+            GlStateManager.disableBlend();
+            GlStateManager.enableLighting();
             GlStateManager.popMatrix();
         } else {
             for (Iterator<DataRocket> iterator = te.rocketList.iterator(); iterator.hasNext(); ) {
@@ -78,19 +73,15 @@ public class RocketPadRender {
                 Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 GlStateManager.scale(2F, 3F, 2F);
 
-                GlStateManager.pushAttrib();
                 GlStateManager.enableBlend();
-                GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GlStateManager.enableAlpha();
-                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
                 GlStateManager.disableLighting();
-                GlStateManager.depthMask(true);
                 Minecraft.getMinecraft().getRenderItem().renderItem(
                         rocket.getItem(), model
 
                 );
 
-                GlStateManager.popAttrib();
+                GlStateManager.disableBlend();
+                GlStateManager.enableLighting();
                 GlStateManager.popMatrix();
                 final BlockPos pos = new BlockPos(te.getPos().getX(), y, te.getPos().getZ());
 

@@ -98,7 +98,11 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQua
         if (tile.vein != null && tile.vein.get()) {
             ItemStack stack = null;
             if (tile.vein.getType() == Type.VEIN) {
-                stack = new ItemStack(IUItem.heavyore, 1, tile.vein.getMeta());
+                if (tile.vein.isOldMineral()) {
+                    stack = new ItemStack(IUItem.heavyore, 1, tile.vein.getMeta());
+                }else{
+                    stack = new ItemStack(IUItem.mineral, 1, tile.vein.getMeta());
+                }
 
             } else if (tile.vein.getType() == Type.OIL) {
                 stack = new ItemStack(IUItem.oilblock);
@@ -120,7 +124,7 @@ public class TileEntityQuarryOilRender extends TileEntitySpecialRenderer<TileQua
                 if (isOil) {
                     if (tile.vein.getType() != Type.GAS) {
                         itextcomponent =
-                                new TextComponentString(Localization.translate(varietyString) + Localization.translate(typeString) + stack.getDisplayName());
+                                new TextComponentString(Localization.translate(varietyString)+" " + Localization.translate(typeString) + stack.getDisplayName());
                     } else {
                         itextcomponent =
                                 new TextComponentString(stack.getDisplayName());

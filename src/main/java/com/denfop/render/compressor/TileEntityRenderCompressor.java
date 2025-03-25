@@ -1,4 +1,4 @@
-package com.denfop.render.macerator;
+package com.denfop.render.compressor;
 
 import com.denfop.tiles.mechanism.TileEntityCompressor;
 import net.minecraft.client.Minecraft;

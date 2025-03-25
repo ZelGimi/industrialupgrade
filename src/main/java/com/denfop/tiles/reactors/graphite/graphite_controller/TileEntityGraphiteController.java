@@ -33,16 +33,18 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
                 if (!(stack.getItem() instanceof ItemCraftingElements)) {
                     return false;
                 }
-                final int itemDamage = stack.getItemDamage();
-                switch (itemDamage) {
-                    case 357:
-                        return ((TileEntityGraphiteController) this.base).getLevel() >= 0;
-                    case 410:
-                        return ((TileEntityGraphiteController) this.base).getLevel() >= 1;
-                    case 310:
-                        return ((TileEntityGraphiteController) this.base).getLevel() >= 2;
-                    case 368:
-                        return ((TileEntityGraphiteController) this.base).getLevel() >= 3;
+                if (!world.isRemote) {
+                    final int itemDamage = stack.getItemDamage();
+                    switch (itemDamage) {
+                        case 357:
+                            return ((TileEntityGraphiteController) this.base).getLevel() >= 0;
+                        case 410:
+                            return ((TileEntityGraphiteController) this.base).getLevel() >= 1;
+                        case 310:
+                            return ((TileEntityGraphiteController) this.base).getLevel() >= 2;
+                        case 368:
+                            return ((TileEntityGraphiteController) this.base).getLevel() >= 3;
+                    }
                 }
                 return false;
             }
@@ -50,7 +52,8 @@ public class TileEntityGraphiteController extends TileEntityMultiBlockElement im
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()) {
+                if (!world.isRemote)
+                    if (content.isEmpty()) {
                     ((TileEntityGraphiteController) this.base).fuel = 0;
                 }
             }

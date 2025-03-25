@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface ITransportTile<T, E> {
 
-    E getHandler();
+    E getHandler(EnumFacing facing);
 
     BlockPos getBlockPos();
 

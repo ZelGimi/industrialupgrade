@@ -60,7 +60,7 @@ public class ContainerSatelliteAssembler extends ContainerFullInv<TileEntitySate
             this.addSlotToContainer(new SlotInvSlot(
                     tileEntityBatteryFactory.inputSlotA,
                     i,
-                    48-18 + (i-33)+3 * 18,
+                    48-18+3 + (i-33) * 18,
                     17+36+36+36-4
             ));
         }

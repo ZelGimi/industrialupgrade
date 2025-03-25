@@ -1587,7 +1587,7 @@ public class BasicRecipeThree {
                 'A',"plateTungsten"
 
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,715), "AAA", "   ", "AAA",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,720), "AAA", "   ", "AAA",
                 'A',"plateMuntsa"
 
         );
@@ -1595,7 +1595,7 @@ public class BasicRecipeThree {
                 'A',"plateStainlessSteel"
 
         );
-        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,720), "AAA", "   ", "AAA",
+        Recipes.recipe.addRecipe(new ItemStack(IUItem.crafting_elements,1,715), "AAA", "   ", "AAA",
                 'A',"plateNitenol"
 
         );
@@ -3209,7 +3209,7 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.bio_extruder), " E ", "BAC", " D ",
 
-                ('A') ,new ItemStack(IUItem.crafting_elements,1,295),
+                ('A') ,new ItemStack(IUItem.blockResource,1,14),
 
                 ('B'), new ItemStack(IUItem.crafting_elements,1,44),
 
@@ -3523,7 +3523,7 @@ public class BasicRecipeThree {
 
                 ('D'), new ItemStack(IUItem.crafting_elements,1,356),
 
-                ('E') ,getBlockStack(BlockBaseMachine3.cooling)
+                ('E') ,getBlockStack(BlockBaseMachine3.fluid_cooling)
 
 
         );

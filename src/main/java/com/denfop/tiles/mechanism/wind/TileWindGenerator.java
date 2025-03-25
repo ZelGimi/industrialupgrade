@@ -29,6 +29,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.DamageHandler;
 import net.minecraft.block.material.Material;
@@ -42,6 +43,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -266,28 +268,6 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         new PacketUpdateFieldTile(this, "work", this.work);
     }
 
-    public void update_generator(BlockPos pos) {
-        this.work = true;
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-                    if (this.pos.getX() == i && this.pos.getY() == j && this.pos.getZ() == k) {
-                        continue;
-                    }
-                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
-                        continue;
-                    }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof IWindMechanism) {
-                        this.work = false;
-                        ((IWindMechanism) tile).setWork(false);
-                    }
-                }
-            }
-        }
-        new PacketUpdateFieldTile(this, "work", this.work);
-    }
-
     @Override
     public EnumRotorSide getRotorSide() {
         return this.rotorSide;
@@ -470,7 +450,6 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
         new PacketUpdateFieldTile(this, "angle", angle);
         new PacketUpdateFieldTile(this, "mind_speed", mind_speed);
         new PacketUpdateFieldTile(this, "generation", generation);
-        update_generator();
         new PacketUpdateFieldTile(this, "work", this.work);
         new PacketUpdateFieldTile(this, "slot", slot);
         if (this.getRotor() != null) {
@@ -492,17 +471,23 @@ public class TileWindGenerator extends TileEntityInventory implements IWindMecha
     }
 
     @Override
-    public void onBlockBreak(boolean wrench) {
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+        for (int i = pos.getX() - 8; i <= pos.getX() + 8; i++) {
+            for (int j = pos.getY() - 8; j <= pos.getY() + 8; j++) {
+                for (int k = pos.getZ() - 8; k <= pos.getZ() + 8; k++) {
+                    final TileEntity tile =world.getTileEntity(new BlockPos(i, j, k));
                     if (tile instanceof IWindMechanism) {
-                        ((IWindMechanism) tile).update_generator(this.pos);
+                      return false;
                     }
                 }
             }
         }
+        return true;
+    }
+
+    @Override
+    public void onBlockBreak(boolean wrench) {
+
         super.onBlockBreak(wrench);
     }
 

@@ -171,6 +171,7 @@ public class TileEntityMacerator extends TileEntityInventory implements IUpdateT
     @Override
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.MACERATOR);
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);

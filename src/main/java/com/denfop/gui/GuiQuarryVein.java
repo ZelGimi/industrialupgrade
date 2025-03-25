@@ -28,6 +28,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeHills;
+import net.minecraft.world.biome.BiomeSnow;
+import net.minecraft.world.biome.BiomeTaiga;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -91,9 +93,10 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
         final Biome biome = this.container.base.getWorld().getBiomeForCoordsBody(this.container.base.getBlockPos());
         lst.add(Localization.translate("iu.biome") + biome.getBiomeName());
         int col = biome instanceof BiomeHills ? 25 : 0;
-        lst.add(Localization.translate("iu.gettingvein") + ((int) (Math.max(0, getChance(biome) - col) * 0.85) + "%"));
+        int col1 = (biome instanceof BiomeTaiga || biome instanceof BiomeSnow) ? 15 : 0;
+        lst.add(Localization.translate("iu.gettingvein") + ((int) (Math.max(0, getChance(biome) - col - col1) * 0.85) + "%"));
         lst.add(Localization.translate("iu.gettingvein1") + String.valueOf(15 + col) + "%");
-        lst.add(Localization.translate("iu.gettingvein2") + String.valueOf(15 + col) + "%");
+        lst.add(Localization.translate("iu.gettingvein2") + String.valueOf(15 + col + col1) + "%");
 
         return lst;
     }
@@ -248,10 +251,11 @@ public class GuiQuarryVein extends GuiIU<ContainerQuarryVein> {
                 String name_vein;
                 if (!isOil) {
                     if (this.container.base.vein.getType() != Type.GAS) {
-                        if (container.base.vein.isOldMineral())
-                        name_vein = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta()).getDisplayName();
-                        else
+                        if (container.base.vein.isOldMineral()) {
+                            name_vein = new ItemStack(IUItem.heavyore, 1, this.container.base.vein.getMeta()).getDisplayName();
+                        } else {
                             name_vein = new ItemStack(IUItem.mineral, 1, this.container.base.vein.getMeta()).getDisplayName();
+                        }
 
                     } else {
                         name_vein = new ItemStack(FluidName.fluidgas.getInstance().getBlock()).getDisplayName();

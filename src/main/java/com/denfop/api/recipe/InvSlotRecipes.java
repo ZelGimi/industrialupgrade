@@ -20,8 +20,9 @@ import java.util.stream.Collectors;
 public class InvSlotRecipes extends InvSlot implements ITypeSlot {
 
     public final IUpdateTick tile;
-    private final HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
+    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> map = new HashMap<>();
     private final RecipeArrayList<IRecipeInputStack> default_accepts;
+    private HashMap<Integer, RecipeArrayList<IRecipeInputStack>> default_map= new HashMap<>() ;
     private IBaseRecipe recipe;
     private RecipeArrayList<IRecipeInputStack> accepts;
     private List<BaseMachineRecipe> recipe_list;
@@ -49,6 +50,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     }
                 }
             }
+            this.default_map = this.map;
         }
         this.tile = tile;
         this.tank = null;
@@ -75,9 +77,11 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
     public void changeAccepts(ItemStack stack) {
         if (stack.isEmpty()) {
             this.accepts = this.default_accepts;
+            this.map = default_map;
         } else {
             ItemRecipeSchedule itemRecipeSchedule = (ItemRecipeSchedule) stack.getItem();
             this.accepts = itemRecipeSchedule.getInputs(this.recipe, stack);
+            this.map = itemRecipeSchedule.getInputsMap(this.recipe, stack);
         }
     }
 
@@ -110,6 +114,7 @@ public class InvSlotRecipes extends InvSlot implements ITypeSlot {
                     }
                 }
             }
+            this.default_map = this.map;
         }
         if (this.invSlotConsumableLiquidByList != null) {
             this.invSlotConsumableLiquidByList.setAcceptedFluids(new HashSet<>(Recipes.recipes.getInputFluidsFromRecipe(this.recipe.getName())));

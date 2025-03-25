@@ -34,6 +34,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.register.InitMultiBlockSystem;
 import com.denfop.render.windgenerator.RotorModel;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.mechanism.multiblocks.base.TileMultiBlockBase;
 import com.denfop.utils.DamageHandler;
 import net.minecraft.block.material.Material;
@@ -255,47 +256,6 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         return fac;
     }
 
-    public void update_generator() {
-        this.work = true;
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-
-                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
-                        continue;
-                    }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof IWindMechanism) {
-                        this.work = false;
-                        ((IWindMechanism) tile).setWork(false);
-                    }
-                }
-            }
-        }
-        new PacketUpdateFieldTile(this, "work", this.work);
-    }
-
-    public void update_generator(BlockPos pos) {
-        this.work = true;
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-                    if (this.pos.getX() == i && this.pos.getY() == j && this.pos.getZ() == k) {
-                        continue;
-                    }
-                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
-                        continue;
-                    }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof IWindMechanism) {
-                        this.work = false;
-                        ((IWindMechanism) tile).setWork(false);
-                    }
-                }
-            }
-        }
-        new PacketUpdateFieldTile(this, "work", this.work);
-    }
 
     @Override
     public void setFull(final boolean full) {
@@ -582,7 +542,6 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
         new PacketUpdateFieldTile(this, "angle", angle);
         new PacketUpdateFieldTile(this, "mind_speed", mind_speed);
         new PacketUpdateFieldTile(this, "generation", generation);
-        update_generator();
         new PacketUpdateFieldTile(this, "work", this.work);
         new PacketUpdateFieldTile(this, "slot", slot);
         this.can_work = this.getWorld().provider.hasSkyLight() &&
@@ -601,17 +560,23 @@ public class TileEntityWindTurbineController extends TileMultiBlockBase implemen
     }
 
     @Override
-    public void onBlockBreak(boolean wrench) {
-        for (int i = this.pos.getX() - 8; i <= this.pos.getX() + 8; i++) {
-            for (int j = this.pos.getY() - 8; j <= this.pos.getY() + 8; j++) {
-                for (int k = this.pos.getZ() - 8; k <= this.pos.getZ() + 8; k++) {
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+        for (int i = pos.getX() - 8; i <= pos.getX() + 8; i++) {
+            for (int j = pos.getY() - 8; j <= pos.getY() + 8; j++) {
+                for (int k = pos.getZ() - 8; k <= pos.getZ() + 8; k++) {
+                    final TileEntity tile = world.getTileEntity(new BlockPos(i, j, k));
                     if (tile instanceof IWindMechanism) {
-                        ((IWindMechanism) tile).update_generator(this.pos);
+                        return false;
                     }
                 }
             }
         }
+        return true;
+    }
+
+    @Override
+    public void onBlockBreak(boolean wrench) {
+
         super.onBlockBreak(wrench);
     }
 

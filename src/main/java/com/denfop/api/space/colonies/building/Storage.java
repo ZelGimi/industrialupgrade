@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Storage implements IStorage {
 
@@ -81,8 +82,12 @@ public class Storage implements IStorage {
         if (!this.getStorageBuilding().getWork()) {
             return false;
         }
+        if (fluidStack == null) {
+            return false;
+        }
         List<FluidStack> fluidStacks = this.getFluidStacks();
         boolean added = false;
+        fluidStacks.removeIf(Objects::isNull);
         for (FluidStack stack : fluidStacks) {
             if (stack.isFluidEqual(fluidStack)) {
                 if (stack.amount + fluidStack.amount <= this.maxvaluefluid) {
@@ -192,9 +197,11 @@ public class Storage implements IStorage {
         }
         tag.setTag("stacks", nbt);
         NBTTagCompound nbt1 = new NBTTagCompound();
-        nbt1.setInteger("col_fluid", this.getStacks().size());
+        nbt1.setInteger("col_fluid", this.getFluidStacks().size());
         for (int i = 0; i < this.getFluidStacks().size(); i++) {
-            nbt1.setTag(String.valueOf(i), this.getFluidStacks().get(i).writeToNBT(new NBTTagCompound()));
+            if (this.fluidStackList.get(i) != null) {
+                nbt1.setTag(String.valueOf(i), this.getFluidStacks().get(i).writeToNBT(new NBTTagCompound()));
+            }
         }
         tag.setTag("fluids", nbt1);
         return tag;
@@ -223,7 +230,7 @@ public class Storage implements IStorage {
             final int size = nbt1.getInteger("col_fluid");
             this.fluidStackList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag(String.valueOf(i))));
+                this.fluidStackList.add(FluidStack.loadFluidStackFromNBT(nbt1.getCompoundTag(String.valueOf(i))));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -267,7 +274,9 @@ public class Storage implements IStorage {
         NBTTagCompound nbt1 = new NBTTagCompound();
         nbt1.setInteger("col_fluid", this.getStacks().size());
         for (int i = 0; i < this.getFluidStacks().size(); i++) {
-            nbt1.setTag(String.valueOf(i), this.getFluidStacks().get(i).writeToNBT(new NBTTagCompound()));
+            if (this.getFluidStacks().get(i) != null) {
+                nbt1.setTag(String.valueOf(i), this.getFluidStacks().get(i).writeToNBT(new NBTTagCompound()));
+            }
         }
         customPacketBuffer.writeCompoundTag(nbt1);
     }

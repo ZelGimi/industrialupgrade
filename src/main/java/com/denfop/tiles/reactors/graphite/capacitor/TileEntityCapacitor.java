@@ -43,7 +43,8 @@ public class TileEntityCapacitor extends TileEntityMultiBlockElement implements 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()) {
+                if (!world.isRemote)
+                    if (content.isEmpty()) {
                     ((TileEntityCapacitor) this.base).percent = 1;
                 } else {
                     ((TileEntityCapacitor) this.base).percent = 1 - ((ICapacitorItem) content.getItem()).getPercent();

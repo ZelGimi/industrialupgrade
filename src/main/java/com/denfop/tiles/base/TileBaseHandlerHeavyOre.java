@@ -22,6 +22,7 @@ import com.denfop.container.ContainerHandlerHeavyOre;
 import com.denfop.gui.GuiHandlerHeavyOre;
 import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
+import com.denfop.world.WorldBaseGen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -106,7 +107,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
             public void operateOnce(final List<ItemStack> processResult) {
                 for (int i = 0; i < col.length; i++) {
                     final Random rand = world.rand;
-                    if (col[i] <= rand.nextInt(100)) {
+                    if (col[i] > WorldBaseGen.random.nextInt(100)) {
                         this.outputSlot.add(processResult.get(i));
                     }
                 }
@@ -234,7 +235,7 @@ public abstract class TileBaseHandlerHeavyOre extends TileElectricMachine
     public void operateOnce(List<ItemStack> processResult) {
         for (int i = 0; i < col.length; i++) {
             final Random rand = world.rand;
-            if ((100 - col[i]) <= rand.nextInt(100)) {
+            if ((col[i]) > rand.nextInt(100)) {
                 this.outputSlot.add(processResult.get(i));
             }
         }

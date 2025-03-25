@@ -121,7 +121,7 @@ public class StorageBuilding extends Building implements IColonyStorage {
 
     @Override
     public void work() {
-        if (this.getColony().getEnergy() < this.getEnergy()) {
+        if (this.getColony().getEnergy() >= this.getEnergy()) {
             this.getColony().useEnergy(this.getEnergy());
             if (!this.getWork()) {
                 this.setWork(true);

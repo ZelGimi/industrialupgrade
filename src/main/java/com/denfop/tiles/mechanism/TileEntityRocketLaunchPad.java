@@ -227,6 +227,29 @@ public class TileEntityRocketLaunchPad extends TileEntityInventory implements IR
     }
 
     @Override
+    public CustomPacketBuffer writePacket() {
+        CustomPacketBuffer packetBuffer = super.writePacket();
+        packetBuffer.writeBoolean(roverSlot.isEmpty());
+        if (!roverSlot.isEmpty()){
+            packetBuffer.writeItemStack(roverSlot.get());
+        }
+        return packetBuffer;
+    }
+
+    @Override
+    public void readPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readPacket(customPacketBuffer);
+        boolean isNotEmpty = customPacketBuffer.readBoolean();
+        if (isNotEmpty){
+            try {
+                this.roverSlot.put(0,customPacketBuffer.readItemStack());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
         if (name.equals("datarocket")){

@@ -279,7 +279,6 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
 
 
         if (!this.getActive()) {
-            RenderHelper.enableStandardItemLighting();
 
             final IBakedModel model = dataBlock.getState();
             final IBlockState state = dataBlock.getBlockState();
@@ -288,16 +287,13 @@ public class TileBlastFurnaceMain extends TileMultiBlockBase implements IBlastMa
             }
 
             render(model, state, null);
-            RenderHelper.disableStandardItemLighting();
         }else{
-            RenderHelper.disableStandardItemLighting();
             final IBakedModel model = dataBlock_active.getState();
             final IBlockState state = dataBlock_active.getBlockState();
             for (EnumFacing enumfacing : EnumFacing.values()) {
                 render(model, state, enumfacing);
             }
             render(model, state, null);
-            RenderHelper.enableStandardItemLighting();
         }
         GlStateManager.pushMatrix();
     }

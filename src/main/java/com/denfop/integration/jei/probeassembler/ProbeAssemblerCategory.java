@@ -107,7 +107,7 @@ public class ProbeAssemblerCategory extends GuiIU implements IRecipeCategory<Pro
         this.slots.drawBackground(0, 0);
         this.slots1.drawBackground(0, 0);
 
-        progress_bar.renderBar(110, 30, xScale);
+        progress_bar.renderBar(90, 33, xScale);
         mc.getTextureManager().bindTexture(getTexture());
 
 

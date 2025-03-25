@@ -24,8 +24,6 @@ import java.util.ArrayList;
 
 public class EventHandler {
 
-    EnumFacing[] enumFacings = EnumFacing.VALUES;
-
     public EventHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -35,73 +33,42 @@ public class EventHandler {
     public void load(TileLoadEvent event) {
         TileEntity tile = event.tileentity;
         final BlockPos pos = tile.getPos();
-        if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null) && tile.hasCapability(
-                CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                null
-        )) {
-            IItemHandler item_storage = tile.getCapability(
-                    CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                    EnumFacing.UP
-            );
-            IFluidHandler fluid_storage = tile.getCapability(
-                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                    EnumFacing.UP
-            );
-            boolean isSink = true;
-            boolean isSource = true;
-            boolean isSinkFluid = true;
-            boolean isSourceFluid = true;
-            final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
-                    tile,
-                    pos,
-                    item_storage,
-                    fluid_storage,
-                    isSink,
-                    isSource,
-                    isSinkFluid,
-                    isSourceFluid
-            );
+        if (!tile.isInvalid()) {
+            for (EnumFacing enumFacing : EnumFacing.VALUES) {
+                if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing) && tile.hasCapability(
+                        CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
+                        enumFacing
+                )) {
+                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
+                            tile,
+                            pos
+                    );
 
-            MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                    event.getWorld(), transport
+                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                            event.getWorld(), transport
 
-            ));
-        } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-            IItemHandler item_storage = tile.getCapability(
-                    CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                    EnumFacing.UP
-            );
+                    ));
+                    break;
+                } else if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, enumFacing)) {
+                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
+                    );
 
-            if (item_storage == null) {
-                return;
+                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                            event.getWorld(), transport
+
+                    ));
+                    break;
+                } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, enumFacing)) {
+                    final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
+                    );
+
+                    MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
+                            event.getWorld(), transport
+
+                    ));
+                    break;
+                }
             }
-            final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos,
-                    item_storage, null, true, true,
-                    false, false
-            );
-
-            MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                    event.getWorld(), transport
-
-            ));
-        } else if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            boolean isSink = true;
-            boolean isSource = true;
-
-            IFluidHandler fluid_storage = tile.getCapability(
-                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                    EnumFacing.UP
-            );
-            final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos,
-                    null, fluid_storage, false, false,
-                    isSink, isSource
-            );
-
-            MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
-                    event.getWorld(), transport
-
-            ));
-
         }
     }
 
@@ -168,13 +135,7 @@ public class EventHandler {
 
                 final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(
                         tile,
-                        pos,
-                        item_storage,
-                        fluid_storage,
-                        isSink,
-                        isSource,
-                        isSinkFluid,
-                        isSourceFluid
+                        pos
                 );
 
 
@@ -195,9 +156,7 @@ public class EventHandler {
 
                 boolean isSink = true;
                 boolean isSource = true;
-                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos,
-                        item_storage, null, isSink, isSource,
-                        false, false
+                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
                 );
 
                 MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
@@ -209,9 +168,7 @@ public class EventHandler {
                 boolean isSink = true;
                 boolean isSource = true;
                 IFluidHandler item_storage = null;
-                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos,
-                        null, item_storage, false, false,
-                        isSink, isSource
+                final TransportFluidItemSinkSource transport = new TransportFluidItemSinkSource(tile, pos
                 );
                 MinecraftForge.EVENT_BUS.post(new TransportTileLoadEvent(
                         event.getWorld(), transport

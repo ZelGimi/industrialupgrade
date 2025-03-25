@@ -67,7 +67,7 @@ public class TileSteamStorage extends TileEntityInventory {
 
 
         this.fluids = this.addComponent(new Fluids(this));
-        this.fluidTank = this.fluids.addTank("fluidTank", 64 * 1000, InvSlot.TypeItemSlot.INPUT,
+        this.fluidTank = this.fluids.addTank("fluidTank", 64 * 1000, InvSlot.TypeItemSlot.NONE,
                 Fluids.fluidPredicate(FluidName.fluidsteam.getInstance())
         );
         this.steam.setFluidTank(fluidTank);
@@ -165,19 +165,12 @@ public class TileSteamStorage extends TileEntityInventory {
             final float hitY,
             final float hitZ
     ) {
-        if (!this.getWorld().isRemote && player
-                .getHeldItem(hand)
-                .hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
 
-            return ModUtils.interactWithFluidHandler(player, hand,
-                    this.getComp(Fluids.class).getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
-            );
-        }
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
     }
 
 
-    @SideOnly(Side.CLIENT)
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {

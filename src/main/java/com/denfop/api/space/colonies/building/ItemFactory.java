@@ -61,7 +61,9 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
         if (storageList.isEmpty() || this.getColony().getEnergy() < this.getEnergy()) {
             return;
         }
-        if (WorldBaseGen.random.nextInt(100) < this.type.getChance()) {
+        if (this.getColony().getTick() % 5 != 0)
+            return;
+        if (WorldBaseGen.random.nextInt(100) < this.type.getChance() ) {
             for (IStorage storage : storageList) {
                 if (storage.work()) {
                     List<DataItem<ItemStack>> itemStacks = SpaceNet.instance.getColonieNet().getItemsFromBody(getColony().getBody());
@@ -72,7 +74,7 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
                             Collectors.toList());
                     if (itemStacks.isEmpty())
                         return;
-                    ItemStack itemStack = itemStacks.get(WorldBaseGen.random.nextInt(itemStacks.size())).getElement();
+                    ItemStack itemStack = itemStacks.get(WorldBaseGen.random.nextInt(itemStacks.size())).getElement().copy();
                     itemStack.setCount((int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue())+1) * this.getColony().getPercentEntertainment()));
                     if (storage.canAddItemStack(itemStack)) {
                         this.getColony().useEnergy(this.getEnergy());

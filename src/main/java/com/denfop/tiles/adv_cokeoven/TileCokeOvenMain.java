@@ -264,7 +264,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
             }
         }
 
-        if (this.heat.getEnergy() > 500 && !this.invSlotBlastFurnace.isEmpty() && this.tank1 != null && this.tank1.getFluidAmount() + 250 <= this.tank1.getCapacity()) {
+        if (this.heat.getEnergy() > 500 && !this.invSlotBlastFurnace.isEmpty() && this.tank1 != null && this.tank1.getFluidAmount() + 500 <= this.tank1.getCapacity()) {
             int amount_stream = tank.getFluidAmount();
             if (this.heat.getEnergy() == this.heat.getCapacity() && tank.getFluidAmount() > 0) {
                 int bar1 = bar;
@@ -285,7 +285,7 @@ public class TileCokeOvenMain extends TileMultiBlockBase implements IMain,
                         progress = 0;
                         this.invSlotBlastFurnace.get(0).shrink(1);
                         this.setActive(false);
-                        this.tank1.fill(new FluidStack(FluidName.fluidcreosote.getInstance(), 250), true);
+                        this.tank1.fill(new FluidStack(FluidName.fluidcreosote.getInstance(), 500), true);
                         initiate(2);
                     }
                 }

@@ -561,6 +561,7 @@ public class TileEntityPrimalElectronicsAssembler extends TileElectricMachine im
         super.onLoaded();
         inputSlotA.load();
         this.getOutput();
+        data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.ELECTRONIC);
     }
 
     public void onUnloaded() {

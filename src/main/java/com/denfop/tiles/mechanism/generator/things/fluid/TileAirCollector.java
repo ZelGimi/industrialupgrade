@@ -313,7 +313,7 @@ public class TileAirCollector extends TileElectricMachine implements IUpgradable
         for (FluidTank tank : fluidTank) {
 
             for (InvSlotDrainTank slot : this.containerslot) {
-                if (tank.getFluidAmount() >= 1000 && !slot.isEmpty()) {
+                if (tank.getFluidAmount() >= 1000 && !slot.isEmpty() && slot.acceptsLiquid(tank.getFluid().getFluid())) {
                     slot.processFromTank(tank, this.outputSlot);
                 }
             }

@@ -4,6 +4,7 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.Localization;
 import com.denfop.api.Recipes;
+import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IHasRecipe;
 import com.denfop.api.recipe.IUpdateTick;
@@ -22,6 +23,7 @@ import com.denfop.componets.AirPollutionComponent;
 import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.container.ContainerRodManufacturer;
 import com.denfop.gui.GuiRodManufacturer;
+import com.denfop.invslot.InvSlot;
 import com.denfop.invslot.InvSlotUpgrade;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -56,6 +58,7 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
     public final InvSlotOutput outputSlot;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
+    public final InvSlot input_slot;
     public MachineRecipe output;
     public short progress;
     public double guiProgress;
@@ -78,6 +81,26 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         Recipes.recipes.addInitRecipes(this);
         this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
         this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.input_slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
+            @Override
+            public void put(final int index, final ItemStack content) {
+                super.put(index, content);
+                if (this.get().isEmpty()) {
+                    ((TileEntityRodManufacturer) this.base).inputSlotA.changeAccepts(ItemStack.EMPTY);
+                } else {
+                    ((TileEntityRodManufacturer) this.base).inputSlotA.changeAccepts(this.get());
+                }
+            }
+
+            @Override
+            public boolean accepts(final ItemStack stack, final int index) {
+                return stack.getItem() == IUItem.recipe_schedule;
+            }
+            @Override
+            public EnumTypeSlot getTypeSlot() {
+                return EnumTypeSlot.RECIPE_SCHEDULE;
+            }
+        };
     }
 
     public static void addRecipe(
@@ -312,10 +335,10 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         addRecipe1(new ItemStack(IUItem.carbon_steam_blade, 1), "plateCarbon", "plateCarbon", new ItemStack(IUItem.steel_steam_blade));
         addRecipe1(IUItem.iridium_steam_blade, "plateIridium", "casingIridium", new ItemStack(IUItem.carbon_steam_blade));
         addRecipe1(
-                IUItem.compressiridium_steam_blade,
+                IUItem.iridium_steam_blade,
                 IUItem.iridiumOre,
                 "doubleplateIridium",
-                IUItem.iridium_steam_blade
+                IUItem.compressiridium_steam_blade
         );
         addRecipe1(
                 IUItem.spectral_steam_blade,
@@ -384,7 +407,13 @@ public class TileEntityRodManufacturer extends TileEntityInventory implements IU
         if (IUCore.proxy.isSimulating()) {
             setOverclockRates();
             inputSlotA.load();
+            if (this.input_slot.isEmpty()) {
+                (this).inputSlotA.changeAccepts(ItemStack.EMPTY);
+            } else {
+                (this).inputSlotA.changeAccepts(this.input_slot.get());
+            }
             this.getOutput();
+
         }
 
 

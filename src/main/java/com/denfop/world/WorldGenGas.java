@@ -122,24 +122,26 @@ public class WorldGenGas extends WorldGenerator {
                         final BlockPos pos1 = new BlockPos(x + j, y + m, z + k);
                         world.setBlockState(pos1, m >= 4 ? Blocks.AIR.getDefaultState() :
                                 this.block.getDefaultState(), 2);
-                        can = true;
-                        if (xmin > x + j) {
-                            xmin = x + j;
-                        }
-                        if (xmax < x + j) {
-                            xmax = x + j;
-                        }
-                        if (zmin > z + k) {
-                            zmin = z + k;
-                        }
-                        if (zmax < z + k) {
-                            zmax = z + k;
-                        }
-                        if (ymin > y + m) {
-                            ymin = y + m;
-                        }
-                        if (ymax < y + m) {
-                            ymax = y + m;
+                        if (m < 4) {
+                            can = true;
+                            if (xmin > x + j) {
+                                xmin = x + j;
+                            }
+                            if (xmax < x + j) {
+                                xmax = x + j;
+                            }
+                            if (zmin > z + k) {
+                                zmin = z + k;
+                            }
+                            if (zmax < z + k) {
+                                zmax = z + k;
+                            }
+                            if (ymin > y + m) {
+                                ymin = y + m;
+                            }
+                            if (ymax < y + m) {
+                                ymax = y + m;
+                            }
                         }
                     }
                 }
@@ -164,7 +166,7 @@ public class WorldGenGas extends WorldGenerator {
                 }
             }
         }
-        if (this.block.getDefaultState().getMaterial() == Material.WATER) {
+
             for (int j = 0; j < 16; j++) {
                 for (k = 0; k < 16; k++) {
                     for (m = 0; m < 8; m++) {
@@ -206,11 +208,28 @@ public class WorldGenGas extends WorldGenerator {
                     }
                 }
             }
-        }
+
+        int xCenter = (xmin + xmax) / 2;
+        int zCenter = (zmin + zmax) / 2;
+        int yCenter = (ymin + ymax) / 2;
+
+
+
         if (can) {
+            can = false;
+            cycle:
+            for (int x1 = -1;x1 < 2;x1++)
+                for (int z1 = -1;z1 < 2;z1++)
+                    for (int y1 = -1;y1 < 2;y1++){
+                        if (world.getBlockState(new BlockPos(xCenter+x1,yCenter+y1,zCenter+z1)).getMaterial().isLiquid()){
+                            can = true;
+                            break cycle;
+                        }
+                    }
+            if (can)
             gasMap.put(
-                    new ChunkPos(((xmin + xmax) / 2) >> 4, ((zmin + zmax) / 2) >> 4),
-                    new GenData((ymin + ymax) / 2, typeGas)
+                    new ChunkPos(xCenter >> 4, zCenter >> 4),
+                    new GenData(yCenter,xCenter,zCenter, typeGas)
             );
         }
         return true;

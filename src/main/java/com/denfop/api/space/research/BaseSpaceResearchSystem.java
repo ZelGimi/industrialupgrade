@@ -1,12 +1,27 @@
 package com.denfop.api.space.research;
 
 import com.denfop.ElectricItem;
-import com.denfop.api.space.*;
-import com.denfop.api.space.fakebody.*;
+import com.denfop.api.space.IAsteroid;
+import com.denfop.api.space.IBody;
+import com.denfop.api.space.IPlanet;
+import com.denfop.api.space.ISatellite;
+import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.fakebody.Data;
+import com.denfop.api.space.fakebody.EnumOperation;
+import com.denfop.api.space.fakebody.FakeAsteroid;
+import com.denfop.api.space.fakebody.FakePlanet;
+import com.denfop.api.space.fakebody.FakeSatellite;
+import com.denfop.api.space.fakebody.IFakeAsteroid;
+import com.denfop.api.space.fakebody.IFakeBody;
+import com.denfop.api.space.fakebody.IFakePlanet;
+import com.denfop.api.space.fakebody.IFakeSatellite;
+import com.denfop.api.space.fakebody.SpaceOperation;
 import com.denfop.api.space.research.api.IResearchSystem;
 import com.denfop.api.space.research.api.IResearchTable;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.rovers.api.IRovers;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,16 +54,27 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                         )),
                         new SpaceOperation(
                                 body,
-                                EnumOperation.WAIT,true
+                                EnumOperation.WAIT, true
                         )
                 );
-                SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakeplanet);
-                SpaceNet.instance
-                        .getFakeSpaceSystem()
-                        .getBodyMap()
-                        .computeIfAbsent(uuid, l -> new LinkedList<>())
-                        .add(fakeplanet);
-                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeplanet.getSpaceOperation());
+                FluidStack fluidStack = FluidUtil.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, false);
+                if (fluidStack != null && fluidStack.amount >= (fakeplanet.getTimerFrom().getTime() + fakeplanet
+                        .getTimerTo()
+                        .getTime())) {
+                    SpaceNet.instance.getFakeSpaceSystem().addFakePlanet(fakeplanet);
+                    SpaceNet.instance
+                            .getFakeSpaceSystem()
+                            .getBodyMap()
+                            .computeIfAbsent(uuid, l -> new LinkedList<>())
+                            .add(fakeplanet);
+                    SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeplanet.getSpaceOperation());
+                } else {
+                    IRocketLaunchPad rocketLaunchPad = SpaceNet.instance
+                            .getFakeSpaceSystem()
+                            .getRocketPadMap()
+                            .get(table.getPlayer());
+                    rocketLaunchPad.getSlotOutput().add(rovers.getItemStack());
+                }
             }
             if (body instanceof ISatellite) {
                 UUID uuid = table.getPlayer();
@@ -60,13 +86,25 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                         )),
                         new SpaceOperation(
                                 body,
-                                EnumOperation.WAIT,true
+                                EnumOperation.WAIT, true
                         )
                 );
-                SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakeSatellite);
-                SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
-                        fakeSatellite);
-                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
+                FluidStack fluidStack = FluidUtil.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, false);
+                if (fluidStack != null && fluidStack.amount >= (fakeSatellite.getTimerFrom().getTime() + fakeSatellite
+                        .getTimerTo()
+                        .getTime())) {
+                    SpaceNet.instance.getFakeSpaceSystem().addFakeSatellite(fakeSatellite);
+                    SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
+                            fakeSatellite);
+                    SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
+
+                } else {
+                    IRocketLaunchPad rocketLaunchPad = SpaceNet.instance
+                            .getFakeSpaceSystem()
+                            .getRocketPadMap()
+                            .get(table.getPlayer());
+                    rocketLaunchPad.getSlotOutput().add(rovers.getItemStack());
+                }
             }
             if (body instanceof IAsteroid) {
                 UUID uuid = table.getPlayer();
@@ -78,14 +116,26 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
                         )),
                         new SpaceOperation(
                                 body,
-                                EnumOperation.WAIT,true
+                                EnumOperation.WAIT, true
                         )
                 );
-                SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakeSatellite);
-                SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
-                        fakeSatellite);
-                SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
-            }
+                FluidStack fluidStack = FluidUtil.getFluidHandler(rovers.getItemStack()).drain(Integer.MAX_VALUE, false);
+                if (fluidStack != null && fluidStack.amount >= (fakeSatellite.getTimerFrom().getTime() + fakeSatellite
+                        .getTimerTo()
+                        .getTime())) {
+                    SpaceNet.instance.getFakeSpaceSystem().addFakeAsteroid(fakeSatellite);
+                    SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(uuid, l -> new LinkedList<>()).add(
+                            fakeSatellite);
+                    SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(uuid).put(body, fakeSatellite.getSpaceOperation());
+
+                } else {
+                    IRocketLaunchPad rocketLaunchPad = SpaceNet.instance
+                            .getFakeSpaceSystem()
+                            .getRocketPadMap()
+                            .get(table.getPlayer());
+                    rocketLaunchPad.getSlotOutput().add(rovers.getItemStack());
+                }
+                }
             IRocketLaunchPad rocketLaunchPad = SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().get(table.getPlayer());
             rocketLaunchPad.consumeRover();
         }
@@ -185,28 +235,34 @@ public class BaseSpaceResearchSystem implements IResearchSystem {
         if (rovers.getItem().getFluidHandler(rovers.getItemStack()).drain(10, false) == null) {
             return false;
         }
-        Data data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(table.getPlayer()).computeIfAbsent(body,
-                k-> new Data(table.getPlayer(),body));
+        Data data = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(table.getPlayer()).computeIfAbsent(
+                body,
+                k -> new Data(table.getPlayer(), body)
+        );
 
-        switch (rovers.getItem().getType()){
+        switch (rovers.getItem().getType()) {
             case ROVERS:
-                if (data.getPercent() >= 0)
+                if (data.getPercent() >= 0) {
                     break;
+                }
             case PROBE:
-                if (data.getPercent() >= 20)
+                if (data.getPercent() >= 20) {
                     break;
-                else
+                } else {
                     return false;
+                }
             case SATELLITE:
-                if (data.getPercent() >= 50)
+                if (data.getPercent() >= 50) {
                     break;
-                else
+                } else {
                     return false;
+                }
             case ROCKET:
-                if (data.getPercent() >= 80)
+                if (data.getPercent() >= 80) {
                     break;
-                else
+                } else {
                     return false;
+                }
         }
         if (!ElectricItem.manager.canUse(rovers.getItemStack(), 10)) {
             return false;

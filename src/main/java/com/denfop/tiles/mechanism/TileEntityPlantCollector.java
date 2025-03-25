@@ -156,7 +156,7 @@ public class TileEntityPlantCollector extends TileEntityInventory  implements IU
                                 final List<ItemStack> listItems = crop.harvest(false);
                                 this.energy.useEnergy(50);
                                 this.output.add(listItems);
-                                if (WorldBaseGen.random.nextInt(100) <= 2){
+                                if (WorldBaseGen.random.nextInt(100) <= 4){
                                     this.output.add(ModUtils.setSize(crop.getCropItem(),crop.getCrop().getSizeSeed()));
                                 }
                             }

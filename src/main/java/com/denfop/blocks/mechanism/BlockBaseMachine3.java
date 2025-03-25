@@ -132,6 +132,7 @@ import com.denfop.tiles.mechanism.TileEntitySolidFluidMixer;
 import com.denfop.tiles.mechanism.TileEntitySolidMixer;
 import com.denfop.tiles.mechanism.TileEntitySolidStateElectrolyzer;
 import com.denfop.tiles.mechanism.TileEntityStampMechanism;
+import com.denfop.tiles.mechanism.TileEntitySteamGenerator;
 import com.denfop.tiles.mechanism.TileEntityTreeBreaker;
 import com.denfop.tiles.mechanism.TileEntityTripleSolidMixer;
 import com.denfop.tiles.mechanism.TileEntityUpgradeMachineFactory;
@@ -526,6 +527,7 @@ public enum BlockBaseMachine3 implements IMultiTileBlock, IMultiBlockItem {
     gen_bio(TileBioFuelGenerator.class, 258),
     ampere_storage(TileEntityAmpereStorage.class,259),
     bio_generator(TileEntityBioGenerator.class, 260),
+    steam_generator(TileEntitySteamGenerator.class, 261),
     ;
 
     public static final ResourceLocation IDENTITY = IUCore.getIdentifier("basemachine3");

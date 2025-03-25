@@ -4,6 +4,7 @@ package com.denfop.api.gui;
 import com.denfop.Localization;
 import com.denfop.gui.GuiCore;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -44,6 +45,7 @@ public class FluidItem extends GuiElement<FluidItem> {
 
     public void drawBackground(int mouseX, int mouseY) {
         bindCommonTexture();
+        GlStateManager.color(1,1,1,1);
         FluidStack fs = fluid;
         if (fs != null && fs.amount > 0) {
             int fluidX = this.x + 1;

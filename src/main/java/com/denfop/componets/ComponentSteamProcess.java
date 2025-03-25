@@ -245,6 +245,19 @@ public class ComponentSteamProcess extends AbstractComponent {
         if (action != null && action.needAction(TypeLoad.ALWAYS)) {
             action.doAction();
         }
+        if (this.parent.getActive()) {
+            if (this.parent.getWorld().getWorldTime() % 20 == 0) {
+                if (this.timer != null && this.timer.canWork()) {
+                    this.timer.work();
+                    if (!this.timer.canWork()) {
+                        timer1 = new Timer(0, 0, 10);
+                    }
+                }
+                if (timer1.canWork()) {
+                    timer1.work();
+                }
+            }
+        }
     }
 
     public void consumeEnergy() {
