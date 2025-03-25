@@ -7,6 +7,7 @@ import com.denfop.api.IModelRegister;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import com.denfop.api.recipe.IBaseRecipe;
+import com.denfop.api.recipe.IInput;
 import com.denfop.api.recipe.IRecipeInputStack;
 import com.denfop.api.recipe.RecipeArrayList;
 import com.denfop.api.recipe.RecipeInputStack;
@@ -28,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ItemRecipeSchedule extends Item implements IModelRegister {
@@ -165,6 +168,92 @@ public class ItemRecipeSchedule extends Item implements IModelRegister {
     @Override
     public void registerModels() {
         registerModel(this, 0, this.name);
+    }
+
+    public HashMap<Integer, RecipeArrayList<IRecipeInputStack>> getInputsMap(IBaseRecipe baseRecipe, ItemStack stack) {
+        final NBTTagCompound nbt = ModUtils.nbt(stack);
+        final List<ItemStack> items = this.getItems(stack);
+        final List<BaseMachineRecipe> recipe_list = Recipes.recipes.getRecipeList(baseRecipe.getName());
+        if (nbt.getBoolean("mode")) {
+            if (items.isEmpty()) {
+                return new HashMap<>();
+            }
+            List<BaseMachineRecipe> recipeArrayList = new LinkedList<>();
+            for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
+                cycle:
+                for (ItemStack output_schedule : items) {
+                    for (ItemStack output : baseMachineRecipe.output.items) {
+                        if (output.isItemEqual(output_schedule)) {
+                            recipeArrayList.add(baseMachineRecipe);
+                            break cycle;
+                        }
+                    }
+                }
+            }
+            HashMap<Integer, RecipeArrayList<IRecipeInputStack>>   map = new HashMap<>();
+            for (BaseMachineRecipe baseMachineRecipe : recipeArrayList) {
+                final IInput input = baseMachineRecipe.input;
+                for (int i = 0; i < input.getInputs().size(); i++) {
+                    final RecipeArrayList<IRecipeInputStack> list = map.get(i);
+                    if (list == null) {
+                        RecipeArrayList<IRecipeInputStack> inputStackList = new RecipeArrayList<>();
+                        inputStackList.add(new RecipeInputStack(input.getInputs().get(i)));
+                        map.put(i, inputStackList);
+                    } else {
+                        list.add(new RecipeInputStack(input.getInputs().get(i)));
+                    }
+                }
+            }
+            return map;
+        } else {
+            if (items.isEmpty()) {
+                HashMap<Integer, RecipeArrayList<IRecipeInputStack>>   map = new HashMap<>();
+                for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
+                    final IInput input = baseMachineRecipe.input;
+                    for (int i = 0; i < input.getInputs().size(); i++) {
+                        final RecipeArrayList<IRecipeInputStack> list = map.get(i);
+                        if (list == null) {
+                            RecipeArrayList<IRecipeInputStack> inputStackList = new RecipeArrayList<>();
+                            inputStackList.add(new RecipeInputStack(input.getInputs().get(i)));
+                            map.put(i, inputStackList);
+                        } else {
+                            list.add(new RecipeInputStack(input.getInputs().get(i)));
+                        }
+                    }
+                }
+                return map;
+            }
+            HashMap<Integer, RecipeArrayList<IRecipeInputStack>>   map = new HashMap<>();
+            List<BaseMachineRecipe> recipeArrayList = new LinkedList<>();
+
+            for (BaseMachineRecipe baseMachineRecipe : recipe_list) {
+                cycle:
+                for (ItemStack output_schedule : items) {
+                    for (ItemStack output : baseMachineRecipe.output.items) {
+                        if (!output.isItemEqual(output_schedule)) {
+                            recipeArrayList.add(baseMachineRecipe);
+                            break cycle;
+                        }
+                    }
+                }
+            }
+            for (BaseMachineRecipe baseMachineRecipe : recipeArrayList) {
+                final IInput input = baseMachineRecipe.input;
+                for (int i = 0; i < input.getInputs().size(); i++) {
+                    final RecipeArrayList<IRecipeInputStack> list = map.get(i);
+                    if (list == null) {
+                        RecipeArrayList<IRecipeInputStack> inputStackList = new RecipeArrayList<>();
+                        inputStackList.add(new RecipeInputStack(input.getInputs().get(i)));
+                        map.put(i, inputStackList);
+                    } else {
+                        list.add(new RecipeInputStack(input.getInputs().get(i)));
+                    }
+                }
+            }
+            return map;
+
+
+        }
     }
 
 }

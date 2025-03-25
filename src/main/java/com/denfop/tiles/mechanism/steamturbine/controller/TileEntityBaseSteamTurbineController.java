@@ -95,7 +95,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
         if (this.getWorld().provider.getDimension() != 0) {
             return 0;
         }
-        if (this.work) {
+        if (this.work && this.phase > 0) {
             final long k = (System.currentTimeMillis() - this.lastcheck);
             this.angle += Math.max(0.025, (float) ((float) k * this.phase * this.enumSteamPhase.ordinal() / 500D));
             this.angle = this.angle % 360;
@@ -165,6 +165,9 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
         work = customPacketBuffer.readBoolean();
+        if (!this.isFull()) {
+            this.updateFull();
+        }
         try {
             FluidTank fluidTank2 = (FluidTank) DecoderHandler.decode(customPacketBuffer);
             if (fluidTank2 != null) {
@@ -220,6 +223,16 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                 model = new SteamRod(diameter);
                 rotorModels.replace(diameter, model);
             }
+            if (this.iRodListMap.isEmpty()) {
+                final List<BlockPos> pos1 = this
+                        .getMultiBlockStucture()
+                        .getPosFromClass(this.getFacing(), this.getBlockPos(),
+                                IRod.class
+                        );
+                for (BlockPos pos2 : pos1) {
+                    iRodListMap.add((IRod) this.getWorld().getTileEntity(pos2));
+                }
+            }
             for (IRod rod : this.iRodListMap) {
                 BlockPos pos = rod.getBlockPos();
                 GlStateManager.pushMatrix();
@@ -228,31 +241,51 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                 EnumFacing facing = this.getFacing();
                 switch (facing) {
                     case NORTH:
-                        GlStateManager.translate(0F, 0.5F, -0.5F);
+                        GlStateManager.translate(0F, 0.5F, 0F);
+                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
+                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
+                        );
+                        GL11.glRotatef(-90f, 0, 1, 0);
                         break;
                     case EAST:
-                        GlStateManager.translate(0F, 0.5F, 0.5);
+                        GlStateManager.translate(0F, 0.5F, 0);
+                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
+                                0
+                        );
                         break;
                     case SOUTH:
-                        GlStateManager.translate(-0.5F, 0.5F, 0);
+                        GlStateManager.translate(0F, 0.5F, 0);
+                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
+                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
+                        );
+                        GL11.glRotatef(-90f, 0, 1, 0);
+
                         break;
                     case WEST:
-                        GlStateManager.translate(0.5F, 0.5F, 0);
+                        GlStateManager.translate(0.25F, 0.5F, 0);
+                        GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
+                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
+                        );
                         break;
                 }
 
-                GL11.glRotatef(angle, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                        facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
-                );
+
                 for (ISteamBlade steamBlade : rod.getRods()) {
                     ResourceLocation rotorRL = steamBlade.getTexture();
                     int light = world.getCombinedLight(pos, 0);
                     int blockLight = light % 65536;
                     int skyLight = light / 65536;
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) blockLight, (float) skyLight);
-                    GL11.glRotatef((90.0F) % 360, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
-                            facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
-                    );
+                    if (facing == EnumFacing.EAST || facing == EnumFacing.WEST) {
+                        GL11.glRotatef((90.0F) % 360, facing.getAxis() == EnumFacing.Axis.X ? 1 : 0, 0,
+                                facing.getAxis() == EnumFacing.Axis.Z ? 1 : 0
+                        );
+                    } else {
+
+                        GL11.glRotatef(90.0F, 1, 0, 0);
+                        ;
+
+                    }
                     Minecraft.getMinecraft().getTextureManager().bindTexture(rotorRL);
                     model.render((Entity) null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, (float) (0.0625F));
                 }
@@ -291,7 +324,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
                     }
                 }
                 if (this.getWorld().provider.getWorldTime() % 120 == 0) {
-                    this.removePhase(WorldBaseGen.random.nextInt(this.level+2));
+                    this.removePhase(WorldBaseGen.random.nextInt(this.level + 2));
                 }
 
                 this.steam.updateData();
@@ -303,7 +336,7 @@ public class TileEntityBaseSteamTurbineController extends TileMultiBlockBase imp
         } else {
             generation = 0;
             if (this.getWorld().provider.getWorldTime() % 60 == 0) {
-                this.removePhase(WorldBaseGen.random.nextInt(this.level+2));
+                this.removePhase(WorldBaseGen.random.nextInt(this.level + 2));
             }
         }
     }

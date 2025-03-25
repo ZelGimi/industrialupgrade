@@ -55,7 +55,5 @@ public interface IWindMechanism {
 
     int getMinWindSpeed();
 
-    void update_generator(BlockPos pos);
-
     void setWork(boolean work);
 }

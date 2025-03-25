@@ -42,7 +42,7 @@ public class WindSystem implements IWindSystem {
         facingMap.put(EnumFacing.NORTH, EnumFacing.WEST);
         facingMap.put(EnumFacing.WEST, EnumFacing.SOUTH);
         facingMap.put(EnumFacing.SOUTH, EnumFacing.EAST);
-        enumTypeWind = EnumTypeWind.values()[rand.nextInt(10)];
+        enumTypeWind = EnumTypeWind.SIX;
     }
 
     public EnumTypeWind getEnumTypeWind() {

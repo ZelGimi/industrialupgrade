@@ -591,5 +591,11 @@ public class BaseRecipeFour {
                 " B ",
                 ('A') ,"gemTopaz",'B',"stickWood"
         );
+
+        Recipes.recipe.addRecipe(getBlockStack(BlockBaseMachine3.steam_generator), " A ", " B ",
+                " C ",
+                ('A') ,getBlockStack(BlockBaseMachine3.steam_converter),'B',new ItemStack(IUItem.blockResource,1,8),
+                'C', new ItemStack(IUItem.crafting_elements,1,276)
+        );
     }
 }

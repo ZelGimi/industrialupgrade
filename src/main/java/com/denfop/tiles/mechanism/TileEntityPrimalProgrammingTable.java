@@ -227,6 +227,7 @@ public class TileEntityPrimalProgrammingTable extends TileElectricMachine implem
 
     public void onLoaded() {
         super.onLoaded();
+        data1 = PrimitiveHandler.getPlayersData(EnumPrimitive.PCB);
         inputSlotA.load();
         this.getOutput();
     }

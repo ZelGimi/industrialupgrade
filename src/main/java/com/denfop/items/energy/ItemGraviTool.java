@@ -14,7 +14,6 @@ import com.denfop.api.upgrade.IUpgradeItem;
 import com.denfop.api.upgrade.UpgradeSystem;
 import com.denfop.api.upgrade.event.EventItemLoad;
 import com.denfop.audio.EnumSound;
-import com.denfop.blocks.BlockRubWood;
 import com.denfop.componets.AbstractComponent;
 import com.denfop.items.EnumInfoUpgradeModules;
 import com.denfop.proxy.CommonProxy;
@@ -126,7 +125,6 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
 
         if (ElectricItem.manager.use(stack, usage * coef, player)) {
             if (!supressSound && player.world.isRemote) {
-                player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
 
             }
 
@@ -144,94 +142,6 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
         }
         assert stack.getTagCompound() != null;
         return stack.getTagCompound().hasKey("toolMode", 4);
-    }
-
-    private static void ejectResin(World world, BlockPos pos, EnumFacing side, int quantity) {
-        double ejectX = (double) pos.getX() + 0.5D + (double) side.getFrontOffsetX() * 0.3D;
-        double ejectY = (double) pos.getY() + 0.5D + (double) side.getFrontOffsetY() * 0.3D;
-        double ejectZ = (double) pos.getZ() + 0.5D + (double) side.getFrontOffsetZ() * 0.3D;
-
-
-        EntityItem entityitem = new EntityItem(
-                world,
-                ejectX,
-                ejectY,
-                ejectZ,
-                IUItem.latex.copy()
-        );
-        entityitem.setDefaultPickupDelay();
-        entityitem.getItem().setCount(quantity);
-        world.spawnEntity(entityitem);
-
-
-    }
-
-    public static boolean attemptExtract(
-            EntityPlayer player,
-            World world,
-            BlockPos pos,
-            EnumFacing side,
-            IBlockState state,
-            List<ItemStack> stacks,
-            final ItemStack stack
-    ) {
-        assert state.getBlock() == IUItem.rubWood;
-
-        BlockRubWood.RubberWoodState rwState = state.getValue(BlockRubWood.stateProperty);
-        boolean max = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.LATEX, stack);
-        if (!rwState.isPlain() && rwState.facing == side) {
-            if (rwState.wet) {
-                if (!world.isRemote) {
-                    world.setBlockState(pos, state.withProperty(BlockRubWood.stateProperty, rwState.getDry()));
-                    if (stacks != null) {
-                        stacks.add(ModUtils.setSize(
-                                IUItem.latex,
-                                world.rand.nextInt(3) + 1
-                        ));
-                    } else {
-                        ejectResin(world, pos, side, !max ? world.rand.nextInt(3) + 1 : 3);
-                    }
-
-                }
-
-                if (world.isRemote && player != null) {
-                    player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
-
-
-                }
-
-                return true;
-            } else {
-                if (!world.isRemote && world.rand.nextInt(5) == 0) {
-                    world.setBlockState(
-                            pos,
-                            state.withProperty(BlockRubWood.stateProperty, BlockRubWood.RubberWoodState.plain_y)
-                    );
-                }
-
-                if (world.rand.nextInt(5) == 0) {
-                    if (!world.isRemote) {
-                        ejectResin(world, pos, side, 1);
-                        if (stacks != null) {
-                            stacks.add(IUItem.latex);
-                        } else {
-                            ejectResin(world, pos, side, 1);
-                        }
-                    }
-
-                    if (world.isRemote && player != null) {
-                        player.playSound(EnumSound.Treetap.getSoundEvent(), 1F, 1);
-
-                    }
-
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            return false;
-        }
     }
 
     public List<EnumInfoUpgradeModules> getUpgradeModules() {
@@ -670,6 +580,7 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
             IWrenchable wrenchable = (IWrenchable) block;
             EnumFacing current = wrenchable.getFacing(world, pos);
             EnumFacing newFacing;
+
             if (!IUCore.keyboard.isChangeKeyDown(player)) {
                 if (player.isSneaking()) {
                     newFacing = side.getOpposite();
@@ -691,15 +602,15 @@ public class ItemGraviTool extends ItemTool implements IEnergyItem, IModelRegist
                 }
 
                 if (wrenchable.setFacing(world, pos, newFacing, player)) {
+                    player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
                     return checkNecessaryPower(stack, ROTATE, player);
                 }
             }
-
             if (wrenchable.wrenchCanRemove(world, pos, player)) {
                 if (!hasNecessaryPower(stack, ROTATE, player)) {
                     return false;
                 }
-
+                player.playSound(EnumSound.wrench.getSoundEvent(), 1F, 1);
                 if (!world.isRemote) {
                     TileEntity te = world.getTileEntity(pos);
                     int experience;

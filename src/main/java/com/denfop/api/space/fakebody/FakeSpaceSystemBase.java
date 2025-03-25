@@ -180,7 +180,7 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
         ItemStack itemStack = fakeBody.getRover().getItemStack();
         if (ElectricItem.manager.getCharge(itemStack) < 100 ||
-                fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(5, false) == null) {
+                fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(1, false) == null) {
             failOperation(fakeBody, playerId, uuidListMap);
             return;
         }
@@ -338,10 +338,17 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
     @Override
     public void copyData(final Map<IBody, Data> data, final UUID uniqueID) {
+
         if (dataMap.containsKey(uniqueID)) {
-            dataMap.replace(uniqueID, data);
+            final Map<IBody, Data> dataPlayer = dataMap.get(uniqueID);
+            for (Map.Entry<IBody,Data> dataEntry : data.entrySet()){
+                Data data1 = dataPlayer.get(dataEntry.getKey());
+                if (data1.getPercent() < dataEntry.getValue().getPercent()){
+                    data1.setInformation(dataEntry.getValue().getPercent());
+                }
+            }
         } else {
-            dataMap.put(uniqueID, data);
+            dataMap.put(uniqueID, new HashMap<>(data));
         }
 
     }
@@ -358,7 +365,7 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
     private void manageEnergy(IFakeBody fakeBody) {
         ItemStack itemStack = fakeBody.getRover().getItemStack();
         ElectricItem.manager.discharge(itemStack, 100, 14, true, false, false);
-        fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(5, true);
+        fakeBody.getRover().getItem().getFluidHandler(itemStack).drain(1, true);
 
         int solar = SpaceUpgradeSystem.system.hasModules(EnumTypeUpgrade.SOLAR, itemStack)
                 ? SpaceUpgradeSystem.system.getModules(EnumTypeUpgrade.SOLAR, itemStack).number
@@ -371,6 +378,8 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
     private void collectResources(IFakeBody fakeBody) {
         int drill = 1;
+        int level = fakeBody.getRover().getItem().getLevel().ordinal()+1;
+        drill+=level;
         if (SpaceUpgradeSystem.system.hasModules(EnumTypeUpgrade.DRILL, fakeBody.getRover().getItemStack())) {
             drill += SpaceUpgradeSystem.system.getModules(EnumTypeUpgrade.DRILL, fakeBody.getRover().getItemStack()).number;
         }

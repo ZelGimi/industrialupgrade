@@ -13,7 +13,9 @@ import com.denfop.utils.ModUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -93,8 +96,19 @@ public class ItemUpgradeMachinesKit extends ItemSubTypes<ItemUpgradeMachinesKit.
                     TileEntityBlock tileEntityBlock = (TileEntityBlock) tileEntity;
                     if (tileEntityBlock.getPickBlock(player, null).isItemEqual(input)) {
                         ItemBlockTileEntity itemBlockTileEntity = (ItemBlockTileEntity) output.getItem();
-                        world.removeTileEntity(pos);
-                        world.setBlockToAir(pos);
+                        final IBlockState state = world.getBlockState(pos);
+                        state.getBlock().removedByPlayer(state, world, pos, (EntityPlayerMP) player, true);
+                        state.getBlock().onBlockDestroyedByPlayer(world, pos, state);
+                        state.getBlock().harvestBlock(world, (EntityPlayerMP) player, pos, state, null, stack);
+                        List<EntityItem> items = world.getEntitiesWithinAABB(
+                                EntityItem.class,
+                                new AxisAlignedBB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 1,
+                                        pos.getY() + 1,
+                                        pos.getZ() + 1
+                                )
+                        );
+                        for (EntityItem item : items)
+                            item.setDead();
                         IBlockState iblockstate1 = itemBlockTileEntity.getBlock().getStateForPlacement(world, pos,
                                 side, hitX,
                                 hitY,

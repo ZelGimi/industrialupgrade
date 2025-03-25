@@ -1,6 +1,7 @@
 package com.denfop.componets;
 
 import com.denfop.IUItem;
+import com.denfop.Localization;
 import com.denfop.api.cool.CoolTick;
 import com.denfop.api.cool.ICoolSource;
 import com.denfop.api.cool.ICoolTile;
@@ -117,6 +118,12 @@ public class HeatComponent extends AbstractComponent {
 
     public static HeatComponent asBasicSource(TileEntityInventory parent, double capacity, int tier) {
         return new HeatComponent(parent, capacity, Collections.emptySet(), ModUtils.allFacings, tier);
+    }
+
+    @Override
+    public void addInformation(final ItemStack stack, final List<String> tooltip) {
+        super.addInformation(stack, tooltip);
+        tooltip.add(Localization.translate("iu.reactor_info.heat")+ " "+  (int)this.storage + "/"+(int)this.capacity);
     }
 
     @Override

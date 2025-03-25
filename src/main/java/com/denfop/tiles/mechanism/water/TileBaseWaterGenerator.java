@@ -31,6 +31,7 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.PacketUpdateFieldTile;
+import com.denfop.tiles.base.TileEntityBlock;
 import com.denfop.tiles.base.TileEntityInventory;
 import com.denfop.utils.DamageHandler;
 import net.minecraft.block.material.Material;
@@ -44,6 +45,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeOcean;
 import net.minecraft.world.biome.BiomeRiver;
 import net.minecraftforge.common.MinecraftForge;
@@ -306,50 +308,10 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         return fac;
     }
 
-    public void update_generator() {
-        this.work = true;
-        for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
-            for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
-                for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
 
-                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
-                        continue;
-                    }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof IWindMechanism) {
-                        this.work = false;
-                        ((IWindMechanism) tile).setWork(false);
-                    }
-                }
-            }
-        }
-        new PacketUpdateFieldTile(this, "work", this.work);
-    }
     @Override
     public void setWork(final boolean work) {
         this.work = work;
-    }
-    public void update_generator(BlockPos pos) {
-        this.work = true;
-        for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
-            for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
-                for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
-                    if (this.pos.getX() == i && this.pos.getY() == j && this.pos.getZ() == k) {
-                        continue;
-                    }
-                    if (pos.getX() == i && pos.getY() == j && pos.getZ() == k) {
-                        continue;
-                    }
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
-                    if (tile instanceof IWindMechanism) {
-                        this.work = false;
-                        ((IWindMechanism) tile).setWork(false);
-                    }
-
-                }
-            }
-        }
-        new PacketUpdateFieldTile(this, "work", this.work);
     }
 
     @Override
@@ -582,7 +544,6 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         new PacketUpdateFieldTile(this, "angle", angle);
         new PacketUpdateFieldTile(this, "mind_speed", mind_speed);
         new PacketUpdateFieldTile(this, "generation", generation);
-        update_generator();
         if (this.getRotor() != null) {
             this.energy.setSourceTier(this.getRotor().getSourceTier());
         }
@@ -603,19 +564,22 @@ public class TileBaseWaterGenerator extends TileEntityInventory implements IWind
         MinecraftForge.EVENT_BUS.post(new WindGeneratorEvent(this, this.getWorld(), false));
         super.onUnloaded();
     }
-
     @Override
-    public void onBlockBreak(boolean w) {
-        for (int i = this.pos.getX() - 4; i <= this.pos.getX() + 4; i++) {
-            for (int j = this.pos.getY() - 4; j <= this.pos.getY() + 4; j++) {
-                for (int k = this.pos.getZ() - 4; k <= this.pos.getZ() + 4; k++) {
-                    final TileEntity tile = this.getWorld().getTileEntity(new BlockPos(i, j, k));
+    public boolean canPlace(final TileEntityBlock te, final BlockPos pos, final World world) {
+        for (int i = pos.getX() - 4; i <= pos.getX() + 4; i++) {
+            for (int j = pos.getY() - 4; j <= pos.getY() + 4; j++) {
+                for (int k = pos.getZ() - 4; k <= pos.getZ() + 4; k++) {
+                    final TileEntity tile = world.getTileEntity(new BlockPos(i, j, k));
                     if (tile instanceof IWindMechanism) {
-                        ((IWindMechanism) tile).update_generator(this.pos);
+                        return false;
                     }
                 }
             }
         }
+        return true;
+    }
+    @Override
+    public void onBlockBreak(boolean w) {
         super.onBlockBreak(w);
     }
 

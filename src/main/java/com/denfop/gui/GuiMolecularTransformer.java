@@ -66,7 +66,7 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                                         progress + (this.container.base.getProgress(i) <= 0.01 ? 0 :
                                                 ModUtils.getString(this.container.base.getProgress(i) * 100)) + "%" + "\n";
                             }
-                            toolip +=energyPerOperation + ModUtils.getString(-container.base.energyShare[i])+" EF/t"+ "\n";
+                            toolip +=energyPerOperation + ModUtils.getString(-container.base.energySlots[i])+" EF/t"+ "\n";
                             MachineRecipe output1 = this.container.base.output[i];
                             toolip +=
                                     input + this.container.base.inputSlot[i].get(0).getDisplayName() + "\n";
@@ -83,7 +83,7 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                                         progress + (this.container.base.getProgress(i) <= 0.01 ? 0 :
                                                 ModUtils.getString(this.container.base.getProgress(i) * 100)) + "%" + "\n";
                             }
-                            toolip +=energyPerOperation + ModUtils.getString(container.base.energyShare[i])+" EF/t"+ "\n";
+                            toolip +=energyPerOperation + ModUtils.getString(container.base.energySlots[i])+" EF/t"+ "\n";
                             int coef = (int) (this.container.base.maxEnergySlots[i] / this.container.base
                                     .getOutput(i)
                                     .getRecipe().output.metadata.getDouble("energy"));
@@ -232,7 +232,8 @@ public class GuiMolecularTransformer extends GuiCore<ContainerBaseMolecular> {
                                 this.guiTop + 65,
                                 ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
-                        this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(this.container.base.energy.getCapacity()) + " EF",
+                        this.fontRenderer.drawString(energyPerOperation + ModUtils.getString(this.container.base. energySlots[0]) +
+                                        " EF",
                                 this.guiLeft + 60, this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
                         if (this.container.base.getProgress(0) * 100 <= 100) {

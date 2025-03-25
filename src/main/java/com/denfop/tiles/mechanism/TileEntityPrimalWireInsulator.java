@@ -159,6 +159,7 @@ public class TileEntityPrimalWireInsulator extends TileEntityInventory implement
     @Override
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);

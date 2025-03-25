@@ -679,9 +679,9 @@ public class TileMolecularTransformer extends TileElectricMachine implements
                     }
 
 
-                    this.guiProgress[i] = (this.energySlots[i] / this.maxEnergySlots[i]);
+                    this.guiProgress[i] = (Math.ceil(this.energySlots[i]) / this.maxEnergySlots[i]);
 
-                    if (this.guiProgress[i] >= 1) {
+                    if (this.guiProgress[i] >= 1 && this.guiProgress[i] != Double.POSITIVE_INFINITY) {
                         operate(i, output, size);
                         initiate(2);
                     }

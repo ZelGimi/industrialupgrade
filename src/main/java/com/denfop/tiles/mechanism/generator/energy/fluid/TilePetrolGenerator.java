@@ -48,7 +48,7 @@ public class TilePetrolGenerator extends TileEntityLiquidTankInventory implement
     public final InvSlotOutput outputSlot;
     public final String name = null;
     public final Energy energy;
-    public final int production = (int) 60.0F;
+    public final int production = (int) 100.0F;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public double coef;

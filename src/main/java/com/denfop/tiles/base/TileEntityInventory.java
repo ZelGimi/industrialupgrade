@@ -685,9 +685,12 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         super.readPacket(customPacketBuffer);
         try {
             this.componentPrivate.onNetworkUpdate((CustomPacketBuffer) DecoderHandler.decode(customPacketBuffer));
+            for (AbstractComponent component : this.componentList)
+                component.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
@@ -695,6 +698,9 @@ public class TileEntityInventory extends TileEntityBlock implements ISidedInvent
         CustomPacketBuffer packetBuffer = super.writePacket();
         try {
             EncoderHandler.encode(packetBuffer, this.componentPrivate);
+
+            for (AbstractComponent component : this.componentList)
+                packetBuffer.writeBytes(component.updateComponent());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -436,7 +436,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             }
         }
         if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.energy.canUseEnergy(
-                25)) {
+                10)) {
             final BaseFluidMachineRecipe output = this.fluid_handler.output();
             final FluidStack inputFluidStack = output.input.getInputs().get(0);
             int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.amount;
@@ -473,7 +473,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
                     this.setActive(true);
                     initiate(0);
                 }
-                this.energy.useEnergy(25);
+                this.energy.useEnergy(10);
                 setActive(true);
             } else {
                 setActive(false);
@@ -519,7 +519,7 @@ public class TileOilRefiner extends TileElectricMachine implements IManufacturer
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 25 + Localization.translate("iu" +
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 10 + Localization.translate("iu" +
                     ".machines_work_energy_type_eu"));
         }
         super.addInformation(stack, tooltip);

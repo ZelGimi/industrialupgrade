@@ -78,7 +78,8 @@ public class Colony implements IColony {
     private byte timeResetFood;
     private byte timeResetOxygen;
     private boolean auto;
-    private short timeToSend = 600;
+    private  byte timeWork = 0;
+    private short timeToSend = 300;
     public Colony(IBody body, UUID player) {
         this.body = body;
         this.list = new ArrayList<>();
@@ -128,6 +129,7 @@ public class Colony implements IColony {
         usingOxygen = packetBuffer.readInt();
         usingEnergy = packetBuffer.readInt();
         usingFood = packetBuffer.readInt();
+        entertainment = (short) packetBuffer.readInt();
         auto = packetBuffer.readBoolean();
         int size1 = packetBuffer.readByte();
         this.enumProblemsList = new ArrayList<>();
@@ -251,6 +253,7 @@ public class Colony implements IColony {
         customPacketBuffer.writeInt(usingOxygen);
         customPacketBuffer.writeInt(usingEnergy);
         customPacketBuffer.writeInt(usingFood);
+        customPacketBuffer.writeInt(entertainment);
         customPacketBuffer.writeBoolean(auto);
         customPacketBuffer.writeByte(this.enumProblemsList.size());
         for (EnumProblems problems : enumProblemsList)
@@ -360,6 +363,9 @@ public class Colony implements IColony {
         return this.maxoxygen;
     }
 
+    public byte getTick() {
+        return tick;
+    }
 
     @Override
     public void update() {
@@ -374,7 +380,7 @@ public class Colony implements IColony {
                 toDelete = 120;
                 this.tick = 0;
             }
-            if (this.level < 200 && this.tick == 10){
+            if (this.level < 100 && this.tick == 10){
                 this.tick = 0;
                 this.experience+=this.workers;
                 if (this.experience >= this.getMaxExperience()){
@@ -390,11 +396,11 @@ public class Colony implements IColony {
         if (this.auto){
             this.timeToSend--;
             if (this.timeToSend == 0){
-                timeToSend = 600;
+                timeToSend = 300;
                 SpaceNet.instance.getColonieNet().sendResourceToPlanet(getFakePlayer(),body);
             }
         }else{
-            this.timeToSend = 600;
+            this.timeToSend = 300;
         }
         if (needWorkers > 0) {
             if (freeWorkers > 0) {
@@ -561,7 +567,7 @@ public class Colony implements IColony {
             return 1;
         if (this.entertainment == 0)
             return 0.8;
-        return  Math.min (1.5,Math.max (0.8,(this.workers + this.freeWorkers) * 1D / this.entertainment));
+       return  Math.min (1.5, Math.max(0.8,(this.entertainment) * 1D / this.workers));
     }
     @Override
     public void useEnergy(final int energy) {
@@ -957,7 +963,7 @@ public class Colony implements IColony {
 
     @Override
     public void addEntertainment(final short entertainment) {
-        this.entertainment = entertainment;
+        this.entertainment += entertainment;
     }
 
     @Override

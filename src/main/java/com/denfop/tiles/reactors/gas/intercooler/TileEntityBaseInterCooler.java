@@ -30,7 +30,8 @@ public class TileEntityBaseInterCooler extends TileEntityMultiBlockElement imple
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()) {
+                if (!world.isRemote)
+                    if (content.isEmpty()) {
                     ((TileEntityBaseInterCooler) this.base).setEnergy(0);
                     ((TileEntityBaseInterCooler) this.base).setPower(0);
                 } else {

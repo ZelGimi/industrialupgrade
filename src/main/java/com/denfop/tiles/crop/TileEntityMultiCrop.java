@@ -806,7 +806,7 @@ public class TileEntityMultiCrop extends TileEntityInventory {
                                                 genome.addGenome(traits.getPrev(), cropItem);
                                                 crop.setGrowthSpeed(traits
                                                         .getPrev()
-                                                        .getValue(Integer.class));
+                                                        .getValue(Double.class));
                                             } else {
                                                 genome.removeGenome(traits, cropItem);
                                                 crop.setGrowthSpeed(1);

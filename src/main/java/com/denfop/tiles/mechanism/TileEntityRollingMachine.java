@@ -82,6 +82,7 @@ public class TileEntityRollingMachine extends TileEntityInventory implements IUp
     @Override
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
         if (!this.getWorld().isRemote) {
             new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);

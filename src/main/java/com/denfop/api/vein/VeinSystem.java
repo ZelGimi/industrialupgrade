@@ -6,6 +6,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeHills;
+import net.minecraft.world.biome.BiomeSnow;
+import net.minecraft.world.biome.BiomeTaiga;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -56,14 +58,15 @@ public class VeinSystem implements IVeinSystem {
         final Biome biome = chunk.getWorld().getBiome(new BlockPos(chunk.x * 16, 0, chunk.z * 16));
         int col = biome instanceof BiomeHills ? 25 : 0;
         if (chance >= 15 + col) {
-            if (rand.nextInt(100) < 85) {
+             col =   (biome instanceof BiomeTaiga || biome instanceof BiomeSnow)  ? 15 : 0;
+            if (rand.nextInt(100) < 85-col) {
                 getnumber(vein, biome);
             } else {
                 vein.setType(Type.GAS);
                 vein.setOldMineral(false);
                 vein.setMeta(0);
-                vein.setMaxCol(350000);
-                vein.setCol(350000);
+                vein.setMaxCol(450000);
+                vein.setCol(450000);
             }
 
         } else {
@@ -105,7 +108,7 @@ public class VeinSystem implements IVeinSystem {
         if (Biome.getIdForBiome(biome) == 2) {
             int random = rand.nextInt(100);
             if (random >= 35) {
-                number = rand.nextInt(500000) + 40000;
+                number = rand.nextInt(500000) + 150000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -120,7 +123,7 @@ public class VeinSystem implements IVeinSystem {
             int random;
             random = rand.nextInt(100);
             if (random >= 40) {
-                number = rand.nextInt(500000) + 40000;
+                number = rand.nextInt(500000) + 150000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -135,7 +138,7 @@ public class VeinSystem implements IVeinSystem {
             int random;
             random = rand.nextInt(100);
             if (random > 35) {
-                number = rand.nextInt(300000);
+                number = rand.nextInt(300000)+100000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -150,7 +153,7 @@ public class VeinSystem implements IVeinSystem {
             int random;
             random = rand.nextInt(100);
             if (random > 60) {
-                number = rand.nextInt(300000);
+                number = rand.nextInt(300000)+100000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -165,7 +168,7 @@ public class VeinSystem implements IVeinSystem {
             int random;
             random = rand.nextInt(100);
             if (random > 35) {
-                number = rand.nextInt(300000) + 20000;
+                number = rand.nextInt(300000) + 200000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -180,7 +183,7 @@ public class VeinSystem implements IVeinSystem {
             int random;
             random = rand.nextInt(100);
             if (random > 50) {
-                number = rand.nextInt(200000);
+                number = rand.nextInt(200000)+50000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);
@@ -195,7 +198,7 @@ public class VeinSystem implements IVeinSystem {
             int random;
             random = rand.nextInt(100);
             if (random > 50) {
-                number = rand.nextInt(300000);
+                number = rand.nextInt(300000)+100000;
                 vein.setCol(number);
                 vein.setMaxCol(number);
                 vein.setType(Type.OIL);

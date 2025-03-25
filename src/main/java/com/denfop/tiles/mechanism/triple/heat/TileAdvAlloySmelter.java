@@ -144,7 +144,16 @@ public class TileAdvAlloySmelter extends TileTripleElectricMachine implements IH
                 ),
                 3000
         );
-
+        addAlloysmelter(
+                new ItemStack(IUItem.smalldust, 2, 9),
+                new ItemStack(IUItem.smalldust, 2, 29),
+                new ItemStack(IUItem.crafting_elements
+                        , 1, 498),
+                new ItemStack(IUItem.crafting_elements,
+                        1, 499
+                ),
+                3000
+        );
         addAlloysmelter("ingotAluminum", "ingotMagnesium", Items.FLINT, new ItemStack(IUItem.alloysingot, 1, 10), 3000);
 
         addAlloysmelter(

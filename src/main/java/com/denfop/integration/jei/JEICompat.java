@@ -170,6 +170,9 @@ import com.denfop.integration.jei.cyclotron.CyclotronWrapper;
 import com.denfop.integration.jei.deposits.DepositsCategory;
 import com.denfop.integration.jei.deposits.DepositsHandler;
 import com.denfop.integration.jei.deposits.DepositsWrapper;
+import com.denfop.integration.jei.deposits_molot.DepositsMolotCategory;
+import com.denfop.integration.jei.deposits_molot.DepositsMolotHandler;
+import com.denfop.integration.jei.deposits_molot.DepositsMolotWrapper;
 import com.denfop.integration.jei.distiller.DistillerCategory;
 import com.denfop.integration.jei.distiller.DistillerHandler;
 import com.denfop.integration.jei.distiller.DistillerWrapper;
@@ -724,6 +727,7 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new EnchantCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new MultiBlockCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new DepositsCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new DepositsMolotCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new EarthQuarryCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new AnvilCategory(registry.getJeiHelpers().getGuiHelper()));
         registry.addRecipeCategories(new HeavyAnvilCategory(registry.getJeiHelpers().getGuiHelper()));
@@ -992,6 +996,15 @@ public final class JEICompat implements IModPlugin {
         registry.handleRecipes(
                 DepositsHandler.class, DepositsWrapper::new,
                 "deposists_iu"
+        );
+        registry.addRecipes(
+                DepositsMolotHandler.getRecipes(),
+                new DepositsMolotCategory(registry.getJeiHelpers().getGuiHelper()).getUid()
+        );
+
+        registry.handleRecipes(
+                DepositsMolotHandler.class, DepositsMolotWrapper::new,
+                "deposists_molot_iu"
         );
 
         registry.addRecipes(

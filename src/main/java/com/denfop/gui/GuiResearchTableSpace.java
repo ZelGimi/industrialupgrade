@@ -525,6 +525,8 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
         slider1.visible = planet != null && this.planet.getSatelliteList().size() > 2 && satellite == null;
         if (planet != null) {
             slider1.setMax(this.planet.getSatelliteList().size() - 2);
+            if (value2 > this.planet.getSatelliteList().size() - 2)
+                value2 = 0;
         }
         if (this.container.base.colony != null && mode == 5) {
             slider2.visible = itemList.size() / 16 > 0;
@@ -704,7 +706,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             );
             List<Timer> timers = this.container.base.getSends().getTimers();
             if (timers != null && !timers.isEmpty()) {
-                renderProgressBarSends(this.guiLeft + 130, this.guiTop + 44 + 9, 0, 85, (float) timers.get(0).getProgressBar());
+                renderProgressBarSends(this.guiLeft + 126, this.guiTop + 44 + 9, 0, 85, (float) timers.get(0).getProgressBar());
             }
         } else if (mode == 3) {
             drawInfoBody(satellite);
@@ -1696,14 +1698,14 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                             colony.getToDelete() + "s" : Localization.translate("iu.space_no"))
                             + "\n" + Localization.translate("iu.space_colony_has_problem") + (colony.getProblems().isEmpty()
                             ? Localization.translate("iu.space_no") : Localization.translate("iu.space_yes"))
-                            + "\n" + Localization.translate("iu.space_colony_has_problem") + getProblem(colony);
+                            + "\n" + Localization.translate("iu.space_colony_problem") + getProblem(colony);
 
 
             ;
             int canvasX = 10;
             int canvasY = 20;
             int canvasWidth = 114;
-            int canvasHeight = 138;
+            int canvasHeight = 140;
             float scale = (float) (2D / new ScaledResolution(mc).getScaleFactor());
             if (prevText != text.length()) {
                 scaled = -1;
@@ -1724,7 +1726,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
                 textIndex = text.length();
             }
             String visibleText = text.substring(0, textIndex);
-            drawTextInCanvas(visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale * 1.1f);
+            drawTextInCanvas(visibleText, canvasX, canvasY, canvasWidth, canvasHeight, scale * 1f);
             for (int i = value3 * 4, j = 0; i < Math.min(this.itemList.size(), 16 + value3 * 4); j++, i++) {
                 final int finalI = i;
                 new ItemStackImage(
@@ -1750,7 +1752,7 @@ public class GuiResearchTableSpace extends GuiIU<ContainerResearchTableSpace> im
             }
             List<Timer> timers = this.container.base.getSends().getTimers();
             if (timers != null && !timers.isEmpty()) {
-                new AdvArea(this, 129, 35, 19, 122).withTooltip(timers.get(0).getDisplay()).drawForeground(par1, par2);
+                new Area(this, 129, 35, 19, 122).withTooltip(timers.get(0).getDisplay()).drawForeground(par1, par2);
             }
         } else if (mode == 4) {
             Data data = container.base.dataMap.get(asteroid);

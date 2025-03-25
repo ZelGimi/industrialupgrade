@@ -3690,7 +3690,7 @@ public class BasicRecipeTwo {
         Recipes.recipe.addRecipe(
                 IUItem.advanced_charging_re_battery
                 ,
-                " B ", "BCB", " B ", ('B'), new ItemStack(IUItem.advBattery, 1, 32767),
+                " B ", "BCB", " B ", ('B'), new ItemStack(IUItem.reBattery, 1, 32767),
 
 
                 ('C'), new ItemStack(IUItem.charging_re_battery, 1, 32767)

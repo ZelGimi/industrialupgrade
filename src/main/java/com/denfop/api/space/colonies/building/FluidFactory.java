@@ -61,7 +61,9 @@ public class FluidFactory extends Building implements IColonyMiningFactory {
         if (storageList.isEmpty() || this.getColony().getEnergy() < this.getEnergy()) {
             return;
         }
-        if (WorldBaseGen.random.nextInt(100) < this.type.getChance()) {
+        if (this.getColony().getTick() % 5 != 0)
+            return;
+        if (WorldBaseGen.random.nextInt(100) < this.type.getChance() ) {
             for (IStorage storage : storageList) {
                 if (storage.work()) {
                     List<DataItem<FluidStack>> fluidStacks = SpaceNet.instance.getColonieNet().getFluidsFromBody(getColony().getBody());

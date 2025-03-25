@@ -63,7 +63,10 @@ public class MaceratorRecipe {
         addmacerator(IUItem.plateobsidian, IUItem.obsidianDust);
 
 
+        addmacerator("wool", "string",4);
         addmacerator("rawOsmium", "crushedOsmium",2);
+        addmacerator("dustOsmium", "smalldustOsmium",9);
+        addmacerator("dustPlatinum", "smalldustPlatinum",9);
         addmacerator("rawTantalum", "crushedTantalum",2);
         addmacerator("rawCadmium", "crushedCadmium",2);
         addmacerator("rawTin", "crushedTin",2);

@@ -51,6 +51,11 @@ public class TileEntityBaseSteamTurbineTank extends TileEntityMultiBlockElement 
         }
 
     }
+
+
+
+
+
     @Override
     public boolean hasOwnInventory() {
         return this.getMain() != null;

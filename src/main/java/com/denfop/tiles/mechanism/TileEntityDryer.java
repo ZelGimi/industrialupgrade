@@ -129,6 +129,7 @@ public class TileEntityDryer extends TileEntityInventory implements IUpgradableB
 
     public void onLoaded() {
         super.onLoaded();
+        data = PrimitiveHandler.getPlayersData(EnumPrimitive.DRYER);
         if (IUCore.proxy.isSimulating()) {
             this.fluid_handler.load();
             new PacketUpdateFieldTile(this, "slot", outputSlot);

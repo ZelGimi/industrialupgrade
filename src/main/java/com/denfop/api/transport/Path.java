@@ -19,9 +19,8 @@ public class Path {
     final ITransportSink target;
 
     final EnumFacing targetDirection;
-    private IItemHandler handler;
+    private final Object handler;
     EnumFacing  firstSide;
-    IFluidHandler fluidHandler = null;
 
     ITransportConductor first = null;
 
@@ -30,31 +29,17 @@ public class Path {
     Path(ITransportSink sink, EnumFacing facing) {
         this.target = sink;
         this.targetDirection = facing;
-        if (this.target.getHandler() instanceof IItemHandler) {
-            this.handler = this.target.getTileEntity().getCapability(
-                    CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                    this.targetDirection
-            );
-            this.handler = new ItemFluidHandler(handler, null);
-        }
-        if (this.target.getHandler() instanceof IFluidHandler) {
-            this.fluidHandler = this.target.getTileEntity().getCapability(
-                    CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-                    this.targetDirection
-            );
-
-            this.fluidHandler = new ItemFluidHandler(null, fluidHandler);
-        }
+        this.handler = sink.getHandler(facing);
         this.firstSide = null;
     }
 
     public IItemHandler getHandler() {
-        return handler;
+        return ( handler instanceof IItemHandler) ? (IItemHandler) handler : null;
     }
 
 
     public IFluidHandler getFluidHandler() {
-        return this.fluidHandler;
+        return ( handler instanceof IFluidHandler) ? (IFluidHandler) handler : null;
     }
 
 }

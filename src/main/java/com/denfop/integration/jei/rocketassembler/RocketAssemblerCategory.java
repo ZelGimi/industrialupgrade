@@ -107,7 +107,7 @@ public class RocketAssemblerCategory extends GuiIU implements IRecipeCategory<Ro
         this.slots.drawBackground(0, 0);
         this.slots1.drawBackground(0, 0);
 
-        progress_bar.renderBar(50, 30, xScale);
+        progress_bar.renderBar(40, 55, xScale);
         mc.getTextureManager().bindTexture(getTexture());
 
 

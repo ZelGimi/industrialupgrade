@@ -24,7 +24,6 @@ import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.transport.types.ICableItem;
 import com.denfop.tiles.transport.types.ItemType;
-import com.denfop.utils.ModUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -47,6 +46,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -153,9 +153,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         this.cableType = ItemType.values[nbt.getByte("cableType") & 0xFF];
         redstoneSignal = nbt.getBoolean("redstoneSignal");
         if (!this.cableType.isOutput && !this.cableType.isInput()) {
-            this.listDown =null;
-            this.listUp =null;
-            this.listWest =null;
+            this.listDown = null;
+            this.listUp = null;
+            this.listWest = null;
             this.listEast = null;
             this.listNorth = null;
             this.listSouth = null;
@@ -241,7 +241,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     public void AddTile(ITransportTile tile, final EnumFacing facing1) {
         if (!this.getWorld().isRemote) {
-            if (!this.energyConductorMap.containsKey(facing1)) {
+            if (!this.energyConductorMap.containsKey(facing1) && ((isOutput() || isInput()) || (!isOutput() && !isInput() && tile instanceof ITransportConductor))) {
                 this.energyConductorMap.put(facing1, tile);
                 validReceivers.add(new InfoTile<>(tile, facing1.getOpposite()));
                 this.update = true;
@@ -274,7 +274,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
             }
             this.needUpdate = true;
         } else {
-            if (var2 == 10){
+            if (var2 == 10) {
                 this.redstoneSignal = !this.redstoneSignal;
             }
         }
@@ -435,22 +435,33 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     }
 
+    List<FluidStack> blackList = new ArrayList<>();
+    List<FluidStack> whiteList = new ArrayList<>();
+
     @Override
     public List<FluidStack> getBlackListFluids(EnumFacing facing) {
         list = getInfoSlotFromFacing(facing);
-        return this.list.getFluidStackList().subList(0, 9).stream().filter(Objects::nonNull).collect(Collectors.toList());
+        if (this.getWorld().getWorldTime() % 20 == 0) {
+            blackList =
+                    this.list.getFluidStackList().subList(0, 9).stream().filter(Objects::nonNull).collect(Collectors.toList());
+        }
+        return blackList;
 
     }
 
     @Override
     public List<FluidStack> getWhiteListFluids(EnumFacing facing) {
         list = getInfoSlotFromFacing(facing);
-        return this.list
-                .getFluidStackList()
-                .subList(9, this.list.size())
-                .stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        if (this.getWorld().getWorldTime() % 20 == 0) {
+            whiteList =
+                    this.list
+                            .getFluidStackList()
+                            .subList(9, this.list.size())
+                            .stream()
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+        }
+        return whiteList;
 
     }
 
@@ -466,7 +477,7 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
 
     @Override
     public int getMax(final byte tick) {
-        if (this.tick != tick){
+        if (this.tick != tick) {
             this.tick = tick;
             this.max = getMax();
             return getMax();
@@ -504,9 +515,9 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
         try {
             cableType = ItemType.values[(int) DecoderHandler.decode(customPacketBuffer)];
             if (!this.cableType.isOutput && !this.cableType.isInput()) {
-                this.listDown =null;
-                this.listUp =null;
-                this.listWest =null;
+                this.listDown = null;
+                this.listUp = null;
+                this.listWest = null;
                 this.listEast = null;
                 this.listNorth = null;
                 this.listSouth = null;
@@ -555,10 +566,10 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
             }
         }
         if (this.cableType.isItem()) {
-            return var1.getHandler() instanceof IItemHandler;
+            return var1.getHandler(var2.getOpposite()) instanceof IItemHandler;
         }
 
-        return var1.getHandler() instanceof IFluidHandler;
+        return var1.getHandler(var2.getOpposite()) instanceof IFluidHandler;
     }
 
     public boolean emitsTo(ITransportAcceptor var1, EnumFacing var2) {
@@ -573,13 +584,13 @@ public class TileEntityItemPipes extends TileEntityMultiCable implements ITransp
             return false;
         }
         if (this.cableType.isItem()) {
-            return var1.getHandler() instanceof IItemHandler;
+            return var1.getHandler(var2.getOpposite()) instanceof IItemHandler;
         }
 
-        return var1.getHandler() instanceof IFluidHandler;
+        return var1.getHandler(var2.getOpposite()) instanceof IFluidHandler;
     }
 
-    public Object getHandler() {
+    public Object getHandler(EnumFacing facing) {
         if (this.cableType.isItem()) {
             return new ItemStackHandler();
         }

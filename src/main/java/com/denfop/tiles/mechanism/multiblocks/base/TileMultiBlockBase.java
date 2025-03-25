@@ -60,6 +60,17 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         this.activate = false;
     }
 
+
+    @Override
+    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+        super.readContainerPacket(customPacketBuffer);
+        if (!this.isFull()) {
+            this.updateFull();
+            this.full = true;
+            this.activate = true;
+        }
+    }
+
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -67,16 +78,19 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             tooltip.add(Localization.translate("multiblock.jei1"));
             if (getMultiBlockStucture() != null) {
                 for (ItemStack stack1 : getMultiBlockStucture().itemStackList) {
-                    if (!stack1.isEmpty())
-                    tooltip.add(TextFormatting.GREEN + "" + stack1.getCount() + "x" + TextFormatting.GRAY + stack1.getDisplayName());
+                    if (!stack1.isEmpty()) {
+                        tooltip.add(TextFormatting.GREEN + "" + stack1.getCount() + "x" + TextFormatting.GRAY + stack1.getDisplayName());
+                    }
                 }
             }
         }
     }
+
     @Override
     public boolean isMain() {
         return true;
     }
+
     public MultiBlockStructure getMultiBlockStructure() {
         return multiBlockStructure;
     }
@@ -99,14 +113,13 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
 
-
     public void readPacket(CustomPacketBuffer customPacketBuffer) {
         super.readPacket(customPacketBuffer);
         try {
             full = (boolean) DecoderHandler.decode(customPacketBuffer);
             activate = (boolean) DecoderHandler.decode(customPacketBuffer);
             if (full && activate) {
-
+                updateFull();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -198,7 +211,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                         rotation = EnumFacing.EAST;
                     }
                 }
-            }  else if (facing == EnumFacing.WEST) {
+            } else if (facing == EnumFacing.WEST) {
                 if (rotation == EnumFacing.EAST || rotation == EnumFacing.WEST) {
                     if (rotation == EnumFacing.WEST) {
                         rotation = EnumFacing.NORTH;
@@ -259,8 +272,8 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     private void renderBlock(
             TileMultiBlockBase tile
     ) {
-        if (facing == 0 || facing == 1){
-           return;
+        if (facing == 0 || facing == 1) {
+            return;
         }
         for (Map.Entry<BlockPos, ItemStack> entry : this.multiBlockStructure.ItemStackMap.entrySet()) {
             BlockPos pos1;
@@ -286,8 +299,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             }
 
             final ItemStack item = entry.getValue();
-            if (item.isEmpty())
+            if (item.isEmpty()) {
                 continue;
+            }
             GlStateManager.pushMatrix();
             GlStateManager.translate(pos1.getX(), 0.5 + pos1.getY(), pos1.getZ()); // Moving into the first slot
             if (rotation != null) {
@@ -430,7 +444,9 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
         if (name.equals("full")) {
             try {
                 this.full = (boolean) DecoderHandler.decode(is);
-
+                if (this.full) {
+                    this.updateAfterAssembly();
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -448,7 +464,7 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.full && !this.activate){
+        if (this.full && !this.activate) {
             this.setFull(false);
         }
     }
@@ -505,42 +521,42 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
             final float hitZ
     ) {
 
-            if (!this.full || !this.activate) {
-                this.getCooldownTracker().setTick(1);
-                if (player.getHeldItem(hand).getItem() instanceof ItemToolWrench || player
-                        .getHeldItem(hand)
-                        .getItem() == IUItem.GraviTool) {
-                    return false;
-                }
-                if (!this.getMultiBlockStucture().isHasActivatedItem()) {
-                    this.updateFull(player);
-                    if (full) {
-                        this.updateAfterAssembly();
-                    }
-                    return true;
-                }
-                if (this.getMultiBlockStucture().isActivateItem(player.getHeldItem(hand))) {
-                    this.updateFull(player);
-                    if (!this.full) {
-                        return false;
-                    } else {
-                        this.updateAfterAssembly();
-                    }
-                } else {
-                    if (!this.getWorld().isRemote) {
-                        IUCore.proxy.messagePlayer(
-                                player,
-                                Localization.translate("iu.activate_multiblock") + " " + this
-                                        .getMultiBlockStucture()
-                                        .getActivateItem()
-                                        .getDisplayName()
-                        );
-                    }
-                }
+        if (!this.full || !this.activate) {
+            this.getCooldownTracker().setTick(1);
+            if (player.getHeldItem(hand).getItem() instanceof ItemToolWrench || player
+                    .getHeldItem(hand)
+                    .getItem() == IUItem.GraviTool) {
                 return false;
-            } else {
-                this.usingBeforeGUI();
             }
+            if (!this.getMultiBlockStucture().isHasActivatedItem()) {
+                this.updateFull(player);
+                if (full) {
+                    this.updateAfterAssembly();
+                }
+                return true;
+            }
+            if (this.getMultiBlockStucture().isActivateItem(player.getHeldItem(hand))) {
+                this.updateFull(player);
+                if (!this.full) {
+                    return false;
+                } else {
+                    this.updateAfterAssembly();
+                }
+            } else {
+                if (!this.getWorld().isRemote) {
+                    IUCore.proxy.messagePlayer(
+                            player,
+                            Localization.translate("iu.activate_multiblock") + " " + this
+                                    .getMultiBlockStucture()
+                                    .getActivateItem()
+                                    .getDisplayName()
+                    );
+                }
+            }
+            return false;
+        } else {
+            this.usingBeforeGUI();
+        }
 
 
         return super.onActivated(player, hand, side, hitX, hitY, hitZ);
@@ -556,10 +572,8 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
     }
 
     @Override
-    public void onUnloaded() {
-        if (this.getWorld().isRemote) {
-            GlobalRenderManager.removeRender(this.getWorld(), pos);
-        }
+    public void onBlockBreak(final boolean wrench) {
+        super.onBlockBreak(wrench);
         if (this.isFull()) {
             if (this.multiBlockStructure != null) {
                 List<BlockPos> blockPosList = this.multiBlockStructure.getPoses(this.getFacing(), this.getBlockPos());
@@ -572,6 +586,13 @@ public abstract class TileMultiBlockBase extends TileEntityInventory implements 
                 }
             }
             this.setFull(false);
+        }
+    }
+
+    @Override
+    public void onUnloaded() {
+        if (this.getWorld().isRemote) {
+            GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
         super.onUnloaded();
     }

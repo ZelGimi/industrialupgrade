@@ -320,14 +320,18 @@ public class ColonyNet implements IColonyNet {
         if (colonies != null) {
             for (IColony colony : colonies) {
                 if (colony.matched(body1)) {
-                    Sends sends1 = new Sends(uniqueID, body1);
+                    Sends sends1 = new Sends(uniqueID, body1, colony);
                     List<IStorage> storages = colony.getStorageList();
                     for (IStorage storage : storages) {
                         for (ItemStack stack : storage.getStacks()) {
-                            sends1.addStack(stack);
+                            if (sends1.stacks.size() == 27)
+                                break;
+                            sends1.addStack(stack.copy());
                         }
                         for (FluidStack fluidStack : storage.getFluidStacks()) {
-                            sends1.addStack(fluidStack);
+                            if (sends1.fluidStacks.size() == 9)
+                                break;
+                            sends1.addStack(fluidStack.copy());
                         }
                         storage.getStacks().clear();
                         storage.getFluidStacks().clear();

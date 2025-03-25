@@ -6,13 +6,12 @@ import com.denfop.api.space.IPlanet;
 import com.denfop.api.space.ISatellite;
 import com.denfop.api.space.SpaceInit;
 import com.denfop.api.space.SpaceNet;
+import com.denfop.api.space.colonies.api.IColony;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.utils.Timer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.LinkedList;
@@ -26,11 +25,11 @@ public class Sends {
     List<ItemStack> stacks = new LinkedList<>();
     List<FluidStack> fluidStacks = new LinkedList<>();
 
-    public Sends(UUID uuid, IBody body) {
+    public Sends(UUID uuid, IBody body, IColony colony) {
         this.uuid = uuid;
         int seconds = 0;
         if (body instanceof IPlanet) {
-            seconds = (int) ((Math.abs(body.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (16.66 * 60));
+            seconds = (int) ((Math.abs(body.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (16.66 * 60 * 0.8));
         } else if (body instanceof ISatellite) {
             double distancePlanetToPlanet =
                     (((ISatellite) body)
@@ -40,12 +39,13 @@ public class Sends {
             if (((ISatellite) body).getPlanet() == SpaceInit.earth) {
                 distanceSatellite = 1;
             }
-            seconds = (int) (Math.abs(distanceSatellite * 5 * 60 + distancePlanetToPlanet * (16.66 * 60)));
+            seconds = (int) (Math.abs(distanceSatellite * 5 * 60 * 0.8 + distancePlanetToPlanet * (16.66 * 60 * 0.8)));
         } else {
             seconds =
-                    (int) ((Math.abs(((((IAsteroid) body).getMaxDistance() - ((IAsteroid) body).getMinDistance()) / 2 + ((IAsteroid) body).getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (16.66 * 60));
+                    (int) ((Math.abs(((((IAsteroid) body).getMaxDistance() - ((IAsteroid) body).getMinDistance()) / 2 + ((IAsteroid) body).getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (16.66 * 60 * 0.8));
         }
-        this.timerToPlanet = new Timer(seconds / 4);
+        int dop = colony.getLevel() / 20;
+        this.timerToPlanet = new Timer(seconds / (4+dop));
     }
 
     public Sends(NBTTagCompound tagCompound) {
@@ -85,7 +85,7 @@ public class Sends {
     }
 
     public boolean needRemove() {
-        return this.timerToPlanet.canWork();
+        return !this.timerToPlanet.canWork();
     }
 
     public void works() {
@@ -96,7 +96,9 @@ public class Sends {
                     .getRocketPadMap()
                     .get(uuid);
             if (spacePad != null) {
-                spacePad.getSlotOutput().add(this.stacks);
+                for (ItemStack stack : this.stacks) {
+                    spacePad.getSlotOutput().add(stack);
+                }
                 for (FluidStack fluidStack : fluidStacks) {
                     spacePad.addFluidStack(fluidStack);
                 }

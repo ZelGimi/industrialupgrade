@@ -30,6 +30,7 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
     public void update() {
         this.tile.solid = new EnumSolidMatter[9];
         this.tile.solid_col = new int[9];
+        final double prev = this.tile.energy.getEnergy();
         this.tile.energy.useEnergy(this.tile.energy.getEnergy());
         this.tile.energy.setCapacity(0);
         for (int i = 0; i < this.size(); i++) {
@@ -39,6 +40,7 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
                 this.tile.energy.addCapacity(Config.SolidMatterStorage * this.get(i).getCount());
             }
         }
+        this.tile.energy.addEnergy(prev);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
         super.put(index, content);
         this.tile.solid = new EnumSolidMatter[9];
         this.tile.solid_col = new int[9];
+        final double prev = this.tile.energy.getEnergy();
         this.tile.energy.useEnergy(this.tile.energy.getEnergy());
         this.tile.energy.setCapacity(0);
         for (int i = 0; i < this.size(); i++) {
@@ -55,6 +58,7 @@ public class InvSlotSolidMatter extends InvSlot implements ITypeSlot {
                 this.tile.energy.addCapacity(Config.SolidMatterStorage * this.get(i).getCount());
             }
         }
+        this.tile.energy.addEnergy(prev);
     }
 
     public boolean accepts(ItemStack itemStack, final int index) {

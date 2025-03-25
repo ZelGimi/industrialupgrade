@@ -134,7 +134,7 @@ public class InvSlot implements ITypeSlot {
                             }
                             maxFill = Math.max(count, maxFill);
                             count -= maxFill;
-                            stack1.grow(stack.getCount());
+                            stack1.grow(maxFill);
                         }
                     }
                 }

@@ -2,21 +2,16 @@ package com.denfop.tiles.mechanism.steamturbine.exchanger;
 
 import com.denfop.api.gui.EnumTypeSlot;
 import com.denfop.container.ContainerBaseSteamTurbineExchanger;
-import com.denfop.container.ContainerExchanger;
 import com.denfop.gui.GuiBaseSteamTurbineExchanger;
-import com.denfop.gui.GuiExchanger;
 import com.denfop.invslot.InvSlot;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.tiles.mechanism.multiblocks.base.TileEntityMultiBlockElement;
 import com.denfop.tiles.mechanism.steamturbine.IController;
 import com.denfop.tiles.mechanism.steamturbine.IExchanger;
 import com.denfop.tiles.reactors.graphite.IExchangerItem;
-import com.denfop.tiles.reactors.graphite.exchanger.TileEntityExchanger;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,6 +21,7 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
     private final InvSlot slot;
     public double percent = 1;
     private IExchangerItem item;
+
     public TileEntityBaseSteamTurbineExchanger(int level) {
         this.level = level;
         this.slot = new InvSlot(this, InvSlot.TypeItemSlot.INPUT, 1) {
@@ -37,22 +33,25 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
 
             @Override
             public boolean accepts(final ItemStack stack, final int index) {
-                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((IController)getMain()).getLevel();
+                return stack.getItem() instanceof IExchangerItem && ((IExchangerItem) stack.getItem()).getLevel() <= ((IController) getMain()).getLevel();
             }
 
             @Override
             public void put(final int index, final ItemStack content) {
                 super.put(index, content);
-                if (content.isEmpty()) {
-                    ((TileEntityBaseSteamTurbineExchanger) this.base).percent = 0;
-                } else {
-                    ((TileEntityBaseSteamTurbineExchanger) this.base).percent =  ((IExchangerItem) content.getItem()).getPercent();
-                    item = (IExchangerItem) content.getItem();
+                if (!world.isRemote) {
+                    if (content.isEmpty()) {
+                        ((TileEntityBaseSteamTurbineExchanger) this.base).percent = 0;
+                    } else {
+                        ((TileEntityBaseSteamTurbineExchanger) this.base).percent = ((IExchangerItem) content.getItem()).getPercent();
+                        item = (IExchangerItem) content.getItem();
+                    }
                 }
             }
         };
         slot.setStackSizeLimit(1);
     }
+
     @Override
     public void onLoaded() {
         super.onLoaded();
@@ -61,17 +60,19 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
                 this.percent = 0;
                 this.item = null;
             } else {
-                this.percent =((IExchangerItem) this.getSlot().get().getItem()).getPercent();
-                this.item =((IExchangerItem) this.getSlot().get().getItem());
+                this.percent = ((IExchangerItem) this.getSlot().get().getItem()).getPercent();
+                this.item = ((IExchangerItem) this.getSlot().get().getItem());
             }
         }
     }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         customPacketBuffer.writeDouble(this.percent);
         return customPacketBuffer;
     }
+
     @Override
     public ContainerBaseSteamTurbineExchanger getGuiContainer(final EntityPlayer var1) {
         return new ContainerBaseSteamTurbineExchanger(this, var1);
@@ -88,6 +89,7 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
         super.readContainerPacket(customPacketBuffer);
         this.percent = customPacketBuffer.readDouble();
     }
+
     @Override
     public boolean hasOwnInventory() {
         return this.getMain() != null;
@@ -109,13 +111,13 @@ public class TileEntityBaseSteamTurbineExchanger extends TileEntityMultiBlockEle
             return 1;
         }
 
-        return this.percent*2;
+        return this.percent * 2;
     }
+
     @Override
     public IExchangerItem getExchanger() {
         return item;
     }
-
 
 
 }

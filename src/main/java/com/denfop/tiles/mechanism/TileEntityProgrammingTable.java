@@ -54,7 +54,7 @@ public class TileEntityProgrammingTable extends TileElectricMachine implements
         super(100, 1, 1);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InvSlotRecipes(this, "programming", this);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 2, 30)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 2, 0)) {
             @Override
             public int getTickFromSecond() {
                 return (int) Math.max(1, 20 - ((TileEntityProgrammingTable) this.parent).getLevel() * 1.75);

@@ -23,7 +23,7 @@ public class ItemStackVeinSensor extends ItemStackInventory {
 
     public final ItemStack itemStack1;
     private final Map<Integer, Map<Vector2, DataOres>> map;
-    private final Vector2 vector;
+    public Vector2 vector;
 
 
     public ItemStackVeinSensor(

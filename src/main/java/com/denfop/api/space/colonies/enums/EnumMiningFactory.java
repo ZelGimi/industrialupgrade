@@ -1,9 +1,9 @@
 package com.denfop.api.space.colonies.enums;
 
 public enum EnumMiningFactory {
-    LOW(10, 15,25,5,1,10),
-    MEDIUM(20,  20,50,15,2,18),
-    HIGH(40, 30,75,30,5,29);
+    LOW(10, 15,15,5,1,10),
+    MEDIUM(20,  20,25,15,2,18),
+    HIGH(40, 30,40,30,5,29);
     private final byte energy;
     private final byte needPeople;
     private final byte chance;

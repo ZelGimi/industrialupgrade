@@ -105,18 +105,18 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
             final NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                     input.getInput("crushed" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                     input.getInput("dust" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
         }
         final NBTTagCompound nbt1 = new NBTTagCompound();
         nbt1.setInteger("temperature", 1000);
         Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                 input.getInput(new ItemStack(IUItem.crafting_elements, 1, 502))
         ), new RecipeOutput(nbt1, IUItem.advIronIngot)));
         for (String s : list_baseore1) {
@@ -125,11 +125,11 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
             final NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                     input.getInput("crushed" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                     input.getInput("dust" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
         }
@@ -139,11 +139,11 @@ public class TileEntityElectricRefractoryFurnace extends TileBasePlasticPlateCre
             final NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("temperature", 1000);
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                     input.getInput("crushed" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
             Recipes.recipes.addRecipe("elec_refractory_furnace", new BaseMachineRecipe(new Input(
-                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 10),
+                    new FluidStack(FluidName.fluidfluorhyd.getInstance(), 5),
                     input.getInput("dust" + s)
             ), new RecipeOutput(nbt, OreDictionary.getOres("rawIngot" + s).get(0))));
         }

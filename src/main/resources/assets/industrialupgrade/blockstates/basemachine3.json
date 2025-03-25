@@ -1371,6 +1371,12 @@
       }, 
 	  "ampere_storage" : {
         "model" : "industrialupgrade:basemachine/ampere_storage"
+      }, 
+	  "steam_generator" : {
+        "model" : "industrialupgrade:basemachine/steam_generator"
+      }, 
+	  "steam_generator_active" : {
+        "model" : "industrialupgrade:basemachine/steam_generator_active"
       }
 	  
 	  

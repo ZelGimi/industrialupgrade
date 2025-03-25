@@ -48,7 +48,7 @@ public class TileDieselGenerator extends TileEntityLiquidTankInventory implement
     public final InvSlotOutput outputSlot;
     public final String name = null;
     public final Energy energy;
-    public final int production = 120;
+    public final int production = 200;
     private final SoilPollutionComponent pollutionSoil;
     private final AirPollutionComponent pollutionAir;
     public double coef;
